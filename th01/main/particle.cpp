@@ -18,7 +18,7 @@ void CParticles::init()
 	velocity_base_max = 10;
 }
 
-void CParticles::unput_update_render(particle_origin_t origin, int col)
+void CParticles::unput_update_render(particle_origin_t origin, vc_t col)
 {
 	unsigned char i;
 

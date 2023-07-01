@@ -1,4 +1,6 @@
-#include "th02/main/hud/hud.h"
+#include "th02/main/hud/hud.hpp"
+
+#define BAR_MAX 128
 
 // Low-level
 // ---------

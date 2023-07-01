@@ -6,7 +6,7 @@ extern vram_y_t scroll_line;
 #if (GAME == 2)
 	// Amount of pixels to be added to [scroll_line] on every scrolling
 	// operation.
-	extern uint8_t scroll_speed;
+	extern pixel_length_8_t scroll_speed;
 
 	extern uint8_t scroll_cycle;
 

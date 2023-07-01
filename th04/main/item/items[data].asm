@@ -2,8 +2,8 @@ public _item_playperf_raise, _item_playperf_lower
 _item_playperf_raise	db 0
 _item_playperf_lower	db 0
 
-public _ITEM_TYPE_PATNUM
-_ITEM_TYPE_PATNUM label word
+public _ITEM_PATNUM
+_ITEM_PATNUM label word
 	dw	PAT_ITEM + IT_POWER
 	dw	PAT_ITEM + IT_POINT
 	dw	PAT_ITEM + IT_DREAM
@@ -36,7 +36,7 @@ public _items_pull_to_player
 _items_pull_to_player	db 0
 	evendata
 
-MISS_ITEM_COUNT = 5
+ITEM_MISS_COUNT = 5
 MISS_FIELD_LEFT = 0
 MISS_FIELD_CENTER = 1
 MISS_FIELD_RIGHT = 2

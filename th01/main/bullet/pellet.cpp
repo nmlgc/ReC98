@@ -574,7 +574,7 @@ void CPellets::unput_update_render(void)
 
 	Shots.unput_update_render();
 
-	GRCGStaticColor<V_WHITE> grcg(GC_RMW);
+	GRCGStaticColor<static_cast<vc_t>(V_WHITE)> grcg(GC_RMW);
 
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {

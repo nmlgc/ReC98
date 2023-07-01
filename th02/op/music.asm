@@ -106,7 +106,7 @@ if GAME ge 4
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 else
 	mov	ah, 0
 	add	ax, ax
@@ -114,7 +114,7 @@ else
 	push	_CosTable8[bx]
 	push	[bp+arg_4]
 	push	[bp+arg_8]
-	call	_vector1_at
+	call	@polar$qiii
 	add	sp, 6
 endif
 
@@ -130,7 +130,7 @@ if GAME ge 4
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 else
 	mov	al, [bp+var_3]
 	mov	ah, 0
@@ -139,7 +139,7 @@ else
 	push	_SinTable8[bx]
 	push	[bp+arg_4]
 	push	[bp+arg_6]
-	call	_vector1_at
+	call	@polar$qiii
 	add	sp, 6
 endif
 

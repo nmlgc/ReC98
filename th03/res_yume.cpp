@@ -26,6 +26,6 @@ const cfg_options_t OPTS_DEFAULT = { SND_BGM_FM, KM_KEY_KEY, RANK_NORMAL };
 #define optimization_barrier()
 
 #define RES_INIT_BOTTOM \
-	cfg_init(sgm);
+	cfg_init(seg);
 
 #include "th02/res_init.cpp"

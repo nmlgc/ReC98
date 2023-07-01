@@ -75,7 +75,7 @@ public:
 		screen_x_t target_left,
 		vram_y_t target_y,
 		int speed_multiplied_by_8,
-		int col,
+		vc2 col,
 		int moveout_at_age,
 		int w
 	);

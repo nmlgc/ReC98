@@ -13,8 +13,8 @@ SHARED	ends
 SHARED_	segment word public 'CODE' use16
 	assume cs:g_SHARED
 
-public CDG_PUT_PLANE_ROLL_8
-cdg_put_plane_roll_8 proc far
+public @CDG_PUT_PLANE_ROLL_8$QIII12VRAM_PLANE_TURUC
+@cdg_put_plane_roll_8$qiii12vram_plane_turuc proc far
 	; (PASCAL calling convention, parameter list needs to be reversed here)
 	arg @@plane_dst:word, @@plane_src_id:word, @@slot:word, @@top:word, @@left:word
 	@@stride_backwards	equ <dx>
@@ -89,7 +89,7 @@ cdg_put_plane_roll_8 proc far
 	pop	si
 	pop	bp
 	retf	0Ah
-cdg_put_plane_roll_8 endp
+@cdg_put_plane_roll_8$qiii12vram_plane_turuc endp
 
 SHARED_	ends
 

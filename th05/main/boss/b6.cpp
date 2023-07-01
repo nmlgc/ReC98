@@ -17,9 +17,9 @@
 #include "th04/main/frames.h"
 #include "th04/main/pattern.hpp"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/math/randring.hpp"
 #include "th04/math/vector.hpp"
+extern "C" {
 #include "th04/snd/snd.h"
 #include "th04/main/bg.hpp"
 #include "th04/main/homing.hpp"
@@ -137,7 +137,7 @@ bool near pattern_dualspeed_rings(void)
 
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_RING;
 		bullet_template.angle = randring2_next16();
 		bullet_template.spread = 16;
@@ -178,7 +178,7 @@ static void near phase_2_3_with_pattern(void)
 			bullet_template.spawn_type = (
 				BST_CLOUD_BACKWARDS | BST_NO_SLOWDOWN
 			);
-			bullet_template.patnum = PAT_BULLET16_N_RED;
+			bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
 			bullet_template.group = BG_RING;
 			bullet_template.speed.set(3.75f);
 			bullet_template.spread = 16;
@@ -220,7 +220,7 @@ bool near pattern_dense_blue_stacks(void)
 {
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SPREAD_STACK_AIMED;
 		bullet_template.angle = 0x00;
 		bullet_template.set_spread(2, 0x04);
@@ -288,13 +288,13 @@ bool near pattern_wing_preparation(void)
 	}
 	if(wing_frames == 0) {
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SINGLE;
 		bullet_template_tune();
 		for(i = 0; i < 50; i++) {
 			bullet_template.origin.x.v = shinki_wing_random_x();
 			bullet_template.origin.y.v = shinki_wing_random_y();
-			bullet_template.angle = randring2_next8_ge_lt(0x10, 0x70);
+			bullet_template.angle = randring2_next8_mod_ge_lt(0x10, 0x70);
 			bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.5f, 5.5f);
 			bullets_add_regular();
 		}
@@ -332,7 +332,7 @@ void near pattern_random_rain_and_spreads_from_wings(void)
 	}
 	if((boss.phase_frame % 8) == 0) {
 		b6ball_template.origin.x.v = randring2_next16_mod(to_sp(PLAYFIELD_W));
-		b6ball_template.origin.y.v = randring2_next16_ge_lt_sp(
+		b6ball_template.origin.y.v = randring2_next16_mod_ge_lt_sp(
 			((2 / 23.0f) * PLAYFIELD_H), ((6 / 23.0f) * PLAYFIELD_H)
 		);
 		b6ball_template.angle = 0x40;
@@ -347,7 +347,7 @@ void near pattern_random_rain_and_spreads_from_wings(void)
 			boss.pos.cur.y.v - randring2_next16_mod(to_sp(BOSS_H))
 		);
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SPREAD_AIMED;
 		bullet_template.spread = 5;
 		bullet_template.spread_angle_delta = select_for_rank(
@@ -418,7 +418,7 @@ bool near pattern_wings_to_purple(void)
 		for(int i = 0; i < 16; i++) {
 			b6ball_template.origin.x.v = shinki_wing_random_x();
 			b6ball_template.origin.y.v = shinki_wing_random_y();
-			b6ball_template.angle = randring2_next8_ge_lt(0x20, 0x60);
+			b6ball_template.angle = randring2_next8_mod_ge_lt(0x20, 0x60);
 			b6ball_template.speed.v = randring2_next8_and_ge_lt_sp(2.0f, 6.0f);
 			b6balls_add();
 		}

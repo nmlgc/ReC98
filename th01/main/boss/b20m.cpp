@@ -414,7 +414,7 @@ void sariel_free(void)
 void near spawnray_unput_and_put(
 	screen_x_t origin_x, vram_y_t origin_y,
 	screen_x_t target_x, vram_y_t target_y,
-	int col
+	vc2 col
 )
 {
 	static screen_x_t target_prev_x = -PIXEL_NONE;
@@ -1131,7 +1131,7 @@ void near bg_transition(int image_id_new)
 	static screen_x_t cell_x;
 	static vram_y_t cell_y;
 	static vram_offset_t cell_vo;
-	static int stripe_col_base;
+	static vc2 stripe_col_base;
 	static int gust_id;
 
 	int row;
@@ -1262,7 +1262,7 @@ void near bg_transition(int image_id_new)
 void near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 {
 	// Also indicates whether a particle is alive.
-	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
+	static svc_t col[PARTICLE2X2_COUNT] = { 0 };
 
 	static double left[PARTICLE2X2_COUNT];
 	static double top[PARTICLE2X2_COUNT];
@@ -1538,7 +1538,7 @@ void near pattern_aimed_sling_clusters(void)
 void near particles2x2_wavy_unput_update_render()
 {
 	// Also indicates whether a particle is alive.
-	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
+	static svc_t col[PARTICLE2X2_COUNT] = { 0 };
 
 	static screen_x_t left[PARTICLE2X2_COUNT];
 	static vram_y_t top[PARTICLE2X2_COUNT];
@@ -2019,7 +2019,7 @@ void near dottedcircle_unput_update_render(
 	int frame_1based,
 	int interval,
 	pixel_t radius_step,
-	int col,
+	vc2 col,
 	pixel_t radius_initial,
 	int duration
 )
@@ -2052,7 +2052,7 @@ void near dottedcircle_unput_update_render(
 void near particles2x2_horizontal_unput_update_render(int frame)
 {
 	// Also indicates whether a particle is alive.
-	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
+	static svc_t col[PARTICLE2X2_COUNT] = { 0 };
 
 	static double left[PARTICLE2X2_COUNT];
 	static double top[PARTICLE2X2_COUNT];
@@ -2539,19 +2539,19 @@ void sariel_main(void)
 	}
 
 	unsigned int i;
-	const unsigned char flash_colors[3] = { 3, 4, 5 };
+	const vc_t flash_colors[3] = { 3, 4, 5 };
 
 	struct {
 		bool padding;
 		bool colliding_with_orb;
 
-		void update_and_render(const unsigned char (&flash_colors)[3]) {
+		void update_and_render(const vc_t (&flash_colors)[3]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				10000,
 				colliding_with_orb,
 				shot_hitbox_t(

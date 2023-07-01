@@ -2595,8 +2595,8 @@ sub_C1DD	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C5E7	proc near
+public @GRAPH_3_DIGIT_PUT$QIIU
+@graph_3_digit_put$qiiu	proc near
 
 var_6		= word ptr -6
 @@g_str		= byte ptr -4
@@ -2617,7 +2617,7 @@ arg_0		= word ptr  4
 		xor	dx, dx
 		div	bx
 		mov	[bp+arg_0], dx
-		cmp	byte_11713, 0
+		cmp	_graph_3_digit_put_as_fixed_2_dig, 0
 		jnz	short loc_C625
 		or	si, [bp+var_6]
 		or	si, si
@@ -2642,7 +2642,7 @@ loc_C625:
 		div	bx
 		mov	[bp+arg_0], dx
 		or	si, [bp+var_6]
-		mov	al, byte_11713
+		mov	al, _graph_3_digit_put_as_fixed_2_dig
 		mov	ah, 0
 		or	si, ax
 		or	si, si
@@ -2672,7 +2672,7 @@ loc_C658:
 		pop	si
 		leave
 		retn	6
-sub_C5E7	endp
+@graph_3_digit_put$qiiu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2771,99 +2771,93 @@ sub_C67F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @SKILL_APPLY_AND_GRAPH_PERCENTAGE$QIIUIUI
+@skill_apply_and_graph_percentage$qiiuiui	proc near
 
-sub_C729	proc near
-
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+@@fraction	= dword	ptr -6
+@@digits  	= word ptr -2
+@@share   	= word ptr  4
+@@total   	= word ptr  6
+@@top     	= word ptr  8
+@@left    	= word ptr  0Ah
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		cmp	[bp+arg_2], 0
+		mov	si, [bp+@@left]
+		mov	di, [bp+@@top]
+		cmp	[bp+@@total], 0
 		jz	short loc_C745
-		mov	[bp+var_6], 1000000
+		mov	[bp+@@fraction], 1000000
 		jmp	short loc_C74D
 ; ---------------------------------------------------------------------------
 
 loc_C745:
-		mov	[bp+var_6], 0
+		mov	[bp+@@fraction], 0
 
 loc_C74D:
-		mov	ax, [bp+arg_2]
-		cmp	ax, [bp+arg_0]
+		mov	ax, [bp+@@total]
+		cmp	ax, [bp+@@share]
 		jz	short loc_C786
-		cmp	[bp+arg_2], 0
+		cmp	[bp+@@total], 0
 		jz	short loc_C770
-		movzx	ebx, [bp+arg_2]
-		mov	eax, [bp+var_6]
+		movzx	ebx, [bp+@@total]
+		mov	eax, [bp+@@fraction]
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_6], eax
+		mov	[bp+@@fraction], eax
 		jmp	short loc_C778
 ; ---------------------------------------------------------------------------
 
 loc_C770:
-		mov	[bp+var_6], 0
+		mov	[bp+@@fraction], 0
 
 loc_C778:
-		movzx	eax, [bp+arg_0]
-		imul	eax, [bp+var_6]
-		mov	[bp+var_6], eax
+		movzx	eax, [bp+@@share]
+		imul	eax, [bp+@@fraction]
+		mov	[bp+@@fraction], eax
 
 loc_C786:
-		cmp	byte_116EA, 0
+		cmp	_skill_subtract, 0
 		jnz	short loc_C797
-		mov	eax, dword_1517E
-		add	eax, [bp+var_6]
+		mov	eax, _skill
+		add	eax, [bp+@@fraction]
 		jmp	short loc_C79F
 ; ---------------------------------------------------------------------------
 
 loc_C797:
-		mov	eax, dword_1517E
-		sub	eax, [bp+var_6]
+		mov	eax, _skill
+		sub	eax, [bp+@@fraction]
 
 loc_C79F:
-		mov	dword_1517E, eax
+		mov	_skill, eax
 		cmp	byte_1517C, 0
 		jz	short loc_C7B6
-		mov	eax, [bp+var_6]
+		mov	eax, [bp+@@fraction]
 		shr	eax, 2
 		mov	dword_15182, eax
 
 loc_C7B6:
-		mov	eax, [bp+var_6]
+		mov	eax, [bp+@@fraction]
 		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		push	si
-		push	di
-		push	ax
-		call	sub_C5E7
+		mov	[bp+@@digits], ax
+		call	@graph_3_digit_put$qiiu pascal, si, di, ax
 		mov	ebx, 10000
-		mov	eax, [bp+var_6]
+		mov	eax, [bp+@@fraction]
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_6], edx
-		mov	eax, [bp+var_6]
+		mov	[bp+@@fraction], edx
+		mov	eax, [bp+@@fraction]
 		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		mov	byte_11713, 1
+		mov	[bp+@@digits], ax
+		mov	_graph_3_digit_put_as_fixed_2_dig, 1
 		lea	ax, [si+48]
-		push	ax
-		push	di
-		push	[bp+var_2]
-		call	sub_C5E7
-		mov	byte_11713, 0
+		call	@graph_3_digit_put$qiiu pascal, ax, di, [bp+@@digits]
+		mov	_graph_3_digit_put_as_fixed_2_dig, 0
 		lea	ax, [si+48]
 		call	graph_putsa_fx pascal, ax, di, col_116E4, ds, offset aBd
 		lea	ax, [si+96]
@@ -2872,58 +2866,52 @@ loc_C7B6:
 		pop	si
 		leave
 		retn	8
-sub_C729	endp
+@skill_apply_and_graph_percentage$qiiuiui	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @GRAPH_FRACTION_OF_MILLION_PUT$QIIUL
+@graph_fraction_of_million_put$qiiul	proc near
 
-sub_C835	proc near
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-@@y		= word ptr  8
-arg_6		= word ptr  0Ah
+@@digits	= word ptr -2
+@@val   	= dword	ptr  4
+@@top   	= word ptr  8
+@@left  	= word ptr  0Ah
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_6]
-		mov	di, [bp+@@y]
-		mov	eax, [bp+arg_0]
+		mov	si, [bp+@@left]
+		mov	di, [bp+@@top]
+		mov	eax, [bp+@@val]
 		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		push	si
-		push	di
-		push	ax
-		call	sub_C5E7
+		mov	[bp+@@digits], ax
+		call	@graph_3_digit_put$qiiu pascal, si, di, ax
 		mov	ebx, 10000
-		mov	eax, [bp+arg_0]
+		mov	eax, [bp+@@val]
 		xor	edx, edx
 		div	ebx
-		mov	[bp+arg_0], edx
-		mov	eax, [bp+arg_0]
+		mov	[bp+@@val], edx
+		mov	eax, [bp+@@val]
 		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		mov	byte_11713, 1
+		mov	[bp+@@digits], ax
+		mov	_graph_3_digit_put_as_fixed_2_dig, 1
 		lea	ax, [si+48]
-		push	ax
-		push	di
-		push	[bp+var_2]
-		call	sub_C5E7
-		mov	byte_11713, 0
+		call	@graph_3_digit_put$qiiu pascal, ax, di, [bp+@@digits]
+		mov	_graph_3_digit_put_as_fixed_2_dig, 0
 		lea	ax, [si+48]
 		call	graph_putsa_fx pascal, ax, di, col_116E4, ds, offset aBd_0
 		pop	di
 		pop	si
 		leave
 		retn	8
-sub_C835	endp
+@graph_fraction_of_million_put$qiiul	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3041,15 +3029,15 @@ loc_C9B3:
 		mov	eax, [bp+var_4]
 		imul	eax, 100
 		mov	[bp+var_4], eax
-		add	dword_1517E, eax
+		add	_skill, eax
 		mov	ax, x_116E2
 		add	ax, 176
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 216
-		push	ax
-		pushd	[bp+var_4]
-		call	sub_C835
+		push	ax	; top
+		pushd	[bp+var_4]	; num
+		call	@graph_fraction_of_million_put$qiiul
 		mov	ax, x_116E2
 		add	ax, 272
 		push	ax
@@ -3178,7 +3166,7 @@ var_4		= dword	ptr -4
 
 		enter	4, 0
 		push	si
-		mov	dword_1517E, 0
+		mov	_skill, 0
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	graph_putsa_fx pascal, x_116E2, y_116E8, col_116E4, ds, offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
 		push	x_116E2
@@ -3310,26 +3298,26 @@ loc_CBE3:
 		call	sub_C67F
 		mov	ax, x_116E2
 		add	ax, 224
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 72
-		push	ax
+		push	ax	; top
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.miss_count]
 		mov	ah, 0
-		push	ax
-		call	sub_C5E7
+		push	ax	; num
+		call	@graph_3_digit_put$qiiu
 		mov	ax, x_116E2
 		add	ax, 224
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 96
-		push	ax
+		push	ax	; top
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.bombs_used]
 		mov	ah, 0
-		push	ax
-		call	sub_C5E7
+		push	ax	; num
+		call	@graph_3_digit_put$qiiu
 		mov	ax, x_116E2
 		add	ax, 272
 		push	ax
@@ -3378,80 +3366,80 @@ loc_CCC6:
 loc_CCD7:
 		mov	ax, x_116E2
 		add	ax, 176
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 120
-		push	ax
-		push	12800
+		push	ax	; top
+		push	12800	; total
 
 loc_CCE8:
 		les	bx, _resident
-		push	es:[bx+resident_t.std_frames]
-		call	sub_C729
+		push	es:[bx+resident_t.std_frames]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
 		mov	byte_1517C, 0
 		mov	ax, x_116E2
 		add	ax, 176
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 144
-		push	ax
+		push	ax	; top
 		les	bx, _resident
-		push	es:[bx+resident_t.enemies_gone]
-		push	es:[bx+resident_t.enemies_killed]
-		call	sub_C729
+		push	es:[bx+resident_t.enemies_gone]	; total
+		push	es:[bx+resident_t.enemies_killed]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
 		mov	ax, x_116E2
 		add	ax, 176
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 168
-		push	ax
+		push	ax	; top
 		les	bx, _resident
-		push	es:[bx+resident_t.items_spawned]
-		push	es:[bx+resident_t.items_collected]
-		call	sub_C729
+		push	es:[bx+resident_t.items_spawned]	; total
+		push	es:[bx+resident_t.items_collected]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
 		mov	ax, x_116E2
 		add	ax, 176
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 192
-		push	ax
+		push	ax	; top
 		les	bx, _resident
-		push	es:[bx+resident_t.point_items_collected]
-		push	es:[bx+resident_t.max_valued_point_items_collected]
-		call	sub_C729
+		push	es:[bx+resident_t.point_items_collected]	; total
+		push	es:[bx+resident_t.max_valued_point_items_collected]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
 		call	sub_C8AE
-		mov	byte_116EA, 1
+		mov	_skill_subtract, 1
 		mov	ax, x_116E2
 		add	ax, 176
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 240
-		push	ax
+		push	ax	; top
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.frames]
 		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
-		push	ax
+		push	ax	; total
 		mov	bx, word ptr _resident
 		mov	eax, es:[bx+resident_t.slow_frames]
 		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
-		push	ax
-		call	sub_C729
-		mov	byte_116EA, 0
+		push	ax	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
+		mov	_skill_subtract, 0
 		mov	ebx, 12
-		mov	eax, dword_1517E
+		mov	eax, _skill
 		cdq
 		idiv	ebx
-		mov	dword_1517E, eax
+		mov	_skill, eax
 		mov	eax, dword_15182
-		add	dword_1517E, eax
+		add	_skill, eax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.score_highest][7], 10
 		jb	short loc_CDCB
-		add	dword_1517E, 500000
+		add	_skill, 500000
 		jmp	short loc_CDF3
 ; ---------------------------------------------------------------------------
 
@@ -3459,10 +3447,10 @@ loc_CDCB:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.score_highest][6]
 		imul	eax, 5000
-		add	dword_1517E, eax
+		add	_skill, eax
 		movzx	eax, es:[bx+resident_t.score_highest][7]
 		imul	eax, 50000
-		add	dword_1517E, eax
+		add	_skill, eax
 
 loc_CDF3:
 		mov	al, _verdict_rank
@@ -3474,7 +3462,7 @@ loc_CDF3:
 		jmp	cs:off_D165[bx]
 
 loc_CE08:
-		sub	dword_1517E, 50000
+		sub	_skill, 50000
 		mov	[bp+var_4], 800000
 		jmp	loc_CEAF
 ; ---------------------------------------------------------------------------
@@ -3485,40 +3473,40 @@ loc_CE1C:
 ; ---------------------------------------------------------------------------
 
 loc_CE27:
-		mov	eax, dword_1517E
+		mov	eax, _skill
 		imul	eax, 5
-		mov	dword_1517E, eax
+		mov	_skill, eax
 		mov	ebx, 4
 		cdq
 		idiv	ebx
-		mov	dword_1517E, eax
-		add	dword_1517E, 150000
+		mov	_skill, eax
+		add	_skill, 150000
 		mov	[bp+var_4], 1200000
 		jmp	short loc_CEAF
 ; ---------------------------------------------------------------------------
 
 loc_CE55:
-		mov	eax, dword_1517E
+		mov	eax, _skill
 		imul	eax, 3
-		mov	dword_1517E, eax
+		mov	_skill, eax
 		mov	ebx, 2
 		cdq
 		idiv	ebx
-		mov	dword_1517E, eax
-		add	dword_1517E, 300000
+		mov	_skill, eax
+		add	_skill, 300000
 		mov	[bp+var_4], 1400000
 		jmp	short loc_CEAF
 ; ---------------------------------------------------------------------------
 
 loc_CE83:
-		mov	eax, dword_1517E
+		mov	eax, _skill
 		imul	eax, 3
-		mov	dword_1517E, eax
+		mov	_skill, eax
 		mov	ebx, 2
 		cdq
 		idiv	ebx
-		mov	dword_1517E, eax
-		add	dword_1517E, 250000
+		mov	_skill, eax
+		add	_skill, 250000
 		mov	[bp+var_4], 2000000
 
 loc_CEAF:
@@ -3533,13 +3521,13 @@ loc_CEAF:
 		jmp	cs:off_D159[bx]
 
 loc_CEC8:
-		add	dword_1517E, 50000
+		add	_skill, 50000
 		add	[bp+var_4], 100000
 		jmp	short loc_CF0A
 ; ---------------------------------------------------------------------------
 
 loc_CEDB:
-		add	dword_1517E, 25000
+		add	_skill, 25000
 		add	[bp+var_4], 50000
 		jmp	short loc_CF0A
 ; ---------------------------------------------------------------------------
@@ -3571,33 +3559,33 @@ loc_CF0A:
 ; ---------------------------------------------------------------------------
 
 loc_CF24:
-		add	dword_1517E, 50000
+		add	_skill, 50000
 		add	[bp+var_4], 100000
 		jmp	short loc_CF5B
 ; ---------------------------------------------------------------------------
 
 loc_CF37:
-		add	dword_1517E, 30000
+		add	_skill, 30000
 		add	[bp+var_4], 50000
 		jmp	short loc_CF5B
 ; ---------------------------------------------------------------------------
 
 loc_CF4A:
-		add	dword_1517E, 20000
+		add	_skill, 20000
 		add	[bp+var_4], 25000
 
 loc_CF5B:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_CF77
-		sub	dword_1517E, 200000
+		sub	_skill, 200000
 		sub	[bp+var_4], 100000
 
 loc_CF77:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.miss_count], 10
 		jb	short loc_CF8D
-		sub	dword_1517E, 300000
+		sub	_skill, 300000
 		jmp	short loc_CFA3
 ; ---------------------------------------------------------------------------
 
@@ -3605,13 +3593,13 @@ loc_CF8D:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.miss_count]
 		imul	eax, 30000
-		sub	dword_1517E, eax
+		sub	_skill, eax
 
 loc_CFA3:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bombs_used], 15
 		jb	short loc_CFB9
-		sub	dword_1517E, 225000
+		sub	_skill, 225000
 		jmp	short loc_CFCF
 ; ---------------------------------------------------------------------------
 
@@ -3619,33 +3607,33 @@ loc_CFB9:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.bombs_used]
 		imul	eax, 15000
-		sub	dword_1517E, eax
+		sub	_skill, eax
 
 loc_CFCF:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnb	short loc_CFF5
-		mov	eax, dword_1517E
+		mov	eax, _skill
 		imul	eax, 7
-		mov	dword_1517E, eax
+		mov	_skill, eax
 		mov	ebx, 8
 		cdq
 		idiv	ebx
-		mov	dword_1517E, eax
+		mov	_skill, eax
 
 loc_CFF5:
-		cmp	dword_1517E, 0
+		cmp	_skill, 0
 		jge	short loc_D008
-		mov	dword_1517E, 0
+		mov	_skill, 0
 		jmp	short loc_D01A
 ; ---------------------------------------------------------------------------
 
 loc_D008:
-		mov	eax, dword_1517E
+		mov	eax, _skill
 		cmp	eax, [bp+var_4]
 		jbe	short loc_D01A
 		mov	eax, [bp+var_4]
-		mov	dword_1517E, eax
+		mov	_skill, eax
 
 loc_D01A:
 		mov	byte_15187, 0
@@ -3657,12 +3645,12 @@ loc_D01A:
 		jbe	loc_D120
 		mov	ax, x_116E2
 		add	ax, 176
-		push	ax
+		push	ax	; left
 		mov	ax, y_116E8
 		add	ax, 272
-		push	ax
-		pushd	[dword_1517E]
-		call	sub_C835
+		push	ax	; top
+		pushd	[_skill]	; num
+		call	@graph_fraction_of_million_put$qiiul
 		mov	ax, x_116E2
 		add	ax, 272
 		push	ax
@@ -3676,18 +3664,18 @@ loc_D01A:
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
 		call	file_ropen
-		cmp	dword_1517E, 1500000
+		cmp	_skill, 1500000
 		jge	short loc_D0E1
-		cmp	dword_1517E, 0
+		cmp	_skill, 0
 		jnz	short loc_D08B
 		mov	si, 19h
 		jmp	short loc_D0D1
 ; ---------------------------------------------------------------------------
 
 loc_D08B:
-		cmp	dword_1517E, 1050000
+		cmp	_skill, 1050000
 		jge	short loc_D0AE
-		mov	eax, dword_1517E
+		mov	eax, _skill
 		mov	ebx, 50000
 		cdq
 		idiv	ebx
@@ -3698,14 +3686,14 @@ loc_D08B:
 ; ---------------------------------------------------------------------------
 
 loc_D0AE:
-		cmp	dword_1517E, 1200000
+		cmp	_skill, 1200000
 		jge	short loc_D0BE
 		mov	si, 3
 		jmp	short loc_D0D1
 ; ---------------------------------------------------------------------------
 
 loc_D0BE:
-		cmp	dword_1517E, 1350000
+		cmp	_skill, 1350000
 		jge	short loc_D0CE
 		mov	si, 2
 		jmp	short loc_D0D1
@@ -6594,9 +6582,7 @@ x_116E2	dw 336
 col_116E4	dw 2
 word_116E6	dw 6
 y_116E8	dw 48
-byte_116EA	db 0
 include th04/gaiji/verdict[data].asm
-byte_11713	db 0
 aU__0		db '点',0
 aBd		db '．',0
 aBu		db '％',0
@@ -6699,9 +6685,10 @@ include th03/hiscore/regist[bss].asm
 _rank	db ?
 playchar_15178	db ?
 		db 3 dup(?)
+public _skill
 byte_1517C	db ?
 		db ?
-dword_1517E	dd ?
+_skill	dd ?
 dword_15182	dd ?
 _verdict_rank	db ?
 byte_15187	db ?

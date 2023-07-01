@@ -222,7 +222,7 @@ void regist_put_initial(
 
 		#define col_and_fx_text (place_col | FX_WEIGHT_BOLD)
 
-		int place_col = (
+		vc_t place_col = (
 			(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
 		);
 		vram_y_t top = table_row_top(i);

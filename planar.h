@@ -3,6 +3,8 @@
  * Declarations for planar 4bpp graphics
  */
 
+#define PLANAR_H
+
 // 1bpp types, describing horizontal lines of 8, 16, or 32 pixels.
 typedef uint8_t dots8_t;
 typedef uint16_t dots16_t;
@@ -17,7 +19,9 @@ typedef int32_t sdots32_t;
 #define PRESHIFT BYTE_DOTS
 
 typedef enum {
-	PL_B, PL_R, PL_G, PL_E
+	PL_B, PL_R, PL_G, PL_E,
+
+	_vram_plane_t_FORCE_INT16 = 0x7FFF
 } vram_plane_t;
 
 // Abstracted dot and planar types, with their width defined by a macro.
@@ -198,6 +202,14 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 	for(int p = 0; p < PLANE_SIZE; p += (int)sizeof(dots32_t)) { \
 		*(dots32_t*)((dst) + p) = *(dots32_t*)((src) + p); \
 	}
+
+// Converts the given ([x], [y]) position to an x86 segment inside the B plane.
+// Only defined for paragraph-aligned values of [x], i.e., multiples of 128
+// pixels.
+#define grcg_segment(x, y) ( \
+	static_assert((((y * ROW_SIZE) + (x / BYTE_DOTS)) % 16) == 0), \
+	(SEG_PLANE_B + (((y * ROW_SIZE) + (x / BYTE_DOTS)) / 16)) \
+)
 
 #define grcg_chunk(vram_offset, bit_count) \
 	VRAM_CHUNK(B, vram_offset, bit_count)

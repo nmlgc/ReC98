@@ -1,6 +1,8 @@
 public _POWER_OVERFLOW_BONUS
 _POWER_OVERFLOW_BONUS label word
+	; Score for both small and big power items collected before full power
 	dw     1
+
 	dw     1
 	dw     2
 	dw     3

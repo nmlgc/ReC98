@@ -1,4 +1,4 @@
-#pragma option -zCmain_TEXT
+#pragma option -zCM4_RENDER_TEXT
 
 #include <stddef.h>
 #include "platform.h"

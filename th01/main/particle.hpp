@@ -32,7 +32,7 @@ struct CParticles {
 	// Runs a frame of the particle system, with new particles spawning from a
 	// random position on the [origin] edge(s) and flying into the opposite
 	// direction. init() must have been called before!
-	void unput_update_render(particle_origin_t origin, int col);
+	void unput_update_render(particle_origin_t origin, vc_t col);
 };
 
 extern CParticles Particles;

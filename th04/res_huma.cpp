@@ -19,7 +19,7 @@ const cfg_options_t OPTS_DEFAULT = {
 	SND_BGM_FM26, SND_SE_FM, true
 };
 
-void cfg_init(resident_t __seg *resident_sgm)
+void cfg_init(resident_t __seg *resident_seg)
 {
 	const char *fn = CFG_FN;
 	cfg_options_t opts = OPTS_DEFAULT;
@@ -45,7 +45,7 @@ recreate:
 		file_append(fn);
 		file_seek(offsetof(cfg_t, resident), 0);
 	}
-	file_write(&resident_sgm, sizeof(resident_sgm));
+	file_write(&resident_seg, sizeof(resident_seg));
 	file_write(&debug, sizeof(debug));
 	// Yes, this is uninitialized if the file didn't exist!
 	file_write(&cfg_in.opts_sum, sizeof(cfg_in.opts_sum));
@@ -58,7 +58,7 @@ recreate:
 #define optimization_barrier()
 
 #define RES_INIT_BOTTOM { \
-	cfg_init(sgm); \
+	cfg_init(seg); \
 	\
 	resident_t far *resident; \
 	resident = reinterpret_cast<resident_t far *>(resident_bytes); \

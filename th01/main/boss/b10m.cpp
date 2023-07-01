@@ -296,7 +296,7 @@ void yuugenmagan_load(void)
 
 void yuugenmagan_setup(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	grp_palette_load_show("boss2.grp");
@@ -1208,7 +1208,7 @@ inline void conditionally_reset_missiles(bool cond) {
 
 void yuugenmagan_main(void)
 {
-	const unsigned char flash_colors[2] = { 1, 11 };
+	const vc_t flash_colors[2] = { 1, 11 };
 	int i;
 
 	static int invincibility_frame;
@@ -1310,7 +1310,7 @@ void yuugenmagan_main(void)
 	static struct {
 		bool16 invincible;
 
-		void update_and_render(const unsigned char (&flash_colors)[2]) {
+		void update_and_render(const vc_t (&flash_colors)[2]) {
 			#define hittest(eye) ( \
 				(eye.hittest_orb() == true) && (eye.image() != C_HIDDEN) \
 			)
@@ -1320,7 +1320,7 @@ void yuugenmagan_main(void)
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				5000,
 				(
 					hittest(eye_west) ||
@@ -1805,8 +1805,9 @@ void yuugenmagan_main(void)
 			pentagram.center.x = pentagram.x[0];
 			pentagram.radius = PENTAGRAM_RADIUS_FINAL;
 
-			// ZUN bloat: Done for every rendering call in phase 12.
-			// (And also wrong, since PENTAGRAM_ANGLE_INITIAL is different.)
+			// ZUN bug: This might look redundant, but it sets the coordinates
+			// for the first unblitting call in phase 12. Which are wrong,
+			// because PENTAGRAM_ANGLE_INITIAL is different.
 			pentagram_corners_set_regular(i, 0x00);
 
 			// Work around the inaccuracies of 8-bit angles and make sure that

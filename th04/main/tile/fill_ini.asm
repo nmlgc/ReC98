@@ -8,7 +8,7 @@ tiles_fill_initial	proc near
 	push	si
 	push	ds
 if GAME eq 5
-	mov	@@section, _tile_section_ptr
+	mov	@@section, _std_map_section_p
 	sub	@@section, (TILE_ROWS_PER_SECTION - 1)
 else
 	xor	@@section, @@section

@@ -2530,7 +2530,7 @@ include th04/hardware/grppsafx.asm
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
 	extern CDG_PUT_8:proc
-	extern VECTOR1_AT:proc
+	extern @POLAR$QIII:proc
 	extern _piano_render:proc
 	extern _piano_setup_and_put_initial:proc
 	extern BGIMAGE_PUT_RECT:proc

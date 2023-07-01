@@ -21,12 +21,12 @@ const cfg_options_t OPTS_DEFAULT = {
 	SND_BGM_FM26, SND_SE_FM, true
 };
 
-char cfg_init(resident_t __seg *resident_sgm)
+char cfg_init(resident_t __seg *resident_seg)
 {
 	const char *fn = CFG_FN;
 	cfg_options_t opts = OPTS_DEFAULT;
 	cfg_t cfg_in;
-	resident_t far *resident = resident_sgm;
+	resident_t far *resident = resident_seg;
 
 	if(!file_ropen(fn)) {
 recreate:
@@ -76,7 +76,7 @@ recreate:
 		}
 		file_seek(offsetof(cfg_t, resident), 0);
 	}
-	if(!file_write(&resident_sgm, sizeof(resident_sgm))) {
+	if(!file_write(&resident_seg, sizeof(resident_seg))) {
 		return 1;
 	}
 	file_write(&debug, sizeof(debug));
@@ -94,8 +94,8 @@ recreate:
 #define INITIALIZED "おじゃましまーす。"
 
 #define RES_INIT_BOTTOM { \
-	if(cfg_init(sgm)) { \
-		dos_free(sgm); \
+	if(cfg_init(seg)) { \
+		dos_free(seg); \
 		dos_puts2("ファイルが書き込めないの～\n\n"); \
 		return 1; \
 	} \

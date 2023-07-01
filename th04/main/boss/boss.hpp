@@ -92,22 +92,8 @@ bool near boss_hittest_shots(void);
 void near boss_hittest_shots_invincible(void);
 // ------
 
-/// Explosions
-/// ----------
-#define EXPLOSION_SMALL_COUNT 2
-
-struct explosion_t {
-	bool alive;
-	unsigned char age;
-	SPPoint center;
-	SPPoint radius_cur;
-	SPPoint radius_delta;
-	int8_t unused; // ZUN bloat
-	// Offset to add to the angle for the Y coordinate, turning the circle
-	// into a slanted ellipse. See https://www.desmos.com/calculator/faeefi6w1u
-	// for a plot of the effect.
-	unsigned char angle_offset;
-};
+// Explosions
+// ----------
 
 enum explosion_type_t {
 	ET_NONE = -1,
@@ -119,9 +105,6 @@ enum explosion_type_t {
 
 	_explosion_type_t_FORCE_INT16 = 0x7FFF
 };
-
-extern explosion_t explosions_small[EXPLOSION_SMALL_COUNT];
-extern explosion_t explosions_big;
 
 void pascal near boss_explode_small(explosion_type_t type);
 #if (GAME == 5)
@@ -139,7 +122,7 @@ void near explosions_small_update_and_render(void);
 void near explosions_big_update_and_render(void);
 
 void explosions_small_reset(void);
-/// ----------
+// ----------
 
 void near boss_items_drop();
 

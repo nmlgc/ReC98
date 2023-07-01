@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include <stddef.h>
 #include "platform.h"
@@ -40,11 +40,11 @@ extern mrs_t far *mrs_images[MRS_SLOT_COUNT];
 	var <<= 2; \
 }
 
-// Points [reg_sgm]:[reg_off] to the alpha plane of the .MRS image in the
+// Points [reg_seg]:[reg_off] to the alpha plane of the .MRS image in the
 // given [slot].
-#define mrs_slot_assign(reg_sgm, reg_off, slot) { \
+#define mrs_slot_assign(reg_seg, reg_off, slot) { \
 	mrs_slot_offset_to(_BX, slot); \
-	asm { l##reg_sgm reg_off, mrs_images[bx]; } \
+	asm { l##reg_seg reg_off, mrs_images[bx]; } \
 }
 
 // Single iteration across [row_dword_w] 32-dot units of a .MRS image, from
@@ -101,10 +101,10 @@ void pascal mrs_load(int slot, const char *fn)
 
 void pascal mrs_free(int slot)
 {
-	#define mrs_image_ptr_word(slot_offset, off_or_sgm) \
+	#define mrs_image_ptr_word(slot_offset, off_or_seg) \
 		*(reinterpret_cast<uint16_t near *>( \
 			reinterpret_cast<uint16_t>(mrs_images) + slot_offset \
-		) + off_or_sgm)
+		) + off_or_seg)
 	mrs_slot_offset_to(_BX, slot);
 	_AX = mrs_image_ptr_word(_BX, 1);
 	// Yes, |=, not =, to an uninitialized register. The entire reason why we

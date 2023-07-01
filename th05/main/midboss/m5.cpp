@@ -27,14 +27,11 @@ static const pixel_t MIDBOSS5_H = 64;
 void pascal near midboss5_render(void)
 {
 	if(midboss.phase < PHASE_EXPLODE_BIG) {
-		// ZUN quirk: Should refer to the correct height of the midboss rather
-		// than hardcoding a wrong 32 pixels. As a result, this midboss plops
-		// into view rather suddenly during its initial entrance from the top
-		// of the playfield. Fixed in uth05win.
-		if(midboss.pos.cur.y < to_sp(PLAYFIELD_TOP - (32 / 2))) {
+		if(playfield_clip_center_top_large_roll(
+			midboss.pos.cur.y, MIDBOSS5_H
+		)) {
 			return;
 		}
-
 		screen_x_t left = midboss.pos.cur.to_screen_left(MIDBOSS5_W);
 		vram_y_t top = midboss.pos.cur.to_vram_top_scrolled_seg1(MIDBOSS5_H);
 		midboss_put_generic(left, top, midboss.sprite);

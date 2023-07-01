@@ -1,6 +1,5 @@
-; void pascal near randring_fill(void);
-public RANDRING_FILL
-randring_fill	proc near
+public @randring_fill$qv
+@randring_fill$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -15,4 +14,4 @@ randring_fill	proc near
 	pop	si
 	pop	bp
 	ret
-randring_fill	endp
+@randring_fill$qv endp

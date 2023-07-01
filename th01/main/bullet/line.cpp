@@ -31,7 +31,7 @@ void linebullet_put_and_hittest(
 	screen_y_t top,
 	screen_x_t right,
 	screen_y_t bottom,
-	int col
+	vc2 col
 )
 {
 	graph_r_line(left, top, right, bottom, col);
@@ -43,7 +43,7 @@ void linebullet_put_patterned_and_hittest(
 	screen_y_t top,
 	screen_x_t right,
 	screen_y_t bottom,
-	int col,
+	vc2 col,
 	dots16_t pattern
 )
 {

@@ -102,8 +102,8 @@ struct SPPoint : public SPPointBase<Subpixel> {
 };
 
 // 8-bit (Q4.4)
-typedef SubpixelBase<subpixel_length_8_t, subpixel_length_8_t> SubpixelLength8;
-typedef SubpixelBase<char, char> Subpixel8;
+typedef SubpixelBase<subpixel_length_8_t, pixel_length_8_t> SubpixelLength8;
+typedef SubpixelBase<char, pixel_delta_8_t> Subpixel8;
 typedef SPPointBase<Subpixel8> SPPoint8;
 // -------------------------------------------------------------------------
 

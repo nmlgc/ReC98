@@ -121,7 +121,7 @@ loc_B70D:
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -128
 	mov	@@draw_x, ax
 	push	[si+zunsoft_pyro_t.origin.y]
@@ -131,7 +131,7 @@ loc_B70D:
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -128
 	jmp	short loc_B799
 
@@ -147,7 +147,7 @@ loc_B754:
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -256
 	mov	@@draw_x, ax
 	push	[si+zunsoft_pyro_t.origin.y]
@@ -157,7 +157,7 @@ loc_B754:
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -256
 
 loc_B799:
@@ -321,7 +321,7 @@ endif
 @@more_pyros?:
 	cmp	si, ZUNSOFT_PYRO_COUNT
 	jl	short @@next_pyro
-	call	snd_delay_until_measure pascal, (2 shl 16)
+	call	snd_delay_until_measure pascal, (2 shl 16) or 0
 	mov	PaletteTone, 100
 	call	palette_show
 	call	super_entry_bfnt pascal, ds, offset aZun02_bft

@@ -7,10 +7,10 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th03/math/polar.hpp"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/math/randring.hpp"
-#include "th04/math/vector.hpp"
+extern "C" {
 #include "th04/snd/snd.h"
 #include "th04/main/homing.hpp"
 #include "th04/main/phase.hpp"
@@ -48,15 +48,15 @@ void near midboss1_move(void)
 	midboss.pos.prev.x = midboss.pos.cur.x;
 	midboss.pos.prev.y = midboss.pos.cur.y;
 
-	midboss.pos.cur.x.v = vector1_at(
+	midboss.pos.cur.x.v = polar_x(
 		to_sp(playfield_fraction_x(1 / 2.0f)),
-		distance_from_center,
-		CosTable8[midboss.angle]
+		distance_from_center.v,
+		midboss.angle
 	);
-	midboss.pos.cur.y.v = vector1_at(
+	midboss.pos.cur.y.v = polar_y(
 		to_sp(playfield_fraction_y(6 / 23.0f)),
-		distance_from_center,
-		SinTable8[midboss.angle]
+		distance_from_center.v,
+		midboss.angle
 	);
 	midboss.angle -= 0x02;
 }
@@ -83,14 +83,14 @@ void near midboss1_pattern(void)
 		bullet_template.group = BG_SINGLE;
 		bullet_template.spawn_type = BST_CLOUD_FORWARDS;
 		bullet_template.speed.set(1.5f);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template_tune();
 		bullet_template.angle = randring2_next16();
-		bullet_template.origin.x.v = vector1_at(
-			midboss.pos.cur.x, MIDBOSS1_W, CosTable8[bullet_template.angle]
+		bullet_template.origin.x.v = polar_x(
+			midboss.pos.cur.x, MIDBOSS1_W, bullet_template.angle
 		);
-		bullet_template.origin.y.v = vector1_at(
-			midboss.pos.cur.y, MIDBOSS1_H, SinTable8[bullet_template.angle]
+		bullet_template.origin.y.v = polar_y(
+			midboss.pos.cur.y, MIDBOSS1_H, bullet_template.angle
 		);
 		bullets_add_regular();
 	}

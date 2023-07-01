@@ -1,10 +1,7 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
-extern "C" {
 #include "platform.h"
-#include "pc98.h"
 #include "master.hpp"
-#include "th01/math/vector.hpp"
 #include "th03/math/vector.hpp"
 
 // Completely disgusting. TH02's version was fine!
@@ -25,6 +22,7 @@ extern "C" {
 	ret_x = (static_cast<long>(_EAX * _EDX) >> 8); \
 	ret_y = (static_cast<long>(static_cast<int16_t>(_SI) * _ECX) >> 8);
 
+extern "C" {
 void pascal vector2(int &ret_x, int &ret_y, unsigned char angle, int length)
 {
 	vector2_raw(ret_x, ret_y, angle, length);
@@ -45,5 +43,4 @@ void pascal vector2_between_plus(
 	_SI = length;
 	vector2_raw(ret_x, ret_y, (iatan2((y2 - y1), (x2 - x1)) + plus_angle), _SI);
 }
-
 }

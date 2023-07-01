@@ -2637,7 +2637,7 @@ SHARED	segment	word public 'CODE' use16
 	extern PI_PUT_8:proc
 	extern PI_LOAD:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
-	extern VECTOR1_AT:proc
+	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern CDG_PUT_NOCOLORS_8:proc
 	extern SND_DETERMINE_MODES:proc

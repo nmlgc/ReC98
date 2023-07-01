@@ -30,9 +30,12 @@ static const pixel_t SHINKI_WING_H = 96;
 typedef enum {
 	/// Stage-independent
 	/// =================
+	// mikod.bft
+	// ---------
+	PAT_EXPLOSION_BIG = 3,
 	// miko32.bft
 	// ----------
-	PAT_ENEMY_KILL = 4,
+	PAT_ENEMY_KILL,
 	PAT_ENEMY_KILL_last = (PAT_ENEMY_KILL + ENEMY_KILL_CELS - 1),
 	PAT_CLOUD_BULLET16_BLUE,
 	PAT_CLOUD_BULLET16_BLUE_last = (PAT_CLOUD_BULLET16_BLUE + BULLET_CLOUD_CELS - 1),
@@ -45,15 +48,16 @@ typedef enum {
 	// --------------------------------------------------
 	// miko16.bft / st06_16.bft
 	// ------------------------
-	PAT_ITEM = 36,
+	TINY_MIKO16_START = 36,
+	PAT_ITEM = TINY_MIKO16_START,
 
 	// Non-directional bullets
-	PAT_BULLET16_N_BLUE = 44,
+	PAT_BULLET16_N_BLUE = 44, // Should not be used in patterns!
 	PAT_BULLET16_N_BALL_BLUE = PAT_BULLET16_N_BLUE,
 	PAT_BULLET16_N_OUTLINED_BALL_BLUE,
 	PAT_BULLET16_N_SMALL_BALL_BLUE,
 	PAT_BULLET16_N_CROSS_BLUE,	// Green during the EX-Alice battle
-	PAT_BULLET16_N_RED,
+	PAT_BULLET16_N_RED, // Should not be used in patterns!
 	PAT_BULLET16_N_BALL_RED = PAT_BULLET16_N_RED,
 	PAT_BULLET16_N_OUTLINED_BALL_RED,
 	PAT_BULLET16_N_SMALL_BALL_RED,
@@ -82,12 +86,14 @@ typedef enum {
 	PAT_DECAY_BULLET16,
 	PAT_DECAY_BULLET16_last = (PAT_DECAY_BULLET16 + BULLET_DECAY_CELS - 1),
 
+	PAT_EXPLOSION_SMALL,
+
 	PAT_FIREWAVE_LEFT = 168,	// st06_16.bft only
 	PAT_FIREWAVE_RIGHT,     	// st06_16.bft only
 
-	PAT_EXPLOSION_SMALL,
+	TINY_MIKO16_END = 172,
 
-	PAT_PARTICLE = 172,
+	PAT_PARTICLE = TINY_MIKO16_END,
 	PAT_PARTICLE_last = (PAT_PARTICLE + PARTICLE_CELS - 1),
 	PAT_MIKO16_UNUSED_0,
 	PAT_MIKO16_UNUSED_1,
@@ -95,7 +101,7 @@ typedef enum {
 	// ------------------------
 	// bomb0.bft / bomb3.bft
 	// ---------------------
-	PAT_PLAYCHAR_BOMB,
+	PAT_PLAYCHAR_BOMB_SHAPE,
 	// ---------------------
 	/// =================
 
@@ -202,6 +208,8 @@ typedef enum {
 	TINY_B6BALL_END,
 	/// -------
 	/// =======
+
+	PAT_MAX = 320,
 
 	_main_patnum_t_FORCE_INT16 = 0x7FFF,
 } main_patnum_t;

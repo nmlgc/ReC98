@@ -382,6 +382,12 @@ These cases should gradually be removed as development goes along, though.
   CamelCase regardless of whether they have methods or not.
 * Fallback naming scheme for space-saving `union`s whose members have wildly
   unrelated semantics: `u1`, `u2`, `u3`, …
+* x86 Real Mode segments and offsets: `seg`/`off`
+  * This collides nicely with Turbo C++'s `__seg` keyword, `#pragma codeseg`,
+    the standard `FP_SEG` and `FP_OFF` macros, and comments about memory
+    segmentation, which limits the strings to grep for. Therefore, `seg` and
+    `off` should *not* be used for anything unrelated to x86 memory
+    segmentation.
 
 ## Identifiers from ZUN's original code
 

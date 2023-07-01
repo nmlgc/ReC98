@@ -386,8 +386,8 @@ void start_game(bool new_game)
 /// ---------
 /// Terminology: "Choice" = Top-level menu selection (not amount of values)
 
-static const uint4_t COL_ACTIVE = 15;
-static const uint4_t COL_INACTIVE = 5;
+static const vc_t COL_ACTIVE = 15;
+static const vc_t COL_INACTIVE = 5;
 static const int16_t FX = FX_WEIGHT_BLACK;
 
 // Coordinates
@@ -459,7 +459,7 @@ void title_hit_key_put(int frame)
 	}
 }
 
-void main_choice_unput_and_put(int choice, int col)
+void main_choice_unput_and_put(int choice, vc2 col)
 {
 	const shiftjis_t* CHOICES[MAIN_CHOICE_COUNT] = MAIN_CHOICES;
 
@@ -470,7 +470,7 @@ void main_choice_unput_and_put(int choice, int col)
 	graph_putsa_fx(left, top, (col | FX), CHOICES[choice]);
 }
 
-void option_choice_unput_and_put(int choice, int col)
+void option_choice_unput_and_put(int choice, vc2 col)
 {
 	const shiftjis_t* CHOICES[OPTION_CHOICE_COUNT] = OPTION_CHOICES;
 	const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS_CENTERED;
@@ -511,7 +511,7 @@ void option_choice_unput_and_put(int choice, int col)
 
 int8_t music_sel = 0;
 
-void music_choice_unput_and_put(int choice, int col)
+void music_choice_unput_and_put(int choice, vc2 col)
 {
 	const shiftjis_t* CHOICES[MUSIC_CHOICE_COUNT]  = MUSIC_CHOICES;
 	const shiftjis_t* TITLES[TRACK_COUNT]  = MUSIC_TITLES;
