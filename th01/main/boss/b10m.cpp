@@ -296,7 +296,7 @@ void yuugenmagan_load(void)
 
 void yuugenmagan_setup(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	grp_palette_load_show("boss2.grp");
@@ -1011,54 +1011,54 @@ inline screen_y_t pentagram_shrink_y(eye_flag_t eye, const pixel_t& distance) {
 	return (eye_north.iris_top() + (distance / DIVISOR_NORTH));
 }
 
-inline void pentagram_shrink_unput(
-	eye_flag_t eye_1, eye_flag_t eye_2, const pixel_t& distance
-) {
-	linebullet_unput(
-		pentagram_shrink_x(eye_1, distance),
-		pentagram_shrink_y(eye_1, distance),
-		pentagram_shrink_x(eye_2, distance),
-		pentagram_shrink_y(eye_2, distance)
-	);
+void pentagram_shrink_unput(screen_point_t p1, screen_point_t p2)
+{
+	linebullet_unput(p1.x, p1.y, p2.x, p2.y);
 }
 
-inline void pentagram_shrink_put(
-	eye_flag_t eye_1, eye_flag_t eye_2, const pixel_t& distance
-) {
-	linebullet_put_and_hittest(
-		pentagram_shrink_x(eye_1, distance),
-		pentagram_shrink_y(eye_1, distance),
-		pentagram_shrink_x(eye_2, distance),
-		pentagram_shrink_y(eye_2, distance),
-		V_WHITE
-	);
+void pentagram_shrink_put(screen_point_t p1, screen_point_t p2)
+{
+	linebullet_put_and_hittest(p1.x, p1.y, p2.x, p2.y, V_WHITE);
 }
 
-#define pentagram_shrink(func, distance) { \
-	func(EF_NORTH, EF_SOUTHWEST, distance); \
-	func(EF_SOUTHWEST, EF_EAST, distance); \
-	func(EF_EAST, EF_WEST, distance); \
-	func(EF_WEST, EF_SOUTHEAST, distance); \
-	func(EF_SOUTHEAST, EF_NORTH, distance); \
+void pentagram_shrink(
+	void (*func)(screen_point_t, screen_point_t), pixel_t distance
+)
+{
+	screen_point_t p[EYE_COUNT];
+	p[0].x = pentagram_shrink_x(EF_NORTH, distance);
+	p[0].y = pentagram_shrink_y(EF_NORTH, distance);
+	p[1].x = pentagram_shrink_x(EF_SOUTHWEST, distance);
+	p[1].y = pentagram_shrink_y(EF_SOUTHWEST, distance);
+	p[2].x = pentagram_shrink_x(EF_EAST, distance);
+	p[2].y = pentagram_shrink_y(EF_EAST, distance);
+	p[3].x = pentagram_shrink_x(EF_WEST, distance);
+	p[3].y = pentagram_shrink_y(EF_WEST, distance);
+	p[4].x = pentagram_shrink_x(EF_SOUTHEAST, distance);
+	p[4].y = pentagram_shrink_y(EF_SOUTHEAST, distance);
+
+	int i;
+	for(i = 0; i < (EYE_COUNT - 1); i++) {
+		func(p[i], p[i + 1]);
+	}
+	func(p[i], p[0]);
 }
 // ----------------
 
 // Regular pentagram, with spin and slam phases
 // --------------------------------------------
 
-#define pentagram_corners_set_regular(i, angle_offset) { \
-	for(i = 0; i < PENTAGRAM_POINTS; i++) { \
-		pentagram.x[i] = polar_x( \
-			pentagram.center.x, \
-			pentagram.radius, \
-			(angle_offset + (i * (0x100 / PENTAGRAM_POINTS))) \
-		); \
-		pentagram.y[i] = polar_y( \
-			pentagram.center.y, \
-			pentagram.radius, \
-			(angle_offset + (i * (0x100 / PENTAGRAM_POINTS))) \
-		); \
-	} \
+void pentagram_corners_set_regular(unsigned char angle_offset)
+{
+	for(int i = 0; i < PENTAGRAM_POINTS; i++) {
+		pentagram.x[i] = polar_x(
+			pentagram.center.x, pentagram.radius, angle_offset
+		);
+		pentagram.y[i] = polar_y(
+			pentagram.center.y, pentagram.radius, angle_offset
+		);
+		angle_offset += (0x100 / PENTAGRAM_POINTS);
+	}
 }
 
 // Not "subphases", as these run independent of [boss_phase] – that one does
@@ -1094,13 +1094,10 @@ enum pentagram_attack_phase_t {
 )
 
 // Also performs collision detection.
-void near pentagram_regular_unput_update_render(
-	int angle_offset // ACTUAL TYPE: unsigned char
-)
+void near pentagram_regular_unput_update_render(unsigned char angle_offset)
 {
-	int i;
 	pentagram.unput();
-	pentagram_corners_set_regular(i, angle_offset);
+	pentagram_corners_set_regular(angle_offset);
 	pentagram.put_and_hittest();
 }
 
@@ -1208,8 +1205,7 @@ inline void conditionally_reset_missiles(bool cond) {
 
 void yuugenmagan_main(void)
 {
-	const unsigned char flash_colors[2] = { 1, 11 };
-	int i;
+	const vc_t flash_colors[2] = { 1, 11 };
 
 	static int invincibility_frame;
 
@@ -1310,7 +1306,7 @@ void yuugenmagan_main(void)
 	static struct {
 		bool16 invincible;
 
-		void update_and_render(const unsigned char (&flash_colors)[2]) {
+		void update_and_render(const vc_t (&flash_colors)[2]) {
 			#define hittest(eye) ( \
 				(eye.hittest_orb() == true) && (eye.image() != C_HIDDEN) \
 			)
@@ -1320,7 +1316,7 @@ void yuugenmagan_main(void)
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				5000,
 				(
 					hittest(eye_west) ||
@@ -1771,25 +1767,6 @@ void yuugenmagan_main(void)
 				pentagram.x[0] = pentagram_shrink_x(EF_NORTH, u1.distance);
 				pentagram.y[0] = pentagram_shrink_y(EF_NORTH, u1.distance);
 
-				// ZUN bloat: All further coordinate assignments are unused and
-				// can be deleted. The values are never read in this phase, and
-				// phase 12 directly assigns regular polygon coordinates before
-				// rendering.
-				// Correct ones, too: This seems to be a relic from a time when
-				// ZUN stored pentagram corner coordinates in interleaved line
-				// order (north → southwest → east → west → southeast) rather
-				// than in (counter-)clockwise angle order. Therefore, these
-				// wouldn't even result in a pentagram with the rendering
-				// function that ended up in the final game.
-				pentagram.x[1] = pentagram_shrink_x(EF_SOUTHWEST, u1.distance);
-				pentagram.y[1] = pentagram_shrink_y(EF_SOUTHWEST, u1.distance);
-				pentagram.x[2] = pentagram_shrink_x(EF_EAST, u1.distance);
-				pentagram.y[2] = pentagram_shrink_y(EF_EAST, u1.distance);
-				pentagram.x[3] = pentagram_shrink_x(EF_WEST, u1.distance);
-				pentagram.y[3] = pentagram_shrink_y(EF_WEST, u1.distance);
-				pentagram.x[4] = pentagram_shrink_x(EF_SOUTHEAST, u1.distance);
-				pentagram.y[4] = pentagram_shrink_y(EF_SOUTHEAST, u1.distance);
-
 				u2.subphase = P11_DONE;
 			}
 		}
@@ -1805,9 +1782,10 @@ void yuugenmagan_main(void)
 			pentagram.center.x = pentagram.x[0];
 			pentagram.radius = PENTAGRAM_RADIUS_FINAL;
 
-			// ZUN bloat: Done for every rendering call in phase 12.
-			// (And also wrong, since PENTAGRAM_ANGLE_INITIAL is different.)
-			pentagram_corners_set_regular(i, 0x00);
+			// ZUN bug: This might look redundant, but it sets the coordinates
+			// for the first unblitting call in phase 12. Which are wrong,
+			// because PENTAGRAM_ANGLE_INITIAL is different.
+			pentagram_corners_set_regular(0x00);
 
 			// Work around the inaccuracies of 8-bit angles and make sure that
 			// at least the lateral corners perfectly line up vertically.
@@ -1927,7 +1905,7 @@ void yuugenmagan_main(void)
 			((boss_phase_frame % pattern_interval) == 0) &&
 			!pentagram_in_slam_phase(pentagram_.phase)
 		) {
-			for(i = 0; i < PENTAGRAM_POINTS; i++) {
+			for(int i = 0; i < PENTAGRAM_POINTS; i++) {
 				angle.tmp = iatan2(
 					(pentagram.y[i] - pentagram.center.y),
 					(pentagram.x[i] - pentagram.center.x)

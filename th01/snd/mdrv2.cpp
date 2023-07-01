@@ -66,21 +66,21 @@ void near mdrv2_load(const char *fn, char func)
 	if(mdrv2_active) {
 		int handle = open(fn, (O_BINARY | O_RDONLY));	// opens a DOS handle
 		int length = filelength(handle);
-		seg_t sgm;
-		int ofs;
+		seg_t block_seg;
+		uint16_t block_off;
 		void far *block;
 
 		block = farmalloc(length);
-		sgm = FP_SEG(block);
-		ofs = FP_OFF(block);
+		block_seg = FP_SEG(block);
+		block_off = FP_OFF(block);
 
 		_asm {
 			push	ds
 			mov	ax, 0x3F00
 			mov	bx, handle
 			mov	cx, length
-			mov	ds, sgm
-			mov	dx, ofs
+			mov	ds, block_seg
+			mov	dx, block_off
 		}
 		geninterrupt(0x21);
 		_asm { pop	ds; }
@@ -89,8 +89,8 @@ void near mdrv2_load(const char *fn, char func)
 		_asm {
 			push	ds
 			mov	ah, func
-			mov	ds, sgm
-			mov	si, ofs
+			mov	ds, block_seg
+			mov	si, block_off
 		}
 		geninterrupt(MDRV2);
 		_asm { pop	ds; }

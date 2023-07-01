@@ -565,7 +565,7 @@ void elis_load(void)
 
 void elis_setup(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	ent_still_or_wave.pos_set(BASE_LEFT, BASE_TOP);
@@ -858,7 +858,7 @@ int pattern_pellets_along_circle(void)
 
 // Draws a line from [angle_1] to [angle_2] on the star circle around Elis.
 void near starcircle_line_put(
-	unsigned char angle_1, unsigned char angle_2, int col
+	unsigned char angle_1, unsigned char angle_2, vc_t col
 )
 {
 	screen_x_t p1_x = polar_x(form_center_x(F_GIRL), BIGCIRCLE_RADIUS, angle_1);
@@ -894,7 +894,7 @@ int phase_1(int id)
 	return CHOOSE_NEW;
 }
 
-void near star_of_david_put(int col)
+void near star_of_david_put(vc_t col)
 {
 	starcircle_line_put(-0x40, +0x16, col);
 	starcircle_line_put(-0x40, +0x6A, col);
@@ -1763,7 +1763,7 @@ void elis_main(void)
 				hit.invincible, \
 				boss_hp, \
 				flash_colors, \
-				sizeof(flash_colors), \
+				(sizeof(flash_colors) / sizeof(flash_colors[0])), \
 				7000, \
 				(form == F_GIRL) \
 					? ent_still_or_wave.hittest_orb() \
@@ -1830,7 +1830,7 @@ void elis_main(void)
 	screen_x_t head_left;
 	screen_y_t head_top;
 	bool16 trails_offscreen;
-	const unsigned char flash_colors[] = { 3, 6, 8, 2 };
+	const vc_t flash_colors[] = { 3, 6, 8, 2 };
 	unsigned char angle;
 
 	Missiles.unput_update_render();

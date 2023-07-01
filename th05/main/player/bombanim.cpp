@@ -6,6 +6,7 @@
 #include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
+extern "C" {
 #include "th04/main/circle.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/main/player/bomb.hpp"
@@ -74,7 +75,7 @@ extern union {
 	super_roll_put_1plane( \
 		star->topleft.screen_x.to_pixel_slow(), \
 		star->topleft.screen_y.to_pixel_slow(), \
-		PAT_PLAYCHAR_BOMB, \
+		PAT_PLAYCHAR_BOMB_SHAPE, \
 		0, \
 		super_plane(col, true) \
 	);
@@ -184,4 +185,6 @@ void pascal near reimu_stars_update_and_render(void)
 			}
 		}
 	}
+}
+
 }

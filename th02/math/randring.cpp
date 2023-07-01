@@ -14,7 +14,7 @@ inline size_t randring_index(void) {
 	return _BX;
 }
 
-uint8_t pascal near randring_func(RANDRING_INSTANCE, next8)(void)
+uint8_t near randring_func(RANDRING_INSTANCE, next8)(void)
 {
 	return randring[randring_index()];
 }
@@ -24,7 +24,7 @@ uint8_t pascal near randring_func(RANDRING_INSTANCE, next8_and)(uint8_t mask)
 	return randring[randring_index()] & mask;
 }
 
-uint16_t pascal near randring_func(RANDRING_INSTANCE, next16)(void)
+uint16_t near randring_func(RANDRING_INSTANCE, next16)(void)
 {
 	return (reinterpret_cast<uint16_t &>(randring[randring_index()]));
 }

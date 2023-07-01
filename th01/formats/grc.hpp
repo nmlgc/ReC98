@@ -33,7 +33,7 @@ void grc_free(main_grc_slot_t slot);
 // Blits the sub[image] from the given [slot] to (⌊left/8⌋*8, top) with the
 // given [col]. Correctly clips the sprite at all 4 edges of VRAM.
 void grc_put_8(
-	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, int col
+	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, vc2 col
 );
 
 // For some reason, all code assumes .GRC entities to be 48×32, rather than

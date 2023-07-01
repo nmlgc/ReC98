@@ -16,7 +16,7 @@ inline screen_y_t pause_top(int line) {
 
 void z_palette_settone_but_keep_white(int tone)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	for(col = 0; col < COLOR_COUNT; col++) {

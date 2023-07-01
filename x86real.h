@@ -102,7 +102,7 @@ void segread(struct SREGS *__segp);
 /// Segmented memory
 /// ----------------
 
-#define MK_FP(seg,ofs) ((void __seg *)(seg) + (void __near *)(ofs))
+#define MK_FP(seg,off) ((void __seg *)(seg) + (void __near *)(off))
 #define FP_SEG(fp)     ((uint16_t)(void __seg *)(void __far *)(fp))
 #define FP_OFF(fp)     ((uint16_t)(fp))
 

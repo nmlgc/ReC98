@@ -27,7 +27,7 @@ void CParticles::unput(EGCCopy& egc)
 	}
 }
 
-void CParticles::update_and_render(particle_origin_t origin, int col)
+void CParticles::update_and_render(particle_origin_t origin, vc_t col)
 {
 	unsigned char i;
 

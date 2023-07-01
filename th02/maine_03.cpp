@@ -12,16 +12,16 @@
 
 int cfg_load(void)
 {
-	resident_t __seg *resident_sgm;
+	resident_t __seg *resident_seg;
 
 	file_ropen(CFG_FN);
 	file_seek(offsetof(cfg_t, resident), 0);
-	file_read(&resident_sgm, sizeof(resident_sgm));
+	file_read(&resident_seg, sizeof(resident_seg));
 	file_close();
-	if(!resident_sgm) {
+	if(!resident_seg) {
 		return 0;
 	}
-	resident = resident_sgm;
+	resident = resident_seg;
 	lives = resident->rem_lives;
 	bombs = resident->rem_bombs;
 	rank = resident->rank;

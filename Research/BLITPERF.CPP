@@ -20,7 +20,7 @@
 
 static const pixel_t SPRITE_W = 8;
 static const pixel_t SPRITE_H = 8;
-static const uint4_t SPRITE_COL = 2;
+static const vc_t SPRITE_COL = 2;
 typedef dot_rect_t(16, SPRITE_H) sprite_rect_t;
 
 #ifndef CPU
@@ -261,7 +261,7 @@ void Test::frame_delay(unsigned int frames)
 
 void graph_clear(void)
 {
-	GRCGStaticColor<0> grcg(GC_TDW);
+	GRCGStaticColor<static_cast<vc_t>(0)> grcg(GC_TDW);
 	_ES = SEG_PLANE_B;
 	_DI = 0;
 	#if (CPU == 386)

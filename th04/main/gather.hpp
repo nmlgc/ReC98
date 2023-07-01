@@ -6,7 +6,7 @@
 // [bullet_template.spawn_type] is set to BST_GATHER_ONLY.
 struct gather_t {
 	entity_flag_t flag;
-	uint4_t col;
+	vc_t col;
 	PlayfieldMotion center;
 	Subpixel radius_cur;
 	int ring_points;
@@ -26,11 +26,11 @@ struct gather_t {
 };
 
 struct gather_template_t {
-	SPPoint center;
-	SPPoint velocity;
+	PlayfieldPoint center;
+	PlayfieldPoint velocity;
 	Subpixel radius;
 	int ring_points;
-	uint4_t col;
+	vc_t col;
 	unsigned char angle_delta;
 };
 
@@ -70,7 +70,7 @@ void near gather_add_only(void);
 // [frame] 0, 2, and 4, respectively, using the given colors. Will do nothing
 // for any other value of [frame].
 void pascal near gather_add_only_3stack(
-	int frame, int col_for_0, int col_for_2_and_4
+	int frame, vc2 col_for_0, vc2 col_for_2_and_4
 );
 
 // Blits the gather point sprite to ([left], [top]). Assumptions:

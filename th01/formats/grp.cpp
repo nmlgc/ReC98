@@ -30,7 +30,7 @@ void grp_palette_settone(int tone)
 	} else if(tone > 200) {
 		tone = 200;
 	}
-	for(int col = 1; col < COLOR_COUNT; col++) {
+	for(vc_t col = 1; col < COLOR_COUNT; col++) {
 		for(int comp = 0; comp < COMPONENT_COUNT; comp++) {
 			int blend;
 			if(tone > 100) {

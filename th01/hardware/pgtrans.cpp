@@ -58,7 +58,7 @@ void pagetrans_diagonal_8x8_with_palette(
 )
 {
 	int comp;
-	int col;
+	svc2 col;
 	screen_x_t from_topleft_left = 0;
 	vram_y_t from_topleft_top = 0;
 	screen_x_t from_bottomright_left = (RES_X - INTERLEAVE_W);

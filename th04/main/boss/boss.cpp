@@ -13,10 +13,11 @@ extern "C" {
 #include "th04/common.h"
 #include "th04/gaiji/gaiji.h"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/math/randring.hpp"
+extern "C" {
 #include "th04/snd/snd.h"
 }
+#include "th04/sprites/main_cdg.h"
 #if (GAME == 5)
 	#include "th05/sprites/main_pat.h"
 #else
@@ -37,6 +38,7 @@ extern "C" {
 #include "th04/main/slowdown.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
+#include "th04/main/stage/bonus.hpp"
 extern "C" {
 #include "th04/main/tile/tile.hpp"
 }
@@ -58,7 +60,6 @@ extern "C" {
 	#include "th04/resident.hpp"
 	#include "th04/formats/bb.h"
 	#include "th04/formats/dialog.hpp"
-	#include "th04/sprites/main_cdg.h"
 	#include "th04/main/boss/boss.hpp"
 	#include "th04/main/boss/bosses.hpp"
 	#include "th04/shiftjis/fns.hpp"

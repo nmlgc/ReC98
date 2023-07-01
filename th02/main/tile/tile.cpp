@@ -24,7 +24,7 @@ typedef dots_t(TILE_W) tile_line_dots_t;
 // State
 // -----
 
-extern int8_t tile_line_at_top;
+extern pixel_delta_8_t tile_line_at_top;
 extern vram_offset_t tile_image_vos[TILE_IMAGE_COUNT];
 extern pixel_t tile_copy_lines_top;
 extern pixel_t tile_copy_lines_h;
@@ -95,10 +95,7 @@ void tile_area_init_and_put_both(void)
 			optimization_barrier();
 		} while(1);
 
-		tile_image_vos[i] = (
-			(TILE_AREA_VRAM_LEFT + ((i / TILE_AREA_ROWS) * TILE_VRAM_W)) +
-			(TILE_AREA_TOP + ((i % TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
-		);
+		tile_image_vos[i] = tile_image_vo(i);
 	}
 }
 #pragma codestring "\x90"
@@ -181,7 +178,7 @@ void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 }
 
 // Enforces signed 8-bit comparisons in one place. MODDERS: Just remove this.
-inline int8_t tile_line_0(void) { return 0; }
+inline pixel_delta_8_t tile_line_0(void) { return 0; }
 
 bool16 pascal tiles_scroll_and_egc_render_both(pixel_t speed)
 {

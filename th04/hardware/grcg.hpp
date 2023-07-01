@@ -32,4 +32,19 @@ inline void grcg_setmode_rmw_inlined(void) {
 	outportb(_DX, tile_register_from_carry(_AH >>= 1)); \
 	enable(); \
 }
+
+// Perfectly inlines if [col] is a compile-time constant.
+inline void grcg_setcolor_direct_constant(vc_t col) {
+	disable();
+	_DX = 0x7E;
+
+	// Same algorithm as in platform/x86real/pc98/grcg.cpp. Only replaces
+	// `MOV AL, 0` with `XOR AL, AL` by making both the XOR and the reuse
+	// explicit.
+	outportb(_DX, ((col & 0x1) ? 0xFF : (_AL ^= _AL)));
+	outportb(_DX, ((col & 0x2) ? 0xFF : ((col & 0x1) ? (_AL ^= _AL) : _AL)));
+	outportb(_DX, ((col & 0x4) ? 0xFF : ((col & 0x2) ? (_AL ^= _AL) : _AL)));
+	outportb(_DX, ((col & 0x8) ? 0xFF : ((col & 0x4) ? (_AL ^= _AL) : _AL)));
+	enable();
+}
 // ---------------------

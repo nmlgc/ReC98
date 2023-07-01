@@ -74,7 +74,7 @@ void grx_put_stream(unsigned int slot, int planar_stream);
 
 // Renders only the RLE stream in the given [col] via the GRCG, using a 0xFF
 // pattern for every 8 dots to be displayed.
-void grx_put_col(unsigned int slot, uint4_t col);
+void grx_put_col(unsigned int slot, vc_t col);
 // -------
 
 // Frees both the RLE and any planar streams in the given GRX [slot].

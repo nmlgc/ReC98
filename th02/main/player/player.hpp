@@ -1,6 +1,8 @@
 #define PLAYER_W 32
 #define PLAYER_H 48
 
+extern screen_point_t player_topleft;
+
 extern bool player_is_hit;
 
 // Grants invincibility when >0. Decrements by 1 each frame in that case.
@@ -16,7 +18,6 @@ static const uint8_t POWER_MIN = 1;
 	extern bool player_invincible_via_bomb;
 #endif
 
-static const int POWER_OVERFLOW_MAX = 42;
 static const int SHOT_LEVEL_MAX = 9;
 
 extern uint8_t power;

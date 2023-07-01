@@ -104,7 +104,7 @@ void end_pic_show(int quarter)
 // given position in VRAM, with a frame delay between each character.
 
 static const unsigned int TYPE_DELAY = 3;
-static const uint4_t COL_TYPE = 15;
+static const vc_t COL_TYPE = 15;
 static const int16_t TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 void graph_type_ank_n(

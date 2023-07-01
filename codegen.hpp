@@ -161,28 +161,28 @@ struct X86 {
 #define _mov_param_to_reg(dst_reg, offset) \
 	_stack_to_reg(X86::MOV_R_RM_16, dst_reg, offset);
 
-#define _mov_to_reg(dst_reg, src_sgm, src_off, src_disp) \
+#define _mov_to_reg(dst_reg, src_seg, src_off, src_disp) \
 	X86::mov_to_reg( \
-		X86::P##src_sgm, X86::RM_ADDRESS##src_off, X86::R##dst_reg, src_disp \
+		X86::P##src_seg, X86::RM_ADDRESS##src_off, X86::R##dst_reg, src_disp \
 	);
 
-#define _mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg) \
+#define _mov_to_mem(dst_seg, dst_off, dst_disp, src_reg) \
 	X86::mov_to_mem( \
-		X86::P##dst_sgm, X86::RM_ADDRESS##dst_off, X86::R##src_reg, dst_disp \
+		X86::P##dst_seg, X86::RM_ADDRESS##dst_off, X86::R##src_reg, dst_disp \
 	);
 
 // Removing [val] from the parameter lists of the template functions below
 // perfects the inlining.
-#define poked(sgm, off, val) \
+#define poked(seg, off, val) \
 	_EAX = val; \
 	X86::reg_mem( \
-		X86::MOV_RM_R_32, X86::P##sgm, X86::RM_ADDRESS##off, X86::R_EAX \
+		X86::MOV_RM_R_32, X86::P##seg, X86::RM_ADDRESS##off, X86::R_EAX \
 	);
 
-#define poke_or_d(sgm, off, val) \
+#define poke_or_d(seg, off, val) \
 	_EAX = val; \
 	X86::reg_mem( \
-		X86::OR_RM_R_32, X86::P##sgm, X86::RM_ADDRESS##off, X86::R_EAX \
+		X86::OR_RM_R_32, X86::P##seg, X86::RM_ADDRESS##off, X86::R_EAX \
 	);
 // -----------------------------------------------------------------
 
@@ -201,10 +201,10 @@ struct X86 {
 #define mov_param_to_reg(dst_reg, src_ptr) \
 	_mov_param_to_reg(dst_reg, src_ptr)
 
-#define mov_to_reg(dst_reg, src_sgm, src_off, src_disp) \
-	_mov_to_reg(dst_reg, src_sgm, src_off, src_disp)
+#define mov_to_reg(dst_reg, src_seg, src_off, src_disp) \
+	_mov_to_reg(dst_reg, src_seg, src_off, src_disp)
 
-#define mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg) \
-	_mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg)
+#define mov_to_mem(dst_seg, dst_off, dst_disp, src_reg) \
+	_mov_to_mem(dst_seg, dst_off, dst_disp, src_reg)
 // ---------------------------------------------------
 /// ----------------------

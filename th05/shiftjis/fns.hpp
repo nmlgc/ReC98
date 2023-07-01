@@ -29,3 +29,14 @@
 #define BOMB_BG_MARISA_FN	"bb1.cdg"
 #define BOMB_BG_MIMA_FN  	"bb2.cdg"
 #define BOMB_BG_YUUKA_FN 	"bb3.cdg"
+
+#define BOMB_SHAPE_FN      	"bomb0.bft"
+#define BOMB_SHAPE_YUUKA_FN	"bomb3.bft"
+
+#define main_pat_bomb_shape_load() { \
+	if(playchar == PLAYCHAR_YUUKA) { \
+		super_entry_bfnt(BOMB_SHAPE_YUUKA_FN); \
+	} else { \
+		super_entry_bfnt(BOMB_SHAPE_FN); \
+	} \
+}

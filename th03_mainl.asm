@@ -300,8 +300,7 @@ sub_978D	proc near
 		kajacall	KAJA_SONG_PLAY
 		push	2
 		call	palette_black_in
-		push	60010h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (6 shl 16) or 16
 		mov	si, 1
 		jmp	short loc_97FC
 ; ---------------------------------------------------------------------------
@@ -315,8 +314,7 @@ loc_97E8:
 loc_97FC:
 		cmp	si, 5
 		jl	short loc_97E8
-		push	0A0040h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (10 shl 16) or 64
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	cdg_put_noalpha_8 pascal, large (224 shl 16) or 64, 6
@@ -326,8 +324,7 @@ loc_97FC:
 		call	palette_entry_rgb
 		call	far ptr	palette_show
 		call	cdg_free_all
-		push	0B0004h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (11 shl 16) or 4
 		push	1
 		call	palette_white_in
 		push	8
@@ -1417,8 +1414,7 @@ sub_B92E	proc near
 		kajacall	KAJA_SONG_PLAY
 		push	1
 		call	palette_black_in
-		push	30040h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (3 shl 16) or 64
 		push	1
 		call	palette_black_out
 		kajacall	KAJA_SONG_STOP

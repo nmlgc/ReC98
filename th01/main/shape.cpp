@@ -16,17 +16,17 @@
 	} \
 	grcg_put_8x8_mono(vram_offset_topleft, first_bit, sprite.row, col);
 
-void shape8x8_diamond_put(screen_x_t left, vram_y_t top, int col)
+void shape8x8_diamond_put(screen_x_t left, vram_y_t top, vc2 col)
 {
 	shape8x8_put(SHAPE8X8_DIAMOND, left, top, col);
 }
 
-void shape8x8_star_put(screen_x_t left, vram_y_t top, int col)
+void shape8x8_star_put(screen_x_t left, vram_y_t top, vc2 col)
 {
 	shape8x8_put(SHAPE8X8_STAR, left, top, col);
 }
 
-void shape8x8_flake_put(screen_x_t left, vram_y_t top, int col)
+void shape8x8_flake_put(screen_x_t left, vram_y_t top, vc2 col)
 {
 	shape8x8_put(SHAPE8X8_FLAKE, left, top, col);
 }
@@ -36,7 +36,7 @@ void shape_ellipse_arc_put(
 	vram_y_t center_y,
 	pixel_t radius_x,
 	pixel_t radius_y,
-	int col,
+	vc2 col,
 	unsigned char angle_step,
 	unsigned char angle_start,
 	unsigned char angle_end
@@ -213,29 +213,4 @@ void shape8x8_invincibility_put_with_mask_from_B_plane(
 		#undef sprite
 	}
 	grcg_off();
-}
-
-// Why is this here?
-void graph_r_lineloop_put(
-	const screen_x_t x[], const vram_y_t y[], int point_count, int col
-)
-{
-	int i = 0;
-	while((point_count - 1) > i) {
-		graph_r_line(x[i], y[i], x[i + 1], y[i + 1], col);
-		i++;
-	}
-	graph_r_line(x[i], y[i], x[0], y[0], col);
-}
-
-void graph_r_lineloop_unput(
-	const screen_x_t x[], const vram_y_t y[], int point_count
-)
-{
-	int i = 0;
-	while((point_count - 1) > i) {
-		graph_r_line_unput(x[i], y[i], x[i + 1], y[i + 1]);
-		i++;
-	}
-	graph_r_line_unput(x[i], y[i], x[0], y[0]);
 }

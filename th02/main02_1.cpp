@@ -3,7 +3,7 @@
  * 1st part of code segment #2 of TH02's MAIN.EXE
  */
 
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include <stddef.h>
 #include "platform.h"

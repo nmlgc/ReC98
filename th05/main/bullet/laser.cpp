@@ -6,9 +6,7 @@
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th02/v_colors.hpp"
-extern "C" {
 #include "th04/math/vector.hpp"
-}
 #include "th04/hardware/grcg.hpp"
 extern "C" {
 #include "th04/snd/snd.h"
@@ -153,9 +151,9 @@ void near lasers_render(void)
 
 		// ZUN bloat: Only needed because we mutate [coords] for rendering the
 		// inner ray.
-		uint8_t width_orig = laser->coords.width.nonshrink;
+		pixel_length_8_t width_orig = laser->coords.width.nonshrink;
 
-		uint8_t radius = laser->coords.width.nonshrink;
+		pixel_length_8_t radius = laser->coords.width.nonshrink;
 
 		vector2_at(
 			drawpoint,

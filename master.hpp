@@ -11,23 +11,11 @@
 /// Types
 /// -----
 
-// A version of master.lib's Point without the constructor, even in C++
-struct point_t {
-	int x, y;
-};
-
-#ifdef PC98_H
-	struct screen_point_t {
-		screen_x_t x;
-		screen_y_t y;
-	};
-
-	#if defined(__cplusplus)
+#if (defined(PC98_H) && defined(__cplusplus))
 	// master.lib palettes use twice the bits per RGB component for more
 	// toning precision
 	typedef RGB<uint8_t, 256> RGB8;
 	typedef Palette<RGB8> Palette8;
-	#endif
 #endif
 /// -----
 
@@ -205,14 +193,14 @@ void MASTER_RET graph_scrollup(unsigned line);
 	// master.lib bug: In all game-specific versions before TH04, these
 	// functions accidentally add the x86 carry flag on top of [c].
 	void MASTER_RET graph_gaiji_putc(
-		screen_x_t left, vram_y_t top, int c, int col
+		screen_x_t left, vram_y_t top, int c, vc2 col
 	);
 	void MASTER_RET graph_gaiji_puts(
 		screen_x_t left,
 		vram_y_t top,
 		pixel_t step,
 		const char MASTER_PTR *str,
-		int col
+		vc2 col
 	);
 
 	// Clipping
@@ -252,7 +240,9 @@ void MASTER_RET graph_scrollup(unsigned line);
 #define GC_TCR	0x80	/* ﾀｲﾙﾚｼﾞｽﾀと同じ色のﾋﾞｯﾄが立って読み込まれる */
 #define GC_RMW	0xc0	/* 書き込みﾋﾞｯﾄが立っているﾄﾞｯﾄにﾀｲﾙﾚｼﾞｽﾀから書く */
 
-void MASTER_RET grcg_setcolor(int mode, int color);
+#ifdef PC98_H
+	void MASTER_RET grcg_setcolor(int mode, vc2 color);
+#endif
 void MASTER_RET grcg_settile_1line(int mode, long tile);
 void MASTER_RET grcg_off(void);
 
@@ -713,7 +703,7 @@ void MASTER_RET vsync_end(void);
 	#ifdef PC98_H
 		// Generates a super_roll_put_1plane [plane_put] constant for blitting
 		// the sprite in the single given color.
-		inline uint16_t super_plane(uint8_t col, bool erase = false) {
+		inline uint16_t super_plane(vc_t col, bool erase = false) {
 			return (
 				(erase ? PLANE_ERASE : (0xFF00 | GC_RMW)) +
 				((COLOR_COUNT - 1) - col)

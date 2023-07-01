@@ -12,6 +12,13 @@
 // Display-space widths, heights, and object-space coordinates
 typedef int pixel_t;
 typedef unsigned int upixel_t;
+typedef int8_t pixel_delta_8_t;
+typedef uint8_t pixel_length_8_t;
+
+// A version of master.lib's Point without the constructor, even in C++
+struct point_t {
+	pixel_t x, y;
+};
 
 // VRAM widths and object-space coordinates
 typedef int vram_byte_amount_t;
@@ -20,6 +27,9 @@ typedef int vram_dword_amount_t;
 typedef unsigned int uvram_byte_amount_t;
 typedef unsigned int uvram_word_amount_t;
 typedef unsigned int uvram_dword_amount_t;
+
+// TRAM widths
+typedef int tram_cell_amount_t;
 /// ------
 
 /// Coordinate systems
@@ -35,6 +45,12 @@ typedef unsigned int uscreen_x_t;
 // care about 200- or 400-line graphics modes or vertical scrolling.
 typedef int screen_y_t;
 typedef unsigned int uscreen_y_t;
+
+// Display-space point.
+struct screen_point_t {
+	screen_x_t x;
+	screen_y_t y;
+};
 
 // VRAM X coordinate, ranging from 0 to (RES_X / BYTE_DOTS).
 typedef int vram_x_t;
@@ -87,9 +103,27 @@ typedef bool page_t;
 #define COMPONENT_B 2
 #define COMPONENT_COUNT 3
 
+// Colors
+// ------
 // The 16-color mode supports 4 bits per RGB component, for a total of
-// 4,096 colors
-typedef int8_t uint4_t;
+// 4,096 colors.
+
+typedef int8_t int4_t;
+typedef uint8_t uint4_t;
+
+// Video palette indices. ZUN bloat: Only keep vc_t.
+typedef uint4_t vc_t;
+typedef int4_t svc_t;
+typedef uint16_t vc2;
+typedef int16_t svc2; // Mainly needed for loops where ZUN used `int`.
+
+// Intensity of a video color's R, G, or B component.
+// ZUN bloat: Only keep vc_comp_t.
+typedef uint4_t vc_comp_t;
+typedef int4_t svc_comp_t;
+typedef uint16_t vc_comp2;
+typedef int16_t svc_comp2;
+// ------
 
 #ifdef __cplusplus
 	template <class ComponentType, int Range> union RGB {
@@ -121,16 +155,16 @@ typedef int8_t uint4_t;
 			return RGBType::Range;
 		}
 
-		RGBType& operator [](int col) {
+		RGBType& operator [](vc2 col) {
 			return colors[col];
 		}
 
-		const RGBType& operator [](int col) const {
+		const RGBType& operator [](vc2 col) const {
 			return colors[col];
 		}
 	};
 
-	typedef RGB<uint4_t, 16> RGB4;
+	typedef RGB<svc_comp_t, 16> RGB4;
 	typedef Palette<RGB4> Palette4;
 
 	#define palette_foreach(tmp_col, tmp_comp, func) { \

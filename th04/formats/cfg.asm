@@ -1,7 +1,7 @@
 public CFG_LOAD
 cfg_load	proc near
 
-@@sgm	= word ptr -0Ch
+@@seg	= word ptr -0Ch
 @@cfg	= byte ptr -(size cfg_t)
 
 	enter	0Ch, 0
@@ -12,8 +12,8 @@ cfg_load	proc near
 	push	size cfg_t
 	call	file_read
 	call	file_close
-	mov	ax, [bp+@@cfg.resident_sgm]
-	mov	[bp+@@sgm], ax
+	mov	ax, [bp+@@cfg.resident_seg]
+	mov	[bp+@@seg], ax
 	mov	word ptr _resident+2, ax
 	mov	word ptr _resident, 0
 	les	bx, _resident

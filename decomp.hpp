@@ -23,22 +23,42 @@ template <class T> union StupidBytewiseWrapperAround {
 // Does exactly the same as Turbo C++'s __memcpy__() intrinsic, just with
 // stupidly reordered instructions. Can be replaced with regular copy
 // assignment wherever it appears.
+// ----------------------------------------------------------------------
+
+#define prepare_di_si(dst, dst_offset, src, src_offset) { \
+	_DI = dst; \
+	_DI += dst_offset; \
+	_SI = src; \
+	_SI += src_offset; \
+}
+
+#define prepare_si_di(dst, dst_offset, src, src_offset) { \
+	_SI = src; \
+	_SI += src_offset; \
+	_DI = dst; \
+	_DI += dst_offset; \
+}
+
 #if (GAME == 5)
-	#define copy_near_struct_member(dst, src, src_type, member) { \
-		_CX = (sizeof(dst) / sizeof(uint16_t)); \
+	#define copy_near_struct_member( \
+		dst, dst_offset, src, src_offset, size, prepare_func \
+	) { \
+		_CX = (size / sizeof(uint16_t)); \
 		asm { push ds; pop es; } \
-		_DI = FP_OFF(&dst); \
-		_SI = FP_OFF(&src); \
-		_SI += offsetof(src_type, member); \
+		prepare_func(FP_OFF(&dst), dst_offset, FP_OFF(&src), src_offset); \
 		asm { rep movsw; } \
 	}
 #else
-	#define copy_near_struct_member(dst, src, src_type, member) { \
+	#define copy_near_struct_member( \
+		dst, dst_offset, src, src_offset, size, prepare_func \
+	) { \
 		asm { push ds; pop es; } \
-		_DI = FP_OFF(&dst); \
-		__memcpy__(MK_FP(_ES, _DI), &src.member, sizeof(dst)); \
+		prepare_func(FP_OFF(&dst), dst_offset, FP_OFF(&src), src_offset); \
+		_CX = (size / sizeof(uint16_t)); \
+		asm { rep movsw; } \
 	}
 #endif
+// ----------------------------------------------------------------------
 
 // Circumventing compiler optimizations
 // ------------------------------------

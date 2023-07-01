@@ -38,26 +38,25 @@ struct laser_coords_t {
 
 	unsigned char angle;
 
-	// In pixels.
 	union {
 		// ZUN landmine: LF_FIXED_SHRINK and LF_FIXED_SHRINK_AND_WAIT_TO_GROW
 		// are effectively limited to a maximum width of 127 pixels due to an
 		// implementation convenience in their update code. For larger values,
 		// their shrink animation wouldn't play, and the laser will transition
 		// to its next flag immediately.
-		int8_t shrink;
+		pixel_delta_8_t shrink;
 
 		// Other types have no limit besides the 8-bit one inherent to the
 		// type. Shootout lasers should probably still be kept below
 		// LASER_SHOOTOUT_DECAY_WIDTH_MAX though, as any larger value would
 		// skip the decay animation.
-		uint8_t nonshrink;
+		pixel_length_8_t nonshrink;
 	} width;
 };
 
 struct Laser {
 	laser_flag_t flag;
-	uint4_t col;
+	vc_t col;
 	laser_coords_t coords;
 
 	// Truncated to 8 bits by the spawn function! Should have therefore rather
@@ -77,9 +76,11 @@ struct Laser {
 	// [age] at which a fixed laser should transition from LF_FIXED_ACTIVE to
 	// LF_FIXED_SHRINK.
 	int shrink_at_age;
+
 	// [width] (in pixels) at which a fixed laser should transition from
 	// LF_FIXED_GROW to LF_FIXED_ACTIVE.
-	uint8_t grow_to_width;
+	pixel_length_8_t grow_to_width;
+
 	uint8_t padding[3];
 
 	void fixed_init(const PlayfieldPoint &origin) {

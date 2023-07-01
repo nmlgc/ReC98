@@ -8,7 +8,7 @@
 include th02/main/playfld.inc
 include th04/main/spark.inc
 
-RANDRING2_NEXT16_AND procdesc pascal near \
+@RANDRING2_NEXT16_AND$QUI procdesc pascal near \
 	mask:word
 VECTOR2_NEAR procdesc pascal near \
 	ret:word, angle:byte, length:word
@@ -86,7 +86,7 @@ public @SPARKS_ADD_RANDOM$Q20%SUBPIXELBASE$TI$TI%T1II
 	; 	p.angle,
 	; 	randring2_next16_ge_lt_sp(radius_min, (radius_min + 2.0f))
 	; );
-	call	randring2_next16_and pascal, ((2 shl 4) - 1)
+	call	@randring2_next16_and$qui pascal, ((2 shl 4) - 1)
 	add 	ax, @@radius_min
 	lea 	bx, [@@p+spark_t.pos.velocity]
 	call	vector2_near pascal, bx, [@@p+spark_t.SPARK_ANGLE], ax

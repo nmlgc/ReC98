@@ -94,7 +94,7 @@ void darken_pic_at(screen_x_t x, screen_y_t y)
 	grcg_off();
 }
 
-void draw_shottype_desc(int sel, int color)
+void draw_shottype_desc(int sel, vc2 color)
 {
 	screen_x_t x;
 	screen_y_t y;

@@ -1,2 +1,2 @@
 extern char rank;
-extern long score;
+extern int32_t score;

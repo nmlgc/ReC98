@@ -19,7 +19,7 @@
 static const int POINTNUM_COUNT = 20;
 
 struct CPointnums {
-	uint8_t col;
+	vc_t col;
 	int8_t unused;
 	screen_x_t left[POINTNUM_COUNT];
 	screen_y_t top[POINTNUM_COUNT][2];
@@ -48,6 +48,7 @@ void near pointnums_init_for_rank_and_reset(void)
 	}
 	pointnums.col = V_WHITE;
 
+	// Matches the score multiplier at the end of items_update_and_render().
 	switch(rank) {
 	case RANK_EASY:
 	case RANK_NORMAL:

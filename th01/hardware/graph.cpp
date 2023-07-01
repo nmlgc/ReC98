@@ -165,7 +165,7 @@ void z_graph_hide()
 /// Hardware
 /// --------
 
-void z_palette_show_single(int col, int r, int g, int b)
+void z_palette_show_single(vc2 col, svc_comp2 r, svc_comp2 g, svc_comp2 b)
 {
 	outportb(0xA8, col);
 	outportb(0xAA, g);
@@ -180,12 +180,12 @@ void z_palette_show_single(int col, int r, int g, int b)
 	outportb(0x7E, (col & 4) ? 0xFF : 0x00); \
 	outportb(0x7E, (col & 8) ? 0xFF : 0x00);
 
-void grcg_setcolor_rmw(int col)
+void grcg_setcolor_rmw(vc2 col)
 {
 	grcg_setcolor(0xC0, col);
 }
 
-void grcg_setcolor_tcr(int col)
+void grcg_setcolor_tcr(vc2 col)
 {
 	grcg_setcolor(0x80, col);
 }
@@ -227,7 +227,7 @@ void z_palette_set_all_show(const Palette4& pal)
 	}
 }
 
-void z_palette_set_show(int col, int r, int g, int b)
+void z_palette_set_show(vc2 col, svc_comp2 r, svc_comp2 g, svc_comp2 b)
 {
 	r = clamp_min(clamp_max(r, RGB4::max()), RGB4::min());
 	g = clamp_min(clamp_max(g, RGB4::max()), RGB4::min());
@@ -259,7 +259,7 @@ void z_graph_clear_0(void)
 	page_access(2);	z_graph_clear();
 }
 
-void z_graph_clear_col(uint4_t col)
+void z_graph_clear_col(svc_t col)
 {
 	dots8_t far *plane = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B);
 
@@ -289,7 +289,7 @@ void graph_copy_page_to_other(page_t src)
 #define fade_loop(pal, per_comp) \
 	for(int i = 0; i < pal.range(); i++) { \
 		z_vsync_wait(); \
-		for(int col = 0; col < COLOR_COUNT; col++) { \
+		for(svc2 col = 0; col < COLOR_COUNT; col++) { \
 			for(int comp = 0; comp < COMPONENT_COUNT; comp++) { \
 				per_comp; \
 			} \
@@ -300,7 +300,7 @@ void graph_copy_page_to_other(page_t src)
 
 void z_palette_black(void)
 {
-	for(int col = 0; col < COLOR_COUNT; col++) {
+	for(svc2 col = 0; col < COLOR_COUNT; col++) {
 		z_palette_show_single(col, 0, 0, 0);
 	}
 }
@@ -330,7 +330,7 @@ void z_palette_black_out(void)
 
 void z_palette_white(void)
 {
-	for(int col = 0; col < COLOR_COUNT; col++) {
+	for(svc2 col = 0; col < COLOR_COUNT; col++) {
 		z_palette_show_single(col, RGB4::max(), RGB4::max(), RGB4::max());
 	}
 }
@@ -372,7 +372,7 @@ void z_palette_show(void)
 #define VRAM_SBYTE(plane, offset) \
 	*reinterpret_cast<sdots8_t *>(MK_FP(SEG_PLANE_##plane, offset))
 
-void z_grcg_pset(screen_x_t x, vram_y_t y, int col)
+void z_grcg_pset(screen_x_t x, vram_y_t y, vc2 col)
 {
 	grcg_setcolor_rmw(col);
 	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & BYTE_MASK));
@@ -412,7 +412,7 @@ static bool graph_r_unput = false;
 // Not used for purely horizontal lines.
 static dots16_t graph_r_pattern = 0x80; // 1 pixel (*       )
 
-void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
+void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, vc2 col)
 {
 	vram_byte_amount_t x;
 	vram_byte_amount_t full_bytes_to_put;
@@ -453,7 +453,7 @@ void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 	}
 }
 
-void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
+void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, vc2 col)
 {
 	vram_y_t y;
 	int order_tmp;
@@ -498,7 +498,7 @@ void graph_r_line_patterned(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col,
+	vc2 col,
 	dots16_t pattern
 )
 {
@@ -512,7 +512,7 @@ void graph_r_line(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col
+	vc2 col
 )
 {
 	register vram_offset_t vram_offset;
@@ -669,6 +669,31 @@ end:
 #undef clip_lerp_max
 #undef slope_x
 }
+
+void graph_r_lineloop_put(const screen_point_t point[], int count, vc_t col)
+{
+	int i = 0;
+	while((count - 1) > i) {
+		graph_r_line(
+			point[i].x, point[i].y, point[i + 1].x, point[i + 1].y, col
+		);
+		i++;
+	}
+	graph_r_line(point[i].x, point[i].y, point[0].x, point[0].y, col);
+}
+
+void graph_r_lineloop_unput(const screen_point_t point[], int count)
+{
+	int i = 0;
+	while((count - 1) > i) {
+		graph_r_line_unput(
+			point[i].x, point[i].y, point[i + 1].x, point[i + 1].y
+		);
+		i++;
+	}
+	graph_r_line_unput(point[i].x, point[i].y, point[0].x, point[0].y);
+}
+
 /// -----------------------
 
 void z_grcg_boxfill(
@@ -676,7 +701,7 @@ void z_grcg_boxfill(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col
+	vc2 col
 )
 {
 	vram_byte_amount_t x;
@@ -718,7 +743,7 @@ void graph_r_box(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col
+	vc2 col
 )
 {
 	graph_r_hline(left, right, top, col);
@@ -757,14 +782,14 @@ void graph_move_byterect_interpage(
 }
 
 void z_palette_fade_from(
-	uint4_t from_r, uint4_t from_g, uint4_t from_b,
-	int keep[COLOR_COUNT],
+	svc_comp_t from_r, svc_comp_t from_g, svc_comp_t from_b,
+	vc2 keep[COLOR_COUNT],
 	unsigned int step_ms
 )
 {
 	Palette4 fadepal;
 	int i;
-	int col;
+	svc2 col;
 	int comp;
 
 	memset(&fadepal, 0x0, sizeof(fadepal));
