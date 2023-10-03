@@ -857,7 +857,7 @@ loc_B141:
 		call	mpn_load
 
 loc_B144:
-		call	main_01:map_load
+		call	@map_load$qv
 		call	@std_load$qv
 		call	@dialog_load$qv
 		call	tiles_fill_initial
@@ -964,7 +964,7 @@ sub_B29E	proc near
 		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	@std_free$qv
-		call	main_01:map_free
+		call	@map_free$qv
 		call	super_clean pascal, (128 shl 16) or 256
 		mov	si, CDG_FACESET_BOSS
 		jmp	short loc_B2C7
@@ -1156,7 +1156,7 @@ loc_B89D:
 		pop	es
 		assume es:_DATA
 		push	ds
-		mov	ax, map_seg
+		mov	ax, _map_seg
 		mov	ds, ax
 		mov	cx, TILES_X
 		rep movsw
@@ -1248,8 +1248,8 @@ mpn_load	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-map_load	proc near
+public @map_load$qv
+@map_load$qv	proc near
 
 @@mh		= map_header_t ptr -(size map_header_t)
 
@@ -1267,10 +1267,10 @@ map_load	proc near
 		push	ax
 		push	size map_header_t
 		call	file_read
-		call	main_01:map_free
+		call	@map_free$qv
 		push	[bp+@@mh.map_size]
 		call	hmem_allocbyte
-		mov	map_seg, ax
+		mov	_map_seg, ax
 		push	ax
 		push	0
 		push	[bp+@@mh.map_size]
@@ -1278,26 +1278,26 @@ map_load	proc near
 		call	file_close
 		leave
 		retn
-map_load	endp
+@map_load$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-map_free	proc near
+public @map_free$qv
+@map_free$qv	proc near
 		push	bp
 		mov	bp, sp
-		cmp	map_seg, 0
+		cmp	_map_seg, 0
 		jz	short loc_B9D4
-		push	map_seg
+		push	_map_seg
 		call	hmem_free
-		mov	map_seg, 0
+		mov	_map_seg, 0
 
 loc_B9D4:
 		pop	bp
 		retn
-map_free	endp
+@map_free$qv	endp
 
 include th04/main/tile/inv.asm
 include th04/main/tile/fill_ini.asm
@@ -1985,7 +1985,7 @@ sub_CF44	proc near
 loc_CF63:
 		call	cdg_free pascal, CDG_EYE
 		call	@std_free$qv
-		call	main_01:map_free
+		call	@map_free$qv
 
 loc_CF70:
 		nopcall	@dialog_animate$qv
@@ -4732,7 +4732,7 @@ loc_E813:
 		call	@dialog_free$qv
 		call	main_01:bb_playchar_free
 		call	@std_free$qv
-		call	main_01:map_free
+		call	@map_free$qv
 		call	super_free
 		call	graph_hide
 		call	text_clear
@@ -31415,7 +31415,6 @@ byte_25A38	db ?
 		db ?
 word_25A3A	dw ?
 include th02/hardware/pages[bss].asm
-map_seg	dw ?
 include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
 include th04/main/quit[bss].asm

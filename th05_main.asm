@@ -976,7 +976,7 @@ loc_B4A6:
 		call	mpn_load
 
 loc_B4A9:
-		call	map_load
+		call	@map_load$qv
 		call	@std_load$qv
 		call	@dialog_load$qv
 		call	tiles_fill_initial
@@ -1097,7 +1097,7 @@ sub_B609	proc near
 		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	@std_free$qv
-		call	map_free
+		call	@map_free$qv
 		call	super_clean pascal, (180 shl 16) or 256
 		mov	si, CDG_PER_STAGE
 		jmp	short loc_B630
@@ -1228,10 +1228,10 @@ mpn_load	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-map_load	proc near
+public @map_load$qv
+@map_load$qv	proc near
 		push	si
-		call	map_free
+		call	@map_free$qv
 		mov	al, _stage_id
 		add	al, '0'
 		mov	aSt00_map+3, al
@@ -1251,7 +1251,7 @@ map_load	proc near
 					; DS:DX	-> buffer
 		push	map_header.map_size
 		call	hmem_allocbyte
-		mov	map_seg, ax
+		mov	_map_seg, ax
 		push	ds
 		mov	bx, si
 		mov	cx, map_header.map_size
@@ -1267,22 +1267,22 @@ map_load	proc near
 					; BX = file handle
 		pop	si
 		retn
-map_load	endp
+@map_load$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-map_free	proc near
-		cmp	map_seg, 0
+public @map_free$qv
+@map_free$qv	proc near
+		cmp	_map_seg, 0
 		jz	short locret_BB98
-		push	map_seg
+		push	_map_seg
 		call	hmem_free
-		mov	map_seg, 0
+		mov	_map_seg, 0
 
 locret_BB98:
 		retn
-map_free	endp
+@map_free$qv	endp
 		even
 
 include th04/main/tile/fill_ini.asm
@@ -1442,7 +1442,7 @@ loc_BD88:
 		pop	es
 		assume es:_DATA
 		push	ds
-		mov	ax, map_seg
+		mov	ax, _map_seg
 		mov	ds, ax
 		mov	cx, TILES_X
 		rep movsw
@@ -3827,7 +3827,7 @@ loc_F71C:
 		call	@dialog_free$qv
 		call	bb_playchar_free
 		call	@std_free$qv
-		call	map_free
+		call	@map_free$qv
 		call	super_free
 		call	graph_hide
 		call	text_clear
@@ -20738,7 +20738,6 @@ public _lives, _bombs
 _lives	db ?
 _bombs	db ?
 include th02/hardware/pages[bss].asm
-map_seg	dw ?
 include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
 include th04/main/quit[bss].asm
