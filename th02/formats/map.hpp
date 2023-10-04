@@ -4,6 +4,9 @@
 // sections of 8 tile rows each. The .DT1 format arranges these sections into
 // the complete [map] of a stage.
 
+// Column-major index of a tile within the tile source area.
+typedef unsigned char tile_image_id_t;
+
 // Not checked by the game.
 #define MAP_MAGIC "MIKO_MAP  "
 static const unsigned int MAP_MAGIC_SIZE = (sizeof(MAP_MAGIC) - 1);

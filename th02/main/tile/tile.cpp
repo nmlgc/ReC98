@@ -33,6 +33,8 @@ extern pixel_t tile_copy_lines_h;
 // local to tiles_scroll_and_egc_render_both(), or just removed outright.
 extern tile_image_id_t tiles_for_new_row[TILES_X];
 
+extern tile_image_id_t tile_ring[TILES_Y][TILES_X];
+
 extern bool tile_dirty[TILES_X][TILES_Y];
 
 // Optimization to skip checking all vertical tiles for clean columns.

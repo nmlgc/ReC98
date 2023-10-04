@@ -46,9 +46,6 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 #endif
 // ------------------------
 
-// Column-major index of a tile within the tile source area.
-typedef unsigned char tile_image_id_t;
-
 #ifdef PLANAR_H
 // Top-left VRAM offset of the tile with the given ID.
 inline vram_offset_t tile_image_vo(int id) {
@@ -75,7 +72,6 @@ inline vram_offset_t tile_image_vo(int id) {
 	};
 
 	extern tile_mode_t tile_mode;
-	extern tile_image_id_t tile_ring[TILES_Y][TILES_X];
 
 	// If `true`, the next call to tiles_egc_render() will unconditionally
 	// redraw all tiles and then reset this flag to `false`.
