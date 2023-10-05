@@ -5,9 +5,8 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th04/main/playfld.hpp"
+#include "th02/formats/tile.hpp"
 extern "C" {
-#include "th04/main/tile/tile.hpp"
 #include "th04/formats/mpn.hpp"
 
 void pascal mpn_free(int slot)
