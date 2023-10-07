@@ -17,7 +17,7 @@ extern Subpixel scroll_last_delta;
 // draws the background.
 extern bool scroll_active;
 
-#pragma codeseg ma_TEXT main_01
+#pragma codeseg mai_TEXT main_01
 
 // Transforms [y] to its corresponding VRAM line, adding the current
 // [scroll_line] or 0 if scrolling is disabled.
