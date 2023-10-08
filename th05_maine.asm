@@ -178,7 +178,7 @@ _arg0		= dword	ptr  4
 		call	cdg_free_all
 		call	graph_hide
 		call	text_clear
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
 		pushd	[bp+_arg0]	; path
@@ -6326,7 +6326,7 @@ include th04/hardware/grppsafx.asm
 	extern _snd_se_update:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_free:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern VECTOR2_AT:proc
 	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc

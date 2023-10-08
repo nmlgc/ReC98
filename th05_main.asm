@@ -990,12 +990,12 @@ loc_B4BB:
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	@overlay_black$qv
-		call	tiles_render_all
+		call	@tiles_render_all$qv
 		mov	_page_back, 1
 		mov	_page_front, 0
 		graph_accesspage 1
 		graph_showpage 0
-		call	tiles_render_all
+		call	@tiles_render_all$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_B506
@@ -1079,7 +1079,7 @@ sub_B55A	proc near
 		call	hud_score_put
 		call	pointnums_init
 		nopcall	hud_put
-		mov	_bg_render_bombing_func, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset @tiles_render_all$qv
 		call	tiles_invalidate_reset
 		pop	bp
 		retn
@@ -1477,8 +1477,8 @@ include th04/main/tile/inv_all.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public TILES_RENDER
-tiles_render	proc near
+public @TILES_RENDER$QV
+@tiles_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	@overlay_titles_invalidate$qv
@@ -1491,10 +1491,10 @@ tiles_render	proc near
 		call	pointnums_invalidate
 		call	_midboss_invalidate
 		call	_stage_invalidate
-		call	tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
-tiles_render	endp
+@tiles_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1504,11 +1504,11 @@ tiles_render	endp
 sub_BF0E	proc near
 		push	bp
 		mov	bp, sp
-		call	tiles_render_all
+		call	@tiles_render_all$qv
 		dec	byte_23F5E
 		cmp	byte_23F5E, 0
 		jnz	short loc_BF25
-		mov	_bg_render_not_bombing, offset tiles_render
+		mov	_bg_render_not_bombing, offset @tiles_render$qv
 
 loc_BF25:
 		pop	bp
@@ -1523,7 +1523,7 @@ sub_BF0E	endp
 sub_BF27	proc far
 		push	bp
 		mov	bp, sp
-		mov	_bg_render_not_bombing, offset tiles_render
+		mov	_bg_render_not_bombing, offset @tiles_render$qv
 		pop	bp
 		retf
 sub_BF27	endp
@@ -3831,7 +3831,7 @@ loc_F71C:
 		call	super_free
 		call	graph_hide
 		call	text_clear
-		call	_game_exit
+		call	@game_exit$qv
 		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
@@ -7817,7 +7817,7 @@ SHARED_	segment	word public 'CODE' use16
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern CDG_PUT_8:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern @POLAR$QIII:proc
 	extern VECTOR2_AT:proc
 	extern SND_LOAD:proc
@@ -14305,7 +14305,7 @@ loc_1AEDF:
 		mov	_playfield_shake_y, ax
 
 loc_1AEE2:
-		mov	_bg_render_bombing_func, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset @tiles_render_all$qv
 		mov	_slowdown_factor, 2
 		mov	ax, _boss_phase_frame
 		mov	bx, 8

@@ -20,6 +20,7 @@ extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
+}
 #include "th02/shiftjis/fns.hpp"
 
 static const int MUSIC_CMT_LINE_LEN = 42;
@@ -369,6 +370,4 @@ controls:
 	palette_entry_rgb_show("op.rgb");
 	graph_copy_page(0);
 	graph_accesspage(0);
-}
-
 }

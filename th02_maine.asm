@@ -2905,7 +2905,7 @@ loc_B1C6:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -2929,7 +2929,7 @@ SHARED	segment	word public 'CODE' use16
 	extern _pi_load:proc
 	extern FRAME_DELAY:proc
 	extern _input_sense:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
 	extern _snd_pmd_resident:proc

@@ -871,12 +871,12 @@ loc_B156:
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	@overlay_black$qv
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		mov	_page_back, 1
 		mov	_page_front, 0
 		graph_accesspage 1
 		graph_showpage 0
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_B1AE
@@ -946,7 +946,7 @@ sub_B1D0	proc near
 		call	sub_15D74
 		call	main_01:pointnums_init
 		nopcall	main_01:hud_put
-		mov	_bg_render_bombing_func, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset @tiles_render_all$qv
 		call	main_01:tiles_invalidate_reset
 		pop	bp
 		retn
@@ -1745,8 +1745,8 @@ include th04/main/tile/inv_all.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public TILES_RENDER
-tiles_render	proc near
+public @TILES_RENDER$QV
+@tiles_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	@overlay_titles_invalidate$qv
@@ -1759,10 +1759,10 @@ tiles_render	proc near
 		call	main_01:pointnums_invalidate
 		call	_midboss_invalidate
 		call	_stage_invalidate
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
-tiles_render	endp
+@tiles_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1772,11 +1772,11 @@ tiles_render	endp
 sub_CB80	proc near
 		push	bp
 		mov	bp, sp
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		dec	byte_255B0
 		cmp	byte_255B0, 0
 		jnz	short loc_CB97
-		mov	_bg_render_not_bombing, offset tiles_render
+		mov	_bg_render_not_bombing, offset @tiles_render$qv
 
 loc_CB97:
 		pop	bp
@@ -1791,7 +1791,7 @@ sub_CB80	endp
 sub_CB99	proc far
 		push	bp
 		mov	bp, sp
-		mov	_bg_render_not_bombing, offset tiles_render
+		mov	_bg_render_not_bombing, offset @tiles_render$qv
 		pop	bp
 		retf
 sub_CB99	endp
@@ -4737,7 +4737,7 @@ loc_E813:
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
@@ -9580,7 +9580,7 @@ loc_12199:
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		call	@tiles_bb_invalidate_raw$qi pascal, ax
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9600,13 +9600,13 @@ loc_121D3:
 		jg	short loc_121E6
 
 loc_121E1:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_121E6:
-		call	tiles_render
+		call	@tiles_render$qv
 		pop	bp
 		retn
 @orange_bg_render$qv	endp
@@ -9629,7 +9629,7 @@ loc_121E6:
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		call	@tiles_bb_invalidate_raw$qi pascal, ax
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9649,13 +9649,13 @@ loc_1222F:
 		jg	short loc_12242
 
 loc_1223D:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_12242:
-		call	tiles_render
+		call	@tiles_render$qv
 		pop	bp
 		retn
 @kurumi_bg_render$qv	endp
@@ -9705,7 +9705,7 @@ loc_12285:
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		call	@tiles_bb_invalidate_raw$qi pascal, ax
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9725,13 +9725,13 @@ loc_122BF:
 		jg	short loc_122D2
 
 loc_122CD:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_122D2:
-		call	tiles_render
+		call	@tiles_render$qv
 		pop	bp
 		retn
 @elly_bg_render$qv	endp
@@ -9763,7 +9763,7 @@ loc_122EB:
 		mov	[bp+@@entrance_cel], al
 		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12309
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		jmp	short loc_12327
 ; ---------------------------------------------------------------------------
 
@@ -9800,13 +9800,13 @@ loc_1234C:
 		jg	short loc_1235F
 
 loc_1235A:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_1235F:
-		call	tiles_render
+		call	@tiles_render$qv
 		leave
 		retn
 @reimu_marisa_bg_render$qv	endp
@@ -9838,7 +9838,7 @@ loc_12378:
 		mov	[bp+@@entrance_cel], al
 		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12396
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		jmp	short loc_123B4
 ; ---------------------------------------------------------------------------
 
@@ -9875,13 +9875,13 @@ loc_123D9:
 		jg	short loc_123EC
 
 loc_123E7:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_123EC:
-		call	tiles_render
+		call	@tiles_render$qv
 		leave
 		retn
 @yuuka5_bg_render$qv	endp
@@ -10601,7 +10601,7 @@ public @MUGETSU_GENGETSU_BG_RENDER$QV
 		mov	_stage_render, offset nullfunc_near
 
 loc_12991:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -10616,7 +10616,7 @@ loc_12996:
 		mov	[bp+@@entrance_cel], al
 		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_129B4
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		jmp	short loc_129D2
 ; ---------------------------------------------------------------------------
 
@@ -10653,7 +10653,7 @@ loc_129F7:
 		jle	short loc_12991
 
 loc_12A05:
-		call	tiles_render
+		call	@tiles_render$qv
 		leave
 		retn
 @mugetsu_gengetsu_bg_render$qv	endp
@@ -11419,7 +11419,7 @@ SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 	extern CDG_PUT_8:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern GAME_INIT_MAIN:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _input_reset_sense:proc

@@ -182,10 +182,10 @@ _start_game	proc near
 		les	bx, _resident
 		mov	es:[bx+resident_t.demo_num], 0
 		call	_main_cdg_free
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
-		call	_game_exit
+		call	@game_exit$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.debug_mode], 0
 		jnz	short loc_A957
@@ -233,10 +233,10 @@ _start_extra	proc near
 		les	bx, _resident
 		mov	es:[bx+resident_t.demo_num], 0
 		call	_main_cdg_free
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -318,9 +318,9 @@ loc_AA6E:
 		call	super_free
 		freePISlotLarge	0
 		call	_main_cdg_free
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -1233,7 +1233,7 @@ loc_B3AB:
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
-		call	cfg_load
+		call	@cfg_load$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rank], RANK_DEFAULT
 		jnz	short loc_B3D3
@@ -1316,10 +1316,10 @@ loc_B47B:
 		cmp	_quit, 0
 		jz	short loc_B43A
 		call	_main_cdg_free
-		call	cfg_save_exit
+		call	@cfg_save_exit$qv
 		call	gaiji_restore
 		call	text_clear
-		call	_game_exit_to_dos
+		call	@game_exit_to_dos$qv
 		call	respal_free
 		pop	si
 		pop	bp
@@ -2642,7 +2642,7 @@ SHARED	segment	word public 'CODE' use16
 	extern CDG_PUT_NOCOLORS_8:proc
 	extern SND_DETERMINE_MODES:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern _game_exit_to_dos:proc
+	extern @game_exit_to_dos$qv:proc
 	extern SND_LOAD:proc
 SHARED	ends
 
@@ -2652,7 +2652,7 @@ SHARED_	segment	word public 'CODE' use16
 
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern _game_init_op:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc

@@ -897,7 +897,7 @@ loc_9DAD:
 		call	sub_B7D2
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -1002,7 +1002,7 @@ loc_9EF1:
 		call	gaiji_restore
 
 loc_9F1E:
-		call	_game_exit_from_mainl_to_main
+		call	@game_exit_from_mainl_to_main$qv
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -1034,7 +1034,7 @@ loc_9F58:
 loc_9F69:
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -1503,7 +1503,7 @@ loc_B9DD:
 loc_BA66:
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset aOp_0	; "op"
@@ -2796,7 +2796,7 @@ SHARED	segment	word public 'CODE' use16
 	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc
 	extern VECTOR2:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
 	extern FRAME_DELAY:proc
@@ -2811,7 +2811,7 @@ SHARED	segment	word public 'CODE' use16
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE:proc
-	extern _game_exit_from_mainl_to_main:proc
+	extern @game_exit_from_mainl_to_main$qv:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern PI_LOAD:proc

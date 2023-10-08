@@ -1079,7 +1079,7 @@ _envp		= dword	ptr  0Ch
 		call	_getch
 
 loc_AF7D:
-		call	cfg_load
+		call	@cfg_load$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rank], RANK_DEFAULT
 		jnz	short loc_AF97
@@ -1173,9 +1173,9 @@ loc_B058:
 		cmp	_quit, 0
 		jz	short loc_B00E
 		call	_main_cdg_free
-		call	cfg_save_exit
+		call	@cfg_save_exit$qv
 		call	text_clear
-		call	_game_exit_to_dos
+		call	@game_exit_to_dos$qv
 		call	respal_free
 		pop	si
 		pop	bp
@@ -2514,7 +2514,7 @@ op_01_TEXT	ends
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
 	extern SND_DETERMINE_MODES:proc
-	extern _game_exit_to_dos:proc
+	extern @game_exit_to_dos$qv:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16

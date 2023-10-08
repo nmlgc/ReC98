@@ -172,7 +172,7 @@ _arg0		= dword	ptr  4
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
 		pushd	[bp+_arg0]	; path
@@ -3207,7 +3207,7 @@ SHARED_	segment	word public 'CODE' use16
 
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern GAME_INIT_MAIN:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc

@@ -20,12 +20,15 @@ extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
+}
 #include "th02/core/globals.hpp"
 #include "th02/core/zunerror.h"
 #include "th02/core/initexit.h"
 #include "th02/formats/cfg.h"
+extern "C" {
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
+}
 #include "th02/gaiji/gaiji.h"
 #include "th02/op/op.h"
 
@@ -701,6 +704,4 @@ int main(void)
 	game_exit_to_dos();
 	gaiji_restore();
 	return ret;
-}
-
 }

@@ -1,5 +1,5 @@
-public CFG_LOAD
-cfg_load	proc near
+public @cfg_load$qv
+@cfg_load$qv proc near
 
 @@seg	= word ptr -0Ch
 @@cfg	= byte ptr -(size cfg_t)
@@ -62,11 +62,11 @@ endif
 @@ret:
 	leave
 	retn
-cfg_load	endp
+@cfg_load$qv endp
 
 
-public CFG_SAVE
-cfg_save	proc near
+public @cfg_save$qv
+@cfg_save$qv proc near
 
 @@opts	= cfg_options_t ptr -8
 @@opts_sum	= byte ptr -2
@@ -108,11 +108,11 @@ cfg_save	proc near
 	call	file_close
 	leave
 	retn
-cfg_save	endp
+@cfg_save$qv endp
 
 
-public CFG_SAVE_EXIT
-cfg_save_exit	proc near
+public @cfg_save_exit$qv
+@cfg_save_exit$qv proc near
 
 @@cfg	= cfg_t ptr -(size cfg_t)
 
@@ -154,4 +154,4 @@ cfg_save_exit	proc near
 	call	file_close
 	leave
 	retn
-cfg_save_exit	endp
+@cfg_save_exit$qv endp

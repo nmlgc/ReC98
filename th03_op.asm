@@ -137,9 +137,9 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-	CFG_LOAD procdesc pascal near
-	CFG_SAVE procdesc pascal near
-	CFG_SAVE_EXIT procdesc pascal near
+	@cfg_load$qv procdesc near
+	@cfg_save$qv procdesc near
+	@cfg_save_exit$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -286,10 +286,10 @@ loc_9B4E:
 		imul	ax, 25
 		add	al, 70
 		mov	es:[bx+resident_t.skill], al
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -498,10 +498,10 @@ loc_9D0A:
 loc_9D19:
 		cmp	[bp+var_2], (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9D0A
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -594,11 +594,11 @@ loc_9E9A:
 loc_9EA6:
 		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9E9A
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	super_free
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -1314,7 +1314,7 @@ loc_A468:
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		call	cfg_load
+		call	@cfg_load$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_VS
 		jb	short loc_A497
@@ -1377,10 +1377,10 @@ loc_A4EE:
 loc_A4FE:
 		cmp	_quit, 0
 		jz	short loc_A4D2
-		call	cfg_save_exit
+		call	@cfg_save_exit$qv
 		call	gaiji_restore
 		call	text_clear
-		call	_game_exit_to_dos
+		call	@game_exit_to_dos$qv
 		call	respal_free
 		pop	bp
 		retf
@@ -3305,10 +3305,10 @@ op_03_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
-	extern _game_exit_to_dos:proc
+	extern @game_exit_to_dos$qv:proc
 	extern _snd_determine_mode:proc
 	extern _snd_load:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern @polar$qiii:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc

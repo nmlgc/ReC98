@@ -3,7 +3,6 @@
  * Code segment #4 of TH02's OP.EXE
  */
 
-extern "C" {
 #include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
@@ -13,8 +12,10 @@ extern "C" {
 #include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th02/common.h"
+extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
+}
 #include "th02/core/globals.hpp"
 #include "th02/formats/scoredat.h"
 #include "th02/gaiji/gaiji.h"
@@ -230,6 +231,4 @@ int cleardata_load(void)
 		}
 	}
 	return extra_unlocked;
-}
-
 }

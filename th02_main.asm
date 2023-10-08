@@ -971,7 +971,7 @@ _envp		= dword	ptr  0Ch
 		call	_game_init_main
 		or	ax, ax
 		jz	short @@game_init_main_is_0
-		call	zun_error pascal, 3
+		call	@zun_error$q11zun_error_t pascal, 3
 
 @@cfg_load_is_1:
 		mov	ax, 1
@@ -2644,7 +2644,7 @@ public @GameExecl$qnxc
 		call	graph_clear
 		call	text_clear
 		call	@gaiji_free$qv
-		call	_game_exit
+		call	@game_exit$qv
 		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf
@@ -6428,7 +6428,7 @@ main_01____TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
-	extern ZUN_ERROR:proc
+	extern @ZUN_ERROR$Q11ZUN_ERROR_T:proc
 	extern _key_delay:proc
 	extern MPN_LOAD:proc
 	extern _mpn_free:proc
@@ -6437,7 +6437,7 @@ SHARED	segment	word public 'CODE' use16
 	extern @VECTOR2_BETWEEN_PLUS$QIIIIUCMIT6I:proc
 	extern FRAME_DELAY:proc
 	extern _input_sense:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
 	extern _snd_pmd_resident:proc

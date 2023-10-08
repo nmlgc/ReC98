@@ -6,7 +6,6 @@
 #include "th01/hardware/vplanset.h"
 #include "th02/shiftjis/fns.hpp"
 #include "th02/mem.h"
-extern "C" {
 #include "th02/core/initexit.h"
 #include "th02/formats/pf.hpp"
 
@@ -27,6 +26,4 @@ int game_init_op(void)
 	egc_start();
 	game_pfopen();
 	return 0;
-}
-
 }

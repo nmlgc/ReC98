@@ -19,6 +19,7 @@ extern "C" {
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
+}
 
 inline char sel_ring_end() {
 	return SHOTTYPE_COUNT - 1;
@@ -230,6 +231,4 @@ void pascal shottype_menu(void)
 	pi_free(1);
 	pi_free(2);
 	palette_black_out(1);
-}
-
 }

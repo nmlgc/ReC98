@@ -39,9 +39,7 @@ extern "C" {
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/stage/bonus.hpp"
-extern "C" {
 #include "th04/main/tile/tile.hpp"
-}
 #include "th04/main/dialog/dialog.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/item/item.hpp"

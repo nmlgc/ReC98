@@ -5,7 +5,6 @@
 
 #pragma option -zCop_01_TEXT
 
-extern "C" {
 #include <process.h>
 #include "platform.h"
 #include "master.hpp"
@@ -16,8 +15,10 @@ extern "C" {
 #include "th04/score.h"
 #include "th04/end/end.h"
 #include "th05/playchar.h"
+extern "C" {
 #include "th05/op/op.hpp"
 #include "th05/snd/snd.h"
+}
 #include "th05/resident.hpp"
 #include "th05/hardware/input.h"
 #include "th04/formats/cfg.hpp"
@@ -144,6 +145,4 @@ void near start_demo(void)
 	palette_black_out(1);
 	game_exit();
 	execl(aMAIN, aMAIN, 0, 0);
-}
-
 }

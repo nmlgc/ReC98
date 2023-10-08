@@ -2385,7 +2385,7 @@ public @GameExecl$qnxc
 		call	gaiji_restore
 		call	@mrs_free$qi pascal, 0
 		call	@mrs_free$qi pascal, 1
-		call	_game_exit
+		call	@game_exit$qv
 		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
@@ -8727,7 +8727,7 @@ SHARED	segment	word public 'CODE' use16
 	extern _snd_determine_mode:proc
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern @polar$qiii:proc
 	extern FRAME_DELAY:proc
 	extern _input_reset_sense_key_held:proc
@@ -18911,7 +18911,7 @@ loc_14C36:
 		mov	byte ptr [bx], 2
 		cmp	di, 2
 		jge	short loc_14C4E
-		mov	byte ptr [bx+1Eh], 0B0h	; '°'
+		mov	byte ptr [bx+1Eh], 0B0h	; 'Â°'
 		jmp	short loc_14C56
 ; ---------------------------------------------------------------------------
 

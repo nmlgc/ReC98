@@ -1,5 +1,5 @@
-public TILES_REDRAW_INVALIDATED
-tiles_redraw_invalidated	proc near
+public @TILES_REDRAW_INVALIDATED$QV
+@tiles_redraw_invalidated$qv proc near
 	push	si
 	push	di
 	call	egc_start_copy_inlined_noframe
@@ -56,4 +56,4 @@ tiles_redraw_invalidated	proc near
 	pop	di
 	pop	si
 	retn
-tiles_redraw_invalidated	endp
+@tiles_redraw_invalidated$qv endp
