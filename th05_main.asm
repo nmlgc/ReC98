@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 	extern _strlen:proc
 
-main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, mai_TEXT, CFG_LRES_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, LASER_RH_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_TEXT, mai_TEXT, CFG_LRES_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, LASER_RH_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, B1_UPDATE_TEXT, B4_UPDATE_TEXT, main_035_TEXT, B6_UPDATE_TEXT, BX_UPDATE_TEXT, main_036_TEXT, BOSS_TEXT
 
@@ -900,7 +900,7 @@ loc_B3C5:
 		call	super_entry_bfnt
 
 loc_B3CA:
-		nopcall	sub_BF27
+		nopcall	@tiles_activate$qv
 		mov	_pellet_bottom_col, GC_RG
 		mov	al, _stage_id
 		mov	ah, 0
@@ -1174,7 +1174,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 	_cfg_load_resident_ptr procdesc near
 CFG_LRES_TEXT	ends
 
-mai_TEXT	segment	word public 'CODE' use16
+TILE_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1496,61 +1496,11 @@ public @TILES_RENDER$QV
 		retn
 @tiles_render$qv	endp
 
+	extern @tiles_activate$qv:proc
+	extern @TILES_ACTIVATE_AND_RENDER_ALL_FO$QUC:proc
+TILE_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF0E	proc near
-		push	bp
-		mov	bp, sp
-		call	@tiles_render_all$qv
-		dec	byte_23F5E
-		cmp	byte_23F5E, 0
-		jnz	short loc_BF25
-		mov	_bg_render_not_bombing, offset @tiles_render$qv
-
-loc_BF25:
-		pop	bp
-		retn
-sub_BF0E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF27	proc far
-		push	bp
-		mov	bp, sp
-		mov	_bg_render_not_bombing, offset @tiles_render$qv
-		pop	bp
-		retf
-sub_BF27	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF32	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+arg_0]
-		mov	byte_23F5E, al
-		mov	_bg_render_not_bombing, offset sub_BF0E
-		pop	bp
-		retf	2
-sub_BF32	endp
-
-; ---------------------------------------------------------------------------
-		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
+mai_TEXT	segment	word public 'CODE' use16
 include th04/main/tile/redraw.asm
 include th04/main/scroll_y_1.asm
 MOTION_UPDATE_DEF 1
@@ -20701,9 +20651,6 @@ byte_23F04	db ?
 word_23F06	dw ?
 include th04/formats/std[bss].asm
 include th04/main/tile/inv[bss].asm
-		db 2 dup(?)
-byte_23F5E	db ?
-		db    ?	;
 word_23F60	dw ?
 include th02/math/randring[bss].asm
 include th04/main/pointnum/render[bss].asm

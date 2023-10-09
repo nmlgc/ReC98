@@ -85,6 +85,21 @@ void pascal near tiles_redraw_invalidated(void);
 // Invalidates all entity types, then redraws the invalidated tiles.
 void pascal near tiles_render(void);
 
+// Sets [bg_render_not_bombing] to [tiles_render].
+void tiles_activate(void);
+
+// Sets [bg_render_not_bombing] to a function that calls [tiles_render_all] for
+// the next [n] frames, and then sets the function pointer back to
+// [tiles_render]. With [n] = 2, this removes the remnants of in-game dialog
+// graphics from both VRAM pages.
+// This is only needed for TH04's post-boss dialog; it's also called for the
+// pre-boss ones, but [bg_render_not_bombing] is immediately overwritten with
+// the boss-specific background render function which does the same job via
+// tiles_render_after_custom(). In TH05, the boss-specific functions remove the
+// graphics of both the pre-boss and post-boss dialogs, and this function is
+// unused.
+void pascal tiles_activate_and_render_all_for_next_N_frames(uint8_t n);
+
 // Used for switching back to a tiled background after rendering anything else,
 // like in-game dialog, or a custom background. Makes sure to first render all
 // tiles to both VRAM pages, then performs regular redrawing of only the

@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
@@ -884,7 +884,7 @@ loc_B156:
 		kajacall	KAJA_SONG_PLAY
 
 loc_B1AE:
-		nopcall	main_01:sub_CB99
+		nopcall	@tiles_activate$qv
 		mov	_overlay1, offset @overlay_stage_enter_update_and_r$qv
 		mov	_overlay2, offset nullfunc_near
 		pop	si
@@ -1029,7 +1029,7 @@ STD_TEXT	segment	byte public 'CODE' use16
 	@std_load$qv procdesc near
 STD_TEXT	ends
 
-mai_TEXT	segment	word public 'CODE' use16
+TILE_TEXT	segment	word public 'CODE' use16
 include th04/formats/std.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1764,58 +1764,11 @@ public @TILES_RENDER$QV
 		retn
 @tiles_render$qv	endp
 
+	extern @tiles_activate$qv:proc
+	extern @TILES_ACTIVATE_AND_RENDER_ALL_FO$QUC:proc
+TILE_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CB80	proc near
-		push	bp
-		mov	bp, sp
-		call	@tiles_render_all$qv
-		dec	byte_255B0
-		cmp	byte_255B0, 0
-		jnz	short loc_CB97
-		mov	_bg_render_not_bombing, offset @tiles_render$qv
-
-loc_CB97:
-		pop	bp
-		retn
-sub_CB80	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CB99	proc far
-		push	bp
-		mov	bp, sp
-		mov	_bg_render_not_bombing, offset @tiles_render$qv
-		pop	bp
-		retf
-sub_CB99	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CBA4	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+arg_0]
-		mov	byte_255B0, al
-		mov	_bg_render_not_bombing, offset sub_CB80
-		pop	bp
-		retf	2
-sub_CBA4	endp
-
-; ---------------------------------------------------------------------------
-		db    0
+mai_TEXT	segment	word public 'CODE' use16
 include th04/main/tile/render_a.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2810,7 +2763,7 @@ public @dialog_animate$qv
 		call	main_01:sub_D016
 		call	main_01:sub_D56C
 		push	2
-		nopcall	main_01:sub_CBA4
+		nopcall	@tiles_activate_and_render_all_fo$quc
 		call	@dialog_exit$qv
 		graph_accesspage _page_back
 		push	1
@@ -31242,9 +31195,6 @@ public _midboss3_patterns_done
 _midboss3_patterns_done	db ?
 		db 5 dup(?)
 include th04/main/tile/inv[bss].asm
-		db 2 dup(?)
-byte_255B0	db ?
-		db ?
 byte_255B2	db ?
 byte_255B3	db ?
 byte_255B4	db ?
