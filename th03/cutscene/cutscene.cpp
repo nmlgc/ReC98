@@ -46,7 +46,6 @@ extern "C" {
 	#define key_det input_sp
 #endif
 }
-#include "th03/math/str_val.hpp"
 #include "th03/cutscene/cutscene.hpp"
 
 #pragma option -a2
@@ -100,6 +99,9 @@ static const int TEXT_INTERVAL_DEFAULT = ((GAME == 5) ? 2 : 1);
 	extern unsigned char script[8192];
 
 	extern unsigned char near *script_p;
+
+	// Required by `script.hpp`.
+	#define script_p script_p
 #else
 	// Dynamically allocated.
 	extern unsigned char far *script;
@@ -118,7 +120,6 @@ extern screen_point_t cursor;
 extern int text_interval;
 extern vc_t text_col;
 extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
-extern int script_number_param_default;
 
 #if (GAME >= 4)
 	#define text_fx graph_putsa_fx_func
@@ -399,31 +400,7 @@ extern "C" {
 	}
 #endif
 
-#define script_fn_param_read(ret, len, temp_c) { \
-	str_consume_control_or_space_separated_string( \
-		ret, len, script_p, PF_FN_LEN, temp_c \
-	); \
-}
-
-void pascal near script_number_param_read_first(int& ret)
-{
-	str_consume_up_to_3_digits(&ret, script_p, script_number_param_default);
-}
-
-inline void script_number_param_read_first(int& ret, int default_value) {
-	script_number_param_default = default_value;
-	script_number_param_read_first(ret);
-}
-
-void pascal near script_number_param_read_second(int& ret)
-{
-	if(*script_p == ',') {
-		script_p++;
-		script_number_param_read_first(ret);
-	} else {
-		ret = script_number_param_default;
-	}
-}
+#include "th03/formats/script.hpp"
 
 void near cursor_advance_and_animate(void)
 {
@@ -578,11 +555,6 @@ void near cursor_advance_and_animate(void)
 	}
 #endif
 
-enum script_ret_t {
-	CONTINUE = 0,
-	STOP = -1,
-};
-
 // Called with [script_p] at the character past [c].
 script_ret_t pascal near script_op(unsigned char c)
 {
@@ -614,7 +586,7 @@ script_ret_t pascal near script_op(unsigned char c)
 			box_1_to_0_animate();
 		#endif
 		if(c != '-') {
-			script_number_param_read_first(p1, 0);
+			script_param_read_number_first(p1, 0);
 			if(!fast_forward) {
 				box_wait_animate(p1);
 			}
@@ -648,12 +620,12 @@ script_ret_t pascal near script_op(unsigned char c)
 				goto colmap_add;
 			}
 		#endif
-		script_number_param_read_first(p1, V_WHITE);
+		script_param_read_number_first(p1, V_WHITE);
 		text_col = p1;
 		break;
 
 	case 'b':
-		script_number_param_read_first(p1, WEIGHT_BOLD);
+		script_param_read_number_first(p1, WEIGHT_BOLD);
 		#if (GAME >= 4)
 			graph_putsa_fx_func = static_cast<graph_putsa_fx_func_t>(p1);
 		#else
@@ -670,7 +642,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		c = tolower(*script_p);
 		if((c == 'o') || (c == 'i')) {
 			script_p++;
-			script_number_param_read_first(p1, 1);
+			script_param_read_number_first(p1, 1);
 			if(c == 'i') {
 				palette_white_in(p1);
 				#if (GAME == 5) // ZUN bloat: `break` or `return`, pick one!
@@ -689,12 +661,12 @@ script_ret_t pascal near script_op(unsigned char c)
 		#if (GAME >= 4)
 			box_1_to_0_animate();
 		#endif
-		script_number_param_default = 64;
+		script_param_number_default = 64;
 		if(c != 'm') {
 			if(c == 'k') {
 				script_p++;
 			}
-			script_number_param_read_first(p1);
+			script_param_read_number_first(p1);
 			if(!fast_forward) {
 				#if (GAME >= 4)
 					frame_delay(p1);
@@ -715,8 +687,8 @@ script_ret_t pascal near script_op(unsigned char c)
 			if(c == 'k') {
 				script_p++;
 			}
-			script_number_param_read_first(p1);
-			script_number_param_read_second(p2);
+			script_param_read_number_first(p1);
+			script_param_read_number_second(p2);
 			if(!fast_forward) {
 				// ZUN landmine: Does not prevent the potential deadlock issue
 				// with this function.
@@ -735,17 +707,17 @@ script_ret_t pascal near script_op(unsigned char c)
 
 	case 'v':
 		if(*script_p != 'p') {
-			script_number_param_read_first(p1, TEXT_INTERVAL_DEFAULT);
+			script_param_read_number_first(p1, TEXT_INTERVAL_DEFAULT);
 			text_interval = p1;
 		} else {
 			script_p++;
-			script_number_param_read_first(p1, 0);
+			script_param_read_number_first(p1, 0);
 			graph_showpage(p1);
 		}
 		break;
 
 	case 't':
-		script_number_param_read_first(p1, 100);
+		script_param_read_number_first(p1, 100);
 		if(!fast_forward) {
 			frame_delay(1);
 		}
@@ -757,7 +729,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		if(c != 'm') {
 			if((c == 'i') || (c == 'o')) {
 				script_p++;
-				script_number_param_read_first(p1, 1);
+				script_param_read_number_first(p1, 1);
 				if(c == 'i') {
 					palette_black_in(p1);
 					#if (GAME == 5) // ZUN bloat: `break` or `return`, pick one!
@@ -772,7 +744,7 @@ script_ret_t pascal near script_op(unsigned char c)
 			}
 		} else {
 			script_p++;
-			script_number_param_read_first(p1, 1);
+			script_param_read_number_first(p1, 1);
 			snd_kaja_func(KAJA_SONG_FADE, p1);
 			#if (GAME <= 4) // ZUN bloat: `break` or `return`, pick one!
 				return CONTINUE;
@@ -782,7 +754,7 @@ script_ret_t pascal near script_op(unsigned char c)
 
 	case 'g':
 		if((GAME == 5) || (*script_p != 'a')) {
-			script_number_param_read_first(p1, 8);
+			script_param_read_number_first(p1, 8);
 			for(p2 = 0; p2 <= p1; p2++) {
 				if(p2 & 1) {
 					graph_scrollup(4);
@@ -796,7 +768,7 @@ script_ret_t pascal near script_op(unsigned char c)
 			graph_scrollup(0);
 		} else {
 			script_p++;
-			script_number_param_read_first(p1, 0);
+			script_param_read_number_first(p1, 0);
 
 			graph_accesspage(1);
 			#if (GAME == 3)
@@ -833,7 +805,7 @@ script_ret_t pascal near script_op(unsigned char c)
 			box_1_to_0_animate();
 		#endif
 
-		script_number_param_read_first(p1, 0);
+		script_param_read_number_first(p1, 0);
 		if(!fast_forward) {
 			// ZUN quirk: This parameter is ignored in TH03. Labeling this as a
 			// quirk because the original TH03 scripts call this command with a
@@ -885,7 +857,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		} else if(c != ',') {
 			script_p--;
 		} else {
-			script_fn_param_read(fn, p1, c);
+			script_param_read_fn(fn, p1, c);
 			#if (GAME >= 4)
 				pi_free(PIC_SLOT);
 			#endif
@@ -894,10 +866,10 @@ script_ret_t pascal near script_op(unsigned char c)
 		break;
 
 	case '=':
-		script_number_param_default = PI_QUARTER_COUNT;
+		script_param_number_default = PI_QUARTER_COUNT;
 		c = *script_p;
 		if(c != '=') {
-			script_number_param_read_first(p1);
+			script_param_read_number_first(p1);
 			#if (GAME == 5)
 				frame_delay(1); // ZUN quirk
 				graph_showpage(0);
@@ -950,9 +922,9 @@ script_ret_t pascal near script_op(unsigned char c)
 			}
 		} else {
 			script_p++;
-			script_number_param_read_first(p1);
-			script_number_param_default = 1;
-			script_number_param_read_second(p2);
+			script_param_read_number_first(p1);
+			script_param_number_default = 1;
+			script_param_read_number_second(p2);
 			for(i = 0; i < PI_MASK_COUNT; i++) {
 				pic_put_both_masked(PIC_LEFT, PIC_TOP, p1, i);
 				if(!fast_forward) {
@@ -991,7 +963,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		}
 		if(c == ',') {
 			script_p++;
-			script_fn_param_read(fn, p1, c);
+			script_param_read_fn(fn, p1, c);
 			snd_kaja_func(KAJA_SONG_STOP, 0);
 			snd_load(fn, SND_LOAD_SONG);
 			snd_kaja_func(KAJA_SONG_PLAY, 0);
@@ -999,7 +971,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		break;
 
 	case 'e':
-		script_number_param_read_first(p1);
+		script_param_read_number_first(p1);
 		snd_se_play_force(p1);
 		break;
 
@@ -1012,11 +984,11 @@ script_ret_t pascal near script_op(unsigned char c)
 
 		// ZUN landmine: Jumps over the additional comma separating the two
 		// parameters, and assumes it's always present. Come on!
-		// script_number_param_read_second() exists to handle exactly this
+		// script_param_read_number_second() exists to handle exactly this
 		// situation in a cleaner way.
 		script_p += 2;
 
-		script_number_param_read_first(p1, V_WHITE);
+		script_param_read_number_first(p1, V_WHITE);
 
 		// ZUN landmine: No bounds check
 		colmap.values[colmap_count] = p1;
@@ -1125,7 +1097,7 @@ void near cutscene_animate(void)
 
 				default:
 					script_p--;
-					script_number_param_read_first(gaiji, gs_NOTES);
+					script_param_read_number_first(gaiji, gs_NOTES);
 					break;
 				}
 				graph_showpage(0);
