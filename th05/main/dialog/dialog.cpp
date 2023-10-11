@@ -1,17 +1,13 @@
 #pragma option -zPmain_01
 
+#include "th04/main/dialog/shared.hpp"
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "master.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/cdg.h"
 }
-#include "th04/main/playfld.hpp"
 #include "th04/main/stage/stage.hpp"
-#include "th04/sprites/main_cdg.h"
 #include "th04/main/ems.hpp"
 #include "th05/playchar.h"
 #include "th05/formats/dialog.hpp"
