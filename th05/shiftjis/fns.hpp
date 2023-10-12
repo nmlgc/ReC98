@@ -1,3 +1,9 @@
+#define BINARY_OP	"op"
+
+#define BGM_EXTRA_BOSS_FN	"st06b"
+
+#define DEMO_EXTRA_PART_2_FN	"DEMO5.REC"
+
 #define EYECATCH_FN	"eye.cdg"
 
 #define FACESET_PLAYCHAR_FORMAT	"KaO0.cD2"

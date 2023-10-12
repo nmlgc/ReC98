@@ -8,8 +8,13 @@ void near main_pat_exalice_override_and_super_clean_stage(void);
 // -----------------------
 
 #include <string.h>
+#include "th02/main/execl.hpp"
 #include "th04/main/dialog/shared.cpp"
+#include "th04/main/demo.hpp"
+#include "th04/score.h"
+#include "th05/mem.h"
 #include "th05/playchar.h"
+#include "th05/resident.hpp"
 #include "th05/formats/dialog.hpp"
 #include "th05/main/dialog/dialog.hpp"
 #include "th05/sprites/main_pat.h"
@@ -224,4 +229,59 @@ void near dialog_run(void)
 		}
 	}
 	overlay_wipe();
+}
+
+void dialog_animate(void)
+{
+	// If we get here during a replay, we assume it's the hidden Extra Stage
+	// one because it's the only one that's long enough, and then skip the
+	// dialog.
+	// You might argue that this is gross and ZUN should have just added a
+	// proper skip feature that would still run through the script for its side
+	// effects, but the only bad aspect I can see is that this happens here and
+	// not at the call site. In regular gameplay, the (hardcoded) boss render
+	// functions rely on the dialog scripts for loading their sprites at the
+	// intended patnums, so it would have made much more sense to hardcode all
+	// of these load calls and completely remove the dependency on game data.
+	if(resident->demo_num != 0) {
+		extern int8_t dialog_sequence_id;
+		if(dialog_sequence_id == 0) {
+			// Pre-boss. Replicate all asset load calls that would be done if
+			// `_DM06.TX2` would run normally, ...
+			#undef BGM_EXTRA_BOSS_FN
+			#undef DEMO_EXTRA_PART_2_FN
+			extern const char st06_bb1[];
+			extern const char st06_bb2[];
+			extern const char BGM_EXTRA_BOSS_FN[];
+			extern const char DEMO_EXTRA_PART_2_FN[];
+
+			main_pat_exalice_override_and_super_clean_stage();
+			super_entry_bfnt(st06_bb1);
+			super_entry_bfnt(st06_bb2);
+			snd_load(BGM_EXTRA_BOSS_FN, SND_LOAD_SONG);
+			snd_kaja_func(KAJA_SONG_PLAY, 0);
+
+			// ... then load the second half of the replay.
+			// ZUN bloat: This could have definitely been integrated into
+			// demo_load(), including the avoided reallocation.
+			file_ropen(DEMO_EXTRA_PART_2_FN);
+			file_read(DemoBuf, (DEMO_N_EXTRA * sizeof(REC<1>)));
+			file_close();
+			stage_frame = 0; // This is actually the index into [DemoBuf].
+			dialog_sequence_id++;
+		} else {
+			// Post-boss. Just return to the title screen.
+			#undef BINARY_OP
+			#define BINARY_OP DIALOG_BINARY_OP
+			extern const char BINARY_OP[];
+			demo_end();
+		}
+		return;
+	}
+
+	cdg_free(CDG_BG_PLAYCHAR_BOMB); // "dialog_init()"
+	dialog_pre();
+	dialog_run();
+	dialog_exit();
+	dialog_post();
 }

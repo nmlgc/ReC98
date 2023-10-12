@@ -1764,7 +1764,6 @@ public @TILES_RENDER$QV
 @tiles_render$qv	endp
 
 	extern @tiles_activate$qv:proc
-	extern @TILES_ACTIVATE_AND_RENDER_ALL_FO$QUC:proc
 TILE_TEXT	ends
 
 mai_TEXT	segment	word public 'CODE' use16
@@ -1905,37 +1904,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	extern @dialog_load_yuuka5_defeat_bad$qv:proc
 	@dialog_free$qv procdesc near
 	@std_update_frames_then_animate_d$qv procdesc near
-	@playfield_copy_front_to_back$qv procdesc near
-	@dialog_box_fade_in_animate$qv procdesc near
-	@dialog_run$qv procdesc pascal near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @dialog_animate$qv
-@dialog_animate$qv	proc far
-		push	bp
-		mov	bp, sp
-		call	@dialog_init$qv
-		call	@overlay_wipe$qv
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		graph_accesspage _page_front
-		call	@dialog_box_fade_in_animate$qv
-		call	@playfield_copy_front_to_back$qv
-		call	@dialog_run$qv
-		push	2
-		nopcall	@tiles_activate_and_render_all_fo$quc
-		call	@dialog_exit$qv
-		graph_accesspage _page_back
-		push	1
-		call	frame_delay
-		pop	bp
-		retf
-@dialog_animate$qv	endp
-
-	@dialog_init$qv procdesc near
-	@dialog_exit$qv procdesc near
+	extern @dialog_animate$qv:proc
 DIALOG_TEXT	ends
 
 BOSS_EXP_TEXT	segment	byte public 'CODE' use16

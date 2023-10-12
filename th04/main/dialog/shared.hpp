@@ -167,6 +167,19 @@ inline void dialog_text_put(shiftjis_t* const& text) {
 	} \
 }
 
+inline void dialog_pre(void) {
+	overlay_wipe();
+	palette_settone(100);
+	graph_accesspage(page_front);
+	dialog_box_fade_in_animate();
+	playfield_copy_front_to_back();
+}
+
+inline void dialog_post(void) {
+	graph_accesspage(page_back);
+	frame_delay(1);
+}
+
 // Script commands
 // ---------------
 

@@ -3183,69 +3183,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_load$qv procdesc near
 	@dialog_free$qv procdesc near
 	@std_update_frames_then_animate_d$qv procdesc near
-	@playfield_copy_front_to_back$qv procdesc near
-	@dialog_box_fade_in_animate$qv procdesc near
-	@dialog_run$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @dialog_animate$qv
-@dialog_animate$qv	proc far
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 0
-		jz	short loc_F333
-		cmp	byte_221EC, 0
-		jnz	short loc_F318
-		call	@main_pat_exalice_override_and_su$qv
-		call	super_entry_bfnt pascal, ds, offset aSt06_bb1 ; "st06.bb1"
-		call	super_entry_bfnt pascal, ds, offset aSt06_bb2 ; "st06.bb2"
-		call	snd_load pascal, ds, offset aSt06b, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		push	ds
-		push	offset aDemo5_rec ; "DEMO5.REC"
-		call	file_ropen
-		call	file_read pascal, large [_DemoBuf], (DEMO_N * 4) * 2
-		call	file_close
-		mov	_stage_frame, 0
-		inc	byte_221EC
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_F318:
-		push	word ptr _DemoBuf+2
-		call	hmem_free
-		push	8
-		call	palette_black_out
-		push	ds
-		push	offset aOp_0	; "op"
-		nopcall	@GameExecl$qnxc
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_F333:
-		call	cdg_free pascal, CDG_BG_PLAYCHAR_BOMB
-		call	@overlay_wipe$qv
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		graph_accesspage _page_front
-		call	@dialog_box_fade_in_animate$qv
-		call	@playfield_copy_front_to_back$qv
-		call	@dialog_run$qv
-		call	@dialog_exit$qv
-		graph_accesspage _page_back
-		push	1
-		call	frame_delay
-		pop	bp
-		retf
-@dialog_animate$qv	endp
-
-	@dialog_exit$qv	procdesc near
-	@main_pat_exalice_override_and_su$qv procdesc near
+	extern @dialog_animate$qv:proc
 DIALOG_TEXT	ends
 
 BOSS_EXP_TEXT	segment	byte public 'CODE' use16
@@ -19882,16 +19820,19 @@ include th04/main/frames[data].asm
 public _dialog_fn
 _dialog_fn	dd a_dm00_tx2
 include th04/main/dialog/dialog[data].asm
-byte_221EC	db 0
+public _dialog_sequence_id
+_dialog_sequence_id	db 0
 a_dm00_tx2	db '_DM00.TX2',0
-public _dialog_kanji_buf
+
+public _dialog_kanji_buf, _st06_bb1, _st06_bb2, _BGM_EXTRA_BOSS_FN
+public _DEMO_EXTRA_PART_2_FN, _DIALOG_BINARY_OP
 _dialog_kanji_buf	db '  ',0
-aSt06_bb1	db 'st06.bb1',0
-aSt06_bb2	db 'st06.bb2',0
-aSt06b		db 'st06b',0
-aDemo5_rec	db 'DEMO5.REC',0
-; char aOp_0[]
-aOp_0		db 'op',0
+_st06_bb1            	db 'st06.bb1',0
+_st06_bb2            	db 'st06.bb2',0
+_BGM_EXTRA_BOSS_FN   	db 'st06b',0
+_DEMO_EXTRA_PART_2_FN	db 'DEMO5.REC',0
+_DIALOG_BINARY_OP    	db 'op',0
+
 public _faceset_boss_format, _faceset_playchar_format
 public _BOMB_BG_REIMU_FN, _BOMB_BG_MARISA_FN, _BOMB_BG_MIMA_FN
 public _BOMB_BG_YUUKA_FN, _MIKO16_EXALICE_FN

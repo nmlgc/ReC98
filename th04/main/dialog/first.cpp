@@ -227,3 +227,23 @@ void near dialog_run(void)
 	}
 	overlay_wipe();
 }
+
+void dialog_animate(void)
+{
+	dialog_init();
+	dialog_pre();
+	dialog_run();
+
+	/* TODO: Replace with the decompiled call
+	 * 	tiles_activate_and_render_all_for_next_N_frames(2);
+	 * once that function is part of the same segment */
+	_asm {
+		push	2;
+		nop;
+		push 	cs;
+		call	near ptr tiles_activate_and_render_all_for_next_N_frames;
+	}
+
+	dialog_exit();
+	dialog_post();
+}

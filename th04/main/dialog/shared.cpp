@@ -27,14 +27,7 @@ bool near std_update_frames_then_animate_dialog_and_activate_boss_if_done(void)
 			}
 		#endif
 
-		/* TODO: Replace with the decompiled call
-		 * dialog_animate();
-		 * once that function is part of this translation unit */
-		_asm {
-			nop;
-			push cs;
-			call near ptr dialog_animate;
-		}
+		dialog_animate();
 
 		std_update = std_update_done;
 		bg_render_not_bombing = boss_bg_render_func;
