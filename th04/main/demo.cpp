@@ -17,7 +17,9 @@
 
 void near DemoPlay(void)
 {
-	extern const char DEMO_OP[];
+	#undef BINARY_OP
+	#define BINARY_OP DEMOPLAY_BINARY_OP
+	extern const char BINARY_OP[];
 
 	#if (GAME == 5)
 		size_t shift_offset = (resident->demo_num <= 4) ? DEMO_N : DEMO_N_EXTRA;
@@ -40,16 +42,5 @@ void near DemoPlay(void)
 			return;
 		}
 	}
-	HMem<uint8_t>::free(DemoBuf);
-	palette_black_out((GAME == 5) ? 8 : 10);
-	/* TODO: Replace with the decompiled call
-	 * 	GameExecl(DEMO_OP);
-	 * once that function is part of the same segment */
-	_asm {
-		push	ds;
-		push	offset DEMO_OP;
-		nop;
-		push 	cs;
-		call	near ptr GameExecl;
-	}
+	demo_end();
 }

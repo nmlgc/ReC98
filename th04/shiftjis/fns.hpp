@@ -1,3 +1,5 @@
+#define BINARY_OP	"op"
+
 #define EYECATCH_FN_FORMAT	"eye0.cdg"
 
 #define FACESET_REIMU_FN 	"KAO0.cd2"

@@ -1,2 +1,2 @@
-public _DEMO_OP
-_DEMO_OP db 'op',0
+public _DEMOPLAY_BINARY_OP
+_DEMOPLAY_BINARY_OP db 'op',0

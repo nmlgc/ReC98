@@ -15,5 +15,20 @@
 // buffer.
 extern uint8_t *DemoBuf; /* ZUN symbol [MAGNet2010] */
 
+#define demo_end() { \
+	HMem<uint8_t>::free(DemoBuf); \
+	palette_black_out((GAME == 5) ? 8 : 10); \
+	/* TODO: Replace with the decompiled call \
+	 * 	GameExecl(BINARY_OP); \
+	 * once that function is only called from the same segment */ \
+	_asm { \
+		push	ds; \
+		push	offset BINARY_OP; \
+		nop; \
+		push 	cs; \
+		call	near ptr GameExecl; \
+	} \
+}
+
 // Assigns the next frame out of [DemoBuf] to [key_det] and [shiftkey].
 void near DemoPlay();
