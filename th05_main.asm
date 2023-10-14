@@ -35,7 +35,6 @@ include th05/main/player/shot_types.inc
 include th05/main/enemy/enemy.inc
 
 	extern _execl:proc
-	extern _strlen:proc
 
 main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_TEXT, mai_TEXT, CFG_LRES_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, LASER_RH_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
@@ -3188,218 +3187,8 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@DIALOG_BOX_WIPE$QII procdesc pascal near \
 		left_and_top:dword
 	@dialog_box_fade_in_animate$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EFDE	proc near
-
-s		= dword	ptr -8
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-
-		enter	8, 0
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, 0Eh
-		ja	loc_F181
-		add	bx, bx
-		jmp	cs:off_F188[bx]
-
-loc_EFF7:
-		mov	_dialog_cursor.x, (DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W)
-		mov	_dialog_cursor.y, (DIALOG_CURSOR_PLAYCHAR_TOP / GLYPH_H)
-		mov	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jmp	loc_F181
-; ---------------------------------------------------------------------------
-
-loc_F00C:
-		mov	_dialog_cursor.x, (DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W)
-		mov	_dialog_cursor.y, (DIALOG_CURSOR_BOSS_TOP / GLYPH_H)
-		mov	_dialog_side, DIALOG_SIDE_BOSS
-		jmp	loc_F181
-; ---------------------------------------------------------------------------
-
-loc_F021:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		push	1
-		call	frame_delay
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_F045
-		push	(32 shl 16) or 240
-		jmp	short loc_F04B
-; ---------------------------------------------------------------------------
-
-loc_F045:
-		push	(288 shl 16) or 112
-
-loc_F04B:
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		push	ax
-		call	@dialog_face_load_unput_put_free_$qiii
-		jmp	loc_F0ED
-; ---------------------------------------------------------------------------
-
-loc_F057:
-		mov	eax, _dialog_p
-		mov	[bp+s],	eax
-		call	super_entry_bfnt pascal, [bp+s]
-
-loc_F068:
-		pushd	[bp+s]	; s
-		call	_strlen
-		add	sp, 4
-		inc	ax
-		add	word ptr _dialog_p, ax
-		jmp	loc_F181
-; ---------------------------------------------------------------------------
-
-loc_F07C:
-		cmp	_stage_id, 6
-		jz	short loc_F091
-		call	super_clean pascal, (180 shl 16) or 320
-		jmp	loc_F181
-; ---------------------------------------------------------------------------
-
-loc_F091:
-		call	@main_pat_exalice_override$qv
-		jmp	loc_F181
-; ---------------------------------------------------------------------------
-
-loc_F097:
-		mov	eax, _dialog_p
-		mov	[bp+s],	eax
-		les	bx, [bp+s]
-		cmp	byte ptr es:[bx], 24h ;	'$'
-		jnz	short loc_F0AD
-		push	(KAJA_SONG_STOP shl 8)
-		jmp	short loc_F0BB
-; ---------------------------------------------------------------------------
-
-loc_F0AD:
-		call	snd_load pascal, [bp+s], SND_LOAD_SONG
-		push	(KAJA_SONG_PLAY shl 8)
-
-loc_F0BB:
-		call	snd_kaja_interrupt
-		jmp	short loc_F068
-; ---------------------------------------------------------------------------
-
-loc_F0C2:
-		les	bx, _dialog_p
-		mov	ax, es:[bx]
-		mov	[bp+var_2], ax
-		mov	ax, es:[bx+2]
-		mov	[bp+var_4], ax
-		mov	al, es:[bx+4]
-		mov	[bp+arg_0], al
-		add	word ptr _dialog_p, 5
-		push	[bp+var_2]
-		push	[bp+var_4]
-		mov	ah, 0
-		push	ax
-		call	super_roll_put
-
-loc_F0ED:
-		jmp	loc_F181
-; ---------------------------------------------------------------------------
-
-loc_F0F0:
-		call	@dialog_box_wipe$qii pascal, ((    DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W) shl 16) or (    DIALOG_CURSOR_BOSS_TOP / GLYPH_H)
-		call	@dialog_box_wipe$qii pascal, ((DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W) shl 16) or (DIALOG_CURSOR_PLAYCHAR_TOP / GLYPH_H)
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		push	ax
-		call	palette_white_out
-
-loc_F118:
-		jmp	short loc_F181
-; ---------------------------------------------------------------------------
-
-loc_F11A:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		push	ax
-		call	palette_white_in
-		jmp	short loc_F118
-; ---------------------------------------------------------------------------
-
-loc_F132:
-		inc	_dialog_cursor.y
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_F142
-		mov	ax, (DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W)
-		jmp	short loc_F145
-; ---------------------------------------------------------------------------
-
-loc_F142:
-		mov	ax, (DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W)
-
-loc_F145:
-		mov	_dialog_cursor.x, ax
-		jmp	short loc_F170
-; ---------------------------------------------------------------------------
-
-loc_F14A:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		push	_dialog_cursor.x
-		push	_dialog_cursor.y
-		mov	ah, 0
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putca
-		add	_dialog_cursor.x, (GLYPH_FULL_W / GLYPH_HALF_W)
-
-loc_F170:
-		mov	al, 1
-		leave
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_F176:
-		push	_dialog_cursor.x
-		push	_dialog_cursor.y
-		call	@dialog_box_wipe$qii
-
-loc_F181:
-		mov	al, 0
-		leave
-		retn	2
-sub_EFDE	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_F188	dw offset loc_EFF7
-		dw offset loc_F00C
-		dw offset loc_F021
-		dw offset loc_F057
-		dw offset loc_F07C
-		dw offset loc_F097
-		dw offset loc_F0C2
-		dw offset loc_F181
-		dw offset loc_F181
-		dw offset loc_F0F0
-		dw offset loc_F11A
-		dw offset loc_F132
-		dw offset loc_F14A
-		dw offset loc_F170
-		dw offset loc_F176
+	@DIALOG_OP$QUC procdesc pascal near \
+		c:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3457,8 +3246,7 @@ loc_F227:
 ; ---------------------------------------------------------------------------
 
 loc_F249:
-		push	word ptr [bp+@@c]
-		call	sub_EFDE
+		call	@dialog_op$quc pascal, word ptr [bp+@@c]
 		or	al, al
 		jnz	short loc_F227
 		les	bx, [bp+var_6]
@@ -3490,8 +3278,7 @@ loc_F29E:
 ; ---------------------------------------------------------------------------
 
 loc_F2A5:
-		push	word ptr [bp+@@c]
-		call	sub_EFDE
+		call	@dialog_op$quc pascal, word ptr [bp+@@c]
 
 loc_F2AB:
 		jmp	loc_F1B3
@@ -3517,7 +3304,7 @@ public @dialog_animate$qv
 		jz	short loc_F333
 		cmp	byte_221EC, 0
 		jnz	short loc_F318
-		call	@main_pat_exalice_override$qv
+		call	@main_pat_exalice_override_and_su$qv
 		call	super_entry_bfnt pascal, ds, offset aSt06_bb1 ; "st06.bb1"
 		call	super_entry_bfnt pascal, ds, offset aSt06_bb2 ; "st06.bb2"
 		call	snd_load pascal, ds, offset aSt06b, SND_LOAD_SONG
@@ -3562,10 +3349,8 @@ loc_F333:
 		retf
 @dialog_animate$qv	endp
 
-	@DIALOG_FACE_LOAD_UNPUT_PUT_FREE_$QIII procdesc pascal near \
-		left:word, top:word, cel:word
 	@dialog_exit$qv	procdesc near
-	@main_pat_exalice_override$qv procdesc near
+	@main_pat_exalice_override_and_su$qv procdesc near
 DIALOG_TEXT	ends
 
 BOSS_EXP_TEXT	segment	byte public 'CODE' use16
@@ -7637,7 +7422,6 @@ SHARED_	segment	word public 'CODE' use16
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
-	extern CDG_PUT_8:proc
 	extern @game_exit$qv:proc
 	extern @POLAR$QIII:proc
 	extern VECTOR2_AT:proc

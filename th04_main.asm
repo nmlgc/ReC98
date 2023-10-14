@@ -40,7 +40,6 @@ include th04/main/enemy/enemy.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
-	extern _tolower:proc
 	extern __ctype:byte
 
 main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
@@ -1907,565 +1906,9 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_free$qv procdesc near
 	@std_update_frames_then_animate_d$qv procdesc near
 	@playfield_copy_front_to_back$qv procdesc near
-	@DIALOG_FACE_UNPUT_8$QUIUI procdesc pascal near \
-		left_and_top:dword
 	@dialog_box_fade_in_animate$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; A version of str_parse_up_to_3_digits_and_advance().
-_IS_DIG = 02h
-
-; Attributes: bp-based frame
-
-sub_D0CA	proc near
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= dword	ptr  4
-
-		enter	2, 0
-		les	bx, _dialog_p
-		mov	cl, es:[bx]
-		inc	word ptr _dialog_p
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _dialog_p
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_2], al
-		inc	word ptr _dialog_p
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_D114
-		les	bx, [bp+arg_0]
-		mov	ax, word_255D6
-		mov	es:[bx], ax
-		sub	word ptr _dialog_p, 3
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D114:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_D138
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		sub	word ptr _dialog_p, 2
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D138:
-		mov	al, [bp+var_2]
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_D168
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		imul	ax, 0Ah
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		dec	word ptr _dialog_p
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D168:
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		imul	ax, 64h
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, 0FFD0h
-		imul	dx, 0Ah
-		add	ax, dx
-		mov	dl, [bp+var_2]
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		leave
-		retn	4
-sub_D0CA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D193	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		les	bx, _dialog_p
-		cmp	byte ptr es:[bx], 2Ch ;	','
-		jnz	short loc_D1AF
-		inc	word ptr _dialog_p
-		pushd	[bp+arg_0]
-		call	main_01:sub_D0CA
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D1AF:
-		les	bx, [bp+arg_0]
-		mov	ax, word_255D6
-		mov	es:[bx], ax
-		pop	bp
-		retn	4
-sub_D193	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D1BC	proc near
-
-var_18		= byte ptr -18h
-var_8		= word ptr -8
-@@y		= word ptr -6
-@@x		= word ptr -4
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-
-		enter	18h, 0
-		push	si
-		push	di
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		push	ax		; ch
-		call	_tolower
-		pop	cx
-		mov	[bp+arg_0], al
-		mov	ah, 0
-		mov	[bp+var_8], ax
-		mov	cx, 0Fh		; switch 15 cases
-		mov	bx, offset word_D530
-
-loc_D1DC:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_8]
-		jz	short loc_D1EC
-		add	bx, 2
-		loop	loc_D1DC
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D1EC:
-		jmp	word ptr cs:[bx+1Eh] ; switch jump
-
-loc_D1F0:
-		add	_dialog_cursor.y, GLYPH_H	; jumptable 0000D1EC case 110
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_D201
-		mov	ax, DIALOG_CURSOR_PLAYCHAR_LEFT
-		jmp	short loc_D204
-; ---------------------------------------------------------------------------
-
-loc_D201:
-		mov	ax, DIALOG_CURSOR_BOSS_LEFT
-
-loc_D204:
-		mov	_dialog_cursor.x, ax
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D20A:
-		mov	word_255D6, 64h	; 'd' ; jumptable 0000D1EC case 116
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		push	1
-		call	frame_delay
-		mov	ax, [bp+var_2]
-		mov	PaletteTone, ax
-		call	far ptr	palette_show
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D22D:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 102
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 69h	; 'i'
-		jz	short loc_D245
-		cmp	[bp+arg_0], 6Fh	; 'o'
-		jnz	loc_D528	; default
-
-loc_D245:
-		inc	word ptr _dialog_p
-		mov	word_255D6, 1
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		cmp	[bp+arg_0], 69h	; 'i'
-		jnz	short loc_D268
-		push	[bp+var_2]
-		call	palette_black_in
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D268:
-		push	[bp+var_2]
-		call	palette_black_out
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D273:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 119
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 69h	; 'i'
-		jz	short loc_D28B
-		cmp	[bp+arg_0], 6Fh	; 'o'
-		jnz	loc_D528	; default
-
-loc_D28B:
-		inc	word ptr _dialog_p
-		mov	word_255D6, 1
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		cmp	[bp+arg_0], 69h	; 'i'
-		jnz	short loc_D2AE
-		push	[bp+var_2]
-		call	palette_white_in
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D2AE:
-		push	[bp+var_2]
-		call	palette_white_out
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D2B9:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 103
-		cmp	byte ptr es:[bx], 61h ;	'a'
-		jz	short loc_D2FE
-		mov	word_255D6, 8
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		xor	si, si
-		jmp	short loc_D2EF
-; ---------------------------------------------------------------------------
-
-loc_D2D5:
-		test	si, 1
-		jz	short loc_D2DF
-		push	4
-		jmp	short loc_D2E2
-; ---------------------------------------------------------------------------
-
-loc_D2DF:
-		push	RES_Y - 4
-
-loc_D2E2:
-		call	graph_scrollup
-		push	1
-		call	frame_delay
-		inc	si
-
-loc_D2EF:
-		cmp	si, [bp+var_2]
-		jle	short loc_D2D5
-		call	graph_scrollup pascal, 0
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D2FE:
-		inc	word ptr _dialog_p
-		mov	word_255D6, 0
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		mov	ax, _dialog_cursor.x
-		mov	bx, GLYPH_HALF_W
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, _dialog_cursor.y
-		mov	bx, GLYPH_H
-		cwd
-		idiv	bx
-		push	ax
-		push	[bp+var_2]
-		push	TX_WHITE
-		call	gaiji_putca
-		add	_dialog_cursor.x, GLYPH_FULL_W
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D337:
-		mov	word_255D6, 0	; jumptable 0000D1EC case 107
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		call	input_wait_for_change pascal, [bp+var_2]
-		jmp	loc_D478
-; ---------------------------------------------------------------------------
-
-loc_D350:
-		mov	word_255D6, 1	; jumptable 0000D1EC case 61
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		push	1
-		call	frame_delay
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_D38A
-		call	@dialog_face_unput_8$quiui pascal, (32 shl 16) or 240
-		cmp	[bp+var_2], (-1 and 255)
-		jz	loc_D528	; default
-		add	[bp+var_2], 2
-		push	(32 shl 16) or 240
-		jmp	short loc_D3A6
-; ---------------------------------------------------------------------------
-
-loc_D38A:
-		call	@dialog_face_unput_8$quiui pascal, (288 shl 16) or 112
-		cmp	[bp+var_2], (-1 and 255)
-		jz	loc_D528	; default
-		add	[bp+var_2], 8
-		push	(288 shl 16) or 112
-
-loc_D3A6:
-		push	[bp+var_2]
-		call	cdg_put_8
-		jmp	short loc_D3E3
-; ---------------------------------------------------------------------------
-
-loc_D3B0:
-		mov	word_255D6, 0	; jumptable 0000D1EC case 98
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		call	main_01:sub_D0CA
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		call	main_01:sub_D193
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D193
-		push	1
-		call	frame_delay
-		call	super_roll_put pascal, [bp+@@x], [bp+@@y], [bp+var_2]
-
-loc_D3E3:
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D3E6:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 109
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 24h	; '$'
-		jnz	short loc_D3FF
-		inc	word ptr _dialog_p
-		push	(KAJA_SONG_STOP shl 8)
-		jmp	short loc_D40B
-; ---------------------------------------------------------------------------
-
-loc_D3FF:
-		cmp	[bp+arg_0], 2Ah	; '*'
-		jnz	short loc_D413
-		inc	word ptr _dialog_p
-		push	(KAJA_SONG_PLAY shl 8)
-
-loc_D40B:
-		call	snd_kaja_interrupt
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D413:
-		cmp	[bp+arg_0], 2Ch	; ','
-		jnz	loc_D528	; default
-		inc	word ptr _dialog_p
-		mov	[bp+var_2], 0
-		jmp	short loc_D454
-; ---------------------------------------------------------------------------
-
-loc_D426:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_D45A
-		cmp	[bp+arg_0], 20h	; ' '
-		jz	short loc_D45A
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	al, [bp+arg_0]
-		mov	ss:[bx], al
-		inc	[bp+var_2]
-
-loc_D454:
-		cmp	[bp+var_2], 0Ch
-		jl	short loc_D426
-
-loc_D45A:
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	byte ptr ss:[bx], 0
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		push	SND_LOAD_SONG
-		call	snd_load
-		kajacall	KAJA_SONG_PLAY
-
-loc_D478:
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D47B:
-		push	ss		; jumptable 0000D1EC case 101
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		call	_snd_se_reset
-		call	snd_se_play pascal, [bp+var_2]
-		call	_snd_se_update
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D498:
-		call	super_clean pascal, (128 shl 16) or 256	; jumptable 0000D1EC case 99
-		jmp	short loc_D508
-; ---------------------------------------------------------------------------
-
-loc_D4A5:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 108
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 2Ch	; ','
-		jnz	short loc_D528	; default
-		inc	word ptr _dialog_p
-		mov	[bp+var_2], 0
-		jmp	short loc_D4EE
-; ---------------------------------------------------------------------------
-
-loc_D4C0:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_D4F4
-		cmp	[bp+arg_0], 20h	; ' '
-		jz	short loc_D4F4
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	al, [bp+arg_0]
-		mov	ss:[bx], al
-		inc	[bp+var_2]
-
-loc_D4EE:
-		cmp	[bp+var_2], 0Ch
-		jl	short loc_D4C0
-
-loc_D4F4:
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	byte ptr ss:[bx], 0
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	super_entry_bfnt
-
-loc_D508:
-		jmp	short loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D50A:
-		mov	di, CDG_PER_STAGE		; jumptable 0000D1EC case 100
-		jmp	short loc_D516
-; ---------------------------------------------------------------------------
-
-loc_D50F:
-		call	cdg_free pascal, di
-		inc	di
-
-loc_D516:
-		cmp	di, CDG_COUNT
-		jl	short loc_D50F
-		jmp	short loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D51D:
-		call	input_wait_for_change pascal, 0		; jumptable 0000D1EC case 36
-
-loc_D524:
-		mov	al, -1	; jumptable 0000D1EC case 35
-		jmp	short loc_D52A
-; ---------------------------------------------------------------------------
-
-loc_D528:
-		mov	al, 0		; default
-
-loc_D52A:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_D1BC	endp
-
-; ---------------------------------------------------------------------------
-word_D530	dw    23h,   24h,   3Dh,   62h
-		dw    63h,   64h,   65h,   66h ; value table for switch	statement
-		dw    67h,   6Bh,   6Ch,   6Dh
-		dw    6Eh,   74h,   77h
-		dw offset loc_D524	; jump table for switch	statement
-		dw offset loc_D51D
-		dw offset loc_D350
-		dw offset loc_D3B0
-		dw offset loc_D498
-		dw offset loc_D50A
-		dw offset loc_D47B
-		dw offset loc_D22D
-		dw offset loc_D2B9
-		dw offset loc_D337
-		dw offset loc_D4A5
-		dw offset loc_D3E6
-		dw offset loc_D1F0
-		dw offset loc_D20A
-		dw offset loc_D273
+	@DIALOG_OP$QUC procdesc pascal near \
+		c:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2475,7 +1918,7 @@ sub_D56C	proc near
 
 var_6		= dword	ptr -6
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@c		= byte ptr -1
 
 		enter	6, 0
 		push	si
@@ -2486,35 +1929,34 @@ var_1		= byte ptr -1
 loc_D57A:
 		les	bx, _dialog_p
 		mov	al, es:[bx]
-		mov	[bp+var_1], al
+		mov	[bp+@@c], al
 		inc	word ptr _dialog_p
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_D57A
-		cmp	[bp+var_1], 20h	; ' '
+		cmp	[bp+@@c], ' '
 		jz	short loc_D57A
-		cmp	[bp+var_1], 5Ch
+		cmp	[bp+@@c], '\'
 		jnz	short loc_D5BA
 		les	bx, _dialog_p
 		mov	al, es:[bx]
-		mov	[bp+var_1], al
+		mov	[bp+@@c], al
 		inc	word ptr _dialog_p
-		push	word ptr [bp+var_1]
-		call	main_01:sub_D1BC
+		call	@dialog_op$quc pascal, word ptr [bp+@@c]
 		cmp	al, -1
 		jnz	short loc_D57A
 		jmp	loc_D6E4
 ; ---------------------------------------------------------------------------
 
 loc_D5BA:
-		cmp	[bp+var_1], 30h	; '0'
+		cmp	[bp+@@c], '0'
 		jz	short loc_D5C6
-		cmp	[bp+var_1], 31h	; '1'
+		cmp	[bp+@@c], '1'
 		jnz	short loc_D57A
 
 loc_D5C6:
-		cmp	[bp+var_1], 30h	; '0'
+		cmp	[bp+@@c], '0'
 		jnz	short loc_D5E0
 		mov	_dialog_cursor.x, DIALOG_CURSOR_PLAYCHAR_LEFT
 		mov	_dialog_cursor.y, DIALOG_CURSOR_PLAYCHAR_TOP
@@ -2573,22 +2015,21 @@ loc_D63F:
 		call	main_01:far ptr	_input_reset_sense
 		les	bx, _dialog_p
 		mov	al, es:[bx]
-		mov	[bp+var_1], al
+		mov	[bp+@@c], al
 		inc	word ptr _dialog_p
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_D63F
-		cmp	[bp+var_1], 20h	; ' '
+		cmp	[bp+@@c], ' '
 		jz	short loc_D63F
-		cmp	[bp+var_1], 5Ch
+		cmp	[bp+@@c], '\'
 		jnz	short loc_D684
 		les	bx, _dialog_p
 		mov	al, es:[bx]
-		mov	[bp+var_1], al
+		mov	[bp+@@c], al
 		inc	word ptr _dialog_p
-		push	word ptr [bp+var_1]
-		call	main_01:sub_D1BC
+		call	@dialog_op$quc pascal, word ptr [bp+@@c]
 		cmp	al, -1
 		jnz	short loc_D63F
 		jmp	loc_D57A
@@ -2596,11 +2037,11 @@ loc_D63F:
 
 loc_D684:
 		les	bx, [bp+var_6]
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@c]
 		mov	es:[bx], al
 		les	bx, _dialog_p
 		mov	al, es:[bx]
-		mov	[bp+var_1], al
+		mov	[bp+@@c], al
 		les	bx, [bp+var_6]
 		mov	es:[bx+1], al
 		inc	word ptr _dialog_p
@@ -11267,7 +10708,6 @@ SHARED	segment	word public 'CODE' use16
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-	extern CDG_PUT_8:proc
 	extern @game_exit$qv:proc
 	extern GAME_INIT_MAIN:proc
 	extern CDG_PUT_NOALPHA_8:proc
@@ -31101,7 +30541,8 @@ byte_255C7	db ?
 byte_255C8	db ?
 		db ?
 include th04/main/dialog/dialog[bss].asm
-word_255D6	dw ?
+public _script_param_number_default
+_script_param_number_default	dw ?
 include th04/main/boss/explosions[bss].asm
 
 SHOT_LASER_COOLDOWN_FRAMES = 32

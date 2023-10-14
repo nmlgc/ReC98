@@ -91,7 +91,9 @@ extern int script_param_number_default;
 	// -------------------------------------------------------
 
 	// The ternary trick in script_op_bgm() is innovative enough, we *really*
-	// don't want to also work around the resulting warning now.
+	// don't want to also work around the resulting warning now. Besides,
+	// [fast_forward] is an rvalue in the TH04/TH05 dialog code and an lvalue
+	// in the TH03/TH04/TH05 cutscene code.
 	#if defined(__TURBOC__) && defined(__MSDOS__)
 		#pragma warn -rch
 		#pragma warn -ccc
@@ -131,6 +133,21 @@ extern int script_param_number_default;
 		} else { \
 			func_out(p1); \
 		} \
+	}
+
+	#define script_op_shake(fast_forward, temp_i, temp_p1) { \
+		script_param_read_number_first(temp_p1, 8); \
+		for(temp_i = 0; temp_i <= temp_p1; temp_i++) { \
+			if(temp_i & 1) { \
+				graph_scrollup(4); \
+			} else { \
+				graph_scrollup(RES_Y - 4); \
+			} \
+			if(!fast_forward) { \
+				frame_delay(1); \
+			} \
+		} \
+		graph_scrollup(0); \
 	}
 	// -------------------------------------------------------
 #endif

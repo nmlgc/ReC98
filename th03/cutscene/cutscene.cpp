@@ -738,18 +738,7 @@ script_ret_t pascal near script_op(unsigned char c)
 
 	case 'g':
 		if((GAME == 5) || (*script_p != 'a')) {
-			script_param_read_number_first(p1, 8);
-			for(p2 = 0; p2 <= p1; p2++) {
-				if(p2 & 1) {
-					graph_scrollup(4);
-				} else {
-					graph_scrollup(RES_Y - 4);
-				}
-				if(!fast_forward) {
-					frame_delay(1);
-				}
-			}
-			graph_scrollup(0);
+			script_op_shake(fast_forward, p2, p1);
 		} else {
 			script_p++;
 			script_param_read_number_first(p1, 0);

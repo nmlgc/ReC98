@@ -293,7 +293,12 @@ void pascal near boss_phase_next(
 						boss_statebyte[0] \
 					)
 
+					// Lol, *now* ZUN hardcoded what's effectively a call to
+					// the dialog script 'c' command?
+					// ZUN bloat: Should have been part of dialog_animate() all
+					// along.
 					super_clean(PAT_STAGE, (PAT_STAGE_last + 1));
+
 					dialog_animate();
 
 					if(!gengetsu_started) {
