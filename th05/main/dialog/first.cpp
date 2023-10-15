@@ -131,3 +131,97 @@ bool pascal near dialog_op(uint8_t c)
 	}
 	return false;
 }
+
+void near dialog_run(void)
+{
+	uint8_t c;
+
+	// ZUN bloat: An obvious remnant from the cutscene code introduced in TH03;
+	// unused here.
+	uint8_t speedup_cycle;
+
+	extern shiftjis_t near dialog_kanji_buf[];
+	shiftjis_t* kanji_str = dialog_kanji_buf;
+
+	while(1) {
+		c = *(dialog_p++);
+		if(c == 0xFF) {
+			break;
+		} else if(c == 0x0D) {
+			// Start a new dialog box by clearing it and rewinding the cursor.
+			// TH04 features separate '0' or '1' commands that include the side
+			// in the command itself, whereas TH05 requires the script to use
+			// separate 0x00 or 0x01 commands before this one. Thankfully, the
+			// original scripts always call these before the first 0x0D command
+			// and don't rely on [dialog_side]'s initial zero value.
+			if(dialog_side == SIDE_PLAYCHAR) {
+				dialog_cursor.x = to_dialog_x(TEXT_PLAYCHAR_LEFT);
+				dialog_cursor.y = to_dialog_y(TEXT_PLAYCHAR_TOP);
+			} else {
+				dialog_cursor.x = to_dialog_x(TEXT_BOSS_LEFT);
+				dialog_cursor.y = to_dialog_y(TEXT_BOSS_TOP);
+			}
+
+			// Technically, this only needs to be done for the other box
+			// because the new one is immediately wiped below, but who cares.
+			text_boxfilla(
+				to_tram_x(to_dialog_x(TEXT_PLAYCHAR_LEFT)),
+				to_tram_y(to_dialog_y(TEXT_PLAYCHAR_TOP)),
+				to_tram_x(to_dialog_x(TEXT_PLAYCHAR_LEFT + TEXT_W)),
+				to_tram_y(to_dialog_y(TEXT_PLAYCHAR_TOP + BOX_H)),
+				TX_BLUE
+			);
+			text_boxfilla(
+				to_tram_x(to_dialog_x(TEXT_BOSS_LEFT)),
+				to_tram_y(to_dialog_y(TEXT_BOSS_TOP)),
+				to_tram_x(to_dialog_x(TEXT_BOSS_LEFT + TEXT_W)),
+				to_tram_y(to_dialog_y(TEXT_BOSS_TOP + BOX_H)),
+				TX_BLUE
+			);
+
+			dialog_box_wipe(dialog_cursor.x, dialog_cursor.y);
+			speedup_cycle = 0;
+
+			// Box loop
+			while(1) {
+				// ZUN bloat: This would have only been necessary before, or,
+				// better yet, inside dialog_delay(). It should have also been
+				// input_reset_sense_held() instead, which would have addressed
+				// the hardware quirk documented in the `Research/HOLDKEY`
+				// example. Y'know, just to ensure that held keys are always
+				// recognized as such, and don't cause a sporadic 2-frame delay
+				// before the text is displayed completely after all.
+				input_reset_sense();
+
+				c = *(dialog_p++);
+				// End of text box?
+				if(c == 0xFF) {
+					input_wait_for_change(0);
+					break;
+				} else if(!dialog_op(c)) {
+					// Regular kanji
+					kanji_str[0] = c;
+					kanji_str[1] = *(dialog_p++);
+					dialog_text_put(kanji_str);
+
+					// ZUN bug: Is this supposed to be the second input sensing
+					// call that addresses the aforementioned hardware quirk?
+					// In most cases, this won't ever change the value of
+					// [key_det] compared to the above call as it will take the
+					// target hardware of this game much less than the PC-98
+					// keyboard UART delay of ≈0.6ms to run from the above call
+					// to this one. This call can only ever make a difference
+					// if this box loop happens to run on a particularly
+					// unlucky UART cycle where the value *did* change in the
+					// meantime.
+					input_sense();
+
+					dialog_delay(speedup_cycle);
+				}
+			}
+		} else {
+			dialog_op(c);
+		}
+	}
+	overlay_wipe();
+}

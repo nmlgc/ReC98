@@ -7,6 +7,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/math/subpixel.hpp"
 #include "th02/hardware/egc.hpp"
@@ -15,7 +16,11 @@ extern "C" {
 #include "th02/hardware/pages.hpp"
 #include "th02/formats/tile.hpp"
 #include "th03/formats/cdg.h"
-#include "th04/hardware/input.h"
+#if (GAME == 5)
+	#include "th05/hardware/input.h"
+#else
+	#include "th04/hardware/input.h"
+#endif
 }
 #include "th04/common.h"
 #if (GAME == 4)
@@ -79,9 +84,11 @@ extern dialog_side_t dialog_side;
 
 static const pixel_t BOX_W = 320;
 static const pixel_t BOX_H = 48;
+static const tram_cell_amount_t BOX_TRAM_H = (BOX_H / GLYPH_H);
 
 static const pixel_t MARGIN = 16;
 static const pixel_t TEXT_W = (PLAYFIELD_W - MARGIN - FACE_W);
+static const tram_cell_amount_t TEXT_TRAM_W = (TEXT_W / GLYPH_HALF_W);
 
 static const screen_x_t BOX_PLAYCHAR_LEFT = (PLAYFIELD_RIGHT - MARGIN - BOX_W);
 static const screen_y_t BOX_PLAYCHAR_TOP = (PLAYFIELD_BOTTOM - MARGIN - BOX_H);
@@ -117,9 +124,48 @@ void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
 // Clears the text in the dialog box that starts at the given coordinate.
 #if (GAME == 5)
 	void pascal near dialog_box_wipe(dialog_x_t left, dialog_y_t top);
+#else
+	#define dialog_box_wipe(left, top) { \
+		/* ZUN bloat: Could have been calculated a single time. */ \
+		tram_y_t y = to_tram_y(top); \
+		while(y < (to_tram_y(top) + BOX_TRAM_H)) { \
+			tram_x_t x = to_tram_x(left); \
+			while(x < (to_tram_x(left) + TEXT_TRAM_W)) { \
+				text_putca(x, y, ' ', TX_WHITE); \
+				x++; \
+			} \
+			y++; \
+		} \
+	}
 #endif
 
 void near dialog_box_fade_in_animate();
+
+inline void dialog_text_put(shiftjis_t* const& text) {
+	// ZUN landmine: Since this function is supposed to be called with [text]
+	// containing one fullwidth Shift-JIS codepoint followed by a terminating
+	// \0, it would have been safer to just assume this format and use
+	// text_putnsa() with a width of 2, or even to do a manual Shift-JIS➜JIS
+	// conversion followed by a direct write to TRAM. master.lib's TRAM
+	// functions follow the JIS X 0208:1997 standard of Shift-JIS that treats
+	// 0xE0 to 0xFF inclusive as fullwidth characters, and 0xFF can easily
+	// appear as the trail byte of an accidentally misaligned 2-byte pair when
+	// modding text. With such a 0xFF interpreted as a lead byte, text_putsa()
+	// will treat the terminating \0 as a trail byte, and end up printing a
+	// much longer string up to the next properly aligned \0 byte.
+	text_putsa(
+		to_tram_x(dialog_cursor.x), to_tram_y(dialog_cursor.y), text, TX_WHITE
+	);
+	dialog_cursor.x += to_dialog_x(GLYPH_FULL_W);
+}
+
+#define dialog_delay(speedup_cycle) { \
+	if(key_det == INPUT_NONE) { \
+		frame_delay(2); \
+	} else if(speedup_cycle & 1) { \
+		frame_delay(1); \
+	} \
+}
 
 // Script commands
 // ---------------

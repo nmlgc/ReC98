@@ -1007,6 +1007,7 @@ void near cutscene_animate(void)
 			int i = 0;
 		#endif
 
+		// Same iteration code as in TH04's dialog system.
 		c = *(script_p++);
 		if(str_sep_control_or_space(c)) {
 			continue;

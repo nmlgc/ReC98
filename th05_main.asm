@@ -3184,113 +3184,8 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_free$qv procdesc near
 	@std_update_frames_then_animate_d$qv procdesc near
 	@playfield_copy_front_to_back$qv procdesc near
-	@DIALOG_BOX_WIPE$QII procdesc pascal near \
-		left_and_top:dword
 	@dialog_box_fade_in_animate$qv procdesc near
-	@DIALOG_OP$QUC procdesc pascal near \
-		c:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F1A6	proc near
-
-var_6		= dword	ptr -6
-var_2		= byte ptr -2
-@@c		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], offset _dialog_kanji_buf
-
-loc_F1B3:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+@@c], al
-		inc	word ptr _dialog_p
-		cmp	[bp+@@c], -1
-		jz	loc_F2AE
-		cmp	[bp+@@c], 0Dh
-		jnz	loc_F2A5
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_F1E6
-		mov	_dialog_cursor.x, (DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W)
-		mov	_dialog_cursor.y, (DIALOG_CURSOR_PLAYCHAR_TOP / GLYPH_H)
-		jmp	short loc_F1F2
-; ---------------------------------------------------------------------------
-
-loc_F1E6:
-		mov	_dialog_cursor.x, (DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W)
-		mov	_dialog_cursor.y, (DIALOG_CURSOR_BOSS_TOP / GLYPH_H)
-
-loc_F1F2:
-		call	text_boxfilla pascal, (20 shl 16) + 20, (50 shl 16) + 23, TX_BLUE
-		call	text_boxfilla pascal, (6 shl 16) + 12, (36 shl 16) + 15, TX_BLUE
-		push	_dialog_cursor.x
-		push	_dialog_cursor.y
-		call	@dialog_box_wipe$qii
-		mov	[bp+var_2], 0
-
-loc_F227:
-		call	far ptr	_input_reset_sense
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+@@c], al
-		inc	word ptr _dialog_p
-		cmp	[bp+@@c], -1
-		jnz	short loc_F249
-		call	input_wait_for_change pascal, 0
-		jmp	short loc_F2AB
-; ---------------------------------------------------------------------------
-
-loc_F249:
-		call	@dialog_op$quc pascal, word ptr [bp+@@c]
-		or	al, al
-		jnz	short loc_F227
-		les	bx, [bp+var_6]
-		mov	al, [bp+@@c]
-		mov	es:[bx], al
-		push	es
-		les	si, _dialog_p
-		mov	al, es:[si]
-		pop	es
-		mov	es:[bx+1], al
-		inc	word ptr _dialog_p
-		call	text_putsa pascal, _dialog_cursor.x, _dialog_cursor.y, word ptr [bp+var_6+2], bx, TX_WHITE
-		add	_dialog_cursor.x, (GLYPH_FULL_W / GLYPH_HALF_W)
-		call	_input_sense
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_F296
-		push	2
-		jmp	short loc_F29E
-; ---------------------------------------------------------------------------
-
-loc_F296:
-		test	[bp+var_2], 1
-		jz	short loc_F227
-		push	1
-
-loc_F29E:
-		call	frame_delay
-		jmp	short loc_F227
-; ---------------------------------------------------------------------------
-
-loc_F2A5:
-		call	@dialog_op$quc pascal, word ptr [bp+@@c]
-
-loc_F2AB:
-		jmp	loc_F1B3
-; ---------------------------------------------------------------------------
-
-loc_F2AE:
-		call	@overlay_wipe$qv
-		pop	si
-		leave
-		retn
-sub_F1A6	endp
-
+	@dialog_run$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3340,7 +3235,7 @@ loc_F333:
 		graph_accesspage _page_front
 		call	@dialog_box_fade_in_animate$qv
 		call	@playfield_copy_front_to_back$qv
-		call	sub_F1A6
+		call	@dialog_run$qv
 		call	@dialog_exit$qv
 		graph_accesspage _page_back
 		push	1
