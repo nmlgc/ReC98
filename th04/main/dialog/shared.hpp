@@ -42,6 +42,13 @@ extern "C" {
 	typedef screen_y_t dialog_y_t;
 #endif
 
+inline dialog_x_t to_dialog_x(screen_x_t screen_x) {
+	return ((GAME == 5) ? (screen_x / GLYPH_HALF_W) : screen_x);
+}
+inline dialog_y_t to_dialog_y(screen_y_t screen_y) {
+	return ((GAME == 5) ? (screen_y / GLYPH_H) : screen_y);
+}
+
 extern struct {
 	dialog_x_t x;
 	dialog_y_t y;
@@ -85,5 +92,10 @@ void near playfield_copy_front_to_back(void);
 // Restores the [FACE_W]×[FACE_H] pixels starting at (⌊left/8⌋*8, top) on the
 // currently active VRAM page with the same pixels from the other VRAM page.
 void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
+
+// Clears the text in the dialog box that starts at the given coordinate.
+#if (GAME == 5)
+	void pascal near dialog_box_wipe(dialog_x_t left, dialog_y_t top);
+#endif
 
 void pascal near dialog_box_fade_in();

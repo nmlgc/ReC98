@@ -156,3 +156,14 @@ void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top)
 	);
 	egc_off();
 }
+
+#if (GAME == 5)
+void pascal near dialog_box_wipe(dialog_x_t left, dialog_y_t top)
+{
+	for(dialog_y_t y = top; y < (top + to_dialog_y(BOX_H)); y++) {
+		for(dialog_x_t x = left; x < (left + to_dialog_x(TEXT_W)); x++) {
+			text_putca(x, y, ' ', TX_WHITE);
+		}
+	}
+}
+#endif

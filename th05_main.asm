@@ -3187,50 +3187,8 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@DIALOG_BOX_PUT$QUIUII procdesc pascal near \
 		left_and_top:dword, tile:word
 	@playfield_copy_front_to_back$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EF74	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		jmp	short loc_EF9C
-; ---------------------------------------------------------------------------
-
-loc_EF7E:
-		mov	di, [bp+arg_2]
-		jmp	short loc_EF91
-; ---------------------------------------------------------------------------
-
-loc_EF83:
-		call	text_putca pascal, di, si, (' ' shl 16) + TX_WHITE
-		inc	di
-
-loc_EF91:
-		mov	ax, [bp+arg_2]
-		add	ax, 1Eh
-		cmp	ax, di
-		jg	short loc_EF83
-		inc	si
-
-loc_EF9C:
-		mov	ax, [bp+arg_0]
-		add	ax, 3
-		cmp	ax, si
-		jg	short loc_EF7E
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_EF74	endp
+	@DIALOG_BOX_WIPE$QII procdesc pascal near \
+		left_and_top:dword
 
 include th04/main/dialog/box_fade_in.asm
 
@@ -3357,10 +3315,8 @@ loc_F0ED:
 ; ---------------------------------------------------------------------------
 
 loc_F0F0:
-		push	(6 shl 16) or 12
-		call	sub_EF74
-		push	(20 shl 16) or 20
-		call	sub_EF74
+		call	@dialog_box_wipe$qii pascal, ((    DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W) shl 16) or (    DIALOG_CURSOR_BOSS_TOP / GLYPH_H)
+		call	@dialog_box_wipe$qii pascal, ((DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W) shl 16) or (DIALOG_CURSOR_PLAYCHAR_TOP / GLYPH_H)
 		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
@@ -3422,7 +3378,7 @@ loc_F170:
 loc_F176:
 		push	_dialog_cursor.x
 		push	_dialog_cursor.y
-		call	sub_EF74
+		call	@dialog_box_wipe$qii
 
 loc_F181:
 		mov	al, 0
@@ -3488,7 +3444,7 @@ loc_F1F2:
 		call	text_boxfilla pascal, (6 shl 16) + 12, (36 shl 16) + 15, TX_BLUE
 		push	_dialog_cursor.x
 		push	_dialog_cursor.y
-		call	sub_EF74
+		call	@dialog_box_wipe$qii
 		mov	[bp+var_2], 0
 
 loc_F227:
