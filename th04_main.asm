@@ -1906,13 +1906,10 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	extern @dialog_load_yuuka5_defeat_bad$qv:proc
 	@dialog_free$qv procdesc near
 	@std_update_frames_then_animate_d$qv procdesc near
-	@DIALOG_BOX_PUT$QUIUII procdesc pascal near \
-		left_and_top:dword, tile:word
 	@playfield_copy_front_to_back$qv procdesc near
 	@DIALOG_FACE_UNPUT_8$QUIUI procdesc pascal near \
 		left_and_top:dword
-
-include th04/main/dialog/box_fade_in.asm
+	@dialog_box_fade_in_animate$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2658,7 +2655,7 @@ public @dialog_animate$qv
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
-		call	main_01:dialog_box_fade_in
+		call	@dialog_box_fade_in_animate$qv
 		call	@playfield_copy_front_to_back$qv
 		call	main_01:sub_D56C
 		push	2

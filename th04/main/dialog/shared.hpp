@@ -72,13 +72,17 @@ static const pixel_t BOX_H = 48;
 static const pixel_t MARGIN = 16;
 static const pixel_t TEXT_W = (PLAYFIELD_W - MARGIN - FACE_W);
 
+static const screen_x_t BOX_PLAYCHAR_LEFT = (PLAYFIELD_RIGHT - MARGIN - BOX_W);
+static const screen_y_t BOX_PLAYCHAR_TOP = (PLAYFIELD_BOTTOM - MARGIN - BOX_H);
 static const screen_x_t TEXT_PLAYCHAR_LEFT = (
 	PLAYFIELD_RIGHT - MARGIN - TEXT_W
 );
-static const screen_y_t TEXT_PLAYCHAR_TOP = (PLAYFIELD_BOTTOM - MARGIN - BOX_H);
+static const screen_y_t TEXT_PLAYCHAR_TOP = BOX_PLAYCHAR_TOP;
 
-static const screen_x_t TEXT_BOSS_LEFT = (PLAYFIELD_LEFT + MARGIN);
-static const screen_y_t TEXT_BOSS_TOP = (TEXT_PLAYCHAR_TOP - FACE_H);
+static const screen_x_t BOX_BOSS_LEFT = (PLAYFIELD_LEFT + MARGIN);
+static const screen_y_t BOX_BOSS_TOP = (BOX_PLAYCHAR_TOP - FACE_H);
+static const screen_x_t TEXT_BOSS_LEFT = BOX_BOSS_LEFT;
+static const screen_y_t TEXT_BOSS_TOP = BOX_BOSS_TOP;
 // -------
 
 // ZUN bloat: Copying the entire playfield is strictly overkill here. Dialog
@@ -98,4 +102,4 @@ void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
 	void pascal near dialog_box_wipe(dialog_x_t left, dialog_y_t top);
 #endif
 
-void pascal near dialog_box_fade_in();
+void near dialog_box_fade_in_animate();

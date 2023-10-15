@@ -3184,13 +3184,10 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_load$qv procdesc near
 	@dialog_free$qv procdesc near
 	@std_update_frames_then_animate_d$qv procdesc near
-	@DIALOG_BOX_PUT$QUIUII procdesc pascal near \
-		left_and_top:dword, tile:word
 	@playfield_copy_front_to_back$qv procdesc near
 	@DIALOG_BOX_WIPE$QII procdesc pascal near \
 		left_and_top:dword
-
-include th04/main/dialog/box_fade_in.asm
+	@dialog_box_fade_in_animate$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3554,7 +3551,7 @@ loc_F333:
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
-		call	dialog_box_fade_in
+		call	@dialog_box_fade_in_animate$qv
 		call	@playfield_copy_front_to_back$qv
 		call	sub_F1A6
 		call	@dialog_exit$qv
