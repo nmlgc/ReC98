@@ -3188,8 +3188,6 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 		left_and_top:dword, tile:word
 	@playfield_copy_front_to_back$qv procdesc near
 
-include th04/main/dialog/face_unput_8.asm
-
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame

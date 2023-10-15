@@ -1909,8 +1909,9 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@DIALOG_BOX_PUT$QUIUII procdesc pascal near \
 		left_and_top:dword, tile:word
 	@playfield_copy_front_to_back$qv procdesc near
+	@DIALOG_FACE_UNPUT_8$QUIUI procdesc pascal near \
+		left_and_top:dword
 
-include th04/main/dialog/face_unput_8.asm
 include th04/main/dialog/box_fade_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================

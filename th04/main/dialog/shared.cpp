@@ -139,3 +139,20 @@ void near playfield_copy_front_to_back(void)
 
 	egc_off();
 }
+
+void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top)
+{
+	egc_start_copy_noframe();
+
+	// ZUN bloat: _ES = grcg_segment(0, top);
+	_AX = top;
+	_BX = _AX;
+	_ES = (SEG_PLANE_B + ((_AX * 4) + _BX));
+
+	_DI = ((FACE_H - 1) * ROW_SIZE);
+	_DI += (left / BYTE_DOTS);
+	egc_rect_interpage_16(
+		reinterpret_cast<egc_temp_t __es *>(_DI), FACE_W, page_back
+	);
+	egc_off();
+}
