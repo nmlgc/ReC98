@@ -2,7 +2,7 @@ public @TILES_REDRAW_INVALIDATED$QV
 @tiles_redraw_invalidated$qv proc near
 	push	si
 	push	di
-	call	egc_start_copy_inlined_noframe
+	call	@egc_start_copy_noframe$qv
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing

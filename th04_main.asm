@@ -1171,7 +1171,7 @@ loc_B8CE:
 		add	byte_25104, al
 		cmp	_scroll_active, 0
 		jz	short loc_B896
-		call	main_01:egc_start_copy_inlined_noframe
+		call	@egc_start_copy_noframe$qv
 		call	main_01:sub_BAEE
 		mov	byte_25104, 0
 		call	egc_off
@@ -2030,7 +2030,7 @@ sub_D016	proc near
 		push	bp
 		mov	bp, sp
 		push	di
-		call	main_01:egc_start_copy_inlined_noframe
+		call	@egc_start_copy_noframe$qv
 		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing

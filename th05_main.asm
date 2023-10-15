@@ -1459,7 +1459,7 @@ loc_BDB7:
 		jz	short loc_BD81
 		cmp	_scroll_active, 0
 		jz	short loc_BD81
-		call	egc_start_copy_inlined_noframe
+		call	@egc_start_copy_noframe$qv
 		call	sub_BC6A
 		mov	byte_23EFC, 0
 		call	egc_off
@@ -3289,7 +3289,7 @@ sub_EEF2	proc near
 		push	bp
 		mov	bp, sp
 		push	di
-		call	egc_start_copy_inlined_noframe
+		call	@egc_start_copy_noframe$qv
 		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing

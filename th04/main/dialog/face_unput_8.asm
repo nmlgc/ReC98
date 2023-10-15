@@ -7,7 +7,7 @@ public @DIALOG_FACE_UNPUT_8$QUIUI
 	push	bp
 	mov	bp, sp
 	push	di
-	call	egc_start_copy_inlined_noframe
+	call	@egc_start_copy_noframe$qv
 	mov	ax, [bp+@@top]
 	mov	bx, ax
 	shl	ax, 2
