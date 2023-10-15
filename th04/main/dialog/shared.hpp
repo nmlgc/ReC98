@@ -22,8 +22,8 @@ extern struct {
 } dialog_cursor;
 
 enum dialog_side_t {
-	DIALOG_SIDE_PLAYCHAR = 0,
-	DIALOG_SIDE_BOSS = 1,
+	SIDE_PLAYCHAR = 0,
+	SIDE_BOSS = 1,
 
 	_dialog_side_t_FORCE_INT16 = 0x7FFF
 };
@@ -33,25 +33,19 @@ extern dialog_side_t dialog_side;
 // Metrics
 // -------
 
-#define DIALOG_BOX_W 320
-#define DIALOG_BOX_H 48
+static const pixel_t BOX_W = 320;
+static const pixel_t BOX_H = 48;
 
-static const pixel_t DIALOG_MARGIN = 16;
-static const pixel_t DIALOG_LINE_W = (PLAYFIELD_W - DIALOG_MARGIN - FACE_W);
+static const pixel_t MARGIN = 16;
+static const pixel_t TEXT_W = (PLAYFIELD_W - MARGIN - FACE_W);
 
-static const screen_x_t DIALOG_CURSOR_PLAYCHAR_LEFT = (
-	PLAYFIELD_RIGHT - DIALOG_MARGIN - DIALOG_LINE_W
+static const screen_x_t TEXT_PLAYCHAR_LEFT = (
+	PLAYFIELD_RIGHT - MARGIN - TEXT_W
 );
-static const screen_y_t DIALOG_CURSOR_PLAYCHAR_TOP = (
-	PLAYFIELD_BOTTOM - DIALOG_MARGIN - DIALOG_BOX_H
-);
+static const screen_y_t TEXT_PLAYCHAR_TOP = (PLAYFIELD_BOTTOM - MARGIN - BOX_H);
 
-static const screen_x_t DIALOG_CURSOR_BOSS_LEFT = (
-	PLAYFIELD_LEFT + DIALOG_MARGIN
-);
-static const screen_y_t DIALOG_CURSOR_BOSS_TOP = (
-	DIALOG_CURSOR_PLAYCHAR_TOP - FACE_H
-);
+static const screen_x_t TEXT_BOSS_LEFT = (PLAYFIELD_LEFT + MARGIN);
+static const screen_y_t TEXT_BOSS_TOP = (TEXT_PLAYCHAR_TOP - FACE_H);
 // -------
 
 // Restores the [FACE_W]×[FACE_H] pixels starting at (⌊left/8⌋*8, top) on the

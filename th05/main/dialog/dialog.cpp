@@ -39,7 +39,7 @@ void pascal near dialog_face_load_unput_put_free_8(
 
 	if(face_id != FACE_NONE) {
 		if(Ems) {
-			if(dialog_side == DIALOG_SIDE_PLAYCHAR) {
+			if(dialog_side == SIDE_PLAYCHAR) {
 				offset = EMS_FACESET_PLAYCHAR_OFFSET;
 			} else {
 				offset = EMS_FACESET_BOSS_OFFSET;
@@ -56,7 +56,7 @@ void pascal near dialog_face_load_unput_put_free_8(
 			);
 			offset += size;
 		} else {
-			if(dialog_side != DIALOG_SIDE_PLAYCHAR) {
+			if(dialog_side != SIDE_PLAYCHAR) {
 				faceset_fn[3] = ('0' + stage_id);
 			} else {
 				faceset_fn = faceset_playchar_fn;

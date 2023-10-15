@@ -26,7 +26,7 @@ dialog_box_put	proc near
 
 @@row_loop:
 	mov	cx, (DIALOG_BOX_VRAM_W / 2)
-	mov	ax, _DIALOG_BOX_TILES[bx]
+	mov	ax, _BOX_TILES[bx]
 	rep stosw
 	add	bx, DIALOG_BOX_TILE_VRAM_W
 	test	bx, ((DIALOG_BOX_TILE_H * DIALOG_BOX_TILE_VRAM_W) - 1)
