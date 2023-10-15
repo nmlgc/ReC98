@@ -1,17 +1,8 @@
 #pragma option -zPmain_01
 
 #include "th04/main/dialog/shared.hpp"
-#include <stddef.h>
-#include "master.hpp"
-extern "C" {
-#include "th03/formats/cdg.h"
-}
-#include "th04/common.h"
-#include "th04/main/stage/stage.hpp"
-#include "th04/shiftjis/fns.hpp"
-#include "th04/playchar.h"
 #include "th04/main/ems.hpp"
-#include "th04/main/dialog/dialog.hpp"
+#include "th04/shiftjis/fns.hpp"
 
 void near dialog_init(void)
 {

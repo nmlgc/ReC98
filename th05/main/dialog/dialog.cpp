@@ -1,19 +1,11 @@
 #pragma option -zPmain_01
 
 #include "th04/main/dialog/shared.hpp"
-#include <stddef.h>
-#include "master.hpp"
-extern "C" {
-#include "th02/hardware/frmdelay.h"
-#include "th03/formats/cdg.h"
-}
-#include "th04/main/stage/stage.hpp"
 #include "th04/main/ems.hpp"
 #include "th05/playchar.h"
 #include "th05/formats/dialog.hpp"
-#include "th05/shiftjis/fns.hpp"
 #include "th05/sprites/main_pat.h"
-#include "th05/main/dialog/dialog.hpp"
+#include "th05/shiftjis/fns.hpp"
 
 #pragma option -a2
 

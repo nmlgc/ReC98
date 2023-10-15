@@ -357,7 +357,7 @@ loc_AB9E:
 		mov	_quit, Q_QUIT_TO_OP
 
 loc_ABBA:
-		call	fp_255CA
+		call	_std_update
 		call	@midboss_activate_if_stage_frame_$qv
 		call	_stage_vm
 		cmp	_bombing, 0
@@ -934,7 +934,7 @@ sub_B1D0	proc near
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_stage_point_items_collected, 0
 		mov	_dream_items_collected, 0
-		mov	fp_255CA, offset sub_CF44
+		mov	_std_update, offset @std_update_frames_then_animate_d$qv
 		mov	_scroll_active, 1
 		call	main_01:sub_1042A
 		nopcall	main_01:sub_11DE6
@@ -1905,73 +1905,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_load$qv procdesc near
 	extern @dialog_load_yuuka5_defeat_bad$qv:proc
 	@dialog_free$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CF3D	proc near
-		push	bp
-		mov	bp, sp
-		mov	al, 0
-		pop	bp
-		retn
-sub_CF3D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CF44	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_scroll_speed, 0
-		jnz	short loc_CFB6
-		cmp	_page_back, 1
-		jnz	short loc_CFB6
-		cmp	_stage_id, 5
-		jz	short loc_CF63
-		cmp	_stage_id, 6
-		jnz	short loc_CF70
-
-loc_CF63:
-		call	cdg_free pascal, CDG_EYE
-		call	@std_free$qv
-		call	@map_free$qv
-
-loc_CF70:
-		nopcall	@dialog_animate$qv
-		mov	fp_255CA, offset sub_CF3D
-		mov	ax, _boss_bg_render_func
-		mov	_bg_render_not_bombing, ax
-		mov	eax, _boss_update_func
-		mov	_boss_update, eax
-		mov	ax, _boss_fg_render_func
-		mov	_boss_fg_render, ax
-		mov	al, _stage_id
-		add	al, al
-		add	al, 2
-		mov	_bgm_title_id, al
-		cmp	_stage_id, 3
-		jnz	short loc_CFAC
-		cmp	_playchar, PLAYCHAR_REIMU
-		jz	short loc_CFAC
-		mov	_bgm_title_id, 10h
-
-loc_CFAC:
-		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_CFB6:
-		inc	_total_std_frames
-		mov	al, 0
-		pop	bp
-		retn
-sub_CF44	endp
+	@std_update_frames_then_animate_d$qv procdesc near
 
 include th04/main/dialog/box_put.asm
 
@@ -31204,7 +31138,6 @@ byte_255C6	db ?
 byte_255C7	db ?
 byte_255C8	db ?
 		db ?
-fp_255CA	dw ?
 include th04/main/dialog/dialog[bss].asm
 word_255D6	dw ?
 include th04/main/boss/explosions[bss].asm

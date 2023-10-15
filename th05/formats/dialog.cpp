@@ -1,7 +1,8 @@
-#pragma option -zCmain_TEXT
+#pragma option -zCmain_TEXT -zPmain_01
 
 #include <stddef.h>
 #include "platform.h"
+#include "pc98.h"
 #include "master.hpp"
 #include "th04/common.h"
 #include "th04/score.h"

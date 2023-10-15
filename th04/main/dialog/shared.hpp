@@ -1,10 +1,34 @@
 /// Internal dialog code, shared between TH04 and TH05
 /// --------------------------------------------------
 
+#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "master.hpp"
+#include "th01/math/subpixel.hpp"
+extern "C" {
+#include "th02/hardware/frmdelay.h"
+#include "th02/hardware/pages.hpp"
+#include "th02/formats/tile.hpp"
+#include "th03/formats/cdg.h"
+}
+#include "th04/common.h"
+#if (GAME == 4)
+	#include "th04/playchar.h"
+	#include "th04/formats/map.hpp"
+	#include "th04/formats/std.hpp"
+#endif
+#include "th04/math/motion.hpp"
+#include "th04/main/bg.hpp"
+#include "th04/main/frames.h"
+#include "th04/main/scroll.hpp"
+#include "th04/main/phase.hpp"
 #include "th04/main/playfld.hpp"
+#include "th04/main/boss/boss.hpp"
+#include "th04/main/hud/overlay.hpp"
+#include "th04/main/stage/stage.hpp"
+#include "th04/main/dialog/dialog.hpp"
 #include "th04/sprites/main_cdg.h"
 
 // A silly TH05 micro-optimization. Could have been 8-bit variables then.

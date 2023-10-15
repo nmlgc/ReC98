@@ -398,7 +398,7 @@ loc_AEBB:
 		mov	_quit, Q_QUIT_TO_OP
 
 loc_AED7:
-		call	fp_2C92E
+		call	_std_update
 		call	_stage_vm
 		cmp	_bombing, 0
 		jnz	short @@bombing
@@ -1069,7 +1069,7 @@ sub_B55A	proc near
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_stage_point_items_collected, 0
 		mov	_shot_time, 0
-		mov	fp_2C92E, offset sub_EE58
+		mov	_std_update, offset @std_update_frames_then_animate_d$qv
 		mov	_scroll_active, 1
 		nopcall	sub_E4FC
 		call	@randring_fill$qv
@@ -3183,51 +3183,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	extern @DIALOG_LOAD$QNXC:proc
 	@dialog_load$qv procdesc near
 	@dialog_free$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE51	proc near
-		push	bp
-		mov	bp, sp
-		mov	al, 0
-		pop	bp
-		retn
-sub_EE51	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE58	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_scroll_speed, 0
-		jnz	short loc_EE92
-		cmp	_page_back, 1
-		jnz	short loc_EE92
-		nopcall	@dialog_animate$qv
-		mov	fp_2C92E, offset sub_EE51
-		mov	ax, _boss_bg_render_func
-		mov	_bg_render_not_bombing, ax
-		mov	eax, _boss_update_func
-		mov	_boss_update, eax
-		mov	ax, _boss_fg_render_func
-		mov	_boss_fg_render, ax
-		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_EE92:
-		inc	_total_std_frames
-		mov	al, 0
-		pop	bp
-		retn
-sub_EE58	endp
+	@std_update_frames_then_animate_d$qv procdesc near
 
 include th04/main/dialog/box_put.asm
 
@@ -20861,7 +20817,6 @@ public _stage_vm, _enemy_cur
 _stage_vm	dd ?
 _enemy_cur	dw ?
 include th04/main/circles_color[bss].asm
-fp_2C92E	dw ?
 include th04/main/dialog/dialog[bss].asm
 		db 2 dup(?)
 include th04/main/boss/explosions[bss].asm
