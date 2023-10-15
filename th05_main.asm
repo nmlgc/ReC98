@@ -3186,43 +3186,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@std_update_frames_then_animate_d$qv procdesc near
 	@DIALOG_BOX_PUT$QUIUII procdesc pascal near \
 		left_and_top:dword, tile:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EEF2	proc near
-		push	bp
-		mov	bp, sp
-		push	di
-		call	@egc_start_copy_noframe$qv
-		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
-		mov	dx, 166	; Port 00A6h: Page access register
-		mov	al, _page_front
-
-loc_EF07:
-		mov	cx, 24
-
-loc_EF0A:
-		out	dx, al
-		xor	al, 1
-		mov	bx, es:[di]
-		out	dx, al
-		xor	al, 1
-		mov	es:[di], bx
-		add	di, 2
-		loop	loc_EF0A
-		sub	di, ROW_SIZE + (24 * 2)
-		jge	short loc_EF07
-		out	dx, al
-		call	egc_off
-		pop	di
-		pop	bp
-		retn
-sub_EEF2	endp
+	@playfield_copy_front_to_back$qv procdesc near
 
 include th04/main/dialog/face_unput_8.asm
 
@@ -3637,7 +3601,7 @@ loc_F333:
 		call	far ptr	palette_show
 		graph_accesspage _page_front
 		call	dialog_box_fade_in
-		call	sub_EEF2
+		call	@playfield_copy_front_to_back$qv
 		call	sub_F1A6
 		call	@dialog_exit$qv
 		graph_accesspage _page_back

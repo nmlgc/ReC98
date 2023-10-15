@@ -102,3 +102,40 @@ void pascal near dialog_box_put(uscreen_x_t left, uvram_y_t top, int tile)
 	#undef offset
 	#undef rows_left
 }
+
+#define egc_rect_interpage_16(bottom_p, w, src_page) { \
+	_DX = 0xA6; /* PC-98 VRAM page access port */ \
+	_AL = src_page; \
+	\
+	do { \
+		_CX = (w / EGC_REGISTER_DOTS); \
+		word_loop: { \
+			outportb(_DX, _AL); _AL ^= 1; _BX = *bottom_p; \
+			outportb(_DX, _AL); _AL ^= 1; *bottom_p = _BX; \
+			bottom_p++; \
+			asm { loop word_loop; } \
+		} \
+	} while(((int16_t)(bottom_p) -= ((RES_X + w) / BYTE_DOTS)) >= 0); \
+}
+
+void near playfield_copy_front_to_back(void)
+{
+	egc_start_copy_noframe();
+	_ES = grcg_segment(0, PLAYFIELD_TOP);
+	_DI = (((PLAYFIELD_H - 1) * ROW_SIZE) + PLAYFIELD_VRAM_LEFT);
+	egc_rect_interpage_16(
+		reinterpret_cast<egc_temp_t __es *>(_DI), PLAYFIELD_W, page_front
+	);
+
+	// The above call returns the VRAM page access port in DX, [page_front] in
+	// AL, and ![page_front] as the accessed page. Since the caller expects to
+	// access the other one, we should switch back here, and this single-byte
+	// instruction is all it takes as a result.
+	// (Technically, it's not necessary since the accessed page only matters
+	// for face blitting and dialog_face_unput_8()'s back→front copy will
+	// override the accessed page anyway, but it's still good form. Kudos to
+	// ZUN for doing the correct thing for once!)
+	outportb(_DX, _AL);
+
+	egc_off();
+}

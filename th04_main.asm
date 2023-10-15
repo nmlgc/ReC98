@@ -1908,43 +1908,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@std_update_frames_then_animate_d$qv procdesc near
 	@DIALOG_BOX_PUT$QUIUII procdesc pascal near \
 		left_and_top:dword, tile:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D016	proc near
-		push	bp
-		mov	bp, sp
-		push	di
-		call	@egc_start_copy_noframe$qv
-		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
-		mov	dx, 166	; Port 00A6h: Page access register
-		mov	al, _page_front
-
-loc_D02B:
-		mov	cx, 18h
-
-loc_D02E:
-		out	dx, al
-		xor	al, 1
-		mov	bx, es:[di]
-		out	dx, al
-		xor	al, 1
-		mov	es:[di], bx
-		add	di, 2
-		loop	loc_D02E
-		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
-		jge	short loc_D02B
-		out	dx, al
-		call	egc_off
-		pop	di
-		pop	bp
-		retn
-sub_D016	endp
+	@playfield_copy_front_to_back$qv procdesc near
 
 include th04/main/dialog/face_unput_8.asm
 include th04/main/dialog/box_fade_in.asm
@@ -2694,7 +2658,7 @@ public @dialog_animate$qv
 		call	far ptr	palette_show
 		graph_accesspage _page_front
 		call	main_01:dialog_box_fade_in
-		call	main_01:sub_D016
+		call	@playfield_copy_front_to_back$qv
 		call	main_01:sub_D56C
 		push	2
 		nopcall	@tiles_activate_and_render_all_fo$quc

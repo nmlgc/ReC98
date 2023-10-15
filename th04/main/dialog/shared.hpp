@@ -8,6 +8,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th02/hardware/egc.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/pages.hpp"
@@ -72,6 +73,14 @@ static const screen_y_t TEXT_PLAYCHAR_TOP = (PLAYFIELD_BOTTOM - MARGIN - BOX_H);
 static const screen_x_t TEXT_BOSS_LEFT = (PLAYFIELD_LEFT + MARGIN);
 static const screen_y_t TEXT_BOSS_TOP = (TEXT_PLAYCHAR_TOP - FACE_H);
 // -------
+
+// ZUN bloat: Copying the entire playfield is strictly overkill here. Dialog
+// sequences are single-buffered and only use the back page to keep the
+// playfield/dialog box pixels behind the two faces for unblitting. Note how it
+// also doesn't help with removing the dialog box pixels after the sequence,
+// because this is called after those were blitted, so it's up to the tile or
+// boss renderers to remove them.
+void near playfield_copy_front_to_back(void);
 
 // Restores the [FACE_W]×[FACE_H] pixels starting at (⌊left/8⌋*8, top) on the
 // currently active VRAM page with the same pixels from the other VRAM page.
