@@ -3184,8 +3184,8 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_load$qv procdesc near
 	@dialog_free$qv procdesc near
 	@std_update_frames_then_animate_d$qv procdesc near
-
-include th04/main/dialog/box_put.asm
+	@DIALOG_BOX_PUT$QUIUII procdesc pascal near \
+		left_and_top:dword, tile:word
 
 ; =============== S U B	R O U T	I N E =======================================
 

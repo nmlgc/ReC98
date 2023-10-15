@@ -9,8 +9,8 @@ dialog_box_fade_in	proc near
 ; ---------------------------------------------------------------------------
 
 @@tile_loop:
-	call	dialog_box_put pascal, (48 shl 16) or 192, si
-	call	dialog_box_put pascal, (80 shl 16) or 320, si
+	call	@dialog_box_put$quiuii pascal, (48 shl 16) or 192, si
+	call	@dialog_box_put$quiuii pascal, (80 shl 16) or 320, si
 	call	frame_delay pascal, 12
 	inc	si
 
