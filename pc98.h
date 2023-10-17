@@ -28,7 +28,7 @@ typedef unsigned int uvram_byte_amount_t;
 typedef unsigned int uvram_word_amount_t;
 typedef unsigned int uvram_dword_amount_t;
 
-// TRAM widths
+// TRAM widths or heights
 typedef int tram_cell_amount_t;
 /// ------
 
