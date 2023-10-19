@@ -86,4 +86,18 @@ extern int script_param_number_default;
 		} \
 		ret[temp_len] = '\0'; \
 	}
+
+	// Commands shared between the cutscene and dialog systems
+	// -------------------------------------------------------
+
+	#define script_op_fade(c, func_in, func_out, temp_p1) { \
+		script_p++; \
+		script_param_read_number_first(temp_p1, 1); \
+		if(c == 'i') { \
+			func_in(p1); \
+		} else { \
+			func_out(p1); \
+		} \
+	}
+	// -------------------------------------------------------
 #endif

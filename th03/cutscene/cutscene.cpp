@@ -558,6 +558,16 @@ void near cursor_advance_and_animate(void)
 // Called with [script_p] at the character past [c].
 script_ret_t pascal near script_op(unsigned char c)
 {
+	// ZUN bloat: Needed for code generation reasons. The structure of the
+	// conditional branches below ensures that the `return`s have no actual
+	// effect, so this block can just be deleted.
+	#if (GAME == 5)
+		#define palette_black_in(x)  palette_black_in(x);  return CONTINUE;
+		#define palette_black_out(x) palette_black_out(x); return CONTINUE;
+		#define palette_white_in(x)  palette_white_in(x);  return CONTINUE;
+		#define palette_white_out(x) palette_white_out(x); return CONTINUE;
+	#endif
+
 	int i;
 	int p1;
 	int p2;
@@ -641,66 +651,52 @@ script_ret_t pascal near script_op(unsigned char c)
 	case 'w':
 		c = tolower(*script_p);
 		if((c == 'o') || (c == 'i')) {
-			script_p++;
-			script_param_read_number_first(p1, 1);
-			if(c == 'i') {
-				palette_white_in(p1);
-				#if (GAME == 5) // ZUN bloat: `break` or `return`, pick one!
-					return CONTINUE;
-				#endif
-			} else {
-				palette_white_out(p1);
-				#if (GAME == 5) // ZUN bloat: `break` or `return`, pick one!
-					return CONTINUE;
-				#endif
-			}
-			#if (GAME <= 4)
-				break;
-			#endif
-		}
-		#if (GAME >= 4)
-			box_1_to_0_animate();
-		#endif
-		script_param_number_default = 64;
-		if(c != 'm') {
-			if(c == 'k') {
-				script_p++;
-			}
-			script_param_read_number_first(p1);
-			if(!fast_forward) {
-				#if (GAME >= 4)
-					frame_delay(p1);
-				#else
-					if(c != 'k')  {
-						frame_delay(p1);
-					} else {
-						input_wait_for_ok(p1);
-					}
-				#endif
-				#if (GAME == 5) // ZUN bloat
-					return CONTINUE;
-				#endif
-			}
+			script_op_fade(c, palette_white_in, palette_white_out, p1);
 		} else {
-			script_p++;
-			c = *script_p;
-			if(c == 'k') {
+			#if (GAME >= 4)
+				box_1_to_0_animate();
+			#endif
+			script_param_number_default = 64;
+			if(c != 'm') {
+				if(c == 'k') {
+					script_p++;
+				}
+				script_param_read_number_first(p1);
+				if(!fast_forward) {
+					#if (GAME >= 4)
+						frame_delay(p1);
+					#else
+						if(c != 'k')  {
+							frame_delay(p1);
+						} else {
+							input_wait_for_ok(p1);
+						}
+					#endif
+					#if (GAME == 5) // ZUN bloat
+						return CONTINUE;
+					#endif
+				}
+			} else {
 				script_p++;
-			}
-			script_param_read_number_first(p1);
-			script_param_read_number_second(p2);
-			if(!fast_forward) {
-				// ZUN landmine: Does not prevent the potential deadlock issue
-				// with this function.
-				#if (GAME >= 4)
-					snd_delay_until_measure(p1, p2);
-				#else
-					if(c != 'k')  {
+				c = *script_p;
+				if(c == 'k') {
+					script_p++;
+				}
+				script_param_read_number_first(p1);
+				script_param_read_number_second(p2);
+				if(!fast_forward) {
+					// ZUN landmine: Does not prevent the potential deadlock
+					// issue with this function.
+					#if (GAME >= 4)
 						snd_delay_until_measure(p1, p2);
-					} else {
-						input_wait_for_ok_or_measure(p1, p2);
-					}
-				#endif
+					#else
+						if(c != 'k')  {
+							snd_delay_until_measure(p1, p2);
+						} else {
+							input_wait_for_ok_or_measure(p1, p2);
+						}
+					#endif
+				}
 			}
 		}
 		break;
@@ -728,19 +724,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		c = *script_p;
 		if(c != 'm') {
 			if((c == 'i') || (c == 'o')) {
-				script_p++;
-				script_param_read_number_first(p1, 1);
-				if(c == 'i') {
-					palette_black_in(p1);
-					#if (GAME == 5) // ZUN bloat: `break` or `return`, pick one!
-						return CONTINUE;
-					#endif
-				} else {
-					palette_black_out(p1);
-					#if (GAME == 5) // ZUN bloat: `break` or `return`, pick one!
-						return CONTINUE;
-					#endif
-				}
+				script_op_fade(c, palette_black_in, palette_black_out, p1);
 			}
 		} else {
 			script_p++;
