@@ -50,8 +50,9 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 #if defined(PMD) && defined(MASTER_HPP)
 // Loads a song ([func] == SND_LOAD_SONG) or a sound effect bank ([func] ==
 // SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must
-// not have any extension. Depending on [snd_bgm_mode], [snd_se_mode], and
-// game, the following file is loaded:
+// be null-terminated (despite the fixed length) and not have any extension.
+// Depending on [snd_bgm_mode], [snd_se_mode], and game, the following file is
+// loaded:
 //
 // |                | TH04       | TH05      |
 // |----------------+------------+-----------|
@@ -66,13 +67,12 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 // | SND_SE_FM      | [fn].efc   | [fn].efc  |
 // | SND_SE_BEEP    | [fn].efs   | [fn].efs  | (using master.lib's BGM driver)
 //
-// Caveats:
-// • [fn] still needs to be null-terminated.
-// • The TH04 version does not handle file errors.
-//
-// ZUN landmine: Two of them:
+// The TH04/TH05 implementation stops any currently playing song before loading
+// a new one, avoiding the landmine from the TH02/TH03 version.
+// ZUN landmine: However, it adds three more:
 // • In SND_SE_BEEP mode, the TH04 version requires master.lib's BGM subsystem
 //   to have been initialized before. TH05 initializes it on demand.
+// • The TH04 version does not handle file errors.
 // • The TH05 version will infinitely loop if neither the file for the current
 //   [snd_bgm_mode] nor "[fn].m" exist.
 void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);

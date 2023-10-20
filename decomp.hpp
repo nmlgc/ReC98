@@ -89,7 +89,11 @@ template <class T> union StupidBytewiseWrapperAround {
 		*reinterpret_cast<int16_t near *>(reinterpret_cast<uint16_t>(&x))
 
 	// Calling an empty inlined function prevents certain jump optimizations.
-	inline void optimization_barrier(void) {
+	// Returning a value also allows such a barrier to be used for turning
+	// conditional branches with no `else` branch into ternary expressions,
+	// which can lead to different jump optimizations in longer functions.
+	inline bool optimization_barrier(void) {
+		return false;
 	}
 
 #else

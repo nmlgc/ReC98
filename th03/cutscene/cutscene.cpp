@@ -935,23 +935,11 @@ script_ret_t pascal near script_op(unsigned char c)
 		break;
 
 	case 'm':
-		c = *script_p;
-		if(c == '$') {
-			script_p++;
-			snd_kaja_func(KAJA_SONG_STOP, 0);
-			return CONTINUE;
-		} else if(c == '*') {
-			script_p++;
-			snd_kaja_func(KAJA_SONG_PLAY, 0);
-			return CONTINUE;
-		}
-		if(c == ',') {
-			script_p++;
-			script_param_read_fn(fn, p1, c);
-			snd_kaja_func(KAJA_SONG_STOP, 0);
-			snd_load(fn, SND_LOAD_SONG);
-			snd_kaja_func(KAJA_SONG_PLAY, 0);
-		}
+		// TH03 uses the TH02 version of snd_load(), and consequently does the
+		// right thing and stops any currently playing BGM before loading the
+		// new one. It wouldn't be necessary for TH04 and TH05, but hey, still
+		// doing it removes a potential implementation difference.
+		script_op_bgm(true, c, fn, p1);
 		break;
 
 	case 'e':

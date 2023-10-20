@@ -90,6 +90,39 @@ extern int script_param_number_default;
 	// Commands shared between the cutscene and dialog systems
 	// -------------------------------------------------------
 
+	// The ternary trick in script_op_bgm() is innovative enough, we *really*
+	// don't want to also work around the resulting warning now.
+	#if defined(__TURBOC__) && defined(__MSDOS__)
+		#pragma warn -rch
+		#pragma warn -ccc
+	#endif
+
+	#define script_op_bgm(stop_before_load, temp_c, temp_fn, temp_len) { \
+		c = *script_p; \
+		if(c == '$') { \
+			script_p++; \
+			snd_kaja_func(KAJA_SONG_STOP, 0); \
+			if(stop_before_load) { /* ZUN bloat */ \
+				return CONTINUE; \
+			} \
+		} else if(c == '*') { \
+			script_p++; \
+			snd_kaja_func(KAJA_SONG_PLAY, 0); \
+			if(stop_before_load) { /* ZUN bloat */ \
+				return CONTINUE; \
+			} \
+		} else if(c == ',') { \
+			script_p++; \
+			script_param_read_fn(fn, p1, c); \
+			(stop_before_load \
+				? snd_kaja_func(KAJA_SONG_STOP, 0) \
+				: optimization_barrier() \
+			); \
+			snd_load(fn, SND_LOAD_SONG); \
+			snd_kaja_func(KAJA_SONG_PLAY, 0); \
+		} \
+	}
+
 	#define script_op_fade(c, func_in, func_out, temp_p1) { \
 		script_p++; \
 		script_param_read_number_first(temp_p1, 1); \
