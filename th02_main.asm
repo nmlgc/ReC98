@@ -1271,12 +1271,12 @@ var_C		= byte ptr -0Ch
 		call	@randring_fill$qv
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		mov	ax, 0D0h
-		mov	word_205E6, ax
-		mov	word_205E8, ax
-		mov	ax, 150h
-		mov	word_205EA, ax
-		mov	word_205EC, ax
+		mov	ax, PLAYER_LEFT_START
+		mov	_player_left_on_page[0 * word], ax
+		mov	_player_left_on_page[1 * word], ax
+		mov	ax, PLAYER_TOP_START
+		mov	_player_top_on_page[0 * word], ax
+		mov	_player_top_on_page[1 * word], ax
 		mov	dword_20612, 0
 		mov	byte_2061A, 0
 		mov	byte_1F466, 0
@@ -1575,12 +1575,12 @@ sub_B98E	proc near
 		mov	bp, sp
 		call	@hud_put$qv
 		nopcall	@overlay_stage_leave_animate$qv
-		mov	ax, 0D0h
-		mov	word_205E8, ax
-		mov	word_205E6, ax
-		mov	ax, 150h
-		mov	word_205EC, ax
-		mov	word_205EA, ax
+		mov	ax, PLAYER_LEFT_START
+		mov	_player_left_on_page[1 * word], ax
+		mov	_player_left_on_page[0 * word], ax
+		mov	ax, PLAYER_TOP_START
+		mov	_player_top_on_page[1 * word], ax
+		mov	_player_top_on_page[0 * word], ax
 		call	sub_C5B0
 		mov	_player_invincibility_time, CONTINUE_INVINCIBILITY_FRAMES
 		graph_accesspage _page_front
@@ -1849,7 +1849,7 @@ loc_BCC3:
 
 loc_BCF9:
 		call	farfp_26C3C
-		call	sub_C6B2
+		call	@player_invalidate$qv
 		call	sub_10D42
 		call	farfp_23A72
 		call	@items_invalidate$qv
@@ -2744,8 +2744,8 @@ sub_C5B0	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C6B2	proc near
+public @PLAYER_INVALIDATE$QV
+@player_invalidate$qv proc near
 
 var_2		= word ptr -2
 
@@ -2758,13 +2758,13 @@ var_2		= word ptr -2
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
-		add	ax, 2B76h
-		mov	word_205EE, ax
+		add	ax, offset _player_left_on_page
+		mov	_player_left_on_back_page, ax
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
-		add	ax, 2B7Ah
-		mov	word_205F0, ax
+		add	ax, offset _player_top_on_page
+		mov	_player_top_on_back_page, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -2775,11 +2775,11 @@ var_2		= word ptr -2
 		shl	ax, 2
 		add	ax, 2B8Ch
 		mov	word_205F4, ax
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		push	word ptr [bx]	; left
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		push	word ptr [bx]	; top
-		push	(32 shl 16) or 48	; (w shl 16) or h
+		push	(PLAYER_W shl 16) or PLAYER_H	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
 		mov	bx, word_205F2
 		mov	si, [bx]
@@ -2798,20 +2798,20 @@ var_2		= word ptr -2
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B76h]
-		mov	bx, word_205EE
+		mov	ax, _player_left_on_page[bx]
+		mov	bx, _player_left_on_back_page
 		mov	[bx], ax
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B7Ah]
-		mov	bx, word_205F0
+		mov	ax, _player_top_on_page[bx]
+		mov	bx, _player_top_on_back_page
 		mov	[bx], ax
 		pop	si
 		leave
 		retn
-sub_C6B2	endp
+@player_invalidate$qv endp
 main_01_TEXT	ends
 
 POINTNUM_TEXT	segment	byte public 'CODE' use16
@@ -5773,18 +5773,18 @@ main_01____TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @PLAYER_MOVE$QII
+@player_move$qii proc near
 
-sub_EEC3	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@delta_y	= word ptr  4
+@@delta_x	= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
 		mov	_player_topleft.y, ax
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@delta_y]
 		add	_player_topleft.y, ax
 		cmp	_player_topleft.y, PLAYFIELD_TOP
 		jge	short loc_EEE5
@@ -5798,13 +5798,13 @@ loc_EEE5:
 		mov	_player_topleft.y, (PLAYFIELD_BOTTOM - PLAYER_H + (PLAYER_H / 6))
 
 loc_EEF3:
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		mov	ax, _player_topleft.y
 		mov	[bx], ax
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
 		mov	_player_topleft.x, ax
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@delta_x]
 		add	_player_topleft.x, ax
 		cmp	_player_topleft.x, (PLAYFIELD_RIGHT - PLAYER_W + 6)
 		jl	short loc_EF1C
@@ -5818,12 +5818,12 @@ loc_EF1C:
 		mov	_player_topleft.x, (PLAYFIELD_LEFT - (PLAYER_W / 8))
 
 loc_EF29:
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		mov	ax, _player_topleft.x
 		mov	[bx], ax
 		pop	bp
 		retn	4
-sub_EEC3	endp
+@player_move$qii endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5936,23 +5936,23 @@ sub_EFF2	proc near
 		nopcall	@score_delta_commit$qv
 
 		inc	byte_1EB0C
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
-		add	ax, 10h
+		add	ax, (PLAYER_W / 2)
 		push	ax
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
-		add	ax, 18h
+		add	ax, (PLAYER_H / 2)
 		push	ax
 		push	800010h
 		push	1
 		call	sub_4090
 
 loc_F03D:
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
 		mov	_player_topleft.x, ax
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
 		mov	_player_topleft.y, ax
 		inc	byte_20609
@@ -5970,7 +5970,7 @@ loc_F03D:
 		sub	si, RES_Y
 
 loc_F078:
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		call	super_roll_put pascal, word ptr [bx], si, [bp+@@patnum]
 		jmp	loc_F1D5
 ; ---------------------------------------------------------------------------
@@ -5992,13 +5992,13 @@ loc_F0A7:
 		mov	word_20272, 0FFFAh
 
 loc_F0B9:
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
-		add	ax, 10h
+		add	ax, (PLAYER_W / 2)
 		push	ax
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
-		add	ax, 18h
+		add	ax, (PLAYER_H / 2)
 		push	ax
 		push	800020h
 		push	1
@@ -6007,9 +6007,9 @@ loc_F0B9:
 		jnz	short loc_F107
 		mov	byte_20609, 0
 		mov	_items_miss_add_gameover, 1
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		push	word ptr [bx]	; screen_left
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		push	word ptr [bx]	; screen_top
 		call	@items_miss_add$qii
 		mov	_items_miss_add_gameover, 0
@@ -6024,9 +6024,9 @@ loc_F107:
 		mov	al, [bx+109Fh]
 		mov	_power, al
 		call	@player_shot_level_update_and_hud$qv
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		push	word ptr [bx]	; screen_left
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		push	word ptr [bx]	; screen_top
 		call	@items_miss_add$qii
 		jmp	loc_F1D5
@@ -6035,7 +6035,7 @@ loc_F107:
 loc_F12A:
 		cmp	byte_20609, 2Bh	; '+'
 		jnb	short loc_F13B
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		add	word ptr [bx], 4
 		jmp	loc_F1D5
 ; ---------------------------------------------------------------------------
@@ -6056,30 +6056,30 @@ loc_F13B:
 
 loc_F160:
 		call	@hud_bombs_put$qv
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
-		add	ax, 10h
+		add	ax, (PLAYER_W / 2)
 		push	ax
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
-		add	ax, 18h
+		add	ax, (PLAYER_H / 2)
 		push	ax
 		push	800010h
 		push	1
 		call	sub_4090
-		mov	ax, 0D0h
-		mov	word_205E6, ax
-		mov	word_205E8, ax
-		mov	ax, 16Eh
-		mov	word_205EA, ax
-		mov	word_205EC, ax
+		mov	ax, PLAYER_LEFT_START
+		mov	_player_left_on_page[0 * word], ax
+		mov	_player_left_on_page[1 * word], ax
+		mov	ax, (((PLAYFIELD_BOTTOM + PLAYFIELD_ROLL_MARGIN) - PLAYER_H) - 2)
+		mov	_player_top_on_page[0 * word], ax
+		mov	_player_top_on_page[1 * word], ax
 		jmp	short loc_F1D5
 ; ---------------------------------------------------------------------------
 
 loc_F198:
 		cmp	byte_20609, 44h	; 'D'
 		jnb	short loc_F1C6
-		mov	bx, word_205F0
+		mov	bx, _player_top_on_back_page
 		sub	word ptr [bx], 2
 		mov	si, [bx]
 		add	si, _scroll_line
@@ -6088,7 +6088,7 @@ loc_F198:
 		sub	si, RES_Y
 
 loc_F1B6:
-		mov	bx, word_205EE
+		mov	bx, _player_left_on_back_page
 		call	super_roll_put pascal, word ptr [bx], si, 0
 		jmp	short loc_F1D5
 ; ---------------------------------------------------------------------------
@@ -6276,9 +6276,7 @@ loc_F2F0:
 		sub	di, ax
 
 loc_F2FB:
-		push	si
-		push	di
-		call	sub_EEC3
+		call	@player_move$qii pascal, si, di
 		mov	ax, _player_topleft.x
 		add	ax, -16
 		sub	ax, si
@@ -17482,7 +17480,7 @@ loc_1579B:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	dx, [bx+2B76h]
+		cmp	dx, _player_left_on_page[bx]
 		jge	loc_158CD
 		mov	bx, word ptr [bp+var_4]
 		mov	ax, es:[bx+2]
@@ -17499,7 +17497,7 @@ loc_1579B:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	dx, [bx+2B76h]
+		cmp	dx, _player_left_on_page[bx]
 		jle	loc_158CD
 		mov	bx, word ptr [bp+var_4]
 		mov	ax, es:[bx+4]
@@ -17515,7 +17513,7 @@ loc_1579B:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	dx, [bx+2B7Ah]
+		cmp	dx, _player_top_on_page[bx]
 		jge	loc_158CD
 		mov	bx, word ptr [bp+var_4]
 		mov	ax, es:[bx+4]
@@ -17532,7 +17530,7 @@ loc_1579B:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	dx, [bx+2B7Ah]
+		cmp	dx, _player_top_on_page[bx]
 		jle	loc_158CD
 		mov	_player_is_hit, 1
 		jmp	loc_158CD
@@ -17649,7 +17647,7 @@ loc_1594A:
 		mov	dx, point_254E6.x
 		add	dx, 8
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jle	short loc_159A4
 		mov	al, _page_front
 		mov	ah, 0
@@ -17657,13 +17655,13 @@ loc_1594A:
 		mov	dx, point_254E6.x
 		add	dx, 88
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jge	short loc_159A4
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B7Ah]
+		mov	ax, _player_top_on_page[bx]
 		cmp	ax, point_254E6.y
 		jle	short loc_159A4
 		mov	al, _page_front
@@ -17672,7 +17670,7 @@ loc_1594A:
 		mov	dx, point_254E6.y
 		add	dx, 64
 		mov	bx, ax
-		cmp	[bx+2B7Ah], dx
+		cmp	_player_top_on_page[bx], dx
 		jge	short loc_159A4
 		mov	_player_is_hit, 1
 
@@ -17825,7 +17823,7 @@ loc_15AD0:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	dx, [bx+2B76h]
+		cmp	dx, _player_left_on_page[bx]
 		jge	short loc_15B57
 		mov	al, _page_front
 		mov	ah, 0
@@ -17835,7 +17833,7 @@ loc_15AD0:
 		add	dx, point_254E6.x
 		add	dx, 40
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jge	short loc_15B57
 		mov	_player_is_hit, 1
 
@@ -17903,14 +17901,14 @@ loc_15BC2:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B76h]
+		mov	ax, _player_left_on_page[bx]
 		cmp	ax, word_25592
 		jle	loc_15D51
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B76h]
+		mov	ax, _player_left_on_page[bx]
 		cmp	ax, word_25594
 		jge	loc_15D51
 		mov	_player_is_hit, 1
@@ -17945,14 +17943,14 @@ loc_15C67:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B76h]
+		mov	ax, _player_left_on_page[bx]
 		cmp	ax, word_25592
 		jle	short loc_15C95
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B76h]
+		mov	ax, _player_left_on_page[bx]
 		cmp	ax, word_25594
 		jge	short loc_15C95
 		mov	_player_is_hit, 1
@@ -17993,14 +17991,14 @@ loc_15CBC:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B76h]
+		mov	ax, _player_left_on_page[bx]
 		cmp	ax, word_25592
 		jle	short loc_15D51
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B76h]
+		mov	ax, _player_left_on_page[bx]
 		cmp	ax, word_25594
 		jge	short loc_15D51
 		mov	_player_is_hit, 1
@@ -20859,7 +20857,7 @@ var_2		= word ptr -2
 		mov	dx, word_26C4E
 		add	dx, 0FFF0h
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jle	short loc_175D1
 		mov	al, _page_front
 		mov	ah, 0
@@ -20867,7 +20865,7 @@ var_2		= word ptr -2
 		mov	dx, word_26C4E
 		add	dx, 10h
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jge	short loc_175D1
 		lea	ax, [si-10h]
 		cmp	ax, _player_topleft.y
@@ -21671,7 +21669,7 @@ loc_17CF9:
 		mov	dx, [bx]
 		add	dx, 10h
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jle	short locret_17D57
 		mov	al, _page_front
 		mov	ah, 0
@@ -21680,13 +21678,13 @@ loc_17CF9:
 		mov	dx, [bx]
 		add	dx, 70h	; 'p'
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jge	short locret_17D57
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2B7Ah]
+		mov	ax, _player_top_on_page[bx]
 		mov	bx, word_2065E
 		cmp	ax, [bx]
 		jle	short locret_17D57
@@ -21696,7 +21694,7 @@ loc_17CF9:
 		mov	dx, [bx]
 		add	dx, 50h	; 'P'
 		mov	bx, ax
-		cmp	[bx+2B7Ah], dx
+		cmp	_player_top_on_page[bx], dx
 		jge	short locret_17D57
 		mov	_player_is_hit, 1
 
@@ -21762,7 +21760,7 @@ loc_17D7A:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		cmp	ax, [bx+2B76h]
+		cmp	ax, _player_left_on_page[bx]
 		jge	short loc_17E50
 		mov	al, _page_back
 		mov	ah, 0
@@ -21777,7 +21775,7 @@ loc_17D7A:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		cmp	ax, [bx+2B76h]
+		cmp	ax, _player_left_on_page[bx]
 		jle	short loc_17E50
 		mov	al, _page_back
 		mov	ah, 0
@@ -21792,7 +21790,7 @@ loc_17D7A:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		cmp	ax, [bx+2B7Ah]
+		cmp	ax, _player_top_on_page[bx]
 		jge	short loc_17E50
 		mov	al, _page_back
 		mov	ah, 0
@@ -21807,7 +21805,7 @@ loc_17D7A:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		cmp	ax, [bx+2B7Ah]
+		cmp	ax, _player_top_on_page[bx]
 		jle	short loc_17E50
 		mov	_player_is_hit, 1
 
@@ -26029,7 +26027,7 @@ sub_1A6C5	proc near
 		add	ax, ax
 		mov	dx, _player_topleft.y
 		mov	bx, ax
-		mov	[bx+2B7Ah], dx
+		mov	_player_top_on_page[bx], dx
 		mov	_scroll_line, 0
 		mov	word_20348, 0
 		graph_accesspage 0
@@ -26329,7 +26327,7 @@ loc_1AAD6:
 		mov	dx, point_26D76.x
 		add	dx, -16
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jle	short locret_1AB33
 		mov	al, _page_front
 		mov	ah, 0
@@ -26337,7 +26335,7 @@ loc_1AAD6:
 		mov	dx, point_26D76.x
 		add	dx, 48
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jge	short locret_1AB33
 		mov	al, _page_front
 		mov	ah, 0
@@ -26345,7 +26343,7 @@ loc_1AAD6:
 		mov	dx, point_26D76.y
 		add	dx, -16
 		mov	bx, ax
-		cmp	[bx+2B7Ah], dx
+		cmp	_player_top_on_page[bx], dx
 		jle	short locret_1AB33
 		mov	al, _page_front
 		mov	ah, 0
@@ -26353,7 +26351,7 @@ loc_1AAD6:
 		mov	dx, point_26D76.y
 		add	dx, 48
 		mov	bx, ax
-		cmp	[bx+2B7Ah], dx
+		cmp	_player_top_on_page[bx], dx
 		jge	short locret_1AB33
 		mov	_player_is_hit, 1
 
@@ -26446,7 +26444,7 @@ loc_1ABEE:
 		mov	dx, es:[bx]
 		add	dx, 0FFF0h
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jle	short loc_1AC6B
 		mov	al, _page_front
 		mov	ah, 0
@@ -26457,7 +26455,7 @@ loc_1ABEE:
 		mov	dx, es:[bx]
 		add	dx, 10h
 		mov	bx, ax
-		cmp	[bx+2B76h], dx
+		cmp	_player_left_on_page[bx], dx
 		jge	short loc_1AC6B
 		mov	al, _page_front
 		mov	ah, 0
@@ -26468,7 +26466,7 @@ loc_1ABEE:
 		mov	dx, es:[bx]
 		add	dx, 0FFF0h
 		mov	bx, ax
-		cmp	[bx+2B7Ah], dx
+		cmp	_player_top_on_page[bx], dx
 		jle	short loc_1AC6B
 		mov	al, _page_front
 		mov	ah, 0
@@ -26479,7 +26477,7 @@ loc_1ABEE:
 		mov	dx, es:[bx]
 		add	dx, 10h
 		mov	bx, ax
-		cmp	[bx+2B7Ah], dx
+		cmp	_player_top_on_page[bx], dx
 		jge	short loc_1AC6B
 		mov	_player_is_hit, 1
 
@@ -31648,12 +31646,12 @@ byte_205E0	db ?
 		db ?
 word_205E2	dw ?
 word_205E4	dw ?
-word_205E6	dw ?
-word_205E8	dw ?
-word_205EA	dw ?
-word_205EC	dw ?
-word_205EE	dw ?
-word_205F0	dw ?
+public _player_left_on_page, _player_top_on_page
+public _player_left_on_back_page, _player_top_on_back_page
+_player_left_on_page	dw 2 dup(?)
+_player_top_on_page 	dw 2 dup(?)
+_player_left_on_back_page	dw ?
+_player_top_on_back_page 	dw ?
 word_205F2	dw ?
 word_205F4	dw ?
 public _player_topleft

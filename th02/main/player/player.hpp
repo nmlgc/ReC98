@@ -1,7 +1,41 @@
 #define PLAYER_W 32
 #define PLAYER_H 48
 
-extern screen_point_t player_topleft;
+#if (GAME == 2)
+	// Coordinates
+	// -----------
+
+	static const screen_x_t PLAYER_LEFT_START = (
+		PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PLAYER_W / 2)
+	);
+	static const screen_y_t PLAYER_TOP_START = (PLAYFIELD_BOTTOM - PLAYER_H);
+	// -----------
+
+	// Current position
+	// ----------------
+	// ZUN bloat: It's tracked quite redundantly in this game:
+	//
+	// 1) [player_(left|top)_on_page] contains the authoritative coordinates on
+	//    both VRAM pages, just like every other entity in this game.
+	// 2) [player_(left|top)_on_back_page] is set in player_invalidate() to
+	//    avoid repeated address calculations of the back page element in 1).
+	// 3) [player_topleft] is a set to 2)'s value in player_move(), probably to
+	//    then avoid dereferencing a pointer whenever the position is needed?
+	//
+	// For the most part, game logic can just use 3), which is why its name
+	// didn't receive any further qualifiers. However, the miss animation
+	// prevents player_move() from running and therefore needs to access the
+	// position through 2) after all, especially since it also calculates the
+	// spawn position of the sparks by temporarily mutating the position. This
+	// can definitely be done in a cleaner and less redundant way.
+
+	extern screen_x_t player_left_on_page[2];
+	extern screen_y_t player_top_on_page[2];
+	extern screen_x_t near* player_left_on_back_page;
+	extern screen_y_t near* player_top_on_back_page;
+	extern screen_point_t player_topleft;
+	// ----------------
+#endif
 
 extern bool player_is_hit;
 
@@ -27,3 +61,5 @@ extern uint8_t power;
 extern int power_overflow;
 
 extern uint8_t shot_level;
+
+void near player_invalidate();
