@@ -5874,7 +5874,7 @@ loc_EF7F:
 		sub	si, RES_Y
 
 loc_EF9E:
-		call	super_roll_put pascal, _player_topleft.x, si, word_1E512
+		call	super_roll_put pascal, _player_topleft.x, si, _player_patnum
 
 loc_EFAC:
 		cmp	_power, 8
@@ -5961,7 +5961,7 @@ loc_F03D:
 		mov	al, byte_20609
 		mov	ah, 0
 		sar	ax, 2
-		add	ax, 4
+		add	ax, PAT_PLAYCHAR_MISS
 		mov	[bp+@@patnum], ax
 		mov	si, [bx]
 		add	si, _scroll_line
@@ -6089,7 +6089,7 @@ loc_F198:
 
 loc_F1B6:
 		mov	bx, _player_left_on_back_page
-		call	super_roll_put pascal, word ptr [bx], si, 0
+		call	super_roll_put pascal, word ptr [bx], si, PAT_PLAYCHAR_STILL
 		jmp	short loc_F1D5
 ; ---------------------------------------------------------------------------
 
@@ -6175,7 +6175,7 @@ loc_F24E:
 		neg	ax
 		mov	si, ax
 		xor	di, di
-		mov	word_1E512, 2
+		mov	_player_patnum, PAT_PLAYCHAR_LEFT
 		jmp	short loc_F2C2
 ; ---------------------------------------------------------------------------
 
@@ -6184,7 +6184,7 @@ loc_F260:
 		cbw
 		mov	si, ax
 		xor	di, di
-		mov	word_1E512, 3
+		mov	_player_patnum, PAT_PLAYCHAR_RIGHT
 		jmp	short loc_F2C2
 ; ---------------------------------------------------------------------------
 
@@ -6199,7 +6199,7 @@ loc_F276:
 		cbw
 		neg	ax
 		mov	si, ax
-		mov	word_1E512, 2
+		mov	_player_patnum, PAT_PLAYCHAR_LEFT
 		jmp	short loc_F2C2
 ; ---------------------------------------------------------------------------
 
@@ -6211,7 +6211,7 @@ loc_F288:
 		mov	al, _playchar_speed_diagonal_x
 		cbw
 		mov	si, ax
-		mov	word_1E512, 3
+		mov	_player_patnum, PAT_PLAYCHAR_RIGHT
 		jmp	short loc_F2C2
 ; ---------------------------------------------------------------------------
 
@@ -6228,7 +6228,7 @@ loc_F2A4:
 		mov	al, _playchar_speed_diagonal_x
 		cbw
 		mov	si, ax
-		mov	word_1E512, 3
+		mov	_player_patnum, PAT_PLAYCHAR_RIGHT
 		jmp	short loc_F2C2
 ; ---------------------------------------------------------------------------
 
@@ -6237,7 +6237,7 @@ loc_F2B8:
 		xor	di, di
 
 loc_F2BC:
-		mov	word_1E512, 0
+		mov	_player_patnum, PAT_PLAYCHAR_STILL
 
 loc_F2C2:
 		mov	al, _playchar_speed_aligned_x
@@ -12402,7 +12402,7 @@ sub_12CE5	proc near
 		sub	si, RES_Y
 
 loc_12CFB:
-		call	super_roll_put pascal, _player_topleft.x, si, 0
+		call	super_roll_put pascal, _player_topleft.x, si, PAT_PLAYCHAR_STILL
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -24807,7 +24807,7 @@ mima_init	proc far
 		add	ax, 2
 		push	ax
 		call	super_put_rect
-		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, PAT_PLAYCHAR_STILL
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -25962,7 +25962,7 @@ loc_1A613:
 		call	grcg_off
 		push	600000h
 		call	sub_1A423
-		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, PAT_PLAYCHAR_STILL
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -26038,7 +26038,7 @@ sub_1A6C5	proc near
 		call	frame_delay pascal, 1
 		call	graph_scrollup pascal, 0
 		graph_accesspage _page_front
-		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, PAT_PLAYCHAR_STILL
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -26151,7 +26151,7 @@ marisa_init	proc far
 		inc	ax
 		push	ax
 		call	super_put_rect
-		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, PAT_PLAYCHAR_STILL
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -26198,7 +26198,7 @@ marisa_init	proc far
 		inc	ax
 		push	ax
 		call	super_put_rect
-		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, PAT_PLAYCHAR_STILL
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -30688,7 +30688,8 @@ byte_1E503	db 0
 		db    0
 angle_1E510	db 20h
 		db 0
-word_1E512	dw 0
+public _player_patnum
+_player_patnum	dw PAT_PLAYCHAR_STILL
 		db    0
 		db    0
 public _power
