@@ -2768,31 +2768,31 @@ var_2		= word ptr -2
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		add	ax, 2B8Ah
-		mov	word_205F2, ax
+		add	ax, offset _player_option_left_topleft.x
+		mov	_player_option_left_left_on_back_page, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		add	ax, 2B8Ch
-		mov	word_205F4, ax
+		add	ax, offset _player_option_left_topleft.y
+		mov	_player_option_left_top_on_back_page, ax
 		mov	bx, _player_left_on_back_page
 		push	word ptr [bx]	; left
 		mov	bx, _player_top_on_back_page
 		push	word ptr [bx]	; top
 		push	(PLAYER_W shl 16) or PLAYER_H	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
-		mov	bx, word_205F2
+		mov	bx, _player_option_left_left_on_back_page
 		mov	si, [bx]
 		push	si	; left
-		mov	bx, word_205F4
+		mov	bx, _player_option_left_top_on_back_page
 		push	word ptr [bx]	; top
-		push	(16 shl 16) or 16	; (w shl 16) or h
+		push	(PLAYER_OPTION_W shl 16) or PLAYER_OPTION_H	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
-		lea	ax, [si+30h]
+		lea	ax, [si+PLAYER_OPTION_TO_OPTION_DISTANCE]
 		push	ax	; left
-		mov	bx, word_205F4
+		mov	bx, _player_option_left_top_on_back_page
 		push	word ptr [bx]	; top
-		push	(16 shl 16) or 16	; (w shl 16) or h
+		push	(PLAYER_OPTION_W shl 16) or PLAYER_OPTION_H	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
 		mov	al, _page_front
 		mov	ah, 0
@@ -2926,14 +2926,14 @@ arg_4		= word ptr  8
 		add	ax, ax
 		mov	dx, ax
 		mov	word ptr [si], 101h
-		mov	bx, word_205F2
+		mov	bx, _player_option_left_left_on_back_page
 		mov	ax, [bx]
 		add	ax, [bp+arg_4]
 		shl	ax, 4
 		mov	bx, dx
 		add	bx, bx
 		mov	[bx+si+2], ax
-		mov	bx, word_205F4
+		mov	bx, _player_option_left_top_on_back_page
 		mov	ax, [bx]
 		shl	ax, 4
 		mov	bx, dx
@@ -5879,7 +5879,7 @@ loc_EF9E:
 loc_EFAC:
 		cmp	_power, 8
 		jb	short loc_EFEF
-		mov	bx, word_205F4
+		mov	bx, _player_option_left_top_on_back_page
 		mov	si, [bx]
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -5887,16 +5887,16 @@ loc_EFAC:
 		sub	si, RES_Y
 
 loc_EFC7:
-		mov	bx, word_205F2
+		mov	bx, _player_option_left_left_on_back_page
 		push	word ptr [bx]
 		push	si
 		mov	al, _player_option_patnum
 		mov	ah, 0
 		push	ax
 		call	super_roll_put_tiny
-		mov	bx, word_205F2
+		mov	bx, _player_option_left_left_on_back_page
 		mov	ax, [bx]
-		add	ax, 48
+		add	ax, (PLAYER_OPTION_DISTANCE * 2)
 		push	ax
 		push	si
 		mov	al, _player_option_patnum
@@ -6278,14 +6278,14 @@ loc_F2F0:
 loc_F2FB:
 		call	@player_move$qii pascal, si, di
 		mov	ax, _player_topleft.x
-		add	ax, -16
+		add	ax, -PLAYER_LEFT_TO_OPTION_LEFT_LEFT
 		sub	ax, si
-		mov	bx, word_205F2
+		mov	bx, _player_option_left_left_on_back_page
 		mov	[bx], ax
 		mov	ax, _player_topleft.y
-		add	ax, 16
+		add	ax, ((PLAYER_H / 2) - (PLAYER_OPTION_H / 2))
 		sub	ax, di
-		mov	bx, word_205F4
+		mov	bx, _player_option_left_top_on_back_page
 		mov	[bx], ax
 		test	byte ptr _key_det, INPUT_SHOT
 		jz	short loc_F349
@@ -12407,7 +12407,7 @@ loc_12CFB:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	si, [bx+2B8Ch]
+		mov	si, _player_option_left_topleft[bx].y
 		add	si, _scroll_line
 		cmp	si, RES_Y
 		jl	short loc_12D23
@@ -12418,14 +12418,14 @@ loc_12D23:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		call	super_roll_put_tiny pascal, word ptr [bx+2B8Ah], si, 72
+		call	super_roll_put_tiny pascal, _player_option_left_topleft[bx].x, si, PAT_OPTION_A
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ah]
-		add	ax, 48
-		call	super_roll_put_tiny pascal, ax, si, 72
+		mov	ax, _player_option_left_topleft[bx].x
+		add	ax, PLAYER_OPTION_TO_OPTION_DISTANCE
+		call	super_roll_put_tiny pascal, ax, si, PAT_OPTION_A
 		pop	si
 		pop	bp
 		retn
@@ -24812,27 +24812,27 @@ mima_init	proc far
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ah]
+		push	_player_option_left_topleft[bx].x
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ah]
-		add	ax, 48
+		mov	ax, _player_option_left_topleft[bx].x
+		add	ax, PLAYER_OPTION_TO_OPTION_DISTANCE
 		push	ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		call	_snd_se_play stdcall, 10
 		call	_snd_se_update
@@ -25967,27 +25967,27 @@ loc_1A613:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ah]
+		push	_player_option_left_topleft[bx].x
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ah]
-		add	ax, 30h	; '0'
+		mov	ax, _player_option_left_topleft[bx].x
+		add	ax, PLAYER_OPTION_TO_OPTION_DISTANCE
 		push	ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		call	sub_1A46B
 		xor	si, si
@@ -26043,61 +26043,61 @@ sub_1A6C5	proc near
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, _player_topleft.x
-		add	dx, -16
+		add	dx, -PLAYER_LEFT_TO_OPTION_LEFT_LEFT
 		mov	bx, ax
-		mov	[bx+2B8Ah], dx
+		mov	_player_option_left_topleft[bx].x, dx
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, _player_topleft.y
-		add	dx, 16
+		add	dx, ((PLAYER_H / 2) - (PLAYER_OPTION_H / 2))
 		mov	bx, ax
-		mov	[bx+2B8Ch], dx
+		mov	_player_option_left_topleft[bx].y, dx
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ah]
+		mov	ax, _player_option_left_topleft[bx].x
 		mov	dl, _page_front
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
-		mov	[bx+2B8Ah], ax
+		mov	_player_option_left_topleft[bx].x, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ch]
+		mov	ax, _player_option_left_topleft[bx].y
 		mov	dl, _page_front
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
-		mov	[bx+2B8Ch], ax
+		mov	_player_option_left_topleft[bx].y, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ah]
+		push	_player_option_left_topleft[bx].x
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ah]
-		add	ax, 48
+		mov	ax, _player_option_left_topleft[bx].x
+		add	ax, PLAYER_OPTION_TO_OPTION_DISTANCE
 		push	ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		pop	bp
 		retn
@@ -26156,27 +26156,27 @@ marisa_init	proc far
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ah]
+		push	_player_option_left_topleft[bx].x
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ah]
-		add	ax, 48
+		mov	ax, _player_option_left_topleft[bx].x
+		add	ax, PLAYER_OPTION_TO_OPTION_DISTANCE
 		push	ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		call	_snd_se_play stdcall, 10
 		call	_snd_se_update
@@ -26203,27 +26203,27 @@ marisa_init	proc far
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ah]
+		push	_player_option_left_topleft[bx].x
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+2B8Ah]
-		add	ax, 48
+		mov	ax, _player_option_left_topleft[bx].x
+		add	ax, PLAYER_OPTION_TO_OPTION_DISTANCE
 		push	ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+2B8Ch]
-		push	72
+		push	_player_option_left_topleft[bx].y
+		push	PAT_OPTION_A
 		call	super_roll_put_tiny
 		mov	al, _page_front
 		mov	ah, 0
@@ -31652,11 +31652,11 @@ _player_left_on_page	dw 2 dup(?)
 _player_top_on_page 	dw 2 dup(?)
 _player_left_on_back_page	dw ?
 _player_top_on_back_page 	dw ?
-word_205F2	dw ?
-word_205F4	dw ?
-public _player_topleft
+_player_option_left_left_on_back_page	dw ?
+_player_option_left_top_on_back_page	dw ?
+public _player_topleft, _player_option_left_topleft
 _player_topleft	Point <?>
-		db 8 dup(?)
+_player_option_left_topleft	Point 2 dup(<?>)
 playchar_shot_func	dw ?
 include th01/main/player_is_hit[bss].asm
 public _player_invincibility_time, _player_invincible_via_bomb

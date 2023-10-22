@@ -1,6 +1,19 @@
 #define PLAYER_W 32
 #define PLAYER_H 48
 
+static const pixel_t PLAYER_OPTION_W = 16;
+static const pixel_t PLAYER_OPTION_H = 16;
+
+// Center-to-center distance. Only directly used in TH04 and TH05, since TH02
+// doesn't use center coordinates internally.
+static const pixel_t PLAYER_OPTION_DISTANCE = (
+	(PLAYER_W / 2) + (PLAYER_OPTION_W / 2)
+);
+
+static const pixel_t PLAYER_OPTION_TO_OPTION_DISTANCE = (
+	PLAYER_OPTION_DISTANCE * 2
+);
+
 #if (GAME == 2)
 	// Coordinates
 	// -----------
@@ -9,6 +22,10 @@
 		PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PLAYER_W / 2)
 	);
 	static const screen_y_t PLAYER_TOP_START = (PLAYFIELD_BOTTOM - PLAYER_H);
+
+	static const pixel_t PLAYER_LEFT_TO_OPTION_LEFT_LEFT = (
+		PLAYER_OPTION_DISTANCE - (PLAYER_W / 2) + (PLAYER_OPTION_W / 2)
+	);
 	// -----------
 
 	// Current position
@@ -34,6 +51,10 @@
 	extern screen_x_t near* player_left_on_back_page;
 	extern screen_y_t near* player_top_on_back_page;
 	extern screen_point_t player_topleft;
+
+	extern screen_point_t player_option_left_topleft[2];
+	extern screen_x_t near* player_option_left_left_on_back_page;
+	extern screen_y_t near* player_option_left_top_on_back_page;
 	// ----------------
 #endif
 
