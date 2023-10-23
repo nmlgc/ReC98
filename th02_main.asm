@@ -1879,7 +1879,7 @@ loc_BD26:
 loc_BD62:
 		mov	byte_1E503, 0
 		mov	_scroll_line, si
-		cmp	byte_1E501, 0
+		cmp	_scroll_done, 0
 		jnz	short loc_BDA2
 		mov	al, _scroll_cycle
 		mov	ah, 0
@@ -1959,14 +1959,14 @@ loc_BE3B:
 		mov	al, _scroll_speed
 		mov	ah, 0
 		call	@tiles_scroll_and_egc_render_both$qi pascal, ax
-		mov	byte_1E501, al
+		mov	_scroll_done, al
 		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw2	EGC_MASKREG, 0FFFFh
 		graph_mode_change	1
 		graph_mode_egc	0
 		GRCG_OFF_VIA_MOV al
 		graph_mode_change	0
-		cmp	byte_1E501, 0
+		cmp	_scroll_done, 0
 		jz	short loc_BE77
 		inc	_scroll_line
 		jmp	short loc_BEE0
@@ -2016,7 +2016,7 @@ loc_BE8D:
 		jmp	short $+2
 		jmp	short $+2
 		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		cmp	byte_1E501, 0
+		cmp	_scroll_done, 0
 		jnz	short loc_BEE0
 
 loc_BEDC:
@@ -2161,7 +2161,7 @@ sub_BF9C	endp
 sub_BFD0	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_1E501, 1
+		cmp	_scroll_done, 1
 		jnz	loc_C05B
 		mov	byte_1F466, 1
 		mov	al, _stage_id
@@ -2836,7 +2836,7 @@ sub_CA1C	proc far
 		mov	_scroll_unused, 0
 		mov	word_2034A, 0
 		mov	_scroll_interval, 4
-		mov	byte_1E501, 0
+		mov	_scroll_done, 0
 		mov	byte_2034E, 0
 		mov	byte_1E502, 0
 		mov	word_20348, 0
@@ -30669,9 +30669,9 @@ asc_1E47E	db '                ',0
 public _FOUR_DIGIT_POWERS_OF_10
 _FOUR_DIGIT_POWERS_OF_10 dw 1000, 100, 10, 1
 include th02/sprites/pointnum.asp
-public _scroll_interval
+public _scroll_interval, _scroll_done
 _scroll_interval	db 4
-byte_1E501	db 0
+_scroll_done	db 0
 byte_1E502	db 0
 byte_1E503	db 0
 		db  27h	; '

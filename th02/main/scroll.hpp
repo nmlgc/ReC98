@@ -13,6 +13,10 @@ extern vram_y_t scroll_line;
 	// Interval between successive scrolling operations, used to achieve
 	// scrolling speeds below 1 pixel per frame. Must be ≥1.
 	extern uint8_t scroll_interval;
+
+	// Set to 1 when the top of the map was reached and the boss should be
+	// started.
+	extern bool scroll_done;
 #endif
 
 #define scroll_screen_y_to_vram(ret, screen_y) \
