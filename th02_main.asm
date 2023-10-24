@@ -1972,6 +1972,16 @@ loc_BE3B:
 		graph_mode_change	0
 		cmp	_scroll_done, 0
 		jz	short loc_BE77
+
+		; On this final frame of the stage, we already were one pixel past the
+		; end of the tile map. Pretend we didn't overshoot by just not running
+		; the GDC SCROLL command this frame, and fix up [scroll_line] so that
+		; all sprites blitted during the boss fight appear at their correct Y
+		; coordinate.
+		; ZUN bug: But we've just rendered a full frame of sprites *at* the
+		; wrong [scroll_line]Å :zunpet: As a result, these will appear one pixel
+		; higher than where they should be, since we skip the GDC SCROLL that
+		; would compensate for it.
 		inc	_scroll_line
 		jmp	short loc_BEE0
 ; ---------------------------------------------------------------------------
@@ -12359,54 +12369,10 @@ sub_12B9E	endp
 
 	extern @dialog_load_and_init$qv:proc
 	@egc_start_copy_2$qv procdesc pascal near
+	@dialog_put_player$qv procdesc near
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12CE5	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, _player_topleft.y
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_12CFB
-		sub	si, RES_Y
-
-loc_12CFB:
-		call	super_roll_put pascal, _player_topleft.x, si, PAT_PLAYCHAR_STILL
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		mov	si, _player_option_left_topleft[bx].y
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_12D23
-		sub	si, RES_Y
-
-loc_12D23:
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		call	super_roll_put_tiny pascal, _player_option_left_topleft[bx].x, si, PAT_OPTION_A
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, _player_option_left_topleft[bx].x
-		add	ax, PLAYER_OPTION_TO_OPTION_DISTANCE
-		call	super_roll_put_tiny pascal, ax, si, PAT_OPTION_A
-		pop	si
-		pop	bp
-		retn
-sub_12CE5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12562,7 +12528,7 @@ loc_12E4F:
 		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
 		call	@tiles_egc_render$qv
 		call	egc_off
-		call	sub_12CE5
+		call	@dialog_put_player$qv
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -12618,7 +12584,7 @@ loc_12EC5:
 		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
 		call	@tiles_egc_render$qv
 		call	egc_off
-		call	sub_12CE5
+		call	@dialog_put_player$qv
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
