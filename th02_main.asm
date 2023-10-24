@@ -12370,6 +12370,8 @@ sub_12B9E	endp
 	extern @dialog_load_and_init$qv:proc
 	@egc_start_copy_2$qv procdesc pascal near
 	@dialog_put_player$qv procdesc near
+	@DIALOG_BOX_PUT$QMIII procdesc pascal near \
+		left:dword, top_top:word, bottom_top:word
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
@@ -12378,104 +12380,10 @@ main_03__TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_12D56	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-@@y		= word ptr  8
-arg_6		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 16
-		jl	short loc_12D8B
-		cmp	word ptr es:[bx], 400
-		jg	short loc_12D8B
-		call	super_roll_put pascal, word ptr es:[bx], [bp+@@y], si
-		les	bx, [bp+arg_6]
-		push	word ptr es:[bx]
-		push	[bp+arg_2]
-		lea	ax, [si+8]
-		push	ax
-		call	super_roll_put
-
-loc_12D8B:
-		les	bx, [bp+arg_6]
-		add	word ptr es:[bx], 20h ;	' '
-		pop	si
-		pop	bp
-		retn	0Ah
-sub_12D56	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12D97	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	si, 22h	; '"'
-		jmp	short loc_12DB1
-; ---------------------------------------------------------------------------
-
-loc_12DA4:
-		pushd	[bp+arg_4]
-		push	di
-		push	[bp+arg_0]
-		push	si
-		call	sub_12D56
-		inc	si
-
-loc_12DB1:
-		cmp	si, 25h	; '%'
-		jl	short loc_12DA4
-		xor	si, si
-		jmp	short loc_12DC8
-; ---------------------------------------------------------------------------
-
-loc_12DBA:
-		pushd	[bp+arg_4]
-		push	di
-		push	[bp+arg_0]
-		push	25h ; '%'
-		call	sub_12D56
-		inc	si
-
-loc_12DC8:
-		cmp	si, 8
-		jl	short loc_12DBA
-		pushd	[bp+arg_4]
-		push	di
-		push	[bp+arg_0]
-		push	26h ; '&'
-		call	sub_12D56
-		pop	di
-		pop	si
-		pop	bp
-		retn	8
-sub_12D97	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_12DE0	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@left		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -12522,7 +12430,7 @@ loc_12E48:
 loc_12E4F:
 		sub	[bp+var_4], 10h
 		mov	ax, [bp+var_4]
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		call	frame_delay pascal, 1
 		call	@egc_start_copy_2$qv
 		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
@@ -12530,11 +12438,11 @@ loc_12E4F:
 		call	egc_off
 		call	@dialog_put_player$qv
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@left]
 		push	ax
 		push	si
 		push	di
-		call	sub_12D97
+		call	@dialog_box_put$qmiii
 
 loc_12E8B:
 		cmp	[bp+var_4], 20h	; ' '
@@ -12553,7 +12461,7 @@ sub_12DE0	endp
 sub_12E95	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@left		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -12578,7 +12486,7 @@ loc_12EC0:
 loc_12EC5:
 		sub	[bp+var_4], 10h
 		mov	ax, [bp+var_4]
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		call	frame_delay pascal, 1
 		call	@egc_start_copy_2$qv
 		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
@@ -12586,12 +12494,12 @@ loc_12EC5:
 		call	egc_off
 		call	@dialog_put_player$qv
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@left]
 		push	ax
 		push	si
 		push	di
-		call	sub_12D97
-		cmp	[bp+var_2], 30h	; '0'
+		call	@dialog_box_put$qmiii
+		cmp	[bp+@@left], 48
 		jge	short loc_12EC5
 		cmp	byte_24E7B, 1
 		jnz	short loc_12F18

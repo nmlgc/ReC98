@@ -12,6 +12,23 @@
 #include "th02/main/player/player.hpp"
 #include "th02/sprites/main_pat.h"
 
+// Coordinates
+// -----------
+
+static const pixel_t BOX_W = PLAYFIELD_W;
+static const pixel_t BOX_H = (
+	(DIALOG_BOX_PART_H / 2) +
+	(DIALOG_BOX_LINES * GLYPH_H) +
+	(DIALOG_BOX_PART_H / 2)
+);
+
+static const pixel_t BOX_MIDDLE_W = (
+	BOX_W - DIALOG_BOX_LEFT_W - DIALOG_BOX_PART_W
+);
+
+static const pixel_t BOX_SLIDE_SPEED = (PLAYFIELD_W / 24);
+// -----------
+
 // State
 // -----
 
@@ -85,4 +102,62 @@ void near dialog_put_player(void)
 	);
 
 	#undef option_left_topleft
+}
+
+void pascal near dialog_box_put_top_and_bottom_part(
+	screen_x_t& left,
+	vram_y_t top_top,
+	vram_y_t bottom_top,
+	int top_patnum // ACTUAL TYPE: main_patnum_t
+)
+{
+	enum {
+		PATNUM_TO_BOTTOM = (
+			PAT_DIALOG_BOX_LEFT_BOTTOM - PAT_DIALOG_BOX_LEFT_TOP
+		),
+	};
+
+	// Assuming the constant slide speed, these are the last coordinates where
+	// the box part wouldn't be fully covered by black TRAM cells.
+	// ZUN bloat: Using the playfield_clip_left*() and playfield_clip_right*()
+	// functions would have been cleaner and more consistent.
+	static_assert(BOX_SLIDE_SPEED == (DIALOG_BOX_PART_W / 2));
+	if(
+		(left >= (PLAYFIELD_LEFT -  BOX_SLIDE_SPEED)) &&
+		(left <= (PLAYFIELD_RIGHT - BOX_SLIDE_SPEED))
+	) {
+		static_assert(BOX_H == (DIALOG_BOX_PART_H * 2));
+		static_assert(
+			(PAT_DIALOG_BOX_MIDDLE_BOTTOM - PAT_DIALOG_BOX_MIDDLE_TOP) ==
+			PATNUM_TO_BOTTOM
+		);
+		static_assert(
+			(PAT_DIALOG_BOX_RIGHT_BOTTOM - PAT_DIALOG_BOX_RIGHT_TOP) ==
+			PATNUM_TO_BOTTOM
+		);
+		super_roll_put(left,    top_top, (top_patnum + 0));
+		super_roll_put(left, bottom_top, (top_patnum + PATNUM_TO_BOTTOM));
+	}
+	left += DIALOG_BOX_PART_W;
+}
+
+// ZUN bloat: Passing [left] by reference made sense in the function above, but
+// here it doesn't.
+void pascal near dialog_box_put(
+	screen_x_t& left, vram_y_t top_top, vram_y_t bottom_top
+)
+{
+	int i;
+
+	for(i = PAT_DIALOG_BOX_LEFT_TOP; i < PAT_DIALOG_BOX_MIDDLE_TOP; i++) {
+		dialog_box_put_top_and_bottom_part(left, top_top, bottom_top, i);
+	}
+	for(i = 0; i < (BOX_MIDDLE_W / DIALOG_BOX_PART_W); i++) {
+		dialog_box_put_top_and_bottom_part(
+			left, top_top, bottom_top, PAT_DIALOG_BOX_MIDDLE_TOP
+		);
+	}
+	dialog_box_put_top_and_bottom_part(
+		left, top_top, bottom_top, PAT_DIALOG_BOX_RIGHT_TOP
+	);
 }
