@@ -11687,7 +11687,7 @@ stones_update	endp
 stones_end	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		push	1
 		call	sub_1310B
 		call	@stage_clear_bonus_animate$qv
@@ -11705,10 +11705,10 @@ stones_end	endp
 stones_init	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		push	0
 		call	sub_1310B
-		call	sub_12E95
+		call	@dialog_post$qv
 		push	ds
 		push	offset aBoss2_m	; "boss2.m"
 		nopcall	sub_13ABB
@@ -12368,152 +12368,11 @@ loc_12C66:
 sub_12B9E	endp
 
 	extern @dialog_load_and_init$qv:proc
-	@egc_start_copy_2$qv procdesc pascal near
-	@dialog_put_player$qv procdesc near
-	@DIALOG_BOX_PUT$QMIII procdesc pascal near \
-		left:dword, top_top:word, bottom_top:word
+	@dialog_pre$qv procdesc near
+	@dialog_post$qv procdesc near
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12DE0	proc near
-
-var_4		= word ptr -4
-@@left		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, 32
-		nopcall	@overlay_wipe$qv
-
-		; ZUN quirk: The game doesn't reset [score_delta] before the next
-		; proper game frame calls score_update_and_render(), thus retaining the
-		; inherent quirk of this function.
-		call	@score_grant_current_delta_as_bon$qv
-
-		call	graph_scrollup pascal, _scroll_line
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		graph_accesspage _page_front
-		nopcall	@overlay_wipe$qv
-		mov	si, 320
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_12E24
-		sub	si, RES_Y
-
-loc_12E24:
-		add	di, si
-		cmp	di, RES_Y
-		jl	short loc_12E30
-		sub	di, RES_Y
-
-loc_12E30:
-		mov	[bp+var_4], RES_Y
-		cmp	_tile_mode, TM_NONE
-		jnz	short loc_12E48
-		mov	byte_24E7B, 1
-		mov	_tile_mode, TM_COL_0
-		jmp	short loc_12E8B
-; ---------------------------------------------------------------------------
-
-loc_12E48:
-		mov	byte_24E7B, 0
-		jmp	short loc_12E8B
-; ---------------------------------------------------------------------------
-
-loc_12E4F:
-		sub	[bp+var_4], 10h
-		mov	ax, [bp+var_4]
-		mov	[bp+@@left], ax
-		call	frame_delay pascal, 1
-		call	@egc_start_copy_2$qv
-		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
-		call	@tiles_egc_render$qv
-		call	egc_off
-		call	@dialog_put_player$qv
-		push	ss
-		lea	ax, [bp+@@left]
-		push	ax
-		push	si
-		push	di
-		call	@dialog_box_put$qmiii
-
-loc_12E8B:
-		cmp	[bp+var_4], 20h	; ' '
-		jg	short loc_12E4F
-		pop	di
-		pop	si
-		leave
-		retn
-sub_12DE0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12E95	proc near
-
-var_4		= word ptr -4
-@@left		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, 20h	; ' '
-		nopcall	@overlay_wipe$qv
-		mov	si, 320
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_12EB4
-		sub	si, RES_Y
-
-loc_12EB4:
-		add	di, si
-		cmp	di, RES_Y
-		jl	short loc_12EC0
-		sub	di, RES_Y
-
-loc_12EC0:
-		mov	[bp+var_4], 20h	; ' '
-
-loc_12EC5:
-		sub	[bp+var_4], 10h
-		mov	ax, [bp+var_4]
-		mov	[bp+@@left], ax
-		call	frame_delay pascal, 1
-		call	@egc_start_copy_2$qv
-		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
-		call	@tiles_egc_render$qv
-		call	egc_off
-		call	@dialog_put_player$qv
-		push	ss
-		lea	ax, [bp+@@left]
-		push	ax
-		push	si
-		push	di
-		call	@dialog_box_put$qmiii
-		cmp	[bp+@@left], 48
-		jge	short loc_12EC5
-		cmp	byte_24E7B, 1
-		jnz	short loc_12F18
-		mov	byte_24E7B, 0
-		mov	_tile_mode, TM_NONE
-
-loc_12F18:
-		graph_accesspage _page_back
-		pop	di
-		pop	si
-		leave
-		retn
-sub_12E95	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13990,10 +13849,10 @@ rika_init	proc far
 		push	offset aBoss1_m	; "boss1.m"
 		call	sub_13ABB
 		add	sp, 4
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		push	0
 		call	sub_1310B
-		call	sub_12E95
+		call	@dialog_post$qv
 		mov	angle_1E510, 20h
 		mov	word_20652, 0C0h
 		mov	word_20654, 0C0h
@@ -14041,7 +13900,7 @@ rika_init	endp
 rika_end	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		push	1
 		call	sub_1310B
 		call	@stage_clear_bonus_animate$qv
@@ -16642,7 +16501,7 @@ off_15210	dw offset loc_15145
 meira_end	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		push	1
 		call	sub_1310B
 		call	@stage_clear_bonus_animate$qv
@@ -16664,7 +16523,7 @@ meira_init	proc far
 		mov	bp, sp
 		push	si
 		mov	patnum_2064E, 141
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		call	sub_1314C
 		mov	word_20652, 0C0h
 		mov	ax, word_20652
@@ -16700,7 +16559,7 @@ loc_15296:
 		call	palette_white_in
 		push	0
 		call	sub_1310B
-		call	sub_12E95
+		call	@dialog_post$qv
 		mov	word_2065A, 0
 		mov	byte_2066A, 0
 		mov	word_21748, 2
@@ -19274,7 +19133,7 @@ evileye_init	proc far
 		mov	bp, sp
 		call	sub_1A6C5
 		mov	_tile_mode, TM_NONE
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		call	super_clean pascal, (128 shl 16) or 192
 		mov	super_patnum, 80h
 		call	super_entry_bfnt pascal, ds, offset aStage5b1_bft ; "stage5b1.bft"
@@ -19305,7 +19164,7 @@ evileye_init	proc far
 		call	palette_white_in
 		push	0
 		call	sub_1310B
-		call	sub_12E95
+		call	@dialog_post$qv
 		pop	bp
 		retf
 evileye_init	endp
@@ -19318,7 +19177,7 @@ evileye_init	endp
 evileye_end	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		push	1
 		call	sub_1310B
 		call	@stage_extra_clear_bonus_animate$qv
@@ -24588,7 +24447,7 @@ mima_init	proc far
 		mov	bp, sp
 		push	si
 		call	sub_1A6C5
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		call	super_clean pascal, (128 shl 16) or 192
 		call	super_entry_bfnt pascal, ds, offset aMima_bft ; "mima.bft"
 		call	sub_13328
@@ -24694,7 +24553,7 @@ mima_init	proc far
 		nopcall	sub_13ABB
 		add	sp, 6
 		call	sub_133AE
-		call	sub_12E95
+		call	@dialog_post$qv
 		call	sub_D376
 		mov	word_2065A, 0
 		mov	byte_2066A, 0
@@ -24837,7 +24696,7 @@ sub_19C8D	proc near
 		add	ax, 2
 		push	ax
 		call	super_put_rect
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		call	sub_133B8
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
@@ -24858,7 +24717,7 @@ loc_19D48:
 		call	super_clean pascal, (128 shl 16) or 192
 		mov	super_patnum, 80h
 		call	super_entry_bfnt pascal, ds, offset aMima2_bft ; "mima2.bft"
-		call	sub_12E95
+		call	@dialog_post$qv
 		graph_accesspage _page_front
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
@@ -25963,7 +25822,7 @@ marisa_init	proc far
 		mov	bp, sp
 		push	si
 		call	sub_1A6C5
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		call	super_clean pascal, (128 shl 16) or 192
 		mov	super_patnum, 80h
 		call	super_entry_bfnt pascal, ds, offset aMima_bft_0 ; "mima.bft"
@@ -28877,7 +28736,7 @@ marisa_bg_render	endp
 marisa_end	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_12DE0
+		call	@dialog_pre$qv
 		call	sub_131D9
 		call	@stage_clear_bonus_animate$qv
 
@@ -31761,10 +31620,10 @@ byte_23A70	db ?
 		db ?
 farfp_23A72	dd ?
 farfp_23A76	dd ?
-public _dialog_text, _dialog_box_cur
+public _dialog_text, _dialog_box_cur, _restore_tile_mode_none_at_post
 _dialog_text	db (64 * DIALOG_BOX_LINES * DIALOG_LINE_SIZE) dup(?)
 _dialog_box_cur	db ?
-byte_24E7B	db ?
+_restore_tile_mode_none_at_post	db ?
 point_24E7C	Point <?>
 word_24E80	dw ?
 word_24E82	dw ?

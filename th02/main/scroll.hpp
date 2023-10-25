@@ -27,3 +27,13 @@ extern vram_y_t scroll_line;
 	if(ret >= RES_Y) { \
 		ret -= RES_Y; \
 	}
+
+// Adds an already [scrolled_vram_y] plus some [delta_pixels] to [ret], and
+// rolls around the result as necessary.
+// ZUN bloat: This can certainly be done with less mutation.
+#define scroll_add_scrolled(ret, scrolled_vram_y, delta_pixels) { \
+	ret += (scrolled_vram_y + delta_pixels); \
+	if(ret >= RES_Y) { \
+		ret -= RES_Y; \
+	} \
+}

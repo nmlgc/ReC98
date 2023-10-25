@@ -1,15 +1,22 @@
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
+extern "C" {
+#include "th02/hardware/frmdelay.h"
+}
 #include "th02/hardware/pages.hpp"
 #include "th02/formats/dialog.hpp"
 #include "th02/main/playfld.hpp"
+#include "th02/main/score.hpp"
 #include "th02/main/scroll.hpp"
 #include "th02/main/dialog/dialog.hpp"
+#include "th02/main/hud/overlay.hpp"
 #include "th02/main/stage/stage.hpp"
 #include "th02/main/player/player.hpp"
+#include "th02/main/tile/tile.hpp"
 #include "th02/sprites/main_pat.h"
 
 // Coordinates
@@ -21,6 +28,8 @@ static const pixel_t BOX_H = (
 	(DIALOG_BOX_LINES * GLYPH_H) +
 	(DIALOG_BOX_PART_H / 2)
 );
+static const screen_x_t BOX_LEFT = PLAYFIELD_LEFT;
+static const screen_y_t BOX_TOP = (PLAYFIELD_BOTTOM - BOX_H);
 
 static const pixel_t BOX_MIDDLE_W = (
 	BOX_W - DIALOG_BOX_LEFT_W - DIALOG_BOX_PART_W
@@ -33,6 +42,7 @@ static const pixel_t BOX_SLIDE_SPEED = (PLAYFIELD_W / 24);
 // -----
 
 extern shiftjis_t dialog_text[64][DIALOG_BOX_LINES][DIALOG_LINE_SIZE];
+extern bool restore_tile_mode_none_at_post;
 // -----
 
 void dialog_load_and_init(void)
@@ -52,7 +62,7 @@ void dialog_load_and_init(void)
 }
 
 // ZUN bloat: Turn into a single global inline function.
-#define egc_start_copy	near egc_start_copy_2
+#define egc_start_copy	static near egc_start_copy
 #include "th01/hardware/egcstart.cpp"
 #undef egc_start_copy
 
@@ -160,4 +170,100 @@ void pascal near dialog_box_put(
 	dialog_box_put_top_and_bottom_part(
 		left, top_top, bottom_top, PAT_DIALOG_BOX_RIGHT_TOP
 	);
+}
+
+// ZUN bloat: Turn this and the function below into a single
+// dialog_box_slide_animate() function.
+#define dialog_box_slide_init(left, top_top, bottom_top, left_start) { \
+	top_top = scroll_screen_y_to_vram(top_top, BOX_TOP); \
+	scroll_add_scrolled(bottom_top, top_top, 0); \
+	left = left_start; \
+}
+
+#define dialog_box_slide_update_and_render( \
+	left, temp_left_mut, top_top, bottom_top \
+) { \
+	left -= BOX_SLIDE_SPEED; \
+	temp_left_mut = left; \
+	frame_delay(1); \
+	\
+	egc_start_copy(); \
+	\
+	/* \
+	 * ZUN bloat: Why not [BOX_H]? Reblitting the bottom margin of the \
+	 * playfield has no effect. \
+	 */ \
+	tiles_invalidate_rect(BOX_LEFT, BOX_TOP, BOX_W, (RES_Y - BOX_TOP)); \
+	\
+	tiles_egc_render(); \
+	egc_off(); \
+	\
+	dialog_put_player(); \
+	dialog_box_put(temp_left_mut, top_top, bottom_top); \
+}
+
+void near dialog_pre(void)
+{
+	// ZUN bloat: Deduplicate and move into dialog_box_slide_animate().
+	vram_y_t top_top;
+	vram_y_t bottom_top = DIALOG_BOX_PART_H;
+
+	overlay_wipe();
+
+	// ZUN quirk: The game doesn't reset [score_delta] before the next proper
+	// game frame calls score_update_and_render(), thus retaining the inherent
+	// quirk of this function.
+	score_grant_current_delta_as_bonus();
+
+	graph_scrollup(scroll_line);
+	palette_100();
+	graph_accesspage(page_front);
+
+	// ZUN bloat: Already did this above. TRAM is not double-buffered :P
+	overlay_wipe();
+
+	screen_x_t left_mut;
+	screen_x_t left;
+	dialog_box_slide_init(
+		left, top_top, bottom_top, (PLAYFIELD_RIGHT - BOX_SLIDE_SPEED)
+	);
+
+	// If we don't render any tiles, tiles_egc_render() should behave like a
+	// flood fill with hardware color 0 in order to actually unblit anything.
+	// ZUN bug: It would have been more robust to just snap the entire original
+	// [BOX_W]×[BOX_H] area and re-blit that to VRAM on every frame.
+	if(tile_mode == TM_NONE) {
+		restore_tile_mode_none_at_post = true;
+		tile_mode = TM_COL_0;
+	} else {
+		restore_tile_mode_none_at_post = false;
+	}
+
+	while(left > PLAYFIELD_LEFT) {
+		dialog_box_slide_update_and_render(left, left_mut, top_top, bottom_top);
+	}
+}
+
+void near dialog_post(void)
+{
+	// ZUN bloat: Deduplicate and move into dialog_box_slide_animate().
+	vram_y_t top_top;
+	vram_y_t bottom_top = DIALOG_BOX_PART_H;
+
+	overlay_wipe();
+
+	screen_x_t left_mut;
+	screen_x_t left;
+	dialog_box_slide_init(left, top_top, bottom_top, PLAYFIELD_LEFT);
+
+	do {
+		dialog_box_slide_update_and_render(left, left_mut, top_top, bottom_top);
+	} while(left_mut >= (PLAYFIELD_LEFT + BOX_SLIDE_SPEED));
+
+	if(restore_tile_mode_none_at_post == true) {
+		restore_tile_mode_none_at_post = false;
+		tile_mode = TM_NONE;
+	}
+
+	graph_accesspage(page_back);
 }
