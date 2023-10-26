@@ -12392,100 +12392,11 @@ sub_12B9E	endp
 	extern @dialog_load_and_init$qv:proc
 	@dialog_pre$qv procdesc near
 	@dialog_post$qv procdesc near
-	@DIALOG_FACE_PUT$QI procdesc pascal near \
-		topleft_id:word
-	@DIALOG_TEXT_PUT$QINXUCUII procdesc pascal near \
-		line:word, str:dword, atrb:word, n:word
+	@DIALOG_BOX_ANIMATE_AND_ADVANCE$QI procdesc pascal near \
+		face_topleft_id:word
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13055	proc near
-
-@@box		= word ptr -4
-var_2		= word ptr -2
-@@topleft_id	= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		call	text_putsa pascal, (14 shl 16) + 21, ds, word_1EB96, TX_WHITE
-		call	text_putsa pascal, (14 shl 16) + 22, ds, word_1EB96, TX_WHITE
-		mov	si, 6
-		xor	di, di
-		mov	al, _dialog_box_cur
-		mov	ah, 0
-		mov	[bp+@@box], ax
-		jmp	short loc_130F7
-; ---------------------------------------------------------------------------
-
-loc_13090:
-		call	_input_sense
-		call	@dialog_face_put$qi pascal, [bp+@@topleft_id]
-		cmp	si, 24h	; '$'
-		jg	short loc_130B3
-		push	0	; line
-		push	ds	; str (segment)
-		mov	ax, [bp+@@box]
-		imul	ax, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
-		add	ax, offset (_dialog_text + (0 * DIALOG_LINE_SIZE))
-		push	ax	; str (offset)
-		push	TX_WHITE	; atrb
-		push	si	; n
-		jmp	short loc_130CC
-; ---------------------------------------------------------------------------
-
-loc_130B3:
-		cmp	si, 48h	; 'H'
-		jg	short loc_130CF
-		push	1	; line
-		push	ds	; str (segment)
-		mov	ax, [bp+@@box]
-		imul	ax, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
-		add	ax, offset (_dialog_text + (1 * DIALOG_LINE_SIZE))
-		push	ax	; str (offset)
-		push	TX_WHITE	; atrb
-		lea	ax, [si-36]	; n
-		push	ax
-
-loc_130CC:
-		call	@dialog_text_put$qinxucuii
-
-loc_130CF:
-		inc	di
-		cmp	_key_det, 0
-		jz	short loc_130DE
-		mov	[bp+var_2], 1
-		jmp	short loc_130EA
-; ---------------------------------------------------------------------------
-
-loc_130DE:
-		mov	[bp+var_2], 3
-		call	frame_delay pascal, 1
-
-loc_130EA:
-		mov	ax, di
-		cwd
-		idiv	[bp+var_2]
-		or	dx, dx
-		jnz	short loc_130F7
-		add	si, 2
-
-loc_130F7:
-		cmp	si, 50h	; 'P'
-		jle	short loc_13090
-		call	_key_delay
-		inc	_dialog_box_cur
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_13055	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12514,7 +12425,7 @@ loc_13123:
 		imul	bx, 16h
 		mov	al, [bx+si+115Ch]
 		mov	ah, 0
-		call	sub_13055 pascal, ax
+		call	@dialog_box_animate_and_advance$qi pascal, ax
 		inc	si
 
 loc_13134:
@@ -12540,8 +12451,8 @@ sub_1310B	endp
 sub_1314C	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_13055 pascal, 0
-		call	sub_13055 pascal, 96
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_NEUTRAL
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_GENJII
 		pop	bp
 		retn
 sub_1314C	endp
@@ -12571,7 +12482,7 @@ var_8		= byte ptr -8
 loc_13175:
 		mov	al, [bp+si+var_8]
 		mov	ah, 0
-		call	sub_13055 pascal, ax
+		call	@dialog_box_animate_and_advance$qi pascal, ax
 		inc	si
 
 loc_1317F:
@@ -12607,14 +12518,14 @@ var_C		= byte ptr -0Ch
 loc_131A1:
 		mov	al, [bp+si+var_C]
 		mov	ah, 0
-		call	sub_13055 pascal, ax
+		call	@dialog_box_animate_and_advance$qi pascal, ax
 		inc	si
 
 loc_131AB:
 		cmp	si, 0Bh
 		jl	short loc_131A1
-		call	text_putsa pascal, (14 shl 16) + 21, ds, word_1EB96, TX_WHITE
-		call	text_putsa pascal, (14 shl 16) + 22, ds, word_1EB96, TX_WHITE
+		call	text_putsa pascal, (14 shl 16) + 21, ds, _LINE_BLANK, TX_WHITE
+		call	text_putsa pascal, (14 shl 16) + 22, ds, _LINE_BLANK, TX_WHITE
 		pop	si
 		leave
 		retn
@@ -12676,7 +12587,7 @@ loc_13238:
 		add	bx, bx
 		lea	ax, [bp+var_6]
 		add	bx, ax
-		call	sub_13055 pascal, word ptr ss:[bx]
+		call	@dialog_box_animate_and_advance$qi pascal, word ptr ss:[bx]
 		inc	si
 
 loc_13248:
@@ -12751,7 +12662,7 @@ loc_132ED:
 		add	bx, bx
 		lea	ax, [bp+var_10]
 		add	bx, ax
-		call	sub_13055 pascal, word ptr ss:[bx]
+		call	@dialog_box_animate_and_advance$qi pascal, word ptr ss:[bx]
 		inc	si
 
 loc_132FD:
@@ -12773,7 +12684,7 @@ loc_13310:
 		add	bx, bx
 		lea	ax, [bp+var_1A]
 		add	bx, ax
-		call	sub_13055 pascal, word ptr ss:[bx]
+		call	@dialog_box_animate_and_advance$qi pascal, word ptr ss:[bx]
 		inc	si
 
 loc_13320:
@@ -12794,8 +12705,8 @@ sub_131D9	endp
 sub_13328	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_13055 pascal, 6
-		call	sub_13055 pascal, 105
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_ANGRY
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
 		pop	bp
 		retn
 sub_13328	endp
@@ -12826,8 +12737,8 @@ var_16		= byte ptr -16h
 		push	offset unk_1ED2C
 		mov	cx, 11h
 		call	SCOPY@
-		call	sub_13055 pascal, 6
-		call	sub_13055 pascal, 105
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_ANGRY
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_13390
@@ -12838,7 +12749,7 @@ var_16		= byte ptr -16h
 loc_13377:
 		mov	al, [bp+si+var_16]
 		mov	ah, 0
-		call	sub_13055 pascal, ax
+		call	@dialog_box_animate_and_advance$qi pascal, ax
 		inc	si
 
 loc_13381:
@@ -12861,7 +12772,7 @@ loc_13390:
 loc_1339C:
 		mov	al, [bp+si+var_28]
 		mov	ah, 0
-		call	sub_13055 pascal, ax
+		call	@dialog_box_animate_and_advance$qi pascal, ax
 		inc	si
 
 loc_133A6:
@@ -12882,7 +12793,7 @@ sub_13337	endp
 sub_133AE	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_13055 pascal, 105
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
 		pop	bp
 		retn
 sub_133AE	endp
@@ -12918,7 +12829,7 @@ var_6		= byte ptr -6
 loc_133E5:
 		mov	al, [bp+si+var_6]
 		mov	ah, 0
-		call	sub_13055 pascal, ax
+		call	@dialog_box_animate_and_advance$qi pascal, ax
 		inc	si
 
 loc_133EF:
@@ -12938,7 +12849,7 @@ loc_133F6:
 loc_13402:
 		mov	al, byte ptr [bp+si+var_A]
 		mov	ah, 0
-		call	sub_13055 pascal, ax
+		call	@dialog_box_animate_and_advance$qi pascal, ax
 		inc	si
 
 loc_1340C:
@@ -12982,16 +12893,16 @@ sub_13439	proc near
 		nopcall	@overlay_wipe$qv
 		kajacall	KAJA_SONG_STOP
 		pop	cx
-		call	sub_13055 pascal, 105
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
 		call	sub_13414
 		call	frame_delay pascal, 10
-		call	sub_13055 pascal, 105
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
 		call	frame_delay pascal, 30
 		call	sub_13414
 		call	frame_delay pascal, 20
-		call	sub_13055 pascal, 105
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
 		call	frame_delay pascal, 20
-		call	sub_13055 pascal, 105
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
 		call	sub_13414
 		call	frame_delay pascal, 20
 		call	sub_13414
@@ -13011,9 +12922,9 @@ sub_13439	endp
 sub_134A0	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_13055 pascal, 255
-		call	sub_13055 pascal, 0
-		call	sub_13055 pascal, 255
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_COL_0
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_NEUTRAL
+		call	@dialog_box_animate_and_advance$qi pascal, FACE_COL_0
 		pop	bp
 		retn
 sub_134A0	endp
@@ -30579,8 +30490,8 @@ byte_1EB88	db 1
 		db 0
 aStage_dt1	db 'STAGE .DT1',0
 		db 0
-word_1EB96	dw 12D6h
-public _clear_bytes
+public _LINE_BLANK, _clear_bytes
+_LINE_BLANK 	dw aLINE_BLANK
 _clear_bytes	db DIALOG_LINE_SIZE dup(0)
 		db  10h
 		db    8
@@ -30969,26 +30880,7 @@ unk_1ED3D	db  69h	; i
 		db  69h	; i
 		db  39h	; 9
 dword_1ED42	dd 0C6C066Ch
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		db  81h
-		db  40h
-		dw 4081h
-aB@b@b@b@b@b@b@	db '　　　　　　　　',0
+aLINE_BLANK	db '　　　　　　　　　　　　　　　　　　', 0
 public _dialog_fn
 _dialog_fn	db 'stage .txt',0
 aVo		db '０',0

@@ -8,6 +8,7 @@
 #include "platform/array.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
+#include "th02/hardware/input.hpp"
 }
 #include "th02/hardware/pages.hpp"
 #include "th02/formats/dialog.hpp"
@@ -331,4 +332,63 @@ void pascal near dialog_text_put(
 	}
 
 	text_putsa(TEXT_TRAM_LEFT, (TEXT_TRAM_TOP + line), buf.data(), atrb);
+}
+
+inline void near dialog_box_wipe(void) {
+	extern const char near* LINE_BLANK;
+
+	static_assert(DIALOG_BOX_LINES == 2);
+	text_putsa(TEXT_TRAM_LEFT, (TEXT_TRAM_TOP + 0), LINE_BLANK, TX_WHITE);
+	text_putsa(TEXT_TRAM_LEFT, (TEXT_TRAM_TOP + 1), LINE_BLANK, TX_WHITE);
+}
+
+// Shows a single dialog box in a blocking way, then advances [box_cur].
+void pascal near dialog_box_animate_and_advance(
+	int face_topleft_id // ACTUAL TYPE: face_topleft_id_t
+)
+{
+	dialog_box_wipe();
+
+	// ZUN quirk: Assumes that the box starts with a 6-byte character name and
+	// colon, and prints that all at once in the first frame. This assumption
+	// breaks with "魔梨沙：" in Stage 3, which is 8 bytes.
+	shiftjis_ank_amount_t box_cursor = 6;
+
+	int loop_count = 0;
+	int delay_per_kanji;
+	int box = dialog_box_cur;
+	while(box_cursor <= ((DIALOG_BOX_LINES * DIALOG_LINE_LENGTH) + 8)) {
+		input_sense();
+		dialog_face_put(face_topleft_id); // ZUN bloat: Every frame?
+
+		static_assert(DIALOG_BOX_LINES == 2);
+		if(box_cursor <= (DIALOG_LINE_LENGTH * 1)) {
+			dialog_text_put(
+				0,
+				dialog_text[box][0],
+				TX_WHITE,
+				(box_cursor - (DIALOG_LINE_LENGTH * 0))
+			);
+		} else if(box_cursor <= (DIALOG_LINE_LENGTH * 2)) {
+			dialog_text_put(
+				1,
+				dialog_text[box][1],
+				TX_WHITE,
+				(box_cursor - (DIALOG_LINE_LENGTH * 1))
+			);
+		}
+
+		loop_count++;
+		if(key_det) {
+			delay_per_kanji = 1;
+		} else {
+			delay_per_kanji = 3;
+			frame_delay(1);
+		}
+		if((loop_count % delay_per_kanji) == 0) {
+			box_cursor += static_cast<int>(sizeof(shiftjis_kanji_t));
+		}
+	}
+	key_delay();
+	dialog_box_cur++;
 }
