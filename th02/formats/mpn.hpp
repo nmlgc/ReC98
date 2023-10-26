@@ -6,7 +6,11 @@ typedef Planar<mpn_plane_t> mpn_image_t;
 
 typedef struct {
 	char magic[4]; // = "MPTN"
-	uint8_t count; // Stored minus 1.
+
+	// Stored minus 1. (Probably because MIKO_K.MPN contains 256 tiles and ZUN
+	// absolutely wanted to store this value in a single byte regardless.)
+	uint8_t count;
+
 	int8_t unused;
 } mpn_header_t;
 

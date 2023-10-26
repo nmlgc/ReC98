@@ -43,6 +43,28 @@ DIALOG_LINE_LENGTH = 36
 DIALOG_LINE_SIZE = (DIALOG_LINE_LENGTH + 4)
 DIALOG_BOX_LINES = 2
 
+FACE_REIMU_NEUTRAL = 0
+FACE_REIMU_HUSHED = 3
+FACE_REIMU_ANGRY = 6
+FACE_REIMU_JOY = 9
+FACE_REIMU_FROWN = 12
+FACE_REIMU_FALL = 48
+FACE_REIMU_CRY = 51
+FACE_REIMU_QUESTION = 54
+FACE_REIMU_SWEAT = 57
+FACE_REIMU_FLIRTY = 60
+FACE_GENJII = 96
+FACE_RIKA = 99
+FACE_MEIRA_NEUTRAL = 102
+FACE_MIMA_SMILE = 105
+FACE_MIMA_FROWN = 108
+FACE_MARISA_SMILE = 144
+FACE_MARISA_FROWN = 147
+FACE_MEIRA_SWEAT = 150
+FACE_EXRIKA_SMILE = 153
+FACE_EXRIKA_FROWN = 156
+FACE_COL_0 = 255
+
 main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
 main_03 group main_03_TEXT, DIALOG_TEXT, main_03__TEXT
 
@@ -12370,111 +12392,11 @@ sub_12B9E	endp
 	extern @dialog_load_and_init$qv:proc
 	@dialog_pre$qv procdesc near
 	@dialog_post$qv procdesc near
+	@DIALOG_FACE_PUT$QI procdesc pascal near \
+		topleft_id:word
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12F23	proc near
-
-@@top_2    	= word ptr -4
-@@top_1    	= word ptr -2
-@@mpn_image	= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+@@mpn_image]
-		mov	[bp+@@top_1], 0
-		mov	[bp+@@top_2], 0
-		mov	si, 328
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_12F47
-		sub	si, RES_Y
-
-loc_12F47:
-		lea	ax, [si+TILE_H]
-		add	[bp+@@top_1], ax
-		cmp	[bp+@@top_1], RES_Y
-		jl	short loc_12F59
-		sub	[bp+@@top_1], RES_Y
-
-loc_12F59:
-		mov	ax, [bp+@@top_1]
-		add	ax, TILE_H
-		add	[bp+@@top_2], ax
-		cmp	[bp+@@top_2], RES_Y
-		jl	short loc_12F6E
-		sub	[bp+@@top_2], RES_Y
-
-loc_12F6E:
-		cmp	di, 255
-		jnz	short loc_12F94
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	40
-		push	si
-		push	87
-		lea	ax, [si+47]
-		push	ax
-		call	grcg_boxfill
-		call	grcg_off
-		jmp	short loc_13009
-; ---------------------------------------------------------------------------
-
-loc_12F94:
-		call	@mpn_put_8$qiii pascal, 40, si, di
-		push	56	; left
-		push	si	; top
-		lea	ax, [di+1]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-		push	72	; left
-		push	si	; top
-		lea	ax, [di+2]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-		push	40	; left
-		push	[bp+@@top_1]	; top
-		lea	ax, [di+10h]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-		push	56	; left
-		push	[bp+@@top_1]	; top
-		lea	ax, [di+11h]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-		push	72	; left
-		push	[bp+@@top_1]	; top
-		lea	ax, [di+12h]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-		push	40	; left
-		push	[bp+@@top_2]	; top
-		lea	ax, [di+20h]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-		push	56	; left
-		push	[bp+@@top_2]	; top
-		lea	ax, [di+21h]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-		push	72	; left
-		push	[bp+@@top_2]	; top
-		lea	ax, [di+22h]
-		push	ax	; image
-		call	@mpn_put_8$qiii
-
-loc_13009:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_12F23	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12534,7 +12456,7 @@ sub_13055	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
-@@mpn_image		= word ptr  4
+@@topleft_id	= word ptr  4
 
 		enter	4, 0
 		push	si
@@ -12551,7 +12473,7 @@ var_2		= word ptr -2
 
 loc_13090:
 		call	_input_sense
-		call	sub_12F23 pascal, [bp+@@mpn_image]
+		call	@dialog_face_put$qi pascal, [bp+@@topleft_id]
 		cmp	si, 24h	; '$'
 		jg	short loc_130B3
 		push	0

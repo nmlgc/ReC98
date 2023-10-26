@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
+#include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
 extern "C" {
@@ -9,6 +10,8 @@ extern "C" {
 }
 #include "th02/hardware/pages.hpp"
 #include "th02/formats/dialog.hpp"
+#include "th02/formats/tile.hpp"
+#include "th02/formats/mpn.hpp"
 #include "th02/main/playfld.hpp"
 #include "th02/main/score.hpp"
 #include "th02/main/scroll.hpp"
@@ -18,6 +21,7 @@ extern "C" {
 #include "th02/main/player/player.hpp"
 #include "th02/main/tile/tile.hpp"
 #include "th02/sprites/main_pat.h"
+#include "th02/sprites/face.hpp"
 
 // Coordinates
 // -----------
@@ -36,6 +40,9 @@ static const pixel_t BOX_MIDDLE_W = (
 );
 
 static const pixel_t BOX_SLIDE_SPEED = (PLAYFIELD_W / 24);
+
+static const screen_x_t FACE_LEFT = (BOX_LEFT + 8);
+static const screen_y_t FACE_TOP = (BOX_TOP + 8);
 // -----------
 
 // State
@@ -266,4 +273,39 @@ void near dialog_post(void)
 	}
 
 	graph_accesspage(page_back);
+}
+
+void pascal near dialog_face_put(
+	int topleft_id // ACTUAL TYPE: face_topleft_id_t
+)
+{
+	static_assert(FACE_TILES_X == 3);
+	static_assert(FACE_TILES_Y == 3);
+
+	vram_y_t top1;
+	vram_y_t top2 = 0;
+	vram_y_t top3 = 0;
+
+	top1 = scroll_screen_y_to_vram(top1, FACE_TOP);
+	scroll_add_scrolled(top2, top1, TILE_H);
+	scroll_add_scrolled(top3, top2, TILE_H);
+
+	if(topleft_id == FACE_COL_0) {
+		grcg_setcolor(GC_RMW, 0);
+		grcg_boxfill(
+			FACE_LEFT, top1, (FACE_LEFT + FACE_W - 1), (top1 + FACE_H - 1)
+		);
+		grcg_off();
+		return;
+	}
+
+	mpn_put_8((FACE_LEFT + (0 * TILE_W)), top1, face_tile_id(topleft_id, 0, 0));
+	mpn_put_8((FACE_LEFT + (1 * TILE_W)), top1, face_tile_id(topleft_id, 1, 0));
+	mpn_put_8((FACE_LEFT + (2 * TILE_W)), top1, face_tile_id(topleft_id, 2, 0));
+	mpn_put_8((FACE_LEFT + (0 * TILE_W)), top2, face_tile_id(topleft_id, 0, 1));
+	mpn_put_8((FACE_LEFT + (1 * TILE_W)), top2, face_tile_id(topleft_id, 1, 1));
+	mpn_put_8((FACE_LEFT + (2 * TILE_W)), top2, face_tile_id(topleft_id, 2, 1));
+	mpn_put_8((FACE_LEFT + (0 * TILE_W)), top3, face_tile_id(topleft_id, 0, 2));
+	mpn_put_8((FACE_LEFT + (1 * TILE_W)), top3, face_tile_id(topleft_id, 1, 2));
+	mpn_put_8((FACE_LEFT + (2 * TILE_W)), top3, face_tile_id(topleft_id, 2, 2));
 }

@@ -3,10 +3,17 @@
 /// Sprite sizes
 /// ------------
 
+#define FACE_W 48
+#define FACE_H 48
+
 #define DIALOG_BOX_PART_W 32
 #define DIALOG_BOX_PART_H 32
 
-#define DIALOG_BOX_LEFT_W 96
+#define DIALOG_BOX_FACE_BORDER 8
+
+#define DIALOG_BOX_LEFT_W ( \
+	(DIALOG_BOX_FACE_BORDER * 2) + FACE_W + DIALOG_BOX_PART_W \
+)
 
 #define DIALOG_BOX_LEFT_PARTS (DIALOG_BOX_LEFT_W / DIALOG_BOX_PART_W)
 /// ------------
