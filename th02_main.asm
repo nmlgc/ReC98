@@ -39,8 +39,12 @@ MAP_LENGTH_MAX = 320
 LIVES_MAX = 5
 BOMBS_MAX = 5
 
+DIALOG_LINE_LENGTH = 36
+DIALOG_LINE_SIZE = (DIALOG_LINE_LENGTH + 4)
+DIALOG_BOX_LINES = 2
+
 main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
-main_03 group main_03_TEXT, main_03__TEXT
+main_03 group main_03_TEXT, DIALOG_TEXT, main_03__TEXT
 
 ; ===========================================================================
 
@@ -1389,7 +1393,7 @@ loc_B4D7:
 		add	sp, 0Ah
 		call	sub_1C608
 		call	sub_1C3DF
-		call	sub_12C72
+		call	@dialog_load_and_init$qv
 		setfarfp	_boss_bg_render, sub_BF90
 		setfarfp	_boss_update, sub_BF95
 		setfarfp	farfp_1F490, sub_BF90
@@ -6456,7 +6460,7 @@ SHARED	ends
 main_03_TEXT	segment	byte public 'CODE' use16
 main_03_TEXT	ends
 
-main_03__TEXT	segment	byte public 'CODE' use16
+DIALOG_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_03
 		;org 6
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -12353,37 +12357,10 @@ loc_12C66:
 		retf
 sub_12B9E	endp
 
+	extern @dialog_load_and_init$qv:proc
+DIALOG_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12C72	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-
-		enter	6, 0
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 12FBh
-		les	bx, [bp+var_4]
-		mov	al, _stage_id
-		add	al, 30h	; '0'
-		mov	es:[bx+5], al
-		push	word ptr [bp+var_4+2]
-		push	bx
-		call	file_ropen
-		call	file_size
-		mov	[bp+var_6], ax
-		push	ds
-		push	offset unk_23A7A
-		push	ax
-		call	file_read
-		call	file_close
-		mov	byte_24E7A, 0
-		leave
-		retf
-sub_12C72	endp
+main_03__TEXT	segment	byte public 'CODE' use16
 
 EGC_START_COPY_DEF 2, near
 
@@ -12834,7 +12811,7 @@ var_2		= word ptr -2
 		call	text_putsa pascal, (14 shl 16) + 22, ds, word_1EB96, TX_WHITE
 		mov	si, 6
 		xor	di, di
-		mov	al, byte_24E7A
+		mov	al, _dialog_box_cur
 		mov	ah, 0
 		mov	[bp+var_4], ax
 		jmp	short loc_130F7
@@ -12848,8 +12825,8 @@ loc_13090:
 		push	0
 		push	ds
 		mov	ax, [bp+var_4]
-		imul	ax, 50h
-		add	ax, 600Ah
+		imul	ax, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
+		add	ax, offset (_dialog_text + (0 * DIALOG_LINE_SIZE))
 		push	ax
 		push	TX_WHITE
 		push	si
@@ -12862,8 +12839,8 @@ loc_130B3:
 		push	1
 		push	ds
 		mov	ax, [bp+var_4]
-		imul	ax, 50h
-		add	ax, 6032h
+		imul	ax, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
+		add	ax, offset (_dialog_text + (1 * DIALOG_LINE_SIZE))
 		push	ax
 		push	TX_WHITE
 		lea	ax, [si-24h]
@@ -12896,7 +12873,7 @@ loc_130F7:
 		cmp	si, 50h	; 'P'
 		jle	short loc_13090
 		call	_key_delay
-		inc	byte_24E7A
+		inc	_dialog_box_cur
 		pop	di
 		pop	si
 		leave
@@ -13113,22 +13090,22 @@ loc_13248:
 		add	bx, ax
 		mov	bx, ss:[bx]
 		mov	al, [bx]
-		mov	dl, byte_24E7A
+		mov	dl, _dialog_box_cur
 		mov	dh, 0
-		imul	dx, 50h
+		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
 		mov	bx, dx
-		mov	[bx+6012h], al
+		mov	_dialog_text[bx][8], al
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_2E]
 		add	bx, ax
 		mov	bx, ss:[bx]
 		mov	al, [bx+1]
-		mov	dl, byte_24E7A
+		mov	dl, _dialog_box_cur
 		mov	dh, 0
-		imul	dx, 50h
+		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
 		mov	bx, dx
-		mov	[bx+6013h], al
+		mov	_dialog_text[bx][9], al
 
 loc_1329D:
 		les	bx, _resident
@@ -13143,22 +13120,22 @@ loc_1329D:
 		add	bx, ax
 		mov	bx, ss:[bx]
 		mov	al, [bx]
-		mov	dl, byte_24E7A
+		mov	dl, _dialog_box_cur
 		mov	dh, 0
-		imul	dx, 50h
+		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
 		mov	bx, dx
-		mov	[bx+6014h], al
+		mov	_dialog_text[bx][10], al
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_2E]
 		add	bx, ax
 		mov	bx, ss:[bx]
 		mov	al, [bx+1]
-		mov	dl, byte_24E7A
+		mov	dl, _dialog_box_cur
 		mov	dh, 0
-		imul	dx, 50h
+		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
 		mov	bx, dx
-		mov	[bx+6015h], al
+		mov	_dialog_text[bx][11], al
 		xor	si, si
 		jmp	short loc_132FD
 ; ---------------------------------------------------------------------------
@@ -13178,9 +13155,9 @@ loc_132FD:
 ; ---------------------------------------------------------------------------
 
 loc_13304:
-		mov	al, byte_24E7A
+		mov	al, _dialog_box_cur
 		add	al, 8
-		mov	byte_24E7A, al
+		mov	_dialog_box_cur, al
 		xor	si, si
 		jmp	short loc_13320
 ; ---------------------------------------------------------------------------
@@ -13261,16 +13238,16 @@ loc_13377:
 loc_13381:
 		cmp	si, 16h
 		jl	short loc_13377
-		mov	al, byte_24E7A
-		add	al, 11h
-		mov	byte_24E7A, al
+		mov	al, _dialog_box_cur
+		add	al, 17
+		mov	_dialog_box_cur, al
 		jmp	short loc_133AB
 ; ---------------------------------------------------------------------------
 
 loc_13390:
-		mov	al, byte_24E7A
-		add	al, 16h
-		mov	byte_24E7A, al
+		mov	al, _dialog_box_cur
+		add	al, 22
+		mov	_dialog_box_cur, al
 		xor	si, si
 		jmp	short loc_133A6
 ; ---------------------------------------------------------------------------
@@ -13345,9 +13322,9 @@ loc_133EF:
 ; ---------------------------------------------------------------------------
 
 loc_133F6:
-		mov	al, byte_24E7A
+		mov	al, _dialog_box_cur
 		add	al, 5
-		mov	byte_24E7A, al
+		mov	_dialog_box_cur, al
 		xor	si, si
 		jmp	short loc_1340C
 ; ---------------------------------------------------------------------------
@@ -31444,7 +31421,8 @@ dword_1ED42	dd 0C6C066Ch
 		db  40h
 		dw 4081h
 aB@b@b@b@b@b@b@	db '　　　　　　　　',0
-aStage_txt	db 'stage .txt',0
+public _dialog_fn
+_dialog_fn	db 'stage .txt',0
 aVo		db '０',0
 aVp		db '１',0
 aVq		db '２',0
@@ -31910,9 +31888,9 @@ byte_23A70	db ?
 		db ?
 farfp_23A72	dd ?
 farfp_23A76	dd ?
-unk_23A7A	db    ?	;
-		db 5119 dup(?)
-byte_24E7A	db ?
+public _dialog_text, _dialog_box_cur
+_dialog_text	db (64 * DIALOG_BOX_LINES * DIALOG_LINE_SIZE) dup(?)
+_dialog_box_cur	db ?
 byte_24E7B	db ?
 point_24E7C	Point <?>
 word_24E80	dw ?
