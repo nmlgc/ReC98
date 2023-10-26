@@ -12397,23 +12397,10 @@ DS_POSTBOSS = 1
 		face_topleft_id:word
 	@DIALOG_SCRIPT_GENERIC_PART_ANIMA$Q17DIALOG_SEQUENCE_T procdesc pascal near \
 		sequence:word
+	@dialog_script_stage2_pre_intro_a$qv procdesc near
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1314C	proc near
-		push	bp
-		mov	bp, sp
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_NEUTRAL
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_GENJII
-		pop	bp
-		retn
-sub_1314C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16262,7 +16249,7 @@ meira_init	proc far
 		push	si
 		mov	patnum_2064E, 141
 		call	@dialog_pre$qv
-		call	sub_1314C
+		call	@dialog_script_stage2_pre_intro_a$qv
 		mov	word_20652, 0C0h
 		mov	ax, word_20652
 		mov	word_20654, ax

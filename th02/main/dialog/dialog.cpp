@@ -414,4 +414,10 @@ void pascal near dialog_script_generic_part_animate(dialog_sequence_t sequence)
 		dialog_box_animate_and_advance(GENERIC_FACES[stage_and_sequence][i]);
 	}
 }
+
+void near dialog_script_stage2_pre_intro_animate(void)
+{
+	dialog_box_animate_and_advance(FACE_REIMU_NEUTRAL);
+	dialog_box_animate_and_advance(FACE_GENJII);
+}
 // ----------------------------------

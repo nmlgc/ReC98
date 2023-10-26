@@ -21,4 +21,9 @@ enum dialog_sequence_t {
 // Shows the generic part of the current stage's given dialog [sequence], using
 // hardcoded face IDs and box counts.
 void pascal near dialog_script_generic_part_animate(dialog_sequence_t sequence);
+
+// Naming convention for these dedicated script functions:
+//
+// 	dialog_script_(<stage>)_(<sequence>)(_<part>)?_animate()
+void near dialog_script_stage2_pre_intro_animate(void);
 // ----------------------------------
