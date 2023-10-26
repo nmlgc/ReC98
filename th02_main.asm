@@ -11710,8 +11710,7 @@ stones_end	proc far
 		push	bp
 		mov	bp, sp
 		call	@dialog_pre$qv
-		push	1
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		call	@stage_clear_bonus_animate$qv
 		call	@overlay_stage_leave_animate$qv
 		inc	_stage_id
@@ -11728,8 +11727,7 @@ stones_init	proc far
 		push	bp
 		mov	bp, sp
 		call	@dialog_pre$qv
-		push	0
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_PREBOSS
 		call	@dialog_post$qv
 		push	ds
 		push	offset aBoss2_m	; "boss2.m"
@@ -12389,60 +12387,19 @@ loc_12C66:
 		retf
 sub_12B9E	endp
 
+DS_PREBOSS = 0
+DS_POSTBOSS = 1
+
 	extern @dialog_load_and_init$qv:proc
 	@dialog_pre$qv procdesc near
 	@dialog_post$qv procdesc near
 	@DIALOG_BOX_ANIMATE_AND_ADVANCE$QI procdesc pascal near \
 		face_topleft_id:word
+	@DIALOG_SCRIPT_GENERIC_PART_ANIMA$Q17DIALOG_SEQUENCE_T procdesc pascal near \
+		sequence:word
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1310B	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	al, _stage_id
-		cbw
-		add	ax, ax
-		add	ax, di
-		mov	[bp+var_2], ax
-		xor	si, si
-		jmp	short loc_13134
-; ---------------------------------------------------------------------------
-
-loc_13123:
-		mov	bx, [bp+var_2]
-		imul	bx, 16h
-		mov	al, [bx+si+115Ch]
-		mov	ah, 0
-		call	@dialog_box_animate_and_advance$qi pascal, ax
-		inc	si
-
-loc_13134:
-		mov	al, _stage_id
-		cbw
-		add	ax, ax
-		mov	bx, ax
-		mov	al, [bx+di+1150h]
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_13123
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_1310B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12573,8 +12530,7 @@ var_6		= byte ptr -6
 		push	offset unk_1ED0C
 		mov	cx, 0Ah
 		call	SCOPY@
-		push	1
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	loc_13304
@@ -13635,8 +13591,7 @@ rika_init	proc far
 		call	sub_13ABB
 		add	sp, 4
 		call	@dialog_pre$qv
-		push	0
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_PREBOSS
 		call	@dialog_post$qv
 		mov	angle_1E510, 20h
 		mov	word_20652, 0C0h
@@ -13686,8 +13641,7 @@ rika_end	proc far
 		push	bp
 		mov	bp, sp
 		call	@dialog_pre$qv
-		push	1
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		call	@stage_clear_bonus_animate$qv
 		call	_key_delay
 		call	@overlay_stage_leave_animate$qv
@@ -16287,8 +16241,7 @@ meira_end	proc far
 		push	bp
 		mov	bp, sp
 		call	@dialog_pre$qv
-		push	1
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		call	@stage_clear_bonus_animate$qv
 		call	_key_delay
 		call	@overlay_stage_leave_animate$qv
@@ -16342,8 +16295,7 @@ loc_15296:
 		add	sp, 4
 		push	1
 		call	palette_white_in
-		push	0
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_PREBOSS
 		call	@dialog_post$qv
 		mov	word_2065A, 0
 		mov	byte_2066A, 0
@@ -18947,8 +18899,7 @@ evileye_init	proc far
 		add	sp, 4
 		push	1
 		call	palette_white_in
-		push	0
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_PREBOSS
 		call	@dialog_post$qv
 		pop	bp
 		retf
@@ -18963,8 +18914,7 @@ evileye_end	proc far
 		push	bp
 		mov	bp, sp
 		call	@dialog_pre$qv
-		push	1
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		call	@stage_extra_clear_bonus_animate$qv
 		call	_key_delay
 		les	bx, _resident
@@ -25615,8 +25565,7 @@ marisa_init	proc far
 		mov	vsync_Count1, 0
 		call	frame_delay pascal, 10
 		call	sub_1A529
-		push	0
-		call	sub_1310B
+		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_PREBOSS
 		call	super_clean pascal, (128 shl 16) or 511
 		mov	super_patnum, 80h
 		call	super_entry_bfnt pascal, ds, offset aStage3_b_bft ; "stage3_b.bft"
@@ -30493,282 +30442,170 @@ aStage_dt1	db 'STAGE .DT1',0
 public _LINE_BLANK, _clear_bytes
 _LINE_BLANK 	dw aLINE_BLANK
 _clear_bytes	db DIALOG_LINE_SIZE dup(0)
-		db  10h
-		db    8
-		db  16h
-		db  0Bh
-		db    8
-		db    3
-		db  10h
-		db    4
-		db    0
-		db    0
-		db  16h
-		db    6
-		db    0
-		db  60h
-		db  33h	; 3
-		db  60h
-		db    9
-		db  60h
-		db    0
-		db  60h
-		db  63h	; c
-		db  63h	; c
-		db  30h	; 0
-		db  0Ch
-		db  63h	; c
-		db  63h	; c
-		db    6
-		db  63h	; c
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  63h	; c
-		db  63h	; c
-		db  39h	; 9
-		db  60h
-		db    3
-		db  63h	; c
-		db    9
-		db  60h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  66h	; f
-		db  66h	; f
-		db  39h	; 9
-		db  3Ch	; <
-		db  66h	; f
-		db  66h	; f
-		db  3Ch	; <
-		db    9
-		db  96h
-		db  36h	; 6
-		db  66h	; f
-		db  66h	; f
-		db  60h
-		db  36h	; 6
-		db  66h	; f
-		db  3Ch	; <
-		db    9
-		db  66h	; f
-		db    9
-		db  96h
-		db  39h	; 9
-		db  96h
-		db    9
-		db  36h	; 6
-		db  39h	; 9
-		db    9
-		db  60h
-		db  96h
-		db  39h	; 9
-		db  60h
-		db  36h	; 6
-		db  60h
-		db  0Ch
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    6
-		db  60h
-		db  60h
-		db  0Ch
-		db  60h
-		db  33h	; 3
-		db  60h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db  60h
-		db  0Ch
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  69h	; i
-		db    6
-		db  60h
-		db  0Ch
-		db    6
-		db    6
-		db  69h	; i
-		db  69h	; i
-		db  0Ch
-		db  60h
-		db    6
-		db    6
-		db  69h	; i
-		db  69h	; i
-		db  69h	; i
-		db  69h	; i
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  93h
-		db    0
-		db  60h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  99h
-		db    0
-		db  99h
-		db    3
-		db  99h
-		db    6
-		db  99h
-		db  99h
-		db  99h
-		db  39h	; 9
-		db  99h
-		db  39h	; 9
-		db  99h
-		db  39h	; 9
-		db  99h
-		db  99h
-		db  39h	; 9
-		db  99h
-		db  0Ch
-		db  60h
-		db  0Ch
-		db  99h
-		db    9
-		db  9Ch
-		db    9
-		db  60h
-		db  60h
-		db  0Ch
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+
+public _GENERIC_BOX_COUNTS
+_GENERIC_BOX_COUNTS label byte
+	db  16,  8	; Stage 1
+	db  22, 11	; Stage 2
+	db   8,  3	; Stage 3
+	db  16,  4	; Stage 4
+	db   0,  0	; Stage 5 (unused, not generic)
+	db  22,  6	; Extra Stage
+
+BOX_COUNT_MAX = 22
+
+public _GENERIC_FACES
+_GENERIC_FACES label byte
+	; Stage	1, pre-boss
+	db FACE_REIMU_NEUTRAL	;  0
+	db FACE_GENJII       	;  1
+	db FACE_REIMU_CRY    	;  2
+	db FACE_GENJII       	;  3
+	db FACE_REIMU_JOY    	;  4
+	db FACE_GENJII       	;  5
+	db FACE_REIMU_NEUTRAL	;  6
+	db FACE_GENJII       	;  7
+	db FACE_RIKA         	;  8
+	db FACE_RIKA         	;  9
+	db FACE_REIMU_FALL   	; 10
+	db FACE_REIMU_FROWN  	; 11
+	db FACE_RIKA         	; 12
+	db FACE_RIKA         	; 13
+	db FACE_REIMU_ANGRY  	; 14
+	db FACE_RIKA         	; 15
+	db (BOX_COUNT_MAX - 16) dup(0)
+
+	; Stage	1, post-boss
+	db FACE_RIKA        	; 0
+	db FACE_RIKA        	; 1
+	db FACE_REIMU_SWEAT 	; 2
+	db FACE_GENJII      	; 3
+	db FACE_REIMU_HUSHED	; 4
+	db FACE_RIKA        	; 5
+	db FACE_REIMU_JOY   	; 6
+	db FACE_GENJII      	; 7
+	db (BOX_COUNT_MAX - 8) dup(0)
+
+	; Stage	2, pre-boss
+	db FACE_MEIRA_NEUTRAL 	;  0
+	db FACE_MEIRA_NEUTRAL 	;  1
+	db FACE_REIMU_SWEAT   	;  2
+	db FACE_REIMU_FLIRTY  	;  3
+	db FACE_MEIRA_NEUTRAL 	;  4
+	db FACE_MEIRA_NEUTRAL 	;  5
+	db FACE_REIMU_FLIRTY  	;  6
+	db FACE_REIMU_JOY     	;  7
+	db FACE_MEIRA_SWEAT   	;  8
+	db FACE_REIMU_QUESTION	;  9
+	db FACE_MEIRA_NEUTRAL 	; 10
+	db FACE_MEIRA_NEUTRAL 	; 11
+	db FACE_GENJII        	; 12
+	db FACE_REIMU_QUESTION	; 13
+	db FACE_MEIRA_NEUTRAL 	; 14
+	db FACE_REIMU_FLIRTY  	; 15
+	db FACE_REIMU_JOY     	; 16
+	db FACE_MEIRA_NEUTRAL 	; 17
+	db FACE_REIMU_JOY     	; 18
+	db FACE_MEIRA_SWEAT   	; 19
+	db FACE_REIMU_SWEAT   	; 20
+	db FACE_MEIRA_SWEAT   	; 21
+
+	; Stage	2, post-boss
+	db FACE_REIMU_JOY     	;  0
+	db FACE_REIMU_QUESTION	;  1
+	db FACE_REIMU_SWEAT   	;  2
+	db FACE_REIMU_JOY     	;  3
+	db FACE_GENJII        	;  4
+	db FACE_MEIRA_SWEAT   	;  5
+	db FACE_REIMU_SWEAT   	;  6
+	db FACE_GENJII        	;  7
+	db FACE_REIMU_QUESTION	;  8
+	db FACE_GENJII        	;  9
+	db FACE_REIMU_FROWN   	; 10
+	db (BOX_COUNT_MAX - 11) dup(0)
+
+	; Stage	3, pre-boss
+	db FACE_REIMU_ANGRY  	; 0
+	db FACE_GENJII       	; 1
+	db FACE_GENJII       	; 2
+	db FACE_REIMU_FROWN  	; 3
+	db FACE_GENJII       	; 4
+	db FACE_REIMU_CRY    	; 5
+	db FACE_GENJII       	; 6
+	db FACE_REIMU_NEUTRAL	; 7
+	db (BOX_COUNT_MAX - 8) dup(0)
+
+	; Stage	3, post-boss
+	db FACE_REIMU_FROWN	; 0
+	db FACE_GENJII     	; 1
+	db FACE_REIMU_FROWN	; 2
+	db (BOX_COUNT_MAX - 3) dup(0)
+
+	; Stage	4, pre-boss
+	db FACE_MIMA_SMILE 	;  0
+	db FACE_REIMU_ANGRY	;  1
+	db FACE_GENJII     	;  2
+	db FACE_REIMU_FROWN	;  3
+	db FACE_REIMU_ANGRY	;  4
+	db FACE_REIMU_ANGRY	;  5
+	db FACE_MIMA_SMILE 	;  6
+	db FACE_MIMA_SMILE 	;  7
+	db FACE_REIMU_FROWN	;  8
+	db FACE_GENJII     	;  9
+	db FACE_REIMU_ANGRY	; 10
+	db FACE_REIMU_ANGRY	; 11
+	db FACE_MIMA_SMILE 	; 12
+	db FACE_MIMA_SMILE 	; 13
+	db FACE_MIMA_SMILE 	; 14
+	db FACE_MIMA_SMILE 	; 15
+	db (BOX_COUNT_MAX - 16) dup(0)
+
+	; Stage	4, post-boss
+	db FACE_MARISA_FROWN 	; 0
+	db FACE_REIMU_NEUTRAL	; 1
+	db FACE_GENJII       	; 2
+	db FACE_REIMU_NEUTRAL	; 3
+	db (BOX_COUNT_MAX - 4) dup(0)
+
+	; Stage	5, pre-boss (unused)
+	db BOX_COUNT_MAX dup(0)
+
+	; Stage	5, post-boss (unused)
+	db BOX_COUNT_MAX dup(0)
+
+	; Extra	Stage, pre-boss
+	db FACE_EXRIKA_SMILE 	;  0
+	db FACE_REIMU_NEUTRAL	;  1
+	db FACE_EXRIKA_SMILE 	;  2
+	db FACE_REIMU_HUSHED 	;  3
+	db FACE_EXRIKA_SMILE 	;  4
+	db FACE_REIMU_ANGRY  	;  5
+	db FACE_EXRIKA_SMILE 	;  6
+	db FACE_EXRIKA_SMILE 	;  7
+	db FACE_EXRIKA_SMILE 	;  8
+	db FACE_REIMU_SWEAT  	;  9
+	db FACE_EXRIKA_SMILE 	; 10
+	db FACE_REIMU_SWEAT  	; 11
+	db FACE_EXRIKA_SMILE 	; 12
+	db FACE_REIMU_SWEAT  	; 13
+	db FACE_EXRIKA_SMILE 	; 14
+	db FACE_EXRIKA_SMILE 	; 15
+	db FACE_REIMU_SWEAT  	; 16
+	db FACE_EXRIKA_SMILE 	; 17
+	db FACE_REIMU_FROWN  	; 18
+	db FACE_GENJII       	; 19
+	db FACE_REIMU_FROWN  	; 20
+	db FACE_EXRIKA_SMILE 	; 21
+
+	; Extra	Stage, post-boss
+	db FACE_REIMU_JOY   	; 0
+	db FACE_EXRIKA_FROWN	; 1
+	db FACE_REIMU_JOY   	; 2
+	db FACE_GENJII      	; 3
+	db FACE_GENJII      	; 4
+	db FACE_REIMU_FROWN 	; 5
+	db (BOX_COUNT_MAX - 6) dup(0)
+
 unk_1ECD4	db  39h	; 9
 		db  60h
 		db  60h

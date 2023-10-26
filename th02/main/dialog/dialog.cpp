@@ -6,6 +6,7 @@
 #include "shiftjis.hpp"
 #include "master.hpp"
 #include "platform/array.hpp"
+#include "th02/common.h"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
@@ -59,6 +60,9 @@ static const tram_x_t TEXT_TRAM_TOP = (
 extern shiftjis_t dialog_text[64][DIALOG_BOX_LINES][DIALOG_LINE_SIZE];
 extern bool restore_tile_mode_none_at_post;
 // -----
+
+// Core system
+// -----------
 
 void dialog_load_and_init(void)
 {
@@ -392,3 +396,22 @@ void pascal near dialog_box_animate_and_advance(
 	key_delay();
 	dialog_box_cur++;
 }
+// -----------
+
+// Stage-specific hardcoded "scripts"
+// ----------------------------------
+
+void pascal near dialog_script_generic_part_animate(dialog_sequence_t sequence)
+{
+	enum {
+		STAGE_SEQUENCE_COUNT = (TOTAL_STAGE_COUNT * DS_COUNT),
+	};
+	extern const uint8_t GENERIC_BOX_COUNTS[TOTAL_STAGE_COUNT][DS_COUNT];
+	extern const face_tile_topleft_t GENERIC_FACES[STAGE_SEQUENCE_COUNT][22];
+
+	int stage_and_sequence = ((stage_id * DS_COUNT) + sequence);
+	for(int i = 0; i < GENERIC_BOX_COUNTS[stage_id][sequence]; i++) {
+		dialog_box_animate_and_advance(GENERIC_FACES[stage_and_sequence][i]);
+	}
+}
+// ----------------------------------
