@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include "platform.h"
+#include "pc98.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
 #include "th02/formats/dialog.hpp"
@@ -27,3 +28,8 @@ void dialog_load_and_init(void)
 	file_close();
 	dialog_box_cur = 0;
 }
+
+// ZUN bloat: Turn into a single global inline function.
+#define egc_start_copy	near egc_start_copy_2
+#include "th01/hardware/egcstart.cpp"
+#undef egc_start_copy

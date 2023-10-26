@@ -12358,11 +12358,10 @@ loc_12C66:
 sub_12B9E	endp
 
 	extern @dialog_load_and_init$qv:proc
+	@egc_start_copy_2$qv procdesc pascal near
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-EGC_START_COPY_DEF 2, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
