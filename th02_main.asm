@@ -12394,6 +12394,8 @@ sub_12B9E	endp
 	@dialog_post$qv procdesc near
 	@DIALOG_FACE_PUT$QI procdesc pascal near \
 		topleft_id:word
+	@DIALOG_TEXT_PUT$QINXUCUII procdesc pascal near \
+		line:word, str:dword, atrb:word, n:word
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
@@ -12402,59 +12404,9 @@ main_03__TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_1300F	proc near
-
-var_28		= byte ptr -28h
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= dword	ptr  8
-arg_8		= word ptr  0Ch
-
-		enter	28h, 0
-		push	si
-		lea	ax, [bp+var_28]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1EB98
-		mov	cx, 28h	; '('
-		call	SCOPY@
-		xor	si, si
-		jmp	short loc_13035
-; ---------------------------------------------------------------------------
-
-loc_13029:
-		les	bx, [bp+arg_4]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+si+var_28],	al
-		inc	si
-
-loc_13035:
-		cmp	si, [bp+arg_0]
-		jl	short loc_13029
-		push	14
-		mov	ax, [bp+arg_8]
-		add	ax, 21
-		push	ax
-		push	ss
-		lea	ax, [bp+var_28]
-		push	ax
-		push	[bp+arg_2]
-		call	text_putsa
-		pop	si
-		leave
-		retn	0Ah
-sub_1300F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_13055	proc near
 
-var_4		= word ptr -4
+@@box		= word ptr -4
 var_2		= word ptr -2
 @@topleft_id	= word ptr  4
 
@@ -12467,7 +12419,7 @@ var_2		= word ptr -2
 		xor	di, di
 		mov	al, _dialog_box_cur
 		mov	ah, 0
-		mov	[bp+var_4], ax
+		mov	[bp+@@box], ax
 		jmp	short loc_130F7
 ; ---------------------------------------------------------------------------
 
@@ -12476,32 +12428,32 @@ loc_13090:
 		call	@dialog_face_put$qi pascal, [bp+@@topleft_id]
 		cmp	si, 24h	; '$'
 		jg	short loc_130B3
-		push	0
-		push	ds
-		mov	ax, [bp+var_4]
+		push	0	; line
+		push	ds	; str (segment)
+		mov	ax, [bp+@@box]
 		imul	ax, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
 		add	ax, offset (_dialog_text + (0 * DIALOG_LINE_SIZE))
-		push	ax
-		push	TX_WHITE
-		push	si
+		push	ax	; str (offset)
+		push	TX_WHITE	; atrb
+		push	si	; n
 		jmp	short loc_130CC
 ; ---------------------------------------------------------------------------
 
 loc_130B3:
 		cmp	si, 48h	; 'H'
 		jg	short loc_130CF
-		push	1
-		push	ds
-		mov	ax, [bp+var_4]
+		push	1	; line
+		push	ds	; str (segment)
+		mov	ax, [bp+@@box]
 		imul	ax, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
 		add	ax, offset (_dialog_text + (1 * DIALOG_LINE_SIZE))
-		push	ax
-		push	TX_WHITE
-		lea	ax, [si-24h]
+		push	ax	; str (offset)
+		push	TX_WHITE	; atrb
+		lea	ax, [si-36]	; n
 		push	ax
 
 loc_130CC:
-		call	sub_1300F
+		call	@dialog_text_put$qinxucuii
 
 loc_130CF:
 		inc	di
@@ -30628,46 +30580,8 @@ byte_1EB88	db 1
 aStage_dt1	db 'STAGE .DT1',0
 		db 0
 word_1EB96	dw 12D6h
-unk_1EB98	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+public _clear_bytes
+_clear_bytes	db DIALOG_LINE_SIZE dup(0)
 		db  10h
 		db    8
 		db  16h

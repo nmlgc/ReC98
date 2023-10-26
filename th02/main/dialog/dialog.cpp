@@ -5,6 +5,7 @@
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
+#include "platform/array.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 }
@@ -43,6 +44,12 @@ static const pixel_t BOX_SLIDE_SPEED = (PLAYFIELD_W / 24);
 
 static const screen_x_t FACE_LEFT = (BOX_LEFT + 8);
 static const screen_y_t FACE_TOP = (BOX_TOP + 8);
+static const tram_x_t TEXT_TRAM_LEFT = (
+	(BOX_LEFT + DIALOG_BOX_LEFT_W - (DIALOG_BOX_PART_W / 2)) / GLYPH_HALF_W
+);
+static const tram_x_t TEXT_TRAM_TOP = (
+	(BOX_TOP + (BOX_H / 2) - ((DIALOG_BOX_LINES * GLYPH_H) / 2)) / GLYPH_H
+);
 // -----------
 
 // State
@@ -308,4 +315,20 @@ void pascal near dialog_face_put(
 	mpn_put_8((FACE_LEFT + (0 * TILE_W)), top3, face_tile_id(topleft_id, 0, 2));
 	mpn_put_8((FACE_LEFT + (1 * TILE_W)), top3, face_tile_id(topleft_id, 1, 2));
 	mpn_put_8((FACE_LEFT + (2 * TILE_W)), top3, face_tile_id(topleft_id, 2, 2));
+}
+
+void pascal near dialog_text_put(
+	tram_cell_amount_t line, const shiftjis_t* str, uint16_t atrb, int n
+)
+{
+	// ZUN landmine: master.lib has text_putnsa() for this purpose, which works
+	// without copying the string and risking a buffer overflow in the process,
+	// or wasting 40 bytes of conventional RAM on \0 bytes.
+	extern const Array<shiftjis_t, DIALOG_LINE_SIZE> clear_bytes;
+	Array<shiftjis_t, DIALOG_LINE_SIZE> buf = clear_bytes;
+	for(int i = 0; i < n; i++) {
+		buf[i] = str[i];
+	}
+
+	text_putsa(TEXT_TRAM_LEFT, (TEXT_TRAM_TOP + line), buf.data(), atrb);
 }
