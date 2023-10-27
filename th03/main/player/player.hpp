@@ -17,7 +17,7 @@
 typedef uint16_t gauge_t;
 typedef uint8_t gauge_perbyte_t;
 
-void pascal near gauge_avail_add(unsigned char pid, unsigned char charge);
+void pascal near gauge_avail_add(pid_t pid, unsigned char charge);
 // -----
 
 // Charge Shots
@@ -92,8 +92,8 @@ typedef struct {
 	uint8_t padding[6];
 } player_t;
 
-extern unsigned char pid_current;
-extern unsigned char pid_other;
+extern pid_t pid_current;
+extern pid_t pid_other;
 
 // ZUN bloat: Doubly redundant: The player ID is already covered by
 // [pid_current], while [so_attack] can be easily calculated from that ID.

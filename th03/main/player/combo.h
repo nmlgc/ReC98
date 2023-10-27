@@ -17,7 +17,7 @@ extern combo_t combos[PLAYER_COUNT];
 // amount of [hits] is enough to continue the combo. Returns the new total
 // bonus value.
 unsigned int pascal combo_add(
-	unsigned char hits, unsigned char pid, unsigned int bonus
+	unsigned char hits, pid_t pid, unsigned int bonus
 );
 
 void combo_update_and_render(void);
@@ -39,6 +39,6 @@ extern unsigned char hitcombo_ring[PLAYER_COUNT][HITCOMBO_RING_SIZE];
 // [slot], adding the given amount of bonus points. Returns the new total
 // bonus value.
 unsigned int pascal hitcombo_commit(
-	unsigned char pid, unsigned char slot, unsigned int bonus_to_add
+	pid_t pid, unsigned char slot, unsigned int bonus_to_add
 );
 /// ----------------

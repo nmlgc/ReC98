@@ -40,7 +40,7 @@ typedef struct {
 	int8_t unused_1;
 	unsigned char bgm_mode;
 	unsigned char key_mode;
-	unsigned char pid_winner;
+	pid_t pid_winner;
 	score_lebcd_t score_last[PLAYER_COUNT];
 	unsigned char game_mode;
 	PlaycharPalettedOptional story_opponents[STAGE_COUNT];

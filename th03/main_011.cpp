@@ -6,6 +6,7 @@
 extern "C" {
 #include "platform.h"
 #include "pc98.h"
+#include "th03/common.h"
 #include "th03/sprite16.hpp"
 #include "th03/main/playfld.hpp"
 #include "th03/main/player/shot.hpp"

@@ -29,7 +29,7 @@ struct shotpair_t {
 	sprite16_offset_t so_pid;
 	unsigned char so_anim;
 	char unused_2; // ZUN bloat
-	unsigned char pid;
+	pid_t pid;
 	char unused_3; // ZUN bloat
 };
 
