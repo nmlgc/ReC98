@@ -12398,248 +12398,12 @@ DS_POSTBOSS = 1
 	@DIALOG_SCRIPT_GENERIC_PART_ANIMA$Q17DIALOG_SEQUENCE_T procdesc pascal near \
 		sequence:word
 	@dialog_script_stage2_pre_intro_a$qv procdesc near
+	@dialog_script_stage4_pre_intro_a$qv procdesc near
+	@dialog_script_stage4_pre_marisa_$qv procdesc near
+	@dialog_script_stage4_post_animat$qv procdesc near
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1315B	proc near
-
-var_8		= byte ptr -8
-
-		enter	8, 0
-		push	si
-		lea	ax, [bp+var_8]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ECD4
-		mov	cx, 8
-		call	SCOPY@
-		xor	si, si
-		jmp	short loc_1317F
-; ---------------------------------------------------------------------------
-
-loc_13175:
-		mov	al, [bp+si+var_8]
-		mov	ah, 0
-		call	@dialog_box_animate_and_advance$qi pascal, ax
-		inc	si
-
-loc_1317F:
-		cmp	si, 8
-		jl	short loc_13175
-		pop	si
-		leave
-		retn
-sub_1315B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13187	proc near
-
-var_C		= byte ptr -0Ch
-
-		enter	0Ch, 0
-		push	si
-		lea	ax, [bp+var_C]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ECDC
-		mov	cx, 0Bh
-		call	SCOPY@
-		xor	si, si
-		jmp	short loc_131AB
-; ---------------------------------------------------------------------------
-
-loc_131A1:
-		mov	al, [bp+si+var_C]
-		mov	ah, 0
-		call	@dialog_box_animate_and_advance$qi pascal, ax
-		inc	si
-
-loc_131AB:
-		cmp	si, 0Bh
-		jl	short loc_131A1
-		call	text_putsa pascal, (14 shl 16) + 21, ds, _LINE_BLANK, TX_WHITE
-		call	text_putsa pascal, (14 shl 16) + 22, ds, _LINE_BLANK, TX_WHITE
-		pop	si
-		leave
-		retn
-sub_13187	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_131D9	proc near
-
-var_2E		= byte ptr -2Eh
-var_1A		= byte ptr -1Ah
-var_10		= byte ptr -10h
-var_6		= byte ptr -6
-
-		enter	2Eh, 0
-		push	si
-		lea	ax, [bp+var_2E]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ECE8
-		mov	cx, 14h
-		call	SCOPY@
-		lea	ax, [bp+var_6]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ECFC
-		mov	cx, 6
-		call	SCOPY@
-		lea	ax, [bp+var_10]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ED02
-		mov	cx, 0Ah
-		call	SCOPY@
-		lea	ax, [bp+var_1A]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ED0C
-		mov	cx, 0Ah
-		call	SCOPY@
-		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
-		les	bx, _resident
-		cmp	es:[bx+mikoconfig_t.continues_used], 0
-		jz	loc_13304
-		xor	si, si
-		jmp	short loc_13248
-; ---------------------------------------------------------------------------
-
-loc_13238:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_6]
-		add	bx, ax
-		call	@dialog_box_animate_and_advance$qi pascal, word ptr ss:[bx]
-		inc	si
-
-loc_13248:
-		cmp	si, 3
-		jl	short loc_13238
-		les	bx, _resident
-		mov	ax, es:[bx+mikoconfig_t.continues_used]
-		mov	bx, 10
-		xor	dx, dx
-		div	bx
-		mov	si, ax
-		or	si, si
-		jz	short loc_1329D
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_2E]
-		add	bx, ax
-		mov	bx, ss:[bx]
-		mov	al, [bx]
-		mov	dl, _dialog_box_cur
-		mov	dh, 0
-		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
-		mov	bx, dx
-		mov	_dialog_text[bx][8], al
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_2E]
-		add	bx, ax
-		mov	bx, ss:[bx]
-		mov	al, [bx+1]
-		mov	dl, _dialog_box_cur
-		mov	dh, 0
-		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
-		mov	bx, dx
-		mov	_dialog_text[bx][9], al
-
-loc_1329D:
-		les	bx, _resident
-		mov	ax, es:[bx+mikoconfig_t.continues_used]
-		mov	bx, 10
-		xor	dx, dx
-		div	bx
-		mov	si, dx
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_2E]
-		add	bx, ax
-		mov	bx, ss:[bx]
-		mov	al, [bx]
-		mov	dl, _dialog_box_cur
-		mov	dh, 0
-		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
-		mov	bx, dx
-		mov	_dialog_text[bx][10], al
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_2E]
-		add	bx, ax
-		mov	bx, ss:[bx]
-		mov	al, [bx+1]
-		mov	dl, _dialog_box_cur
-		mov	dh, 0
-		imul	dx, (DIALOG_BOX_LINES * DIALOG_LINE_SIZE)
-		mov	bx, dx
-		mov	_dialog_text[bx][11], al
-		xor	si, si
-		jmp	short loc_132FD
-; ---------------------------------------------------------------------------
-
-loc_132ED:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_10]
-		add	bx, ax
-		call	@dialog_box_animate_and_advance$qi pascal, word ptr ss:[bx]
-		inc	si
-
-loc_132FD:
-		cmp	si, 5
-		jl	short loc_132ED
-		jmp	short loc_13325
-; ---------------------------------------------------------------------------
-
-loc_13304:
-		mov	al, _dialog_box_cur
-		add	al, 8
-		mov	_dialog_box_cur, al
-		xor	si, si
-		jmp	short loc_13320
-; ---------------------------------------------------------------------------
-
-loc_13310:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_1A]
-		add	bx, ax
-		call	@dialog_box_animate_and_advance$qi pascal, word ptr ss:[bx]
-		inc	si
-
-loc_13320:
-		cmp	si, 5
-		jl	short loc_13310
-
-loc_13325:
-		pop	si
-		leave
-		retn
-sub_131D9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25548,7 +25312,7 @@ marisa_init	proc far
 		call	super_clean pascal, (128 shl 16) or 192
 		mov	super_patnum, 80h
 		call	super_entry_bfnt pascal, ds, offset aMima_bft_0 ; "mima.bft"
-		call	sub_1315B
+		call	@dialog_script_stage4_pre_intro_a$qv
 		mov	vsync_Count1, 0
 		call	frame_delay pascal, 10
 		call	sub_1A529
@@ -25617,7 +25381,7 @@ marisa_init	proc far
 		push	offset aBoss3_m	; "boss3.m"
 		nopcall	sub_13ABB
 		add	sp, 6
-		call	sub_13187
+		call	@dialog_script_stage4_pre_marisa_$qv
 		call	graph_clear
 		call	super_put_rect pascal, point_26D76.x, point_26D76.y, patnum_2064E
 		mov	ax, point_26D76.x
@@ -28458,7 +28222,7 @@ marisa_end	proc far
 		push	bp
 		mov	bp, sp
 		call	@dialog_pre$qv
-		call	sub_131D9
+		call	@dialog_script_stage4_post_animat$qv
 		call	@stage_clear_bonus_animate$qv
 
 loc_1C27C:
@@ -30593,72 +30357,67 @@ _GENERIC_FACES label byte
 	db FACE_REIMU_FROWN 	; 5
 	db (BOX_COUNT_MAX - 6) dup(0)
 
-unk_1ECD4	db  39h	; 9
-		db  60h
-		db  60h
-		db  39h	; 9
-		db  60h
-		db  39h	; 9
-		db  60h
-		db  39h	; 9
-unk_1ECDC	db  39h	; 9
-		db  90h
-		db    6
-		db  90h
-		db  90h
-		db  90h
-		db    6
-		db  90h
-		db  60h
-		db    0
-		db  60h
-		db    0
-unk_1ECE8	db    6
-		db  13h
-		db    9
-		db  13h
-		db  0Ch
-		db  13h
-		db  0Fh
-		db  13h
-		db  12h
-		db  13h
-		db  15h
-		db  13h
-		db  18h
-		db  13h
-		db  1Bh
-		db  13h
-		db  1Eh
-		db  13h
-		db  21h	; !
-		db  13h
-unk_1ECFC	db  60h
-		db    0
-		db  36h	; 6
-		db    0
-		db  90h
-		db    0
-unk_1ED02	db  90h
-		db    0
-		db  0Ch
-		db    0
-		db  60h
-		db    0
-		db  39h	; 9
-		db    0
-		db  90h
-		db    0
-unk_1ED0C	db  60h
-		db    0
-		db  60h
-		db    0
-		db  39h	; 9
-		db    0
-		db  60h
-		db    0
-		db  39h	; 9
-		db    0
+public _STAGE4_PREBOSS_INTRO_FACES
+_STAGE4_PREBOSS_INTRO_FACES label byte
+	db FACE_REIMU_SWEAT	; 0
+	db FACE_GENJII     	; 1
+	db FACE_GENJII     	; 2
+	db FACE_REIMU_SWEAT	; 3
+	db FACE_GENJII     	; 4
+	db FACE_REIMU_SWEAT	; 5
+	db FACE_GENJII     	; 6
+	db FACE_REIMU_SWEAT	; 7
+
+public _STAGE4_PREBOSS_MARISA_FACES
+_STAGE4_PREBOSS_MARISA_FACES label byte
+	db FACE_REIMU_SWEAT 	;  0
+	db FACE_MARISA_SMILE	;  1
+	db FACE_REIMU_ANGRY 	;  2
+	db FACE_MARISA_SMILE	;  3
+	db FACE_MARISA_SMILE	;  4
+	db FACE_MARISA_SMILE	;  5
+	db FACE_REIMU_ANGRY 	;  6
+	db FACE_MARISA_SMILE	;  7
+	db FACE_GENJII      	;  8
+	db FACE_REIMU_NEUTRAL	;  9
+	db FACE_GENJII      	; 10
+	db FACE_REIMU_NEUTRAL	; 11
+
+public _STAGE4_POSTBOSS_CONTINUED_NUMERA
+_STAGE4_POSTBOSS_CONTINUED_NUMERA label word
+	dw offset aFW_0
+	dw offset aFW_1
+	dw offset aFW_2
+	dw offset aFW_3
+	dw offset aFW_4
+	dw offset aFW_5
+	dw offset aFW_6
+	dw offset aFW_7
+	dw offset aFW_8
+	dw offset aFW_9
+
+public _STAGE4_POSTBOSS_CONTINUED_BEFORE
+_STAGE4_POSTBOSS_CONTINUED_BEFORE label word
+	dw FACE_GENJII        	; 0
+	dw FACE_REIMU_QUESTION	; 1
+	dw FACE_MARISA_SMILE  	; 2
+
+public _STAGE4_POSTBOSS_CONTINUED_AFTER_
+_STAGE4_POSTBOSS_CONTINUED_AFTER_ label word
+	dw FACE_MARISA_SMILE	; 0
+	dw FACE_REIMU_FROWN 	; 1
+	dw FACE_GENJII      	; 2
+	dw FACE_REIMU_SWEAT 	; 3
+	dw FACE_MARISA_SMILE	; 4
+
+public _STAGE4_POSTBOSS_NOTCONTINUED_FAC
+_STAGE4_POSTBOSS_NOTCONTINUED_FAC label word
+	dw FACE_GENJII     	; 0
+	dw FACE_GENJII     	; 1
+	dw FACE_REIMU_SWEAT	; 2
+	dw FACE_GENJII     	; 3
+	dw FACE_REIMU_SWEAT	; 4
+
 unk_1ED16	db  69h	; i
 		db  39h	; 9
 		db  69h	; i
@@ -30707,16 +30466,16 @@ dword_1ED42	dd 0C6C066Ch
 aLINE_BLANK	db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@', 0
 public _dialog_fn
 _dialog_fn	db 'stage .txt',0
-aVo		db 'ÇO',0
-aVp		db 'ÇP',0
-aVq		db 'ÇQ',0
-aVr		db 'ÇR',0
-aVs		db 'ÇS',0
-aVt		db 'ÇT',0
-aVu		db 'ÇU',0
-aVv1		db 'ÇV',0
-aVw		db 'ÇW',0
-aVx		db 'ÇX',0
+aFW_0	db 'ÇO', 0
+aFW_1	db 'ÇP', 0
+aFW_2	db 'ÇQ', 0
+aFW_3	db 'ÇR', 0
+aFW_4	db 'ÇS', 0
+aFW_5	db 'ÇT', 0
+aFW_6	db 'ÇU', 0
+aFW_7	db 'ÇV', 0
+aFW_8	db 'ÇW', 0
+aFW_9	db 'ÇX', 0
 word_1ED94	dw 0
 word_1ED96	dw 0
 word_1ED98	dw 0

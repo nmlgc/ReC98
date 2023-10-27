@@ -26,4 +26,7 @@ void pascal near dialog_script_generic_part_animate(dialog_sequence_t sequence);
 //
 // 	dialog_script_(<stage>)_(<sequence>)(_<part>)?_animate()
 void near dialog_script_stage2_pre_intro_animate(void);
+void near dialog_script_stage4_pre_intro_animate(void);
+void near dialog_script_stage4_pre_marisa_animate(void);
+void near dialog_script_stage4_post_animate(void);
 // ----------------------------------

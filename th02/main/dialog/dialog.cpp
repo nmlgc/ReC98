@@ -7,6 +7,7 @@
 #include "master.hpp"
 #include "platform/array.hpp"
 #include "th02/common.h"
+#include "th02/resident.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
@@ -400,6 +401,14 @@ void pascal near dialog_box_animate_and_advance(
 
 // Stage-specific hardcoded "scripts"
 // ----------------------------------
+// ZUN bloat: All face ID arrays in this section should have been `static
+// const` to avoid the useless copy.
+
+#define boxes_animate(face_id_array) { \
+	for(int i = 0; i < face_id_array.count(); i++) { \
+		dialog_box_animate_and_advance(face_id_array[i]); \
+	} \
+}
 
 void pascal near dialog_script_generic_part_animate(dialog_sequence_t sequence)
 {
@@ -419,5 +428,65 @@ void near dialog_script_stage2_pre_intro_animate(void)
 {
 	dialog_box_animate_and_advance(FACE_REIMU_NEUTRAL);
 	dialog_box_animate_and_advance(FACE_GENJII);
+}
+
+void near dialog_script_stage4_pre_intro_animate(void)
+{
+	typedef Array<face_tile_topleft_t, 8> T1;
+	extern const T1 STAGE4_PREBOSS_INTRO_FACES;
+	const T1 FACES = STAGE4_PREBOSS_INTRO_FACES;
+	boxes_animate(FACES);
+}
+
+void near dialog_script_stage4_pre_marisa_animate(void)
+{
+	typedef Array<face_tile_topleft_t, 11> T1;
+	extern const T1 STAGE4_PREBOSS_MARISA_FACES;
+	const T1 FACES = STAGE4_PREBOSS_MARISA_FACES;
+	boxes_animate(FACES);
+	dialog_box_wipe();
+}
+
+void near dialog_script_stage4_post_animate(void)
+{
+	typedef Array<shiftjis_t near*, 10> T1;
+	typedef Array<int /* ACTUAL TYPE: face_tile_topleft_t */, 3> T2;
+	typedef Array<int /* ACTUAL TYPE: face_tile_topleft_t */, 5> T3;
+
+	extern const T1 STAGE4_POSTBOSS_CONTINUED_NUMERALS;
+	extern const T2 STAGE4_POSTBOSS_CONTINUED_BEFORE_FACES;
+	extern const T3 STAGE4_POSTBOSS_CONTINUED_AFTER_FACES;
+	extern const T3 STAGE4_POSTBOSS_NOTCONTINUED_FACES;
+
+	const T1 CONTINUED_NUMERALS = STAGE4_POSTBOSS_CONTINUED_NUMERALS;
+	const T2 CONTINUED_BEFORE_BOX_FACE = STAGE4_POSTBOSS_CONTINUED_BEFORE_FACES;
+	const T3 CONTINUED_AFTER_BOX_FACE = STAGE4_POSTBOSS_CONTINUED_AFTER_FACES;
+	const T3 NOTCONTINUED_BOX_FACE = STAGE4_POSTBOSS_NOTCONTINUED_FACES;
+
+	dialog_script_generic_part_animate(DS_POSTBOSS);
+	if(resident->continues_used) {
+		boxes_animate(CONTINUED_BEFORE_BOX_FACE);
+
+		// Insert number of continues into the next dialog box
+		int digit = (resident->continues_used / 10);
+		if(digit) {
+			dialog_text[dialog_box_cur][0][8] = CONTINUED_NUMERALS[digit][0];
+			dialog_text[dialog_box_cur][0][9] = CONTINUED_NUMERALS[digit][1];
+		}
+		digit = (resident->continues_used % 10);
+		dialog_text[dialog_box_cur][0][10] = CONTINUED_NUMERALS[digit][0];
+		dialog_text[dialog_box_cur][0][11] = CONTINUED_NUMERALS[digit][1];
+
+		// ZUN bloat: Same as boxes_animate().
+		for(digit = 0; digit < CONTINUED_AFTER_BOX_FACE.count(); digit++) {
+			dialog_box_animate_and_advance(CONTINUED_AFTER_BOX_FACE[digit]);
+		}
+	} else {
+		dialog_box_cur += (
+			CONTINUED_BEFORE_BOX_FACE.count() +
+			CONTINUED_AFTER_BOX_FACE.count()
+		);
+		boxes_animate(NOTCONTINUED_BOX_FACE);
+	}
 }
 // ----------------------------------

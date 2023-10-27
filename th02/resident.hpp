@@ -8,7 +8,7 @@ typedef struct {
 	char debug;
 	int8_t padding_1;
 	long score;
-	int continues_used;
+	unsigned int continues_used;
 	char rem_bombs;
 	char rem_lives;
 	char rank;
