@@ -12401,226 +12401,14 @@ DS_POSTBOSS = 1
 	@dialog_script_stage4_pre_intro_a$qv procdesc near
 	@dialog_script_stage4_pre_marisa_$qv procdesc near
 	@dialog_script_stage4_post_animat$qv procdesc near
+	@dialog_script_stage5_pre_intro_a$qv procdesc near
+	@dialog_script_stage5_pre_unseale$qv procdesc near
+	@dialog_script_stage5_pre_winged_$qv procdesc near
+	@dialog_script_stage5_form1defeat$qv procdesc near
+	@dialog_script_stage5_post_animat$qv procdesc near
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13328	proc near
-		push	bp
-		mov	bp, sp
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_ANGRY
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
-		pop	bp
-		retn
-sub_13328	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13337	proc near
-
-var_28		= byte ptr -28h
-var_16		= byte ptr -16h
-
-		enter	28h, 0
-		push	si
-		lea	ax, [bp+var_16]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ED16
-		mov	cx, 16h
-		call	SCOPY@
-		lea	ax, [bp+var_28]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ED2C
-		mov	cx, 11h
-		call	SCOPY@
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_ANGRY
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
-		les	bx, _resident
-		cmp	es:[bx+mikoconfig_t.continues_used], 0
-		jz	short loc_13390
-		xor	si, si
-		jmp	short loc_13381
-; ---------------------------------------------------------------------------
-
-loc_13377:
-		mov	al, [bp+si+var_16]
-		mov	ah, 0
-		call	@dialog_box_animate_and_advance$qi pascal, ax
-		inc	si
-
-loc_13381:
-		cmp	si, 16h
-		jl	short loc_13377
-		mov	al, _dialog_box_cur
-		add	al, 17
-		mov	_dialog_box_cur, al
-		jmp	short loc_133AB
-; ---------------------------------------------------------------------------
-
-loc_13390:
-		mov	al, _dialog_box_cur
-		add	al, 22
-		mov	_dialog_box_cur, al
-		xor	si, si
-		jmp	short loc_133A6
-; ---------------------------------------------------------------------------
-
-loc_1339C:
-		mov	al, [bp+si+var_28]
-		mov	ah, 0
-		call	@dialog_box_animate_and_advance$qi pascal, ax
-		inc	si
-
-loc_133A6:
-		cmp	si, 11h
-		jl	short loc_1339C
-
-loc_133AB:
-		pop	si
-		leave
-		retn
-sub_13337	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_133AE	proc near
-		push	bp
-		mov	bp, sp
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
-		pop	bp
-		retn
-sub_133AE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_133B8	proc near
-
-var_A		= dword	ptr -0Ah
-var_6		= byte ptr -6
-
-		enter	0Ah, 0
-		push	si
-		lea	ax, [bp+var_6]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_1ED3D
-		mov	cx, 5
-		call	SCOPY@
-		mov	eax, dword_1ED42
-		mov	[bp+var_A], eax
-		les	bx, _resident
-		cmp	es:[bx+mikoconfig_t.continues_used], 0
-		jz	short loc_133F6
-		xor	si, si
-		jmp	short loc_133EF
-; ---------------------------------------------------------------------------
-
-loc_133E5:
-		mov	al, [bp+si+var_6]
-		mov	ah, 0
-		call	@dialog_box_animate_and_advance$qi pascal, ax
-		inc	si
-
-loc_133EF:
-		cmp	si, 5
-		jl	short loc_133E5
-		jmp	short loc_13411
-; ---------------------------------------------------------------------------
-
-loc_133F6:
-		mov	al, _dialog_box_cur
-		add	al, 5
-		mov	_dialog_box_cur, al
-		xor	si, si
-		jmp	short loc_1340C
-; ---------------------------------------------------------------------------
-
-loc_13402:
-		mov	al, byte ptr [bp+si+var_A]
-		mov	ah, 0
-		call	@dialog_box_animate_and_advance$qi pascal, ax
-		inc	si
-
-loc_1340C:
-		cmp	si, 4
-		jl	short loc_13402
-
-loc_13411:
-		pop	si
-		leave
-		retn
-sub_133B8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13414	proc near
-		push	bp
-		mov	bp, sp
-		push	0
-		call	palette_white_out
-		call	_snd_se_reset
-		call	_snd_se_play stdcall, 5
-		pop	cx
-		call	_snd_se_update
-		push	0
-		call	palette_white_in
-		pop	bp
-		retn
-sub_13414	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13439	proc near
-		push	bp
-		mov	bp, sp
-		nopcall	@overlay_wipe$qv
-		kajacall	KAJA_SONG_STOP
-		pop	cx
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
-		call	sub_13414
-		call	frame_delay pascal, 10
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
-		call	frame_delay pascal, 30
-		call	sub_13414
-		call	frame_delay pascal, 20
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
-		call	frame_delay pascal, 20
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_MIMA_SMILE
-		call	sub_13414
-		call	frame_delay pascal, 20
-		call	sub_13414
-		call	frame_delay pascal, 20
-		call	sub_13414
-		push	3
-		call	palette_white_out
-		pop	bp
-		retn
-sub_13439	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23936,7 +23724,7 @@ mima_init	proc far
 		call	@dialog_pre$qv
 		call	super_clean pascal, (128 shl 16) or 192
 		call	super_entry_bfnt pascal, ds, offset aMima_bft ; "mima.bft"
-		call	sub_13328
+		call	@dialog_script_stage5_pre_intro_a$qv
 		mov	vsync_Count1, 0
 		call	frame_delay pascal, 10
 		call	sub_1A529
@@ -23951,7 +23739,7 @@ mima_init	proc far
 		mov	ax, word_20656
 		mov	word_20658, ax
 		mov	patnum_2064E, 128
-		call	sub_13337
+		call	@dialog_script_stage5_pre_unseale$qv
 		push	1
 		call	palette_white_out
 		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
@@ -24038,7 +23826,7 @@ mima_init	proc far
 		push	offset aMima_m	; "mima.m"
 		nopcall	sub_13ABB
 		add	sp, 6
-		call	sub_133AE
+		call	@dialog_script_stage5_pre_winged_$qv
 		call	@dialog_post$qv
 		call	sub_D376
 		mov	word_2065A, 0
@@ -24183,7 +23971,7 @@ sub_19C8D	proc near
 		push	ax
 		call	super_put_rect
 		call	@dialog_pre$qv
-		call	sub_133B8
+		call	@dialog_script_stage5_form1defeat$qv
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_19D48
@@ -24224,6 +24012,16 @@ sub_19C8D	endp
 mima_end	proc far
 		push	bp
 		mov	bp, sp
+
+		; ZUN bug: This renders Mima's sprite to [page_back] on top of the
+		; boss background rendered earlier, right before animating the defeat
+		; dialog on [page_front] and launching into MAINE.EXE, which means that
+		; none of this will ever show up. Given the fact that this code exists,
+		; it probably was ZUN's intention to render the defeat dialog on top of
+		; what's rendered here - i.e, before rendering any player shot, item,
+		; bullet, or spark sprites - rather than blindly printing the text on
+		; top of whatever white VRAM pixels that may have been in the text box
+		; area in the previous full frame.
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
@@ -24268,7 +24066,7 @@ mima_end	proc far
 		add	ax, 2
 		push	ax
 		call	super_put_rect
-		call	sub_13439
+		call	@dialog_script_stage5_post_animat$qv
 		add	_score, 100000
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
@@ -30418,51 +30216,66 @@ _STAGE4_POSTBOSS_NOTCONTINUED_FAC label word
 	dw FACE_GENJII     	; 3
 	dw FACE_REIMU_SWEAT	; 4
 
-unk_1ED16	db  69h	; i
-		db  39h	; 9
-		db  69h	; i
-		db    6
-		db    6
-		db  69h	; i
-		db  69h	; i
-		db    6
-		db  69h	; i
-		db    6
-		db    6
-		db  60h
-		db    6
-		db  69h	; i
-		db  39h	; 9
-		db  69h	; i
-		db    0
-		db  60h
-		db    6
-		db    6
-		db  69h	; i
-		db  69h	; i
-unk_1ED2C	db  69h	; i
-		db    0
-		db  69h	; i
-		db    6
-		db  69h	; i
-		db  69h	; i
-		db  69h	; i
-		db  69h	; i
-		db  69h	; i
-		db    6
-		db  69h	; i
-		db  69h	; i
-		db  69h	; i
-		db    6
-		db    6
-		db  69h	; i
-		db  69h	; i
-unk_1ED3D	db  69h	; i
-		db  69h	; i
-		db    6
-		db  69h	; i
-		db  39h	; 9
-dword_1ED42	dd 0C6C066Ch
+public _STAGE5_PREBOSS_CONTINUED_FACES
+_STAGE5_PREBOSS_CONTINUED_FACES label byte
+	db FACE_MIMA_SMILE   	;  0
+	db FACE_REIMU_SWEAT  	;  1
+	db FACE_MIMA_SMILE   	;  2
+	db FACE_REIMU_ANGRY  	;  3
+	db FACE_REIMU_ANGRY  	;  4
+	db FACE_MIMA_SMILE   	;  5
+	db FACE_MIMA_SMILE   	;  6
+	db FACE_REIMU_ANGRY  	;  7
+	db FACE_MIMA_SMILE   	;  8
+	db FACE_REIMU_ANGRY  	;  9
+	db FACE_REIMU_ANGRY  	; 10
+	db FACE_GENJII       	; 11
+	db FACE_REIMU_ANGRY  	; 12
+	db FACE_MIMA_SMILE   	; 13
+	db FACE_REIMU_SWEAT  	; 14
+	db FACE_MIMA_SMILE   	; 15
+	db FACE_REIMU_NEUTRAL	; 16
+	db FACE_GENJII       	; 17
+	db FACE_REIMU_ANGRY  	; 18
+	db FACE_REIMU_ANGRY  	; 19
+	db FACE_MIMA_SMILE   	; 20
+	db FACE_MIMA_SMILE   	; 21
+
+public _STAGE5_PREBOSS_NOTCONTINUED_FACE
+_STAGE5_PREBOSS_NOTCONTINUED_FACE label byte
+	db FACE_MIMA_SMILE   	;  0
+	db FACE_REIMU_NEUTRAL	;  1
+	db FACE_MIMA_SMILE   	;  2
+	db FACE_REIMU_ANGRY  	;  3
+	db FACE_MIMA_SMILE   	;  4
+	db FACE_MIMA_SMILE   	;  5
+	db FACE_MIMA_SMILE   	;  6
+	db FACE_MIMA_SMILE   	;  7
+	db FACE_MIMA_SMILE   	;  8
+	db FACE_REIMU_ANGRY  	;  9
+	db FACE_MIMA_SMILE   	; 10
+	db FACE_MIMA_SMILE   	; 11
+	db FACE_MIMA_SMILE   	; 12
+	db FACE_REIMU_ANGRY  	; 13
+	db FACE_REIMU_ANGRY  	; 14
+	db FACE_MIMA_SMILE   	; 15
+	db FACE_MIMA_SMILE   	; 16
+
+public _STAGE5_FORM1DEFEAT_CONTINUED_FAC
+_STAGE5_FORM1DEFEAT_CONTINUED_FAC label byte
+	db FACE_MIMA_SMILE 	; 0
+	db FACE_MIMA_SMILE 	; 1
+	db FACE_REIMU_ANGRY	; 2
+	db FACE_MIMA_SMILE 	; 3
+	db FACE_REIMU_SWEAT	; 4
+
+public _STAGE5_FORM1DEFEAT_NOTCONTINUED_
+_STAGE5_FORM1DEFEAT_NOTCONTINUED_ label byte
+	db FACE_MIMA_FROWN 	; 0
+	db FACE_REIMU_ANGRY	; 1
+	db FACE_MIMA_FROWN 	; 2
+	db FACE_REIMU_FROWN	; 3
+
 aLINE_BLANK	db '　　　　　　　　　　　　　　　　　　', 0
 public _dialog_fn
 _dialog_fn	db 'stage .txt',0

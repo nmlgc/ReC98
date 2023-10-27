@@ -6,13 +6,15 @@
 #include "shiftjis.hpp"
 #include "master.hpp"
 #include "platform/array.hpp"
+#include "libs/kaja/kaja.h"
 #include "th02/common.h"
 #include "th02/resident.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
-}
 #include "th02/hardware/pages.hpp"
+#include "th02/snd/snd.h"
+}
 #include "th02/formats/dialog.hpp"
 #include "th02/formats/tile.hpp"
 #include "th02/formats/mpn.hpp"
@@ -488,5 +490,107 @@ void near dialog_script_stage4_post_animate(void)
 		);
 		boxes_animate(NOTCONTINUED_BOX_FACE);
 	}
+}
+
+void near dialog_script_stage5_pre_intro_animate(void)
+{
+	dialog_box_animate_and_advance(FACE_REIMU_ANGRY);
+	dialog_box_animate_and_advance(FACE_MIMA_SMILE);
+}
+
+void near dialog_script_stage5_pre_unsealed_animate(void)
+{
+	typedef Array<face_tile_topleft_t, 22> T1;
+	typedef Array<face_tile_topleft_t, 17> T2;
+
+	extern const T1 STAGE5_PREBOSS_CONTINUED_FACES;
+	extern const T2 STAGE5_PREBOSS_NOTCONTINUED_FACES;
+
+	const T1 CONTINUED_FACES = STAGE5_PREBOSS_CONTINUED_FACES;
+	const T2 NOTCONTINUED_FACES = STAGE5_PREBOSS_NOTCONTINUED_FACES;
+
+	dialog_box_animate_and_advance(FACE_REIMU_ANGRY);
+	dialog_box_animate_and_advance(FACE_MIMA_SMILE);
+
+	if(resident->continues_used) {
+		boxes_animate(CONTINUED_FACES);
+		dialog_box_cur += NOTCONTINUED_FACES.count();
+	} else {
+		dialog_box_cur += CONTINUED_FACES.count();
+		boxes_animate(NOTCONTINUED_FACES);
+	}
+}
+
+void near dialog_script_stage5_pre_winged_animate(void)
+{
+	dialog_box_animate_and_advance(FACE_MIMA_SMILE);
+}
+
+void near dialog_script_stage5_form1defeat_animate(void)
+{
+	typedef Array<face_tile_topleft_t, 5> T1;
+	typedef Array<face_tile_topleft_t, 4> T2;
+
+	extern const T1 STAGE5_FORM1DEFEAT_CONTINUED_FACES;
+	extern const T2 STAGE5_FORM1DEFEAT_NOTCONTINUED_FACES;
+
+	const T1 CONTINUED_FACES = STAGE5_FORM1DEFEAT_CONTINUED_FACES;
+	const T2 NOTCONTINUED_FACES = STAGE5_FORM1DEFEAT_NOTCONTINUED_FACES;
+
+	if(resident->continues_used) {
+		boxes_animate(CONTINUED_FACES);
+		// MODDERS: Skipping over the boxes for the non-continued part would
+		// have been the sensible thing to do, but the game ends after this
+		// sequence anyway.
+		// dialog_box_cur += NOTCONTINUED_FACES.count();
+	} else {
+		dialog_box_cur += CONTINUED_FACES.count();
+		boxes_animate(NOTCONTINUED_FACES);
+	}
+}
+
+void near dialog_script_stage5_flash_animate(void)
+{
+	palette_white_out(0);
+	snd_se_play_force(5);
+	palette_white_in(0);
+}
+
+void near dialog_script_stage5_post_animate(void)
+{
+	overlay_wipe();
+	snd_kaja_func(KAJA_SONG_STOP, 0);
+
+	// ZUN quirk: These faces never show up on screen. This function is called
+	// straight from double-buffered game code with therefore different shown
+	// and accessed VRAM pages, without having called dialog_pre() to slide in
+	// the box and switch to single-buffered rendering. This could count as a
+	// bug if you look at this function in isolation, but the alternative of
+	// [FACE_COL_0] would be equally wrong since the face area is supposed to
+	// be transparent. In any case, the smiling expression just looks wrong
+	// compared to the original game, especially considering Mima's lines in
+	// this sequence.
+	dialog_box_animate_and_advance(FACE_MIMA_SMILE);
+	dialog_script_stage5_flash_animate();
+	frame_delay(10);
+
+	dialog_box_animate_and_advance(FACE_MIMA_SMILE);
+	frame_delay(30);
+
+	dialog_script_stage5_flash_animate();
+	frame_delay(20);
+
+	dialog_box_animate_and_advance(FACE_MIMA_SMILE);
+	frame_delay(20);
+
+	dialog_box_animate_and_advance(FACE_MIMA_SMILE);
+	dialog_script_stage5_flash_animate();
+	frame_delay(20);
+
+	dialog_script_stage5_flash_animate();
+	frame_delay(20);
+
+	dialog_script_stage5_flash_animate();
+	palette_white_out(3);
 }
 // ----------------------------------

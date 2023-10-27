@@ -29,4 +29,9 @@ void near dialog_script_stage2_pre_intro_animate(void);
 void near dialog_script_stage4_pre_intro_animate(void);
 void near dialog_script_stage4_pre_marisa_animate(void);
 void near dialog_script_stage4_post_animate(void);
+void near dialog_script_stage5_pre_intro_animate(void);
+void near dialog_script_stage5_pre_unsealed_animate(void);
+void near dialog_script_stage5_pre_winged_animate(void);
+void near dialog_script_stage5_form1defeat_animate(void);
+void near dialog_script_stage5_post_animate(void);
 // ----------------------------------
