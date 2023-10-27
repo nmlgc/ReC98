@@ -12393,8 +12393,6 @@ DS_POSTBOSS = 1
 	extern @dialog_load_and_init$qv:proc
 	@dialog_pre$qv procdesc near
 	@dialog_post$qv procdesc near
-	@DIALOG_BOX_ANIMATE_AND_ADVANCE$QI procdesc pascal near \
-		face_topleft_id:word
 	@DIALOG_SCRIPT_GENERIC_PART_ANIMA$Q17DIALOG_SEQUENCE_T procdesc pascal near \
 		sequence:word
 	@dialog_script_stage2_pre_intro_a$qv procdesc near
@@ -12406,24 +12404,10 @@ DS_POSTBOSS = 1
 	@dialog_script_stage5_pre_winged_$qv procdesc near
 	@dialog_script_stage5_form1defeat$qv procdesc near
 	@dialog_script_stage5_post_animat$qv procdesc near
+	@dialog_script_extra_pre_intro_an$qv procdesc near
 DIALOG_TEXT	ends
 
 main_03__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_134A0	proc near
-		push	bp
-		mov	bp, sp
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_COL_0
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_REIMU_NEUTRAL
-		call	@dialog_box_animate_and_advance$qi pascal, FACE_COL_0
-		pop	bp
-		retn
-sub_134A0	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18415,7 +18399,7 @@ evileye_init	proc far
 		call	super_entry_bfnt pascal, ds, offset aStage5b1_bft ; "stage5b1.bft"
 		call	super_entry_bfnt pascal, ds, offset aStage5b2_bft ; "stage5b2.bft"
 		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
-		call	sub_134A0
+		call	@dialog_script_extra_pre_intro_an$qv
 		mov	word_20652, 0A0h
 		mov	word_20654, 0A0h
 		mov	point_254E6.x, 160

@@ -593,4 +593,11 @@ void near dialog_script_stage5_post_animate(void)
 	dialog_script_stage5_flash_animate();
 	palette_white_out(3);
 }
+
+void near dialog_script_extra_pre_intro_animate(void)
+{
+	dialog_box_animate_and_advance(FACE_COL_0);
+	dialog_box_animate_and_advance(FACE_REIMU_NEUTRAL);
+	dialog_box_animate_and_advance(FACE_COL_0);
+}
 // ----------------------------------
