@@ -34,7 +34,7 @@ enum game_mode_t {
 typedef struct {
 	char id[sizeof(RES_ID)];
 	unsigned char rank;
-	PlaycharPaletted playchar_paletted[PLAYER_COUNT];
+	PlaycharPalettedOptional playchar_paletted[PLAYER_COUNT];
 	bool is_cpu[PLAYER_COUNT];
 	long rand;
 	int8_t unused_1;
@@ -43,7 +43,7 @@ typedef struct {
 	unsigned char pid_winner;
 	score_lebcd_t score_last[PLAYER_COUNT];
 	unsigned char game_mode;
-	PlaycharPaletted story_opponents[STAGE_COUNT];
+	PlaycharPalettedOptional story_opponents[STAGE_COUNT];
 	int8_t unused_2;
 	unsigned char story_stage;
 	unsigned char story_lives;

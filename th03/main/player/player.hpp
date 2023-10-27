@@ -37,7 +37,7 @@ typedef struct {
 	uint8_t unused_1; // ZUN bloat
 	unsigned char invincibility_time;
 	char halfhearts;
-	PlaycharPaletted playchar_paletted;
+	PlaycharPalettedOptional playchar_paletted;
 	speed_t speed;
 	shot_mode_t shot_mode;
 	unsigned char patnum_movement;

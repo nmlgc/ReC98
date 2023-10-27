@@ -11,19 +11,6 @@ typedef enum {
 	PLAYCHAR_COUNT = 9,
 } playchar_t;
 
-// Encodes a playchar_t together with its alternate palette flag.
-struct PlaycharPaletted {
-	unsigned char v;
-
-	int filename_id() const {
-		return (v - 1);
-	}
-
-	playchar_t char_id() const {
-		return static_cast<playchar_t>(filename_id() / 2);
-	}
-};
-
 // Uses 0 to indicate "no character" and shifts all IDs up by 1.
 struct PlaycharOptional {
 	unsigned char v;
@@ -37,4 +24,32 @@ struct PlaycharOptional {
 	}
 };
 
-#define TO_PALETTED(playchar) ((playchar << 1) + 1)
+// Encodes a playchar_t together with its alternate palette flag in the lowest
+// bit.
+struct PlaycharPaletted {
+	unsigned char v;
+
+	playchar_t char_id() const {
+		return static_cast<playchar_t>(v / 2);
+	}
+
+	bool16 palette_id() const {
+		return (v & 1);
+	}
+};
+
+// Like PlaycharPaletted, but with all IDs shifted up by 1 to reserve 0 for "no
+// character".
+struct PlaycharPalettedOptional {
+	unsigned char v;
+
+	int filename_id() const {
+		return (v - 1);
+	}
+
+	playchar_t char_id() const {
+		return static_cast<playchar_t>(filename_id() / 2);
+	}
+};
+
+#define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
