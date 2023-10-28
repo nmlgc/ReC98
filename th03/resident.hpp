@@ -20,11 +20,15 @@ enum game_mode_t {
 	GM_VS_CPU_CPU = GM_VS + VS_CPU_CPU,
 };
 
+#define STAGE_DECISIVE 6
+#define STAGE_CHIYURI 7
+#define STAGE_YUMEMI 8
+#define STAGE_COUNT 9
+
 // Won't enter [score_last[0]] into YUME.NEM, even if it's high enough for a
 // place. Also used for just showing the high scores from the main menu.
 #define STAGE_NONE -1
 #define STAGE_ALL 99
-#define STAGE_COUNT 9
 
 #define CREDIT_LIVES 2
 

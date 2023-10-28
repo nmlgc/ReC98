@@ -26,7 +26,7 @@ include th03/formats/scoredat.inc
 	extern __ctype:byte
 	extern _execl:proc
 
-group_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -133,6 +133,10 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 	_cfg_load_resident_ptr procdesc near
 CFG_LRES_TEXT	ends
 
+MAINL_SC_TEXT segment byte public 'CODE' use16
+	@win_load$qv procdesc pascal near
+MAINL_SC_TEXT ends
+
 ; Segment type:	Pure code
 CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
@@ -143,137 +147,12 @@ CUTSCENE_TEXT segment byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_9624	proc near
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	ds
-		push	offset aLogo0_rgb ; "logo0.rgb"
-		call	palette_entry_rgb
-		call	far ptr	palette_show
-		call	cdg_load_all_noalpha pascal, 0, ds, offset aLogo_cd2
-		call	cdg_load_single pascal, 5, ds, offset aLogo5_cdg, 0
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_965E
-		mov	al, _playchar_filename_id[0]
-		jmp	short loc_9661
-; ---------------------------------------------------------------------------
-
-loc_965E:
-		mov	al, _playchar_filename_id[1]
-
-loc_9661:
-		mov	[bp+var_1], al
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_969A
-		cmp	es:[bx+resident_t.story_stage], 6
-		jnz	short loc_967C
-		mov	[bp+var_2], 9
-		jmp	short loc_96B7
-; ---------------------------------------------------------------------------
-
-loc_967C:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.story_stage], 7
-		jnz	short loc_968D
-		mov	[bp+var_2], 0Ah
-		jmp	short loc_96B7
-; ---------------------------------------------------------------------------
-
-loc_968D:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_96AA
-		jmp	short loc_96A5
-; ---------------------------------------------------------------------------
-
-loc_969A:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_96AA
-
-loc_96A5:
-		mov	al, _playchar_filename_id[1]
-		jmp	short loc_96AD
-; ---------------------------------------------------------------------------
-
-loc_96AA:
-		mov	al, _playchar_filename_id[0]
-
-loc_96AD:
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[bp+var_2], al
-
-loc_96B7:
-		push	6
-		push	ds
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		mov	bx, ax
-		sar	bx, 1
-		add	bx, bx
-		push	word ptr [bx+90h]
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		and	ax, 1
-		push	ax
-		call	cdg_load_single_noalpha
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		mov	bx, ax
-		sar	bx, 1
-		shl	bx, 2
-		pushd	dword ptr [bx+0A2h]
-		call	file_ropen
-		mov	al, [bp+var_2]
-		mov	ah, 0
-		imul	ax, 0B4h
-		cwde
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_F72C
-		push	3Ch ; '<'
-		call	file_read
-		mov	byte_F768, 0
-		push	ds
-		push	offset unk_F769
-		push	3Ch ; '<'
-		call	file_read
-		mov	byte_F7A5, 0
-		push	ds
-		push	offset unk_F7A6
-		push	3Ch ; '<'
-		call	file_read
-		mov	byte_F7E2, 0
-		call	file_close
-		leave
-		retn
-sub_9624	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_973E	proc near
 		push	bp
 		mov	bp, sp
-		call	graph_putsa_fx pascal, (80 shl 16) or 272, 2Fh, ds, offset unk_F72C
-		call	graph_putsa_fx pascal, (80 shl 16) or 288, 2Fh, ds, offset unk_F769
-		call	graph_putsa_fx pascal, (80 shl 16) or 304, 2Fh, ds, offset unk_F7A6
+		call	graph_putsa_fx pascal, (80 shl 16) or 272, 2Fh, ds, offset _win_text[0 * (WIN_LINE_SIZE + 1)]
+		call	graph_putsa_fx pascal, (80 shl 16) or 288, 2Fh, ds, offset _win_text[1 * (WIN_LINE_SIZE + 1)]
+		call	graph_putsa_fx pascal, (80 shl 16) or 304, 2Fh, ds, offset _win_text[2 * (WIN_LINE_SIZE + 1)]
 		pop	bp
 		retn
 sub_973E	endp
@@ -439,7 +318,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		graph_showpage 0
 		graph_accesspage 1
-		mov	al, _playchar_filename_id[0]
+		mov	al, _playchar[0]
 		mov	[bp+var_1], al
 		push	0
 		push	ds
@@ -449,7 +328,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		sar	bx, 1
 		add	bx, bx
-		push	word ptr [bx+90h]
+		push	_PIC_FN[bx]
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 1
@@ -467,7 +346,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		sar	bx, 1
 		add	bx, bx
-		push	word ptr [bx+90h]
+		push	_PIC_FN[bx]
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 1
@@ -910,10 +789,10 @@ loc_9E04:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		add	al, -1
-		mov	_playchar_filename_id[0], al
+		mov	_playchar[0], al
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		add	al, -1
-		mov	_playchar_filename_id[1], al
+		mov	_playchar[1], al
 		cmp	es:[bx+resident_t.story_stage], 0
 		jz	loc_9F85
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
@@ -928,7 +807,7 @@ loc_9E04:
 
 loc_9E3F:
 		call	_snd_load c,  offset aWin_m, ds, SND_LOAD_SONG
-		call	sub_9624
+		call	@win_load$qv
 		call	sub_978D
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
@@ -953,7 +832,7 @@ loc_9E7B:
 loc_9E89:
 		call	cdg_free_all
 		freePISlotLarge	0
-		mov	al, _playchar_filename_id[0]
+		mov	al, _playchar[0]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -2823,6 +2702,8 @@ SHARED	ends
 
 	.data
 
+public _PIC_FN
+_PIC_FN label word
 		dw offset a00sl_cd2
 		dw offset a02sl_cd2
 		dw offset a04sl_cd2
@@ -2832,6 +2713,9 @@ SHARED	ends
 		dw offset a12sl_cd2
 		dw offset a14sl_cd2
 		dw offset a16sl_cd2
+
+public _WIN_MESSAGE_FN
+_WIN_MESSAGE_FN label word
 		dd a@00tx_txt		; "@00TX.TXT"
 		dd a@01tx_txt		; "@01TX.TXT"
 		dd a@02tx_txt		; "@02TX.TXT"
@@ -2841,6 +2725,7 @@ SHARED	ends
 		dd a@06tx_txt		; "@06TX.TXT"
 		dd a@07tx_txt		; "@07TX.TXT"
 		dd a@08tx_txt		; "@08TX.TXT"
+
 off_E4B6	dd a@00dm0_txt
 					; "@00DM0.TXT"
 CHAR_TITLE		dd TITLE_REIMU		; "   夢と伝統を保守する巫女   "
@@ -2906,9 +2791,10 @@ NAME_CHIYURI	db ' 北白河　ちゆり',0
 TITLE_YUMEMI	db '　  　　　夢幻伝説　　　    ',0
 NAME_YUMEMI	db ' 　岡崎　夢美',0
 include th03/formats/cfg_lres[data].asm
-aLogo0_rgb	db 'logo0.rgb',0
-aLogo_cd2	db 'logo.cd2',0
-aLogo5_cdg	db 'logo5.cdg',0
+public _logo0_rgb, _logo_cd2, _logo5_cdg
+_logo0_rgb	db 'logo0.rgb',0
+_logo_cd2 	db 'logo.cd2',0
+_logo5_cdg	db 'logo5.cdg',0
 aLogo1_rgb	db 'logo1.rgb',0
 aSt_cd2		db 'st.cd2',0
 aStnx1_pi	db 'stnx1.pi',0
@@ -3152,17 +3038,13 @@ aStf12_cdg	db 'stf12.cdg',0
 
 	.data?
 
-unk_F72C	db    ?	;
-		db 59 dup(?)
-byte_F768	db ?
-unk_F769	db    ?	;
-		db 59 dup(?)
-byte_F7A5	db ?
-unk_F7A6	db    ?	;
-		db 59 dup(?)
-byte_F7E2	db ?
-_playchar_filename_id	db PLAYER_COUNT dup (?)
-_do_not_show_stage_number	db ?
+WIN_LINES = 3
+WIN_LINE_SIZE = 60
+
+	extern _win_text:byte:(WIN_LINES * (WIN_LINE_SIZE + 1))
+	extern _playchar:byte:PLAYCHAR_COUNT
+	extern _do_not_show_stage_number:byte
+
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm
