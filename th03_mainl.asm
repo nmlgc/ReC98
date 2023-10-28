@@ -135,6 +135,7 @@ CFG_LRES_TEXT	ends
 
 MAINL_SC_TEXT segment byte public 'CODE' use16
 	@win_load$qv procdesc pascal near
+	@win_text_put$qv procdesc pascal near
 MAINL_SC_TEXT ends
 
 ; Segment type:	Pure code
@@ -142,20 +143,6 @@ CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_973E	proc near
-		push	bp
-		mov	bp, sp
-		call	graph_putsa_fx pascal, (80 shl 16) or 272, 2Fh, ds, offset _win_text[0 * (WIN_LINE_SIZE + 1)]
-		call	graph_putsa_fx pascal, (80 shl 16) or 288, 2Fh, ds, offset _win_text[1 * (WIN_LINE_SIZE + 1)]
-		call	graph_putsa_fx pascal, (80 shl 16) or 304, 2Fh, ds, offset _win_text[2 * (WIN_LINE_SIZE + 1)]
-		pop	bp
-		retn
-sub_973E	endp
 
 include th03/formats/cdg_free_all.asm
 
@@ -208,7 +195,7 @@ loc_97FC:
 		call	palette_white_in
 		push	8
 		call	frame_delay
-		call	sub_973E
+		call	@win_text_put$qv
 		call	sub_9887
 		or	ax, ax
 		jnz	short loc_9868
@@ -3038,10 +3025,6 @@ aStf12_cdg	db 'stf12.cdg',0
 
 	.data?
 
-WIN_LINES = 3
-WIN_LINE_SIZE = 60
-
-	extern _win_text:byte:(WIN_LINES * (WIN_LINE_SIZE + 1))
 	extern _playchar:byte:PLAYCHAR_COUNT
 	extern _do_not_show_stage_number:byte
 

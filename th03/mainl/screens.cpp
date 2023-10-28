@@ -4,6 +4,10 @@
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
+extern "C" {
+#include "th01/hardware/grppsafx.h"
+}
+#include "th02/v_colors.hpp"
 #include "th03/common.h"
 #include "th03/playchar.hpp"
 #include "th03/score.h"
@@ -12,6 +16,7 @@ extern "C" {
 #include "th03/formats/cdg.h"
 }
 #include "th03/formats/win.hpp"
+#include "th03/sprites/playchar.hpp"
 
 extern const char near* PIC_FN[PLAYCHAR_COUNT];
 shiftjis_t win_text[WIN_LINES][WIN_LINE_SIZE + 1];
@@ -27,6 +32,9 @@ enum win_cdg_slot_t {
 	CDG_LOGO = (CDG_LOGO_FADE + LOGO_FADE_CELS),
 	CDG_PIC_WINNER,
 };
+
+static const screen_y_t WIN_PIC_TOP = 64;
+static const screen_y_t WIN_PIC_BOTTOM = (64 + PLAYCHAR_PIC_H);
 
 inline playchar_t loser_char_id(void) {
 	return static_cast<playchar_t>((resident->pid_winner == 0)
@@ -90,6 +98,20 @@ void near win_load(void)
 	file_close();
 
 	#undef playchar_winner
+}
+
+void near win_text_put(void)
+{
+	enum {
+		LEFT = ((RES_X / 2) - ((WIN_LINE_SIZE / 2) * GLYPH_HALF_W)),
+		TOP = (WIN_PIC_BOTTOM + GLYPH_H),
+		COL_AND_FX = (FX_WEIGHT_BOLD | V_WHITE),
+	};
+
+	static_assert(WIN_LINES == 3);
+	graph_putsa_fx(LEFT, (TOP + (0 * GLYPH_H)), COL_AND_FX, win_text[0]);
+	graph_putsa_fx(LEFT, (TOP + (1 * GLYPH_H)), COL_AND_FX, win_text[1]);
+	graph_putsa_fx(LEFT, (TOP + (2 * GLYPH_H)), COL_AND_FX, win_text[2]);
 }
 // ----------
 
