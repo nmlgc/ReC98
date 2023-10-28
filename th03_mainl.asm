@@ -479,7 +479,7 @@ var_1		= byte ptr -1
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_1], al
-		mov	byte_F7E5, 1
+		mov	_do_not_show_stage_number, 1
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_9997
@@ -530,7 +530,7 @@ loc_99D4:
 		inc	ax
 		push	ax
 		call	cdg_load_single
-		mov	byte_F7E5, 0
+		mov	_do_not_show_stage_number, 0
 
 loc_99F1:
 		call	pi_load pascal, 0, ds, offset aStnx0_pi
@@ -563,7 +563,7 @@ var_2		= word ptr -2
 		freePISlotLarge	0
 		call	cdg_put_8 pascal, large (96 shl 16) or 96, 0
 		call	cdg_put_hflip_8 pascal, large (352 shl 16) or 96, 1
-		cmp	byte_F7E5, 0
+		cmp	_do_not_show_stage_number, 0
 		jnz	short loc_9A8E
 		call	cdg_put_8 pascal, large (384 shl 16) or 46, 2
 
@@ -3162,7 +3162,7 @@ unk_F7A6	db    ?	;
 		db 59 dup(?)
 byte_F7E2	db ?
 _playchar_filename_id	db PLAYER_COUNT dup (?)
-byte_F7E5	db ?
+_do_not_show_stage_number	db ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm
