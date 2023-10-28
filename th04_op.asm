@@ -23,11 +23,11 @@ include th04/th04.inc
 include th04/hardware/grppsafx.inc
 include th04/op/music.inc
 
-	extern SCOPY@:proc
 	extern _execl:proc
 	extern _getch:proc
 	extern _strlen:proc
 
+op_01 group CFG_TEXT, OP_01_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -153,13 +153,17 @@ _TEXT		ends
 
 ; ===========================================================================
 
+CFG_TEXT segment byte public 'CODE' use16
+	@cfg_load$qv procdesc near
+	@cfg_save$qv procdesc near
+	@cfg_save_exit$qv procdesc near
+CFG_TEXT ends
+
 ; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_01_TEXT
+		assume cs:op_01
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th04/formats/cfg.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2672,8 +2676,8 @@ SHARED_	ends
 
 	.data
 
-include th03/formats/cfg[data].asm
-_menu_sel	db 0
+_menu_sel = byte ptr $-1 ; place in padding area of previous segment
+
 _quit	db 0
 _main_menu_unused_1	db 1
 public _MENU_DESC
@@ -2706,8 +2710,8 @@ _MENU_DESC label dword
 		dd aGqbGav_3		; "ゲームを開始します（ルナティック）"
 _main_menu_initialized	db 0
 _option_initialized	db 0
-public _cfg_fn
-_cfg_fn	db 'MIKO.CFG',0
+public _CFG_FN
+_CFG_FN	db 'MIKO.CFG',0
 ; char aMain[]
 aMain		db 'main',0
 ; char path[]

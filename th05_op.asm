@@ -24,11 +24,10 @@ include th04/hardware/grppsafx.inc
 include th05/op/music.inc
 include th05/op/piano.inc
 
-	extern SCOPY@:proc
 	extern _getch:proc
 	extern _strlen:proc
 
-op_01 group OP_START_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
+op_01 group OP_START_TEXT, CFG_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -154,7 +153,7 @@ OP_START_TEXT segment byte public 'CODE' use16
 OP_START_TEXT ends
 
 ; Segment type:	Pure code
-op_01_TEXT	segment	byte public 'CODE' use16
+CFG_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -1417,7 +1416,13 @@ _setup_menu proc near
 _setup_menu endp
 
 include th04/zunsoft.asm
-include th04/formats/cfg.asm
+
+	@cfg_load$qv procdesc near
+	@cfg_save$qv procdesc near
+	@cfg_save_exit$qv procdesc near
+CFG_TEXT ends
+
+op_01_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 

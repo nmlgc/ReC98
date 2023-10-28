@@ -6,6 +6,10 @@ typedef struct {
 	int8_t bgm_mode;
 	int8_t se_mode;
 	int8_t turbo_mode;
+
+	int8_t sum(void) const {
+		return (rank + lives + bombs + bgm_mode + se_mode + turbo_mode);
+	}
 } cfg_options_t;
 
 #include "th03/formats/cfg.hpp"

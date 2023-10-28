@@ -31,7 +31,8 @@ static inline resident_t __seg* cfg_load_and_set_resident(
 	return resident_seg;
 }
 
-// Saves the .CFG file, without changing its resident segment pointer.
+// Saves the current configuration values to the .CFG file, without changing
+// its resident segment pointer.
 void near cfg_save(void);
 
 // Like cfg_save(), but resets the resident segment pointer to zero.
