@@ -1,9 +1,4 @@
-/* ReC98
- * -----
- * 1st part of code segment #1 of TH05's OP.EXE
- */
-
-#pragma option -zCop_01_TEXT
+#pragma option -zPop_01
 
 #include <process.h>
 #include "platform.h"

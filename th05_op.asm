@@ -28,6 +28,7 @@ include th05/op/piano.inc
 	extern _getch:proc
 	extern _strlen:proc
 
+op_01 group OP_START_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -146,15 +147,16 @@ _TEXT		ends
 
 ; ===========================================================================
 
+OP_START_TEXT segment byte public 'CODE' use16
+	_start_game procdesc near
+	_start_extra procdesc near
+	_start_demo procdesc near
+OP_START_TEXT ends
+
 ; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_01_TEXT
-		; org 0Ch
+		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-		_start_game procdesc near
-		_start_extra procdesc near
-		_start_demo procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2505,9 +2507,14 @@ loc_CD64:
 		pop	bp
 		retn
 _regist_view_menu endp
+op_01_TEXT ends
 
+HI_VIEW_TEXT segment byte public 'CODE' use16
 	_cleardata_and_regist_view_sprite procdesc near
-op_01_TEXT	ends
+HI_VIEW_TEXT ends
+
+M_CHAR_TEXT segment byte public 'CODE' use16
+M_CHAR_TEXT ends
 
 ; ===========================================================================
 

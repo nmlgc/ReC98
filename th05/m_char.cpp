@@ -3,7 +3,7 @@
  * TH05 player character selection menu
  */
 
-#pragma option -zCop_01_TEXT
+#pragma option -zPop_01
 
 #include "platform.h"
 #include "x86real.h"
