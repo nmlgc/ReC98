@@ -1,9 +1,7 @@
 #pragma option -zPop_01
 
-#include <process.h>
 #include "platform.h"
 #include "master.hpp"
-#include "libs/kaja/kaja.h"
 #include "th01/rank.h"
 #include "th02/core/initexit.h"
 #include "th04/common.h"
@@ -12,14 +10,10 @@
 #include "th05/playchar.h"
 extern "C" {
 #include "th05/op/op.hpp"
-#include "th05/snd/snd.h"
 }
 #include "th05/resident.hpp"
 #include "th05/hardware/input.h"
-#include "th04/formats/cfg.hpp"
-
-extern char aMAIN[];
-extern char aDEB[];
+#include "th04/op/start.hpp"
 
 #define resident_reset_last_highest_and_stage_scores(digit, stage) \
 	for(digit = 0; digit < SCORE_DIGITS; digit++) { \
@@ -37,12 +31,6 @@ extern char aDEB[];
 		resident->score_highest.digits[digit] = 0; \
 	}
 
-#define op_exit() \
-	main_cdg_free(); \
-	cfg_save(); \
-	snd_kaja_func(KAJA_SONG_FADE, 10); \
-	game_exit();
-
 void near start_game(void)
 {
 	int digit;
@@ -58,12 +46,7 @@ void near start_game(void)
 		return;
 	}
 	resident_reset_last_highest_and_stage_scores(digit, stage);
-	op_exit();
-	if(!resident->debug) {
-		execl(aMAIN, aMAIN, 0, 0);
-	} else {
-		execl(aDEB, aDEB, 0, 0);
-	}
+	op_exit_into_main(true, true);
 }
 
 void near start_extra(void)
@@ -80,8 +63,7 @@ void near start_extra(void)
 		return;
 	}
 	resident_reset_last_highest_and_stage_scores(digit, stage);
-	op_exit();
-	execl(aMAIN, aMAIN, 0, 0);
+	op_exit_into_main(true, false);
 }
 
 void near start_demo(void)

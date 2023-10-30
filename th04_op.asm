@@ -27,7 +27,7 @@ include th04/op/music.inc
 	extern _getch:proc
 	extern _strlen:proc
 
-op_01 group CFG_TEXT, OP_01_TEXT
+op_01 group CFG_TEXT, OP_START_TEXT, OP_01_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -159,188 +159,17 @@ CFG_TEXT segment byte public 'CODE' use16
 	@cfg_save_exit$qv procdesc near
 CFG_TEXT ends
 
+OP_START_TEXT segment byte public 'CODE' use16
+	_start_game procdesc near
+	_start_extra procdesc near
+	_start_demo procdesc near
+OP_START_TEXT ends
+
 ; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:op_01
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _start_game
-_start_game	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	es:[bx+resident_t.stage], 0
-		mov	al, es:[bx+resident_t.cfg_lives]
-		mov	es:[bx+resident_t.credit_lives], al
-		mov	al, es:[bx+resident_t.cfg_bombs]
-		mov	es:[bx+resident_t.credit_bombs], al
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '0'
-		call	_playchar_menu
-		or	ax, ax
-		jnz	short loc_A96A
-		les	bx, _resident
-		mov	es:[bx+resident_t.demo_num], 0
-		call	_main_cdg_free
-		call	@cfg_save$qv
-		call	gaiji_restore
-		kajacall	KAJA_SONG_FADE, 10
-		call	@game_exit$qv
-		les	bx, _resident
-		cmp	es:[bx+resident_t.debug_mode], 0
-		jnz	short loc_A957
-		pushd	0
-		push	ds
-		push	offset aMain	; "main"
-		push	ds
-		push	offset aMain	; "main"
-		jmp	short loc_A962
-; ---------------------------------------------------------------------------
-
-loc_A957:
-		pushd	0
-		push	ds
-		push	offset path	; "deb"
-		push	ds
-		push	offset path	; "deb"
-
-loc_A962:
-		call	_execl
-		add	sp, 0Ch
-
-loc_A96A:
-		pop	bp
-		retn
-_start_game	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _start_extra
-_start_extra	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	es:[bx+resident_t.stage], STAGE_EXTRA
-		mov	es:[bx+resident_t.credit_lives], 3
-		mov	es:[bx+resident_t.credit_bombs], 2
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '6'
-		call	_playchar_menu
-		or	ax, ax
-		jnz	short loc_A9C7
-		les	bx, _resident
-		mov	es:[bx+resident_t.demo_num], 0
-		call	_main_cdg_free
-		call	@cfg_save$qv
-		call	gaiji_restore
-		kajacall	KAJA_SONG_FADE, 10
-		call	@game_exit$qv
-		pushd	0
-		push	ds
-		push	offset aMain	; "main"
-		push	ds
-		push	offset aMain	; "main"
-		call	_execl
-		add	sp, 0Ch
-
-loc_A9C7:
-		pop	bp
-		retn
-_start_extra	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _start_demo
-_start_demo	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	es:[bx+resident_t.stage], 0
-		mov	es:[bx+resident_t.credit_lives], 3
-		mov	es:[bx+resident_t.credit_bombs], 3
-		inc	es:[bx+resident_t.demo_num]
-		cmp	es:[bx+resident_t.demo_num], 4
-		jbe	short loc_A9EF
-		mov	es:[bx+resident_t.demo_num], 1
-
-loc_A9EF:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.demo_num]
-		mov	ah, 0
-		dec	ax
-		mov	bx, ax
-		cmp	bx, 3
-		ja	short loc_AA6E
-		add	bx, bx
-		jmp	cs:off_AAAD[bx]
-
-loc_AA08:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '3'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_A
-		mov	es:[bx+resident_t.demo_stage], 3
-		jmp	short loc_AA6E
-; ---------------------------------------------------------------------------
-
-loc_AA22:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
-		mov	es:[bx+resident_t.stage_ascii], '0'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_A
-		mov	es:[bx+resident_t.demo_stage], 0
-		jmp	short loc_AA6E
-; ---------------------------------------------------------------------------
-
-loc_AA3C:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '2'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_B
-		mov	es:[bx+resident_t.demo_stage], 2
-		jmp	short loc_AA6E
-; ---------------------------------------------------------------------------
-
-loc_AA56:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
-		mov	es:[bx+resident_t.stage_ascii], '1'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_B
-		mov	es:[bx+resident_t.demo_stage], 1
-
-loc_AA6E:
-		push	1
-		call	palette_black_out
-		call	super_free
-		freePISlotLarge	0
-		call	_main_cdg_free
-		call	@cfg_save$qv
-		call	gaiji_restore
-		call	@game_exit$qv
-		pushd	0
-		push	ds
-		push	offset aMain	; "main"
-		push	ds
-		push	offset aMain	; "main"
-		call	_execl
-		add	sp, 0Ch
-		pop	bp
-		retn
-_start_demo	endp
-
-; ---------------------------------------------------------------------------
-off_AAAD	dw offset loc_AA08
-		dw offset loc_AA22
-		dw offset loc_AA3C
-		dw offset loc_AA56
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2710,12 +2539,10 @@ _MENU_DESC label dword
 		dd aGqbGav_3		; "ゲームを開始します（ルナティック）"
 _main_menu_initialized	db 0
 _option_initialized	db 0
-public _CFG_FN
+public _CFG_FN, _aMAIN, _aDEB
 _CFG_FN	db 'MIKO.CFG',0
-; char aMain[]
-aMain		db 'main',0
-; char path[]
-path		db 'deb',0
+_aMAIN	db 'main',0
+_aDEB	db 'deb',0
 aGqbGav		db 'ゲームを開始します',0
 aGgglgxgggigxge	db 'エキストラステージを開始します',0
 aMNVGngcgxgrgav	db '現在のハイスコアを表示します',0
