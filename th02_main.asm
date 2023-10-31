@@ -32,6 +32,10 @@ include th02/sprites/main_pat.inc
 	extern _getdate:proc
 	extern _memcpy:proc
 
+SP_STAGE = 0
+SP_BOSS = 1
+SP_CLEAR = 2
+
 MAP_ROWS_PER_SECTION = 8
 MAP_BITS_PER_SECTION = 3
 MAP_SECTION_COUNT = 16
@@ -1305,7 +1309,7 @@ var_C		= byte ptr -0Ch
 		mov	_player_top_on_page[1 * word], ax
 		mov	dword_20612, 0
 		mov	byte_2061A, 0
-		mov	byte_1F466, 0
+		mov	_stage_progression, SP_STAGE
 		mov	_slowdown_factor, 1
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
@@ -1948,7 +1952,7 @@ loc_BDCC:
 		call	@bomb_update_and_render$qv
 		call	farfp_26C40
 		call	_boss_update
-		mov	byte_1F466, al
+		mov	_stage_progression, al
 		cmp	byte_2061A, 0
 		jz	short loc_BDE8
 		call	farfp_1F470
@@ -2165,7 +2169,7 @@ sub_BF95	endp
 sub_BF9C	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_1F466, 2
+		cmp	_stage_progression, SP_CLEAR
 		jnz	short loc_BFCC
 		mov	al, _stage_id
 		cbw
@@ -2199,7 +2203,7 @@ sub_BFD0	proc far
 		mov	bp, sp
 		cmp	_scroll_done, 1
 		jnz	loc_C05B
-		mov	byte_1F466, 1
+		mov	_stage_progression, SP_BOSS
 		mov	al, _stage_id
 		cbw
 		cmp	ax, 3
@@ -30357,7 +30361,8 @@ aBoss3_m	db 'boss3.m',0
 		db 0
 	.data?
 
-byte_1F466	db ?
+public _stage_progression
+_stage_progression	db ?
 stage1_gaiji_halflen	db ?
 public _stage_title, _stage_title_halflen, _bgm_title_id
 _stage_title_halflen	db ?
