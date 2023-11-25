@@ -26,7 +26,6 @@ include th05/op/music.inc
 include th05/op/piano.inc
 
 	extern _getch:proc
-	extern _strlen:proc
 
 op_01 group OP_MAIN_TEXT, CFG_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
 g_SHARED group SHARED, SHARED_
@@ -153,225 +152,14 @@ OP_MAIN_TEXT segment byte public 'CODE' use16
 	_start_demo procdesc near
 	@MAIN_UNPUT_AND_PUT$QIUI procdesc pascal near \
 		sel:word, col:word
+	@OPTION_UNPUT_AND_PUT$QIUI procdesc pascal near \
+		sel:word, col:word
 OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
 CFG_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public OPTION_PUT
-option_put	proc near
-
-@@y		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, 224
-		mov	ax, [bp+arg_2]
-		shl	ax, 4
-		add	ax, 250
-		mov	[bp+@@y], ax
-		cmp	[bp+arg_2], 7
-		jnz	short loc_A737
-		mov	[bp+@@y], 366
-
-loc_A737:
-		call	@egc_copy_rect_1_to_0_16$qiiii pascal, 224, [bp+@@y], (192 shl 16) or 16
-		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
-		mov	bx, [bp+arg_2]
-		cmp	bx, 7
-		ja	loc_A8DA
-		add	bx, bx
-		jmp	cs:off_A958[bx]
-
-loc_A764:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 250, CDG_OPTION_LABEL_RANK
-		push	(320 shl 16) or 250
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		add	ax, CDG_OPTION_VALUE_RANK
-		push	ax
-		call	cdg_put_nocolors_8
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		add	ax, 6
-
-loc_A797:
-		mov	si, ax
-		jmp	loc_A8DA
-; ---------------------------------------------------------------------------
-
-loc_A79C:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 266, CDG_OPTION_LABEL_LIVES
-		push	(320 shl 16) or 266
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.cfg_lives]
-		mov	ah, 0
-		push	ax
-		call	cdg_put_nocolors_8
-		mov	si, 0Ah
-		jmp	loc_A8DA
-; ---------------------------------------------------------------------------
-
-loc_A7C5:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 282, CDG_OPTION_LABEL_BOMBS
-		push	(320 shl 16) or 282
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.cfg_bombs]
-		mov	ah, 0
-		push	ax
-		call	cdg_put_nocolors_8
-		mov	si, 0Bh
-		jmp	loc_A8DA
-; ---------------------------------------------------------------------------
-
-loc_A7EE:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 298, CDG_OPTION_LABEL_BGM
-		les	bx, _resident
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		jnz	short loc_A80B
-		mov	ax, CDG_OPTION_VALUE_OFF
-		jmp	short loc_A818
-; ---------------------------------------------------------------------------
-
-loc_A80B:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		add	ax, (CDG_OPTION_VALUE_BGM - SND_BGM_FM26)
-
-loc_A818:
-		mov	[bp+var_2], ax
-		call	cdg_put_nocolors_8 pascal, large (320 shl 16) or 298, ax
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		add	ax, 0Ch
-		jmp	loc_A797
-; ---------------------------------------------------------------------------
-
-loc_A837:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 314, CDG_OPTION_LABEL_SE
-		les	bx, _resident
-		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
-		jnz	short loc_A854
-		mov	ax, CDG_OPTION_VALUE_OFF
-		jmp	short loc_A865
-; ---------------------------------------------------------------------------
-
-loc_A854:
-		les	bx, _resident
-
-loc_A858:
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		mov	ax, (CDG_OPTION_VALUE_SE_FM + SND_SE_FM)
-		pop	dx
-		sub	ax, dx
-
-loc_A865:
-		mov	[bp+var_2], ax
-		call	cdg_put_nocolors_8 pascal, large (320 shl 16) or 314, ax
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		add	ax, 0Fh
-		jmp	loc_A797
-; ---------------------------------------------------------------------------
-
-loc_A884:
-		push	(272 shl 16) or 330
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.turbo_mode]
-		mov	ah, 0
-		mov	dx, CDG_OPTION_SLOW
-		sub	dx, ax
-		push	dx
-		call	cdg_put_nocolors_8
-		mov	di, 256
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.turbo_mode]
-		mov	ah, 0
-		add	ax, 12h
-		jmp	loc_A797
-; ---------------------------------------------------------------------------
-
-loc_A8B2:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 346, CDG_OPTION_RESET
-		mov	di, 256
-		mov	si, 14h
-		jmp	short loc_A8DA
-; ---------------------------------------------------------------------------
-
-loc_A8C7:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 366, CDG_QUIT
-		mov	di, 256
-		mov	si, 15h
-
-loc_A8DA:
-		GRCG_OFF_CLOBBERING dx
-		cmp	[bp+arg_0], 0Eh
-		jnz	short loc_A951
-		call	cdg_put_8 pascal, di, [bp+@@y], CDG_CURSOR_LEFT
-		cmp	di, 256
-		jnz	short loc_A8FD
-		lea	ax, [di+96]
-		push	ax
-		jmp	short loc_A900
-; ---------------------------------------------------------------------------
-
-loc_A8FD:
-		push	384
-
-loc_A900:
-		push	[bp+@@y]
-		push	CDG_CURSOR_RIGHT
-		call	cdg_put_8
-		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		mov	bx, si
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	_strlen
-		add	sp, 4
-		shl	ax, 3
-		mov	dx, 624
-		sub	dx, ax
-		push	dx
-		push	(384 shl 16) or 9
-		mov	bx, si
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	graph_putsa_fx
-
-loc_A951:
-		pop	di
-		pop	si
-		leave
-		retn	4
-option_put	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_A958	dw offset loc_A764
-		dw offset loc_A79C
-		dw offset loc_A7C5
-		dw offset loc_A7EE
-		dw offset loc_A837
-		dw offset loc_A884
-		dw offset loc_A8B2
-		dw offset loc_A8C7
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -628,13 +416,13 @@ loc_AC02:
 
 loc_AC05:
 		push	ax
-		call	option_put
+		call	@option_unput_and_put$qiui
 		inc	si
 
 loc_AC0A:
 		cmp	si, 8
 		jl	short loc_ABF4
-		mov	_putfunc, offset option_put
+		mov	_putfunc, offset @option_unput_and_put$qiui
 		mov	_option_initialized, 1
 		mov	_option_input_allowed, 0
 
@@ -799,9 +587,7 @@ loc_ADE7:
 loc_ADF5:
 		mov	al, _menu_sel
 		cbw
-		push	ax
-		push	0Eh
-		call	option_put
+		call	@option_unput_and_put$qiui pascal, ax, 14
 
 loc_ADFF:
 		test	_key_det.lo, low INPUT_LEFT
@@ -906,9 +692,7 @@ loc_AEF4:
 loc_AF02:
 		mov	al, _menu_sel
 		cbw
-		push	ax
-		push	0Eh
-		call	option_put
+		call	@option_unput_and_put$qiui pascal, ax, 14
 
 loc_AF0C:
 		test	_key_det.hi, high INPUT_CANCEL
@@ -2431,7 +2215,6 @@ include th04/hardware/grppsafx.asm
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
-	extern CDG_PUT_8:proc
 	extern @POLAR$QIII:proc
 	extern _piano_render:proc
 	extern _piano_setup_and_put_initial:proc
@@ -2447,7 +2230,6 @@ include th04/hardware/grppsafx.asm
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern CDG_PUT_NOCOLORS_8:proc
 	extern FRAME_DELAY:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_SINGLE:proc

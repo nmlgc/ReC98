@@ -64,4 +64,6 @@ typedef enum {
 		CDG_CLEARED,
 		CDG_PIC_NOT_CLEARED,
 	#endif
+
+	_op_cdg_slot_t_FORCE_INT16 = 0x7FFF
 } op_cdg_slot_t;
