@@ -27,7 +27,7 @@ include th05/op/piano.inc
 	extern _getch:proc
 	extern _strlen:proc
 
-op_01 group OP_START_TEXT, CFG_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
+op_01 group OP_MAIN_TEXT, CFG_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -146,11 +146,11 @@ _TEXT		ends
 
 ; ===========================================================================
 
-OP_START_TEXT segment byte public 'CODE' use16
+OP_MAIN_TEXT segment byte public 'CODE' use16
 	_start_game procdesc near
 	_start_extra procdesc near
 	_start_demo procdesc near
-OP_START_TEXT ends
+OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
 CFG_TEXT segment byte public 'CODE' use16

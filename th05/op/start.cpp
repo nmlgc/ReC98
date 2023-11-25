@@ -1,5 +1,3 @@
-#pragma option -zPop_01
-
 #include "platform.h"
 #include "master.hpp"
 #include "th01/rank.h"
@@ -15,7 +13,9 @@ extern "C" {
 #include "th05/hardware/input.h"
 #include "th04/op/start.hpp"
 
-#define resident_reset_last_highest_and_stage_scores(digit, stage) \
+#define resident_reset_last_highest_and_stage_scores() \
+	int digit; \
+	int stage; \
 	for(digit = 0; digit < SCORE_DIGITS; digit++) { \
 		resident->score_last.digits[digit] = 0; \
 		resident->score_highest.digits[digit] = 0; \
@@ -33,9 +33,6 @@ extern "C" {
 
 void near start_game(void)
 {
-	int digit;
-	int stage;
-
 	resident->end_sequence = ES_SCORE;
 	resident->demo_num = 0;
 	resident->stage = 0;
@@ -45,15 +42,12 @@ void near start_game(void)
 	if(playchar_menu()) {
 		return;
 	}
-	resident_reset_last_highest_and_stage_scores(digit, stage);
+	resident_reset_last_highest_and_stage_scores();
 	op_exit_into_main(true, true);
 }
 
 void near start_extra(void)
 {
-	int digit;
-	int stage;
-
 	resident->demo_num = 0;
 	resident->stage = STAGE_EXTRA;
 	resident->credit_lives = 3;
@@ -62,7 +56,7 @@ void near start_extra(void)
 	if(playchar_menu()) {
 		return;
 	}
-	resident_reset_last_highest_and_stage_scores(digit, stage);
+	resident_reset_last_highest_and_stage_scores();
 	op_exit_into_main(true, false);
 }
 

@@ -1,5 +1,3 @@
-#pragma option -zPop_01
-
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"

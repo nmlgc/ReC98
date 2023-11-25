@@ -27,7 +27,7 @@ include th04/op/music.inc
 	extern _getch:proc
 	extern _strlen:proc
 
-op_01 group CFG_TEXT, OP_START_TEXT, OP_01_TEXT
+op_01 group CFG_TEXT, OP_MAIN_TEXT, OP_01_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -159,11 +159,11 @@ CFG_TEXT segment byte public 'CODE' use16
 	@cfg_save_exit$qv procdesc near
 CFG_TEXT ends
 
-OP_START_TEXT segment byte public 'CODE' use16
+OP_MAIN_TEXT segment byte public 'CODE' use16
 	_start_game procdesc near
 	_start_extra procdesc near
 	_start_demo procdesc near
-OP_START_TEXT ends
+OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
