@@ -1,5 +1,11 @@
 #include <stddef.h>
 #include "platform.h"
+#if (GAME == 4)
+	// These are needed for the game startup code, which needs to be part of
+	// the same translation unit in this game...
+	#include "pc98.h"
+	#include "libs/kaja/kaja.h"
+#endif
 #include "master.hpp"
 #include "th04/score.h"
 #if (GAME == 5)
@@ -9,7 +15,9 @@
 	#include "th04/resident.hpp"
 #endif
 #include "th04/formats/cfg.hpp"
+extern "C" {
 #include "th04/snd/snd.h"
+}
 
 #undef CFG_FN
 extern const char CFG_FN[];

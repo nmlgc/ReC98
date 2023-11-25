@@ -1,12 +1,7 @@
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
 #include "th01/rank.h"
 #include "th02/formats/pi.h"
 #include "th04/common.h"
 #include "th04/playchar.h"
-#include "th04/score.h"
-#include "th04/resident.hpp"
 extern "C" {
 #include "th04/op/op.hpp"
 }

@@ -1,12 +1,7 @@
 // Startup code shared between TH04 and TH05
 
 #include <process.h>
-#include "libs/kaja/kaja.h"
 #include "th02/core/initexit.h"
-#include "th04/formats/cfg.hpp"
-extern "C" {
-#include "th04/snd/snd.h"
-}
 
 extern char aMAIN[];
 extern char aDEB[];
