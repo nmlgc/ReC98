@@ -9,6 +9,7 @@
 #include "shiftjis.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
+#include "th02/op/menu.hpp"
 extern "C" {
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
@@ -104,12 +105,26 @@ static const screen_y_t DESC_TOP = (RES_Y - GLYPH_H);
 // Colors
 // ------
 
+const vc2 COL_INACTIVE = ((GAME == 5) ?  8 :  1);
 const vc2 COL_ACTIVE   = ((GAME == 5) ? 14 :  8);
 const vc2 COL_LOCKED   = ((GAME == 5) ?  2 : 12);
 const vc2 COL_DESC     = ((GAME == 5) ?  9 : V_WHITE);
 // ------
 
+// Globals
+// -------
+
+#if (GAME == 5)
+	static int8_t unused = 0; // ZUN bloat
+#endif
+int8_t menu_sel = 0;
+bool quit = false;
+int8_t main_menu_unused_1 = 1;
 extern const shiftjis_t* MENU_DESC[];
+resident_t* resident;
+int8_t in_option; // ACTUAL TYPE: bool
+menu_unput_and_put_func_t menu_unput_and_put;
+// -------
 
 #define command_put(top, slot) { \
 	cdg_put_nocolors_8(COMMAND_LEFT, top, slot); \
@@ -258,4 +273,23 @@ void pascal near option_unput_and_put(int sel, vc2 col)
 		}
 		desc_unput_and_put(desc_id);
 	}
+}
+
+void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
+{
+	menu_unput_and_put(menu_sel, COL_INACTIVE);
+
+	menu_sel += direction;
+	if(menu_sel < 0) {
+		menu_sel = max;
+	}
+	if(menu_sel > max) {
+		menu_sel = 0;
+	}
+	if(!extra_unlocked && (menu_sel == MC_EXTRA) && !in_option) {
+		menu_sel += direction;
+	}
+
+	menu_unput_and_put(menu_sel, COL_ACTIVE);
+	snd_se_play_force(1);
 }

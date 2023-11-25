@@ -154,69 +154,14 @@ OP_MAIN_TEXT segment byte public 'CODE' use16
 		sel:word, col:word
 	@OPTION_UNPUT_AND_PUT$QIUI procdesc pascal near \
 		sel:word, col:word
+	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
+		max:byte, direction:byte
 OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
 CFG_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MENU_SEL_MOVE
-menu_sel_move	proc near
-
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	8
-		call	_putfunc
-		mov	al, [bp+arg_0]
-		add	_menu_sel, al
-		mov	al, _menu_sel
-		cbw
-		or	ax, ax
-		jge	short loc_A98B
-		mov	al, [bp+arg_2]
-		mov	_menu_sel, al
-
-loc_A98B:
-		mov	al, _menu_sel
-		cmp	al, [bp+arg_2]
-		jle	short loc_A998
-		mov	_menu_sel, 0
-
-loc_A998:
-		cmp	_extra_unlocked, 0
-		jnz	short loc_A9B6
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 1
-		jnz	short loc_A9B6
-		cmp	_in_option, 0
-		jnz	short loc_A9B6
-		mov	al, [bp+arg_0]
-		add	_menu_sel, al
-
-loc_A9B6:
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	0Eh
-		call	_putfunc
-		call	_snd_se_reset
-		call	snd_se_play pascal, 1
-		call	_snd_se_update
-		pop	bp
-		retn	4
-menu_sel_move	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -256,7 +201,7 @@ loc_AA11:
 loc_AA16:
 		cmp	si, 6
 		jl	short loc_AA00
-		mov	_putfunc, offset @main_unput_and_put$qiui
+		mov	_menu_unput_and_put, offset @main_unput_and_put$qiui
 		mov	_main_menu_initialized, 1
 		mov	_main_input_allowed, 0
 
@@ -270,12 +215,12 @@ loc_AA37:
 		jz	loc_ABC0
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_AA4E
-		call	menu_sel_move pascal, 5, -1
+		call	@menu_sel_update_and_render$qcc pascal, 5, -1
 
 loc_AA4E:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_AA5C
-		call	menu_sel_move pascal, 5, 1
+		call	@menu_sel_update_and_render$qcc pascal, 5, 1
 
 loc_AA5C:
 		test	_key_det.hi, high INPUT_OK
@@ -422,7 +367,7 @@ loc_AC05:
 loc_AC0A:
 		cmp	si, 8
 		jl	short loc_ABF4
-		mov	_putfunc, offset @option_unput_and_put$qiui
+		mov	_menu_unput_and_put, offset @option_unput_and_put$qiui
 		mov	_option_initialized, 1
 		mov	_option_input_allowed, 0
 
@@ -436,12 +381,12 @@ loc_AC2B:
 		jz	loc_AF2E
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_AC42
-		call	menu_sel_move pascal, 7, -1
+		call	@menu_sel_update_and_render$qcc pascal, 7, -1
 
 loc_AC42:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_AC50
-		call	menu_sel_move pascal, 7, 1
+		call	@menu_sel_update_and_render$qcc pascal, 7, 1
 
 loc_AC50:
 		test	_key_det.hi, high INPUT_OK
@@ -2240,10 +2185,10 @@ SHARED_	ends
 
 	.data
 
-		db    0
-_menu_sel	db 0
-_quit	db 0
-_main_menu_unused_1	db 1
+	extern _menu_sel:byte
+	extern _quit:byte
+	extern _main_menu_unused_1:byte
+
 public _MENU_DESC
 _MENU_DESC		dd aMENU_START		; "ゲームを開始します"
 		dd aMENU_START_EXTRA	; "エキストラステージを開始します"
@@ -2906,11 +2851,10 @@ aOp_1		db 'op',0
 
 	.data?
 
-public _resident
-_resident	dd ?
-_in_option	db ?
-		db ?
-_putfunc	dw ?
+	extern _resident:dword
+	extern _in_option:byte
+	extern _menu_unput_and_put:word
+
 _main_input_allowed	db ?
 _option_input_allowed	db ?
 include libs/master.lib/clip[bss].asm
@@ -2947,6 +2891,5 @@ musicroom_trackcount	dw ?
 	extern _hi:scoredat_section_t
 	extern _hi2:scoredat_section_t
 	extern _rank:byte
-	extern _extra_unlocked:byte
 
 		end

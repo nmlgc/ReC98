@@ -164,6 +164,8 @@ OP_MAIN_TEXT segment byte public 'CODE' use16
 		sel:word, col:word
 	@OPTION_UNPUT_AND_PUT$QIUI procdesc pascal near \
 		sel:word, col:word
+	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
+		max:byte, direction:byte
 OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
@@ -171,63 +173,6 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:op_01
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MENU_SEL_MOVE
-menu_sel_move	proc near
-
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	1
-		call	_putfunc
-		mov	al, [bp+arg_0]
-		add	_menu_sel, al
-		mov	al, _menu_sel
-		cbw
-		or	ax, ax
-		jge	short loc_AE4B
-		mov	al, [bp+arg_2]
-		mov	_menu_sel, al
-
-loc_AE4B:
-		mov	al, _menu_sel
-		cmp	al, [bp+arg_2]
-		jle	short loc_AE58
-		mov	_menu_sel, 0
-
-loc_AE58:
-		cmp	_extra_unlocked, 0
-		jnz	short loc_AE76
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 1
-		jnz	short loc_AE76
-		cmp	_in_option, 0
-		jnz	short loc_AE76
-		mov	al, [bp+arg_0]
-		add	_menu_sel, al
-
-loc_AE76:
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	8
-		call	_putfunc
-		call	_snd_se_reset
-		call	snd_se_play pascal, 1
-		call	_snd_se_update
-		pop	bp
-		retn	4
-menu_sel_move	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -267,7 +212,7 @@ loc_AED1:
 loc_AED6:
 		cmp	si, 6
 		jl	short loc_AEC0
-		mov	_putfunc, offset @main_unput_and_put$qiui
+		mov	_menu_unput_and_put, offset @main_unput_and_put$qiui
 		mov	_main_menu_initialized, 1
 		mov	_main_input_allowed, 0
 
@@ -281,12 +226,12 @@ loc_AEF7:
 		jz	loc_B043
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_AF0E
-		call	menu_sel_move pascal, 5, -1
+		call	@menu_sel_update_and_render$qcc pascal, 5, -1
 
 loc_AF0E:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_AF1C
-		call	menu_sel_move pascal, 5, 1
+		call	@menu_sel_update_and_render$qcc pascal, 5, 1
 
 loc_AF1C:
 		test	_key_det.hi, high INPUT_OK
@@ -424,7 +369,7 @@ loc_B088:
 loc_B08D:
 		cmp	si, 8
 		jl	short loc_B077
-		mov	_putfunc, offset @option_unput_and_put$qiui
+		mov	_menu_unput_and_put, offset @option_unput_and_put$qiui
 		mov	_option_initialized, 1
 		mov	_option_input_allowed, 0
 
@@ -438,12 +383,12 @@ loc_B0AE:
 		jz	loc_B35B
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B0C5
-		call	menu_sel_move pascal, 7, -1
+		call	@menu_sel_update_and_render$qcc pascal, 7, -1
 
 loc_B0C5:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B0D3
-		call	menu_sel_move pascal, 7, 1
+		call	@menu_sel_update_and_render$qcc pascal, 7, 1
 
 loc_B0D3:
 		test	_key_det.hi, high INPUT_OK
@@ -2175,10 +2120,10 @@ SHARED_	ends
 
 	.data
 
-_menu_sel = byte ptr $-1 ; place in padding area of previous segment
+	extern _menu_sel:byte
+	extern _quit:byte
+	extern _main_menu_unused_1:byte
 
-_quit	db 0
-_main_menu_unused_1	db 1
 public _MENU_DESC
 _MENU_DESC label dword
 		dd aGqbGav		; "ÉQÅ[ÉÄÇäJénÇµÇ‹Ç∑"
@@ -2407,11 +2352,10 @@ aOp1_pi_1	db 'op1.pi',0
 
 	.data?
 
-public _resident
-_resident	dd ?
-_in_option	db ?
-		db ?
-_putfunc	dw ?
+	extern _resident:dword
+	extern _in_option:byte
+	extern _menu_unput_and_put:word
+
 _main_input_allowed	db ?
 _option_input_allowed	db ?
 include libs/master.lib/clip[bss].asm

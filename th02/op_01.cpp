@@ -31,10 +31,9 @@ extern "C" {
 }
 #include "th02/gaiji/gaiji.h"
 #include "th02/op/op.h"
+#include "th02/op/menu.hpp"
 
 #pragma option -d -a2
-
-typedef void pascal near putfunc_t(int sel, tram_atrb2 atrb);
 
 char menu_sel = 0;
 bool in_option = false;
@@ -47,7 +46,7 @@ static int unused_2; // ZUN bloat
 unsigned int idle_frames;
 unsigned char demo_num;
 resident_t __seg *resident_seg;
-putfunc_t near *putfunc;
+menu_put_func_t menu_put;
 
 // Apparently, declaring variables with `extern` before definining them for
 // real within the same compilation unit causes Turbo C++ to emit *everything*
@@ -371,20 +370,20 @@ void pascal near main_put(int sel, tram_atrb2 atrb)
 	gaiji_putsa(38, 23, gbcRANKS[rank], TX_GREEN);
 }
 
-void pascal near menu_sel_move(char sel_count, char direction)
+void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 {
-	putfunc(menu_sel, TX_YELLOW);
+	menu_put(menu_sel, TX_YELLOW);
 	menu_sel += direction;
 	if(!in_option && !extra_unlocked && menu_sel == menu_extra_pos()) {
 		menu_sel += direction;
 	}
 	if(menu_sel < ring_min()) {
-		menu_sel = sel_count;
+		menu_sel = max;
 	}
-	if(menu_sel > sel_count) {
+	if(menu_sel > max) {
 		menu_sel = 0;
 	}
-	putfunc(menu_sel, TX_WHITE);
+	menu_put(menu_sel, TX_WHITE);
 }
 
 void main_update_and_render(void)
@@ -403,18 +402,13 @@ void main_update_and_render(void)
 		for(i = 0; i < 6; i++) {
 			main_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
-		putfunc = main_put;
+		menu_put = main_put;
 	}
 	if(!key_det) {
 		main_input_allowed = true;
 	}
 	if(main_input_allowed) {
-		if(key_det & INPUT_UP) {
-			menu_sel_move(5, -1);
-		}
-		if(key_det & INPUT_DOWN) {
-			menu_sel_move(5, 1);
-		}
+		menu_update_vertical(6);
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {
 			case 0:
@@ -584,18 +578,13 @@ void option_update_and_render(void)
 		for(i = 0; i < 7; i++) {
 			option_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
-		putfunc = option_put;
+		menu_put = option_put;
 	}
 	if(!key_det) {
 		input_allowed = 1;
 	}
 	if(input_allowed) {
-		if(key_det & INPUT_UP) {
-			menu_sel_move(6, -1);
-		}
-		if(key_det & INPUT_DOWN) {
-			menu_sel_move(6, 1);
-		}
+		menu_update_vertical(7);
 		if(key_det & INPUT_RIGHT) {
 			option_change(ring_inc);
 		}
