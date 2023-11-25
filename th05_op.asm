@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 BINARY = 'O'
 
@@ -151,125 +151,14 @@ OP_MAIN_TEXT segment byte public 'CODE' use16
 	_start_game procdesc near
 	_start_extra procdesc near
 	_start_demo procdesc near
+	@MAIN_UNPUT_AND_PUT$QIUI procdesc pascal near \
+		sel:word, col:word
 OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
 CFG_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MAIN_PUT
-main_put	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	ax, si
-		imul	ax, 20
-		add	ax, 250
-		mov	di, ax
-		call	@egc_copy_rect_1_to_0_16$qiiii pascal, 256, ax, (128 shl 16) or 16
-		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
-		mov	[bp+var_2], si
-		mov	bx, si
-		cmp	bx, 5
-		ja	short loc_A69A
-		add	bx, bx
-		jmp	cs:off_A70B[bx]
-
-loc_A634:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 250, CDG_MAIN_GAME
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		add	ax, 22
-		mov	[bp+var_2], ax
-		jmp	short loc_A69A
-; ---------------------------------------------------------------------------
-
-loc_A653:
-		cmp	_extra_unlocked, 0
-
-loc_A658:
-		jnz	short loc_A665
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
-
-loc_A665:
-		push	(272 shl 16) or 270
-		push	CDG_MAIN_EXTRA
-		jmp	short loc_A695
-; ---------------------------------------------------------------------------
-
-loc_A66F:
-		push	(272 shl 16) or 290
-		push	CDG_MAIN_REGIST_VIEW
-		jmp	short loc_A695
-; ---------------------------------------------------------------------------
-
-loc_A679:
-		push	(272 shl 16) or 310
-		push	CDG_MAIN_MUSICROOM
-		jmp	short loc_A695
-; ---------------------------------------------------------------------------
-
-loc_A683:
-		push	(272 shl 16) or 330
-		push	CDG_MAIN_OPTION
-		jmp	short loc_A695
-; ---------------------------------------------------------------------------
-
-loc_A68D:
-		push	(272 shl 16) or 350
-		push	CDG_QUIT
-
-loc_A695:
-		call	cdg_put_nocolors_8
-
-loc_A69A:
-		GRCG_OFF_CLOBBERING dx
-		cmp	[bp+arg_0], 0Eh
-		jnz	short loc_A705
-		call	cdg_put_8 pascal, 256, di, CDG_CURSOR_LEFT
-		call	cdg_put_8 pascal, 352, di, CDG_CURSOR_RIGHT
-		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	_strlen
-		add	sp, 4
-		shl	ax, 3
-		mov	dx, 624
-		sub	dx, ax
-		push	dx
-		push	(384 shl 16) or 9
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	graph_putsa_fx
-
-loc_A705:
-		pop	di
-		pop	si
-		leave
-		retn	4
-main_put	endp
-
-; ---------------------------------------------------------------------------
-off_A70B	dw offset loc_A634
-		dw offset loc_A653
-		dw offset loc_A66F
-		dw offset loc_A679
-		dw offset loc_A683
-		dw offset loc_A68D
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -573,13 +462,13 @@ loc_AA0E:
 
 loc_AA11:
 		push	ax
-		call	main_put
+		call	@main_unput_and_put$qiui
 		inc	si
 
 loc_AA16:
 		cmp	si, 6
 		jl	short loc_AA00
-		mov	_putfunc, offset main_put
+		mov	_putfunc, offset @main_unput_and_put$qiui
 		mov	_main_menu_initialized, 1
 		mov	_main_input_allowed, 0
 

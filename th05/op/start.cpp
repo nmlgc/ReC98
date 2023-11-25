@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/rank.h"
