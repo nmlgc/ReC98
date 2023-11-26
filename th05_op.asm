@@ -147,188 +147,18 @@ _TEXT		ends
 ; ===========================================================================
 
 OP_MAIN_TEXT segment byte public 'CODE' use16
-	_start_game procdesc near
-	_start_extra procdesc near
 	_start_demo procdesc near
-	@MAIN_UNPUT_AND_PUT$QIUI procdesc pascal near \
-		sel:word, col:word
 	@OPTION_UNPUT_AND_PUT$QIUI procdesc pascal near \
 		sel:word, col:word
 	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
 		max:byte, direction:byte
+	@main_update_and_render$qv procdesc near
 OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
 CFG_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MAIN_UPDATE_AND_RENDER
-main_update_and_render	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_main_menu_initialized, 0
-		jnz	short loc_AA2B
-		mov	_main_menu_unused_1, 0
-		mov	_main_input_allowed, 0
-		call	@egc_copy_rect_1_to_0_16$qiiii pascal, (192 shl 16) or 250, (288 shl 16) or 160
-		xor	si, si
-		jmp	short loc_AA16
-; ---------------------------------------------------------------------------
-
-loc_AA00:
-		push	si
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, si
-		jnz	short loc_AA0E
-		mov	ax, 0Eh
-		jmp	short loc_AA11
-; ---------------------------------------------------------------------------
-
-loc_AA0E:
-		mov	ax, 8
-
-loc_AA11:
-		push	ax
-		call	@main_unput_and_put$qiui
-		inc	si
-
-loc_AA16:
-		cmp	si, 6
-		jl	short loc_AA00
-		mov	_menu_unput_and_put, offset @main_unput_and_put$qiui
-		mov	_main_menu_initialized, 1
-		mov	_main_input_allowed, 0
-
-loc_AA2B:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_AA37
-		mov	_main_input_allowed, 1
-
-loc_AA37:
-		cmp	_main_input_allowed, 0
-		jz	loc_ABC0
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_AA4E
-		call	@menu_sel_update_and_render$qcc pascal, 5, -1
-
-loc_AA4E:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_AA5C
-		call	@menu_sel_update_and_render$qcc pascal, 5, 1
-
-loc_AA5C:
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_AA6C
-		test	_key_det.lo, low INPUT_SHOT
-		jz	loc_ABA8
-
-loc_AA6C:
-		call	_snd_se_reset
-		call	snd_se_play pascal, 11
-		call	_snd_se_update
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	loc_ABA8
-		add	bx, bx
-		jmp	cs:off_ABC3[bx]
-
-loc_AA91:
-		call	_start_game
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
-		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 0
-		mov	_menu_sel, 0
-		jmp	loc_ABC0
-; ---------------------------------------------------------------------------
-
-loc_AAE1:
-		call	_start_extra
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
-		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 0
-		mov	_menu_sel, 1
-		jmp	loc_ABC0
-; ---------------------------------------------------------------------------
-
-loc_AB31:
-		call	_regist_view_menu
-		mov	_main_menu_initialized, 0
-		jmp	short loc_ABA8
-; ---------------------------------------------------------------------------
-
-loc_AB3B:
-		call	_musicroom
-		call	_main_cdg_load
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
-		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 0
-		mov	_menu_sel, 3
-		jmp	short loc_ABC0
-; ---------------------------------------------------------------------------
-
-loc_AB8D:
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 1
-		mov	_menu_sel, 0
-		jmp	short loc_ABA8
-; ---------------------------------------------------------------------------
-
-loc_AB9E:
-		mov	_main_menu_initialized, 0
-		mov	_quit, 1
-
-loc_ABA8:
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_ABB4
-		mov	_quit, 1
-
-loc_ABB4:
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_ABC0
-		mov	_main_input_allowed, 0
-
-loc_ABC0:
-		pop	si
-		pop	bp
-		retn
-main_update_and_render	endp
-
-; ---------------------------------------------------------------------------
-off_ABC3	dw offset loc_AA91
-		dw offset loc_AAE1
-		dw offset loc_AB31
-		dw offset loc_AB3B
-		dw offset loc_AB8D
-		dw offset loc_AB9E
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -758,7 +588,7 @@ loc_B00E:
 ; ---------------------------------------------------------------------------
 
 loc_B022:
-		call	main_update_and_render
+		call	@main_update_and_render$qv
 		cmp	si, 640
 		jl	short loc_B035
 		call	_start_demo
@@ -2187,7 +2017,6 @@ SHARED_	ends
 
 	extern _menu_sel:byte
 	extern _quit:byte
-	extern _main_menu_unused_1:byte
 
 public _MENU_DESC
 _MENU_DESC		dd aMENU_START		; "ゲームを開始します"
@@ -2216,8 +2045,11 @@ _MENU_DESC		dd aMENU_START		; "ゲームを開始します"
 		dd aMENU_START_NORMAL		; "ゲームを開始します（ノーマル）"
 		dd aMENU_START_HARD		; "ゲームを開始します（ハード）"
 		dd aMENU_START_LUNATIC		; "ゲームを開始します（ルナティック）"
+
+public _main_menu_initialized
 _main_menu_initialized	db 0
 _option_initialized	db 0
+
 public _aMAIN, _aDEB
 _aMAIN		db 'main',0
 _aDEB		db 'deb',0
@@ -2247,7 +2079,8 @@ aMENU_START_EASY	db 'ゲームを開始します（イージー）',0
 aMENU_START_NORMAL	db 'ゲームを開始します（ノーマル）',0
 aMENU_START_HARD	db 'ゲームを開始します（ハード）',0
 aMENU_START_LUNATIC		db 'ゲームを開始します（ルナティック）',0
-aOp1_pi		db 'op1.pi',0
+public _MENU_MAIN_BG_FN
+_MENU_MAIN_BG_FN	db 'op1.pi',0
 aMiko		db 'miko',0
 aOp		db 'op',0
 aKaikidan1_dat0	db '怪綺談1.dat',0
@@ -2855,8 +2688,8 @@ aOp_1		db 'op',0
 	extern _in_option:byte
 	extern _menu_unput_and_put:word
 
-_main_input_allowed	db ?
-_option_input_allowed	db ?
+_option_input_allowed = byte ptr $-1 ; place in padding area of previous segment
+
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm

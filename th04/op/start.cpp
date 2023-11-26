@@ -1,9 +1,10 @@
 #include "planar.h"
 #include "th01/rank.h"
+extern "C" {
 #include "th02/formats/pi.h"
 #include "th04/common.h"
 #include "th04/playchar.h"
-extern "C" {
+#include "th04/hardware/input.h"
 #include "th04/op/op.hpp"
 }
 #include "th04/op/start.hpp"

@@ -13,6 +13,7 @@
 #include "th04/formats/cfg.hpp"
 extern "C" {
 #include "th04/snd/snd.h"
+#include "th05/formats/pi.hpp"
 #include "th05/op/op.hpp"
 }
 #include "th05/hardware/input.h"

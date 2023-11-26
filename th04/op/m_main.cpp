@@ -14,6 +14,7 @@ extern "C" {
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
 }
+#include "th04/shiftjis/fnshared.hpp"
 #include "th04/sprites/op_cdg.h"
 
 #pragma option -a2
@@ -292,4 +293,114 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 
 	menu_unput_and_put(menu_sel, COL_ACTIVE);
 	snd_se_play_force(1);
+}
+
+#define menu_init( \
+	initialized, \
+	input_allowed, \
+	choice_count, \
+	unput_and_put, \
+	other_left, \
+	other_w, \
+	other_bottom \
+) { \
+	input_allowed = false; \
+	\
+	/* ZUN bloat: Excessively wide and tall. */ \
+	egc_copy_rect_1_to_0_16( \
+		other_left, MENU_TOP, (other_w + 32), (other_bottom + 24 - MENU_TOP) \
+	); \
+	\
+	for(int i = 0; i < choice_count; i++) { \
+		unput_and_put(i, ((menu_sel == i) ? COL_ACTIVE : COL_INACTIVE)); \
+	} \
+	menu_unput_and_put = unput_and_put; \
+	initialized = true; \
+	input_allowed = false; /* ZUN bloat: Already done above. */ \
+}
+
+inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
+	#undef MENU_MAIN_BG_FN
+	extern const char MENU_MAIN_BG_FN[];
+	graph_accesspage(1);
+	pi_load_put_8_free(0, MENU_MAIN_BG_FN);
+	graph_copy_page(0); // switches the accessed page back 0
+	palette_100();
+	main_initialized = false;
+	in_option = false;
+	menu_sel = sel;
+}
+
+void near main_update_and_render(void)
+{
+	#define initialized main_menu_initialized
+	extern bool initialized;
+	static bool input_allowed;
+
+	if(!initialized) {
+		main_menu_unused_1 = 0;
+
+		// ZUN bloat: Way too wide.
+		menu_init(
+			initialized,
+			input_allowed,
+			MC_COUNT,
+			main_unput_and_put,
+			(MENU_OPTION_LEFT - 32),
+			(MENU_OPTION_W + 64),
+			option_choice_top(OC_COUNT)
+		);
+	}
+
+	if(!key_det) {
+		input_allowed = true;
+	}
+	if(!input_allowed) {
+		return;
+	}
+	menu_update_vertical(MC_COUNT);
+
+	if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) {
+		snd_se_play_force(11);
+		switch(menu_sel) {
+		case MC_GAME:
+			start_game();
+			return_from_other_screen_to_main(initialized, MC_GAME);
+			return;
+		case MC_EXTRA:
+			start_extra();
+			return_from_other_screen_to_main(initialized, MC_EXTRA);
+			return;
+		case MC_REGIST_VIEW:
+			regist_view_menu();
+			initialized = false;
+			break;
+		case MC_MUSICROOM:
+			musicroom();
+			main_cdg_load();
+
+			// ZUN quirk: Moving to MC_GAME in TH04?
+			return_from_other_screen_to_main(
+				initialized, ((GAME == 5) ? MC_MUSICROOM : MC_GAME)
+			);
+			return;
+		case MC_OPTION:
+			initialized = false;
+			in_option = true;
+			menu_sel = OC_RANK;
+			break;
+		case MC_QUIT:
+			initialized = false; // We're quitting anyway...
+			quit = true;
+			break;
+		}
+	}
+	if(key_det & INPUT_CANCEL) {
+		quit = true;
+	}
+	if(key_det) {
+		input_allowed = false;
+	}
+
+	#undef initialized
 }

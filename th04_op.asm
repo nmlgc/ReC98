@@ -157,15 +157,12 @@ OP_MAIN_TEXT segment byte public 'CODE' use16
 	@cfg_load$qv procdesc near
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
-	_start_game procdesc near
-	_start_extra procdesc near
 	_start_demo procdesc near
-	@MAIN_UNPUT_AND_PUT$QIUI procdesc pascal near \
-		sel:word, col:word
 	@OPTION_UNPUT_AND_PUT$QIUI procdesc pascal near \
 		sel:word, col:word
 	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
 		max:byte, direction:byte
+	@main_update_and_render$qv procdesc near
 OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
@@ -173,164 +170,6 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:op_01
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MAIN_UPDATE_AND_RENDER
-main_update_and_render	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_main_menu_initialized, 0
-		jnz	short loc_AEEB
-		mov	_main_menu_unused_1, 0
-		mov	_main_input_allowed, 0
-		call	@egc_copy_rect_1_to_0_16$qiiii pascal, (192 shl 16) or 224, (288 shl 16) or 160
-		xor	si, si
-		jmp	short loc_AED6
-; ---------------------------------------------------------------------------
-
-loc_AEC0:
-		push	si
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, si
-		jnz	short loc_AECE
-		mov	ax, 8
-		jmp	short loc_AED1
-; ---------------------------------------------------------------------------
-
-loc_AECE:
-		mov	ax, 1
-
-loc_AED1:
-		push	ax
-		call	@main_unput_and_put$qiui
-		inc	si
-
-loc_AED6:
-		cmp	si, 6
-		jl	short loc_AEC0
-		mov	_menu_unput_and_put, offset @main_unput_and_put$qiui
-		mov	_main_menu_initialized, 1
-		mov	_main_input_allowed, 0
-
-loc_AEEB:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_AEF7
-		mov	_main_input_allowed, 1
-
-loc_AEF7:
-		cmp	_main_input_allowed, 0
-		jz	loc_B043
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_AF0E
-		call	@menu_sel_update_and_render$qcc pascal, 5, -1
-
-loc_AF0E:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_AF1C
-		call	@menu_sel_update_and_render$qcc pascal, 5, 1
-
-loc_AF1C:
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_AF2C
-		test	_key_det.lo, low INPUT_SHOT
-		jz	loc_B02B
-
-loc_AF2C:
-		call	_snd_se_reset
-		call	snd_se_play pascal, 11
-		call	_snd_se_update
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	loc_B02B
-		add	bx, bx
-		jmp	cs:off_B046[bx]
-
-loc_AF51:
-		call	_start_game
-		jmp	short loc_AFBD
-; ---------------------------------------------------------------------------
-
-loc_AF56:
-		call	_start_extra
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 0
-		mov	_menu_sel, 1
-		jmp	loc_B043
-; ---------------------------------------------------------------------------
-
-loc_AFAD:
-		call	_regist_view_menu
-		mov	_main_menu_initialized, 0
-		jmp	short loc_B02B
-; ---------------------------------------------------------------------------
-
-loc_AFB7:
-		call	_musicroom
-		call	_main_cdg_load
-
-loc_AFBD:
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 0
-		mov	_menu_sel, 0
-		jmp	short loc_B043
-; ---------------------------------------------------------------------------
-
-loc_B010:
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 1
-		mov	_menu_sel, 0
-		jmp	short loc_B02B
-; ---------------------------------------------------------------------------
-
-loc_B021:
-		mov	_main_menu_initialized, 0
-		mov	_quit, 1
-
-loc_B02B:
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_B037
-		mov	_quit, 1
-
-loc_B037:
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_B043
-		mov	_main_input_allowed, 0
-
-loc_B043:
-		pop	si
-		pop	bp
-		retn
-main_update_and_render	endp
-
-; ---------------------------------------------------------------------------
-off_B046	dw offset loc_AF51
-		dw offset loc_AF56
-		dw offset loc_AFAD
-		dw offset loc_AFB7
-		dw offset loc_B010
-		dw offset loc_B021
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -736,7 +575,7 @@ loc_B43A:
 ; ---------------------------------------------------------------------------
 
 loc_B44E:
-		call	main_update_and_render
+		call	@main_update_and_render$qv
 		cmp	si, 640
 		jl	short loc_B45F
 		call	_start_demo
@@ -2122,7 +1961,6 @@ SHARED_	ends
 
 	extern _menu_sel:byte
 	extern _quit:byte
-	extern _main_menu_unused_1:byte
 
 public _MENU_DESC
 _MENU_DESC label dword
@@ -2152,8 +1990,11 @@ _MENU_DESC label dword
 		dd aGqbGav_1		; "ゲームを開始します（ノーマル）"
 		dd aGqbGav_2		; "ゲームを開始します（ハード）"
 		dd aGqbGav_3		; "ゲームを開始します（ルナティック）"
+
+public _main_menu_initialized
 _main_menu_initialized	db 0
 _option_initialized	db 0
+
 public _CFG_FN, _aMAIN, _aDEB
 _CFG_FN	db 'MIKO.CFG',0
 _aMAIN	db 'main',0
@@ -2184,7 +2025,8 @@ aGqbGav_0	db 'ゲームを開始します（イージー）',0
 aGqbGav_1	db 'ゲームを開始します（ノーマル）',0
 aGqbGav_2	db 'ゲームを開始します（ハード）',0
 aGqbGav_3	db 'ゲームを開始します（ルナティック）',0
-aOp1_pi		db 'op1.pi',0
+public _MENU_MAIN_BG_FN
+_MENU_MAIN_BG_FN	db 'op1.pi',0
 aOp		db 'op',0
 aMSzlEd_dat	db '幻想郷ed.dat',0
 asc_F7F7	db 0Ah
@@ -2356,8 +2198,8 @@ aOp1_pi_1	db 'op1.pi',0
 	extern _in_option:byte
 	extern _menu_unput_and_put:word
 
-_main_input_allowed	db ?
-_option_input_allowed	db ?
+_option_input_allowed = byte ptr $-1 ; place in padding area of previous segment
+
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm
