@@ -23,7 +23,7 @@ const cfg_options_t OPTS_DEFAULT = {
 
 char cfg_init(resident_t __seg *resident_seg)
 {
-	const char *fn = CFG_FN;
+	const char *fn = CFG_FN_LOWER;
 	cfg_options_t opts = OPTS_DEFAULT;
 	cfg_t cfg_in;
 	resident_t far *resident = resident_seg;

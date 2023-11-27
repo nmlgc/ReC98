@@ -2,9 +2,7 @@
 
 #include <process.h>
 #include "th02/core/initexit.h"
-
-extern char aMAIN[];
-extern char aDEB[];
+#include "th04/shiftjis/fnshared.hpp"
 
 inline void op_exit_into_main(bool fade_out_bgm, bool allow_debug) {
 	main_cdg_free();
@@ -22,8 +20,8 @@ inline void op_exit_into_main(bool fade_out_bgm, bool allow_debug) {
 	}
 	game_exit();
 	if(!allow_debug || !resident->debug) {
-		execl(aMAIN, aMAIN, 0, 0);
+		execl(BINARY_MAIN, BINARY_MAIN, 0, 0);
 	} else {
-		execl(aDEB, aDEB, 0, 0);
+		execl(BINARY_DEB, BINARY_DEB, 0, 0);
 	}
 }

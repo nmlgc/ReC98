@@ -19,8 +19,10 @@ extern "C" {
 #include "th04/snd/snd.h"
 }
 
+#if (GAME == 5)
 #undef CFG_FN
 extern const char CFG_FN[];
+#endif
 
 #if (GAME == 4)
 	bool snd_sel_disabled = false; // ZUN bloat: Unused in this game.

@@ -121,5 +121,5 @@ void near start_demo(void)
 	cfg_save();
 	palette_black_out(1);
 	game_exit();
-	execl(aMAIN, aMAIN, 0, 0);
+	execl(BINARY_MAIN, BINARY_MAIN, 0, 0);
 }

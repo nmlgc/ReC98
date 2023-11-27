@@ -26,6 +26,7 @@ extern "C" {
 #include "th04/formats/cdg.h"
 }
 #include "th04/shiftjis/fnshared.hpp"
+#include "th04/shiftjis/m_main.hpp"
 #include "th04/sprites/op_cdg.h"
 
 #pragma option -a2
@@ -132,7 +133,7 @@ const vc2 COL_DESC     = ((GAME == 5) ?  9 : V_WHITE);
 int8_t menu_sel = 0;
 bool quit = false;
 int8_t main_menu_unused_1 = 1;
-extern const shiftjis_t* MENU_DESC[];
+const shiftjis_t* MENU_DESC[] = MENU_DESCRIPTIONS;
 resident_t* resident;
 int8_t in_option; // ACTUAL TYPE: bool
 menu_unput_and_put_func_t menu_unput_and_put;
@@ -331,8 +332,6 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 }
 
 inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
-	#undef MENU_MAIN_BG_FN
-	extern const char MENU_MAIN_BG_FN[];
 	graph_accesspage(1);
 	pi_load_put_8_free(0, MENU_MAIN_BG_FN);
 	graph_copy_page(0); // switches the accessed page back 0
@@ -344,8 +343,7 @@ inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
 
 void near main_update_and_render(void)
 {
-	#define initialized main_menu_initialized
-	extern bool initialized;
+	static bool initialized = false;
 	static bool input_allowed;
 
 	if(!initialized) {
@@ -412,20 +410,14 @@ void near main_update_and_render(void)
 	if(key_det) {
 		input_allowed = false;
 	}
-
-	#undef initialized
 }
 
-inline void snd_redetermine_modes_and_reload_se(void) {
-	#undef SE_FN
-	extern const char SE_FN[];
-	snd_determine_modes(resident->bgm_mode, resident->se_mode);
-	snd_load(SE_FN, SND_LOAD_SE);
+#define snd_redetermine_modes_and_reload_se() { \
+	snd_determine_modes(resident->bgm_mode, resident->se_mode); \
+	snd_load(SE_FN, SND_LOAD_SE); \
 }
 
 inline void snd_redetermine_modes_and_restart_bgm(bool also_reload_se) {
-	#undef BGM_MENU_MAIN_FN
-	extern const char BGM_MENU_MAIN_FN[];
 	snd_kaja_func(KAJA_SONG_STOP, 0);
 	#if (GAME == 5)
 		if(also_reload_se) {
@@ -448,8 +440,7 @@ inline void return_from_option_to_main(bool& option_initialized) {
 
 void near option_update_and_render(void)
 {
-	#define initialized option_initialized
-	extern bool initialized;
+	static bool initialized = false;
 	static bool input_allowed;
 
 	if(!initialized) {
@@ -572,16 +563,10 @@ void near option_update_and_render(void)
 	if(key_det) {
 		input_allowed = false;
 	}
-
-	#undef initialized
 }
 
 void main(void)
 {
-	#undef OP_AND_END_PF_FN
-	#undef MEMORY_INSUFFICIENT
-	extern const unsigned char OP_AND_END_PF_FN[];
-	extern const char MEMORY_INSUFFICIENT[];
 	int idle_frames = 0;
 
 	text_clear();
@@ -593,8 +578,6 @@ void main(void)
 	}
 
 	#if (GAME == 4)
-		#undef GAIJI_FN
-		extern const char GAIJI_FN[];
 		gaiji_backup();
 		gaiji_entry_bfnt(GAIJI_FN);
 	#endif

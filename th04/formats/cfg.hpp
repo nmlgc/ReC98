@@ -1,4 +1,9 @@
-#define CFG_FN "miko.cfg"
+#define CFG_FN "MIKO.CFG"
+
+// ZUN landmine: The lowercase variant is only used by `ZUN.COM -S`. Will break
+// when porting to case-sensitive file systems.
+#define CFG_FN_LOWER "miko.cfg"
+
 typedef struct {
 	int8_t rank;
 	int8_t lives;
