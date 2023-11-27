@@ -1301,7 +1301,7 @@ loc_A446:
 ; ---------------------------------------------------------------------------
 
 loc_A452:
-		call	_game_init_op c, offset aCOul, ds
+		call	@game_init_op$qnxuc c, offset aCOul, ds
 		or	ax, ax
 		jz	short loc_A468
 		push	ds
@@ -3317,7 +3317,7 @@ SHARED	segment	word public 'CODE' use16
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern _game_init_op:proc
+	extern @game_init_op$qnxuc:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc

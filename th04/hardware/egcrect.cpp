@@ -7,7 +7,6 @@
 #include "master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "platform/x86real/pc98/egc.hpp"
-extern "C" {
 #include "th01/hardware/egc.h"
 
 inline void graph_accesspage_1(void) {
@@ -125,5 +124,3 @@ static void near egc_start_copy(void)
 }
 
 #pragma codestring "\x90"
-
-}

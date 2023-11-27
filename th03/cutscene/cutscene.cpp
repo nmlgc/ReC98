@@ -226,11 +226,9 @@ bool16 pascal near cutscene_script_load(const char* fn)
 #endif
 
 // ZUN bloat: Turn into a single global inline function.
-extern "C" {
-	#define egc_start_copy	near egc_start_copy
-	#include "th01/hardware/egcstart.cpp"
-	#undef egc_start_copy
-}
+#define egc_start_copy	near egc_start_copy
+#include "th01/hardware/egcstart.cpp"
+#undef egc_start_copy
 
 // Picture crossfading works by doing a masked blit of the new picture on top
 // of the old one on the invisible VRAM page, then blitting the result to the

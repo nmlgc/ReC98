@@ -175,7 +175,7 @@ arg_2		= word ptr  6
 		imul	ax, 20
 		add	ax, 250
 		mov	di, ax
-		call	egc_copy_rect_1_to_0_16 pascal, 256, ax, (128 shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii pascal, 256, ax, (128 shl 16) or 16
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	[bp+var_2], si
 		mov	bx, si
@@ -238,7 +238,7 @@ loc_A69A:
 		jnz	short loc_A705
 		call	cdg_put_8 pascal, 256, di, 35
 		call	cdg_put_8 pascal, 352, di, 36
-		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -294,7 +294,7 @@ arg_2		= word ptr  6
 		mov	[bp+@@y], 366
 
 loc_A737:
-		call	egc_copy_rect_1_to_0_16 pascal, 224, [bp+@@y], (192 shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii pascal, 224, [bp+@@y], (192 shl 16) or 16
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	bx, [bp+arg_2]
 		cmp	bx, 7
@@ -448,7 +448,7 @@ loc_A900:
 		push	[bp+@@y]
 		push	36
 		call	cdg_put_8
-		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	bx, si
 		shl	bx, 2
@@ -552,7 +552,7 @@ main_update_and_render	proc near
 		jnz	short loc_AA2B
 		mov	_main_menu_unused_1, 0
 		mov	_main_input_allowed, 0
-		call	egc_copy_rect_1_to_0_16 pascal, (192 shl 16) or 250, (288 shl 16) or 160
+		call	@egc_copy_rect_1_to_0_16$qiiii pascal, (192 shl 16) or 250, (288 shl 16) or 160
 		xor	si, si
 		jmp	short loc_AA16
 ; ---------------------------------------------------------------------------
@@ -718,7 +718,7 @@ option_update_and_render	proc near
 		cmp	_option_initialized, 0
 		jnz	short loc_AC1F
 		mov	_option_input_allowed, 0
-		call	egc_copy_rect_1_to_0_16 pascal, (272 shl 16) or 250, (160 shl 16) or 144
+		call	@egc_copy_rect_1_to_0_16$qiiii pascal, (272 shl 16) or 250, (160 shl 16) or 144
 		xor	si, si
 		jmp	short loc_AC0A
 ; ---------------------------------------------------------------------------
@@ -1071,7 +1071,7 @@ _envp		= dword	ptr  0Ch
 		call	text_clear
 		call	respal_create
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_OP
-		call	_game_init_op c, offset aKaikidan1_dat0, ds
+		call	@game_init_op$qnxuc c, offset aKaikidan1_dat0, ds
 		or	ax, ax
 		jz	short loc_AF7D
 		push	ds
@@ -2553,7 +2553,7 @@ include th04/hardware/grppsafx.asm
 	extern PI_PUT_8:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
-	extern _game_init_op:proc
+	extern @game_init_op$qnxuc:proc
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
@@ -2563,7 +2563,7 @@ include th04/hardware/grppsafx.asm
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
-	extern EGC_COPY_RECT_1_TO_0_16:proc
+	extern @EGC_COPY_RECT_1_TO_0_16$QIIII:proc
 SHARED_	ends
 
 	.data

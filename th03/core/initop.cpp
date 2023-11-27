@@ -5,7 +5,6 @@
 #include "x86real.h"
 #include "master.hpp"
 #include "th01/hardware/vplanset.h"
-extern "C" {
 #include "th03/core/initexit.h"
 
 #if (GAME <= 3)
@@ -42,6 +41,4 @@ int game_init_op(const unsigned char *pf_fn)
 		pfstart(pf_fn);
 	#endif
 	return 0;
-}
-
 }
