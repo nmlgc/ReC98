@@ -113,15 +113,15 @@ inline uint8_t* tram_jis(uint16_t offset) {
 	return reinterpret_cast<uint8_t *>(MK_FP(SEG_TRAM_JIS, offset));
 }
 
-inline uint16_t* tram_atrb(uint16_t offset) {
-	return reinterpret_cast<uint16_t *>(MK_FP(SEG_TRAM_ATRB, offset));
+inline tram_atrb2* tram_atrb(uint16_t offset) {
+	return reinterpret_cast<tram_atrb2 *>(MK_FP(SEG_TRAM_ATRB, offset));
 }
 
 void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const sshiftjis_t *str)
 {
 	jis_t codepoint;
 	int p = (((y * text_width()) + x) * 2);
-	int hw_atrb = 1;
+	tram_atrb2 hw_atrb = 1;
 
 	if(z_atrb & Z_ATRB_BLUE) {
 		hw_atrb += 0x20;

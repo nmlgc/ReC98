@@ -326,7 +326,7 @@ void pascal near dialog_face_put(
 }
 
 void pascal near dialog_text_put(
-	tram_cell_amount_t line, const shiftjis_t* str, uint16_t atrb, int n
+	tram_cell_amount_t line, const shiftjis_t* str, tram_atrb2 atrb, int n
 )
 {
 	// ZUN landmine: master.lib has text_putnsa() for this purpose, which works

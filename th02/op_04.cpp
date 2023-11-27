@@ -43,7 +43,7 @@ unsigned int score_duration;
 #include "th02/scorelod.c"
 
 // Slightly differs from the same function in MAINE.EXE!
-void pascal near score_put(unsigned y, long score, unsigned atrb)
+void pascal near score_put(unsigned y, long score, tram_atrb2 atrb)
 {
 	unsigned digit = gb_0_;
 	long divisor = 10000000;
@@ -63,7 +63,7 @@ void pascal near score_put(unsigned y, long score, unsigned atrb)
 	}
 }
 
-void pascal near shottype_put(tram_y_t y, int type, int atrb)
+void pascal near shottype_put(tram_y_t y, int type, tram_atrb2 atrb)
 {
 	text_putsa(48, y, SHOTTYPES[type], atrb);
 }
@@ -86,7 +86,7 @@ void int_to_string(char *str, int val, int chars)
 	str[c] = 0;
 }
 
-void pascal near scoredat_date_put(tram_y_t y, int place, int atrb)
+void pascal near scoredat_date_put(tram_y_t y, int place, tram_atrb2 atrb)
 {
 	char str[6];
 	int_to_string(str, hi.score.date[place].da_year, 4);
@@ -101,7 +101,7 @@ void pascal near scoredat_date_put(tram_y_t y, int place, int atrb)
 
 void pascal near scores_put(int place_to_highlight)
 {
-	unsigned atrb = TX_WHITE;
+	tram_atrb2 atrb = TX_WHITE;
 	int i;
 	gaiji_putsa(22, 2, gbHI_SCORE, TX_GREEN);
 	gaiji_putsa(40, 2, gbcRANKS[rank], TX_GREEN);

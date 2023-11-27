@@ -80,6 +80,10 @@ typedef unsigned int utram_y_t;
 
 #define shiftjis_w(literal) \
 	((sizeof(literal) - 1) * GLYPH_HALF_W)
+
+// Text RAM attribute byte. ZUN bloat: Only keep tram_atrb_t.
+typedef uint8_t tram_atrb_t;
+typedef uint16_t tram_atrb2;
 /// ----
 
 /// Graphics

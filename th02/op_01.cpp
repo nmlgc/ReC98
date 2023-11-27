@@ -34,7 +34,7 @@ extern "C" {
 
 #pragma option -d -a2
 
-typedef void pascal near putfunc_t(int sel, unsigned int atrb);
+typedef void pascal near putfunc_t(int sel, tram_atrb2 atrb);
 
 char menu_sel = 0;
 bool in_option = false;
@@ -347,7 +347,7 @@ void pascal near main_put_shadow(void)
 	graph_gaiji_puts(308, 372, 16, gbcRANKS[rank], 0);
 }
 
-void pascal near main_put(int sel, unsigned int atrb)
+void pascal near main_put(int sel, tram_atrb2 atrb)
 {
 	if(sel == 0) {
 		gaiji_putsa(35, 16, gbSTART, atrb);
@@ -474,7 +474,7 @@ void pascal near option_put_shadow(void)
 	graph_gaiji_puts(292, 372, 16, gbQUIT, 0);
 }
 
-void pascal near option_put(int sel, unsigned int atrb)
+void pascal near option_put(int sel, tram_atrb2 atrb)
 {
 	if(sel == 0) {
 		gaiji_putsa(24, 16, gbRANK, atrb);
