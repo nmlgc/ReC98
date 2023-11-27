@@ -6,7 +6,7 @@ void near start_extra(void);
 void near start_demo(void);
 
 void near setup_menu(void);
-void near zunsoft(void);
+void near zunsoft_animate(void);
 
 void near main_cdg_load(void);
 void near main_cdg_free(void);

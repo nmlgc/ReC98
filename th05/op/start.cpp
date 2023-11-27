@@ -15,8 +15,8 @@ extern "C" {
 #include "th04/snd/snd.h"
 #include "th05/formats/pi.hpp"
 #include "th05/op/op.hpp"
-}
 #include "th05/hardware/input.h"
+}
 #include "th04/op/start.hpp"
 
 #define resident_reset_last_highest_and_stage_scores() \

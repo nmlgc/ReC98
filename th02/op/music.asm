@@ -173,7 +173,10 @@ polygons_update_and_render	proc near
 	cmp	polygons_initialized, 0
 	jnz	loc_A752
 	xor	si, si
-	jmp	loc_A746
+	; Hack (jmp	loc_A746)
+	; No idea why TASM can't assemble this properly after TH04's main() was
+	; decompiled.
+	db	0E9h, 91h, 00h
 
 loc_A6B5:
 	call	IRand

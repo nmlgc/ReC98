@@ -1,16 +1,26 @@
 #if (GAME == 5)
+	#include "th05/mem.h"
 	#include "th05/op/start.cpp"
+	#include "th05/shiftjis/fns.hpp"
 #else
+	#include "th03/shiftjis/fnshared.hpp"
+	#include "th04/mem.h"
 	#include "th04/op/start.cpp"
+	#include "th04/shiftjis/fns.hpp"
 #endif
 
+#include <conio.h>
 #include <string.h>
 #include "x86real.h"
 #include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
+extern "C" {
+#include "th02/hardware/frmdelay.h"
+}
 #include "th02/op/menu.hpp"
+#include "th03/core/initexit.h"
 extern "C" {
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
@@ -564,4 +574,102 @@ void near option_update_and_render(void)
 	}
 
 	#undef initialized
+}
+
+void main(void)
+{
+	#undef OP_AND_END_PF_FN
+	#undef MEMORY_INSUFFICIENT
+	extern const unsigned char OP_AND_END_PF_FN[];
+	extern const char MEMORY_INSUFFICIENT[];
+	int idle_frames = 0;
+
+	text_clear();
+	respal_create(); // ZUN bloat: These games don't use resident palettes.
+	mem_assign_paras = MEM_ASSIGN_PARAS_OP;
+	if(game_init_op(OP_AND_END_PF_FN)) {
+		dos_puts2(MEMORY_INSUFFICIENT);
+		getch();
+	}
+
+	#if (GAME == 4)
+		#undef GAIJI_FN
+		extern const char GAIJI_FN[];
+		gaiji_backup();
+		gaiji_entry_bfnt(GAIJI_FN);
+	#endif
+
+	cfg_load();
+	if(resident->rank == RANK_SHOW_SETUP_MENU) {
+		setup_menu();
+		resident->rank = RANK_NORMAL;
+	}
+	snd_redetermine_modes_and_reload_se();
+
+	if(!resident->zunsoft_shown) {
+		zunsoft_animate();
+		resident->zunsoft_shown = true;
+	}
+
+	if((GAME == 5) && resident->demo_num == 5) {
+		resident->demo_num = 0;
+	}
+	if(resident->demo_num == 0) {
+		snd_kaja_func(KAJA_SONG_STOP, 0);
+	}
+	op_animate();
+
+	#if (GAME == 5)
+		main_cdg_load();
+		cleardata_and_regist_view_sprites_load();
+	#else
+		cleardata_and_regist_view_sprites_load();
+		main_cdg_load();
+	#endif
+	in_option = false;
+	quit = false;
+	menu_sel = 0;
+	while(!quit) {
+		input_reset_sense_interface();
+		switch(in_option) {
+		case false:
+			main_update_and_render();
+			if(idle_frames >= 640) {
+				start_demo();
+				#if (GAME == 5)
+					// ZUN bloat: Execution never gets here.
+					idle_frames = 0;
+				#endif
+			}
+			break;
+
+		case true:
+			option_update_and_render();
+			break;
+		}
+
+		if(
+			!key_det ||
+
+			// Holding Left+Right triggers the hidden Extra Stage replay in
+			// start_demo(). Don't reset [idle_frames] for that specific input,
+			// as that function would otherwise never be called.
+			((GAME == 5) && (key_det == (INPUT_LEFT | INPUT_RIGHT)))
+		) {
+			idle_frames++;
+		} else {
+			idle_frames = 0;
+		}
+
+		resident->rand++;
+		frame_delay(1);
+	}
+	main_cdg_free();
+	cfg_save_exit();
+	#if (GAME == 4)
+		gaiji_restore();
+	#endif
+	text_clear();
+	game_exit_to_dos();
+	respal_free(); // ZUN bloat: These games don't use resident palettes.
 }

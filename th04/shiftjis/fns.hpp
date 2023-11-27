@@ -1,5 +1,8 @@
 #define BINARY_OP	"op"
 
+// Packfile loaded during OP.EXE and MAINE.EXE
+#define OP_AND_END_PF_FN	"Œ¶‘z‹½ed.dat"
+
 #define EYECATCH_FN_FORMAT	"eye0.cdg"
 
 #define FACESET_REIMU_FN 	"KAO0.cd2"

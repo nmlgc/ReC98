@@ -25,9 +25,7 @@ include th04/sprites/op_cdg.inc
 include th05/op/music.inc
 include th05/op/piano.inc
 
-	extern _getch:proc
-
-op_01 group OP_MAIN_TEXT, CFG_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
+op_01 group CFG_TEXT, op_01_TEXT, HI_VIEW_TEXT, M_CHAR_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -146,147 +144,10 @@ _TEXT		ends
 
 ; ===========================================================================
 
-OP_MAIN_TEXT segment byte public 'CODE' use16
-	_start_demo procdesc near
-	@main_update_and_render$qv procdesc near
-	@option_update_and_render$qv procdesc near
-OP_MAIN_TEXT ends
-
 ; Segment type:	Pure code
 CFG_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		call	text_clear
-		call	respal_create
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_OP
-		call	@game_init_op$qnxuc c, offset aKaikidan1_dat0, ds
-		or	ax, ax
-		jz	short loc_AF7D
-		push	ds
-		push	offset aNotEnoughMem
-		call	dos_puts2
-		call	_getch
-
-loc_AF7D:
-		call	@cfg_load$qv
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rank], RANK_SHOW_SETUP_MENU
-		jnz	short loc_AF97
-		call	_setup_menu
-		les	bx, _resident
-		mov	es:[bx+resident_t.rank], 1
-
-loc_AF97:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset _SE_FN, SND_LOAD_SE
-		les	bx, _resident
-		cmp	es:[bx+resident_t.zunsoft_shown], 0
-		jnz	short loc_AFD1
-		call	_zunsoft
-		les	bx, _resident
-		mov	es:[bx+resident_t.zunsoft_shown], 1
-
-loc_AFD1:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 5
-		jnz	short loc_AFE1
-		mov	es:[bx+resident_t.demo_num], 0
-
-loc_AFE1:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 0
-		jnz	short loc_AFF4
-		kajacall	KAJA_SONG_STOP
-
-loc_AFF4:
-		call	_op_animate
-		call	_main_cdg_load
-		call	_cleardata_and_regist_view_sprite
-		mov	_in_option, 0
-		mov	_quit, 0
-		mov	_menu_sel, 0
-		jmp	short loc_B058
-; ---------------------------------------------------------------------------
-
-loc_B00E:
-		call	_input_reset_sense_held
-		mov	al, _in_option
-		cbw
-		or	ax, ax
-		jz	short loc_B022
-		cmp	ax, 1
-		jz	short loc_B032
-		jmp	short loc_B035
-; ---------------------------------------------------------------------------
-
-loc_B022:
-		call	@main_update_and_render$qv
-		cmp	si, 640
-		jl	short loc_B035
-		call	_start_demo
-		xor	si, si
-		jmp	short loc_B035
-; ---------------------------------------------------------------------------
-
-loc_B032:
-		call	@option_update_and_render$qv
-
-loc_B035:
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_B043
-		cmp	_key_det, INPUT_LEFT or INPUT_RIGHT
-		jnz	short loc_B046
-
-loc_B043:
-		inc	si
-		jmp	short loc_B048
-; ---------------------------------------------------------------------------
-
-loc_B046:
-		xor	si, si
-
-loc_B048:
-		les	bx, _resident
-		inc	es:[bx+resident_t.rand]
-		push	1
-		call	frame_delay
-
-loc_B058:
-		cmp	_quit, 0
-		jz	short loc_B00E
-		call	_main_cdg_free
-		call	@cfg_save_exit$qv
-		call	text_clear
-		call	@game_exit_to_dos$qv
-		call	respal_free
-		pop	si
-		pop	bp
-		retf
-_main		endp
 
 include th04/setup.asm
 
@@ -521,10 +382,6 @@ _setup_menu proc near
 _setup_menu endp
 
 include th04/zunsoft.asm
-
-	@cfg_load$qv procdesc near
-	@cfg_save$qv procdesc near
-	@cfg_save_exit$qv procdesc near
 CFG_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
@@ -1628,10 +1485,7 @@ M_CHAR_TEXT ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
-	extern SND_DETERMINE_MODES:proc
-	extern @game_exit_to_dos$qv:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
@@ -1656,7 +1510,6 @@ include th04/hardware/grppsafx.asm
 	extern PI_PUT_8:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
-	extern @game_init_op$qnxuc:proc
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
@@ -1669,9 +1522,6 @@ include th04/hardware/grppsafx.asm
 SHARED_	ends
 
 	.data
-
-	extern _menu_sel:byte
-	extern _quit:byte
 
 public _MENU_DESC
 _MENU_DESC		dd aMENU_START		; "ゲームを開始します"
@@ -1734,12 +1584,13 @@ aMENU_START_EASY	db 'ゲームを開始します（イージー）',0
 aMENU_START_NORMAL	db 'ゲームを開始します（ノーマル）',0
 aMENU_START_HARD	db 'ゲームを開始します（ハード）',0
 aMENU_START_LUNATIC		db 'ゲームを開始します（ルナティック）',0
-public _MENU_MAIN_BG_FN, _SE_FN, _BGM_MENU_MAIN_FN
+public _MENU_MAIN_BG_FN, _SE_FN, _BGM_MENU_MAIN_FN, _OP_AND_END_PF_FN
+public _MEMORY_INSUFFICIENT
 _MENU_MAIN_BG_FN	db 'op1.pi',0
 _SE_FN	db 'miko',0
 _BGM_MENU_MAIN_FN	db 'op',0
-aKaikidan1_dat0	db '怪綺談1.dat',0
-aNotEnoughMem	db 0Ah
+_OP_AND_END_PF_FN	db '怪綺談1.dat',0
+_MEMORY_INSUFFICIENT	db 0Ah
 		db '空きメモリ不足です。メモリ空きを増やしてから実行してね',0Ah,0
 		db    0
 include libs/master.lib/atrtcmod[data].asm
@@ -2340,7 +2191,6 @@ aOp_1		db 'op',0
 	.data?
 
 	extern _resident:dword
-	extern _in_option:byte
 
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
