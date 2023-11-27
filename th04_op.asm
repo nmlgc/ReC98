@@ -158,11 +158,8 @@ OP_MAIN_TEXT segment byte public 'CODE' use16
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
 	_start_demo procdesc near
-	@OPTION_UNPUT_AND_PUT$QIUI procdesc pascal near \
-		sel:word, col:word
-	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
-		max:byte, direction:byte
 	@main_update_and_render$qv procdesc near
+	@option_update_and_render$qv procdesc near
 OP_MAIN_TEXT ends
 
 ; Segment type:	Pure code
@@ -170,325 +167,6 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:op_01
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public OPTION_UPDATE_AND_RENDER
-option_update_and_render	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_option_initialized, 0
-		jnz	short loc_B0A2
-		mov	_option_input_allowed, 0
-		call	@egc_copy_rect_1_to_0_16$qiiii pascal, (272 shl 16) or 224, (160 shl 16) or 144
-		xor	si, si
-		jmp	short loc_B08D
-; ---------------------------------------------------------------------------
-
-loc_B077:
-		push	si
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, si
-		jnz	short loc_B085
-		mov	ax, 8
-		jmp	short loc_B088
-; ---------------------------------------------------------------------------
-
-loc_B085:
-		mov	ax, 1
-
-loc_B088:
-		push	ax
-		call	@option_unput_and_put$qiui
-		inc	si
-
-loc_B08D:
-		cmp	si, 8
-		jl	short loc_B077
-		mov	_menu_unput_and_put, offset @option_unput_and_put$qiui
-		mov	_option_initialized, 1
-		mov	_option_input_allowed, 0
-
-loc_B0A2:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_B0AE
-		mov	_option_input_allowed, 1
-
-loc_B0AE:
-		cmp	_option_input_allowed, 0
-		jz	loc_B35B
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B0C5
-		call	@menu_sel_update_and_render$qcc pascal, 7, -1
-
-loc_B0C5:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B0D3
-		call	@menu_sel_update_and_render$qcc pascal, 7, 1
-
-loc_B0D3:
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B0E3
-		test	_key_det.lo, low INPUT_SHOT
-		jz	loc_B16F
-
-loc_B0E3:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 6
-		jz	short loc_B0F4
-		cmp	ax, 7
-		jz	short loc_B14F
-		jmp	loc_B178
-; ---------------------------------------------------------------------------
-
-loc_B0F4:
-		les	bx, _resident
-		mov	es:[bx+resident_t.rank], RANK_NORMAL
-		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
-		mov	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_DEFAULT
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
-		mov	es:[bx+resident_t.se_mode], SND_SE_FM
-		mov	es:[bx+resident_t.turbo_mode], 1
-		kajacall	KAJA_SONG_STOP
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		mov	_option_initialized, 0
-		jmp	short loc_B16F
-; ---------------------------------------------------------------------------
-
-loc_B14F:
-		call	_snd_se_reset
-		call	snd_se_play pascal, 11
-		call	_snd_se_update
-		mov	_option_initialized, 0
-		mov	_menu_sel, 4
-		mov	_in_option, 0
-
-loc_B16F:
-		test	_key_det.lo, low INPUT_RIGHT
-		jz	loc_B250
-
-loc_B178:
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	loc_B246
-		add	bx, bx
-		jmp	cs:off_B36B[bx]
-
-loc_B18C:
-		les	bx, _resident
-		inc	es:[bx+resident_t.rank]
-		cmp	es:[bx+resident_t.rank], RANK_LUNATIC
-		jbe	loc_B246
-		mov	es:[bx+resident_t.rank], RANK_EASY
-		jmp	loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B1A5:
-		les	bx, _resident
-		inc	es:[bx+resident_t.cfg_lives]
-		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
-		jbe	loc_B246
-		mov	es:[bx+resident_t.cfg_lives], 1
-		jmp	loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B1BE:
-		les	bx, _resident
-		inc	es:[bx+resident_t.cfg_bombs]
-		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
-		jbe	short loc_B246
-		mov	es:[bx+resident_t.cfg_bombs], 0
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B1D4:
-		les	bx, _resident
-		inc	es:[bx+resident_t.bgm_mode]
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_MODE_COUNT
-		jb	short loc_B1E8
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-
-loc_B1E8:
-		kajacall	KAJA_SONG_STOP
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B21C:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
-		jnz	short loc_B22E
-		mov	es:[bx+resident_t.se_mode], SND_SE_BEEP
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B22E:
-		les	bx, _resident
-		dec	es:[bx+resident_t.se_mode]
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B238:
-		les	bx, _resident
-		mov	al, 1
-		sub	al, es:[bx+resident_t.turbo_mode]
-		mov	es:[bx+resident_t.turbo_mode], al
-
-loc_B246:
-		mov	al, _menu_sel
-		cbw
-		call	@option_unput_and_put$qiui pascal, ax, 8
-
-loc_B250:
-		test	_key_det.lo, low INPUT_LEFT
-		jz	loc_B339
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	loc_B32F
-		add	bx, bx
-		jmp	cs:off_B35F[bx]
-
-loc_B26D:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rank], RANK_EASY
-		jnz	short loc_B27D
-		mov	es:[bx+resident_t.rank], RANK_EXTRA
-
-loc_B27D:
-		les	bx, _resident
-		dec	es:[bx+resident_t.rank]
-		jmp	loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B288:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_lives], 1
-		jnz	short loc_B298
-		mov	es:[bx+resident_t.cfg_lives], (CFG_LIVES_MAX + 1)
-
-loc_B298:
-		les	bx, _resident
-		dec	es:[bx+resident_t.cfg_lives]
-		jmp	loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B2A3:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_bombs], 0
-		jnz	short loc_B2B3
-		mov	es:[bx+resident_t.cfg_bombs], (CFG_BOMBS_MAX + 1)
-
-loc_B2B3:
-		les	bx, _resident
-		dec	es:[bx+resident_t.cfg_bombs]
-		jmp	short loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B2BD:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		jnz	short loc_B2CF
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
-		jmp	short loc_B2D7
-; ---------------------------------------------------------------------------
-
-loc_B2CF:
-		les	bx, _resident
-		dec	es:[bx+resident_t.bgm_mode]
-
-loc_B2D7:
-		kajacall	KAJA_SONG_STOP
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		jmp	short loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B30B:
-		les	bx, _resident
-		inc	es:[bx+resident_t.se_mode]
-		cmp	es:[bx+resident_t.se_mode], SND_SE_MODE_COUNT
-		jb	short loc_B32F
-		mov	es:[bx+resident_t.se_mode], SND_SE_OFF
-		jmp	short loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B321:
-		les	bx, _resident
-		mov	al, 1
-		sub	al, es:[bx+resident_t.turbo_mode]
-		mov	es:[bx+resident_t.turbo_mode], al
-
-loc_B32F:
-		mov	al, _menu_sel
-		cbw
-		call	@option_unput_and_put$qiui pascal, ax, 8
-
-loc_B339:
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_B34F
-		mov	_option_initialized, 0
-		mov	_menu_sel, 4
-		mov	_in_option, 0
-
-loc_B34F:
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_B35B
-		mov	_option_input_allowed, 0
-
-loc_B35B:
-		pop	si
-		pop	bp
-		retn
-option_update_and_render	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_B35F	dw offset loc_B26D
-		dw offset loc_B288
-		dw offset loc_B2A3
-		dw offset loc_B2BD
-		dw offset loc_B30B
-		dw offset loc_B321
-off_B36B	dw offset loc_B18C
-		dw offset loc_B1A5
-		dw offset loc_B1BE
-		dw offset loc_B1D4
-		dw offset loc_B21C
-		dw offset loc_B238
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -539,7 +217,7 @@ loc_B3D3:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
+		call	snd_load pascal, ds, offset _SE_FN, SND_LOAD_SE
 		les	bx, _resident
 		cmp	es:[bx+resident_t.zunsoft_shown], 0
 		jnz	short loc_B40D
@@ -583,7 +261,7 @@ loc_B44E:
 ; ---------------------------------------------------------------------------
 
 loc_B45C:
-		call	option_update_and_render
+		call	@option_update_and_render$qv
 
 loc_B45F:
 		cmp	_key_det, INPUT_NONE
@@ -1943,7 +1621,6 @@ include th04/hardware/grppsafx.asm
 	extern @game_init_op$qnxuc:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
-	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern @EGC_COPY_RECT_1_TO_0_16$QIIII:proc
@@ -1991,7 +1668,7 @@ _MENU_DESC label dword
 		dd aGqbGav_2		; "ゲームを開始します（ハード）"
 		dd aGqbGav_3		; "ゲームを開始します（ルナティック）"
 
-public _main_menu_initialized
+public _main_menu_initialized, _option_initialized
 _main_menu_initialized	db 0
 _option_initialized	db 0
 
@@ -2025,14 +1702,15 @@ aGqbGav_0	db 'ゲームを開始します（イージー）',0
 aGqbGav_1	db 'ゲームを開始します（ノーマル）',0
 aGqbGav_2	db 'ゲームを開始します（ハード）',0
 aGqbGav_3	db 'ゲームを開始します（ルナティック）',0
-public _MENU_MAIN_BG_FN
+public _MENU_MAIN_BG_FN, _BGM_MENU_MAIN_FN
 _MENU_MAIN_BG_FN	db 'op1.pi',0
-aOp		db 'op',0
+_BGM_MENU_MAIN_FN	db 'op',0
 aMSzlEd_dat	db '幻想郷ed.dat',0
 asc_F7F7	db 0Ah
 		db '空きメモリ不足です。メモリ空きを増やしてから実行してね',0Ah,0
 aGameft_bft	db 'GAMEFT.bft',0
-aMiko		db 'miko',0
+public _SE_FN
+_SE_FN	db 'miko',0
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
@@ -2196,9 +1874,6 @@ aOp1_pi_1	db 'op1.pi',0
 
 	extern _resident:dword
 	extern _in_option:byte
-	extern _menu_unput_and_put:word
-
-_option_input_allowed = byte ptr $-1 ; place in padding area of previous segment
 
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
