@@ -1,3 +1,5 @@
+include th04/hardware/grppsafx.inc
+
 public GRAPH_PUTSA_FX
 graph_putsa_fx	proc far
 

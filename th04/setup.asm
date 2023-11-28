@@ -1,3 +1,5 @@
+include th04/snd/snd.inc
+
 WINDOW_BORDER_W = 8
 WINDOW_BORDER_H = 8
 WINDOW_TILE_W = 16

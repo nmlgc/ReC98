@@ -11,6 +11,10 @@ include th03/formats/cdg.inc
 include th02/score.inc
 include th02/v_colors.inc
 
+SND_BGM_OFF = 0
+SND_BGM_FM = 1
+SND_BGM_MIDI = 2
+
 KM_KEY_KEY = 0
 KM_JOY_KEY = 1
 KM_KEY_JOY = 2
