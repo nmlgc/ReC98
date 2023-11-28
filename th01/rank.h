@@ -14,7 +14,12 @@ typedef enum {
 	#endif
 
 	RANK_COUNT,
-	RANK_DEFAULT = -1,
+
+	#if (GAME >= 4)
+		// Triggering the first-launch setup menu via a special rank value...
+		// Definitely unique.
+		RANK_SHOW_SETUP_MENU = 0xFF,
+	#endif
 
 	_rank_t_FORCE_INT16 = 0x7FFF
 } rank_t;

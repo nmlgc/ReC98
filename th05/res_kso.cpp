@@ -17,7 +17,7 @@
 
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {
-	RANK_DEFAULT, CFG_LIVES_DEFAULT, CFG_BOMBS_DEFAULT,
+	RANK_SHOW_SETUP_MENU, CFG_LIVES_DEFAULT, CFG_BOMBS_DEFAULT,
 	SND_BGM_FM26, SND_SE_FM, true
 };
 
@@ -34,7 +34,7 @@ recreate:
 			return 1;
 		}
 		file_write(&opts, sizeof(opts));
-		resident->rank = RANK_DEFAULT;
+		resident->rank = RANK_SHOW_SETUP_MENU;
 		resident->cfg_lives = CFG_LIVES_DEFAULT;
 		resident->cfg_bombs = CFG_BOMBS_DEFAULT;
 		resident->bgm_mode = SND_BGM_FM26;

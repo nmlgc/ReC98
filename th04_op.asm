@@ -1068,7 +1068,7 @@ loc_B3AB:
 		call	gaiji_entry_bfnt
 		call	@cfg_load$qv
 		les	bx, _resident
-		cmp	es:[bx+resident_t.rank], RANK_DEFAULT
+		cmp	es:[bx+resident_t.rank], RANK_SHOW_SETUP_MENU
 		jnz	short loc_B3D3
 		call	_setup_menu
 		les	bx, _resident

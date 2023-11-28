@@ -1082,7 +1082,7 @@ _envp		= dword	ptr  0Ch
 loc_AF7D:
 		call	@cfg_load$qv
 		les	bx, _resident
-		cmp	es:[bx+resident_t.rank], RANK_DEFAULT
+		cmp	es:[bx+resident_t.rank], RANK_SHOW_SETUP_MENU
 		jnz	short loc_AF97
 		call	_setup_menu
 		les	bx, _resident
