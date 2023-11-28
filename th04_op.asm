@@ -24,7 +24,7 @@ include th04/hardware/grppsafx.inc
 include th04/op/music.inc
 include th04/sprites/op_cdg.inc
 
-op_01 group OP_01_TEXT
+op_01 group OP_SETUP_TEXT
 
 ; ===========================================================================
 
@@ -60,7 +60,7 @@ _TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_01_TEXT	segment	byte public 'CODE' use16
+OP_SETUP_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -1366,7 +1366,7 @@ loc_CF4E:
 _op_animate	endp
 
 	_playchar_menu procdesc near
-op_01_TEXT	ends
+OP_SETUP_TEXT ends
 
 ; ===========================================================================
 

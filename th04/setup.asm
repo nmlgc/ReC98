@@ -1,5 +1,15 @@
 include th04/snd/snd.inc
 
+MSWIN_INSIDE = 0
+MSWIN_MIDDLE_TOP = 1
+MSWIN_MIDDLE_LEFT = 2
+MSWIN_MIDDLE_BOTTOM = 3
+MSWIN_MIDDLE_RIGHT = 4
+MSWIN_LEFT_TOP = 5
+MSWIN_LEFT_BOTTOM = 6
+MSWIN_RIGHT_BOTTOM = 7
+MSWIN_RIGHT_TOP = 8
+
 WINDOW_BORDER_W = 8
 WINDOW_BORDER_H = 8
 WINDOW_TILE_W = 16
@@ -24,11 +34,11 @@ window_dropdown_row	proc near
 	push	ax
 	push	WINDOW_TILE_H
 	call	@egc_copy_rect_1_to_0_16$qiiii
-	call	super_put pascal, si, di, 2
+	call	super_put pascal, si, di, MSWIN_MIDDLE_LEFT
 	push	si
 	lea	ax, [di+WINDOW_BORDER_H]
 	push	ax
-	push	6
+	push	MSWIN_LEFT_BOTTOM
 	call	super_put
 	add	si, WINDOW_TILE_W
 	mov	[bp+@@tile_x], 1
@@ -36,11 +46,11 @@ window_dropdown_row	proc near
 ; ---------------------------------------------------------------------------
 
 @@tile_x_loop:
-	call	super_put pascal, si, di, 0
+	call	super_put pascal, si, di, MSWIN_INSIDE
 	push	si
 	lea	ax, [di+WINDOW_BORDER_H]
 	push	ax
-	push	3
+	push	MSWIN_MIDDLE_BOTTOM
 	call	super_put
 	inc	[bp+@@tile_x]
 	add	si, WINDOW_TILE_W
@@ -50,11 +60,11 @@ window_dropdown_row	proc near
 	dec	ax
 	cmp	ax, [bp+@@tile_x]
 	jg	short @@tile_x_loop
-	call	super_put pascal, si, di, 4
+	call	super_put pascal, si, di, MSWIN_MIDDLE_RIGHT
 	push	si
 	lea	ax, [di+WINDOW_BORDER_H]
 	push	ax
-	push	7
+	push	MSWIN_RIGHT_BOTTOM
 	call	super_put
 	pop	di
 	pop	si
@@ -82,14 +92,14 @@ window_rollup_row	proc near
 	push	ax
 	push	WINDOW_TILE_H
 	call	@egc_copy_rect_1_to_0_16$qiiii
-	call	super_put pascal, si, di, 6
+	call	super_put pascal, si, di, MSWIN_LEFT_BOTTOM
 	add	si, WINDOW_TILE_W
 	mov	[bp+@@tile_x], 1
 	jmp	short @@tile_x_more?
 ; ---------------------------------------------------------------------------
 
 @@tile_x_loop:
-	call	super_put pascal, si, di, 3
+	call	super_put pascal, si, di, MSWIN_MIDDLE_BOTTOM
 	inc	[bp+@@tile_x]
 	add	si, WINDOW_TILE_W
 
@@ -98,7 +108,7 @@ window_rollup_row	proc near
 	dec	ax
 	cmp	ax, [bp+@@tile_x]
 	jg	short @@tile_x_loop
-	call	super_put pascal, si, di, 7
+	call	super_put pascal, si, di, MSWIN_RIGHT_BOTTOM
 	pop	di
 	pop	si
 	leave
@@ -119,14 +129,14 @@ window_dropdown_animate	proc near
 	mov	ax, [bp+@@left_x]
 	mov	[bp+@@x], ax
 	mov	si, [bp+@@top_y]
-	call	super_put pascal, ax, si, 5
+	call	super_put pascal, ax, si, MSWIN_LEFT_TOP
 	add	[bp+@@x], WINDOW_TILE_W
 	mov	di, 1
 	jmp	short @@top_more?
 ; ---------------------------------------------------------------------------
 
 @@top_loop:
-	call	super_put pascal, [bp+@@x], si, 1
+	call	super_put pascal, [bp+@@x], si, MSWIN_MIDDLE_TOP
 	inc	di
 	add	[bp+@@x], WINDOW_TILE_W
 
@@ -135,7 +145,7 @@ window_dropdown_animate	proc near
 	dec	ax
 	cmp	ax, di
 	jg	short @@top_loop
-	call	super_put pascal, [bp+@@x], si, 8
+	call	super_put pascal, [bp+@@x], si, MSWIN_RIGHT_TOP
 	add	si, WINDOW_TILE_H
 	mov	di, 1
 	jmp	short @@row_more?
@@ -179,11 +189,11 @@ window_singleline	proc near
 	push	ax
 	push	WINDOW_BORDER_H + WINDOW_TILE_H + WINDOW_BORDER_H
 	call	@egc_copy_rect_1_to_0_16$qiiii
-	call	super_put pascal, si, di, 5
+	call	super_put pascal, si, di, MSWIN_LEFT_TOP
 	push	si
 	lea	ax, [di+WINDOW_TILE_H]
 	push	ax
-	push	6
+	push	MSWIN_LEFT_BOTTOM
 	call	super_put
 	add	si, WINDOW_TILE_W
 	mov	[bp+@@tile_x], 1
@@ -191,11 +201,11 @@ window_singleline	proc near
 ; ---------------------------------------------------------------------------
 
 @@tile_x_loop:
-	call	super_put pascal, si, di, 1
+	call	super_put pascal, si, di, MSWIN_MIDDLE_TOP
 	push	si
 	lea	ax, [di+WINDOW_TILE_H]
 	push	ax
-	push	3
+	push	MSWIN_MIDDLE_BOTTOM
 	call	super_put
 	inc	[bp+@@tile_x]
 	add	si, WINDOW_TILE_W
@@ -205,11 +215,11 @@ window_singleline	proc near
 	dec	ax
 	cmp	ax, [bp+@@tile_x]
 	jg	short @@tile_x_loop
-	call	super_put pascal, si, di, 8
+	call	super_put pascal, si, di, MSWIN_RIGHT_TOP
 	push	si
 	lea	ax, [di+WINDOW_TILE_H]
 	push	ax
-	push	7
+	push	MSWIN_RIGHT_BOTTOM
 	call	super_put
 	pop	di
 	pop	si

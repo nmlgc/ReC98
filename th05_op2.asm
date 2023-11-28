@@ -118,6 +118,9 @@ include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
 _TEXT	ends
 
+OP_SETUP_TEXT segment byte public 'CODE' use16
+OP_SETUP_TEXT ends
+
 CFG_TEXT segment byte public 'CODE' use16
 CFG_TEXT ends
 

@@ -5,6 +5,7 @@ GAME = 4
 
 include ReC98.inc
 
+op_01 group OP_SETUP_TEXT, op_01_TEXT
 g_SHARED group SHARED, SHARED_
 
 _TEXT	segment	word public 'CODE' use16
@@ -124,6 +125,9 @@ include libs/master.lib/bgm_stop_sound.asm
 include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_gaiji_putc.asm
 _TEXT	ends
+
+OP_SETUP_TEXT segment byte public 'CODE' use16
+OP_SETUP_TEXT ends
 
 op_01_TEXT	segment	byte public 'CODE' use16
 op_01_TEXT	ends
