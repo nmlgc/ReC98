@@ -16,6 +16,8 @@
 		.386
 		.model use16 large _TEXT
 
+BINARY = 'M'
+
 include ReC98.inc
 include th01/math/subpixel.inc
 include th02/th02.inc

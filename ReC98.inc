@@ -32,9 +32,11 @@ setfarfp macro farfp, func
 	mov word ptr farfp, offset func
 endm
 
-; See decomp.hpp
-public _address_0
-_address_0 = 0
+ifdef BINARY
+	; See decomp.hpp
+	public _address_0
+	_address_0 = 0
+endif
 
 ; master.lib extensions
 ; ---------------------
