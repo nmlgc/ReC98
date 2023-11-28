@@ -10485,10 +10485,7 @@ BOSS_BG_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
-		assume cs:g_SHARED
-		;org 0Dh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
+include th02/snd/snd.inc
 	extern VECTOR2:proc
 	extern FRAME_DELAY:proc
 	extern MPN_FREE:proc

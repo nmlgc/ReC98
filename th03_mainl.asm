@@ -2658,6 +2658,7 @@ mainl_03_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
+include th02/snd/snd.inc
 	extern _snd_determine_mode:proc
 	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc

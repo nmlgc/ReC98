@@ -1462,6 +1462,7 @@ op_01_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
+include th02/snd/snd.inc
 	extern FRAME_DELAY:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc

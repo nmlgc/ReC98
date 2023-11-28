@@ -1489,6 +1489,8 @@ SHARED	segment	word public 'CODE' use16
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+include th02/snd/snd.inc
+
 		assume cs:g_SHARED
 		; org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing

@@ -6320,6 +6320,8 @@ SHARED_	segment	word public 'CODE' use16
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+include th02/snd/snd.inc
+
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc

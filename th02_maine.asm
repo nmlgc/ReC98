@@ -2924,6 +2924,7 @@ maine_01_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
+include th02/snd/snd.inc
 	extern _graph_putsa_fx:proc
 	extern _key_delay:proc
 	extern _pi_load:proc

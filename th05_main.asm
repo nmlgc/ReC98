@@ -7252,6 +7252,7 @@ SHARED	segment	word public 'CODE' use16
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+include th02/snd/snd.inc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc

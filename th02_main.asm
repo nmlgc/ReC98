@@ -6466,6 +6466,7 @@ main_01____TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
+include th02/snd/snd.inc
 	extern @ZUN_ERROR$Q11ZUN_ERROR_T:proc
 	extern _key_delay:proc
 	extern MPN_LOAD:proc
