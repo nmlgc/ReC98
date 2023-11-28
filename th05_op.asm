@@ -21,6 +21,7 @@ BINARY = 'O'
 include ReC98.inc
 include th05/th05.inc
 include th04/hardware/grppsafx.inc
+include th04/sprites/op_cdg.inc
 include th05/op/music.inc
 include th05/op/piano.inc
 
@@ -185,7 +186,7 @@ arg_2		= word ptr  6
 		jmp	cs:off_A70B[bx]
 
 loc_A634:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 250, 10
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 250, CDG_MAIN_GAME
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
@@ -203,31 +204,31 @@ loc_A658:
 
 loc_A665:
 		push	(272 shl 16) or 270
-		push	11
+		push	CDG_MAIN_EXTRA
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A66F:
 		push	(272 shl 16) or 290
-		push	12
+		push	CDG_MAIN_REGIST_VIEW
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A679:
 		push	(272 shl 16) or 310
-		push	13
+		push	CDG_MAIN_MUSICROOM
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A683:
 		push	(272 shl 16) or 330
-		push	14
+		push	CDG_MAIN_OPTION
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A68D:
 		push	(272 shl 16) or 350
-		push	15
+		push	CDG_QUIT
 
 loc_A695:
 		call	cdg_put_nocolors_8
@@ -236,8 +237,8 @@ loc_A69A:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A705
-		call	cdg_put_8 pascal, 256, di, 35
-		call	cdg_put_8 pascal, 352, di, 36
+		call	cdg_put_8 pascal, 256, di, CDG_CURSOR_LEFT
+		call	cdg_put_8 pascal, 352, di, CDG_CURSOR_RIGHT
 		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	bx, [bp+var_2]
@@ -303,12 +304,12 @@ loc_A737:
 		jmp	cs:off_A958[bx]
 
 loc_A764:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 250, 16
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 250, CDG_OPTION_LABEL_RANK
 		push	(320 shl 16) or 250
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
-		add	ax, 21
+		add	ax, CDG_OPTION_VALUE_RANK
 		push	ax
 		call	cdg_put_nocolors_8
 		les	bx, _resident
@@ -322,7 +323,7 @@ loc_A797:
 ; ---------------------------------------------------------------------------
 
 loc_A79C:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 266, 17
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 266, CDG_OPTION_LABEL_LIVES
 		push	(320 shl 16) or 266
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.cfg_lives]
@@ -334,7 +335,7 @@ loc_A79C:
 ; ---------------------------------------------------------------------------
 
 loc_A7C5:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 282, 18
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 282, CDG_OPTION_LABEL_BOMBS
 		push	(320 shl 16) or 282
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.cfg_bombs]
@@ -346,11 +347,11 @@ loc_A7C5:
 ; ---------------------------------------------------------------------------
 
 loc_A7EE:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 298, 19
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 298, CDG_OPTION_LABEL_BGM
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jnz	short loc_A80B
-		mov	ax, 1Ch
+		mov	ax, CDG_OPTION_VALUE_OFF
 		jmp	short loc_A818
 ; ---------------------------------------------------------------------------
 
@@ -358,7 +359,7 @@ loc_A80B:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
-		add	ax, 18h
+		add	ax, (CDG_OPTION_VALUE_BGM - SND_BGM_FM26)
 
 loc_A818:
 		mov	[bp+var_2], ax
@@ -371,11 +372,11 @@ loc_A818:
 ; ---------------------------------------------------------------------------
 
 loc_A837:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 314, 20
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 314, CDG_OPTION_LABEL_SE
 		les	bx, _resident
 		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
 		jnz	short loc_A854
-		mov	ax, 1Ch
+		mov	ax, CDG_OPTION_VALUE_OFF
 		jmp	short loc_A865
 ; ---------------------------------------------------------------------------
 
@@ -386,7 +387,7 @@ loc_A858:
 		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
-		mov	ax, 1Fh
+		mov	ax, (CDG_OPTION_VALUE_SE_FM + SND_SE_FM)
 		pop	dx
 		sub	ax, dx
 
@@ -405,7 +406,7 @@ loc_A884:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.turbo_mode]
 		mov	ah, 0
-		mov	dx, 33
+		mov	dx, CDG_OPTION_SLOW
 		sub	dx, ax
 		push	dx
 		call	cdg_put_nocolors_8
@@ -418,14 +419,14 @@ loc_A884:
 ; ---------------------------------------------------------------------------
 
 loc_A8B2:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 346, 31
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 346, CDG_OPTION_RESET
 		mov	di, 256
 		mov	si, 14h
 		jmp	short loc_A8DA
 ; ---------------------------------------------------------------------------
 
 loc_A8C7:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 366, 15
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 366, CDG_QUIT
 		mov	di, 256
 		mov	si, 15h
 
@@ -433,7 +434,7 @@ loc_A8DA:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A951
-		call	cdg_put_8 pascal, di, [bp+@@y], 35
+		call	cdg_put_8 pascal, di, [bp+@@y], CDG_CURSOR_LEFT
 		cmp	di, 256
 		jnz	short loc_A8FD
 		lea	ax, [di+96]
@@ -446,7 +447,7 @@ loc_A8FD:
 
 loc_A900:
 		push	[bp+@@y]
-		push	36
+		push	CDG_CURSOR_RIGHT
 		call	cdg_put_8
 		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
@@ -1431,9 +1432,9 @@ public _main_cdg_load
 _main_cdg_load	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_load_all pascal, 0, ds, offset aSft1_cd2
-		call	cdg_load_all pascal, 10, ds, offset aSft2_cd2
-		call	cdg_load_all pascal, 35, ds, offset aCar_cd2
+		call	cdg_load_all pascal, CDG_NUMERAL, ds, offset aSft1_cd2
+		call	cdg_load_all pascal, CDG_MAIN, ds, offset aSft2_cd2
+		call	cdg_load_all pascal, CDG_CURSOR, ds, offset aCar_cd2
 		call	cdg_load_single_noalpha pascal, 40, ds, offset aSl00_cdg, 0
 		call	cdg_load_single_noalpha pascal, 41, ds, offset aSl01_cdg, 0
 		call	cdg_load_single_noalpha pascal, 42, ds, offset aSl02_cdg, 0

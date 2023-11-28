@@ -22,6 +22,7 @@ include ReC98.inc
 include th04/th04.inc
 include th04/hardware/grppsafx.inc
 include th04/op/music.inc
+include th04/sprites/op_cdg.inc
 
 	extern _execl:proc
 	extern _getch:proc
@@ -196,7 +197,7 @@ arg_2		= word ptr  6
 		jmp	cs:off_ABCB[bx]
 
 loc_AAF3:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 224, 10
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 224, CDG_MAIN_GAME
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
@@ -212,31 +213,31 @@ loc_AB12:
 
 loc_AB24:
 		push	(272 shl 16) or 244
-		push	11
+		push	CDG_MAIN_EXTRA
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB2E:
 		push	(272 shl 16) or 264
-		push	12
+		push	CDG_MAIN_REGIST_VIEW
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB38:
 		push	(272 shl 16) or 284
-		push	13
+		push	CDG_MAIN_MUSICROOM
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB42:
 		push	(272 shl 16) or 304
-		push	14
+		push	CDG_MAIN_OPTION
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB4C:
 		push	(272 shl 16) or 324
-		push	15
+		push	CDG_QUIT
 
 loc_AB54:
 		call	cdg_put_nocolors_8
@@ -245,8 +246,8 @@ loc_AB59:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 8
 		jnz	short loc_ABC4
-		call	cdg_put_8 pascal, 256, di, 35
-		call	cdg_put_8 pascal, 352, di, 36
+		call	cdg_put_8 pascal, 256, di, CDG_CURSOR_LEFT
+		call	cdg_put_8 pascal, 352, di, CDG_CURSOR_RIGHT
 		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	bx, [bp+var_2]
@@ -315,12 +316,12 @@ loc_AC08:
 		jmp	cs:off_AE18[bx]
 
 loc_AC24:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 224, 16
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 224, CDG_OPTION_LABEL_RANK
 		push	(320 shl 16) or 224
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
-		add	ax, 21
+		add	ax, CDG_OPTION_VALUE_RANK
 		push	ax
 		call	cdg_put_nocolors_8
 		les	bx, _resident
@@ -334,7 +335,7 @@ loc_AC57:
 ; ---------------------------------------------------------------------------
 
 loc_AC5C:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 240, 17
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 240, CDG_OPTION_LABEL_LIVES
 		push	(320 shl 16) or 240
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.cfg_lives]
@@ -346,7 +347,7 @@ loc_AC5C:
 ; ---------------------------------------------------------------------------
 
 loc_AC85:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 256, 18
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 256, CDG_OPTION_LABEL_BOMBS
 		push	(320 shl 16) or 256
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.cfg_bombs]
@@ -358,11 +359,11 @@ loc_AC85:
 ; ---------------------------------------------------------------------------
 
 loc_ACAE:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 272, 19
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 272, CDG_OPTION_LABEL_BGM
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jnz	short loc_ACCB
-		mov	ax, 1Ch
+		mov	ax, CDG_OPTION_VALUE_OFF
 		jmp	short loc_ACD8
 ; ---------------------------------------------------------------------------
 
@@ -370,7 +371,7 @@ loc_ACCB:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
-		add	ax, 18h
+		add	ax, (CDG_OPTION_VALUE_BGM - SND_BGM_FM26)
 
 loc_ACD8:
 		mov	[bp+var_2], ax
@@ -383,11 +384,11 @@ loc_ACD8:
 ; ---------------------------------------------------------------------------
 
 loc_ACF7:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 288, 20
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 288, CDG_OPTION_LABEL_SE
 		les	bx, _resident
 		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
 		jnz	short loc_AD14
-		mov	ax, 1Ch
+		mov	ax, CDG_OPTION_VALUE_OFF
 		jmp	short loc_AD25
 ; ---------------------------------------------------------------------------
 
@@ -396,7 +397,7 @@ loc_AD14:
 		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
-		mov	ax, 1Fh
+		mov	ax, (CDG_OPTION_VALUE_SE_FM + SND_SE_FM)
 		pop	dx
 		sub	ax, dx
 
@@ -415,7 +416,7 @@ loc_AD44:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.turbo_mode]
 		mov	ah, 0
-		mov	dx, 33
+		mov	dx, CDG_OPTION_SLOW
 		sub	dx, ax
 		push	dx
 		call	cdg_put_nocolors_8
@@ -428,14 +429,14 @@ loc_AD44:
 ; ---------------------------------------------------------------------------
 
 loc_AD72:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 320, 31
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 320, CDG_OPTION_RESET
 		mov	di, 256
 		mov	si, 14h
 		jmp	short loc_AD9A
 ; ---------------------------------------------------------------------------
 
 loc_AD87:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 340, 15
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 340, CDG_QUIT
 		mov	di, 256
 		mov	si, 15h
 
@@ -443,7 +444,7 @@ loc_AD9A:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 8
 		jnz	short loc_AE11
-		call	cdg_put_8 pascal, di, [bp+@@y], 35
+		call	cdg_put_8 pascal, di, [bp+@@y], CDG_CURSOR_LEFT
 		cmp	di, 256
 		jnz	short loc_ADBD
 		lea	ax, [di+96]
@@ -456,7 +457,7 @@ loc_ADBD:
 
 loc_ADC0:
 		push	[bp+@@y]
-		push	36
+		push	CDG_CURSOR_RIGHT
 		call	cdg_put_8
 		call	@egc_copy_rect_1_to_0_16$qiiii pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
@@ -2238,9 +2239,9 @@ public _main_cdg_load
 _main_cdg_load	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_load_all pascal,  0, ds, offset aSft1_cd2
-		call	cdg_load_all pascal, 10, ds, offset aSft2_cd2
-		call	cdg_load_all pascal, 35, ds, offset aCar_cd2
+		call	cdg_load_all pascal, CDG_NUMERAL, ds, offset aSft1_cd2
+		call	cdg_load_all pascal, CDG_MAIN, ds, offset aSft2_cd2
+		call	cdg_load_all pascal, CDG_CURSOR, ds, offset aCar_cd2
 		call	cdg_load_all_noalpha pascal, 40, ds, offset aSl_cd2
 		pop	bp
 		retn

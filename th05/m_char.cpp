@@ -10,7 +10,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th01/rank.h"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
@@ -18,10 +17,10 @@ extern "C" {
 #include "th04/score.h"
 #include "th04/common.h"
 #include "th05/playchar.h"
+#include "th04/snd/snd.h"
+#include "th04/sprites/op_cdg.h"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
-#include "th05/sprites/op_cdg.h"
-#include "th05/snd/snd.h"
 #include "th05/hardware/input.h"
 #include "th05/formats/pi.hpp"
 
