@@ -80,7 +80,7 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	window_singleline pascal, (96 shl 16) or 80
+		call	@singleline$qii pascal, (96 shl 16) or 80
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_BGM_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
@@ -180,7 +180,7 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	window_singleline pascal, (96 shl 16) or 80
+		call	@singleline$qii pascal, (96 shl 16) or 80
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_SE_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
@@ -1428,7 +1428,6 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
-	extern @EGC_COPY_RECT_1_TO_0_16$QIIII:proc
 SHARED	ends
 
 	.data
