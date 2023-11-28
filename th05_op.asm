@@ -2016,7 +2016,7 @@ aOp_1		db 'op',0
 	; th02/hardware/input_sense[bss].asm
 	extern _key_det:word
 
-include th04/setup[bss].asm
+	extern _window_tiles:Point
 include th04/zunsoft[bss].asm
 		db 104 dup(?)
 include th02/op/music[bss].asm
