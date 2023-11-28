@@ -1,53 +1,13 @@
 include th04/snd/snd.inc
 
-	@WINDOW_ROLLUP_PUT$QII procdesc pascal near \
-		left:word, bottom_tile_top:word
 	@DROPDOWN$QII procdesc pascal near \
 		topleft:dword
 	@SINGLELINE$QII procdesc pascal near \
 		topleft:dword
+	@ROLLUP$QII procdesc pascal near \
+		topleft:dword
 
-WINDOW_BORDER_H = 8
 WINDOW_TILE_W = 16
-WINDOW_TILE_H = 16
-
-
-public WINDOW_ROLLUP_ANIMATE
-window_rollup_animate	proc near
-
-@@top_y 	= word ptr  4
-@@left_x	= word ptr  6
-
-	push	bp
-	mov	bp, sp
-	push	si
-	push	di
-	mov	si, [bp+@@top_y]
-	mov	ax, _window_tiles.y
-	shl	ax, 4
-	add	ax, -WINDOW_TILE_H
-	add	si, ax
-	mov	di, 1
-	jmp	short @@row_more?
-; ---------------------------------------------------------------------------
-
-@@row_loop:
-	call	@window_rollup_put$qii pascal, [bp+@@left_x], si
-	call	frame_delay pascal, 1
-	inc	di
-	sub	si, WINDOW_BORDER_H
-
-@@row_more?:
-	mov	ax, _window_tiles.y
-	add	ax, ax
-	add	ax, -2
-	cmp	ax, di
-	jg	short @@row_loop
-	pop	di
-	pop	si
-	pop	bp
-	retn	4
-window_rollup_animate	endp
 
 
 SETUP_LINE_H = 16

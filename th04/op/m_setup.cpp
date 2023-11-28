@@ -41,6 +41,9 @@ struct {
 	pixel_t pixel_w(void) const {
 		return (w * MSWIN_W);
 	}
+	pixel_t pixel_h(void) const {
+		return (h * MSWIN_H);
+	}
 } window;
 
 // Blits ([DROP_SPEED] + [MSWIN_H]) pixels in the Y direction.
@@ -111,4 +114,18 @@ void pascal near singleline(screen_x_t left, screen_y_t top)
 	}
 	super_put(left, (top + (0 * MSWIN_H)), MSWIN_RIGHT_TOP);
 	super_put(left, (top + (1 * MSWIN_H)), MSWIN_RIGHT_BOTTOM);
+}
+
+void pascal near rollup(screen_x_t left, screen_y_t top)
+{
+	screen_y_t bottom_tile_top = top;
+	bottom_tile_top += (window.pixel_h() - MSWIN_H);
+
+	mswin_tile_amount_t i = 1;
+	while(i < ((window.h * DROP_FRAMES_PER_TILE) - DROP_FRAMES_PER_TILE)) {
+		window_rollup_put(left, bottom_tile_top);
+		frame_delay(1);
+		i++;
+		bottom_tile_top -= DROP_SPEED;
+	}
 }

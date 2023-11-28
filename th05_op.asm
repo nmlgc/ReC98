@@ -158,10 +158,10 @@ loc_B448:
 loc_B452:
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
-		call	window_rollup_animate pascal, (192 shl 16) or 128
+		call	@rollup$qii pascal, (192 shl 16) or 128
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
-		call	window_rollup_animate pascal, ( 32 shl 16) or 128
+		call	@rollup$qii pascal, ( 32 shl 16) or 128
 		les	bx, _resident
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+resident_t.bgm_mode], al
@@ -258,10 +258,10 @@ loc_B565:
 loc_B56F:
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
-		call	window_rollup_animate pascal, (192 shl 16) or 128
+		call	@rollup$qii pascal, (192 shl 16) or 128
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
-		call	window_rollup_animate pascal, ( 32 shl 16) or 128
+		call	@rollup$qii pascal, ( 32 shl 16) or 128
 		les	bx, _resident
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+resident_t.se_mode], al
