@@ -1,9 +1,9 @@
 include th04/snd/snd.inc
 
-	@WINDOW_DROPDOWN_PUT$QII procdesc pascal near \
-		left:word, bottom_tile_top:word
 	@WINDOW_ROLLUP_PUT$QII procdesc pascal near \
 		left:word, bottom_tile_top:word
+	@DROPDOWN$QII procdesc pascal near \
+		topleft:dword
 
 MSWIN_MIDDLE_TOP = 1
 MSWIN_MIDDLE_BOTTOM = 3
@@ -15,60 +15,6 @@ MSWIN_RIGHT_TOP = 8
 WINDOW_BORDER_H = 8
 WINDOW_TILE_W = 16
 WINDOW_TILE_H = 16
-
-
-public WINDOW_DROPDOWN_ANIMATE
-window_dropdown_animate	proc near
-
-@@x     	= word ptr -2
-@@top_y 	= word ptr  4
-@@left_x	= word ptr  6
-
-	enter	2, 0
-	push	si
-	push	di
-	mov	ax, [bp+@@left_x]
-	mov	[bp+@@x], ax
-	mov	si, [bp+@@top_y]
-	call	super_put pascal, ax, si, MSWIN_LEFT_TOP
-	add	[bp+@@x], WINDOW_TILE_W
-	mov	di, 1
-	jmp	short @@top_more?
-; ---------------------------------------------------------------------------
-
-@@top_loop:
-	call	super_put pascal, [bp+@@x], si, MSWIN_MIDDLE_TOP
-	inc	di
-	add	[bp+@@x], WINDOW_TILE_W
-
-@@top_more?:
-	mov	ax, _window_tiles.x
-	dec	ax
-	cmp	ax, di
-	jg	short @@top_loop
-	call	super_put pascal, [bp+@@x], si, MSWIN_RIGHT_TOP
-	add	si, WINDOW_TILE_H
-	mov	di, 1
-	jmp	short @@row_more?
-; ---------------------------------------------------------------------------
-
-@@row_loop:
-	call	@window_dropdown_put$qii pascal, [bp+@@left_x], si
-	call	frame_delay pascal, 1
-	inc	di
-	add	si, WINDOW_BORDER_H
-
-@@row_more?:
-	mov	ax, _window_tiles.y
-	add	ax, ax
-	add	ax, -3
-	cmp	ax, di
-	jg	short @@row_loop
-	pop	di
-	pop	si
-	leave
-	retn	4
-window_dropdown_animate	endp
 
 
 public WINDOW_SINGLELINE

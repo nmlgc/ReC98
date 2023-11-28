@@ -84,7 +84,7 @@ var_2		= word ptr -2
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_BGM_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
-		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
+		call	@dropdown$qii pascal, ( 32 shl 16) or 128
 		mov	[bp+var_2], 0
 		jmp	short loc_B3C3
 ; ---------------------------------------------------------------------------
@@ -110,7 +110,7 @@ loc_B3C3:
 		jl	short loc_B3AC
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
-		call	window_dropdown_animate pascal, (192 shl 16) or 128
+		call	@dropdown$qii pascal, (192 shl 16) or 128
 		call	setup_bgm_help_put
 		mov	[bp+var_2], 2
 
@@ -184,7 +184,7 @@ var_2		= word ptr -2
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_SE_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
-		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
+		call	@dropdown$qii pascal, ( 32 shl 16) or 128
 		mov	[bp+var_2], 0
 		jmp	short loc_B4E0
 ; ---------------------------------------------------------------------------
@@ -210,7 +210,7 @@ loc_B4E0:
 		jl	short loc_B4C9
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
-		call	window_dropdown_animate pascal, (192 shl 16) or 128
+		call	@dropdown$qii pascal, (192 shl 16) or 128
 		call	setup_se_help_put
 		mov	[bp+var_2], 1
 

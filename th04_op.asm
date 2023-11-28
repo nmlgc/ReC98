@@ -81,7 +81,7 @@ var_2		= word ptr -2
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_BGM_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
-		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
+		call	@dropdown$qii pascal, ( 32 shl 16) or 128
 		mov	[bp+var_2], 0
 		jmp	short loc_B7EB
 ; ---------------------------------------------------------------------------
@@ -107,7 +107,7 @@ loc_B7EB:
 		jl	short loc_B7D4
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
-		call	window_dropdown_animate pascal, (192 shl 16) or 128
+		call	@dropdown$qii pascal, (192 shl 16) or 128
 		call	setup_bgm_help_put
 		mov	[bp+var_2], 2
 
@@ -181,7 +181,7 @@ var_2		= word ptr -2
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_SE_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
-		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
+		call	@dropdown$qii pascal, ( 32 shl 16) or 128
 		mov	[bp+var_2], 0
 		jmp	short loc_B908
 ; ---------------------------------------------------------------------------
@@ -207,7 +207,7 @@ loc_B908:
 		jl	short loc_B8F1
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
-		call	window_dropdown_animate pascal, (192 shl 16) or 128
+		call	@dropdown$qii pascal, (192 shl 16) or 128
 		call	setup_se_help_put
 		mov	[bp+var_2], 1
 
@@ -850,7 +850,11 @@ arg_0		= word ptr  4
 		push	ax
 		call	hiscore_stage_put
 		push	(600 shl 16) or 96
-		jmp	loc_CA0A
+
+		; Hack (jmp	loc_CA0A)
+		; No idea why TASM can't assemble this properly after
+		; dropdown() was decompiled.
+		db	0E9h, 81h, 00h
 ; ---------------------------------------------------------------------------
 
 loc_C989:

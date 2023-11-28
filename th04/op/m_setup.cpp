@@ -2,6 +2,9 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/hardware/egc.h"
+extern "C" {
+#include "th02/hardware/frmdelay.h"
+}
 
 // MSWIN.BFT sprites
 enum setup_window_patnum_t {
@@ -24,6 +27,7 @@ static const pixel_t MSWIN_W = 16;
 static const pixel_t MSWIN_H = 16;
 
 static const pixel_t DROP_SPEED = (MSWIN_H / 2);
+static const int DROP_FRAMES_PER_TILE = (MSWIN_H / DROP_SPEED);
 // -----------
 
 typedef int mswin_tile_amount_t;
@@ -69,4 +73,27 @@ void pascal near window_rollup_put(screen_x_t left, screen_y_t bottom_tile_top)
 		super_put(left, bottom_tile_top, MSWIN_MIDDLE_BOTTOM);
 	}
 	super_put(left, bottom_tile_top, MSWIN_RIGHT_BOTTOM);
+}
+
+void pascal near dropdown(screen_x_t left, screen_y_t top_)
+{
+	mswin_tile_amount_t i;
+	screen_x_t tile_left = left;
+	screen_y_t top = top_; // ZUN bloat
+
+	super_put(tile_left, top, MSWIN_LEFT_TOP);
+	tile_left += MSWIN_W;
+	for(i = 1; i < (window.w - 1); (i++, tile_left += MSWIN_W)) {
+		super_put(tile_left, top, MSWIN_MIDDLE_TOP);
+	}
+	super_put(tile_left, top, MSWIN_RIGHT_TOP);
+
+	top += MSWIN_H;
+	i = 1;
+	while(i < ((window.h * DROP_FRAMES_PER_TILE) - DROP_FRAMES_PER_TILE - 1)) {
+		window_dropdown_put(left, top);
+		frame_delay(1);
+		i++;
+		top += DROP_SPEED;
+	}
 }
