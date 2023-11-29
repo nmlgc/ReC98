@@ -1,4 +1,3 @@
-extern unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
 extern bool extra_unlocked;
 
 void near start_game(void);
