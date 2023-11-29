@@ -1,4 +1,5 @@
 static const int HELP_LINES = 9;
+static const pixel_t HELP_W = (46 * GLYPH_HALF_W);
 
 shiftjis_t* BGM_HELP[HELP_LINES] = {
 	"ステレオＦＭ音源：PC-9801-86(互換)ボード　　　",
@@ -30,6 +31,11 @@ shiftjis_t* SE_HELP[HELP_LINES] = {
 
 #define SE_CHOICE_FM  	"　　ＦＭ音源　　"
 #define SE_CHOICE_BEEP	"　Ｂｅｅｐ音源　"
-#define SE_CHOICE_OFF 	"　 効果音無し 　\0" SETUP_BGM_CAPTION
+#define SE_CHOICE_OFF 	"　 効果音無し 　"
 
+// ZUN bloat: Why not centered? That's why we have to hardcode the length for
+// those as well, even though we could infer it.
 #define SETUP_BGM_CAPTION	"　　　　　使用する音源を選択して下さいね☆"
+#define SETUP_SE_CAPTION 	"　　　　効果音に使用する音源を選択してね☆\0mswin.bft\0ms.pi"
+
+static const pixel_t CAPTION_W = (52 * GLYPH_HALF_W);

@@ -73,206 +73,6 @@ include th04/setup.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B36C	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	@singleline$qii pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_BGM_HEAD
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@dropdown$qii pascal, ( 32 shl 16) or 128
-		mov	[bp+var_2], 0
-		jmp	short loc_B3C3
-; ---------------------------------------------------------------------------
-
-loc_B3AC:
-		push	[bp+var_2]
-		cmp	[bp+var_2], 2
-		jnz	short loc_B3BA
-		mov	ax, V_WHITE
-		jmp	short loc_B3BC
-; ---------------------------------------------------------------------------
-
-loc_B3BA:
-		xor	ax, ax
-
-loc_B3BC:
-		push	ax
-		call	@bgm_choice_put$qiui
-		inc	[bp+var_2]
-
-loc_B3C3:
-		cmp	[bp+var_2], 3
-		jl	short loc_B3AC
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@dropdown$qii pascal, (192 shl 16) or 128
-		call	@bgm_help_put$qv
-		mov	[bp+var_2], 2
-
-loc_B3E6:
-		call	input_wait_for_change pascal, 0
-		push	1
-		call	frame_delay
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B452
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_B452
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B429
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 2
-		jnz	short loc_B41E
-		mov	[bp+var_2], 0
-		jmp	short loc_B421
-; ---------------------------------------------------------------------------
-
-loc_B41E:
-		inc	[bp+var_2]
-
-loc_B421:
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], V_WHITE
-
-loc_B429:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B3E6
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 0
-		jnz	short loc_B445
-		mov	[bp+var_2], 2
-		jmp	short loc_B448
-; ---------------------------------------------------------------------------
-
-loc_B445:
-		dec	[bp+var_2]
-
-loc_B448:
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], V_WHITE
-		jmp	short loc_B3E6
-; ---------------------------------------------------------------------------
-
-loc_B452:
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@rollup$qii pascal, (192 shl 16) or 128
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@rollup$qii pascal, ( 32 shl 16) or 128
-		les	bx, _resident
-		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+resident_t.bgm_mode], al
-		leave
-		retn
-sub_B36C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B489	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	@singleline$qii pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_SE_HEAD
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@dropdown$qii pascal, ( 32 shl 16) or 128
-		mov	[bp+var_2], 0
-		jmp	short loc_B4E0
-; ---------------------------------------------------------------------------
-
-loc_B4C9:
-		push	[bp+var_2]
-		cmp	[bp+var_2], 1
-		jnz	short loc_B4D7
-		mov	ax, V_WHITE
-		jmp	short loc_B4D9
-; ---------------------------------------------------------------------------
-
-loc_B4D7:
-		xor	ax, ax
-
-loc_B4D9:
-		push	ax
-		call	@se_choice_put$qiui
-		inc	[bp+var_2]
-
-loc_B4E0:
-		cmp	[bp+var_2], 3
-		jl	short loc_B4C9
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@dropdown$qii pascal, (192 shl 16) or 128
-		call	@se_help_put$qv
-		mov	[bp+var_2], 1
-
-loc_B503:
-		call	input_wait_for_change pascal, 0
-		push	1
-		call	frame_delay
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B56F
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_B56F
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B546
-		call	@se_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 2
-		jnz	short loc_B53B
-		mov	[bp+var_2], 0
-		jmp	short loc_B53E
-; ---------------------------------------------------------------------------
-
-loc_B53B:
-		inc	[bp+var_2]
-
-loc_B53E:
-		call	@se_choice_put$qiui pascal, [bp+var_2], V_WHITE
-
-loc_B546:
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B503
-		call	@se_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 0
-		jnz	short loc_B562
-		mov	[bp+var_2], 2
-		jmp	short loc_B565
-; ---------------------------------------------------------------------------
-
-loc_B562:
-		dec	[bp+var_2]
-
-loc_B565:
-		call	@se_choice_put$qiui pascal, [bp+var_2], V_WHITE
-		jmp	short loc_B503
-; ---------------------------------------------------------------------------
-
-loc_B56F:
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@rollup$qii pascal, (192 shl 16) or 128
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@rollup$qii pascal, ( 32 shl 16) or 128
-		les	bx, _resident
-		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+resident_t.se_mode], al
-		leave
-		retn
-sub_B489	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public _setup_menu
 _setup_menu proc near
 		push	bp
@@ -288,11 +88,11 @@ _setup_menu proc near
 		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
-		call	sub_B36C
+		call	@setup_bgm_menu$qv
 		push	1
 		call	frame_delay
 		call	graph_copy_page pascal, 0
-		call	sub_B489
+		call	@setup_se_menu$qv
 		push	1
 		call	palette_black_out
 		call	super_free
@@ -1421,7 +1221,6 @@ include th02/snd/snd.inc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
 	extern _input_reset_sense_held:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern FRAME_DELAY:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
@@ -2015,7 +1814,6 @@ aOp_1		db 'op',0
 	; th02/hardware/input_sense[bss].asm
 	extern _key_det:word
 
-	extern _window_tiles:Point
 include th04/zunsoft[bss].asm
 		db 104 dup(?)
 include th02/op/music[bss].asm

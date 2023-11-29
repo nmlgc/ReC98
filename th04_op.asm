@@ -70,206 +70,6 @@ include th04/setup.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B794	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	@singleline$qii pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_BGM_HEAD
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@dropdown$qii pascal, ( 32 shl 16) or 128
-		mov	[bp+var_2], 0
-		jmp	short loc_B7EB
-; ---------------------------------------------------------------------------
-
-loc_B7D4:
-		push	[bp+var_2]
-		cmp	[bp+var_2], 2
-		jnz	short loc_B7E2
-		mov	ax, V_WHITE
-		jmp	short loc_B7E4
-; ---------------------------------------------------------------------------
-
-loc_B7E2:
-		xor	ax, ax
-
-loc_B7E4:
-		push	ax
-		call	@bgm_choice_put$qiui
-		inc	[bp+var_2]
-
-loc_B7EB:
-		cmp	[bp+var_2], 3
-		jl	short loc_B7D4
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@dropdown$qii pascal, (192 shl 16) or 128
-		call	@bgm_help_put$qv
-		mov	[bp+var_2], 2
-
-loc_B80E:
-		call	input_wait_for_change pascal, 0
-		push	1
-		call	frame_delay
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B87A
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_B87A
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B851
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 2
-		jnz	short loc_B846
-		mov	[bp+var_2], 0
-		jmp	short loc_B849
-; ---------------------------------------------------------------------------
-
-loc_B846:
-		inc	[bp+var_2]
-
-loc_B849:
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], V_WHITE
-
-loc_B851:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B80E
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 0
-		jnz	short loc_B86D
-		mov	[bp+var_2], 2
-		jmp	short loc_B870
-; ---------------------------------------------------------------------------
-
-loc_B86D:
-		dec	[bp+var_2]
-
-loc_B870:
-		call	@bgm_choice_put$qiui pascal, [bp+var_2], V_WHITE
-		jmp	short loc_B80E
-; ---------------------------------------------------------------------------
-
-loc_B87A:
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@rollup$qii pascal, (192 shl 16) or 128
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@rollup$qii pascal, ( 32 shl 16) or 128
-		les	bx, _resident
-		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+resident_t.bgm_mode], al
-		leave
-		retn
-sub_B794	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B8B1	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	@singleline$qii pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_SE_HEAD
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@dropdown$qii pascal, ( 32 shl 16) or 128
-		mov	[bp+var_2], 0
-		jmp	short loc_B908
-; ---------------------------------------------------------------------------
-
-loc_B8F1:
-		push	[bp+var_2]
-		cmp	[bp+var_2], 1
-		jnz	short loc_B8FF
-		mov	ax, V_WHITE
-		jmp	short loc_B901
-; ---------------------------------------------------------------------------
-
-loc_B8FF:
-		xor	ax, ax
-
-loc_B901:
-		push	ax
-		call	@se_choice_put$qiui
-		inc	[bp+var_2]
-
-loc_B908:
-		cmp	[bp+var_2], 3
-		jl	short loc_B8F1
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@dropdown$qii pascal, (192 shl 16) or 128
-		call	@se_help_put$qv
-		mov	[bp+var_2], 1
-
-loc_B92B:
-		call	input_wait_for_change pascal, 0
-		push	1
-		call	frame_delay
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B997
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_B997
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B96E
-		call	@se_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 2
-		jnz	short loc_B963
-		mov	[bp+var_2], 0
-		jmp	short loc_B966
-; ---------------------------------------------------------------------------
-
-loc_B963:
-		inc	[bp+var_2]
-
-loc_B966:
-		call	@se_choice_put$qiui pascal, [bp+var_2], V_WHITE
-
-loc_B96E:
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B92B
-		call	@se_choice_put$qiui pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 0
-		jnz	short loc_B98A
-		mov	[bp+var_2], 2
-		jmp	short loc_B98D
-; ---------------------------------------------------------------------------
-
-loc_B98A:
-		dec	[bp+var_2]
-
-loc_B98D:
-		call	@se_choice_put$qiui pascal, [bp+var_2], V_WHITE
-		jmp	short loc_B92B
-; ---------------------------------------------------------------------------
-
-loc_B997:
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	@rollup$qii pascal, (192 shl 16) or 128
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	@rollup$qii pascal, ( 32 shl 16) or 128
-		les	bx, _resident
-		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+resident_t.se_mode], al
-		leave
-		retn
-sub_B8B1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public _setup_menu
 _setup_menu proc near
 		push	bp
@@ -285,11 +85,11 @@ _setup_menu proc near
 		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
-		call	sub_B794
+		call	@setup_bgm_menu$qv
 		push	1
 		call	frame_delay
 		call	graph_copy_page pascal, 0
-		call	sub_B8B1
+		call	@setup_se_menu$qv
 		push	1
 		call	palette_black_out
 		call	super_free
@@ -1380,7 +1180,6 @@ include th02/snd/snd.inc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern PI_LOAD:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
@@ -1555,7 +1354,6 @@ aOp1_pi_1	db 'op1.pi',0
 	; th02/hardware/input_sense[bss].asm
 	extern _key_det:word
 
-	extern _window_tiles:Point
 include th04/zunsoft[bss].asm
 		db 56 dup(?)
 include th02/op/music[bss].asm
