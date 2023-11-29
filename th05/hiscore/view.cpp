@@ -2,7 +2,6 @@ extern "C" {
 #include "platform.h"
 #include "master.hpp"
 #include "th01/rank.h"
-#include "th04/common.h"
 #include "th04/formats/scoredat.h"
 #include "th05/playchar.h"
 #include "th05/resident.hpp"

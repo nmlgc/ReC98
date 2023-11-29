@@ -7,7 +7,6 @@
 #include "th04/main/frames.h"
 #include "th04/main/demo.hpp"
 #if (GAME == 5)
-	#include "th04/common.h"
 	#include "th05/mem.h"
 	#include "th05/resident.hpp"
 #else

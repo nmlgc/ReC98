@@ -6,7 +6,6 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-#include "th04/common.h"
 #include "th04/score.h"
 #include "th01/math/subpixel.hpp"
 #include "th02/v_colors.hpp"

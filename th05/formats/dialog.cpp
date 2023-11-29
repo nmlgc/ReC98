@@ -4,7 +4,6 @@
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
-#include "th04/common.h"
 #include "th04/score.h"
 #include "th04/main/stage/stage.hpp"
 #include "th05/playchar.h"

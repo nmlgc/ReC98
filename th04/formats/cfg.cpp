@@ -9,7 +9,6 @@
 #include "master.hpp"
 #include "th04/score.h"
 #if (GAME == 5)
-	#include "th04/common.h"
 	#include "th05/resident.hpp"
 #else
 	#include "th04/resident.hpp"

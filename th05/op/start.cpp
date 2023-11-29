@@ -5,7 +5,6 @@
 #include "libs/kaja/kaja.h"
 #include "th01/rank.h"
 #include "th02/core/initexit.h"
-#include "th04/common.h"
 #include "th04/score.h"
 #include "th04/end/end.h"
 #include "th05/playchar.h"

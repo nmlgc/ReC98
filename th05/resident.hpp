@@ -1,3 +1,5 @@
+#include "th04/common.h"
+
 #define RES_ID "KSOConfig"
 typedef struct {
 	char id[sizeof(RES_ID)];

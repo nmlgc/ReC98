@@ -15,7 +15,6 @@ extern "C" {
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"
 #include "th04/score.h"
-#include "th04/common.h"
 #include "th05/playchar.h"
 #include "th04/snd/snd.h"
 #include "th04/sprites/op_cdg.h"
