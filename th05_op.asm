@@ -68,38 +68,6 @@ CFG_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/setup.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _setup_menu
-_setup_menu proc near
-		push	bp
-		mov	bp, sp
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	super_entry_bfnt pascal, ds, offset aMswin_bft ; "mswin.bft"
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aMs_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
-		call	graph_copy_page pascal, 0
-		push	1
-		call	palette_black_in
-		call	@setup_bgm_menu$qv
-		push	1
-		call	frame_delay
-		call	graph_copy_page pascal, 0
-		call	@setup_se_menu$qv
-		push	1
-		call	palette_black_out
-		call	super_free
-		pop	bp
-		retn
-_setup_menu endp
-
 include th04/zunsoft.asm
 CFG_TEXT ends
 
@@ -1244,7 +1212,6 @@ SHARED	ends
 	; th05/hardware/vram_planes[data].asm
 	extern _VRAM_PLANE_B:dword
 
-include th04/setup[data].asm
 include th04/zunsoft[data].asm
 include th05/formats/cfg[data].asm
 		db 0

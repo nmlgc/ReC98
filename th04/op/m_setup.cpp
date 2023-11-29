@@ -1,5 +1,7 @@
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
@@ -10,12 +12,15 @@ extern "C" {
 #include "th04/score.h"
 #if (GAME == 5)
 	#include "th05/resident.hpp"
+	#include "th05/formats/pi.hpp"
 #else
 	#include "th04/resident.hpp"
+	#include "th03/formats/pi.hpp"
 #endif
 #include "th04/hardware/grppsafx.h"
 #include "th04/hardware/input.h"
 #include "th04/snd/snd.h"
+#include "th04/op/op.hpp"
 }
 #include "th04/shiftjis/m_setup.hpp"
 
@@ -310,4 +315,23 @@ void near setup_se_menu(void)
 		INPUT_DOWN
 	);
 	resident->se_mode = sel;
+}
+
+void near setup_menu(void)
+{
+	palette_black();
+	super_entry_bfnt("mswin.bft");
+	graph_accesspage(1);
+	pi_load_put_8_free(0, "ms.pi");
+	graph_copy_page(0);
+	palette_black_in(1);
+
+	setup_bgm_menu();
+	frame_delay(1); // ZUN quirk: Already done after every rollup frame.
+
+	graph_copy_page(0);
+	setup_se_menu();
+	palette_black_out(1);
+
+	super_free();
 }

@@ -36,6 +36,6 @@ shiftjis_t* SE_HELP[HELP_LINES] = {
 // ZUN bloat: Why not centered? That's why we have to hardcode the length for
 // those as well, even though we could infer it.
 #define SETUP_BGM_CAPTION	"　　　　　使用する音源を選択して下さいね☆"
-#define SETUP_SE_CAPTION 	"　　　　効果音に使用する音源を選択してね☆\0mswin.bft\0ms.pi"
+#define SETUP_SE_CAPTION 	"　　　　効果音に使用する音源を選択してね☆"
 
 static const pixel_t CAPTION_W = (52 * GLYPH_HALF_W);
