@@ -102,7 +102,7 @@ loc_B3BA:
 
 loc_B3BC:
 		push	ax
-		call	setup_bgm_choice_put
+		call	@bgm_choice_put$qiui
 		inc	[bp+var_2]
 
 loc_B3C3:
@@ -111,7 +111,7 @@ loc_B3C3:
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
 		call	@dropdown$qii pascal, (192 shl 16) or 128
-		call	setup_bgm_help_put
+		call	@bgm_help_put$qv
 		mov	[bp+var_2], 2
 
 loc_B3E6:
@@ -124,7 +124,7 @@ loc_B3E6:
 		jnz	short loc_B452
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B429
-		call	setup_bgm_choice_put pascal, [bp+var_2], 0
+		call	@bgm_choice_put$qiui pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 2
 		jnz	short loc_B41E
 		mov	[bp+var_2], 0
@@ -135,12 +135,12 @@ loc_B41E:
 		inc	[bp+var_2]
 
 loc_B421:
-		call	setup_bgm_choice_put pascal, [bp+var_2], V_WHITE
+		call	@bgm_choice_put$qiui pascal, [bp+var_2], V_WHITE
 
 loc_B429:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B3E6
-		call	setup_bgm_choice_put pascal, [bp+var_2], 0
+		call	@bgm_choice_put$qiui pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 0
 		jnz	short loc_B445
 		mov	[bp+var_2], 2
@@ -151,7 +151,7 @@ loc_B445:
 		dec	[bp+var_2]
 
 loc_B448:
-		call	setup_bgm_choice_put pascal, [bp+var_2], V_WHITE
+		call	@bgm_choice_put$qiui pascal, [bp+var_2], V_WHITE
 		jmp	short loc_B3E6
 ; ---------------------------------------------------------------------------
 
@@ -202,7 +202,7 @@ loc_B4D7:
 
 loc_B4D9:
 		push	ax
-		call	setup_se_choice_put
+		call	@se_choice_put$qiui
 		inc	[bp+var_2]
 
 loc_B4E0:
@@ -211,7 +211,7 @@ loc_B4E0:
 		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 9
 		call	@dropdown$qii pascal, (192 shl 16) or 128
-		call	setup_se_help_put
+		call	@se_help_put$qv
 		mov	[bp+var_2], 1
 
 loc_B503:
@@ -224,7 +224,7 @@ loc_B503:
 		jnz	short loc_B56F
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B546
-		call	setup_se_choice_put pascal, [bp+var_2], 0
+		call	@se_choice_put$qiui pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 2
 		jnz	short loc_B53B
 		mov	[bp+var_2], 0
@@ -235,12 +235,12 @@ loc_B53B:
 		inc	[bp+var_2]
 
 loc_B53E:
-		call	setup_se_choice_put pascal, [bp+var_2], V_WHITE
+		call	@se_choice_put$qiui pascal, [bp+var_2], V_WHITE
 
 loc_B546:
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B503
-		call	setup_se_choice_put pascal, [bp+var_2], 0
+		call	@se_choice_put$qiui pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 0
 		jnz	short loc_B562
 		mov	[bp+var_2], 2
@@ -251,7 +251,7 @@ loc_B562:
 		dec	[bp+var_2]
 
 loc_B565:
-		call	setup_se_choice_put pascal, [bp+var_2], V_WHITE
+		call	@se_choice_put$qiui pascal, [bp+var_2], V_WHITE
 		jmp	short loc_B503
 ; ---------------------------------------------------------------------------
 
