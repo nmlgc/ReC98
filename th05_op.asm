@@ -76,149 +76,6 @@ op_01_TEXT segment byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _op_animate
-_op_animate	proc near
-
-@@page_show  	= byte ptr -2
-@@page_access	= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	pi_load pascal, 0, ds, offset aOp2a_pi
-		call	pi_load pascal, 1, ds, offset aOp2b_pi
-		call	pi_load pascal, 2, ds, offset aOp2c_pi
-		call	pi_load pascal, 3, ds, offset aOp2d_pi
-		call	pi_load pascal, 4, ds, offset aOp2e_pi
-		call	pi_load pascal, 5, ds, offset aOp2f_pi
-		call	pi_load pascal, 6, ds, offset aOp2g_pi
-		call	pi_load pascal, 7, ds, offset aOp2h_pi
-		graph_accesspage 0
-		graph_showpage al
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		graph_accesspage 1
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		graph_accesspage 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		GRCG_OFF_CLOBBERING dx
-		call	graph_copy_page pascal, 1
-		mov	[bp+@@page_access], 1
-		mov	[bp+@@page_show], 0
-		graph_accesspage 0
-		graph_showpage al
-		xor	si, si
-		jmp	short loc_BDAD
-; ---------------------------------------------------------------------------
-
-loc_BD55:
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jg	short loc_BD81
-		mov	ax, si
-		cwd
-		idiv	bx
-		call	pi_palette_apply pascal, ax
-		pushd	(0 shl 16) or 278
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		push	ax
-		call	pi_put_8
-
-loc_BD81:
-		push	1
-		call	frame_delay
-		graph_accesspage [bp+@@page_access]
-		graph_showpage [bp+@@page_show]
-		mov	[bp+@@page_access], al
-		mov	al, 1
-		sub	al, [bp+@@page_show]
-		mov	[bp+@@page_show], al
-		lea	ax, [si+36]
-		mov	PaletteTone, ax
-		call	far ptr	palette_show
-		inc	si
-
-loc_BDAD:
-		cmp	si, 40h
-		jl	short loc_BD55
-		mov	si, 1
-		jmp	short loc_BDBE
-; ---------------------------------------------------------------------------
-
-loc_BDB7:
-		call	pi_free pascal, si
-		inc	si
-
-loc_BDBE:
-		cmp	si, 8
-		jl	short loc_BDB7
-		call	graph_copy_page pascal, 1
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 0
-		jnz	short loc_BDE8
-		call	snd_load pascal, ds, offset aOp_0, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-
-loc_BDE8:
-		call	pi_load pascal, 0, ds, offset aOp1_pi_0
-		graph_accesspage 0
-		graph_showpage al
-		push	16
-		call	frame_delay
-		xor	si, si
-		jmp	short loc_BE46
-; ---------------------------------------------------------------------------
-
-loc_BE08:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jg	short loc_BE25
-		pushd	0
-		push	0
-		mov	ax, si
-		cwd
-		idiv	bx
-		push	ax
-		call	pi_put_masked_8
-
-loc_BE25:
-		push	1
-		call	frame_delay
-		graph_accesspage [bp+@@page_access]
-		graph_showpage [bp+@@page_show]
-		mov	[bp+@@page_access], al
-		mov	al, 1
-		sub	al, [bp+@@page_show]
-		mov	[bp+@@page_show], al
-		inc	si
-
-loc_BE46:
-		cmp	si, 10h
-		jl	short loc_BE08
-		graph_accesspage 1
-		graph_showpage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
-		call	graph_copy_page pascal, 0
-		pop	si
-		leave
-		retn
-_op_animate	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public DRAW_TRACK
 draw_track	proc near
 
@@ -1149,7 +1006,6 @@ include th02/snd/snd.inc
 	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern PI_PUT_MASKED_8:proc
 	extern PI_LOAD:proc
 	extern PI_PUT_8:proc
 	extern PI_PALETTE_APPLY:proc
@@ -1177,16 +1033,6 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-aOp2a_pi	db 'op2a.pi',0
-aOp2b_pi	db 'op2b.pi',0
-aOp2c_pi	db 'op2c.pi',0
-aOp2d_pi	db 'op2d.pi',0
-aOp2e_pi	db 'op2e.pi',0
-aOp2f_pi	db 'op2f.pi',0
-aOp2g_pi	db 'op2g.pi',0
-aOp2h_pi	db 'op2h.pi',0
-aOp_0		db 'op',0
-aOp1_pi_0	db 'op1.pi',0
 MUSICROOM_UP	dd aMUSICROOM_UP
 					; "		------ Å£ ------       "
 MUSICROOM_DOWN	dd aMUSICROOM_DOWN

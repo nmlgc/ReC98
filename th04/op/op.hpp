@@ -10,7 +10,10 @@ void near zunsoft_animate(void);
 void near main_cdg_load(void);
 void near main_cdg_free(void);
 
+// Returns with the title image blitted to both VRAM pages, page 1 accessed,
+// and page 0 shown.
 void near op_animate(void);
+
 void near musicroom(void);
 
 void near regist_view_menu(void);
