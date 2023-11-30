@@ -25,7 +25,7 @@ include th04/sprites/op_cdg.inc
 include th05/op/music.inc
 include th05/op/piano.inc
 
-op_01 group CFG_TEXT, op_01_TEXT, HI_VIEW_TEXT
+op_01 group OP_SETUP_TEXT, op_01_TEXT, HI_VIEW_TEXT
 
 ; ===========================================================================
 
@@ -64,12 +64,12 @@ _TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-CFG_TEXT segment byte public 'CODE' use16
+OP_SETUP_TEXT segment byte public 'CODE' use16
 		assume cs:op_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th04/zunsoft.asm
-CFG_TEXT ends
+OP_SETUP_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
 
@@ -1213,8 +1213,7 @@ SHARED	ends
 	extern _VRAM_PLANE_B:dword
 
 include th04/zunsoft[data].asm
-include th05/formats/cfg[data].asm
-		db 0
+
 aSft1_cd2	db 'sft1.cd2',0
 aSft2_cd2	db 'sft2.cd2',0
 aCar_cd2	db 'car.cd2',0

@@ -18,11 +18,6 @@ extern "C" {
 #include "th04/snd/snd.h"
 }
 
-#if (GAME == 5)
-#undef CFG_FN
-extern const char CFG_FN[];
-#endif
-
 #if (GAME == 4)
 	bool snd_sel_disabled = false; // ZUN bloat: Unused in this game.
 #endif
@@ -90,12 +85,7 @@ void near cfg_save(void)
 
 void near cfg_save_exit(void)
 {
-	#if (GAME == 5)
-		extern const cfg_t cfg_empty;
-		cfg_t cfg = cfg_empty;
-	#else
-		cfg_t cfg = { 0 };
-	#endif
+	cfg_t cfg = { 0 };
 
 	// ZUN landmine: In contrast to the function above, we do write the entire
 	// structure here. Since file_append() will fail if the file doesn't exist,
