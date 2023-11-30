@@ -13,7 +13,7 @@ zunsoft_pyro_new	proc pascal near
 	mov	ax, 16
 	imul	di
 	mov	di, ax
-	mov	si, offset _zunsoft_pyros
+	mov	si, offset _pyros
 	mov	@@i, 0
 	jmp	short loc_B68D
 
@@ -47,7 +47,7 @@ loc_B687:
 	add	si, size zunsoft_pyro_t
 
 loc_B68D:
-	cmp	@@i, ZUNSOFT_PYRO_COUNT
+	cmp	@@i, PYRO_COUNT
 	jl	short loc_B63E
 
 loc_B694:
@@ -63,7 +63,7 @@ zunsoft_update_and_render	proc pascal near
 
 	push	si
 	push	di
-	mov	si, offset _zunsoft_pyros
+	mov	si, offset _pyros
 	xor	di, di
 	jmp	loc_B7B9
 
@@ -181,7 +181,7 @@ loc_B7B5:
 	add	si, size zunsoft_pyro_t
 
 loc_B7B9:
-	cmp	di, ZUNSOFT_PYRO_COUNT
+	cmp	di, PYRO_COUNT
 	jl	loc_B6A8
 	pop	di
 	pop	si
@@ -253,7 +253,7 @@ _zunsoft_animate proc near
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	pi_load pascal, 0, ds, offset aZun00_pi
+	call	pi_load pascal, 0, ds, offset _zun00_pi
 	call	pi_palette_apply pascal, 0
 	call	pi_put_8 pascal, large 0, 0
 if GAME eq 5
@@ -305,9 +305,9 @@ endif
 @@more_colors?:
 	cmp	si, 15
 	jl	short @@next_color
-	call	snd_load pascal, ds, offset aLogo, SND_LOAD_SONG
+	call	snd_load pascal, ds, offset _logo, SND_LOAD_SONG
 	kajacall	KAJA_SONG_PLAY
-	mov	[bp+@@i], offset _zunsoft_pyros
+	mov	[bp+@@i], offset _pyros
 	xor	si, si
 	jmp	short @@more_pyros?
 ; ---------------------------------------------------------------------------
@@ -319,15 +319,15 @@ endif
 	add	[bp+@@i], size zunsoft_pyro_t
 
 @@more_pyros?:
-	cmp	si, ZUNSOFT_PYRO_COUNT
+	cmp	si, PYRO_COUNT
 	jl	short @@next_pyro
 	call	snd_delay_until_measure pascal, (2 shl 16) or 0
 	mov	PaletteTone, 100
 	call	palette_show
-	call	super_entry_bfnt pascal, ds, offset aZun02_bft
-	call	super_entry_bfnt pascal, ds, offset aZun04_bft
-	call	super_entry_bfnt pascal, ds, offset aZun01_bft
-	call	super_entry_bfnt pascal, ds, offset aZun03_bft
+	call	super_entry_bfnt pascal, ds, offset _zun02_bft
+	call	super_entry_bfnt pascal, ds, offset _zun04_bft
+	call	super_entry_bfnt pascal, ds, offset _zun01_bft
+	call	super_entry_bfnt pascal, ds, offset _zun03_bft
 	mov	[bp+@@page], 0
 	graph_accesspage 1
 	graph_showpage 0
