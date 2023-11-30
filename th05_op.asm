@@ -76,40 +76,6 @@ op_01_TEXT segment byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _main_cdg_load
-_main_cdg_load	proc near
-		push	bp
-		mov	bp, sp
-		call	cdg_load_all pascal, CDG_NUMERAL, ds, offset aSft1_cd2
-		call	cdg_load_all pascal, CDG_MAIN, ds, offset aSft2_cd2
-		call	cdg_load_all pascal, CDG_CURSOR, ds, offset aCar_cd2
-		call	cdg_load_single_noalpha pascal, 40, ds, offset aSl00_cdg, 0
-		call	cdg_load_single_noalpha pascal, 41, ds, offset aSl01_cdg, 0
-		call	cdg_load_single_noalpha pascal, 42, ds, offset aSl02_cdg, 0
-		call	cdg_load_single_noalpha pascal, 43, ds, offset aSl03_cdg, 0
-		call	cdg_load_single pascal, 44, ds, offset aSlcl_cdg, 0
-		call	cdg_load_single_noalpha pascal, 45, ds, offset aSl04_cdg, 0
-		pop	bp
-		retn
-_main_cdg_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _main_cdg_free
-_main_cdg_free	proc near
-		push	bp
-		mov	bp, sp
-		call	cdg_free_all
-		pop	bp
-		retn
-_main_cdg_free	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public _op_animate
 _op_animate	proc near
 
@@ -1191,9 +1157,6 @@ include th02/snd/snd.inc
 	extern _input_reset_sense_held:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern FRAME_DELAY:proc
-	extern CDG_LOAD_SINGLE_NOALPHA:proc
-	extern CDG_LOAD_SINGLE:proc
-	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
 SHARED	ends
 
@@ -1214,15 +1177,6 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-aSft1_cd2	db 'sft1.cd2',0
-aSft2_cd2	db 'sft2.cd2',0
-aCar_cd2	db 'car.cd2',0
-aSl00_cdg	db 'sl00.cdg',0
-aSl01_cdg	db 'sl01.cdg',0
-aSl02_cdg	db 'sl02.cdg',0
-aSl03_cdg	db 'sl03.cdg',0
-aSlcl_cdg	db 'slcl.cdg',0
-aSl04_cdg	db 'sl04.cdg',0
 aOp2a_pi	db 'op2a.pi',0
 aOp2b_pi	db 'op2b.pi',0
 aOp2c_pi	db 'op2c.pi',0

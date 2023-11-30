@@ -67,3 +67,9 @@ typedef enum {
 
 	_op_cdg_slot_t_FORCE_INT16 = 0x7FFF
 } op_cdg_slot_t;
+
+inline void op_cdg_load_shared(void) {
+	cdg_load_all(CDG_NUMERAL, "sft1.cd2");
+	cdg_load_all(CDG_MAIN, "sft2.cd2");
+	cdg_load_all(CDG_CURSOR, "car.cd2");
+}

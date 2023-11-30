@@ -25,7 +25,7 @@ extern "C" {
 #include "th04/snd/snd.h"
 #include "th04/op/clear.hpp"
 #include "th04/op/op.hpp"
-#include "th04/sprites/op_cdg.h"
+#include "th04/sprites/op_cdg.hpp"
 
 #include "th04/shiftjis/m_char.cpp"
 

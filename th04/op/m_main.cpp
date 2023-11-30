@@ -27,7 +27,7 @@ extern "C" {
 }
 #include "th04/shiftjis/fnshared.hpp"
 #include "th04/shiftjis/m_main.hpp"
-#include "th04/sprites/op_cdg.h"
+#include "th04/sprites/op_cdg.hpp"
 
 #pragma option -a2
 
