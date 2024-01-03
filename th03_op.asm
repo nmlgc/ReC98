@@ -26,7 +26,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _getch:proc
 
-group_01 group op_01_TEXT, op_02_TEXT, SCOREDAT_TEXT, op_03_TEXT
+group_01 group op_01_TEXT, OP_MUSIC_TEXT, op_02_TEXT, SCOREDAT_TEXT, op_03_TEXT
 
 ; ===========================================================================
 
@@ -1324,7 +1324,9 @@ loc_A4FE:
 		pop	bp
 		retf
 _main		endp
+op_01_TEXT ends
 
+OP_MUSIC_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1906,7 +1908,7 @@ loc_B11F:
 		pop	bp
 		retn	2
 sub_B10A	endp
-op_01_TEXT	ends
+OP_MUSIC_TEXT ends
 
 op_02_TEXT segment byte public 'CODE' use16
 op_02_TEXT ends

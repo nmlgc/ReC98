@@ -1,7 +1,4 @@
-/* ReC98
- * -----
- * Code segment #6 of TH02's OP.EXE
- */
+#pragma option -zCOP_MUSIC_TEXT
 
 #include <stddef.h>
 #include "platform.h"

@@ -129,6 +129,9 @@ _TEXT	ends
 OP_SETUP_TEXT segment byte public 'CODE' use16
 OP_SETUP_TEXT ends
 
+OP_MUSIC_TEXT segment byte public 'CODE' use16
+OP_MUSIC_TEXT ends
+
 op_01_TEXT	segment	byte public 'CODE' use16
 op_01_TEXT	ends
 
