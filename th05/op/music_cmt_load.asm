@@ -7,7 +7,7 @@ music_cmt_load	proc pascal near
 	mov	word ptr @@fn+2, ds
 	mov	word ptr @@fn, offset _a_Music0_txt
 	les	bx, @@fn
-	mov	al, byte ptr music_game
+	mov	al, byte ptr _game_sel
 	add	al, '0'
 	mov	es:[bx+6], al
 	call	file_ropen pascal, word ptr @@fn+2, bx

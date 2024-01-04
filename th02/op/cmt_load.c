@@ -1,6 +1,9 @@
 #define MUSIC_CMT_LEN MUSIC_CMT_LINE_COUNT * MUSIC_CMT_LINE_LEN
 char music_cmt[MUSIC_CMT_LINE_COUNT][MUSIC_CMT_LINE_LEN];
 
+#undef MUSIC_CMT_FN
+#define MUSIC_CMT_FN (const char *)(MK_FP(_DS, 0x0C13))
+
 void pascal near music_cmt_load(int track)
 {
 	int i;

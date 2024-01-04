@@ -32,6 +32,7 @@ extern "C" {
 #include "th02/snd/snd.h"
 }
 #include "th02/gaiji/gaiji.h"
+#include "th02/shiftjis/fns.hpp"
 #include "th02/op/op.h"
 #include "th02/op/menu.hpp"
 
@@ -166,10 +167,10 @@ void op_animate(void)
 		if(snd_midi_possible) {
 			door_x = snd_midi_active;
 			snd_midi_active = true;
-			snd_load("op.m", SND_LOAD_SONG);
+			snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 		}
 		snd_midi_active = false;
-		snd_load("op.m", SND_LOAD_SONG);
+		snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 		snd_midi_active = door_x;
 	}
 

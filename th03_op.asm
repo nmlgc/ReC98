@@ -1354,7 +1354,7 @@ var_1  	= byte ptr -1
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
+		pushd	_MUSIC_CHOICES[bx]
 		call	graph_putsa_fx
 		graph_accesspage _music_page
 		push	16
@@ -1371,7 +1371,7 @@ var_1  	= byte ptr -1
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
+		pushd	_MUSIC_CHOICES[bx]
 		call	graph_putsa_fx
 		leave
 		retn	4
@@ -1457,7 +1457,7 @@ loc_AC15:
 		call	pi_palette_apply pascal, 0
 		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
-		mov	al, music_track_playing
+		mov	al, _track_playing
 		mov	_music_sel, al
 		call	draw_tracks pascal, word ptr _music_sel
 		call	graph_copy_page pascal, 0
@@ -1466,11 +1466,11 @@ loc_AC15:
 		call	screen_back_B_snap
 		call	cmt_back_snap
 		graph_accesspage 1
-		mov	al, music_track_playing
+		mov	al, _track_playing
 		mov	ah, 0
 		call	draw_cmt pascal, ax
 		graph_accesspage 0
-		mov	al, music_track_playing
+		mov	al, _track_playing
 		mov	ah, 0
 		call	draw_cmt pascal, ax
 		mov	PaletteTone, 100
@@ -1547,7 +1547,7 @@ loc_AD52:
 		add	sp, 6
 		kajacall	KAJA_SONG_PLAY
 		mov	al, _music_sel
-		mov	music_track_playing, al
+		mov	_track_playing, al
 		mov	ah, 0
 		call	draw_cmt pascal, ax
 		call	music_flip
@@ -3321,94 +3321,13 @@ SHARED	ends
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
 
-public _MUSIC_TITLES
-_MUSIC_TITLES	label dword
-		dd aNo_1B@cVOul		; "NO.1	    　夢は時空を越えて	   "
-		dd aNo_2B@B@Select	; "NO.2	   　 　 Selection	   "
-		dd aNo_3Umx		; "NO.3		 東方妖恋談	   "
-		dd aNo_4Reincarnat	; "NO.4	       Reincarnation	   "
-		dd aNo_5Dim_Dream	; "NO.5		 Dim. Dream	   "
-		dd aNo_6TabulaRasa	; "NO.6	  Tabula rasa　～空白少女  "
-		dd aNo_7B@Maniacal	; "NO.7	  　  Maniacal Princess	   "
-		dd aNo_8CPOBLostDr	; "NO.8	     夢消失  ～Lost Dream  "
-		dd aNo_9CMCvlyBDre	; "NO.9	    夢幻遊戯  ～Dream War  "
-		dd aNo_10Cvc@mirab	; "NO.10  魔法決戦！～Fight it out!"
-		dd aNo_11B@SailorO	; "NO.11    　 Sailor of Time	   "
-		dd aNo_12Strawberr	; "NO.12     Strawberry	Crisis!!   "
-		dd aNo_13F		; "NO.13      非統一魔法世界論	   "
-		dd aNo_14B@cvc@pri	; "NO.14	　魔法鐘愛	   "
-		dd aNo_15B@lviuvC	; "NO.15	　久遠の夢	   "
-		dd aNo_16Umx		; "NO.16	東方の青い空	   "
-		dd aNo_17IiiuvCumo	; "NO.17	 永遠の満月	   "
-		dd aNo_18MapleDrea	; "NO.18       Maple Dream...	   "
-		dd aNo_19CRlvLxu	; "NO.19	 霊人の休日	   "
-		dd aB@b@		; "	      　　		   "
-		dd aB@b@vpvxvivf	; "	      　　Ｑｕｉｔ	   "
-public _MUSIC_FILES
-_MUSIC_FILES	label dword
-		dd aOp_m_0		; "op.m"
-		dd aSelect_m_0		; "select.m"
-		dd a00mm_m		; "00mm.m"
-		dd a01mm_m		; "01mm.m"
-		dd a02mm_m		; "02mm.m"
-		dd a03mm_m		; "03mm.m"
-		dd a04mm_m		; "04mm.m"
-		dd a05mm_m		; "05mm.m"
-		dd a06mm_m		; "06mm.m"
-		dd aDec_m		; "dec.m"
-		dd a07mm_m		; "07mm.m"
-		dd a08mm_m		; "08mm.m"
-		dd aDemo1_m		; "demo1.m"
-		dd aDemo2_m		; "demo2.m"
-		dd aDemo3_m		; "demo3.m"
-		dd aDemo4_m		; "demo4.m"
-		dd aDemo5_m		; "demo5.m"
-		dd aEd_m		; "ed.m"
-		dd aScore_m		; "score.m"
-include th02/op/polygons[data].asm
-music_track_playing	db 0
-aNo_1B@cVOul	db 'NO.1     　夢は時空を越えて     ',0
-aNo_2B@B@Select	db 'NO.2    　 　 Selection         ',0
-aNo_3Umx	db 'NO.3          東方妖恋談        ',0
-aNo_4Reincarnat	db 'NO.4        Reincarnation       ',0
-aNo_5Dim_Dream	db 'NO.5          Dim. Dream        ',0
-aNo_6TabulaRasa	db 'NO.6   Tabula rasa　～空白少女  ',0
-aNo_7B@Maniacal	db 'NO.7   　  Maniacal Princess    ',0
-aNo_8CPOBLostDr	db 'NO.8      夢消失  ～Lost Dream  ',0
-aNo_9CMCvlyBDre	db 'NO.9     夢幻遊戯  ～Dream War  ',0
-aNo_10Cvc@mirab	db 'NO.10  魔法決戦！～Fight it out!',0
-aNo_11B@SailorO	db 'NO.11    　 Sailor of Time      ',0
-aNo_12Strawberr	db 'NO.12     Strawberry Crisis!!   ',0
-aNo_13F		db 'NO.13      非統一魔法世界論     ',0
-aNo_14B@cvc@pri	db 'NO.14        　魔法鐘愛         ',0
-aNo_15B@lviuvC	db 'NO.15        　久遠の夢         ',0
-aNo_16Umx	db 'NO.16        東方の青い空       ',0
-aNo_17IiiuvCumo	db 'NO.17         永遠の満月        ',0
-aNo_18MapleDrea	db 'NO.18       Maple Dream...      ',0
-aNo_19CRlvLxu	db 'NO.19         霊人の休日        ',0
-aB@b@		db '           　　                 ',0
-aB@b@vpvxvivf	db '           　　Ｑｕｉｔ         ',0
-aOp_m_0		db 'op.m',0
-aSelect_m_0	db 'select.m',0
-a00mm_m		db '00mm.m',0
-a01mm_m		db '01mm.m',0
-a02mm_m		db '02mm.m',0
-a03mm_m		db '03mm.m',0
-a04mm_m		db '04mm.m',0
-a05mm_m		db '05mm.m',0
-a06mm_m		db '06mm.m',0
-aDec_m		db 'dec.m',0
-a07mm_m		db '07mm.m',0
-a08mm_m		db '08mm.m',0
-aDemo1_m	db 'demo1.m',0
-aDemo2_m	db 'demo2.m',0
-aDemo3_m	db 'demo3.m',0
-aDemo4_m	db 'demo4.m',0
-aDemo5_m	db 'demo5.m',0
-aEd_m		db 'ed.m',0
-aScore_m	db 'score.m',0
-include th02/op/music_cmt_load[data].asm
-aOp3_pi		db 'op3.pi',0
+	extern _MUSIC_CHOICES:dword
+	extern _MUSIC_FILES:dword
+	extern _track_playing:byte
+	extern _polygons_initialized:byte
+	_aMUSIC_TXT = (aOp3_pi - 10)
+	aOp3_pi = ($ - 7)
+
 aOpwin_bft	db 'opwin.bft',0
 aOp_m		db 'op.m',0
 aTl01_pi	db 'TL01.PI',0

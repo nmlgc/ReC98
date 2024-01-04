@@ -170,7 +170,7 @@ polygons_update_and_render	proc near
 	push	bp
 	mov	bp, sp
 	push	si
-	cmp	polygons_initialized, 0
+	cmp	_polygons_initialized, 0
 	jnz	loc_A752
 	xor	si, si
 	; Hack (jmp	loc_A746)
@@ -233,7 +233,7 @@ loc_A745:
 loc_A746:
 	cmp	si, POLYGONS_RENDERED
 	jl	loc_A6B5
-	mov	polygons_initialized, 1
+	mov	_polygons_initialized, 1
 
 loc_A752:
 	xor	si, si

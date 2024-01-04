@@ -98,7 +98,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
+		pushd	_MUSIC_CHOICES[bx]
 		call	graph_putsa_fx
 		graph_accesspage _music_page
 		push	16
@@ -114,7 +114,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
+		pushd	_MUSIC_CHOICES[bx]
 		call	graph_putsa_fx
 		leave
 		retn	4
@@ -314,7 +314,7 @@ _musicroom	proc near
 		call	pi_palette_apply pascal, 0
 		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
-		mov	al, music_track_playing
+		mov	al, _track_playing
 		mov	_music_sel, al
 		call	draw_tracks pascal, word ptr _music_sel
 		call	graph_copy_page pascal, 0
@@ -322,7 +322,7 @@ _musicroom	proc near
 		graph_accesspage 1
 		graph_showpage 0
 		call	screen_back_B_snap
-		mov	al, music_track_playing
+		mov	al, _track_playing
 		mov	ah, 0
 		call	draw_cmt pascal, ax
 		mov	PaletteTone, 100
@@ -390,7 +390,7 @@ loc_C4E4:
 		jz	short loc_C533
 		kajacall	KAJA_SONG_FADE, 32
 		mov	al, _music_sel
-		mov	music_track_playing, al
+		mov	_track_playing, al
 		mov	ah, 0
 		call	draw_cmt pascal, ax
 		mov	al, _music_sel
@@ -1178,104 +1178,13 @@ SHARED	ends
 	extern _graph_putsa_fx_func:word
 
 include th04/zunsoft[data].asm
-public _MUSIC_TITLES
-_MUSIC_TITLES	label dword
-		dd aNo_1MSzlBLotus	; "No.1	  å∂ëzãΩ  Å` Lotus Land	Story"
-		dd aNo_2WitchingDr	; "No.2		Witching Dream	     "
-		dd aNo_3SeleneSLig	; "No.3		Selene's light       "
-		dd aNo_4Sxp		; "No.4	 ëïè¸êÌÅ@Å` Decoration Battle"
-		dd aNo_5BreakTheSa	; "No.5	       Break the Sabbath     "
-		dd aNo_6NglLBScarl	; "No.6	  çgãøã»  Å` Scarlet Phoneme "
-		dd aNo_7BadApple	; "No.7		  Bad Apple!!	     "
-		dd aNo_8CRab@bPerd	; "No.8	   óÏêÌÅ@Å` Perdition crisis "
-		dd aNo_9GagkgxgGgg	; "No.9	       ÉAÉäÉXÉ}ÉGÉXÉeÉâ	     "
-		dd aNo_10Pnpcuyszl	; "No.10   è≠èó„Yëzã»Å@Å` Capriccio  "
-		dd aNo_11RpvKab@bC	; "No.11  êØÇÃäÌÅ@Å` Casket of Star  "
-		dd aNo_12LotusLove	; "No.12	  Lotus	Love	     "
-		dd aNo_13CVVslXBSl	; "No.13 ñ∞ÇÍÇÈã∞ï| Å`Sleeping Terror"
-		dd aNo_14DreamLand	; "No.14	  Dream	Land	     "
-		dd aNo_15ChcB@bIna	; "No.15   óHñ≤Å@Å` Inanimate Dream  "
-		dd aNo_16LVVVsv		; "No.16     ã÷Ç∂Ç¥ÇÈÇÇ¶Ç»Ç¢óVãY    "
-		dd aNo_17GbgcghmSz	; "No.17 ÉÅÉCÉhå∂ëzÅ@Å`	Icemilk	Magic"
-		dd aNo_18Vivavvvvi	; "No.18  Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence "
-		dd aNo_19Days		; "No.19	     Days	     "
-		dd aNo_20Peaceful	; "No.20	   Peaceful	     "
-		dd aNo_21ArcadianD	; "No.21	Arcadian Dream	     "
-		dd aNo_22MSzvPzrl	; "No.22	  å∂ëzÇÃèZêl	     "
-		dd asc_105B2		; "				     "
-		dd aB@b@vpvxvivf	; "	       Å@Å@ÇpÇïÇâÇî	     "
-public _MUSIC_FILES
-_MUSIC_FILES	label dword
-		dd aOp_2		; "op"
-		dd aSt00		; "st00"
-		dd aSt10		; "st10"
-		dd aSt00b		; "st00b"
-		dd aSt01		; "st01"
-		dd aSt01b		; "st01b"
-		dd aSt02		; "st02"
-		dd aSt02b		; "st02b"
-		dd aSt03		; "st03"
-		dd aSt03c		; "st03c"
-		dd aSt03b		; "st03b"
-		dd aSt04		; "st04"
-		dd aSt04b		; "st04b"
-		dd aSt05		; "st05"
-		dd aSt05b		; "st05b"
-		dd aSt06		; "st06"
-		dd aSt06b		; "st06b"
-		dd aSt06c		; "st06c"
-		dd aEnd1		; "end1"
-		dd aEnd2		; "end2"
-		dd aStaff		; "staff"
-		dd aName_0		; "name"
-include th02/op/polygons[data].asm
-music_track_playing	db 0
-aNo_1MSzlBLotus	db 'No.1   å∂ëzãΩ  Å` Lotus Land Story',0
-aNo_2WitchingDr	db 'No.2         Witching Dream       ',0
-aNo_3SeleneSLig	db 'No.3         Selene',27h,'s light       ',0
-aNo_4Sxp	db 'No.4  ëïè¸êÌÅ@Å` Decoration Battle',0
-aNo_5BreakTheSa	db 'No.5        Break the Sabbath     ',0
-aNo_6NglLBScarl	db 'No.6   çgãøã»  Å` Scarlet Phoneme ',0
-aNo_7BadApple	db 'No.7           Bad Apple!!        ',0
-aNo_8CRab@bPerd	db 'No.8    óÏêÌÅ@Å` Perdition crisis ',0
-aNo_9GagkgxgGgg	db 'No.9        ÉAÉäÉXÉ}ÉGÉXÉeÉâ      ',0
-aNo_10Pnpcuyszl	db 'No.10   è≠èó„Yëzã»Å@Å` Capriccio  ',0
-aNo_11RpvKab@bC	db 'No.11  êØÇÃäÌÅ@Å` Casket of Star  ',0
-aNo_12LotusLove	db 'No.12          Lotus Love         ',0
-aNo_13CVVslXBSl	db 'No.13 ñ∞ÇÍÇÈã∞ï| Å`Sleeping Terror',0
-aNo_14DreamLand	db 'No.14          Dream Land         ',0
-aNo_15ChcB@bIna	db 'No.15   óHñ≤Å@Å` Inanimate Dream  ',0
-aNo_16LVVVsv	db 'No.16     ã÷Ç∂Ç¥ÇÈÇÇ¶Ç»Ç¢óVãY    ',0
-aNo_17GbgcghmSz	db 'No.17 ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic',0
-aNo_18Vivavvvvi	db 'No.18  Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence ',0
-aNo_19Days	db 'No.19             Days            ',0
-aNo_20Peaceful	db 'No.20           Peaceful          ',0
-aNo_21ArcadianD	db 'No.21        Arcadian Dream       ',0
-aNo_22MSzvPzrl	db 'No.22          å∂ëzÇÃèZêl         ',0
-asc_105B2	db '                                  ',0
-aB@b@vpvxvivf	db '            Å@Å@ÇpÇïÇâÇî          ',0
-aOp_2		db 'op',0
-aSt00		db 'st00',0
-aSt10		db 'st10',0
-aSt00b		db 'st00b',0
-aSt01		db 'st01',0
-aSt01b		db 'st01b',0
-aSt02		db 'st02',0
-aSt02b		db 'st02b',0
-aSt03		db 'st03',0
-aSt03c		db 'st03c',0
-aSt03b		db 'st03b',0
-aSt04		db 'st04',0
-aSt04b		db 'st04b',0
-aSt05		db 'st05',0
-aSt05b		db 'st05b',0
-aSt06		db 'st06',0
-aSt06b		db 'st06b',0
-aSt06c		db 'st06c',0
-aEnd1		db 'end1',0
-aEnd2		db 'end2',0
-aStaff		db 'staff',0
-aName_0		db 'name',0
+
+	extern _MUSIC_CHOICES:dword
+	extern _MUSIC_FILES:dword
+	extern _track_playing:byte
+	extern _polygons_initialized:byte
+	aOp_2 = ($ - 118)
+
 include th04/op/music_cmt_load[data].asm
 aMusic_pi	db 'music.pi',0
 aGensou_scr	db 'GENSOU.SCR',0

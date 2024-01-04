@@ -22,54 +22,21 @@ extern "C" {
 }
 #include "th02/shiftjis/fns.hpp"
 
+extern const shiftjis_t* MUSIC_CHOICES[17];
+extern const char* MUSIC_FILES[15];
+extern uint8_t track_playing;
+
 static const int MUSIC_CMT_LINE_LEN = 42;
 static const int MUSIC_CMT_LINE_COUNT = 20;
 
-#define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
 #define SEL_QUIT TRACK_COUNT + 1
 
 #define MUSIC_POLYGONS 16
 
-const shiftjis_t *MUSIC_TITLES[] = {
-	"NO.1    東方封魔録　～浄土曼荼羅",
-	"NO.2    　 博麗　～Eastern Wind ",
-	"NO.3    　   End of Daylight　  ",
-	"NO.4    　　　　　幻夢界　　　　",
-	"NO.5    ひもろぎ、むらさきにもえ",
-	"NO.6    　東方封魔録　～幽幻乱舞",
-	"NO.7    　  She's in a temper!! ",
-	"NO.8    　  　 やみのちから　　 ",
-	"NO.9    　　　　死を賭して　　　",
-	"NO.10    　  　 恋色マジック 　 ",
-	"NO.11       Complete Darkness   ",
-	"NO.12        　　遠野の森　　　 ",
-	"NO.13       昔話わんだーらんど  ",
-	"NO.14      　 エキストララブ    ",
-	"NO.15      戦車むすめのみるゆめ ",
-	"           　　                 ",
-	"           　　Ｑｕｉｔ         "
-};
-
-const char *MUSIC_FILES[] = {
-	"op.m",
-	"stage0.m",
-	"stage1.m",
-	"stage2.m",
-	"stage3.m",
-	"stage4.m",
-	"boss1.m",
-	"boss4.m",
-	"boss2.m",
-	"boss3.m",
-	"mima.m",
-	"end1.m",
-	"ending.m",
-	"stage5.m",
-	"boss5.m"
-};
+#define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
 
 // Polygon state
-char initialized = 0;
+extern bool polygons_initialized;
 screen_point_t points[10];
 screen_point_t pos[MUSIC_POLYGONS];
 point_t move_speed[MUSIC_POLYGONS];
@@ -86,18 +53,18 @@ void pascal near draw_track(unsigned char sel, unsigned char color)
 	page_t other_page = (1 - music_page);
 	graph_accesspage(other_page);
 	graph_putsa_fx(
-		16, ((sel + 6) * GLYPH_H), (color | FX_WEIGHT_BOLD), MUSIC_TITLES[sel]
+		16, ((sel + 6) * GLYPH_H), (color | FX_WEIGHT_BOLD), MUSIC_CHOICES[sel]
 	);
 	graph_accesspage(music_page);
 	graph_putsa_fx(
-		16, ((sel + 6) * GLYPH_H), (color | FX_WEIGHT_BOLD), MUSIC_TITLES[sel]
+		16, ((sel + 6) * GLYPH_H), (color | FX_WEIGHT_BOLD), MUSIC_CHOICES[sel]
 	);
 }
 
 void pascal near draw_tracks(unsigned char sel)
 {
 	int i;
-	for(i = 0; i < sizeof(MUSIC_TITLES) / sizeof(MUSIC_TITLES[0]); i++) {
+	for(i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
 		draw_track(i, (i == sel) ? V_WHITE : 3);
 	}
 }
@@ -160,11 +127,11 @@ inline int polygon_vertex_count(int i) {
 void pascal near polygons_update_and_render(void)
 {
 	int i;
-	if(!initialized) {
+	if(!polygons_initialized) {
 		for(i = 0; i < MUSIC_POLYGONS; i++) {
 			polygon_init(i, (rand() % (RES_Y * 16)), (4 - (rand() & 7)));
 		}
-		initialized = 1;
+		polygons_initialized = true;
 	}
 	for(i = 0; i < MUSIC_POLYGONS; i++) {
 		polygon_build(
@@ -267,7 +234,6 @@ void pascal near draw_cmt(int track)
 
 void pascal musicroom(void)
 {
-	static unsigned char track_playing = 0;
 	music_page = 1;
 
 	palette_black();
@@ -277,7 +243,7 @@ void pascal musicroom(void)
 	graph_clear();
 	graph_accesspage(1);
 
-	pi_load_put_8_free(0, "op3.pi");
+	pi_load_put_8_free(0, reinterpret_cast<const char *>(MK_FP(_DS, 0x0C1D)));
 	music_sel = track_playing;
 	draw_tracks(music_sel);
 	graph_copy_page(0);

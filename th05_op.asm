@@ -139,14 +139,14 @@ loc_BF05:
 		mov	[bp+var_5], 3
 
 loc_BF14:
-		mov	bx, music_game
+		mov	bx, _game_sel
 		imul	bx, 78h
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, word ptr _MUSIC_TITLES+2[bx]
-		mov	dx, word ptr _MUSIC_TITLES[bx]
+		mov	ax, word ptr _MUSIC_CHOICES+2[bx]
+		mov	dx, word ptr _MUSIC_CHOICES[bx]
 		mov	[bp+var_2], ax
 		mov	[bp+var_4], dx
 		add	si, 96
@@ -204,13 +204,13 @@ loc_BF6B:
 		add	ax, 2
 		cmp	ax, si
 		jg	short loc_BF55
-		call	graph_putsa_fx pascal, (12 shl 16) or 80, 5, large [MUSICROOM_UP]
-		call	graph_putsa_fx pascal, (12 shl 16) or 288, 5, large [MUSICROOM_DOWN]
+		call	graph_putsa_fx pascal, (12 shl 16) or 80, 5, large [_LABEL_UP]
+		call	graph_putsa_fx pascal, (12 shl 16) or 288, 5, large [_LABEL_DOWN]
 		push	(12 shl 16) or 32
 		push	3
-		mov	bx, music_game
+		mov	bx, _game_sel
 		shl	bx, 2
-		pushd	dword ptr MUSICROOM_GAME[bx]
+		pushd	dword ptr _LABEL_GAME[bx]
 		call	graph_putsa_fx
 		pop	si
 		pop	bp
@@ -382,9 +382,9 @@ _musicroom	proc near
 		mov	word_1403A, 0
 		mov	word_1403C, 0
 		mov	_music_sel, 0
-		mov	bx, music_game
+		mov	bx, _game_sel
 		add	bx, bx
-		mov	ax, MUSICROOM_TRACKCOUNTS[bx]
+		mov	ax, _TRACK_COUNT[bx]
 		mov	musicroom_trackcount, ax
 		mov	byte_13E96, 0
 		call	cdg_free_all
@@ -521,34 +521,34 @@ loc_C652:
 loc_C666:
 		test	_key_det.lo, low INPUT_LEFT
 		jz	short loc_C680
-		dec	music_game
-		cmp	music_game, 0
+		dec	_game_sel
+		cmp	_game_sel, 0
 		jge	short loc_C698
-		mov	music_game, 4
+		mov	_game_sel, 4
 		jmp	short loc_C698
 ; ---------------------------------------------------------------------------
 
 loc_C680:
 		test	_key_det.lo, low INPUT_RIGHT
 		jz	short loc_C6E3
-		inc	music_game
-		cmp	music_game, 5
+		inc	_game_sel
+		cmp	_game_sel, 5
 		jl	short loc_C698
-		mov	music_game, 0
+		mov	_game_sel, 0
 
 loc_C698:
 		mov	_music_sel, 0
 		mov	word_1403C, 0
 		mov	word_1403A, 0
-		mov	bx, music_game
+		mov	bx, _game_sel
 		add	bx, bx
-		mov	ax, MUSICROOM_TRACKCOUNTS[bx]
+		mov	ax, _TRACK_COUNT[bx]
 		mov	musicroom_trackcount, ax
 		push	0
 		call	sub_C441
 		kajacall	KAJA_SONG_FADE, 32
 		call	draw_cmt pascal, 0
-		mov	bx, music_game
+		mov	bx, _game_sel
 		imul	bx, 78h
 		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -578,7 +578,7 @@ loc_C6F1:
 		mov	al, _music_sel
 		mov	ah, 0
 		call	draw_cmt pascal, ax
-		mov	bx, music_game
+		mov	bx, _game_sel
 		imul	bx, 78h
 		mov	al, _music_sel
 		mov	ah, 0
@@ -1033,529 +1033,16 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-MUSICROOM_UP	dd aMUSICROOM_UP
-					; "		------ ▲ ------       "
-MUSICROOM_DOWN	dd aMUSICROOM_DOWN
-					; "		------ ▼ ------       "
-		dd asc_104D5		; "		----------------       "
-MUSICROOM_GAME		dd aMUSICROOM_TH01
-		dd aMUSICROOM_TH02
-		dd aMUSICROOM_TH03
-		dd aMUSICROOM_TH04
-		dd aMUSICROOM_TH05
-public _MUSIC_TITLES
-_MUSIC_TITLES	label dword
-		dd aTH01_01	; "No.1		  A Sacred Lot	       "
-		dd aTH01_02	; "No.2		   永遠の巫女	       "
-		dd aTH01_03	; "No.3	   The Positive	and Negative   "
-		dd aTH01_04	; "No.4	  Highly Responsive to Prayers "
-		dd aTH01_05
-		dd aTH01_06		; "No.6		    天使伝説	       "
-		dd aTH01_07	; "No.7	       Oriental	Magician       "
-		dd aTH01_08	; "No.8		  破邪の小太刀	       "
-		dd aTH01_09		; "No.9		      魔鏡	       "
-		dd aTH01_10	; "No.10       the Legend of KAGE      "
-		dd aTH01_11	; "No.11    いざ、倒れ逝くその時まで   "
-		dd aTH01_12	; "No.12      Civilization of Magic    "
-		dd aTH01_13	; "No.13	    星幽天使	       "
-		dd aTH01_14	; "No.14	    アイリス	       "
-		dd aMUSICROOM_QUIT1		; "	       タイトルに戻る	       "
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd aTH02_01
-		dd aTH02_02	; "No.2	     　	博麗　～Eastern	Wind   "
-		dd aTH02_03	; "No.3	     　	 She's in a temper!!   "
-		dd aTH02_04	; "No.4	     　	  End of Daylight　    "
-		dd aTH02_05	; "No.5	     　	 　 やみのちから　　   "
-		dd aTH02_06	; "No.6	     　　　　　幻夢界　　　　  "
-		dd aTH02_07
-		dd aTH02_08	; "No.8	     ひもろぎ、むらさきにもえ  "
-		dd aTH02_09
-		dd aTH02_10
-		dd aTH02_11	; "No.11	 Complete Darkness     "
-		dd aTH02_12	; "No.12	　 エキストララブ      "
-		dd aTH02_13	; "No.13	戦車むすめのみるゆめ   "
-		dd aTH02_14	; "No.14	  　　遠野の森　　　   "
-		dd aTH02_15
-		dd aTH02_16	; "未使用.1	    博麗神社境内       "
-		dd aTH02_17	; "未使用.2	    　陽落ちて	　     "
-		dd aTH02_18	; "未使用.3	    　封魔終演	　     "
-		dd aMUSICROOM_QUIT1		; "	       タイトルに戻る	       "
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd aTH03_01
-		dd aTH03_02	; "No.2	     　	　 Selection	       "
-		dd aTH03_03
-		dd aTH03_04	; "No.4		 Reincarnation	       "
-		dd aTH03_05	; "No.5		   Dim.	Dream	       "
-		dd aTH03_06
-		dd aTH03_07	; "No.7	    　	Maniacal Princess      "
-		dd aTH03_08	; "No.8	       夢消失  ～Lost Dream    "
-		dd aTH03_09	; "No.9	      夢幻遊戯	～Dream	War    "
-		dd aTH03_10	; "No.10    魔法決戦！～Fight it out!  "
-		dd aTH03_11	; "No.11      　 Sailor	of Time	       "
-		dd aTH03_12	; "No.12       Strawberry Crisis!!     "
-		dd aTH03_13
-		dd aTH03_14	; "No.14	  　魔法鐘愛	       "
-		dd aTH03_15	; "No.15	  　久遠の夢	       "
-		dd aTH03_16
-		dd aTH03_17	; "No.17	   永遠の満月	       "
-		dd aTH03_18	; "No.18	 Maple Dream...	       "
-		dd aTH03_19
-		dd aTH03_20	; "No.20	    勝利デモ	       "
-		dd aTH03_21	; "No.21	 ゲームオーバー	       "
-		dd aTH03_22	; "未使用.1	     時の風	       "
-		dd aTH03_23	; "未使用.2	スターボウドリーム     "
-		dd aTH03_24	; "未使用.3	  Phantasmagoria       "
-		dd aMUSICROOM_QUIT2	; "		 タイトルに戻る	       "
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd aTH04_01	; "No.1	   幻想郷  ～ Lotus Land Story "
-		dd aTH04_02	; "No.2		 Witching Dream	       "
-		dd aTH04_03	; "No.3		 Selene's light        "
-		dd aTH04_04
-		dd aTH04_05	; "No.5		Break the Sabbath      "
-		dd aTH04_06	; "No.6	   紅響曲  ～ Scarlet Phoneme  "
-		dd aTH04_07	; "No.7		   Bad Apple!!	       "
-		dd aTH04_08	; "No.8	    霊戦　～ Perdition crisis  "
-		dd aTH04_09	; "No.9		アリスマエステラ       "
-		dd aTH04_10	; "No.10    少女綺想曲　～ Capriccio   "
-		dd aTH04_11	; "No.11   星の器　～ Casket of	Star   "
-		dd aTH04_12	; "No.12	   Lotus Love	       "
-		dd aTH04_13	; "No.13  眠れる恐怖 ～Sleeping	Terror "
-		dd aTH04_14	; "No.14	   Dream Land	       "
-		dd aTH04_15	; "No.15    幽夢　～ Inanimate Dream   "
-		dd aTH04_16
-		dd aTH04_17	; "No.17  メイド幻想　～ Icemilk Magic "
-		dd aTH04_18	; "No.18   かわいい悪魔　～ Innocence  "
-		dd aTH04_19		; "No.19	      Days	       "
-		dd aTH04_20	; "No.20	    Peaceful	       "
-		dd aTH04_21	; "No.21	 Arcadian Dream	       "
-		dd aTH04_22	; "No.22	   幻想の住人	       "
-		dd aTH04_23	; "未使用.1	   Lotus Road	       "
-		dd aTH04_24	; "未使用.2	  Dreamy pilot	       "
-		dd aTH04_25	; "未使用.3	 Incomplete Plot       "
-		dd aTH04_26	; "未使用.4	   Border Land	       "
-		dd aTH04_27	; "未使用.5   Magic Shop of Raspberry  "
-		dd aTH04_28	; "未使用.6	  Crescent Dream       "
-		dd aMUSICROOM_QUIT1		; "	       タイトルに戻る	       "
-		dd    0
-		dd aTH05_01
-		dd aTH05_02	; "No.2		  Dream	Express	       "
-		dd aTH05_03	; "No.3	     魔法陣　～	Magic Square   "
-		dd aTH05_04
-		dd aTH05_05	; "No.5	    霊天　～ Spiritual Heaven  "
-		dd aTH05_06	; "No.6		Romantic Children      "
-		dd aTH05_07	; "No.7	      プラスチックマインド     "
-		dd aTH05_08	; "No.8		 メイプルワイズ	       "
-		dd aTH05_09	; "No.9	 禁断の魔法  ～	Forbidden Magic"
-		dd aTH05_10	; "No.10  真紅の少女　～ Crimson Dead!!"
-		dd aTH05_11	; "No.11  裏切りの少女　～ Judas Kiss  "
-		dd aTH05_12	; "No.12       the Last	Judgement      "
-		dd aTH05_13	; "No.13  悲しき人形　～ Doll of Misery"
-		dd aTH05_14	; "No.14   世界の果て　～ World's End  "
-		dd aTH05_15	; "No.15   神話幻想　～	Infinite Being "
-		dd aTH05_16	; "No.16       不思議の国のアリス      "
-		dd aTH05_17	; "No.17     the Grimoire of Alice     "
-		dd aTH05_18	; "No.18	      神社	       "
-		dd aTH05_19	; "No.19	    Endless	       "
-		dd aTH05_20	; "No.20	  久遠の楽園	       "
-		dd aTH05_21	; "No.21	 Mystic	Dream	       "
-		dd aTH05_22	; "No.22       Peaceful	Romancer       "
-		dd aTH05_23	; "No.23	 魂の休らむ所	       "
-		dd aMUSICROOM_QUIT1		; "	       タイトルに戻る	       "
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-public _MUSIC_FILES
-_MUSIC_FILES	label dword
-		dd aR_00		; "r_00"
-		dd aR_01		; "r_01"
-		dd aR_02		; "r_02"
-		dd aR_03		; "r_03"
-		dd aR_04		; "r_04"
-		dd aR_05		; "r_05"
-		dd aR_06		; "r_06"
-		dd aR_07		; "r_07"
-		dd aR_08		; "r_08"
-		dd aR_09		; "r_09"
-		dd aR_10		; "r_10"
-		dd aR_11		; "r_11"
-		dd aR_12		; "r_12"
-		dd aR_13		; "r_13"
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd aH_op		; "h_op"
-		dd aH_st00		; "h_st00"
-		dd aH_st00b		; "h_st00b"
-		dd aH_st01		; "h_st01"
-		dd aH_st01b		; "h_st01b"
-		dd aH_st02		; "h_st02"
-		dd aH_st02b		; "h_st02b"
-		dd aH_st03		; "h_st03"
-		dd aH_st03b		; "h_st03b"
-		dd aH_st04		; "h_st04"
-		dd aH_st04b		; "h_st04b"
-		dd aH_st05		; "h_st05"
-		dd aH_st05b		; "h_st05b"
-		dd aH_end		; "h_end"
-		dd aH_staff		; "h_staff"
-		dd aH_ng00		; "h_ng00"
-		dd aH_ng01		; "h_ng01"
-		dd aH_ng02		; "h_ng02"
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd aY_op		; "y_op"
-		dd aY_select		; "y_select"
-		dd aY_00mm		; "y_00mm"
-		dd aY_01mm		; "y_01mm"
-		dd aY_02mm		; "y_02mm"
-		dd aY_03mm		; "y_03mm"
-		dd aY_04mm		; "y_04mm"
-		dd aY_05mm		; "y_05mm"
-		dd aY_06mm		; "y_06mm"
-		dd aY_dec		; "y_dec"
-		dd aY_07mm		; "y_07mm"
-		dd aY_08mm		; "y_08mm"
-		dd aY_demo1		; "y_demo1"
-		dd aY_demo2		; "y_demo2"
-		dd aY_demo3		; "y_demo3"
-		dd aY_demo4		; "y_demo4"
-		dd aY_demo5		; "y_demo5"
-		dd aY_ed		; "y_ed"
-		dd aY_score		; "y_score"
-		dd aY_win		; "y_win"
-		dd aY_over		; "y_over"
-		dd aY_ng00		; "y_ng00"
-		dd aY_ng01		; "y_ng01"
-		dd aY_ng02		; "y_ng02"
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd aG_op		; "g_op"
-		dd aG_st00		; "g_st00"
-		dd aG_st10		; "g_st10"
-		dd aG_st00b		; "g_st00b"
-		dd aG_st01		; "g_st01"
-		dd aG_st01b		; "g_st01b"
-		dd aG_st02		; "g_st02"
-		dd aG_st02b		; "g_st02b"
-		dd aG_st03		; "g_st03"
-		dd aG_st03c		; "g_st03c"
-		dd aG_st03b		; "g_st03b"
-		dd aG_st04		; "g_st04"
-		dd aG_st04b		; "g_st04b"
-		dd aG_st05		; "g_st05"
-		dd aG_st05b		; "g_st05b"
-		dd aG_st06		; "g_st06"
-		dd aG_st06b		; "g_st06b"
-		dd aG_st06c		; "g_st06c"
-		dd aG_end1		; "g_end1"
-		dd aG_end2		; "g_end2"
-		dd aG_staff		; "g_staff"
-		dd aG_name		; "g_name"
-		dd aG_ng00		; "g_ng00"
-		dd aG_ng01		; "g_ng01"
-		dd aG_ng02		; "g_ng02"
-		dd aG_ng03		; "g_ng03"
-		dd aG_ng04		; "g_ng04"
-		dd aG_ng05		; "g_ng05"
-		dd    0
-		dd    0
-		dd aH_op+2
-		dd aH_st00+2
-		dd aH_st00b+2
-		dd aH_st01+2
-		dd aH_st01b+2
-		dd aH_st02+2
-		dd aH_st02b+2
-		dd aH_st03+2
-		dd aH_st03b+2
-		dd aG_st03c+2
-		dd aSt03d		; "st03d"
-		dd aH_st04+2
-		dd aH_st04b+2
-		dd aH_st05+2
-		dd aH_st05b+2
-		dd aG_st06+2
-		dd aG_st06b+2
-		dd aEd00		; "ed00"
-		dd aEd01		; "ed01"
-		dd aEd02		; "ed02"
-		dd aH_staff+2
-		dd aExed		; "exed"
-		dd aG_name+2
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-music_game	dw 4
-MUSICROOM_TRACKCOUNTS dw 14,18,24,28,23
-include th02/op/polygons[data].asm
-aMUSICROOM_UP		db '             ------ ▲ ------       ',0
-aMUSICROOM_DOWN		db '             ------ ▼ ------       ',0
-asc_104D5	db '             ----------------       ',0
-aMUSICROOM_TH01	db '   第１弾　東方靈異伝  Arrange ver  ',0
-aMUSICROOM_TH02	db '   第２弾　東方封魔録  Special MIX  ',0
-aMUSICROOM_TH03	db '   第３弾　東方夢時空  Special MIX  ',0
-aMUSICROOM_TH04	db '   第４弾　東方幻想郷  Special MIX  ',0
-aMUSICROOM_TH05	db '   第５弾　東方怪綺談 MysticSquare  ',0
-aTH01_01	db 'No.1           A Sacred Lot         ',0
-aTH01_02	db 'No.2            永遠の巫女          ',0
-aTH01_03	db 'No.3    The Positive and Negative   ',0
-aTH01_04	db 'No.4   Highly Responsive to Prayers ',0
-aTH01_05	db 'No.5            東方怪奇談          ',0
-aTH01_06	db 'No.6             天使伝説           ',0
-aTH01_07	db 'No.7        Oriental Magician       ',0
-aTH01_08	db 'No.8           破邪の小太刀         ',0
-aTH01_09	db 'No.9               魔鏡             ',0
-aTH01_10	db 'No.10       the Legend of KAGE      ',0
-aTH01_11	db 'No.11    いざ、倒れ逝くその時まで   ',0
-aTH01_12	db 'No.12      Civilization of Magic    ',0
-aTH01_13	db 'No.13            星幽天使           ',0
-aTH01_14	db 'No.14            アイリス           ',0
-aMUSICROOM_QUIT1	db '            タイトルに戻る          ',0
-aTH02_01	db 'No.1      東方封魔録　～浄土曼荼羅  ',0
-aTH02_02	db 'No.2      　 博麗　～Eastern Wind   ',0
-aTH02_03	db 'No.3      　  She',27h,'s in a temper!!   ',0
-aTH02_04	db 'No.4      　   End of Daylight　    ',0
-aTH02_05	db 'No.5      　  　 やみのちから　　   ',0
-aTH02_06	db 'No.6      　　　　　幻夢界　　　　  ',0
-aTH02_07	db 'No.7      　　　　死を賭して　　　  ',0
-aTH02_08	db 'No.8      ひもろぎ、むらさきにもえ  ',0
-aTH02_09	db 'No.9      　  　 恋色マジック 　    ',0
-aTH02_10	db 'No.10     　東方封魔録　～幽幻乱舞  ',0
-aTH02_11	db 'No.11         Complete Darkness     ',0
-aTH02_12	db 'No.12        　 エキストララブ      ',0
-aTH02_13	db 'No.13        戦車むすめのみるゆめ   ',0
-aTH02_14	db 'No.14          　　遠野の森　　　   ',0
-aTH02_15	db 'No.15         昔話わんだーらんど    ',0
-aTH02_16	db '未使用.1         博麗神社境内       ',0
-aTH02_17	db '未使用.2         　陽落ちて  　     ',0
-aTH02_18	db '未使用.3         　封魔終演  　     ',0
-aTH03_01	db 'No.1       　夢は時空を越えて       ',0
-aTH03_02	db 'No.2      　 　 Selection           ',0
-aTH03_03	db 'No.3            東方妖恋談          ',0
-aTH03_04	db 'No.4          Reincarnation         ',0
-aTH03_05	db 'No.5            Dim. Dream          ',0
-aTH03_06	db 'No.6     Tabula rasa　～空白少女    ',0
-aTH03_07	db 'No.7     　  Maniacal Princess      ',0
-aTH03_08	db 'No.8        夢消失  ～Lost Dream    ',0
-aTH03_09	db 'No.9       夢幻遊戯  ～Dream War    ',0
-aTH03_10	db 'No.10    魔法決戦！～Fight it out!  ',0
-aTH03_11	db 'No.11      　 Sailor of Time        ',0
-aTH03_12	db 'No.12       Strawberry Crisis!!     ',0
-aTH03_13	db 'No.13        非統一魔法世界論       ',0
-aTH03_14	db 'No.14          　魔法鐘愛           ',0
-aTH03_15	db 'No.15          　久遠の夢           ',0
-aTH03_16	db 'No.16          東方の青い空         ',0
-aTH03_17	db 'No.17           永遠の満月          ',0
-aTH03_18	db 'No.18         Maple Dream...        ',0
-aTH03_19	db 'No.19           霊人の休日          ',0
-aTH03_20	db 'No.20            勝利デモ           ',0
-aTH03_21	db 'No.21         ゲームオーバー        ',0
-aTH03_22	db '未使用.1          時の風            ',0
-aTH03_23	db '未使用.2     スターボウドリーム     ',0
-aTH03_24	db '未使用.3       Phantasmagoria       ',0
-aMUSICROOM_QUIT2	db '              タイトルに戻る        ',0
-aTH04_01	db 'No.1    幻想郷  ～ Lotus Land Story ',0
-aTH04_02	db 'No.2          Witching Dream        ',0
-aTH04_03	db 'No.3          Selene',27h,'s light        ',0
-aTH04_04	db 'No.4   装飾戦　～ Decoration Battle ',0
-aTH04_05	db 'No.5         Break the Sabbath      ',0
-aTH04_06	db 'No.6    紅響曲  ～ Scarlet Phoneme  ',0
-aTH04_07	db 'No.7            Bad Apple!!         ',0
-aTH04_08	db 'No.8     霊戦　～ Perdition crisis  ',0
-aTH04_09	db 'No.9         アリスマエステラ       ',0
-aTH04_10	db 'No.10    少女綺想曲　～ Capriccio   ',0
-aTH04_11	db 'No.11   星の器　～ Casket of Star   ',0
-aTH04_12	db 'No.12           Lotus Love          ',0
-aTH04_13	db 'No.13  眠れる恐怖 ～Sleeping Terror ',0
-aTH04_14	db 'No.14           Dream Land          ',0
-aTH04_15	db 'No.15    幽夢　～ Inanimate Dream   ',0
-aTH04_16	db 'No.16      禁じざるをえない遊戯     ',0
-aTH04_17	db 'No.17  メイド幻想　～ Icemilk Magic ',0
-aTH04_18	db 'No.18   かわいい悪魔　～ Innocence  ',0
-aTH04_19	db 'No.19              Days             ',0
-aTH04_20	db 'No.20            Peaceful           ',0
-aTH04_21	db 'No.21         Arcadian Dream        ',0
-aTH04_22	db 'No.22           幻想の住人          ',0
-aTH04_23	db '未使用.1        Lotus Road          ',0
-aTH04_24	db '未使用.2       Dreamy pilot         ',0
-aTH04_25	db '未使用.3      Incomplete Plot       ',0
-aTH04_26	db '未使用.4        Border Land         ',0
-aTH04_27	db '未使用.5   Magic Shop of Raspberry  ',0
-aTH04_28	db '未使用.6       Crescent Dream       ',0
-aTH05_01	db 'No.1     怪綺談　～ Mystic Square   ',0
-aTH05_02	db 'No.2           Dream Express        ',0
-aTH05_03	db 'No.3      魔法陣　～ Magic Square   ',0
-aTH05_04	db 'No.4             夢想時空           ',0
-aTH05_05	db 'No.5     霊天　～ Spiritual Heaven  ',0
-aTH05_06	db 'No.6         Romantic Children      ',0
-aTH05_07	db 'No.7       プラスチックマインド     ',0
-aTH05_08	db 'No.8          メイプルワイズ        ',0
-aTH05_09	db 'No.9  禁断の魔法  ～ Forbidden Magic',0
-aTH05_10	db 'No.10  真紅の少女　～ Crimson Dead!!',0
-aTH05_11	db 'No.11  裏切りの少女　～ Judas Kiss  ',0
-aTH05_12	db 'No.12       the Last Judgement      ',0
-aTH05_13	db 'No.13  悲しき人形　～ Doll of Misery',0
-aTH05_14	db 'No.14   世界の果て　～ World',27h,'s End  ',0
-aTH05_15	db 'No.15   神話幻想　～ Infinite Being ',0
-aTH05_16	db 'No.16       不思議の国のアリス      ',0
-aTH05_17	db 'No.17     the Grimoire of Alice     ',0
-aTH05_18	db 'No.18              神社             ',0
-aTH05_19	db 'No.19            Endless            ',0
-aTH05_20	db 'No.20          久遠の楽園           ',0
-aTH05_21	db 'No.21         Mystic Dream          ',0
-aTH05_22	db 'No.22       Peaceful Romancer       ',0
-aTH05_23	db 'No.23         魂の休らむ所          ',0
-aR_00		db 'r_00',0
-aR_01		db 'r_01',0
-aR_02		db 'r_02',0
-aR_03		db 'r_03',0
-aR_04		db 'r_04',0
-aR_05		db 'r_05',0
-aR_06		db 'r_06',0
-aR_07		db 'r_07',0
-aR_08		db 'r_08',0
-aR_09		db 'r_09',0
-aR_10		db 'r_10',0
-aR_11		db 'r_11',0
-aR_12		db 'r_12',0
-aR_13		db 'r_13',0
-aH_op		db 'h_op',0
-aH_st00		db 'h_st00',0
-aH_st00b	db 'h_st00b',0
-aH_st01		db 'h_st01',0
-aH_st01b	db 'h_st01b',0
-aH_st02		db 'h_st02',0
-aH_st02b	db 'h_st02b',0
-aH_st03		db 'h_st03',0
-aH_st03b	db 'h_st03b',0
-aH_st04		db 'h_st04',0
-aH_st04b	db 'h_st04b',0
-aH_st05		db 'h_st05',0
-aH_st05b	db 'h_st05b',0
-aH_end		db 'h_end',0
-aH_staff	db 'h_staff',0
-aH_ng00		db 'h_ng00',0
-aH_ng01		db 'h_ng01',0
-aH_ng02		db 'h_ng02',0
-aY_op		db 'y_op',0
-aY_select	db 'y_select',0
-aY_00mm		db 'y_00mm',0
-aY_01mm		db 'y_01mm',0
-aY_02mm		db 'y_02mm',0
-aY_03mm		db 'y_03mm',0
-aY_04mm		db 'y_04mm',0
-aY_05mm		db 'y_05mm',0
-aY_06mm		db 'y_06mm',0
-aY_dec		db 'y_dec',0
-aY_07mm		db 'y_07mm',0
-aY_08mm		db 'y_08mm',0
-aY_demo1	db 'y_demo1',0
-aY_demo2	db 'y_demo2',0
-aY_demo3	db 'y_demo3',0
-aY_demo4	db 'y_demo4',0
-aY_demo5	db 'y_demo5',0
-aY_ed		db 'y_ed',0
-aY_score	db 'y_score',0
-aY_win		db 'y_win',0
-aY_over		db 'y_over',0
-aY_ng00		db 'y_ng00',0
-aY_ng01		db 'y_ng01',0
-aY_ng02		db 'y_ng02',0
-aG_op		db 'g_op',0
-aG_st00		db 'g_st00',0
-aG_st10		db 'g_st10',0
-aG_st00b	db 'g_st00b',0
-aG_st01		db 'g_st01',0
-aG_st01b	db 'g_st01b',0
-aG_st02		db 'g_st02',0
-aG_st02b	db 'g_st02b',0
-aG_st03		db 'g_st03',0
-aG_st03c	db 'g_st03c',0
-aG_st03b	db 'g_st03b',0
-aG_st04		db 'g_st04',0
-aG_st04b	db 'g_st04b',0
-aG_st05		db 'g_st05',0
-aG_st05b	db 'g_st05b',0
-aG_st06		db 'g_st06',0
-aG_st06b	db 'g_st06b',0
-aG_st06c	db 'g_st06c',0
-aG_end1		db 'g_end1',0
-aG_end2		db 'g_end2',0
-aG_staff	db 'g_staff',0
-aG_name		db 'g_name',0
-aG_ng00		db 'g_ng00',0
-aG_ng01		db 'g_ng01',0
-aG_ng02		db 'g_ng02',0
-aG_ng03		db 'g_ng03',0
-aG_ng04		db 'g_ng04',0
-aG_ng05		db 'g_ng05',0
-aSt03d		db 'st03d',0
-aEd00		db 'ed00',0
-aEd01		db 'ed01',0
-aEd02		db 'ed02',0
-aExed		db 'exed',0
+	extern _LABEL_UP:dword
+	extern _LABEL_DOWN:dword
+	extern _LABEL_GAME:dword
+	extern _MUSIC_CHOICES:dword
+	extern _MUSIC_FILES:dword
+	extern _game_sel:word
+	extern _TRACK_COUNT:word:5
+	extern _polygons_initialized:byte
+	aH_op = ($ - 530)
+
 include th05/op/music_cmt_load[data].asm
 aMusic_pi	db 'music.pi',0
 aMusic_dat	db 'music.dat',0
