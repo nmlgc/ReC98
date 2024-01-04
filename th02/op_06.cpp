@@ -22,7 +22,6 @@ extern "C" {
 }
 #include "th02/shiftjis/fns.hpp"
 
-extern const shiftjis_t* MUSIC_CHOICES[17];
 extern const char* MUSIC_FILES[15];
 extern uint8_t track_playing;
 
@@ -49,14 +48,7 @@ dots8_t *screen_back_B;
 Planar<dots8_t far *> cmt_back;
 
 void pascal near track_put(uint8_t sel, vc_t col);
-
-void pascal near draw_tracks(unsigned char sel)
-{
-	int i;
-	for(i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
-		track_put(i, (i == sel) ? V_WHITE : 3);
-	}
-}
+void pascal near tracklist_put(uint8_t sel);
 
 void pascal near screen_back_B_snap(void)
 {
@@ -234,7 +226,7 @@ void pascal musicroom(void)
 
 	pi_load_put_8_free(0, reinterpret_cast<const char *>(MK_FP(_DS, 0x0C1D)));
 	music_sel = track_playing;
-	draw_tracks(music_sel);
+	tracklist_put(music_sel);
 	graph_copy_page(0);
 
 	graph_accesspage(1);

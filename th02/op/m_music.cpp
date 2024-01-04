@@ -44,6 +44,10 @@ static const screen_x_t TRACKLIST_LEFT = ((GAME == 5) ? 12 : 16);
 
 	static const screen_y_t TRACKLIST_TOP = 96;
 	static const pixel_t TRACKLIST_H = (TRACKLIST_VISIBLE_COUNT * GLYPH_H);
+
+	static const screen_y_t LABEL_GAME_TOP = 32;
+	static const screen_y_t LABEL_UP_TOP = (TRACKLIST_TOP - GLYPH_H);
+	static const screen_y_t LABEL_DOWN_TOP = (TRACKLIST_TOP + TRACKLIST_H);
 #else
 	inline screen_y_t track_top(uint8_t sel) {
 		#if (GAME == 4)
@@ -86,6 +90,7 @@ extern page_t music_page;
 
 	extern int track_id_at_top;
 	extern int track_playing;
+	extern int track_count_cur;
 	// --------------------
 
 	void pascal near track_unput_or_put(uint8_t track_sel, bool16 put)
@@ -127,6 +132,23 @@ extern page_t music_page;
 		top += TRACKLIST_TOP;
 		graph_putsa_fx(TRACKLIST_LEFT, top, col, choice);
 	}
+
+	void pascal near tracklist_put(uint8_t sel)
+	{
+		for(int i = 0; i < (track_count_cur + 2); i++) {
+			track_unput_or_put(i, (i == sel));
+		}
+		graph_putsa_fx(TRACKLIST_LEFT, LABEL_UP_TOP, COL_TRACKLIST, LABEL_UP);
+		graph_putsa_fx(
+			TRACKLIST_LEFT, LABEL_DOWN_TOP, COL_TRACKLIST, LABEL_DOWN
+		);
+		graph_putsa_fx(
+			TRACKLIST_LEFT,
+			LABEL_GAME_TOP,
+			COL_TRACKLIST_SELECTED,
+			LABEL_GAME[game_sel]
+		);
+	}
 #else
 	void pascal near track_put(uint8_t sel, vc_t col)
 	{
@@ -140,4 +162,13 @@ extern page_t music_page;
 			TRACKLIST_LEFT, track_top(sel), track_fx(col), MUSIC_CHOICES[sel]
 		);
 	}
+
+	void pascal near tracklist_put(uint8_t sel)
+	{
+		int i;
+		for(i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
+			track_put(i, ((i == sel) ? COL_TRACKLIST_SELECTED : COL_TRACKLIST));
+		}
+	}
 #endif
+

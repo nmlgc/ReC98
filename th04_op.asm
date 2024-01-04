@@ -71,47 +71,8 @@ OP_SETUP_TEXT ends
 op_01_TEXT segment byte public 'CODE' use16
 	@TRACK_PUT$QUCUC procdesc pascal near \
 		sel:byte, col:byte
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACKS
-draw_tracks	proc near
-
-@@sel		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BF5E
-; ---------------------------------------------------------------------------
-
-loc_BF49:
-		push	si
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		cmp	ax, si
-		jnz	short loc_BF57
-		mov	al, 3
-		jmp	short loc_BF59
-; ---------------------------------------------------------------------------
-
-loc_BF57:
-		mov	al, 5
-
-loc_BF59:
-		push	ax
-		call	@track_put$qucuc
-		inc	si
-
-loc_BF5E:
-		cmp	si, 18h
-		jl	short loc_BF49
-		pop	si
-		pop	bp
-		retn	2
-draw_tracks	endp
+	@TRACKLIST_PUT$QUC procdesc pascal near \
+		sel:byte
 
 include th02/op/music.asm
 include th02/op/music_cmt_load.asm
@@ -267,7 +228,7 @@ _musicroom	proc near
 		freePISlotLarge	0
 		mov	al, _track_playing
 		mov	_music_sel, al
-		call	draw_tracks pascal, word ptr _music_sel
+		call	@tracklist_put$quc pascal, word ptr _music_sel
 		call	graph_copy_page pascal, 0
 		call	_bgimage_snap
 		graph_accesspage 1

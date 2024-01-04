@@ -72,57 +72,8 @@ OP_SETUP_TEXT ends
 op_01_TEXT segment byte public 'CODE' use16
 	@TRACK_UNPUT_OR_PUT$QUCI procdesc pascal near \
 		track_sel:byte, boot:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACKS
-draw_tracks	proc near
-
-@@sel		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BF6B
-; ---------------------------------------------------------------------------
-
-loc_BF55:
-		push	si
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		cmp	ax, si
-		jnz	short loc_BF64
-		mov	ax, 1
-		jmp	short loc_BF66
-; ---------------------------------------------------------------------------
-
-loc_BF64:
-		xor	ax, ax
-
-loc_BF66:
-		push	ax
-		call	@track_unput_or_put$quci
-		inc	si
-
-loc_BF6B:
-		mov	ax, musicroom_trackcount
-		add	ax, 2
-		cmp	ax, si
-		jg	short loc_BF55
-		call	graph_putsa_fx pascal, (12 shl 16) or 80, 5, large [_LABEL_UP]
-		call	graph_putsa_fx pascal, (12 shl 16) or 288, 5, large [_LABEL_DOWN]
-		push	(12 shl 16) or 32
-		push	3
-		mov	bx, _game_sel
-		shl	bx, 2
-		pushd	dword ptr _LABEL_GAME[bx]
-		call	graph_putsa_fx
-		pop	si
-		pop	bp
-		retn	2
-draw_tracks	endp
+	@TRACKLIST_PUT$QUC procdesc pascal near \
+		sel:byte
 
 include th02/op/music.asm
 include th05/op/music_cmt_load.asm
@@ -264,11 +215,11 @@ arg_0		= word ptr  4
 		mov	si, [bp+arg_0]
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
-		call	draw_tracks pascal, si
+		call	@tracklist_put$quc pascal, si
 		call	music_flip
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
-		call	draw_tracks pascal, si
+		call	@tracklist_put$quc pascal, si
 		pop	si
 		pop	bp
 		retn	2
@@ -292,7 +243,7 @@ _musicroom	proc near
 		mov	bx, _game_sel
 		add	bx, bx
 		mov	ax, _TRACK_COUNT[bx]
-		mov	musicroom_trackcount, ax
+		mov	_track_count_cur, ax
 		mov	byte_13E96, 0
 		call	cdg_free_all
 		call	text_clear
@@ -310,7 +261,7 @@ _musicroom	proc near
 		call	@piano_setup_and_put_initial$qv
 		call	screen_back_B_snap
 		call	_bgimage_snap
-		call	draw_tracks pascal, word ptr _music_sel
+		call	@tracklist_put$quc pascal, word ptr _music_sel
 		call	graph_copy_page pascal, 0
 		graph_accesspage 1
 		graph_showpage 0
@@ -372,12 +323,12 @@ loc_C5AE:
 ; ---------------------------------------------------------------------------
 
 loc_C5D5:
-		mov	al, byte ptr musicroom_trackcount
+		mov	al, byte ptr _track_count_cur
 		mov	_music_sel, al
-		mov	ax, musicroom_trackcount
+		mov	ax, _track_count_cur
 		add	ax, -11
 		mov	_track_id_at_top, ax
-		push	musicroom_trackcount
+		push	_track_count_cur
 		call	sub_C441
 
 loc_C5EB:
@@ -386,7 +337,7 @@ loc_C5EB:
 		mov	al, _music_sel
 		mov	[bp+@@sel], al
 		mov	ah, 0
-		cmp	ax, musicroom_trackcount
+		cmp	ax, _track_count_cur
 		jge	short loc_C652
 		inc	_music_sel
 		mov	al, _music_sel
@@ -450,7 +401,7 @@ loc_C698:
 		mov	bx, _game_sel
 		add	bx, bx
 		mov	ax, _TRACK_COUNT[bx]
-		mov	musicroom_trackcount, ax
+		mov	_track_count_cur, ax
 		push	0
 		call	sub_C441
 		kajacall	KAJA_SONG_FADE, 32
@@ -469,7 +420,7 @@ loc_C6E3:
 loc_C6F1:
 		mov	al, _music_sel
 		mov	ah, 0
-		cmp	ax, musicroom_trackcount
+		cmp	ax, _track_count_cur
 		jz	loc_C77F
 		kajacall	KAJA_SONG_FADE, 32
 		mov	al, byte ptr _track_playing
@@ -940,9 +891,6 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-	extern _LABEL_UP:dword
-	extern _LABEL_DOWN:dword
-	extern _LABEL_GAME:dword
 	extern _MUSIC_FILES:dword
 	extern _game_sel:word
 	extern _TRACK_COUNT:word:5
@@ -980,10 +928,10 @@ byte_13E96	db ?
 		db ?
 include th03/op/cmt_back[bss].asm
 include th02/op/music_cmt[bss].asm
-public _track_id_at_top, _track_playing
+public _track_id_at_top, _track_playing, _track_count_cur
 _track_id_at_top	dw ?
 _track_playing  	dw ?
-musicroom_trackcount	dw ?
+_track_count_cur	dw ?
 	extern _hi:scoredat_section_t
 	extern _hi2:scoredat_section_t
 	extern _rank:byte
