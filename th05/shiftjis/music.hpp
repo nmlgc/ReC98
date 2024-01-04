@@ -6,6 +6,9 @@
 static const unsigned int GAME_COUNT = 5;
 static const unsigned int TRACKS_MAX = 30;
 
+// Corresponds to 36 Shift-JIS code units.
+static const pixel_t TRACKLIST_W = 288;
+
 const shiftjis_t* LABEL_UP     = "             ------ Å£ ------       ";
 const shiftjis_t* LABEL_DOWN   = "             ------ Å• ------       ";
 

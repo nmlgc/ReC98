@@ -1324,59 +1324,8 @@ _main		endp
 op_01_TEXT ends
 
 OP_MUSIC_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACK
-draw_track	proc near
-
-var_1  	= byte ptr -1
-@@color	= byte ptr  4
-@@sel  	= byte ptr  6
-
-		enter	2, 0
-		mov	al, 1
-		sub	al, _music_page
-		mov	[bp+var_1], al
-		graph_accesspage al
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 40
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		or	ax, FX_WEIGHT_BOLD
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_CHOICES[bx]
-		call	graph_putsa_fx
-		graph_accesspage _music_page
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 40
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		or	ax, FX_WEIGHT_BOLD
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_CHOICES[bx]
-		call	graph_putsa_fx
-		leave
-		retn	4
-draw_track	endp
-
+	@TRACK_PUT$QUCUC procdesc pascal near \
+		sel:byte, col:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1408,7 +1357,7 @@ loc_A5A6:
 
 loc_A5A8:
 		push	ax
-		call	draw_track
+		call	@track_put$qucuc
 		inc	si
 
 loc_A5AD:
@@ -1488,7 +1437,7 @@ loc_ACD3:
 		call	input_mode_interface
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_AD0E
-		call	draw_track pascal, word ptr _music_sel, 3
+		call	@track_put$qucuc pascal, word ptr _music_sel, 3
 		cmp	_music_sel, 0
 		jbe	short loc_ACF5
 		dec	_music_sel
@@ -1504,12 +1453,12 @@ loc_ACFA:
 		dec	_music_sel
 
 loc_AD05:
-		call	draw_track pascal, word ptr _music_sel, V_WHITE
+		call	@track_put$qucuc pascal, word ptr _music_sel, V_WHITE
 
 loc_AD0E:
 		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_AD44
-		call	draw_track pascal, word ptr _music_sel, 3
+		call	@track_put$qucuc pascal, word ptr _music_sel, 3
 		cmp	_music_sel, 14h
 		jnb	short loc_AD2B
 		inc	_music_sel
@@ -1525,7 +1474,7 @@ loc_AD30:
 		inc	_music_sel
 
 loc_AD3B:
-		call	draw_track pascal, word ptr _music_sel, V_WHITE
+		call	@track_put$qucuc pascal, word ptr _music_sel, V_WHITE
 
 loc_AD44:
 		test	_input_sp.lo, low INPUT_SHOT
@@ -3321,7 +3270,6 @@ SHARED	ends
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
 
-	extern _MUSIC_CHOICES:dword
 	extern _MUSIC_FILES:dword
 	extern _track_playing:byte
 	extern _polygons_initialized:byte

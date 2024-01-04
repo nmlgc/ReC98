@@ -48,24 +48,13 @@ page_t music_page;
 dots8_t *screen_back_B;
 Planar<dots8_t far *> cmt_back;
 
-void pascal near draw_track(unsigned char sel, unsigned char color)
-{
-	page_t other_page = (1 - music_page);
-	graph_accesspage(other_page);
-	graph_putsa_fx(
-		16, ((sel + 6) * GLYPH_H), (color | FX_WEIGHT_BOLD), MUSIC_CHOICES[sel]
-	);
-	graph_accesspage(music_page);
-	graph_putsa_fx(
-		16, ((sel + 6) * GLYPH_H), (color | FX_WEIGHT_BOLD), MUSIC_CHOICES[sel]
-	);
-}
+void pascal near track_put(uint8_t sel, vc_t col);
 
 void pascal near draw_tracks(unsigned char sel)
 {
 	int i;
 	for(i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
-		draw_track(i, (i == sel) ? V_WHITE : 3);
+		track_put(i, (i == sel) ? V_WHITE : 3);
 	}
 }
 
@@ -267,7 +256,7 @@ void pascal musicroom(void)
 controls:
 		input_sense();
 		if(key_det & INPUT_UP) {
-			draw_track(music_sel, 3);
+			track_put(music_sel, 3);
 			if(music_sel > 0) {
 				music_sel--;
 			} else {
@@ -276,10 +265,10 @@ controls:
 			if(music_sel == TRACK_COUNT) {
 				music_sel--;
 			}
-			draw_track(music_sel, V_WHITE);
+			track_put(music_sel, V_WHITE);
 		}
 		if(key_det & INPUT_DOWN) {
-			draw_track(music_sel, 3);
+			track_put(music_sel, 3);
 			if(music_sel < SEL_QUIT) {
 				music_sel++;
 			} else {
@@ -288,7 +277,7 @@ controls:
 			if(music_sel == TRACK_COUNT) {
 				music_sel++;
 			}
-			draw_track(music_sel, V_WHITE);
+			track_put(music_sel, V_WHITE);
 		}
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			if(music_sel != SEL_QUIT) {

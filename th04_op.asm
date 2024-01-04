@@ -69,57 +69,8 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACK
-draw_track	proc near
-
-var_1		= byte ptr -1
-@@color		= byte ptr  4
-@@sel		= byte ptr  6
-
-		enter	2, 0
-		mov	al, 1
-		sub	al, _music_page
-		mov	[bp+var_1], al
-		graph_accesspage al
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 8
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_CHOICES[bx]
-		call	graph_putsa_fx
-		graph_accesspage _music_page
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 8
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_CHOICES[bx]
-		call	graph_putsa_fx
-		leave
-		retn	4
-draw_track	endp
-
+	@TRACK_PUT$QUCUC procdesc pascal near \
+		sel:byte, col:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -151,7 +102,7 @@ loc_BF57:
 
 loc_BF59:
 		push	ax
-		call	draw_track
+		call	@track_put$qucuc
 		inc	si
 
 loc_BF5E:
@@ -340,7 +291,7 @@ loc_C465:
 		call	far ptr	_input_reset_sense
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_C4A0
-		call	draw_track pascal, word ptr _music_sel, 5
+		call	@track_put$qucuc pascal, word ptr _music_sel, 5
 		cmp	_music_sel, 0
 		jbe	short loc_C487
 		dec	_music_sel
@@ -356,12 +307,12 @@ loc_C48C:
 		dec	_music_sel
 
 loc_C497:
-		call	draw_track pascal, word ptr _music_sel, 3
+		call	@track_put$qucuc pascal, word ptr _music_sel, 3
 
 loc_C4A0:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_C4D6
-		call	draw_track pascal, word ptr _music_sel, 5
+		call	@track_put$qucuc pascal, word ptr _music_sel, 5
 		cmp	_music_sel, 17h
 		jnb	short loc_C4BD
 		inc	_music_sel
@@ -377,7 +328,7 @@ loc_C4C2:
 		inc	_music_sel
 
 loc_C4CD:
-		call	draw_track pascal, word ptr _music_sel, 3
+		call	@track_put$qucuc pascal, word ptr _music_sel, 3
 
 loc_C4D6:
 		test	_key_det.lo, low INPUT_SHOT
@@ -1179,7 +1130,6 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-	extern _MUSIC_CHOICES:dword
 	extern _MUSIC_FILES:dword
 	extern _track_playing:byte
 	extern _polygons_initialized:byte

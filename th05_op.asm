@@ -40,10 +40,8 @@ _TEXT	segment	word public 'CODE' use16
 	extern FILE_SEEK:proc
 	extern FILE_WRITE:proc
 	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_HLINE:proc
 	extern GRCG_POLYGON_C:proc
 	extern GRCG_SETCOLOR:proc
-	extern GRCG_VLINE:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
 	extern PALETTE_SHOW:proc
@@ -72,99 +70,8 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACK
-draw_track	proc near
-
-var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-
-		enter	6, 0
-		push	si
-		mov	[bp+var_5], 5
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		sub	ax, word_1403A
-		shl	ax, 4
-		mov	si, ax
-		or	si, si
-		jl	loc_BF48
-		cmp	si, 192
-		jge	loc_BF48
-		cmp	[bp+arg_0], 0
-		jz	short loc_BEF4
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 5
-		push	(12 shl 16) or 300
-		lea	ax, [si+96]
-		push	ax
-		call	grcg_hline
-		push	(12 shl 16) or 300
-		lea	ax, [si+111]
-		push	ax
-		call	grcg_hline
-		push	12
-		lea	ax, [si+96]
-		push	ax
-		lea	ax, [si+111]
-		push	ax
-		call	grcg_vline
-		push	300
-		lea	ax, [si+96]
-		push	ax
-		lea	ax, [si+111]
-		push	ax
-		call	grcg_vline
-		GRCG_OFF_CLOBBERING dx
-		jmp	short loc_BF05
-; ---------------------------------------------------------------------------
-
-loc_BEF4:
-		push	0
-		lea	ax, [si+96]
-		push	ax
-		push	(320 shl 16) or 16
-		call	bgimage_put_rect_16
-
-loc_BF05:
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		cmp	ax, word_1403C
-		jnz	short loc_BF14
-		mov	[bp+var_5], 3
-
-loc_BF14:
-		mov	bx, _game_sel
-		imul	bx, 78h
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		shl	ax, 2
-		add	bx, ax
-		mov	ax, word ptr _MUSIC_CHOICES+2[bx]
-		mov	dx, word ptr _MUSIC_CHOICES[bx]
-		mov	[bp+var_2], ax
-		mov	[bp+var_4], dx
-		add	si, 96
-		push	12
-		push	si
-		mov	al, [bp+var_5]
-		mov	ah, 0
-		push	ax
-		push	[bp+var_2]
-		push	dx
-		call	graph_putsa_fx
-
-loc_BF48:
-		pop	si
-		leave
-		retn	4
-draw_track	endp
-
+	@TRACK_UNPUT_OR_PUT$QUCI procdesc pascal near \
+		track_sel:byte, boot:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -196,7 +103,7 @@ loc_BF64:
 
 loc_BF66:
 		push	ax
-		call	draw_track
+		call	@track_unput_or_put$quci
 		inc	si
 
 loc_BF6B:
@@ -379,8 +286,8 @@ _musicroom	proc near
 		enter	2, 0
 		push	si
 		xor	si, si
-		mov	word_1403A, 0
-		mov	word_1403C, 0
+		mov	_track_id_at_top, 0
+		mov	_track_playing, 0
 		mov	_music_sel, 0
 		mov	bx, _game_sel
 		add	bx, bx
@@ -448,7 +355,7 @@ loc_C57F:
 		dec	_music_sel
 		mov	al, _music_sel
 		mov	ah, 0
-		cmp	ax, word_1403A
+		cmp	ax, _track_id_at_top
 		jge	short loc_C5AE
 		mov	al, _music_sel
 		mov	ah, 0
@@ -456,11 +363,11 @@ loc_C57F:
 ; ---------------------------------------------------------------------------
 
 loc_C5AE:
-		call	draw_track pascal, word ptr [bp+@@sel], 0
-		call	draw_track pascal, word ptr _music_sel, 1
+		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
+		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		call	music_flip
-		call	draw_track pascal, word ptr [bp+@@sel], 0
-		call	draw_track pascal, word ptr _music_sel, 1
+		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
+		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		jmp	short loc_C5EB
 ; ---------------------------------------------------------------------------
 
@@ -468,8 +375,8 @@ loc_C5D5:
 		mov	al, byte ptr musicroom_trackcount
 		mov	_music_sel, al
 		mov	ax, musicroom_trackcount
-		add	ax, 0FFF5h
-		mov	word_1403A, ax
+		add	ax, -11
+		mov	_track_id_at_top, ax
 		push	musicroom_trackcount
 		call	sub_C441
 
@@ -484,16 +391,16 @@ loc_C5EB:
 		inc	_music_sel
 		mov	al, _music_sel
 		mov	ah, 0
-		mov	dx, word_1403A
-		add	dx, 0Ch
+		mov	dx, _track_id_at_top
+		add	dx, 12
 		cmp	ax, dx
 		jl	short loc_C62B
 		mov	al, _music_sel
 		mov	ah, 0
-		add	ax, 0FFF5h
+		add	ax, -11
 
 loc_C61C:
-		mov	word_1403A, ax
+		mov	_track_id_at_top, ax
 		mov	al, _music_sel
 		mov	ah, 0
 		push	ax
@@ -502,17 +409,17 @@ loc_C61C:
 ; ---------------------------------------------------------------------------
 
 loc_C62B:
-		call	draw_track pascal, word ptr [bp+@@sel], 0
-		call	draw_track pascal, word ptr _music_sel, 1
+		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
+		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		call	music_flip
-		call	draw_track pascal, word ptr [bp+@@sel], 0
-		call	draw_track pascal, word ptr _music_sel, 1
+		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
+		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		jmp	short loc_C666
 ; ---------------------------------------------------------------------------
 
 loc_C652:
 		mov	_music_sel, 0
-		mov	word_1403A, 0
+		mov	_track_id_at_top, 0
 		mov	al, _music_sel
 		mov	ah, 0
 		push	ax
@@ -538,8 +445,8 @@ loc_C680:
 
 loc_C698:
 		mov	_music_sel, 0
-		mov	word_1403C, 0
-		mov	word_1403A, 0
+		mov	_track_playing, 0
+		mov	_track_id_at_top, 0
 		mov	bx, _game_sel
 		add	bx, bx
 		mov	ax, _TRACK_COUNT[bx]
@@ -565,16 +472,16 @@ loc_C6F1:
 		cmp	ax, musicroom_trackcount
 		jz	loc_C77F
 		kajacall	KAJA_SONG_FADE, 32
-		mov	al, byte ptr word_1403C
+		mov	al, byte ptr _track_playing
 		mov	[bp+@@sel], al
 		mov	al, _music_sel
 		mov	ah, 0
-		mov	word_1403C, ax
-		call	draw_track pascal, word ptr [bp+@@sel], 0
-		call	draw_track pascal, word ptr _music_sel, 1
+		mov	_track_playing, ax
+		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
+		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		call	music_flip
-		call	draw_track pascal, word ptr [bp+@@sel], 0
-		call	draw_track pascal, word ptr _music_sel, 1
+		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
+		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		mov	al, _music_sel
 		mov	ah, 0
 		call	draw_cmt pascal, ax
@@ -1036,7 +943,6 @@ include th04/zunsoft[data].asm
 	extern _LABEL_UP:dword
 	extern _LABEL_DOWN:dword
 	extern _LABEL_GAME:dword
-	extern _MUSIC_CHOICES:dword
 	extern _MUSIC_FILES:dword
 	extern _game_sel:word
 	extern _TRACK_COUNT:word:5
@@ -1074,8 +980,9 @@ byte_13E96	db ?
 		db ?
 include th03/op/cmt_back[bss].asm
 include th02/op/music_cmt[bss].asm
-word_1403A	dw ?
-word_1403C	dw ?
+public _track_id_at_top, _track_playing
+_track_id_at_top	dw ?
+_track_playing  	dw ?
 musicroom_trackcount	dw ?
 	extern _hi:scoredat_section_t
 	extern _hi2:scoredat_section_t
