@@ -1373,7 +1373,7 @@ loc_AC15:
 		call	graph_copy_page pascal, 0
 		graph_accesspage 1
 		graph_showpage 0
-		call	screen_back_B_snap
+		call	@nopoly_B_snap$qv
 		call	cmt_back_snap
 		graph_accesspage 1
 		mov	al, _track_playing
@@ -1483,7 +1483,7 @@ loc_ADB0:
 ; ---------------------------------------------------------------------------
 
 loc_ADC1:
-		call	screen_back_B_free
+		call	@nopoly_B_free$qv
 		call	cmt_back_free
 		graph_showpage 0
 		graph_accesspage al

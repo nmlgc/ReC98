@@ -1,5 +1,5 @@
-public _screen_back_B
-_screen_back_B	dw ?
+public _nopoly_B
+_nopoly_B	dw ?
 
 public _cmt_back
 _cmt_back	label dword

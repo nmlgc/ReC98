@@ -180,7 +180,7 @@ draw_cmt	proc near
 
 loc_C406:
 		call	music_cmt_load pascal, [bp+@@track]
-		call	screen_back_B_put
+		call	@nopoly_B_put$qv
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 256
 		cmp	byte_13E96, 0
 		jz	short loc_C42C
@@ -195,7 +195,7 @@ loc_C42C:
 		call	draw_cmt_lines
 
 loc_C43A:
-		call	screen_back_B_put
+		call	@nopoly_B_put$qv
 		pop	bp
 		retn	2
 draw_cmt	endp
@@ -259,7 +259,7 @@ _musicroom	proc near
 		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	@piano_setup_and_put_initial$qv
-		call	screen_back_B_snap
+		call	@nopoly_B_snap$qv
 		call	_bgimage_snap
 		call	@tracklist_put$quc pascal, word ptr _music_sel
 		call	graph_copy_page pascal, 0
@@ -467,7 +467,7 @@ loc_C790:
 		call	pfend
 		call	pfstart pascal, ds, offset aKaikidan1_dat1
 		kajacall	KAJA_SONG_FADE, 16
-		call	screen_back_B_free
+		call	@nopoly_B_free$qv
 		graph_showpage 0
 		graph_accesspage al
 		push	1
@@ -885,9 +885,6 @@ SHARED	ends
 
 	; th04/hardware/grppsafx[data].asm
 	extern _graph_putsa_fx_func:word
-
-	; th05/hardware/vram_planes[data].asm
-	extern _VRAM_PLANE_B:dword
 
 include th04/zunsoft[data].asm
 

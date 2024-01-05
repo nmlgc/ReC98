@@ -11,7 +11,7 @@ draw_cmt	proc near
 	push	si
 	push	di
 	call	music_cmt_load pascal, [bp+@@track]
-	call	screen_back_B_put
+	call	@nopoly_B_put$qv
 	call	cmt_back_put
 	push	1300040h
 	push	1Fh
@@ -47,7 +47,7 @@ loc_ABE5:
 	les	bx, _VRAM_PLANE_B
 	add	bx, si
 	mov	eax, es:[bx]
-	mov	es, _screen_back_B
+	mov	es, _nopoly_B
 	mov	es:[si], eax
 	add	si, 4
 

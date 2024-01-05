@@ -10,67 +10,9 @@ else
 POLYGONS_RENDERED = 16
 endif
 
-public SCREEN_BACK_B_SNAP
-screen_back_B_snap	proc near
-	push	bp
-	mov	bp, sp
-	push	si
-	call	hmem_allocbyte pascal, PLANE_SIZE
-	mov	_screen_back_B, ax
-	xor	si, si
-	jmp	short loc_A5DF
-; ---------------------------------------------------------------------------
-
-loc_A5CA:
-	les	bx, _VRAM_PLANE_B
-	add	bx, si
-	mov	eax, es:[bx]
-	mov	es, _screen_back_B
-	mov	es:[si], eax
-	add	si, 4
-
-loc_A5DF:
-	cmp	si, PLANE_SIZE
-	jl	short loc_A5CA
-	pop	si
-	pop	bp
-	retn
-screen_back_B_snap	endp
-
-
-public SCREEN_BACK_B_FREE
-screen_back_B_free	proc near
-	push	bp
-	mov	bp, sp
-	call	hmem_free pascal, _screen_back_B
-	pop	bp
-	retn
-screen_back_B_free	endp
-
-
-public SCREEN_BACK_B_PUT
-screen_back_B_put	proc near
-	push	bp
-	mov	bp, sp
-	push	si
-	push	di
-	push	ds
-	mov	ax, 0A800h
-	mov	es, ax
-	assume es:nothing
-	mov	ax, _screen_back_B
-	mov	ds, ax
-	xor	di, di
-	xor	si, si
-	mov	cx, (PLANE_SIZE / 2)
-	rep movsw
-	pop	ds
-	pop	di
-	pop	si
-	pop	bp
-	retn
-screen_back_B_put	endp
-
+	@nopoly_B_snap$qv procdesc near
+	@nopoly_B_free$qv procdesc near
+	@nopoly_B_put$qv procdesc near
 
 polygon_build	proc near
 
@@ -366,7 +308,7 @@ public MUSIC_FLIP
 music_flip	proc near
 	push	bp
 	mov	bp, sp
-	call	screen_back_B_put
+	call	@nopoly_B_put$qv
 if GAME eq 5
 	call	@piano_render$qv
 endif

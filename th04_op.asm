@@ -48,7 +48,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern IRAND:proc
 	extern TEXT_CLEAR:proc
 	extern HMEM_ALLOCBYTE:proc
-	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT_RECT:proc
@@ -184,7 +183,7 @@ draw_cmt	proc near
 
 loc_C37C:
 		call	music_cmt_load pascal, [bp+@@track]
-		call	screen_back_B_put
+		call	@nopoly_B_put$qv
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		cmp	byte_12DBE, 0
 		jz	short loc_C3A2
@@ -199,7 +198,7 @@ loc_C3A2:
 		call	draw_cmt_lines
 
 loc_C3B0:
-		call	screen_back_B_put
+		call	@nopoly_B_put$qv
 		pop	bp
 		retn	2
 draw_cmt	endp
@@ -233,7 +232,7 @@ _musicroom	proc near
 		call	_bgimage_snap
 		graph_accesspage 1
 		graph_showpage 0
-		call	screen_back_B_snap
+		call	@nopoly_B_snap$qv
 		mov	al, _track_playing
 		mov	ah, 0
 		call	draw_cmt pascal, ax
@@ -331,7 +330,7 @@ loc_C533:
 
 loc_C544:
 		kajacall	KAJA_SONG_FADE, 16
-		call	screen_back_B_free
+		call	@nopoly_B_free$qv
 		graph_showpage 0
 		graph_accesspage al
 		push	1

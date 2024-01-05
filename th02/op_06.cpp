@@ -44,27 +44,14 @@ char rot_speed[MUSIC_POLYGONS];
 
 unsigned char music_sel;
 page_t music_page;
-dots8_t *screen_back_B;
+dots8_t *nopoly_B;
 Planar<dots8_t far *> cmt_back;
 
 void pascal near track_put(uint8_t sel, vc_t col);
 void pascal near tracklist_put(uint8_t sel);
-
-void pascal near screen_back_B_snap(void)
-{
-	screen_back_B = HMem<dots8_t>::alloc(PLANE_SIZE);
-	plane_dword_blit(screen_back_B, VRAM_PLANE_B);
-}
-
-void pascal near screen_back_B_free(void)
-{
-	HMem<dots8_t>::free(screen_back_B);
-}
-
-void pascal near screen_back_B_put(void)
-{
-	plane_dword_blit(VRAM_PLANE_B, screen_back_B);
-}
+void near nopoly_B_snap(void);
+void near nopoly_B_free(void);
+void near nopoly_B_put(void);
 
 void pascal near polygon_build(
 	screen_point_t near *pts,
@@ -134,7 +121,7 @@ void pascal near polygons_update_and_render(void)
 
 void pascal near music_flip(void)
 {
-	screen_back_B_put();
+	nopoly_B_put();
 	grcg_setcolor((GC_RMW | GC_B), V_WHITE);
 	polygons_update_and_render();
 	grcg_off();
@@ -201,7 +188,7 @@ void pascal near draw_cmt(int track)
 {
 	int line;
 	music_cmt_load(track);
-	screen_back_B_put();
+	nopoly_B_put();
 	cmt_back_put();
 
 	graph_putsa_fx(160, 64, (V_WHITE | FX_WEIGHT_HEAVY), music_cmt[0]);
@@ -210,7 +197,7 @@ void pascal near draw_cmt(int track)
 			304, ((line + 4) * GLYPH_H), (13 | FX_WEIGHT_HEAVY), music_cmt[line]
 		);
 	}
-	plane_dword_blit(screen_back_B, VRAM_PLANE_B);
+	plane_dword_blit(nopoly_B, VRAM_PLANE_B);
 }
 
 void pascal musicroom(void)
@@ -231,7 +218,7 @@ void pascal musicroom(void)
 
 	graph_accesspage(1);
 	graph_showpage(0);
-	screen_back_B_snap();
+	nopoly_B_snap();
 	cmt_back_snap();
 
 	graph_accesspage(1);	draw_cmt(track_playing);
@@ -306,7 +293,7 @@ controls:
 			break;
 		}
 	};
-	screen_back_B_free();
+	nopoly_B_free();
 	cmt_back_free();
 	graph_showpage(0);
 	graph_accesspage(0);

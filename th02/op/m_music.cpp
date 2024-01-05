@@ -1,3 +1,4 @@
+#include <mem.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -83,6 +84,18 @@ bool polygons_initialized = false;
 #endif
 extern page_t music_page;
 // ---------------
+
+// Backgrounds
+// -----------
+
+// B plane of the background image as loaded from the .PI file, without any
+// polygons drawn on top of it.
+#if (GAME >= 3)
+	extern dots8_t __seg* nopoly_B;
+#else
+	extern dots8_t* nopoly_B;
+#endif
+// -----------
 
 #if (GAME == 5)
 	// TH05 selection state
@@ -172,3 +185,34 @@ extern page_t music_page;
 	}
 #endif
 
+void near nopoly_B_snap(void)
+{
+	nopoly_B = HMem<dots8_t>::alloc(PLANE_SIZE);
+	for(vram_offset_t p = 0; p < PLANE_SIZE; p += int(sizeof(dots32_t))) {
+		*reinterpret_cast<dots32_t *>(nopoly_B + p) = VRAM_CHUNK(B, p, 32);
+	}
+}
+
+void near nopoly_B_free(void)
+{
+	HMem<dots8_t>::free(nopoly_B);
+}
+
+void near nopoly_B_put(void)
+{
+	#if (GAME >= 3)
+		// ZUN bloat: This doesn't even compile to a 32-wide memcpy().
+		asm { push ds; }
+		_ES = SEG_PLANE_B;
+		_AX = FP_SEG(nopoly_B);
+		_DS = _AX;
+		__memcpy__(MK_FP(_ES, 0), MK_FP(_DS, 0), PLANE_SIZE);
+		asm { pop ds; }
+	#else
+		for(vram_offset_t p = 0; p < PLANE_SIZE; p += int(sizeof(dots32_t))) {
+			VRAM_CHUNK(B, p, 32) = (
+				*reinterpret_cast<dots32_t *>(nopoly_B + p)
+			);
+		}
+	#endif
+}
