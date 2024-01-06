@@ -5,7 +5,13 @@
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
+#include "game/coords.hpp"
 #include "th02/v_colors.hpp"
+#if (GAME >= 3)
+	#include "th03/math/polar.hpp"
+#else
+	#include "th01/math/polar.hpp"
+#endif
 extern "C" {
 #if (GAME >= 4)
 	#include "th04/hardware/bgimage.hpp"
@@ -70,10 +76,37 @@ static const screen_x_t TRACKLIST_LEFT = ((GAME == 5) ? 12 : 16);
 #endif
 // -----------
 
+// ZUN bloat
+#if (GAME == 5)
+	static int8_t unused[104];
+#elif (GAME == 4)
+	static int8_t unused[56];
+#endif
+
 // Polygon state
 // -------------
 
+struct polygon_point_t {
+	pixel_t x;
+	Subpixel y;
+};
+
+static const unsigned int POLYGON_COUNT = 16;
+
+// ZUN quirk: This has to be intentional.
+static const unsigned int POLYGONS_RENDERED = (
+	(GAME == 5) ? (POLYGON_COUNT - 2) : POLYGON_COUNT
+);
+
 bool polygons_initialized = false;
+
+// ZUN bloat: Could have been local to polygons_update_and_render().
+static screen_point_t points[10];
+
+static polygon_point_t center[POLYGON_COUNT];
+static polygon_point_t velocity[POLYGON_COUNT];
+static unsigned char angle[POLYGON_COUNT];
+static unsigned char angle_speed[POLYGON_COUNT];
 // -------------
 
 // Selection state
@@ -215,4 +248,87 @@ void near nopoly_B_put(void)
 			);
 		}
 	#endif
+}
+
+void pascal near polygon_build(
+	screen_point_t near* points,
+	screen_x_t center_x,
+	space_changing_pixel_t center_y,
+	pixel_t radius,
+	int point_count,
+	unsigned char plus_angle
+)
+{
+	int i;
+
+	// ZUN bloat: center_y.pixel = center_y.sp.to_pixel();
+	center_y.sp.v >>= SUBPIXEL_BITS;
+
+	for(i = 0; i < point_count; i++) {
+		unsigned char point_angle = (((i << 8) / point_count) + plus_angle);
+		#if (GAME >= 3)
+			points[i].x = polar_x(center_x, radius, point_angle);
+			points[i].y = polar_y(center_y.pixel, radius, point_angle);
+		#else
+			points[i].x = polar_x_fast(center_x, radius, point_angle);
+			points[i].y = polar_y_fast(center_y.pixel, radius, point_angle);
+		#endif
+	}
+	points[i].x = points[0].x;
+	points[i].y = points[0].y;
+}
+
+#define polygon_init(i, center_y, velocity_x) { \
+	center[i].x = (rand() % RES_X); \
+	center[i].y.v = center_y; \
+	velocity[i].x = velocity_x; \
+	if(velocity[i].x == 0) { \
+		velocity[i].x = 1; \
+	} \
+	velocity[i].y.v = (to_sp(2.0f) + TO_SP(rand() & 3)); \
+	angle[i] = rand(); \
+	angle_speed[i] = (0x04 - (rand() & 0x07)); \
+	if(angle_speed[i] == 0x00) { \
+		angle_speed[i] = 0x04; \
+	} \
+}
+
+inline int polygon_vertex_count(int polygon_index) {
+	return ((polygon_index / 4) + 3);
+}
+
+void near polygons_update_and_render(void)
+{
+	int i;
+	if(!polygons_initialized) {
+		for(i = 0; i < POLYGONS_RENDERED; i++) {
+			polygon_init(i, (rand() % to_sp(RES_Y)), (4 - (rand() & 7)));
+		}
+
+		// ZUN quirk: This is never reset.
+		polygons_initialized = true;
+	}
+	for(i = 0; i < POLYGONS_RENDERED; i++) {
+		polygon_build(
+			points,
+			center[i].x,
+			reinterpret_cast<space_changing_pixel_t &>(center[i].y),
+			(((i & 3) * 16) + 64),
+			polygon_vertex_count(i),
+			angle[i]
+		);
+		center[i].x += velocity[i].x;
+		center[i].y.v += velocity[i].y.v;
+		angle[i] += angle_speed[i];
+		if((center[i].x <= 0) || (center[i].x >= (RES_X - 1))) {
+			velocity[i].x *= -1;
+		}
+
+		// Enough to cover the maximum possible radius of 96.
+		if(center[i].y >= to_sp(RES_Y + 100.0f)) {
+			polygon_init(i, to_sp(-100.0f), (8 - (rand() & 15)));
+		}
+
+		grcg_polygon_c(points, polygon_vertex_count(i));
+	}
 }

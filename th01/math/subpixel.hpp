@@ -13,14 +13,14 @@ static const subpixel_t SUBPIXEL_FACTOR = 16;
 static const char SUBPIXEL_BITS = 4;
 
 #define TO_SP(v) \
-	(v << SUBPIXEL_BITS)
+	((v) << SUBPIXEL_BITS)
 
 #define TO_PIXEL(v) \
-	(v >> SUBPIXEL_BITS)
+	((v) >> SUBPIXEL_BITS)
 
 // In-place conversion to a pixel. Ugly, and should not exist.
 #define TO_PIXEL_INPLACE(v) \
-	(v >>= SUBPIXEL_BITS)
+	((v) >>= SUBPIXEL_BITS)
 
 inline subpixel_t to_sp(float pixel_v) {
 	return static_cast<subpixel_t>(pixel_v * SUBPIXEL_FACTOR);

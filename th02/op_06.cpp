@@ -8,12 +8,10 @@
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
-#include "th01/math/polar.hpp"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
-#include "th02/v_colors.hpp"
-#include "th02/math/vector.hpp"
 }
+#include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 extern "C" {
 #include "th02/hardware/input.hpp"
@@ -30,17 +28,7 @@ static const int MUSIC_CMT_LINE_COUNT = 20;
 
 #define SEL_QUIT TRACK_COUNT + 1
 
-#define MUSIC_POLYGONS 16
-
 #define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
-
-// Polygon state
-extern bool polygons_initialized;
-screen_point_t points[10];
-screen_point_t pos[MUSIC_POLYGONS];
-point_t move_speed[MUSIC_POLYGONS];
-char angle[MUSIC_POLYGONS];
-char rot_speed[MUSIC_POLYGONS];
 
 unsigned char music_sel;
 page_t music_page;
@@ -52,72 +40,7 @@ void pascal near tracklist_put(uint8_t sel);
 void near nopoly_B_snap(void);
 void near nopoly_B_free(void);
 void near nopoly_B_put(void);
-
-void pascal near polygon_build(
-	screen_point_t near *pts,
-	screen_x_t x,
-	screen_y_t y,
-	int rad,
-	int npoint,
-	char angle
-)
-{
-	int i;
-	y >>= 4;
-	for(i = 0; i < npoint; i++) {
-		unsigned char point_angle = ((i << 8) / npoint) + angle;
-		pts[i].x = polar_x_fast(x, rad, point_angle);
-		pts[i].y = polar_y_fast(y, rad, point_angle);
-	}
-	pts[i].x = pts[0].x;
-	pts[i].y = pts[0].y;
-}
-
-#define polygon_init(i, y_, velocity_x) { \
-	pos[i].x = (rand() % RES_X); \
-	pos[i].y = y_; \
-	move_speed[i].x = velocity_x; \
-	if(move_speed[i].x == 0) { \
-		move_speed[i].x = 1; \
-	} \
-	move_speed[i].y = (((rand() & 3) << 4) + 32); \
-	angle[i] = rand(); \
-	rot_speed[i] = 0x04 - (rand() & 0x07); \
-	if(rot_speed[i] == 0x00) { \
-		rot_speed[i] = 0x04; \
-	} \
-}
-
-inline int polygon_vertex_count(int i) {
-	return ((i / 4) + 3);
-}
-
-void pascal near polygons_update_and_render(void)
-{
-	int i;
-	if(!polygons_initialized) {
-		for(i = 0; i < MUSIC_POLYGONS; i++) {
-			polygon_init(i, (rand() % (RES_Y * 16)), (4 - (rand() & 7)));
-		}
-		polygons_initialized = true;
-	}
-	for(i = 0; i < MUSIC_POLYGONS; i++) {
-		polygon_build(
-			points, pos[i].x, pos[i].y,
-			(((i & 3) << 4) + 64), polygon_vertex_count(i), angle[i]
-		);
-		pos[i].x += move_speed[i].x;
-		pos[i].y += move_speed[i].y;
-		angle[i] += rot_speed[i];
-		if(pos[i].x <= 0 || pos[i].x >= 639) {
-			move_speed[i].x *= -1;
-		}
-		if(pos[i].y >= (RES_Y * 20)) {
-			polygon_init(i, -(RES_Y * 4), (8 - (rand() & 15)));
-		}
-		grcg_polygon_c(points, polygon_vertex_count(i));
-	}
-}
+void near polygons_update_and_render(void);
 
 void pascal near music_flip(void)
 {

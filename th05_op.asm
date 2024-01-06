@@ -40,7 +40,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern FILE_SEEK:proc
 	extern FILE_WRITE:proc
 	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_POLYGON_C:proc
 	extern GRCG_SETCOLOR:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
@@ -891,7 +890,6 @@ include th04/zunsoft[data].asm
 	extern _MUSIC_FILES:dword
 	extern _game_sel:word
 	extern _TRACK_COUNT:word:5
-	extern _polygons_initialized:byte
 	aH_op = ($ - 530)
 
 include th05/op/music_cmt_load[data].asm
@@ -919,7 +917,6 @@ aOp_1		db 'op',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-		db 104 dup(?)
 include th02/op/music[bss].asm
 byte_13E96	db ?
 		db ?

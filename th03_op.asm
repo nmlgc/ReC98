@@ -40,7 +40,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern FILE_SEEK:proc
 	extern GRCG_BOXFILL:proc
 	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_POLYGON_C:proc
 	extern GRCG_PSET:proc
 	extern GRCG_SETCOLOR:proc
 	extern GRCG_OFF:proc
@@ -3233,7 +3232,6 @@ SHARED	ends
 
 	extern _MUSIC_FILES:dword
 	extern _track_playing:byte
-	extern _polygons_initialized:byte
 	_aMUSIC_TXT = (aOp3_pi - 10)
 	aOp3_pi = ($ - 7)
 
