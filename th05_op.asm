@@ -40,7 +40,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern FILE_SEEK:proc
 	extern FILE_WRITE:proc
 	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_SETCOLOR:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
 	extern PALETTE_SHOW:proc
@@ -127,9 +126,9 @@ sub_C376	proc near
 loc_C37F:
 		mov	_graph_putsa_fx_func, si
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		inc	si
 
 loc_C390:
@@ -137,7 +136,7 @@ loc_C390:
 		jl	short loc_C37F
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		call	draw_cmt_lines
 		pop	si
 		pop	bp
@@ -155,7 +154,7 @@ sub_C3A7	proc near
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or  32, (320 shl 16) or  16
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or 180, (320 shl 16) or 144
-		call	music_flip
+		call	@music_flip$qv
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or  32, (320 shl 16) or  16
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or 180, (320 shl 16) or 144
 		pop	bp
@@ -190,7 +189,7 @@ loc_C406:
 loc_C42C:
 		mov	byte_13E96, 1
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		call	draw_cmt_lines
 
 loc_C43A:
@@ -215,7 +214,7 @@ arg_0		= word ptr  4
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
 		call	@tracklist_put$quc pascal, si
-		call	music_flip
+		call	@music_flip$qv
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
 		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
 		call	@tracklist_put$quc pascal, si
@@ -290,7 +289,7 @@ loc_C574:
 
 loc_C579:
 		inc	si
-		call	music_flip
+		call	@music_flip$qv
 		jmp	short loc_C555
 ; ---------------------------------------------------------------------------
 
@@ -315,7 +314,7 @@ loc_C57F:
 loc_C5AE:
 		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
 		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		call	music_flip
+		call	@music_flip$qv
 		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
 		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		jmp	short loc_C5EB
@@ -361,7 +360,7 @@ loc_C61C:
 loc_C62B:
 		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
 		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		call	music_flip
+		call	@music_flip$qv
 		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
 		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		jmp	short loc_C666
@@ -429,7 +428,7 @@ loc_C6F1:
 		mov	_track_playing, ax
 		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
 		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		call	music_flip
+		call	@music_flip$qv
 		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
 		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		mov	al, _music_sel
@@ -450,7 +449,7 @@ loc_C767:
 		cmp	_key_det, INPUT_NONE
 		jnz	loc_C555
 		xor	si, si
-		call	music_flip
+		call	@music_flip$qv
 		jmp	loc_C57F
 ; ---------------------------------------------------------------------------
 
@@ -458,7 +457,7 @@ loc_C77F:
 		call	_input_reset_sense_held
 		cmp	_key_det, INPUT_NONE
 		jz	short loc_C790
-		call	music_flip
+		call	@music_flip$qv
 		jmp	short loc_C77F
 ; ---------------------------------------------------------------------------
 
@@ -858,7 +857,6 @@ include th02/snd/snd.inc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
 	extern @POLAR$QIII:proc
-	extern @piano_render$qv:proc
 	extern @piano_setup_and_put_initial$qv:proc
 	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc

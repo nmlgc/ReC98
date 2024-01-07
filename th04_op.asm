@@ -132,9 +132,9 @@ sub_C30E	proc near
 loc_C317:
 		mov	_graph_putsa_fx_func, si
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		inc	si
 
 loc_C328:
@@ -142,7 +142,7 @@ loc_C328:
 		jl	short loc_C317
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		call	draw_cmt_lines
 		pop	si
 		pop	bp
@@ -159,7 +159,7 @@ sub_C33F	proc near
 		mov	bp, sp
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		call	music_flip
+		call	@music_flip$qv
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		pop	bp
 		retn
@@ -193,7 +193,7 @@ loc_C37C:
 loc_C3A2:
 		mov	byte_12DBE, 1
 		call	draw_cmt_lines
-		call	music_flip
+		call	@music_flip$qv
 		call	draw_cmt_lines
 
 loc_C3B0:
@@ -242,7 +242,7 @@ loc_C454:
 		call	far ptr	_input_reset_sense
 		cmp	_key_det, INPUT_NONE
 		jz	short loc_C465
-		call	music_flip
+		call	@music_flip$qv
 		jmp	short loc_C454
 ; ---------------------------------------------------------------------------
 
@@ -315,7 +315,7 @@ loc_C51D:
 		jnz	short loc_C533
 		cmp	_key_det, INPUT_NONE
 		jnz	loc_C454
-		call	music_flip
+		call	@music_flip$qv
 		jmp	loc_C465
 ; ---------------------------------------------------------------------------
 
@@ -323,7 +323,7 @@ loc_C533:
 		call	far ptr	_input_reset_sense
 		cmp	_key_det, INPUT_NONE
 		jz	short loc_C544
-		call	music_flip
+		call	@music_flip$qv
 		jmp	short loc_C533
 ; ---------------------------------------------------------------------------
 
@@ -1072,7 +1072,6 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
-	extern @FRAME_DELAY_2$QI:proc
 SHARED	ends
 
 	.data

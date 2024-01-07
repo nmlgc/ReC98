@@ -12,7 +12,6 @@ extern "C" {
 #include "th01/hardware/grppsafx.h"
 }
 #include "th02/v_colors.hpp"
-#include "th02/hardware/frmdelay.h"
 extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
@@ -30,8 +29,8 @@ static const int MUSIC_CMT_LINE_COUNT = 20;
 
 #define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
 
-unsigned char music_sel;
-page_t music_page;
+extern unsigned char music_sel;
+extern page_t music_page;
 dots8_t *nopoly_B;
 Planar<dots8_t far *> cmt_back;
 
@@ -40,19 +39,7 @@ void pascal near tracklist_put(uint8_t sel);
 void near nopoly_B_snap(void);
 void near nopoly_B_free(void);
 void near nopoly_B_put(void);
-void near polygons_update_and_render(void);
-
-void pascal near music_flip(void)
-{
-	nopoly_B_put();
-	grcg_setcolor((GC_RMW | GC_B), V_WHITE);
-	polygons_update_and_render();
-	grcg_off();
-	graph_showpage(music_page);
-	music_page = 1 - music_page;
-	graph_accesspage(music_page);
-	frame_delay(1);
-}
+void near music_flip(void);
 
 #define cmt_bg_put_planar(cmt_bg_p, vo, x, dst, dst_p, src, src_p) \
 	size_t cmt_bg_p = 0; \

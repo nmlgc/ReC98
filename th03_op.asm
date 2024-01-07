@@ -1389,7 +1389,7 @@ loc_ACC2:
 		call	input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_ACD3
-		call	music_flip
+		call	@music_flip$qv
 		jmp	short loc_ACC2
 ; ---------------------------------------------------------------------------
 
@@ -1459,7 +1459,7 @@ loc_AD52:
 		mov	_track_playing, al
 		mov	ah, 0
 		call	draw_cmt pascal, ax
-		call	music_flip
+		call	@music_flip$qv
 		mov	al, _music_sel
 		mov	ah, 0
 		call	draw_cmt pascal, ax
@@ -1469,7 +1469,7 @@ loc_AD9A:
 		jnz	short loc_ADB0
 		cmp	_input_sp, INPUT_NONE
 		jnz	loc_ACC2
-		call	music_flip
+		call	@music_flip$qv
 		jmp	loc_ACD3
 ; ---------------------------------------------------------------------------
 
@@ -1477,7 +1477,7 @@ loc_ADB0:
 		call	input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_ADC1
-		call	music_flip
+		call	@music_flip$qv
 		jmp	short loc_ADB0
 ; ---------------------------------------------------------------------------
 
@@ -3168,7 +3168,6 @@ include th02/snd/snd.inc
 	extern INPUT_MODE_KEY_VS_JOY:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
-	extern @FRAME_DELAY_2$QI:proc
 SHARED	ends
 
 	.data

@@ -7,6 +7,7 @@
 #include "master.hpp"
 #include "game/coords.hpp"
 #include "th02/v_colors.hpp"
+#include "th02/hardware/frmdelay.h"
 #if (GAME >= 3)
 	#include "th03/math/polar.hpp"
 #else
@@ -21,6 +22,7 @@ extern "C" {
 #endif
 }
 #if (GAME == 5)
+	#include "th05/op/piano.hpp"
 	#include "th05/shiftjis/music.hpp"
 
 	int game_sel = (GAME_COUNT - 1);
@@ -115,7 +117,8 @@ static unsigned char angle_speed[POLYGON_COUNT];
 #if (GAME <= 4)
 	uint8_t track_playing = 0;
 #endif
-extern page_t music_page;
+uint8_t music_sel;
+page_t music_page;
 // ---------------
 
 // Backgrounds
@@ -331,4 +334,50 @@ void near polygons_update_and_render(void)
 
 		grcg_polygon_c(points, polygon_vertex_count(i));
 	}
+}
+
+// ZUN bloat
+#if ((GAME == 3) || (GAME == 4))
+	#define frame_delay frame_delay_2
+#endif
+#if (GAME <= 3)
+	#undef grcg_off
+#endif
+
+void near music_flip(void)
+{
+	nopoly_B_put();
+	#if (GAME == 5)
+		piano_render();
+	#endif
+
+	// Draw the polygons via the GRCG by setting all bits in all tile registers
+	// but restricting blitting to the B plane. Technically, using the GRCG
+	// wouldn't be necessary and is in fact a slower way of regularly writing
+	// pixels to just the B plane, but all master.lib polygon drawing functions
+	// write to VRAM using `=` (MOV) rather than `|=` (OR), and thus expect the
+	// GRCG to be enabled.
+	grcg_setcolor((GC_RMW | GC_B), 0xF);
+	polygons_update_and_render();
+	grcg_off();
+
+	// This is the correct position for a VSync delay. frame_delay() returns
+	// immediately after a VSync interrupt and at the beginning of the vertical
+	// blanking interval, which is the safest point to flip pages.
+	#if (GAME == 5)
+		frame_delay(1);
+	#endif
+
+	graph_showpage(music_page);
+	music_page = (1 - music_page);
+	graph_accesspage(music_page);
+
+	// ZUN landmine: Waiting for VSync *after* flipping, however, means that we
+	// almost certainly *don't* flip within the vertical blanking interval, but
+	// somewhere *within* a frame while the beam is still traveling across the
+	// screen. This ensures a tearing line on all but the fastest PC-98
+	// systems, with the pixels above always being one frame behind.
+	#if (GAME <= 4)
+		frame_delay(1);
+	#endif
 }
