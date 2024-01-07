@@ -148,7 +148,7 @@ _TEXT		ends
 ; ===========================================================================
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 ; Segment type:	Pure code
@@ -226,7 +226,7 @@ _main		proc far
 		enter	4, 0
 		mov	word ptr [bp+@@cong_fn+2], ds
 		mov	word ptr [bp+@@cong_fn], offset _CongFN
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	locret_A290
 		les	bx, _resident
@@ -234,7 +234,7 @@ _main		proc far
 		les	bx, [bp+@@cong_fn]
 		mov	es:[bx+4], al
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
-		call	game_init_main pascal, ds, offset aMSzlEd_dat
+		call	@game_init_main$qnxuc pascal, ds, offset aMSzlEd_dat
 		call	gaiji_backup
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
@@ -281,8 +281,7 @@ loc_A187:
 
 loc_A1E9:
 		kajacall	KAJA_SONG_FADE, 4
-		push	64h ; 'd'
-		call	frame_delay
+		call	@frame_delay$qi pascal, 100
 		call	sub_C814
 		jmp	loc_A281
 ; ---------------------------------------------------------------------------
@@ -291,7 +290,7 @@ loc_A1FE:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnz	short loc_A274
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		call	sub_C814
 		les	bx, [bp+@@cong_fn]
 		mov	byte ptr es:[bx+5], '4'
@@ -312,8 +311,7 @@ loc_A1FE:
 ; ---------------------------------------------------------------------------
 
 loc_A274:
-		push	64h ; 'd'
-		call	frame_delay
+		call	@frame_delay$qi pascal, 100
 		call	sub_C814
 
 loc_A27E:
@@ -1893,8 +1891,7 @@ loc_C084:
 		call	file_read
 		mov	byte_124EF, 0
 		call	file_close
-		push	40h
-		call	frame_delay
+		call	@frame_delay$qi pascal, 64
 		push	(64 shl 16) or 360
 		push	V_WHITE
 		push	ds
@@ -3057,8 +3054,7 @@ loc_CB67:
 
 loc_CB6B:
 		call	far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_C9F6
 ; ---------------------------------------------------------------------------
 
@@ -3189,7 +3185,7 @@ maine_01_TEXT	ends
 
 SHARED	segment	word public 'CODE' use16
 include th02/snd/snd.inc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern PI_LOAD:proc
@@ -3209,7 +3205,7 @@ SHARED_	segment	word public 'CODE' use16
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc
 	extern @game_exit$qv:proc
-	extern GAME_INIT_MAIN:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern _bgimage_snap:proc

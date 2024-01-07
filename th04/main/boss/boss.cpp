@@ -6,9 +6,7 @@
 #include "libs/kaja/kaja.h"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
-}
 #include "th03/hardware/palette.hpp"
 #include "th04/common.h"
 #include "th04/gaiji/gaiji.h"

@@ -288,11 +288,11 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short loc_AB86
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
-		call	game_init_main pascal, ds, offset aUmx
+		call	@game_init_main$qnxuc pascal, ds, offset aUmx
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
@@ -341,8 +341,7 @@ sub_AB88	proc near
 		mov	bp, sp
 		push	si
 		mov	_slowdown_factor, 1
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	main_01:far ptr	_input_reset_sense
 
 loc_AB9E:
@@ -3501,8 +3500,7 @@ loc_E556:
 		call	main_01:sub_E4D1
 		or	al, al
 		jnz	short loc_E566
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E556
 ; ---------------------------------------------------------------------------
 
@@ -3514,8 +3512,7 @@ loc_E571:
 		call	main_01:sub_E461
 		or	al, al
 		jnz	short loc_E581
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E571
 ; ---------------------------------------------------------------------------
 
@@ -3526,8 +3523,7 @@ loc_E581:
 
 loc_E588:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_22C3F, TX_WHITE
 		sub	[bp+var_2], 2
 
@@ -3540,8 +3536,7 @@ loc_E5B5:
 
 loc_E5C2:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_22C42, TX_WHITE
 		add	[bp+var_2], 2
 
@@ -3560,8 +3555,7 @@ loc_E61E:
 		call	main_01:sub_E4D1
 		or	al, al
 		jnz	short loc_E62E
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E61E
 ; ---------------------------------------------------------------------------
 
@@ -3575,8 +3569,7 @@ loc_E63F:
 		call	main_01:sub_E461
 		or	al, al
 		jnz	short loc_E64F
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E63F
 ; ---------------------------------------------------------------------------
 
@@ -3706,8 +3699,7 @@ loc_E783:
 
 loc_E787:
 		call	main_01:far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_E703
 ; ---------------------------------------------------------------------------
 
@@ -8557,7 +8549,7 @@ sub_11ECB	endp
 main_012_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 main_013_TEXT	segment	word public 'CODE' use16
@@ -10487,7 +10479,7 @@ BOSS_BG_TEXT	ends
 SHARED	segment	word public 'CODE' use16
 include th02/snd/snd.inc
 	extern VECTOR2:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern MPN_FREE:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern MPN_LOAD_PALETTE_SHOW:proc
@@ -10500,7 +10492,7 @@ SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 	extern @game_exit$qv:proc
-	extern GAME_INIT_MAIN:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc

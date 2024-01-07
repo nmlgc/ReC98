@@ -8,9 +8,9 @@
 #include "th02/score.h"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/core/globals.hpp"
+extern "C" {
 #include "th02/snd/snd.h"
 }
 #include "th02/main/playfld.hpp"

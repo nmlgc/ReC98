@@ -1,8 +1,8 @@
 #pragma option -zCSHARED
 
-extern "C" {
 #include "platform.h"
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th04/hardware/input.h"
 
 // TODO: Remove these macros once those functions are part of the actual

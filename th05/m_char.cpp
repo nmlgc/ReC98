@@ -10,8 +10,8 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"
 #include "th04/score.h"

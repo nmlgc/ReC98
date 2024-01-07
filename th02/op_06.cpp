@@ -13,7 +13,9 @@ extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/v_colors.hpp"
 #include "th02/math/vector.hpp"
+}
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"

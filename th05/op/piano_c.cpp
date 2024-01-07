@@ -7,7 +7,6 @@
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th04/hardware/grcg.hpp"
-extern "C" {
 #include "th05/op/piano.h"
 #include "th05/sprites/piano_l.hpp"
 
@@ -83,6 +82,7 @@ extern piano_notes_t piano_notes_prev;
 
 /// Helper functions
 /// ----------------
+extern "C" {
 
 // Additionally takes:
 // • `void far *vram_at_x0_and_top_of_part<es:di>`
@@ -135,6 +135,7 @@ inline void piano_label_putc(int col, int row, piano_label_t chr) {
 	piano_label_putc(0, row, pl_##chr1); \
 	piano_label_putc(1, row, pl_##chr2); \
 	piano_label_putc(2, row, pl_##chr3);
+}
 /// ----------------
 
 void piano_setup_and_put_initial(void)
@@ -205,6 +206,4 @@ void piano_render(void)
 	grcg_off();
 
 	_asm { pop 	ds; }
-}
-
 }

@@ -3,7 +3,6 @@
  * Code segment #4 of TH02's MAINE.EXE
  */
 
-extern "C" {
 #include <dos.h>
 #include "platform.h"
 #include "pc98.h"
@@ -12,6 +11,7 @@ extern "C" {
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/gaiji/gaiji.h"

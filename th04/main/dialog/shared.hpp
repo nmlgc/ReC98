@@ -11,10 +11,10 @@
 #include "libs/kaja/kaja.h"
 #include "th01/math/subpixel.hpp"
 #include "th02/hardware/egc.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/pages.hpp"
 #include "th02/formats/tile.hpp"
+extern "C" {
 #include "th03/formats/cdg.h"
 #if (GAME == 5)
 	#include "th05/hardware/input.h"

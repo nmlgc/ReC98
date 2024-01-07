@@ -11,9 +11,7 @@
 #include "th01/math/polar.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/math/vector.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
-}
 
 void pascal near rotrect_draw(int rad, unsigned char angle)
 {

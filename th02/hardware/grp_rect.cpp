@@ -5,7 +5,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-extern "C" {
 #include "th02/hardware/grp_rect.h"
 
 void pascal graph_copy_rect_1_to_0_16(
@@ -26,6 +25,4 @@ void pascal graph_copy_rect_1_to_0_16(
 		}
 		row_p += ROW_SIZE;
 	}
-}
-
 }

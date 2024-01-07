@@ -3,8 +3,8 @@
 #include "platform.h"
 #include "x86real.h"
 #include "libs/kaja/kaja.h"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th02/snd/snd.h"
 #include "th02/snd/measure.hpp"
 

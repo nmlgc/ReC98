@@ -400,7 +400,7 @@ _musicroom	proc near
 		call	pi_palette_apply pascal, 0
 		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
-		call	_piano_setup_and_put_initial
+		call	@piano_setup_and_put_initial$qv
 		call	screen_back_B_snap
 		call	_bgimage_snap
 		call	draw_tracks pascal, word ptr _music_sel
@@ -931,7 +931,7 @@ loc_CC9F:
 
 loc_CCA9:
 		call	_input_reset_sense_held
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CD17
 		test	_key_det.lo, low INPUT_SHOT
@@ -975,7 +975,7 @@ loc_CD17:
 
 loc_CD64:
 		call	_input_reset_sense_held
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CD64
 		kajacall	KAJA_SONG_STOP
@@ -1001,8 +1001,8 @@ include th02/snd/snd.inc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
 	extern @POLAR$QIII:proc
-	extern _piano_render:proc
-	extern _piano_setup_and_put_initial:proc
+	extern @piano_render$qv:proc
+	extern @piano_setup_and_put_initial$qv:proc
 	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
@@ -1012,7 +1012,7 @@ include th02/snd/snd.inc
 	extern PI_FREE:proc
 	extern _input_reset_sense_held:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern CDG_FREE_ALL:proc
 SHARED	ends
 

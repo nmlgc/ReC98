@@ -9,8 +9,8 @@
 #include "libs/kaja/kaja.h"
 #include "th02/common.h"
 #include "th02/resident.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/hardware/pages.hpp"
 #include "th02/snd/snd.h"

@@ -12,8 +12,8 @@
 #include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th02/common.h"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th02/hardware/input.hpp"
 }
 #include "th02/core/globals.hpp"

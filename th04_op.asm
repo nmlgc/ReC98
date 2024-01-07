@@ -776,8 +776,7 @@ loc_CADA:
 
 loc_CAE4:
 		call	far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CB58
 		test	_key_det.lo, low INPUT_SHOT
@@ -826,8 +825,7 @@ loc_CB58:
 
 loc_CBB3:
 		call	far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CBB3
 		kajacall	KAJA_SONG_STOP
@@ -1007,8 +1005,7 @@ loc_CDB0:
 		mov	PaletteTone, di
 		call	far ptr	palette_show
 		add	di, 2
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_CDC4:
@@ -1070,8 +1067,7 @@ loc_CEC7:
 		mov	Palettes[0 * size rgb_t].g, al
 		mov	Palettes[0 * size rgb_t].b, al
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, -16
@@ -1123,8 +1119,7 @@ loc_CF34:
 		cmp	di, COLOR_COUNT
 		jl	short loc_CEFA
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, -4
@@ -1147,7 +1142,7 @@ op_01_TEXT ends
 
 SHARED	segment	word public 'CODE' use16
 include th02/snd/snd.inc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern PI_LOAD:proc
@@ -1167,7 +1162,7 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
-	extern FRAME_DELAY_2:proc
+	extern @FRAME_DELAY_2$QI:proc
 SHARED	ends
 
 	.data

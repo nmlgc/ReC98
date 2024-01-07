@@ -5,7 +5,6 @@
 #include "master.hpp"
 #include "th04/score.h"
 #include "th05/resident.hpp"
-extern "C" {
 #include "th04/formats/cfg.hpp"
 
 resident_t __seg* near cfg_load_resident_ptr(void)
@@ -34,5 +33,3 @@ resident_t __seg* near cfg_load_resident_ptr(void)
 	return cfg.resident;
 }
 #pragma codestring "\x90"
-
-}

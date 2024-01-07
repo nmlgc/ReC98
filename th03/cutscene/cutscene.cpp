@@ -21,8 +21,8 @@
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th02/v_colors.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #if (GAME == 5)
 	#include "th04/hardware/bgimage.hpp"
 	#include "th04/hardware/grppsafx.h"

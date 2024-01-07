@@ -147,7 +147,7 @@ bin\th04\res_huma.com: th04\res_huma.cpp
 $**
 | masters.lib
 
-bin\th04\op.exe: th04\op_main.cpp bin\th04\op2.obj th04\op_setup.cpp th04\zunsoft.cpp th04\op_music.cpp bin\th04\op.obj th04\m_char.cpp bin\th01\vplanset.obj bin\th02\frmdely1.obj bin\th03\pi_put.obj bin\th03\pi_load.obj bin\th03\hfliplut.obj bin\th04\input_w.obj bin\th04\vector.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_kaja.obj bin\th04\cdg_p_nc.obj bin\th04\snd_mode.obj bin\th04\snd_dlym.obj bin\th02\exit_dos.obj bin\th04\snd_load.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initop.obj bin\th04\cdg_p_na.obj bin\th04\input_s.obj bin\th04\snd_se_r.obj bin\th04\snd_se.obj bin\th04\egcrect.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj th04\frmdely2.c
+bin\th04\op.exe: th04\op_main.cpp bin\th04\op2.obj th04\op_setup.cpp th04\zunsoft.cpp th04\op_music.cpp bin\th04\op.obj th04\m_char.cpp bin\th01\vplanset.obj bin\th02\frmdely1.obj bin\th03\pi_put.obj bin\th03\pi_load.obj bin\th03\hfliplut.obj bin\th04\input_w.obj bin\th04\vector.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_kaja.obj bin\th04\cdg_p_nc.obj bin\th04\snd_mode.obj bin\th04\snd_dlym.obj bin\th02\exit_dos.obj bin\th04\snd_load.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initop.obj bin\th04\cdg_p_na.obj bin\th04\input_s.obj bin\th04\snd_se_r.obj bin\th04\snd_se.obj bin\th04\egcrect.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj th04\frmdely2.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='O' -3 -Z -d -nbin\th04\ -eOP.EXE @&&|
 $**
 |

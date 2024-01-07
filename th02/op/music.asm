@@ -368,14 +368,14 @@ music_flip	proc near
 	mov	bp, sp
 	call	screen_back_B_put
 if GAME eq 5
-	call	_piano_render
+	call	@piano_render$qv
 endif
 	call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + V_WHITE
 	call	polygons_update_and_render
 if GAME ge 4
 	GRCG_OFF_CLOBBERING dx
 	if GAME eq 5
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 	endif
 else
 	call	grcg_off
@@ -386,7 +386,7 @@ endif
 	mov	_music_page, al
 	graph_accesspage al
 if GAME le 4
-	call	frame_delay_2 pascal, 1
+	call	@frame_delay_2$qi pascal, 1
 endif
 	pop	bp
 	retn

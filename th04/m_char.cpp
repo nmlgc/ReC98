@@ -12,9 +12,9 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-extern "C" {
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
 #include "th04/formats/scoredat.h"

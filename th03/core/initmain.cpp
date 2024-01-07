@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include "master.hpp"
 #include "th01/hardware/vplanset.h"
-extern "C" {
 #include "th03/core/initexit.h"
 
 #if (GAME <= 3)
@@ -31,6 +30,4 @@ int pascal game_init_main(const unsigned char *pf_fn)
 		bgm_init(2048);
 	#endif
 	return 0;
-}
-
 }

@@ -7,9 +7,9 @@
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th04/score.h"
+extern "C" {
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 	#include "th05/formats/pi.hpp"

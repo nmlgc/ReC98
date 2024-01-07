@@ -155,7 +155,7 @@ _TEXT		ends
 ; ===========================================================================
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 ; Segment type:	Pure code
@@ -246,11 +246,11 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	loc_A693
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
-		call	game_init_main pascal, ds, offset aKaikidan1_dat
+		call	@game_init_main$qnxuc pascal, ds, offset aKaikidan1_dat
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
@@ -264,7 +264,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		les	bx, _resident
 		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jb	short loc_A665
@@ -483,8 +483,7 @@ sub_B273	endp
 sub_B37C	proc near
 		push	bp
 		mov	bp, sp
-		push	2
-		call	frame_delay
+		call	@frame_delay$qi pascal, 2
 		graph_accesspage byte_1085E
 		mov	al, 1
 		sub	al, byte_1085E
@@ -1536,8 +1535,7 @@ sub_BD1E	proc near
 		mov	bp, sp
 		call	_snd_se_update
 		call	sub_BE76
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		graph_accesspage byte_11621
 		mov	al, 1
 		sub	al, byte_11621
@@ -3831,8 +3829,7 @@ sub_D1B1	proc near
 		graph_accesspage 0
 		graph_showpage al
 		call	sub_CA9B
-		push	40h
-		call	frame_delay
+		call	@frame_delay$qi pascal, 64
 		call	sub_D16F
 		call	input_wait_for_change pascal, 0
 		push	2
@@ -5932,8 +5929,7 @@ sub_E349	proc near
 		mov	bp, sp
 		call	sub_D5E1
 		call	sub_DFEC
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		graph_accesspage byte_1183A
 		mov	al, 1
 		sub	al, byte_1183A
@@ -6339,11 +6335,11 @@ include th04/hardware/grppsafx.asm
 	extern PI_PUT_QUARTER_8:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
-	extern GAME_INIT_MAIN:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern _snd_bgm_measure:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE_ALL:proc
 SHARED_	ends

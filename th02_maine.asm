@@ -274,7 +274,7 @@ loc_96B9:
 		push	[bp+arg_0]
 
 loc_96BC:
-		call	frame_delay
+		call	@frame_delay$qi
 
 loc_96C1:
 		add	di, 2
@@ -300,7 +300,7 @@ loc_96E4:
 		push	2
 
 loc_96E6:
-		call	frame_delay
+		call	@frame_delay$qi
 		inc	si
 
 loc_96EC:
@@ -476,7 +476,7 @@ loc_9810:
 loc_9830:
 		cmp	si, [bp+arg_4]
 		jl	short loc_9810
-		call	frame_delay pascal, 10
+		call	@frame_delay$qi pascal, 10
 		inc	di
 
 loc_983D:
@@ -897,7 +897,7 @@ sub_9AD4	proc near
 		push	ds
 		push	offset aEnd3_txt ; "end3.txt"
 		call	sub_95A3
-		call	frame_delay pascal, 30
+		call	@frame_delay$qi pascal, 30
 		push	1
 		call	palette_white_out
 		call	_snd_load c, offset aEnding_m, ds, SND_LOAD_SONG
@@ -928,7 +928,7 @@ loc_9B1B:
 		push	299
 		call	grcg_boxfill
 		call	grcg_off
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		sub	si, 4
 
 loc_9B5C:
@@ -964,7 +964,7 @@ sub_9B64	proc near
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		call	frame_delay pascal, 40
+		call	@frame_delay$qi pascal, 40
 		push	0
 		call	sub_98B5
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -975,7 +975,7 @@ sub_9B64	proc near
 		push	offset end_buf
 		push	6
 		call	sub_9643
-		call	frame_delay pascal, 20
+		call	@frame_delay$qi pascal, 20
 		push	1
 		call	palette_black_out
 		push	1
@@ -1063,7 +1063,7 @@ loc_9C91:
 		push	offset end_buf + (END_LINE_LEN * 11)
 		push	6
 		call	sub_9643
-		call	frame_delay pascal, 20
+		call	@frame_delay$qi pascal, 20
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1085,7 +1085,7 @@ loc_9CDE:
 		push	dx
 		push	2
 		call	sub_99E4
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_9D10:
@@ -1481,7 +1481,7 @@ sub_A09D	proc near
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		call	frame_delay pascal, 40
+		call	@frame_delay$qi pascal, 40
 		push	0
 		call	sub_98B5
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -1492,7 +1492,7 @@ sub_A09D	proc near
 		push	offset end_buf
 		push	6
 		call	sub_9643
-		call	frame_delay pascal, 20
+		call	@frame_delay$qi pascal, 20
 		push	1
 		call	palette_black_out
 		graph_accesspage 1
@@ -1721,7 +1721,7 @@ loc_A353:
 		push	offset end_buf + (END_LINE_LEN * 26)
 		push	6
 		call	sub_9643
-		call	frame_delay pascal, 10
+		call	@frame_delay$qi pascal, 10
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_A4EC
@@ -1731,7 +1731,7 @@ loc_A353:
 		push	offset end_buf + (END_LINE_LEN * 27)
 		push	6
 		call	sub_9643
-		call	frame_delay pascal, 30
+		call	@frame_delay$qi pascal, 30
 		push	2
 		call	sub_98B5
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -1885,7 +1885,7 @@ loc_A4EC:
 		push	offset end_buf + (END_LINE_LEN * 51)
 		push	6
 		call	sub_9643
-		call	frame_delay pascal, 30
+		call	@frame_delay$qi pascal, 30
 		push	2
 		call	sub_98B5
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -2037,7 +2037,7 @@ loc_A6B6:
 		push	offset end_buf + (END_LINE_LEN * 73)
 		push	6
 		call	sub_9643
-		call	frame_delay pascal, 30
+		call	@frame_delay$qi pascal, 30
 		push	2
 		call	sub_98B5
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -2238,7 +2238,7 @@ arg_4		= word ptr  8
 		push	200064h
 		push	[bp+arg_2]
 		call	sub_9942
-		call	frame_delay pascal, 4
+		call	@frame_delay$qi pascal, 4
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		pop	bp
@@ -2267,7 +2267,7 @@ loc_A90C:
 		push	1B000B8h
 		push	si
 		call	sub_A874
-		call	frame_delay pascal, 4
+		call	@frame_delay$qi pascal, 4
 		add	si, 5
 
 loc_A920:
@@ -2302,7 +2302,7 @@ loc_A947:
 		push	528
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		add	si, 4
 
 loc_A992:
@@ -2467,7 +2467,7 @@ loc_A992:
 		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aVsvivbvovlb@vs
@@ -2481,7 +2481,7 @@ loc_A992:
 		push	18h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 200
+		call	@frame_delay$qi pascal, 200
 		graph_accesspage 1
 		push	ds
 		push	offset aB@nPiuU_ ; "　最終得点"
@@ -2498,7 +2498,7 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aGrgugegbgjgeb ;	"コンティニュー"
@@ -2519,7 +2519,7 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aB@Gigugn ; "　 ランク"
@@ -2543,7 +2543,7 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aGvgmgcgdbPik ; "プレイヤー初期"
@@ -2565,7 +2565,7 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aCMvpik	; " 霊撃初期数"
@@ -2587,7 +2587,7 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 150
+		call	@frame_delay$qi pascal, 150
 		graph_accesspage 1
 		les	bx, _resident
 		mov	di, es:[bx+mikoconfig_t.skill]
@@ -2718,12 +2718,12 @@ loc_AF56:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 120
+		call	@frame_delay$qi pascal, 120
 		push	180120h
 		push	0C0h
 		call	sub_97F1
 		add	sp, 6
-		call	frame_delay pascal, 200
+		call	@frame_delay$qi pascal, 200
 		graph_accesspage 1
 		push	ds
 		push	offset aVpvxvxvvb@vyvt ; "１９９７　ＺＵＮ  (Amusement Makers)"
@@ -2769,7 +2769,7 @@ sub_AFE7	proc far
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		call	frame_delay pascal, 150
+		call	@frame_delay$qi pascal, 150
 		call	_pi_load c, 0, offset aBut_pi, ds
 		call	_pi_palette_apply stdcall, 0
 		pop	cx
@@ -2804,7 +2804,7 @@ sub_B07F	proc far
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		call	frame_delay pascal, 150
+		call	@frame_delay$qi pascal, 150
 		call	_pi_load c, 0, offset aExtra_pi, ds
 		call	_pi_palette_apply stdcall, 0
 		pop	cx
@@ -2840,7 +2840,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.stage], 7Fh
 		jnz	loc_B1FE
-		call	_game_init_main
+		call	@game_init_main$qv
 		call	gaiji_backup
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
@@ -2877,7 +2877,7 @@ loc_B189:
 		mov	dx, 164	; Port 00A4h: Page display register
 		out	dx, al
 		call	super_entry_bfnt pascal, ds, offset aEndft_bft ; "endft.bft"
-		call	frame_delay pascal, 100
+		call	@frame_delay$qi pascal, 100
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.rank], 4
 		jz	short loc_B1C2
@@ -2928,14 +2928,14 @@ include th02/snd/snd.inc
 	extern _graph_putsa_fx:proc
 	extern _key_delay:proc
 	extern _pi_load:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern _input_sense:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
 	extern _snd_pmd_resident:proc
 	extern _snd_load:proc
-	extern _game_init_main:proc
+	extern @game_init_main$qv:proc
 	extern _pi_palette_apply:proc
 	extern _pi_put_8:proc
 	extern _snd_kaja_interrupt:proc

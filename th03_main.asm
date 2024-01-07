@@ -153,8 +153,8 @@ _envp		= dword	ptr  0Ch
 		push	bp
 		mov	bp, sp
 		push	si
-		call	game_init_main pascal, ds, offset aCOul
-		call	_cfg_load_resident_ptr
+		call	@game_init_main$qnxuc pascal, ds, offset aCOul
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short @@ret
 		mov	_snd_midi_active, 0
@@ -1410,7 +1410,7 @@ sub_A310	endp
 main_0_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 main_010_TEXT	segment	word public 'CODE' use16
@@ -4841,8 +4841,7 @@ loc_C7C8:
 
 loc_C7DB:
 		call	_input_reset_sense_key_held
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_C7E7:
 		cmp	_input_sp, INPUT_NONE
@@ -4854,15 +4853,13 @@ loc_C7EE:
 		jnz	short loc_C7C1
 		test	_input_sp.hi, high INPUT_CANCEL
 		jnz	short loc_C816
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_C7EE
 ; ---------------------------------------------------------------------------
 
 loc_C80A:
 		call	_input_reset_sense_key_held
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_C816:
 		cmp	_input_sp, INPUT_NONE
@@ -5211,8 +5208,7 @@ loc_CA99:
 		call	sub_C7A5
 
 loc_CAA8:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	ax, si
 		and	ax, 1
 		imul	ax, 50
@@ -8729,13 +8725,13 @@ SHARED	segment	word public 'CODE' use16
 	extern VECTOR2_BETWEEN_PLUS:proc
 	extern @game_exit$qv:proc
 	extern @polar$qiii:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern _input_reset_sense_key_held:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern GAME_INIT_MAIN:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern INPUT_MODE_KEY_VS_KEY:proc
 	extern INPUT_MODE_JOY_VS_KEY:proc
 	extern INPUT_MODE_KEY_VS_JOY:proc

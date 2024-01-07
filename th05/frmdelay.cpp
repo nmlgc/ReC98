@@ -1,6 +1,5 @@
 #pragma option -zCSHARED_ -k-
 
-extern "C" {
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 
@@ -13,5 +12,3 @@ void pascal frame_delay(int frames)
 }
 
 #pragma codestring "\x00"
-
-}

@@ -334,11 +334,11 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short loc_AEA4
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
-		call	game_init_main pascal, ds, offset aKAIKIDAN2_DAT
+		call	@game_init_main$qnxuc pascal, ds, offset aKAIKIDAN2_DAT
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
@@ -382,8 +382,7 @@ sub_AEA6	proc near
 		push	bp
 		mov	bp, sp
 		mov	_slowdown_factor, 1
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	far ptr	_input_reset_sense
 
 loc_AEBB:
@@ -1170,7 +1169,7 @@ EMS_TEXT	segment	byte public 'CODE' use16
 EMS_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 TILE_TEXT	segment	word public 'CODE' use16
@@ -3528,8 +3527,7 @@ loc_F97F:
 		call	sub_F906
 		or	al, al
 		jnz	short loc_F98F
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_F97F
 ; ---------------------------------------------------------------------------
 
@@ -3541,8 +3539,7 @@ loc_F99A:
 		call	sub_F896
 		or	al, al
 		jnz	short loc_F9AA
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_F99A
 ; ---------------------------------------------------------------------------
 
@@ -3553,8 +3550,7 @@ loc_F9AA:
 
 loc_F9B1:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B3, TX_WHITE
 		sub	[bp+var_2], 2
 
@@ -3567,8 +3563,7 @@ loc_F9DE:
 
 loc_F9EB:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B6, TX_WHITE
 		add	[bp+var_2], 2
 
@@ -3587,8 +3582,7 @@ loc_FA47:
 		call	sub_F906
 		or	al, al
 		jnz	short loc_FA57
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_FA47
 ; ---------------------------------------------------------------------------
 
@@ -3602,8 +3596,7 @@ loc_FA68:
 		call	sub_F896
 		or	al, al
 		jnz	short loc_FA78
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_FA68
 ; ---------------------------------------------------------------------------
 
@@ -3731,8 +3724,7 @@ loc_FBA7:
 		mov	si, _key_det
 
 loc_FBAB:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_FB27
 ; ---------------------------------------------------------------------------
 
@@ -7261,12 +7253,12 @@ include th02/snd/snd.inc
 	extern VECTOR2_AT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern GAME_INIT_MAIN:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc

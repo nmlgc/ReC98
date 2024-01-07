@@ -16,9 +16,7 @@
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
-}
 #include "th02/op/menu.hpp"
 #include "th03/core/initexit.h"
 extern "C" {

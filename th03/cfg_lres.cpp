@@ -1,4 +1,3 @@
-extern "C" {
 #include "platform.h"
 #include "master.hpp"
 #include "th03/common.h"
@@ -7,4 +6,3 @@ extern "C" {
 #include "th03/resident.hpp"
 #include "th03/formats/cfg.hpp"
 #include "th03/formats/cfg_lres.cpp"
-}

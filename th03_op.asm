@@ -359,8 +359,7 @@ loc_9C70:
 
 loc_9C7E:
 		mov	si, _input_sp
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_9C1B
 ; ---------------------------------------------------------------------------
 
@@ -481,8 +480,7 @@ loc_9E24:
 		call	start_demo
 
 loc_9E3C:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_9E43:
 		cmp	_input_sp, INPUT_NONE
@@ -496,7 +494,7 @@ loc_9E5C:
 		push	si
 		call	sub_B10A
 		call	super_put pascal, si, large (256 shl 16) or 2
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		add	si, 8
 
 loc_9E76:
@@ -1310,8 +1308,7 @@ loc_A4D2:
 loc_A4EE:
 		les	bx, _resident
 		inc	es:[bx+resident_t.rand]
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_A4FE:
 		cmp	_quit, 0
@@ -1631,8 +1628,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_AEA0:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	al, byte ptr [bp+var_2]
 		mov	Palettes[15 * size rgb_t].r, al
 		mov	Palettes[15 * size rgb_t].g, al
@@ -1676,8 +1672,7 @@ loc_AF09:
 		mov	Palettes[15 * size rgb_t].b, al
 		call	far ptr	palette_show
 		add	[bp+var_2], 2
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_AF25:
 		cmp	[bp+var_2], 255
@@ -1695,12 +1690,10 @@ loc_AF35:
 loc_AF40:
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_AF65:
@@ -1713,12 +1706,10 @@ loc_AF65:
 		graph_accesspage al
 		call	pi_palette_apply pascal, 0
 		call	pi_put_8 pascal, large 0, 0
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		xor	si, si
 		jmp	short loc_AFD9
 ; ---------------------------------------------------------------------------
@@ -1726,12 +1717,10 @@ loc_AF65:
 loc_AFB4:
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_AFD9:
@@ -1780,8 +1769,7 @@ sub_B008	proc near
 loc_B094:
 		mov	PaletteTone, si
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		add	si, 4
 
 loc_B0A7:
@@ -1809,7 +1797,7 @@ loc_B0B8:
 		push	si
 		call	sub_B10A
 		call	super_put pascal, si, large (256 shl 16) or 2
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		add	si, 8
 
 loc_B0D2:
@@ -1838,7 +1826,7 @@ loc_B0E4:
 		push	ax
 		call	sub_B10A
 		call	super_put pascal, si, large (256 shl 16) or 2
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		sub	si, 8
 
 loc_B101:
@@ -2876,8 +2864,7 @@ loc_BAED:
 		setfarfp	_input_mode, input_mode_key_vs_joy
 
 loc_BAF9:
-		push	10h
-		call	frame_delay
+		call	@frame_delay$qi pascal, 16
 		mov	word_FC62, 0
 
 loc_BB06:
@@ -3254,7 +3241,7 @@ include th02/snd/snd.inc
 	extern @polar$qiii:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern _input_reset_sense_key_held:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
@@ -3272,7 +3259,7 @@ include th02/snd/snd.inc
 	extern INPUT_MODE_KEY_VS_JOY:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
-	extern FRAME_DELAY_2:proc
+	extern @FRAME_DELAY_2$QI:proc
 SHARED	ends
 
 	.data

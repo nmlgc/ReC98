@@ -130,7 +130,7 @@ _TEXT		ends
 ; ===========================================================================
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 MAINL_SC_TEXT segment byte public 'CODE' use16
@@ -173,8 +173,7 @@ sub_978D	proc near
 
 loc_97E8:
 		call	cdg_put_noalpha_8 pascal, large (352 shl 16) or 300, si
-		push	6
-		call	frame_delay
+		call	@frame_delay$qi pascal, 6
 		inc	si
 
 loc_97FC:
@@ -193,8 +192,7 @@ loc_97FC:
 		call	snd_delay_until_measure pascal, (11 shl 16) or 4
 		push	1
 		call	palette_white_in
-		push	8
-		call	frame_delay
+		call	@frame_delay$qi pascal, 8
 		call	@win_text_put$qv
 		call	sub_9887
 		or	ax, ax
@@ -205,8 +203,7 @@ loc_9868:
 		call	input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_987D
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_9868
 ; ---------------------------------------------------------------------------
 
@@ -738,10 +735,10 @@ _argv		= dword	ptr  8
 _envp		= dword	ptr  0Ch
 
 		enter	2, 0
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	@@ret
-		call	game_init_main pascal, ds, offset aCOul
+		call	@game_init_main$qnxuc pascal, ds, offset aCOul
 		call	respal_exist
 		mov	_snd_midi_active, 0
 		les	bx, _resident
@@ -1028,8 +1025,7 @@ loc_A0B0:
 ; ---------------------------------------------------------------------------
 
 loc_A0BB:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_A00B
 ; ---------------------------------------------------------------------------
 
@@ -1337,8 +1333,7 @@ loc_B9DD:
 		add	es:[bx+2], al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	60h
-		call	frame_delay
+		call	@frame_delay$qi pascal, 96
 		graph_accesspage 0
 		graph_showpage al
 		call	graph_clear
@@ -2527,8 +2522,7 @@ loc_C4D8:
 		kajacall	KAJA_SONG_PLAY
 		mov	byte_10BB6, 1
 		mov	byte_10BB5, 1
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	vsync_Count1, 0
 
 loc_C657:
@@ -2666,13 +2660,13 @@ include th02/snd/snd.inc
 	extern @game_exit$qv:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern PI_PUT_INTERLACE_8:proc
 	extern _snd_se_reset:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern GAME_INIT_MAIN:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc

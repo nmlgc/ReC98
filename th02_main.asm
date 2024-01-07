@@ -1000,7 +1000,7 @@ _envp		= dword	ptr  0Ch
 		call	cfg_load
 		or	ax, ax
 		jz	short @@cfg_load_is_1
-		call	_game_init_main
+		call	@game_init_main$qv
 		or	ax, ax
 		jz	short @@game_init_main_is_0
 		call	@zun_error$q11zun_error_t pascal, 3
@@ -1830,7 +1830,7 @@ loc_BCA0:
 		mov	[bp+var_1], 2
 
 loc_BCA4:
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_BA1D
 ; ---------------------------------------------------------------------------
 
@@ -2534,13 +2534,13 @@ loc_C348:
 		call	text_putsa pascal, ax, 12, ds, offset asc_1E47E, TX_WHITE
 		lea	ax, [si+6]
 		call	gaiji_putsa pascal, ax, 12, ds, offset gGAMEOVER, TX_WHITE
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		dec	si
 
 loc_C3E5:
 		cmp	si, 0Ch
 		jge	loc_C348
-		call	frame_delay pascal, 30
+		call	@frame_delay$qi pascal, 30
 		mov	_key_det, 0
 		jmp	short loc_C400
 ; ---------------------------------------------------------------------------
@@ -2614,7 +2614,7 @@ loc_C4CA:
 		jnz	short loc_C4EE
 
 loc_C4E5:
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_C47A
 ; ---------------------------------------------------------------------------
 
@@ -6476,7 +6476,7 @@ include th02/snd/snd.inc
 	extern _pi_load:proc
 	extern @VECTOR2$QMIT1UCI:proc
 	extern @VECTOR2_BETWEEN_PLUS$QIIIIUCMIT6I:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern _input_sense:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
@@ -6484,7 +6484,7 @@ include th02/snd/snd.inc
 	extern _snd_pmd_resident:proc
 	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc
-	extern _game_init_main:proc
+	extern @game_init_main$qv:proc
 	extern _pi_palette_apply:proc
 	extern _pi_put_8:proc
 	extern _snd_kaja_interrupt:proc
@@ -23717,7 +23717,7 @@ mima_init	proc far
 		call	super_entry_bfnt pascal, ds, offset aMima_bft ; "mima.bft"
 		call	@dialog_script_stage5_pre_intro_a$qv
 		mov	vsync_Count1, 0
-		call	frame_delay pascal, 10
+		call	@frame_delay$qi pascal, 10
 		call	sub_1A529
 		call	super_clean pascal, (128 shl 16) or 192
 		mov	super_patnum, 80h
@@ -23970,7 +23970,7 @@ sub_19C8D	proc near
 		pop	cx
 		push	0Ah
 		call	palette_white_out
-		call	frame_delay pascal, 50
+		call	@frame_delay$qi pascal, 50
 		add	_score, 50000
 		call	sub_19C1D
 		mov	ax, 1
@@ -24907,7 +24907,7 @@ loc_1A54E:
 		imul	dx, 7
 		push	dx
 		call	grcg_circle
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_circlefill pascal, (224 shl 16) or 144, si
 		push	(224 shl 16) or 144
@@ -24985,7 +24985,7 @@ loc_1A697:
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
-		call	frame_delay pascal, 3
+		call	@frame_delay$qi pascal, 3
 		inc	si
 
 loc_1A6B2:
@@ -25019,7 +25019,7 @@ sub_1A6C5	proc near
 		graph_accesspage 1
 		call	graph_clear
 		mov	vsync_Count1, 0
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		call	graph_scrollup pascal, 0
 		graph_accesspage _page_front
 		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, PAT_PLAYCHAR_STILL
@@ -25103,7 +25103,7 @@ marisa_init	proc far
 		call	super_entry_bfnt pascal, ds, offset aMima_bft_0 ; "mima.bft"
 		call	@dialog_script_stage4_pre_intro_a$qv
 		mov	vsync_Count1, 0
-		call	frame_delay pascal, 10
+		call	@frame_delay$qi pascal, 10
 		call	sub_1A529
 		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_PREBOSS
 		call	super_clean pascal, (128 shl 16) or 511
@@ -29339,7 +29339,7 @@ loc_1CCF7:
 		jnz	short loc_1CD2E
 
 loc_1CCFE:
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		mov	ax, _key_det
 		mov	[bp+var_A], ax
 		cmp	[bp+var_A], 0

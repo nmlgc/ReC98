@@ -1,9 +1,9 @@
 #pragma option -zCSHARED
 
-extern "C" {
 #include "platform.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
+extern "C" {
 #include "th03/hardware/input.h"
 
 /// Modes
