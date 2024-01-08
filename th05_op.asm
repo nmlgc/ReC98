@@ -45,7 +45,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_SHOW:proc
 	extern IRAND:proc
 	extern TEXT_CLEAR:proc
-	extern HMEM_ALLOCBYTE:proc
 	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc

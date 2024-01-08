@@ -40,6 +40,7 @@ void near nopoly_B_snap(void);
 void near nopoly_B_free(void);
 void near nopoly_B_put(void);
 void near music_flip(void);
+void near cmt_bg_snap(void);
 
 #define cmt_bg_put_planar(cmt_bg_p, vo, x, dst, dst_p, src, src_p) \
 	size_t cmt_bg_p = 0; \
@@ -64,18 +65,6 @@ void near music_flip(void);
 			cmt_bg_p += 4; \
 		} \
 	}
-
-void pascal near cmt_back_snap(void)
-{
-	screen_x_t x;
-	vram_offset_t vo;
-	for(int i = 0; i < PLANE_COUNT; i++) {
-		cmt_back[i] = HMem<dots8_t>::alloc(
-			(304 * (320 / BYTE_DOTS)) + (16 * (320 / BYTE_DOTS))
-		);
-	}
-	cmt_bg_put_planar(cmt_bg_p, vo, x, cmt_back, cmt_bg_p, VRAM_PLANE, vo);
-}
 
 #include "th02/op/cmt_load.c"
 
@@ -129,7 +118,7 @@ void pascal musicroom(void)
 	graph_accesspage(1);
 	graph_showpage(0);
 	nopoly_B_snap();
-	cmt_back_snap();
+	cmt_bg_snap();
 
 	graph_accesspage(1);	draw_cmt(track_playing);
 	graph_accesspage(0);	draw_cmt(track_playing);

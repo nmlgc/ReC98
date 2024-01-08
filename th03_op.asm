@@ -58,7 +58,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern TEXT_CLEAR:proc
 	extern TEXT_PUTSA:proc
 	extern PALETTE_WHITE_IN:proc
-	extern HMEM_ALLOCBYTE:proc
 	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
@@ -1327,9 +1326,9 @@ OP_MUSIC_TEXT segment byte public 'CODE' use16
 		sel:byte, col:byte
 	@TRACKLIST_PUT$QUC procdesc pascal near \
 		sel:byte
+	@cmt_bg_snap$qv procdesc near
 
 include th02/op/music.asm
-include th03/op/cmt_back_snap.asm
 include th02/op/music_cmt_load.asm
 include th03/op/cmt_back_free_put.asm
 include th03/op/draw_cmt.asm
@@ -1373,7 +1372,7 @@ loc_AC15:
 		graph_accesspage 1
 		graph_showpage 0
 		call	@nopoly_B_snap$qv
-		call	cmt_back_snap
+		call	@cmt_bg_snap$qv
 		graph_accesspage 1
 		mov	al, _track_playing
 		mov	ah, 0

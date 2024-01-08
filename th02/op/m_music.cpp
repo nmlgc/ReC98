@@ -8,6 +8,7 @@
 #include "game/coords.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
+#include "th02/formats/musiccmt.hpp"
 #if (GAME >= 3)
 	#include "th03/math/polar.hpp"
 #else
@@ -76,6 +77,23 @@ static const screen_x_t TRACKLIST_LEFT = ((GAME == 5) ? 12 : 16);
 		}
 	}
 #endif
+
+static const pixel_t CMT_LINE_W = (CMT_LINE_LENGTH * GLYPH_HALF_W);
+static const vram_byte_amount_t CMT_LINE_VRAM_W = (CMT_LINE_W / BYTE_DOTS);
+static const pixel_t CMT_COMMENT_H = (CMT_COMMENT_LINES * GLYPH_H);
+
+static const screen_x_t CMT_TITLE_LEFT = (
+	/**/ (GAME >= 3)  ? (RES_X - GLYPH_FULL_W - CMT_LINE_W) :
+	/*   (GAME == 2) */ ((RES_X / 2) - (CMT_LINE_W / 2))
+);
+static const screen_y_t CMT_TITLE_TOP = 64;
+static const screen_x_t CMT_TITLE_RIGHT = (CMT_TITLE_LEFT + CMT_LINE_W);
+static const screen_y_t CMT_TITLE_BOTTOM = (CMT_TITLE_TOP + GLYPH_H);
+
+static const screen_x_t CMT_COMMENT_LEFT = (RES_X - GLYPH_FULL_W - CMT_LINE_W);
+static const screen_y_t CMT_COMMENT_TOP = CMT_TITLE_BOTTOM;
+static const screen_x_t CMT_COMMENT_RIGHT = (CMT_COMMENT_LEFT + CMT_LINE_W);
+static const screen_x_t CMT_COMMENT_BOTTOM = (CMT_COMMENT_TOP + CMT_COMMENT_H);
 // -----------
 
 // ZUN bloat
@@ -131,6 +149,8 @@ page_t music_page;
 #else
 	extern dots8_t* nopoly_B;
 #endif
+#define cmt_bg cmt_back
+extern Planar<dots8_t far *> cmt_bg;
 // -----------
 
 #if (GAME == 5)
@@ -381,3 +401,41 @@ void near music_flip(void)
 		frame_delay(1);
 	#endif
 }
+
+#if (GAME <= 3)
+	#define cmt_bg_blit_planar(cmt_bg_p, vo, x, dst, dst_p, src, src_p) \
+		size_t cmt_bg_p = 0; \
+		screen_y_t y; \
+		for(y = CMT_TITLE_TOP; y < CMT_TITLE_BOTTOM; y++) { \
+			for(x = CMT_TITLE_LEFT; x < CMT_TITLE_RIGHT; x += 32) { \
+				vo = vram_offset_shift(x, y); \
+				*(dots32_t *)(dst[0] + dst_p) = *(dots32_t *)(src[0] + src_p); \
+				*(dots32_t *)(dst[1] + dst_p) = *(dots32_t *)(src[1] + src_p); \
+				*(dots32_t *)(dst[2] + dst_p) = *(dots32_t *)(src[2] + src_p); \
+				*(dots32_t *)(dst[3] + dst_p) = *(dots32_t *)(src[3] + src_p); \
+				cmt_bg_p += sizeof(dots32_t); \
+			} \
+		} \
+		for(y = CMT_COMMENT_TOP; y < CMT_COMMENT_BOTTOM; y++) { \
+			for(x = CMT_COMMENT_LEFT; x < CMT_COMMENT_RIGHT; x += 32) { \
+				vo = vram_offset_shift(x, y); \
+				*(dots32_t *)(dst[0] + dst_p) = *(dots32_t *)(src[0] + src_p); \
+				*(dots32_t *)(dst[1] + dst_p) = *(dots32_t *)(src[1] + src_p); \
+				*(dots32_t *)(dst[2] + dst_p) = *(dots32_t *)(src[2] + src_p); \
+				*(dots32_t *)(dst[3] + dst_p) = *(dots32_t *)(src[3] + src_p); \
+				cmt_bg_p += sizeof(dots32_t); \
+			} \
+		}
+
+	void near cmt_bg_snap(void)
+	{
+		screen_x_t x;
+		vram_offset_t vo;
+		for(int i = 0; i < PLANE_COUNT; i++) {
+			cmt_bg[i] = HMem<dots8_t>::alloc(
+				(GLYPH_H * CMT_LINE_VRAM_W) + (CMT_COMMENT_H * CMT_LINE_VRAM_W)
+			);
+		}
+		cmt_bg_blit_planar(cmt_bg_p, vo, x, cmt_bg, cmt_bg_p, VRAM_PLANE, vo);
+	}
+#endif
