@@ -153,6 +153,12 @@ page_t music_page;
 extern Planar<dots8_t far *> cmt_bg;
 // -----------
 
+#define cmt music_cmt
+struct cmt_line_t {
+	shiftjis_t c[CMT_LINE_SIZE];
+};
+extern cmt_line_t cmt[CMT_LINES];
+
 #if (GAME == 5)
 	// TH05 selection state
 	// --------------------
@@ -439,3 +445,25 @@ void near music_flip(void)
 		cmt_bg_blit_planar(cmt_bg_p, vo, x, cmt_bg, cmt_bg_p, VRAM_PLANE, vo);
 	}
 #endif
+
+void pascal near cmt_load(int track)
+{
+	#if (GAME == 5)
+		char* FN = "_MUSIC0.TXT";
+
+		FN[6] = ('0' + game_sel);
+		file_ropen(FN);
+	#elif (GAME == 4)
+		file_ropen("_MUSIC.TXT\0music.pi");
+	#elif (GAME == 3)
+		file_ropen(reinterpret_cast<const char *>(MK_FP(_DS, 0x09D1)));
+	#elif (GAME == 2)
+		file_ropen(reinterpret_cast<const char *>(MK_FP(_DS, 0x0C13)));
+	#endif
+	file_seek((track * int(sizeof(cmt))), SEEK_SET);
+	file_read(cmt, sizeof(cmt));
+	file_close();
+	for(int i = 0; i < CMT_LINES; i++) {
+		cmt[i].c[CMT_LINE_LENGTH] = '\0';
+	}
+}

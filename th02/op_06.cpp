@@ -17,7 +17,6 @@ extern "C" {
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 }
-#include "th02/shiftjis/fns.hpp"
 
 extern const char* MUSIC_FILES[15];
 extern uint8_t track_playing;
@@ -33,6 +32,7 @@ extern unsigned char music_sel;
 extern page_t music_page;
 dots8_t *nopoly_B;
 Planar<dots8_t far *> cmt_back;
+shiftjis_t music_cmt[MUSIC_CMT_LINE_COUNT][MUSIC_CMT_LINE_LEN];
 
 void pascal near track_put(uint8_t sel, vc_t col);
 void pascal near tracklist_put(uint8_t sel);
@@ -41,6 +41,7 @@ void near nopoly_B_free(void);
 void near nopoly_B_put(void);
 void near music_flip(void);
 void near cmt_bg_snap(void);
+void pascal near cmt_load(int track);
 
 #define cmt_bg_put_planar(cmt_bg_p, vo, x, dst, dst_p, src, src_p) \
 	size_t cmt_bg_p = 0; \
@@ -66,8 +67,6 @@ void near cmt_bg_snap(void);
 		} \
 	}
 
-#include "th02/op/cmt_load.c"
-
 void pascal near cmt_back_free(void)
 {
 	HMem<dots8_t>::free(cmt_back.B);
@@ -86,7 +85,7 @@ void pascal near cmt_back_put(void)
 void pascal near draw_cmt(int track)
 {
 	int line;
-	music_cmt_load(track);
+	cmt_load(track);
 	nopoly_B_put();
 	cmt_back_put();
 

@@ -1,6 +1,9 @@
 ; (identical to the already decompiled TH02 version, except for the first X
 ; coordinate)
 
+	@CMT_LOAD$QI procdesc pascal near \
+		track:word
+
 public DRAW_CMT
 draw_cmt	proc near
 
@@ -10,7 +13,7 @@ draw_cmt	proc near
 	mov	bp, sp
 	push	si
 	push	di
-	call	music_cmt_load pascal, [bp+@@track]
+	call	@cmt_load$qi pascal, [bp+@@track]
 	call	@nopoly_B_put$qv
 	call	cmt_back_put
 	push	1300040h

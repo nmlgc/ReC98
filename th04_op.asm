@@ -70,9 +70,10 @@ op_01_TEXT segment byte public 'CODE' use16
 		sel:byte, col:byte
 	@TRACKLIST_PUT$QUC procdesc pascal near \
 		sel:byte
+	@CMT_LOAD$QI procdesc pascal near \
+		track:word
 
 include th02/op/music.asm
-include th02/op/music_cmt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -180,7 +181,7 @@ draw_cmt	proc near
 		call	sub_C33F
 
 loc_C37C:
-		call	music_cmt_load pascal, [bp+@@track]
+		call	@cmt_load$qi pascal, [bp+@@track]
 		call	@nopoly_B_put$qv
 		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		cmp	byte_12DBE, 0
@@ -1089,10 +1090,9 @@ include th04/zunsoft[data].asm
 
 	extern _MUSIC_FILES:dword
 	extern _track_playing:byte
-	aOp_2 = ($ - 118)
+	aOp_2 = ($ - 138)
+	aMusic_pi = ($ - 9)
 
-include th04/op/music_cmt_load[data].asm
-aMusic_pi	db 'music.pi',0
 aGensou_scr	db 'GENSOU.SCR',0
 aName		db 'name',0
 aHi01_pi	db 'hi01.pi',0

@@ -6,8 +6,8 @@
 // The first line contains the track title and is rendered to a different
 // position than the other 19 lines.
 
-static const shiftjis_ank_amount_t CMT_LINE_LENGTH = 40;
+static const shiftjis_ank_amount_t CMT_LINE_LENGTH = ((GAME >= 4) ? 38 : 40);
 static const shiftjis_ank_amount_t CMT_LINE_SIZE = (CMT_LINE_LENGTH + 2);
 static const int CMT_TITLE_LINE = 0;
-static const int CMT_COMMENT_LINES = 19;
+static const int CMT_COMMENT_LINES = ((GAME == 5) ? 9 : 19);
 static const int CMT_LINES = (1 + CMT_COMMENT_LINES);

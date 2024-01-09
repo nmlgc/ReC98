@@ -34,10 +34,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_BLACK_OUT:proc
 	extern DOS_PUTS2:proc
 	extern EGC_SHIFT_LEFT_ALL:proc
-	extern FILE_CLOSE:proc
-	extern FILE_READ:proc
-	extern FILE_ROPEN:proc
-	extern FILE_SEEK:proc
 	extern GRCG_BOXFILL:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRCG_PSET:proc
@@ -1329,7 +1325,6 @@ OP_MUSIC_TEXT segment byte public 'CODE' use16
 	@cmt_bg_snap$qv procdesc near
 
 include th02/op/music.asm
-include th02/op/music_cmt_load.asm
 include th03/op/cmt_back_free_put.asm
 include th03/op/draw_cmt.asm
 
