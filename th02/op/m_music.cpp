@@ -149,7 +149,6 @@ page_t music_page;
 #else
 	extern dots8_t* nopoly_B;
 #endif
-#define cmt_bg cmt_back
 extern Planar<dots8_t far *> cmt_bg;
 // -----------
 
@@ -467,3 +466,21 @@ void pascal near cmt_load(int track)
 		cmt[i].c[CMT_LINE_LENGTH] = '\0';
 	}
 }
+
+#if (GAME >= 4)
+#else
+	void near cmt_bg_free(void)
+	{
+		HMem<dots8_t>::free(cmt_bg.B);
+		HMem<dots8_t>::free(cmt_bg.R);
+		HMem<dots8_t>::free(cmt_bg.G);
+		HMem<dots8_t>::free(cmt_bg.E);
+	}
+
+	void near cmt_unput(void)
+	{
+		screen_x_t x;
+		vram_offset_t vo;
+		cmt_bg_blit_planar(cmt_bg_p, vo, x, VRAM_PLANE, vo, cmt_bg, cmt_bg_p);
+	}
+#endif

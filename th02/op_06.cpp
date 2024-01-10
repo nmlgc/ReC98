@@ -1,6 +1,5 @@
 #pragma option -zCOP_MUSIC_TEXT
 
-#include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -31,7 +30,7 @@ static const int MUSIC_CMT_LINE_COUNT = 20;
 extern unsigned char music_sel;
 extern page_t music_page;
 dots8_t *nopoly_B;
-Planar<dots8_t far *> cmt_back;
+Planar<dots8_t far *> cmt_bg;
 shiftjis_t music_cmt[MUSIC_CMT_LINE_COUNT][MUSIC_CMT_LINE_LEN];
 
 void pascal near track_put(uint8_t sel, vc_t col);
@@ -42,52 +41,15 @@ void near nopoly_B_put(void);
 void near music_flip(void);
 void near cmt_bg_snap(void);
 void pascal near cmt_load(int track);
-
-#define cmt_bg_put_planar(cmt_bg_p, vo, x, dst, dst_p, src, src_p) \
-	size_t cmt_bg_p = 0; \
-	screen_y_t y; \
-	for(y = 64; y < 80; y++) { \
-		for(x = 160; x < 480; x += (4 * BYTE_DOTS)) { \
-			vo = vram_offset_shift(x, y); \
-			*(long*)(dst[PL_B] + dst_p) = *(long*)(src[PL_B] + src_p); \
-			*(long*)(dst[PL_R] + dst_p) = *(long*)(src[PL_R] + src_p); \
-			*(long*)(dst[PL_G] + dst_p) = *(long*)(src[PL_G] + src_p); \
-			*(long*)(dst[PL_E] + dst_p) = *(long*)(src[PL_E] + src_p); \
-			cmt_bg_p += 4; \
-		} \
-	} \
-	for(y = 80; y < 384; y++) { \
-		for(x = 304; x < 624; x += (4 * BYTE_DOTS)) { \
-			vo = vram_offset_shift(x, y); \
-			*(long*)(dst[PL_B] + dst_p) = *(long*)(src[PL_B] + src_p); \
-			*(long*)(dst[PL_R] + dst_p) = *(long*)(src[PL_R] + src_p); \
-			*(long*)(dst[PL_G] + dst_p) = *(long*)(src[PL_G] + src_p); \
-			*(long*)(dst[PL_E] + dst_p) = *(long*)(src[PL_E] + src_p); \
-			cmt_bg_p += 4; \
-		} \
-	}
-
-void pascal near cmt_back_free(void)
-{
-	HMem<dots8_t>::free(cmt_back.B);
-	HMem<dots8_t>::free(cmt_back.R);
-	HMem<dots8_t>::free(cmt_back.G);
-	HMem<dots8_t>::free(cmt_back.E);
-}
-
-void pascal near cmt_back_put(void)
-{
-	screen_x_t x;
-	vram_offset_t vo;
-	cmt_bg_put_planar(cmt_bg_p, vo, x, VRAM_PLANE, vo, cmt_back, cmt_bg_p);
-}
+void near cmt_bg_free(void);
+void near cmt_unput(void);
 
 void pascal near draw_cmt(int track)
 {
 	int line;
 	cmt_load(track);
 	nopoly_B_put();
-	cmt_back_put();
+	cmt_unput();
 
 	graph_putsa_fx(160, 64, (V_WHITE | FX_WEIGHT_HEAVY), music_cmt[0]);
 	for(line = 1; line < MUSIC_CMT_LINE_COUNT; line++) {
@@ -192,7 +154,7 @@ controls:
 		}
 	};
 	nopoly_B_free();
-	cmt_back_free();
+	cmt_bg_free();
 	graph_showpage(0);
 	graph_accesspage(0);
 	graph_clear();

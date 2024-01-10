@@ -1323,9 +1323,10 @@ OP_MUSIC_TEXT segment byte public 'CODE' use16
 	@TRACKLIST_PUT$QUC procdesc pascal near \
 		sel:byte
 	@cmt_bg_snap$qv procdesc near
+	@cmt_bg_free$qv procdesc near
+	@cmt_unput$qv procdesc near
 
 include th02/op/music.asm
-include th03/op/cmt_back_free_put.asm
 include th03/op/draw_cmt.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1477,7 +1478,7 @@ loc_ADB0:
 
 loc_ADC1:
 		call	@nopoly_B_free$qv
-		call	cmt_back_free
+		call	@cmt_bg_free$qv
 		graph_showpage 0
 		graph_accesspage al
 		call	graph_clear
@@ -3309,9 +3310,6 @@ aTlsl_rgb	db 'TLSL.RGB',0
 	extern vsync_Count1:word
 
 	extern _VRAM_PLANE_B:dword
-	extern _VRAM_PLANE_R:dword
-	extern _VRAM_PLANE_G:dword
-	extern _VRAM_PLANE_E:dword
 
 	extern _snd_active:byte
 

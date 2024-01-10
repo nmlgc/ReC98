@@ -15,7 +15,7 @@ draw_cmt	proc near
 	push	di
 	call	@cmt_load$qi pascal, [bp+@@track]
 	call	@nopoly_B_put$qv
-	call	cmt_back_put
+	call	@cmt_unput$qv
 	push	1300040h
 	push	1Fh
 	push	ds
