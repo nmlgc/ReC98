@@ -43,6 +43,8 @@ extern "C" {
 
 static const vc_t COL_TRACKLIST_SELECTED = ((GAME >= 4) ? 3 : V_WHITE);
 static const vc_t COL_TRACKLIST          = ((GAME >= 4) ? 5 : 3);
+static const vc_t COL_CMT_TRACK          = ((GAME >= 4) ? 7 : V_WHITE);
+static const vc_t COL_CMT_COMMENT        = ((GAME >= 4) ? 7 : 13);
 // ------
 
 // Coordinates
@@ -86,12 +88,16 @@ static const screen_x_t CMT_TITLE_LEFT = (
 	/**/ (GAME >= 3)  ? (RES_X - GLYPH_FULL_W - CMT_LINE_W) :
 	/*   (GAME == 2) */ ((RES_X / 2) - (CMT_LINE_W / 2))
 );
-static const screen_y_t CMT_TITLE_TOP = 64;
+static const screen_y_t CMT_TITLE_TOP = ((GAME == 5) ? 32 : 64);
 static const screen_x_t CMT_TITLE_RIGHT = (CMT_TITLE_LEFT + CMT_LINE_W);
 static const screen_y_t CMT_TITLE_BOTTOM = (CMT_TITLE_TOP + GLYPH_H);
 
 static const screen_x_t CMT_COMMENT_LEFT = (RES_X - GLYPH_FULL_W - CMT_LINE_W);
-static const screen_y_t CMT_COMMENT_TOP = CMT_TITLE_BOTTOM;
+#if (GAME == 5)
+	static const screen_y_t CMT_COMMENT_TOP = (PIANO_BOTTOM + 8);
+#else
+	static const screen_y_t CMT_COMMENT_TOP = CMT_TITLE_BOTTOM;
+#endif
 static const screen_x_t CMT_COMMENT_RIGHT = (CMT_COMMENT_LEFT + CMT_LINE_W);
 static const screen_x_t CMT_COMMENT_BOTTOM = (CMT_COMMENT_TOP + CMT_COMMENT_H);
 // -----------
@@ -137,6 +143,11 @@ static unsigned char angle_speed[POLYGON_COUNT];
 #endif
 uint8_t music_sel;
 page_t music_page;
+#if (GAME >= 4)
+	// The initial comment is displayed immediately, without a fade-in
+	// animation.
+	bool cmt_shown_initial;
+#endif
 // ---------------
 
 // Backgrounds
@@ -467,7 +478,120 @@ void pascal near cmt_load(int track)
 	}
 }
 
+// ZUN bloat: TH05 has the most straightforward version of this code.
+#define cmt_put_macro(fx) \
+	graph_putsa_fx( \
+		CMT_TITLE_LEFT, CMT_TITLE_TOP, (COL_CMT_TRACK | fx), cmt[0].c \
+	); \
+	for(int line = 1; line < CMT_LINES; line++) { \
+		if((GAME >= 4) && (cmt[line].c[0] == ';')) { \
+			continue; \
+		} \
+		graph_putsa_fx( \
+			CMT_COMMENT_LEFT, \
+			((line + ((CMT_COMMENT_TOP - 1) / GLYPH_H)) * GLYPH_H), \
+			(COL_CMT_COMMENT | fx), \
+			cmt[line].c \
+		); \
+	}
+
 #if (GAME >= 4)
+	void near cmt_put(void)
+	{
+		#if (GAME == 5)
+			graph_putsa_fx(
+				CMT_TITLE_LEFT, CMT_TITLE_TOP, COL_CMT_TRACK, cmt[0].c
+			);
+			const cmt_line_t near* cmt_p = &cmt[1];
+			int line = 1;
+			screen_y_t top = CMT_COMMENT_TOP;
+			while(line < CMT_LINES) {
+				if(cmt_p->c[0] != ';') {
+					graph_putsa_fx(
+						CMT_COMMENT_LEFT, top, COL_CMT_COMMENT, cmt_p->c
+					);
+				}
+				line++;
+				top += GLYPH_H;
+				cmt_p++;
+			}
+		#else
+			cmt_put_macro(0);
+		#endif
+	}
+
+	void near cmt_fadein_both_animate(void)
+	{
+		int func; // ACTUAL TYPE: graph_putsa_fx_func_t
+		for(func = FX_MASK; func < FX_MASK_END; func++) {
+			graph_putsa_fx_func = static_cast<graph_putsa_fx_func_t>(func);
+			cmt_put();	music_flip();
+			cmt_put();	music_flip();
+		}
+		graph_putsa_fx_func = FX_WEIGHT_BOLD;
+		cmt_put();	music_flip();
+		cmt_put();
+	}
+
+	inline void cmt_unput(void) {
+		enum {
+			W = (RES_X - CMT_TITLE_LEFT), // ZUN bloat: [CMT_LINE_W] is enough.
+		};
+		#if (GAME == 5)
+			bgimage_put_rect_16(CMT_TITLE_LEFT, CMT_TITLE_TOP, W, GLYPH_H);
+			bgimage_put_rect_16(
+				CMT_COMMENT_LEFT,
+				CMT_COMMENT_TOP,
+				W,
+				(CMT_COMMENT_LINES * GLYPH_H)
+			);
+		#else
+			bgimage_put_rect_16(
+				CMT_TITLE_LEFT, CMT_TITLE_TOP, W, (CMT_LINES * GLYPH_H)
+			);
+		#endif
+	}
+
+	void near cmt_unput_both_animate(void)
+	{
+		// ZUN bloat: Not related to unblitting.
+		graph_putsa_fx_func = FX_WEIGHT_BOLD;
+
+		cmt_unput();
+		music_flip();
+		cmt_unput();
+	}
+
+	void pascal near cmt_load_unput_and_put_both_animate(int track)
+	{
+		if(cmt_shown_initial) {
+			cmt_unput_both_animate();
+		}
+		cmt_load(track);
+
+		// ZUN bloat: These calls are never needed. Either we're rendering the
+		// first track and there's nothing to be unblitted, or we already
+		// unblitted the previous track title and comment in the call above.
+		// In fact, they have no effect at all, which is why TH05 can put these
+		// nonsensical coordinates and ZUN never noticed anything.
+		nopoly_B_put();
+		bgimage_put_rect_16(
+			CMT_TITLE_LEFT,
+			((GAME == 5) ? 64 : CMT_TITLE_TOP),
+			(RES_X - CMT_TITLE_LEFT),
+			((GAME == 5) ? 256 : (CMT_LINES * GLYPH_H))
+		);
+
+		if(cmt_shown_initial) {
+			cmt_fadein_both_animate();
+		} else {
+			cmt_shown_initial = true;
+			cmt_put();
+			music_flip();
+			cmt_put();
+		}
+		nopoly_B_put();
+	}
 #else
 	void near cmt_bg_free(void)
 	{
@@ -482,5 +606,24 @@ void pascal near cmt_load(int track)
 		screen_x_t x;
 		vram_offset_t vo;
 		cmt_bg_blit_planar(cmt_bg_p, vo, x, VRAM_PLANE, vo, cmt_bg, cmt_bg_p);
+	}
+
+	void pascal near cmt_load_unput_and_put(int track)
+	{
+		// ZUN bloat: This function is called once per VRAM page, but we only
+		// need to load the track once.
+		cmt_load(track);
+
+		nopoly_B_put();
+		cmt_unput();
+		cmt_put_macro(FX_WEIGHT_HEAVY);
+
+		// ZUN bloat: Same as above – the second call overwrites the previously
+		// snapped contents with the exact same pixels from the other page.
+		// ZUN bloat: Also, limiting it to just the comment area would have
+		// been enough.
+		for(vram_offset_t p = 0; p < PLANE_SIZE; p += int(sizeof(dots32_t))) {
+			*reinterpret_cast<dots32_t *>(nopoly_B + p) = VRAM_CHUNK(B, p, 32);
+		}
 	}
 #endif

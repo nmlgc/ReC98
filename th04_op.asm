@@ -20,7 +20,6 @@ BINARY = 'O'
 
 include ReC98.inc
 include th04/th04.inc
-include th04/hardware/grppsafx.inc
 include th04/op/music.inc
 include th04/sprites/op_cdg.inc
 
@@ -70,138 +69,10 @@ op_01_TEXT segment byte public 'CODE' use16
 		sel:byte, col:byte
 	@TRACKLIST_PUT$QUC procdesc pascal near \
 		sel:byte
-	@CMT_LOAD$QI procdesc pascal near \
+	@CMT_LOAD_UNPUT_AND_PUT_BOTH_ANIM$QI procdesc pascal near \
 		track:word
 
 include th02/op/music.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT_LINES
-draw_cmt_lines	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	graph_putsa_fx pascal, (320 shl 16) or 64, 7, ds, offset _music_cmt
-		mov	si, 1
-		jmp	short loc_C306
-; ---------------------------------------------------------------------------
-
-loc_C2DE:
-		mov	bx, si
-		imul	bx, MUSIC_CMT_LINE_LEN
-		cmp	_music_cmt[bx], ';'
-		jz	short loc_C305
-		push	320
-		lea	ax, [si+4]
-		shl	ax, 4
-		push	ax
-		push	7
-		push	ds
-		mov	ax, si
-		imul	ax, MUSIC_CMT_LINE_LEN
-		add	ax, offset _music_cmt
-		push	ax
-		call	graph_putsa_fx
-
-loc_C305:
-		inc	si
-
-loc_C306:
-		cmp	si, MUSIC_CMT_LINE_COUNT
-		jl	short loc_C2DE
-		pop	si
-		pop	bp
-		retn
-draw_cmt_lines	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C30E	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, FX_MASK
-		jmp	short loc_C328
-; ---------------------------------------------------------------------------
-
-loc_C317:
-		mov	_graph_putsa_fx_func, si
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		inc	si
-
-loc_C328:
-		cmp	si, FX_MASK_END
-		jl	short loc_C317
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		call	draw_cmt_lines
-		pop	si
-		pop	bp
-		retn
-sub_C30E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C33F	proc near
-		push	bp
-		mov	bp, sp
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		call	@music_flip$qv
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		pop	bp
-		retn
-sub_C33F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT
-draw_cmt	proc near
-
-@@track		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		cmp	byte_12DBE, 0
-		jz	short loc_C37C
-		call	sub_C33F
-
-loc_C37C:
-		call	@cmt_load$qi pascal, [bp+@@track]
-		call	@nopoly_B_put$qv
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		cmp	byte_12DBE, 0
-		jz	short loc_C3A2
-		call	sub_C30E
-		jmp	short loc_C3B0
-; ---------------------------------------------------------------------------
-
-loc_C3A2:
-		mov	byte_12DBE, 1
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		call	draw_cmt_lines
-
-loc_C3B0:
-		call	@nopoly_B_put$qv
-		pop	bp
-		retn	2
-draw_cmt	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -210,7 +81,7 @@ public _musicroom
 _musicroom	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte_12DBE, 0
+		mov	_cmt_shown_initial, 0
 		call	cdg_free_all
 		call	text_clear
 		mov	_music_page, 1
@@ -234,7 +105,7 @@ _musicroom	proc near
 		call	@nopoly_B_snap$qv
 		mov	al, _track_playing
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
@@ -302,7 +173,7 @@ loc_C4E4:
 		mov	al, _music_sel
 		mov	_track_playing, al
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
 		mov	al, _music_sel
 		mov	ah, 0
 		shl	ax, 2
@@ -1060,7 +931,6 @@ include th02/snd/snd.inc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern SND_LOAD:proc
-	extern GRAPH_PUTSA_FX:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern SND_SE_PLAY:proc
@@ -1068,7 +938,6 @@ include th02/snd/snd.inc
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
-	extern BGIMAGE_PUT_RECT_16:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
@@ -1082,9 +951,6 @@ SHARED	ends
 	; libs/master.lib/sin8[data].asm
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
-
-	; th04/hardware/grppsafx[data].asm
-	extern _graph_putsa_fx_func:word
 
 include th04/zunsoft[data].asm
 
@@ -1124,9 +990,6 @@ aOp1_pi_1	db 'op1.pi',0
 	; libs/master.lib/vs[bss].asm
 	extern vsync_Count1:word
 
-	; th01/hardware/vram_planes[bss].asm
-	extern _VRAM_PLANE_B:dword
-
 	; th02/formats/pi_slots[bss].asm
 	extern _pi_buffers:dword
 	extern _pi_headers:PiHeader
@@ -1136,8 +999,6 @@ aOp1_pi_1	db 'op1.pi',0
 
 include th04/zunsoft[bss].asm
 include th02/op/music[bss].asm
-byte_12DBE	db ?
-		db    ?	;
 include th03/op/cmt_back[bss].asm
 include th02/op/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm

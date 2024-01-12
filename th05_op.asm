@@ -20,7 +20,6 @@ BINARY = 'O'
 
 include ReC98.inc
 include th05/th05.inc
-include th04/hardware/grppsafx.inc
 include th04/sprites/op_cdg.inc
 include th05/op/music.inc
 include th05/op/piano.inc
@@ -71,133 +70,10 @@ op_01_TEXT segment byte public 'CODE' use16
 		track_sel:byte, boot:word
 	@TRACKLIST_PUT$QUC procdesc pascal near \
 		sel:byte
-	@CMT_LOAD$QI procdesc pascal near \
+	@CMT_LOAD_UNPUT_AND_PUT_BOTH_ANIM$QI procdesc pascal near \
 		track:word
 
 include th02/op/music.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT_LINES
-draw_cmt_lines	proc pascal near
-		local @@y:word
-
-		push	si
-		push	di
-		call	graph_putsa_fx pascal, (320 shl 16) or 32, 7, ds, offset _music_cmt
-		mov	si, offset _music_cmt + MUSIC_CMT_LINE_LEN
-		mov	di, 1
-		mov	@@y, 180
-		jmp	short loc_C36D
-; ---------------------------------------------------------------------------
-
-loc_C351:
-		cmp	byte ptr [si], ';'
-		jz	short loc_C365
-		call	graph_putsa_fx pascal, 320, @@y, 7, ds, si
-
-loc_C365:
-		inc	di
-		add	@@y, 16
-		add	si, MUSIC_CMT_LINE_LEN
-
-loc_C36D:
-		cmp	di, MUSIC_CMT_LINE_COUNT
-		jl	short loc_C351
-		pop	di
-		pop	si
-		ret
-draw_cmt_lines	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C376	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, FX_MASK
-		jmp	short loc_C390
-; ---------------------------------------------------------------------------
-
-loc_C37F:
-		mov	_graph_putsa_fx_func, si
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		inc	si
-
-loc_C390:
-		cmp	si, FX_MASK_END
-		jl	short loc_C37F
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		call	draw_cmt_lines
-		pop	si
-		pop	bp
-		retn
-sub_C376	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C3A7	proc near
-		push	bp
-		mov	bp, sp
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or  32, (320 shl 16) or  16
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or 180, (320 shl 16) or 144
-		call	@music_flip$qv
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or  32, (320 shl 16) or  16
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or 180, (320 shl 16) or 144
-		pop	bp
-		retn
-sub_C3A7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT
-draw_cmt	proc near
-
-@@track		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		cmp	byte_13E96, 0
-		jz	short loc_C406
-		call	sub_C3A7
-
-loc_C406:
-		call	@cmt_load$qi pascal, [bp+@@track]
-		call	@nopoly_B_put$qv
-		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 256
-		cmp	byte_13E96, 0
-		jz	short loc_C42C
-		call	sub_C376
-		jmp	short loc_C43A
-; ---------------------------------------------------------------------------
-
-loc_C42C:
-		mov	byte_13E96, 1
-		call	draw_cmt_lines
-		call	@music_flip$qv
-		call	draw_cmt_lines
-
-loc_C43A:
-		call	@nopoly_B_put$qv
-		pop	bp
-		retn	2
-draw_cmt	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -242,7 +118,7 @@ _musicroom	proc near
 		add	bx, bx
 		mov	ax, _TRACK_COUNT[bx]
 		mov	_track_count_cur, ax
-		mov	byte_13E96, 0
+		mov	_cmt_shown_initial, 0
 		call	cdg_free_all
 		call	text_clear
 		mov	_music_page, 1
@@ -267,7 +143,7 @@ _musicroom	proc near
 		call	pfstart pascal, ds, offset aMusic_dat ; "music.dat"
 		mov	al, _music_sel
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
@@ -403,7 +279,7 @@ loc_C698:
 		push	0
 		call	sub_C441
 		kajacall	KAJA_SONG_FADE, 32
-		call	draw_cmt pascal, 0
+		call	@cmt_load_unput_and_put_both_anim$qi pascal, 0
 		mov	bx, _game_sel
 		imul	bx, 78h
 		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
@@ -433,7 +309,7 @@ loc_C6F1:
 		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
 		mov	al, _music_sel
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
 		mov	bx, _game_sel
 		imul	bx, 78h
 		mov	al, _music_sel
@@ -850,7 +726,6 @@ HI_VIEW_TEXT ends
 
 SHARED	segment	word public 'CODE' use16
 include th02/snd/snd.inc
-	extern GRAPH_PUTSA_FX:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern _bgimage_snap:proc
@@ -879,9 +754,6 @@ SHARED	ends
 	; libs/master.lib/sin8[data].asm
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
-
-	; th04/hardware/grppsafx[data].asm
-	extern _graph_putsa_fx_func:word
 
 include th04/zunsoft[data].asm
 
@@ -915,8 +787,6 @@ aOp_1		db 'op',0
 
 include th04/zunsoft[bss].asm
 include th02/op/music[bss].asm
-byte_13E96	db ?
-		db ?
 include th03/op/cmt_back[bss].asm
 include th02/op/music_cmt[bss].asm
 public _track_id_at_top, _track_playing, _track_count_cur

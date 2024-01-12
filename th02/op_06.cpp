@@ -7,9 +7,6 @@
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
-extern "C" {
-#include "th01/hardware/grppsafx.h"
-}
 #include "th02/v_colors.hpp"
 extern "C" {
 #include "th02/hardware/input.hpp"
@@ -37,28 +34,10 @@ void pascal near track_put(uint8_t sel, vc_t col);
 void pascal near tracklist_put(uint8_t sel);
 void near nopoly_B_snap(void);
 void near nopoly_B_free(void);
-void near nopoly_B_put(void);
 void near music_flip(void);
 void near cmt_bg_snap(void);
-void pascal near cmt_load(int track);
 void near cmt_bg_free(void);
-void near cmt_unput(void);
-
-void pascal near draw_cmt(int track)
-{
-	int line;
-	cmt_load(track);
-	nopoly_B_put();
-	cmt_unput();
-
-	graph_putsa_fx(160, 64, (V_WHITE | FX_WEIGHT_HEAVY), music_cmt[0]);
-	for(line = 1; line < MUSIC_CMT_LINE_COUNT; line++) {
-		graph_putsa_fx(
-			304, ((line + 4) * GLYPH_H), (13 | FX_WEIGHT_HEAVY), music_cmt[line]
-		);
-	}
-	plane_dword_blit(nopoly_B, VRAM_PLANE_B);
-}
+void pascal near cmt_load_unput_and_put(int track);
 
 void pascal musicroom(void)
 {
@@ -81,8 +60,8 @@ void pascal musicroom(void)
 	nopoly_B_snap();
 	cmt_bg_snap();
 
-	graph_accesspage(1);	draw_cmt(track_playing);
-	graph_accesspage(0);	draw_cmt(track_playing);
+	graph_accesspage(1);	cmt_load_unput_and_put(track_playing);
+	graph_accesspage(0);	cmt_load_unput_and_put(track_playing);
 
 	palette_100();
 
@@ -130,9 +109,9 @@ controls:
 				snd_kaja_func(KAJA_SONG_PLAY, 0);
 				track_playing = music_sel;
 
-				draw_cmt(music_sel);
+				cmt_load_unput_and_put(music_sel);
 				music_flip();
-				draw_cmt(music_sel);
+				cmt_load_unput_and_put(music_sel);
 			} else {
 				break;
 			}

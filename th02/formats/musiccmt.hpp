@@ -5,6 +5,10 @@
 // editing.
 // The first line contains the track title and is rendered to a different
 // position than the other 19 lines.
+//
+// As of TH04, comment lines can start with a semicolon, which prevents them
+// from being rendered. This is purely a performance hint, and is functionally
+// equivalent to a line consisting of only whitespace.
 
 static const shiftjis_ank_amount_t CMT_LINE_LENGTH = ((GAME >= 4) ? 38 : 40);
 static const shiftjis_ank_amount_t CMT_LINE_SIZE = (CMT_LINE_LENGTH + 2);

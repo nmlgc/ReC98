@@ -18,7 +18,6 @@
 
 include ReC98.inc
 include th03/th03.inc
-include th01/hardware/grppsafx.inc
 include th02/op/music.inc
 include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
@@ -1324,10 +1323,10 @@ OP_MUSIC_TEXT segment byte public 'CODE' use16
 		sel:byte
 	@cmt_bg_snap$qv procdesc near
 	@cmt_bg_free$qv procdesc near
-	@cmt_unput$qv procdesc near
+	@CMT_LOAD_UNPUT_AND_PUT$QI procdesc pascal near \
+		track:word
 
 include th02/op/music.asm
-include th03/op/draw_cmt.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1372,11 +1371,11 @@ loc_AC15:
 		graph_accesspage 1
 		mov	al, _track_playing
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put$qi pascal, ax
 		graph_accesspage 0
 		mov	al, _track_playing
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put$qi pascal, ax
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
@@ -1453,11 +1452,11 @@ loc_AD52:
 		mov	al, _music_sel
 		mov	_track_playing, al
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put$qi pascal, ax
 		call	@music_flip$qv
 		mov	al, _music_sel
 		mov	ah, 0
-		call	draw_cmt pascal, ax
+		call	@cmt_load_unput_and_put$qi pascal, ax
 
 loc_AD9A:
 		test	_input_sp.hi, high INPUT_CANCEL
@@ -3155,7 +3154,6 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE:proc
-	extern GRAPH_PUTSA_FX:proc
 	extern PI_LOAD:proc
 	extern INPUT_MODE_INTERFACE:proc
 	extern INPUT_MODE_KEY_VS_KEY:proc
@@ -3308,8 +3306,6 @@ aTlsl_rgb	db 'TLSL.RGB',0
 
 	; libs/master.lib/vs[bss].asm
 	extern vsync_Count1:word
-
-	extern _VRAM_PLANE_B:dword
 
 	extern _snd_active:byte
 
