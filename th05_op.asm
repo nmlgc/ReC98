@@ -43,7 +43,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern GRAPH_COPY_PAGE:proc
 	extern PALETTE_SHOW:proc
 	extern IRAND:proc
-	extern TEXT_CLEAR:proc
 	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
@@ -51,8 +50,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern SUPER_PUT:proc
 	extern GRAPH_GAIJI_PUTS:proc
 	extern GRAPH_GAIJI_PUTC:proc
-	extern PFSTART:proc
-	extern PFEND:proc
 _TEXT	ends
 
 ; ===========================================================================
@@ -66,294 +63,6 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-	@TRACK_UNPUT_OR_PUT$QUCI procdesc pascal near \
-		track_sel:byte, boot:word
-	@TRACKLIST_PUT$QUC procdesc pascal near \
-		sel:byte
-	@CMT_LOAD_UNPUT_AND_PUT_BOTH_ANIM$QI procdesc pascal near \
-		track:word
-
-include th02/op/music.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C441	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
-		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
-		call	@tracklist_put$quc pascal, si
-		call	@music_flip$qv
-		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
-		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
-		call	@tracklist_put$quc pascal, si
-		pop	si
-		pop	bp
-		retn	2
-sub_C441	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _musicroom
-_musicroom	proc near
-
-@@sel		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		mov	_track_id_at_top, 0
-		mov	_track_playing, 0
-		mov	_music_sel, 0
-		mov	bx, _game_sel
-		add	bx, bx
-		mov	ax, _TRACK_COUNT[bx]
-		mov	_track_count_cur, ax
-		mov	_cmt_shown_initial, 0
-		call	cdg_free_all
-		call	text_clear
-		mov	_music_page, 1
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aMusic_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
-		call	@piano_setup_and_put_initial$qv
-		call	@nopoly_B_snap$qv
-		call	_bgimage_snap
-		call	@tracklist_put$quc pascal, word ptr _music_sel
-		call	graph_copy_page pascal, 0
-		graph_accesspage 1
-		graph_showpage 0
-		call	pfend
-		call	pfstart pascal, ds, offset aMusic_dat ; "music.dat"
-		mov	al, _music_sel
-		mov	ah, 0
-		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-
-loc_C555:
-		call	_input_reset_sense_held
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C57F
-		cmp	si, 18h
-		jl	short loc_C579
-		cmp	_key_det, INPUT_UP
-		jz	short loc_C574
-		cmp	_key_det, INPUT_DOWN
-		jnz	short loc_C579
-
-loc_C574:
-		mov	si, 14h
-		jmp	short loc_C57F
-; ---------------------------------------------------------------------------
-
-loc_C579:
-		inc	si
-		call	@music_flip$qv
-		jmp	short loc_C555
-; ---------------------------------------------------------------------------
-
-loc_C57F:
-		call	_input_reset_sense_held
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_C5EB
-		mov	al, _music_sel
-		mov	[bp+@@sel], al
-		cmp	_music_sel, 0
-		jbe	short loc_C5D5
-		dec	_music_sel
-		mov	al, _music_sel
-		mov	ah, 0
-		cmp	ax, _track_id_at_top
-		jge	short loc_C5AE
-		mov	al, _music_sel
-		mov	ah, 0
-		jmp	short loc_C61C
-; ---------------------------------------------------------------------------
-
-loc_C5AE:
-		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
-		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		call	@music_flip$qv
-		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
-		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		jmp	short loc_C5EB
-; ---------------------------------------------------------------------------
-
-loc_C5D5:
-		mov	al, byte ptr _track_count_cur
-		mov	_music_sel, al
-		mov	ax, _track_count_cur
-		add	ax, -11
-		mov	_track_id_at_top, ax
-		push	_track_count_cur
-		call	sub_C441
-
-loc_C5EB:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_C666
-		mov	al, _music_sel
-		mov	[bp+@@sel], al
-		mov	ah, 0
-		cmp	ax, _track_count_cur
-		jge	short loc_C652
-		inc	_music_sel
-		mov	al, _music_sel
-		mov	ah, 0
-		mov	dx, _track_id_at_top
-		add	dx, 12
-		cmp	ax, dx
-		jl	short loc_C62B
-		mov	al, _music_sel
-		mov	ah, 0
-		add	ax, -11
-
-loc_C61C:
-		mov	_track_id_at_top, ax
-		mov	al, _music_sel
-		mov	ah, 0
-		push	ax
-		call	sub_C441
-		jmp	loc_C6E3
-; ---------------------------------------------------------------------------
-
-loc_C62B:
-		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
-		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		call	@music_flip$qv
-		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
-		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		jmp	short loc_C666
-; ---------------------------------------------------------------------------
-
-loc_C652:
-		mov	_music_sel, 0
-		mov	_track_id_at_top, 0
-		mov	al, _music_sel
-		mov	ah, 0
-		push	ax
-		call	sub_C441
-
-loc_C666:
-		test	_key_det.lo, low INPUT_LEFT
-		jz	short loc_C680
-		dec	_game_sel
-		cmp	_game_sel, 0
-		jge	short loc_C698
-		mov	_game_sel, 4
-		jmp	short loc_C698
-; ---------------------------------------------------------------------------
-
-loc_C680:
-		test	_key_det.lo, low INPUT_RIGHT
-		jz	short loc_C6E3
-		inc	_game_sel
-		cmp	_game_sel, 5
-		jl	short loc_C698
-		mov	_game_sel, 0
-
-loc_C698:
-		mov	_music_sel, 0
-		mov	_track_playing, 0
-		mov	_track_id_at_top, 0
-		mov	bx, _game_sel
-		add	bx, bx
-		mov	ax, _TRACK_COUNT[bx]
-		mov	_track_count_cur, ax
-		push	0
-		call	sub_C441
-		kajacall	KAJA_SONG_FADE, 32
-		call	@cmt_load_unput_and_put_both_anim$qi pascal, 0
-		mov	bx, _game_sel
-		imul	bx, 78h
-		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-
-loc_C6E3:
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_C6F1
-		test	_key_det.hi, high INPUT_OK
-		jz	short loc_C767
-
-loc_C6F1:
-		mov	al, _music_sel
-		mov	ah, 0
-		cmp	ax, _track_count_cur
-		jz	loc_C77F
-		kajacall	KAJA_SONG_FADE, 32
-		mov	al, byte ptr _track_playing
-		mov	[bp+@@sel], al
-		mov	al, _music_sel
-		mov	ah, 0
-		mov	_track_playing, ax
-		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
-		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		call	@music_flip$qv
-		call	@track_unput_or_put$quci pascal, word ptr [bp+@@sel], 0
-		call	@track_unput_or_put$quci pascal, word ptr _music_sel, 1
-		mov	al, _music_sel
-		mov	ah, 0
-		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
-		mov	bx, _game_sel
-		imul	bx, 78h
-		mov	al, _music_sel
-		mov	ah, 0
-		shl	ax, 2
-		add	bx, ax
-		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-
-loc_C767:
-		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_C77F
-		cmp	_key_det, INPUT_NONE
-		jnz	loc_C555
-		xor	si, si
-		call	@music_flip$qv
-		jmp	loc_C57F
-; ---------------------------------------------------------------------------
-
-loc_C77F:
-		call	_input_reset_sense_held
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C790
-		call	@music_flip$qv
-		jmp	short loc_C77F
-; ---------------------------------------------------------------------------
-
-loc_C790:
-		call	pfend
-		call	pfstart pascal, ds, offset aKaikidan1_dat1
-		kajacall	KAJA_SONG_FADE, 16
-		call	@nopoly_B_free$qv
-		graph_showpage 0
-		graph_accesspage al
-		push	1
-		call	palette_black_out
-		call	_bgimage_free
-		call	snd_load pascal, ds, offset aH_op+2, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		pop	si
-		leave
-		retn
-_musicroom	endp
-
 include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
 include th05/formats/scoredat_recreate_op.asm
@@ -732,8 +441,6 @@ include th02/snd/snd.inc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
 	extern @POLAR$QIII:proc
-	extern @piano_setup_and_put_initial$qv:proc
-	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_LOAD:proc
@@ -743,7 +450,6 @@ include th02/snd/snd.inc
 	extern _input_reset_sense_held:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern @FRAME_DELAY$QI:proc
-	extern CDG_FREE_ALL:proc
 SHARED	ends
 
 	.data
@@ -756,16 +462,6 @@ SHARED	ends
 	extern _CosTable8:word:256
 
 include th04/zunsoft[data].asm
-
-	extern _MUSIC_FILES:dword
-	extern _game_sel:word
-	extern _TRACK_COUNT:word:5
-	aH_op = ($ - 542)
-
-aMusic_pi	db 'music.pi',0
-aMusic_dat	db 'music.dat',0
-aKaikidan1_dat1	db '‰öãY’k1.dat',0
-		db 0
 include th05/formats/scoredat_load_for[data].asm
 aName		db 'name',0
 aHi01_pi	db 'hi01.pi',0
@@ -786,7 +482,6 @@ aOp_1		db 'op',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-include th02/op/music[bss].asm
 include th03/op/cmt_back[bss].asm
 include th02/op/music_cmt[bss].asm
 public _track_id_at_top, _track_playing, _track_count_cur

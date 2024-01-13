@@ -18,6 +18,7 @@
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/op/menu.hpp"
+#include "th02/op/m_music.hpp"
 #include "th03/core/initexit.h"
 extern "C" {
 #include "th04/hardware/grppsafx.h"
@@ -383,7 +384,7 @@ void near main_update_and_render(void)
 			initialized = false;
 			break;
 		case MC_MUSICROOM:
-			musicroom();
+			musicroom_menu();
 			main_cdg_load();
 
 			// ZUN quirk: Moving to MC_GAME in TH04?

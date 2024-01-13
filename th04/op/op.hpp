@@ -14,8 +14,6 @@ void near main_cdg_free(void);
 // and page 0 shown.
 void near op_animate(void);
 
-void near musicroom(void);
-
 void near regist_view_menu(void);
 
 // Initializes the game clear/extra unlock variables from the score file, and

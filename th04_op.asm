@@ -44,7 +44,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern GRAPH_PI_FREE:proc
 	extern PALETTE_SHOW:proc
 	extern IRAND:proc
-	extern TEXT_CLEAR:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT_RECT:proc
@@ -65,153 +64,6 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-	@TRACK_PUT$QUCUC procdesc pascal near \
-		sel:byte, col:byte
-	@TRACKLIST_PUT$QUC procdesc pascal near \
-		sel:byte
-	@CMT_LOAD_UNPUT_AND_PUT_BOTH_ANIM$QI procdesc pascal near \
-		track:word
-
-include th02/op/music.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _musicroom
-_musicroom	proc near
-		push	bp
-		mov	bp, sp
-		mov	_cmt_shown_initial, 0
-		call	cdg_free_all
-		call	text_clear
-		mov	_music_page, 1
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aMusic_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		mov	al, _track_playing
-		mov	_music_sel, al
-		call	@tracklist_put$quc pascal, word ptr _music_sel
-		call	graph_copy_page pascal, 0
-		call	_bgimage_snap
-		graph_accesspage 1
-		graph_showpage 0
-		call	@nopoly_B_snap$qv
-		mov	al, _track_playing
-		mov	ah, 0
-		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-
-loc_C454:
-		call	far ptr	_input_reset_sense
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C465
-		call	@music_flip$qv
-		jmp	short loc_C454
-; ---------------------------------------------------------------------------
-
-loc_C465:
-		call	far ptr	_input_reset_sense
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_C4A0
-		call	@track_put$qucuc pascal, word ptr _music_sel, 5
-		cmp	_music_sel, 0
-		jbe	short loc_C487
-		dec	_music_sel
-		jmp	short loc_C48C
-; ---------------------------------------------------------------------------
-
-loc_C487:
-		mov	_music_sel, 17h
-
-loc_C48C:
-		cmp	_music_sel, 16h
-		jnz	short loc_C497
-		dec	_music_sel
-
-loc_C497:
-		call	@track_put$qucuc pascal, word ptr _music_sel, 3
-
-loc_C4A0:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_C4D6
-		call	@track_put$qucuc pascal, word ptr _music_sel, 5
-		cmp	_music_sel, 17h
-		jnb	short loc_C4BD
-		inc	_music_sel
-		jmp	short loc_C4C2
-; ---------------------------------------------------------------------------
-
-loc_C4BD:
-		mov	_music_sel, 0
-
-loc_C4C2:
-		cmp	_music_sel, 16h
-		jnz	short loc_C4CD
-		inc	_music_sel
-
-loc_C4CD:
-		call	@track_put$qucuc pascal, word ptr _music_sel, 3
-
-loc_C4D6:
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_C4E4
-		test	_key_det.hi, high INPUT_OK
-		jz	short loc_C51D
-
-loc_C4E4:
-		cmp	_music_sel, 17h
-		jz	short loc_C533
-		kajacall	KAJA_SONG_FADE, 32
-		mov	al, _music_sel
-		mov	_track_playing, al
-		mov	ah, 0
-		call	@cmt_load_unput_and_put_both_anim$qi pascal, ax
-		mov	al, _music_sel
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-
-loc_C51D:
-		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_C533
-		cmp	_key_det, INPUT_NONE
-		jnz	loc_C454
-		call	@music_flip$qv
-		jmp	loc_C465
-; ---------------------------------------------------------------------------
-
-loc_C533:
-		call	far ptr	_input_reset_sense
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C544
-		call	@music_flip$qv
-		jmp	short loc_C533
-; ---------------------------------------------------------------------------
-
-loc_C544:
-		kajacall	KAJA_SONG_FADE, 16
-		call	@nopoly_B_free$qv
-		graph_showpage 0
-		graph_accesspage al
-		push	1
-		call	palette_black_out
-		call	_bgimage_free
-		call	snd_load pascal, ds, offset aOp_2, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		pop	bp
-		retn
-_musicroom	endp
-
 include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
@@ -954,11 +806,6 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-	extern _MUSIC_FILES:dword
-	extern _track_playing:byte
-	aOp_2 = ($ - 138)
-	aMusic_pi = ($ - 9)
-
 aGensou_scr	db 'GENSOU.SCR',0
 aName		db 'name',0
 aHi01_pi	db 'hi01.pi',0
@@ -998,7 +845,6 @@ aOp1_pi_1	db 'op1.pi',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-include th02/op/music[bss].asm
 include th03/op/cmt_back[bss].asm
 include th02/op/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm

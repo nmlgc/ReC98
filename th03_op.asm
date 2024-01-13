@@ -917,7 +917,7 @@ loc_A19A:
 ; ---------------------------------------------------------------------------
 
 menu_sel_musicroom:
-		nopcall	musicroom
+		nopcall	@musicroom_menu$qv
 		jmp	short loc_A19A
 ; ---------------------------------------------------------------------------
 
@@ -1317,178 +1317,7 @@ _main		endp
 op_01_TEXT ends
 
 OP_MUSIC_TEXT segment byte public 'CODE' use16
-	@TRACK_PUT$QUCUC procdesc pascal near \
-		sel:byte, col:byte
-	@TRACKLIST_PUT$QUC procdesc pascal near \
-		sel:byte
-	@cmt_bg_snap$qv procdesc near
-	@cmt_bg_free$qv procdesc near
-	@CMT_LOAD_UNPUT_AND_PUT$QI procdesc pascal near \
-		track:word
-
-include th02/op/music.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MUSICROOM
-musicroom	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_AC15
-; ---------------------------------------------------------------------------
-
-loc_AC0E:
-		call	cdg_free pascal, si
-		inc	si
-
-loc_AC15:
-		cmp	si, CDG_SLOT_COUNT
-		jl	short loc_AC0E
-		call	super_free
-		call	text_clear
-		mov	_music_page, 1
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp3_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		mov	al, _track_playing
-		mov	_music_sel, al
-		call	@tracklist_put$quc pascal, word ptr _music_sel
-		call	graph_copy_page pascal, 0
-		graph_accesspage 1
-		graph_showpage 0
-		call	@nopoly_B_snap$qv
-		call	@cmt_bg_snap$qv
-		graph_accesspage 1
-		mov	al, _track_playing
-		mov	ah, 0
-		call	@cmt_load_unput_and_put$qi pascal, ax
-		graph_accesspage 0
-		mov	al, _track_playing
-		mov	ah, 0
-		call	@cmt_load_unput_and_put$qi pascal, ax
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-
-loc_ACC2:
-		call	input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_ACD3
-		call	@music_flip$qv
-		jmp	short loc_ACC2
-; ---------------------------------------------------------------------------
-
-loc_ACD3:
-		call	input_mode_interface
-		test	_input_sp.lo, low INPUT_UP
-		jz	short loc_AD0E
-		call	@track_put$qucuc pascal, word ptr _music_sel, 3
-		cmp	_music_sel, 0
-		jbe	short loc_ACF5
-		dec	_music_sel
-		jmp	short loc_ACFA
-; ---------------------------------------------------------------------------
-
-loc_ACF5:
-		mov	_music_sel, 14h
-
-loc_ACFA:
-		cmp	_music_sel, 13h
-		jnz	short loc_AD05
-		dec	_music_sel
-
-loc_AD05:
-		call	@track_put$qucuc pascal, word ptr _music_sel, V_WHITE
-
-loc_AD0E:
-		test	_input_sp.lo, low INPUT_DOWN
-		jz	short loc_AD44
-		call	@track_put$qucuc pascal, word ptr _music_sel, 3
-		cmp	_music_sel, 14h
-		jnb	short loc_AD2B
-		inc	_music_sel
-		jmp	short loc_AD30
-; ---------------------------------------------------------------------------
-
-loc_AD2B:
-		mov	_music_sel, 0
-
-loc_AD30:
-		cmp	_music_sel, 13h
-		jnz	short loc_AD3B
-		inc	_music_sel
-
-loc_AD3B:
-		call	@track_put$qucuc pascal, word ptr _music_sel, V_WHITE
-
-loc_AD44:
-		test	_input_sp.lo, low INPUT_SHOT
-		jnz	short loc_AD52
-		test	_input_sp.hi, high INPUT_OK
-		jz	short loc_AD9A
-
-loc_AD52:
-		cmp	_music_sel, 14h
-		jz	short loc_ADB0
-		kajacall	KAJA_SONG_STOP
-		push	SND_LOAD_SONG
-		mov	al, _music_sel
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_FILES[bx]
-		call	_snd_load
-		add	sp, 6
-		kajacall	KAJA_SONG_PLAY
-		mov	al, _music_sel
-		mov	_track_playing, al
-		mov	ah, 0
-		call	@cmt_load_unput_and_put$qi pascal, ax
-		call	@music_flip$qv
-		mov	al, _music_sel
-		mov	ah, 0
-		call	@cmt_load_unput_and_put$qi pascal, ax
-
-loc_AD9A:
-		test	_input_sp.hi, high INPUT_CANCEL
-		jnz	short loc_ADB0
-		cmp	_input_sp, INPUT_NONE
-		jnz	loc_ACC2
-		call	@music_flip$qv
-		jmp	loc_ACD3
-; ---------------------------------------------------------------------------
-
-loc_ADB0:
-		call	input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_ADC1
-		call	@music_flip$qv
-		jmp	short loc_ADB0
-; ---------------------------------------------------------------------------
-
-loc_ADC1:
-		call	@nopoly_B_free$qv
-		call	@cmt_bg_free$qv
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		mov	al, 0
-		out	dx, al
-		pop	si
-		pop	bp
-		retf
-musicroom	endp
-
+	extern @musicroom_menu$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3222,11 +3051,6 @@ SHARED	ends
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
 
-	extern _MUSIC_FILES:dword
-	extern _track_playing:byte
-	_aMUSIC_TXT = (aOp3_pi - 10)
-	aOp3_pi = ($ - 7)
-
 aOpwin_bft	db 'opwin.bft',0
 aOp_m		db 'op.m',0
 aTl01_pi	db 'TL01.PI',0
@@ -3316,7 +3140,6 @@ aTlsl_rgb	db 'TLSL.RGB',0
 	extern _pi_buffers:dword
 	extern _pi_headers:PiHeader
 
-include th02/op/music[bss].asm
 include th03/op/cmt_back[bss].asm
 include th02/op/music_cmt[bss].asm
 public _hi

@@ -44,5 +44,5 @@ const char* MUSIC_FILES[] = {
 	"demo4.m",
 	"demo5.m",
 	"ed.m",
-	"score.m\0MUSIC.TXT\0op3.pi",
+	"score.m",
 };

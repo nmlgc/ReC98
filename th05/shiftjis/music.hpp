@@ -2,6 +2,7 @@
 #include "th03/shiftjis/bgm.hpp"
 #include "th04/shiftjis/bgm.hpp"
 #include "th05/shiftjis/bgm.hpp"
+#include "th04/shiftjis/fnshared.hpp"
 
 static const unsigned int GAME_COUNT = 5;
 static const unsigned int TRACKS_MAX = 30;
@@ -254,7 +255,7 @@ const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"g_ng04",
 	"g_ng05",
 }, {
-	"op",
+	BGM_MENU_MAIN_FN,
 	"st00",
 	"st00b",
 	"st01",

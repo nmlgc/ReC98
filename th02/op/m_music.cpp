@@ -5,30 +5,55 @@
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
+#include "libs/kaja/kaja.h"
 #include "game/coords.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/musiccmt.hpp"
-#if (GAME >= 3)
-	#include "th03/math/polar.hpp"
-#else
-	#include "th01/math/polar.hpp"
-#endif
 extern "C" {
 #if (GAME >= 4)
 	#include "th04/hardware/bgimage.hpp"
 	#include "th04/hardware/grppsafx.h"
+	#if (GAME == 5)
+		#include "th05/hardware/input.h"
+	#else
+		#include "th04/hardware/input.h"
+	#endif
+	#include "th04/snd/snd.h"
 #else
 	#include "th01/hardware/grppsafx.h"
+	#if (GAME == 3)
+		#include "th03/hardware/input.h"
+	#else
+		#include "th02/hardware/input.hpp"
+	#endif
+	#include "th02/snd/snd.h"
 #endif
 }
+#if (GAME >= 3)
+	extern "C" {
+	#include "th03/formats/cdg.h"
+	}
+	#include "th03/math/polar.hpp"
+#else
+	#include "th01/math/polar.hpp"
+#endif
+#include "th02/op/m_music.hpp"
 #if (GAME == 5)
+	#include "th01/math/clamp.hpp"
+	extern "C" {
+	#include "th05/formats/pi.hpp"
+	}
 	#include "th05/op/piano.hpp"
+	#include "th05/shiftjis/fns.hpp"
 	#include "th05/shiftjis/music.hpp"
 
 	int game_sel = (GAME_COUNT - 1);
-	extern const int TRACK_COUNT[GAME_COUNT] = { 14, 18, 24, 28, 23 };
+	const int TRACK_COUNT[GAME_COUNT] = { 14, 18, 24, 28, 23 };
 #else
+	extern "C" {
+	#include "th02/formats/pi.h"
+	}
 	#if (GAME == 4)
 		#include "th04/shiftjis/music.hpp"
 	#elif (GAME == 3)
@@ -36,6 +61,9 @@ extern "C" {
 	#elif (GAME == 2)
 		#include "th02/shiftjis/music.hpp"
 	#endif
+	static const size_t TRACK_COUNT = (
+		sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
+	);
 #endif
 
 // Colors
@@ -464,11 +492,9 @@ void pascal near cmt_load(int track)
 		FN[6] = ('0' + game_sel);
 		file_ropen(FN);
 	#elif (GAME == 4)
-		file_ropen("_MUSIC.TXT\0music.pi");
-	#elif (GAME == 3)
-		file_ropen(reinterpret_cast<const char *>(MK_FP(_DS, 0x09D1)));
-	#elif (GAME == 2)
-		file_ropen(reinterpret_cast<const char *>(MK_FP(_DS, 0x0C13)));
+		file_ropen("_MUSIC.TXT");
+	#else
+		file_ropen("MUSIC.TXT");
 	#endif
 	file_seek((track * int(sizeof(cmt))), SEEK_SET);
 	file_read(cmt, sizeof(cmt));
@@ -590,6 +616,10 @@ void pascal near cmt_load(int track)
 			music_flip();
 			cmt_put();
 		}
+
+		// ZUN bloat: Redundant; this is the first thing done in music_flip(),
+		// which runs almost immediately after this function on every code
+		// path.
 		nopoly_B_put();
 	}
 #else
@@ -627,3 +657,408 @@ void pascal near cmt_load(int track)
 		}
 	}
 #endif
+
+// Input wrappers
+// --------------
+// The Music Room is the only piece of UI that is more or less the same across
+// 4 of the 5 games. Therefore, it makes sense to define these here rather than
+// adding more complexity to the headers.
+
+#if (GAME == 3)
+	#define key_det input_sp
+#endif
+
+// Same game-specific branches as in the TH03/TH04/TH05 cutscene system, but
+// with a different, much smaller effect here.
+//
+// ZUN quirk: After processing an input, the Music Room loop wants to prevent
+// held keys from having any effect by spinning in a different loop until all
+// keys have been released. However, due to the different sensing functions,
+// the actual handling of held keys differs depending on the game:
+//
+// • TH02 and TH04 use raw input sensing functions that don't address the
+//   hardware quirk documented in the `Research/HOLDKEY` example. Therefore,
+//   the eventual key release scancode for a held key is not filtered and gets
+//   through to [key_det], breaking the spinning loop despite the key still
+//   being held.
+// • In TH03 and TH05, this eventual key release scancode is accurately
+//   detected and filtered. Thus, held keys truly don't have any effect, but at
+//   the cost of an additional 614.4 µs for every call to this function.
+inline void music_input_sense(void) {
+	#if (GAME == 5)
+		input_reset_sense_held();
+	#elif (GAME == 4)
+		input_reset_sense();
+	#elif (GAME == 3)
+		input_mode_interface();
+	#else
+		input_sense();
+	#endif
+}
+// --------------
+
+#define wait_for_key_release_animate() { \
+	while(1) { \
+		music_input_sense(); \
+		if(key_det) { \
+			music_flip(); \
+		} else { \
+			break; \
+		} \
+	} \
+}
+
+#if (GAME == 5)
+	void pascal near tracklist_unput_and_put_both_animate(int sel)
+	{
+		bgimage_put_rect_16(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
+		bgimage_put_rect_16(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
+		tracklist_put(sel);
+		music_flip();
+		bgimage_put_rect_16(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
+		bgimage_put_rect_16(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
+		tracklist_put(sel);
+	}
+
+	inline void track_unput_and_put_both_animate(
+		const uint8_t& sel_prev, const uint8_t& sel_new
+	) {
+		track_unput_or_put(sel_prev, false);
+		track_unput_or_put(sel_new, true);
+		music_flip();
+		track_unput_or_put(sel_prev, false);
+		track_unput_or_put(sel_new, true);
+	}
+
+	inline void game_switch(void) {
+		music_sel = 0;
+		track_playing = 0;
+		track_id_at_top = 0;
+		track_count_cur = TRACK_COUNT[game_sel];
+		tracklist_unput_and_put_both_animate(0);
+		snd_kaja_func(KAJA_SONG_FADE, 32);
+		cmt_load_unput_and_put_both_animate(0);
+		snd_load(MUSIC_FILES[game_sel][0], SND_LOAD_SONG);
+		snd_kaja_func(KAJA_SONG_PLAY, 0);
+	}
+#endif
+
+void MUSICROOM_DISTANCE musicroom_menu(void)
+{
+	#if (GAME == 5)
+		int frames_since_last_input = 0;
+		uint8_t sel_prev;
+		track_id_at_top = 0;
+		track_playing = 0;
+		music_sel = 0;
+		track_count_cur = TRACK_COUNT[game_sel];
+		#define SEL_QUIT track_count_cur
+	#else
+		enum {
+			SEL_QUIT = (TRACK_COUNT + 1),
+		};
+	#endif
+
+	#if (GAME >= 4)
+		cmt_shown_initial = false;
+	#endif
+
+	// ZUN bloat: The call site would have been a better place for this.
+	#if (GAME >= 4)
+		cdg_free_all();
+		text_clear();
+	#elif (GAME == 3)
+		for(int i = 0; i < CDG_SLOT_COUNT; i++) {
+			cdg_free(i);
+		}
+		super_free();
+		text_clear();
+	#endif
+
+	music_page = 1;
+
+	palette_black();
+	graph_showpage(0);
+
+	// ZUN bloat: We copy page 1 to page 0 below anyway. The hardware palette
+	// is also entirely black, so no one will ever see a difference.
+	graph_accesspage(0);
+	graph_clear();
+
+	graph_accesspage(1);
+
+	#if (GAME >= 4)
+		pi_load_put_8_free(0, "music.pi");
+	#else
+		pi_load_put_8_free(0, "op3.pi");
+	#endif
+
+	#if (GAME == 5)
+		piano_setup_and_put_initial();
+		nopoly_B_snap();
+		bgimage_snap();
+	#else
+		music_sel = track_playing;
+	#endif
+	tracklist_put(music_sel);
+	graph_copy_page(0);
+
+	#if (GAME == 4)
+		bgimage_snap();
+	#endif
+	graph_accesspage(1);
+	graph_showpage(0);
+
+	#if (GAME == 5)
+		pfend();
+		pfstart("music.dat");
+		cmt_load_unput_and_put_both_animate(music_sel);
+	#else
+		nopoly_B_snap();
+		#if (GAME >= 4)
+			cmt_load_unput_and_put_both_animate(track_playing);
+		#else
+			cmt_bg_snap();
+			graph_accesspage(1);	cmt_load_unput_and_put(track_playing);
+			graph_accesspage(0);	cmt_load_unput_and_put(track_playing);
+		#endif
+	#endif
+
+	palette_100();
+
+	while(1) {
+		#if (GAME == 5)
+			// This loop also ignores any ← or → inputs while ↑ or ↓ are held,
+			// and vice versa.
+			while(1) {
+				music_input_sense();
+				if(!key_det) {
+					break;
+				}
+				if(frames_since_last_input >= 24) {
+					if((key_det == INPUT_UP) || (key_det == INPUT_DOWN)) {
+						frames_since_last_input = 20;
+						break;
+					}
+				}
+				frames_since_last_input++;
+				music_flip();
+			}
+		#else
+			// ZUN bloat: None of this `goto` business would have been
+			// necessary if the loop clearly defined its update and render
+			// steps. Especially since it does want to render the polygon
+			// animation every frame.
+			wait_for_key_release_animate();
+		#endif
+controls:
+		// ZUN bloat: We already did that for this frame if we came from above,
+		// but not if we came from the `goto` below.
+		music_input_sense();
+
+		#if (GAME == 5)
+			if(key_det & INPUT_UP) {
+				sel_prev = music_sel;
+				if(music_sel > 0) {
+					music_sel--;
+					if(music_sel < track_id_at_top) {
+						track_id_at_top = music_sel;
+						tracklist_unput_and_put_both_animate(music_sel);
+
+						// ZUN quirk: This prevents game switches via ← or → ,
+						// but only in the very specific case of
+						// 1) the cursor being at the top of the list,
+						// 2) highlighting a track other than the first one of
+						//    the respective game, and
+						// 3) ←/→ being pressed simultaneously with ↑.
+						// In any other case, ←/→ are processed as expected,
+						// and override this cursor movement with a game
+						// switch.
+						goto skip_processing_of_left_and_right;
+					} else {
+						track_unput_and_put_both_animate(sel_prev, music_sel);
+					}
+				} else {
+					music_sel = SEL_QUIT;
+					track_id_at_top = (
+						SEL_QUIT - (TRACKLIST_VISIBLE_COUNT - 1)
+					);
+					tracklist_unput_and_put_both_animate(SEL_QUIT);
+				}
+			}
+			if(key_det & INPUT_DOWN) {
+				sel_prev = music_sel;
+				if(music_sel < SEL_QUIT) {
+					music_sel++;
+					if(
+						music_sel >=
+						(track_id_at_top + TRACKLIST_VISIBLE_COUNT)
+					) {
+						track_id_at_top = (
+							music_sel - (TRACKLIST_VISIBLE_COUNT - 1)
+						);
+						tracklist_unput_and_put_both_animate(music_sel);
+
+						// Same as the quirk above, applying to the
+						// corresponding very specific case of
+						// 1) the cursor being at the bottom of the list,
+						// 2) highlighting anything except [SEL_QUIT], and
+						// 3) ←/→ being pressed simultaneously with ↓.
+						goto skip_processing_of_left_and_right;
+					} else {
+						track_unput_and_put_both_animate(sel_prev, music_sel);
+					}
+				} else {
+					music_sel = 0;
+					track_id_at_top = 0;
+					tracklist_unput_and_put_both_animate(music_sel);
+				}
+			}
+			if(key_det & INPUT_LEFT) {
+				ring_dec(game_sel, (GAME_COUNT - 1));
+				game_switch();
+			} else if(key_det & INPUT_RIGHT) {
+				ring_inc_ge(game_sel, GAME_COUNT);
+				game_switch();
+			}
+		#else
+			if(key_det & INPUT_UP) {
+				track_put(music_sel, COL_TRACKLIST);
+				if(music_sel > 0) {
+					music_sel--;
+				} else {
+					music_sel = SEL_QUIT;
+				}
+
+				// Skip over the empty line
+				if(music_sel == TRACK_COUNT) {
+					music_sel--;
+				}
+
+				track_put(music_sel, COL_TRACKLIST_SELECTED);
+			}
+			if(key_det & INPUT_DOWN) {
+				track_put(music_sel, COL_TRACKLIST);
+				if(music_sel < SEL_QUIT) {
+					music_sel++;
+				} else {
+					music_sel = 0;
+				}
+
+				// Skip over the empty line
+				if(music_sel == TRACK_COUNT) {
+					music_sel++;
+				}
+
+				track_put(music_sel, COL_TRACKLIST_SELECTED);
+			}
+		#endif
+	skip_processing_of_left_and_right:
+		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+			if(music_sel != SEL_QUIT) {
+				#if (GAME >= 4)
+					snd_kaja_func(KAJA_SONG_FADE, 32);
+				#elif (GAME == 3)
+					// Avoids the snd_load() landmine that is still present in
+					// this game.
+					snd_kaja_func(KAJA_SONG_STOP, 0);
+				#elif (GAME == 2)
+					// ZUN landmine: Should have stopped the currently playing
+					// track according to snd_load()'s header comment.
+					// Especially since this game simultaneously loads both the
+					// PMD and MIDI versions and is therefore inherently slower
+					// than the others.
+				#endif
+
+				#if (GAME == 5)
+					sel_prev = track_playing;
+					track_playing = music_sel;
+					track_unput_and_put_both_animate(sel_prev, music_sel);
+					cmt_load_unput_and_put_both_animate(music_sel);
+					snd_load(MUSIC_FILES[game_sel][music_sel], SND_LOAD_SONG);
+					snd_kaja_func(KAJA_SONG_PLAY, 0);
+				#elif (GAME == 4)
+					track_playing = music_sel;
+					cmt_load_unput_and_put_both_animate(music_sel);
+					snd_load(MUSIC_FILES[music_sel], SND_LOAD_SONG);
+					snd_kaja_func(KAJA_SONG_PLAY, 0);
+				#else
+					#if (GAME == 3)
+						snd_load(MUSIC_FILES[music_sel], SND_LOAD_SONG);
+					#else
+						// Load both the MIDI and PMD versions of the selected
+						// track. Makes sense given that the track continues
+						// playing when leaving the Music Room – changing the
+						// music mode in the Option menu will then play the
+						// same selected track.
+						bool midi_active = snd_midi_active;
+						snd_midi_active = snd_midi_possible;
+						snd_load(MUSIC_FILES[music_sel], SND_LOAD_SONG);
+						snd_midi_active = 0;
+						snd_load(MUSIC_FILES[music_sel], SND_LOAD_SONG);
+						snd_midi_active = midi_active;
+					#endif
+					snd_kaja_func(KAJA_SONG_PLAY, 0);
+					track_playing = music_sel;
+					cmt_load_unput_and_put(music_sel);
+					music_flip();
+					cmt_load_unput_and_put(music_sel);
+				#endif
+			} else {
+				break;
+			}
+		}
+		if(key_det & INPUT_CANCEL) {
+			break;
+		}
+		if(!key_det) {
+			#if (GAME == 5)
+				frames_since_last_input = 0;
+			#endif
+			music_flip();
+			goto controls;
+		}
+	};
+	wait_for_key_release_animate();
+
+	#if (GAME >= 4)
+		#if (GAME == 5)
+			pfend();
+			pfstart(OP_AND_END_PF_FN);
+		#endif
+		snd_kaja_func(KAJA_SONG_FADE, 16);
+		nopoly_B_free();
+		graph_showpage(0);
+		graph_accesspage(0);
+		palette_black_out(1);
+		bgimage_free();
+		snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
+		snd_kaja_func(KAJA_SONG_PLAY, 0);
+	#else
+		nopoly_B_free();
+		cmt_bg_free();
+		graph_showpage(0);
+
+		// ZUN quirk: graph_clear() sets all of VRAM to hardware color #0,
+		// which is purple in the original images, not black.
+		//
+		// ZUN bloat: Unlike the graph_clear() call at the beginning of the
+		// function, this one is not useless because we haven't reset the
+		// hardware palette yet. Still, setting all hardware colors to color #0
+		// would have been a more efficient way to accomplish the same hiding
+		// effect before the graph_copy_page() call below.
+		graph_accesspage(0);
+		graph_clear();
+
+		graph_accesspage(1);
+
+		#if (GAME == 2)
+			// ZUN bloat: The call site would have been a better place for this.
+			pi_load_put_8_free(0, "op2.pi");
+			palette_entry_rgb_show("op.rgb");
+			graph_copy_page(0);
+		#endif
+
+		graph_accesspage(0);
+	#endif
+}

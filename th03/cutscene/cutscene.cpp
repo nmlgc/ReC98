@@ -169,6 +169,9 @@ extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 #endif
 // -----------------------
 
+// Same game-specific branches as in the Music Room, but they have a much
+// bigger impact here:
+//
 // ZUN quirk: The cutscene system features both
 // 1) a top-level input sensing mechanism (for updating the fast-forward flag),
 //    and

@@ -35,6 +35,7 @@ extern "C" {
 #include "th02/shiftjis/fns.hpp"
 #include "th02/op/op.h"
 #include "th02/op/menu.hpp"
+#include "th02/op/m_music.hpp"
 
 #pragma option -d -a2
 
@@ -60,7 +61,6 @@ extern unsigned int score_duration;
 void title_flash(void);
 void pascal score_menu(void);
 void pascal shottype_menu(void);
-void pascal musicroom(void);
 
 int cfg_load(void)
 {
@@ -439,7 +439,7 @@ void main_update_and_render(void)
 				break;
 			case 4:
 				text_clear();
-				musicroom();
+				musicroom_menu();
 				initialized = false;
 				break;
 			case 5:
