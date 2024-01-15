@@ -21,8 +21,6 @@ BINARY = 'O'
 include ReC98.inc
 include th05/th05.inc
 include th04/sprites/op_cdg.inc
-include th05/op/music.inc
-include th05/op/piano.inc
 
 op_01 group OP_SETUP_TEXT, op_01_TEXT, HI_VIEW_TEXT
 
@@ -482,12 +480,6 @@ aOp_1		db 'op',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-include th03/op/cmt_back[bss].asm
-include th02/op/music_cmt[bss].asm
-public _track_id_at_top, _track_playing, _track_count_cur
-_track_id_at_top	dw ?
-_track_playing  	dw ?
-_track_count_cur	dw ?
 	extern _hi:scoredat_section_t
 	extern _hi2:scoredat_section_t
 	extern _rank:byte

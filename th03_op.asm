@@ -18,7 +18,6 @@
 
 include ReC98.inc
 include th03/th03.inc
-include th02/op/music.inc
 include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
 
@@ -3140,8 +3139,6 @@ aTlsl_rgb	db 'TLSL.RGB',0
 	extern _pi_buffers:dword
 	extern _pi_headers:PiHeader
 
-include th03/op/cmt_back[bss].asm
-include th02/op/music_cmt[bss].asm
 public _hi
 _hi	scoredat_section_t <?>
 word_FC52	dw ?

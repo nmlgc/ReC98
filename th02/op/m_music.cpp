@@ -175,6 +175,7 @@ page_t music_page;
 	// The initial comment is displayed immediately, without a fade-in
 	// animation.
 	bool cmt_shown_initial;
+	static int8_t unused_byte; // ZUN bloat
 #endif
 // ---------------
 
@@ -184,26 +185,28 @@ page_t music_page;
 // B plane of the background image as loaded from the .PI file, without any
 // polygons drawn on top of it.
 #if (GAME >= 3)
-	extern dots8_t __seg* nopoly_B;
+	dots8_t __seg* nopoly_B;
 #else
-	extern dots8_t* nopoly_B;
+	dots8_t* nopoly_B;
 #endif
-extern Planar<dots8_t far *> cmt_bg;
+
+// ZUN bloat: Unused in TH04 and TH05 which use the bgimage system for that,
+// but still present in the binary.
+Planar<dots8_t far *> cmt_bg;
 // -----------
 
-#define cmt music_cmt
 struct cmt_line_t {
 	shiftjis_t c[CMT_LINE_SIZE];
 };
-extern cmt_line_t cmt[CMT_LINES];
+cmt_line_t cmt[CMT_LINES];
 
 #if (GAME == 5)
 	// TH05 selection state
 	// --------------------
 
-	extern int track_id_at_top;
-	extern int track_playing;
-	extern int track_count_cur;
+	int track_id_at_top;
+	int track_playing;
+	int track_count_cur;
 	// --------------------
 
 	void pascal near track_unput_or_put(uint8_t track_sel, bool16 put)

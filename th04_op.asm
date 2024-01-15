@@ -20,7 +20,6 @@ BINARY = 'O'
 
 include ReC98.inc
 include th04/th04.inc
-include th04/op/music.inc
 include th04/sprites/op_cdg.inc
 
 op_01 group OP_SETUP_TEXT, op_01_TEXT
@@ -845,8 +844,6 @@ aOp1_pi_1	db 'op1.pi',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-include th03/op/cmt_back[bss].asm
-include th02/op/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm
 _rank	db ?
 public _cleared_with, _extra_unlocked
