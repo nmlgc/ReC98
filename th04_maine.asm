@@ -252,8 +252,8 @@ _main		proc far
 		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jb	loc_A1FE
 		call	sub_A0BD
-		call	sub_B44D
-		call	sub_C0F8
+		call	@staffroll_animate$qv
+		call	@verdict_animate$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.end_sequence], ES_1CC
 		jz	short loc_A187
@@ -282,7 +282,7 @@ loc_A187:
 loc_A1E9:
 		kajacall	KAJA_SONG_FADE, 4
 		call	@frame_delay$qi pascal, 100
-		call	sub_C814
+		call	@regist_menu$qv
 		jmp	loc_A281
 ; ---------------------------------------------------------------------------
 
@@ -291,7 +291,7 @@ loc_A1FE:
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnz	short loc_A274
 		call	@frame_delay$qi pascal, 100
-		call	sub_C814
+		call	@regist_menu$qv
 		les	bx, [bp+@@cong_fn]
 		mov	byte ptr es:[bx+5], '4'
 		mov	PaletteTone, 0
@@ -312,10 +312,10 @@ loc_A1FE:
 
 loc_A274:
 		call	@frame_delay$qi pascal, 100
-		call	sub_C814
+		call	@regist_menu$qv
 
 loc_A27E:
-		call	sub_C0F8
+		call	@verdict_animate$qv
 
 loc_A281:
 		kajacall	KAJA_SONG_FADE, 4
@@ -979,8 +979,8 @@ sub_B3AC	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B44D	proc near
+public @staffroll_animate$qv
+@staffroll_animate$qv proc near
 		push	bp
 		mov	bp, sp
 		mov	PaletteTone, 0
@@ -1080,7 +1080,7 @@ sub_B44D	proc near
 		call	palette_black_out
 		pop	bp
 		retn
-sub_B44D	endp
+@staffroll_animate$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1933,8 +1933,8 @@ off_C0EE	dw offset loc_BE1B
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C0F8	proc near
+public @verdict_animate$qv
+@verdict_animate$qv proc near
 		push	bp
 		mov	bp, sp
 		mov	PaletteTone, 0
@@ -1950,7 +1950,7 @@ sub_C0F8	proc near
 		call	sub_BB81
 		pop	bp
 		retn
-sub_C0F8	endp
+@verdict_animate$qv endp
 
 include th04/formats/scoredat_decode.asm
 include th04/formats/scoredat_encode.asm
@@ -2678,8 +2678,8 @@ sub_C7E3	endp
 ; Attributes: bp-based frame
 
 include th02/hiscore/regist.inc
-
-sub_C814	proc near
+public @regist_menu$qv
+@regist_menu$qv proc near
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
@@ -3087,7 +3087,7 @@ off_CB9E	dw offset @@space
 		dw offset @@regular
 		dw offset @@regular
 		dw offset @@enter
-sub_C814	endp
+@regist_menu$qv endp
 
 ; =============== S U B	R O U T	I N E =======================================
 

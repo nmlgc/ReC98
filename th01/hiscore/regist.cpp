@@ -600,7 +600,7 @@ void regist_name_enter(int entered_place)
 static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
-void regist(
+void regist_menu(
 	score_t score,
 	int16_t stage_num_or_scoredat_constant,
 	const sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]

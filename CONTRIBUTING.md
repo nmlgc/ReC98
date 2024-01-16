@@ -373,6 +373,8 @@ These cases should gradually be removed as development goes along, though.
 * Macros defining the number of distinct sprites in an animation: `*_CELS`
 * Frame variables counting from a frame count to 0: `*_time`
 * Frame variables and other counters starting from 0: `*_frames`
+* Blocking main functions of interactive menus with their own `frame_delay()`
+  calls: `*_menu()`
 * Functions that show multi-frame animations in a blocking way, using their own
   `frame_delay()` calls: `*_animate`
 * Generic 0-based IDs: `*_id`

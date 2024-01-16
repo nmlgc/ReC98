@@ -1,7 +1,8 @@
 // Needed outside to allow callers to set these to "custom" colors… i.e., the
 // intended ones after they partied on the palette themselves. Would be cleaner
-// if regist() just set the correct hardware palette itself… oh well, it also
-// helps to document which colors you'd better not use in the background image.
+// if regist_menu() just set the correct hardware palette itself… oh well, it
+// also helps to document which colors you'd better not use in the background
+// image.
 #define COL_REGIST_SELECTED	3 // V_GREEN
 #define COL_REGIST_REGULAR 	V_WHITE
 
@@ -14,7 +15,7 @@
 // Shows the high score list for the current difficulty. If the given game
 // result is good enough to be on there, the player is asked to enter a name,
 // before the result is inserted and written to the high score file.
-void regist(
+void regist_menu(
 	score_t score,
 	int16_t stage_num_or_scoredat_constant,
 	const sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]

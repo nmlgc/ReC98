@@ -269,7 +269,7 @@ _envp		= dword	ptr  0Ch
 		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jb	short loc_A665
 		call	sub_A5A4
-		call	sub_E41D
+		call	@staffroll_animate$qv
 		jmp	short loc_A679
 ; ---------------------------------------------------------------------------
 
@@ -278,17 +278,17 @@ loc_A665:
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnz	short loc_A67E
 		call	sub_A5A4
-		call	sub_B3CB
-		call	sub_D1B1
+		call	@allcast_animate$qv
+		call	@verdict_animate$qv
 
 loc_A679:
-		call	sub_C1DD
+		call	@regist_menu$qv
 		jmp	short loc_A684
 ; ---------------------------------------------------------------------------
 
 loc_A67E:
-		call	sub_C1DD
-		call	sub_D1B1
+		call	@regist_menu$qv
+		call	@verdict_animate$qv
 
 loc_A684:
 		kajacall	KAJA_SONG_FADE, 4
@@ -520,8 +520,8 @@ sub_B37C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B3CB	proc near
+public @allcast_animate$qv
+@allcast_animate$qv	proc near
 		push	bp
 		mov	bp, sp
 		mov	allcast_step, 0
@@ -582,7 +582,7 @@ loc_B4B5:
 		graph_showpage al
 		pop	bp
 		retn
-sub_B3CB	endp
+@allcast_animate$qv	endp
 
 include th04/formats/scoredat_decode.asm
 include th04/formats/scoredat_encode.asm
@@ -2176,7 +2176,8 @@ sub_C16C	endp
 
 include th02/hiscore/regist.inc
 
-sub_C1DD	proc near
+public @regist_menu$qv
+@regist_menu$qv proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
@@ -2587,7 +2588,7 @@ loc_C5CD:
 		pop	si
 		leave
 		retn
-sub_C1DD	endp
+@regist_menu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3812,8 +3813,8 @@ sub_D16F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D1B1	proc near
+public @verdict_animate$qv
+@verdict_animate$qv proc near
 		push	bp
 		mov	bp, sp
 		mov	PaletteTone, 0
@@ -3836,7 +3837,7 @@ sub_D1B1	proc near
 		call	palette_black_out
 		pop	bp
 		retn
-sub_D1B1	endp
+@verdict_animate$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5962,8 +5963,8 @@ include th05/end/verdict_bitmap.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E41D	proc near
+public @staffroll_animate$qv
+@staffroll_animate$qv proc near
 
 var_4		= word ptr -4
 @@verdict_bitmap_offset		= word ptr -2
@@ -6299,7 +6300,7 @@ loc_E7CC:
 		pop	si
 		leave
 		retn
-sub_E41D	endp
+@staffroll_animate$qv endp
 
 maine_01__TEXT	ends
 

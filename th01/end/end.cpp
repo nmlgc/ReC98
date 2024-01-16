@@ -66,9 +66,9 @@ void near end_good_jigoku(void);
 // Shows the route-specific boss slideshow.
 void near boss_slides_animate(void);
 
-// Shows the verdict screen, then calls regist() with the score and the cleared
-// route.
-void verdict_animate_and_regist(void);
+// Shows the verdict screen, then calls regist_menu() with the score and the
+// cleared route.
+void verdict_animate_and_regist_menu(void);
 // -----------------------
 
 #define end_pic_show_and_delay(quarter, delay_frames) { \
@@ -184,7 +184,7 @@ void end_and_verdict_and_regist_animate(void)
 		end_bad();
 		end_done();
 	}
-	verdict_animate_and_regist();
+	verdict_animate_and_regist_menu();
 }
 
 void pascal near shake_then_boom(int shake_duration, int boom_duration)
@@ -521,7 +521,7 @@ void verdict_title_calculate_and_render(void)
 	);
 }
 
-void verdict_animate_and_regist(void)
+void verdict_animate_and_regist_menu(void)
 {
 	const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS_CENTERED;
 
@@ -604,9 +604,9 @@ void verdict_animate_and_regist(void)
 	grp_palette_settone(50);
 	regist_colors_set();
 	if(end_flag == ES_MAKAI) {
-		regist(score, SCOREDAT_CLEARED_MAKAI, SCOREDAT_ROUTE_CLEAR);
+		regist_menu(score, SCOREDAT_CLEARED_MAKAI, SCOREDAT_ROUTE_CLEAR);
 	} else {
-		regist(score, SCOREDAT_CLEARED_JIGOKU, SCOREDAT_ROUTE_CLEAR);
+		regist_menu(score, SCOREDAT_CLEARED_JIGOKU, SCOREDAT_ROUTE_CLEAR);
 	}
 	end_resident_clear();
 }
