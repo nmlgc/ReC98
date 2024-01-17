@@ -1,9 +1,9 @@
 #include "th02/score.h"
 
-typedef struct {
+struct score_lebcd_t {
 	// Not including the amount of continues used.
 	unsigned char digits[SCORE_DIGITS];
-} score_lebcd_t;
+};
 
 extern score_lebcd_t score_lebcd[PLAYER_COUNT];
 

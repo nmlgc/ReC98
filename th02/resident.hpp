@@ -2,7 +2,7 @@ static const int8_t LIVES_MAX = 5;
 static const int8_t BOMBS_MAX = 5;
 
 #define RES_ID "MIKOConfig"
-typedef struct {
+struct resident_t {
 	char id[sizeof(RES_ID)];
 	unsigned char stage;
 	char debug;
@@ -28,7 +28,7 @@ typedef struct {
 	int skill;
 	int unused_4;
 	long score_highest;
-} resident_t;
+};
 
 extern resident_t *resident;
 

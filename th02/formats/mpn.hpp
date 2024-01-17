@@ -4,7 +4,7 @@
 typedef dot_rect_t(TILE_W, TILE_H) mpn_plane_t;
 typedef Planar<mpn_plane_t> mpn_image_t;
 
-typedef struct {
+struct mpn_header_t {
 	char magic[4]; // = "MPTN"
 
 	// Stored minus 1. (Probably because MIKO_K.MPN contains 256 tiles and ZUN
@@ -12,7 +12,7 @@ typedef struct {
 	uint8_t count;
 
 	int8_t unused;
-} mpn_header_t;
+};
 
 #if (GAME == 2)
 	extern uint8_t mpn_count;  // Stored minus 1.

@@ -89,7 +89,7 @@ $**
 {th02}.cpp{bin\th02}.obj:
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -n$(@D) -c $**
 
-bin\th02\zun_res.com: th02\zun_res1.cpp th02\zun_res2.c th02\zun_res3.c
+bin\th02\zun_res.com: th02\zun_res1.cpp th02\zun_res2.cpp th02\zun_res3.cpp
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=2 -nbin\th02\ -eZUN_RES.COM @&&|
 $**
 | masters.lib

@@ -16,7 +16,7 @@ static const pixel_t BOSS_HITBOX_DEFAULT_H = ((BOSS_W / 2) - (BOSS_W / 8));
 // Architecturally, that's a step back even compared to TH01.
 extern unsigned char boss_statebyte[16];
 
-typedef struct {
+struct boss_stuff_t {
 	PlayfieldMotion pos;
 	int hp;
 	unsigned char sprite;
@@ -34,7 +34,7 @@ typedef struct {
 		bool defeat_bonus;
 	} phase_state;
 	int phase_end_hp;
-} boss_stuff_t;
+};
 
 extern boss_stuff_t boss;
 extern SPPoint boss_hitbox_radius;

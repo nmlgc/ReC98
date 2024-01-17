@@ -2,7 +2,7 @@
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th03/common.h"
-#include "th03/score.h"
+#include "th03/score.hpp"
 #include "th03/playchar.hpp"
 #include "th03/sprites/regi.h"
 #include "th03/formats/scoredat.hpp"

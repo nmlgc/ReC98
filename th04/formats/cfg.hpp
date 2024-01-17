@@ -4,7 +4,7 @@
 // when porting to case-sensitive file systems.
 #define CFG_FN_LOWER "miko.cfg"
 
-typedef struct {
+struct cfg_options_t {
 	int8_t rank;
 	int8_t lives;
 	int8_t bombs;
@@ -15,7 +15,7 @@ typedef struct {
 	int8_t sum(void) const {
 		return (rank + lives + bombs + bgm_mode + se_mode + turbo_mode);
 	}
-} cfg_options_t;
+};
 
 #include "th03/formats/cfg.hpp"
 

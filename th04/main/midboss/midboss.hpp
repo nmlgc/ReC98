@@ -2,7 +2,7 @@ static const pixel_t MIDBOSS_W_MAX = 64;
 static const pixel_t MIDBOSS_H_MAX = 64;
 static const unsigned int MIDBOSS_BONUS_UNIT_VALUE = 1280;
 
-typedef struct {
+struct midboss_stuff_t {
 	PlayfieldMotion pos;
 	unsigned int frames_until;
 	int hp;
@@ -12,7 +12,7 @@ typedef struct {
 	// Treated as a bool in TH04
 	unsigned char damage_this_frame;
 	unsigned char angle;
-} midboss_stuff_t;
+};
 
 extern midboss_stuff_t midboss;
 

@@ -55,10 +55,10 @@ extern const dots8_t PIANO_KEYS_BLACK[PIANO_VRAM_W];
 // Actually a single `OPEN_WORK far *`.
 extern uint16_t pmd_workadr[2];
 
-typedef struct {
+struct piano_notes_t {
 	char fm[5];
 	char unused[3]; // SSG?
-} piano_notes_t;
+};
 
 extern piano_notes_t piano_notes_cur;
 extern piano_notes_t piano_notes_prev;

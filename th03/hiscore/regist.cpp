@@ -13,7 +13,7 @@ extern "C" {
 }
 #include "th02/hardware/frmdelay.h"
 #include "th03/common.h"
-#include "th03/score.h"
+#include "th03/score.hpp"
 #include "th03/playchar.hpp"
 #include "th03/resident.hpp"
 #include "th03/sprites/regi.h"

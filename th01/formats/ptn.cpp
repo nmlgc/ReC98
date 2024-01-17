@@ -13,11 +13,11 @@
 // -----------------------------
 #define PTN_MAGIC "HPTN"
 
-typedef struct {
+struct ptn_header_t {
 	char magic[sizeof(PTN_MAGIC) - 1];
 	int8_t unused_one;
 	int8_t image_count;
-} ptn_header_t;
+};
 // -----------------------------
 
 extern bool16 flag_palette_show;

@@ -6,7 +6,7 @@
 #include <dos.h>
 #include "platform.h"
 #include "master.hpp"
-#include "th02/formats/scoredat.h"
+#include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
 
 extern scoredat_section_t hi;

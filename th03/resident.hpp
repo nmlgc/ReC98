@@ -35,7 +35,7 @@ enum game_mode_t {
 #define DEMO_COUNT 4
 
 #define RES_ID "YUMEConfig"
-typedef struct {
+struct resident_t {
 	char id[sizeof(RES_ID)];
 	unsigned char rank;
 	PlaycharPalettedOptional playchar_paletted[PLAYER_COUNT];
@@ -57,6 +57,6 @@ typedef struct {
 	unsigned char skill;
 	unsigned char demo_num;	// 0 = no demo active
 	int8_t unused_3[198];
-} resident_t;
+};
 
 extern resident_t far *resident;

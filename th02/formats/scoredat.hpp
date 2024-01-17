@@ -4,7 +4,7 @@
 #define GAME_CLEAR_CONSTANTS {318, 118, 218}
 #define STAGE_ALL 127
 
-typedef struct {
+struct scoredat_t {
 	/* For ranks (and therefore, structure instances) #0, #1 and #2 (Easy,
 	 * Normal and Hard), this is either GAME_CLEAR_CONSTANTS[rank] or 0,
 	 * and indicates whether the main 5 stages have been cleared with the
@@ -30,9 +30,9 @@ typedef struct {
 	unsigned char stage_sum;
 	struct date date[SCOREDAT_PLACES];
 	unsigned char shottype[SCOREDAT_PLACES];
-} scoredat_t;
+};
 
-typedef struct {
+struct scoredat_section_t {
 	scoredat_t score;
 	int32_t section_sum; // Sum of all bytes in [score], pre-encraption
-} scoredat_section_t;
+};

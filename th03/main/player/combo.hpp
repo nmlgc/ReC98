@@ -1,8 +1,8 @@
-typedef struct {
+struct combo_t {
 	unsigned char time;
 	unsigned char hits;
 	unsigned int bonus;
-} combo_t;
+};
 
 #define COMBO_FRAMES 80
 #define COMBO_HIT_RESET_FRAMES 32

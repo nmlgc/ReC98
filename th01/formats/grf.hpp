@@ -12,13 +12,13 @@
 #define GRF_MAGIC "HGRF"
 
 #pragma push(pack, 1)
-typedef struct {
+struct grf_header_t {
 	char magic[sizeof(GRF_MAGIC) - 1];
 	int8_t unknown1; // Image count?
 	uint8_t rle_run_byte;
 	int16_t unknown2;
 	Planar<uint16_t> rle_size;
 	Palette4 pal;
-} grf_header_t;
+};
 #pragma pop
 /// ----------------------------------------------------------------

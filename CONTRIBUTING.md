@@ -63,6 +63,10 @@ These cases should gradually be removed as development goes along, though.
   with a common source) that defines their signedness. If a variable is used
   in both signed and unsigned contexts, declare it as the more common one.
 
+* Don't use the C-style `typedef` syntax for declaring `struct`s.
+  Currently, this codebase does not aim for compatibility with C-only
+  compilers, and it only makes forward declarations more annoying.
+
 ## Compatibility
 
 * Despite the games' native encoding being Shift-JIS, most files should be

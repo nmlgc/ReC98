@@ -15,7 +15,7 @@ extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/gaiji/gaiji.h"
-#include "th02/formats/scoredat.h"
+#include "th02/formats/scoredat.hpp"
 #include "th02/score.h"
 
 #include "th02/score.c"

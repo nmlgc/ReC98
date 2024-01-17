@@ -9,9 +9,9 @@
 #include "platform.h"
 #include "master.hpp"
 #include "th01/rank.h"
-#include "th02/formats/scoredat.h"
+#include "th02/formats/scoredat.hpp"
 
-extern char rank;
+extern int8_t rank;
 scoredat_section_t hi;
 
 void pascal scoredat_recreate(void);
@@ -24,12 +24,17 @@ unsigned char unused_2 = 0; // ZUN bloat
 long score_sum = 0;
 long section_sum = 0;
 
+// ZUN bloat: Needed to circumvent 16-bit promotion in a single comparison.
+inline int8_t rank_count(void) {
+	return RANK_COUNT;
+}
+
 int pascal scoredat_verify(void)
 {
 	if(!file_exist(SCOREDAT_FN)) {
 		scoredat_recreate();
 	} else {
-		for(rank = 0; rank < RANK_COUNT; rank++) {
+		for(rank = 0; rank < rank_count(); rank++) {
 			register int unused; // ZUN bloat
 			register int i;
 
@@ -58,12 +63,13 @@ int pascal scoredat_verify(void)
 				|| stage_sum != hi.score.stage_sum
 				|| section_sum != hi.section_sum
 			) {
-				goto delete;
+				goto remove;
 			}
 		}
 	}
 	return 0;
-delete:
+
+remove:
 	file_delete(SCOREDAT_FN);
 	return 1;
 }

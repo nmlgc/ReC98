@@ -26,7 +26,7 @@ extern "C" {
 #include "th02/core/globals.hpp"
 #include "th02/core/zunerror.h"
 #include "th02/core/initexit.h"
-#include "th02/formats/cfg.h"
+#include "th02/formats/cfg.hpp"
 extern "C" {
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"

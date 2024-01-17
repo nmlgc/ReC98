@@ -23,12 +23,12 @@ static const int STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y);
 
 // Nothing in here is actually read, and none of the referenced file names are
 // even part of the released game. Beta content right here!
-typedef struct {
+struct stagedat_header_t {
 	char magic[sizeof(STAGEDAT_MAGIC) - 1];
 	int8_t id;
 	char bgm_fn[8];
 	char grf_fn[8];
-} stagedat_header_t;
+};
 
 typedef enum {
 	OT_NONE = 0,

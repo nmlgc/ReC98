@@ -48,7 +48,7 @@ typedef int32_t score_t; // ZUN bug: Should have maybe been unsigned…
 typedef uint32_t uscore_t; // ZUN bug: …or consistent, at least.
 
 #define RES_ID "ReiidenConfig"
-typedef struct {
+struct resident_t {
 	char id[sizeof(RES_ID)];
 	int8_t rank;
 	bgm_mode_t bgm_mode;
@@ -78,7 +78,7 @@ typedef struct {
 	unsigned long hiscore;
 	score_t score_highest; // among all continues
 	uint16_t point_value;
-} resident_t;
+};
 
 extern resident_t far *resident;
 

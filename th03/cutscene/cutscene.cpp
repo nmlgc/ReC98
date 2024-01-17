@@ -134,12 +134,12 @@ extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 
 	static const int COLMAP_COUNT = 8;
 
-	typedef struct {
+	struct colmap_t {
 		vc_t values[COLMAP_COUNT];
 
 		// Might have been originally meant for a complete character name?
 		ShiftJISKanji keys[COLMAP_COUNT][NAME_KANJI_LEN];
-	} colmap_t;
+	};
 
 	extern colmap_t colmap;
 	extern unsigned char colmap_count;

@@ -31,7 +31,7 @@ extern farfunc_t_near chargeshot_update[PLAYER_COUNT];
 extern farfunc_t_near chargeshot_render[PLAYER_COUNT];
 // ------------
 
-typedef struct {
+struct player_t {
 	PlayfieldPoint center;
 	bool is_hit;
 	uint8_t unused_1; // ZUN bloat
@@ -90,7 +90,7 @@ typedef struct {
 	unsigned char boss_panics_fired;
 
 	uint8_t padding[6];
-} player_t;
+};
 
 extern pid_t pid_current;
 extern pid_t pid_other;

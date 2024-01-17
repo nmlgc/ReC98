@@ -10,9 +10,9 @@
 #include "th01/rank.h"
 #include "th02/resident.hpp"
 #include "th02/snd/snd.h"
-#include "th02/formats/cfg.h"
+#include "th02/formats/cfg.hpp"
 
-extern "C" int pascal scoredat_verify(void);
+int pascal scoredat_verify(void);
 
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {

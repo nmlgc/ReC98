@@ -1,14 +1,14 @@
 #if GAME == 3
 	#define CFG_FN "yume.cfg"
-	typedef struct {
+	struct cfg_options_t {
 		uint8_t bgm_mode;
 		uint8_t key_mode;
 		uint8_t rank;
 		int16_t unused;
-	} cfg_options_t;
+	};
 #endif
 
-#include "th02/formats/cfg.h"
+#include "th02/formats/cfg.hpp"
 
 // Loads the [resident] pointer from the .CFG file, initializes the rest of
 // the structure (in TH03 and TH04), and clamps the life, bomb, and BGM/SE
