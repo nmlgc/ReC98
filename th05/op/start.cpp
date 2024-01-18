@@ -4,6 +4,7 @@
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/rank.h"
+#include "th02/hardware/frmdelay.h"
 #include "th02/core/initexit.h"
 #include "th04/score.h"
 #include "th04/end/end.h"

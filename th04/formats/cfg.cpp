@@ -7,13 +7,13 @@
 	#include "libs/kaja/kaja.h"
 #endif
 #include "master.hpp"
+#include "th03/formats/cfg_impl.hpp"
 #include "th04/score.h"
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 #else
 	#include "th04/resident.hpp"
 #endif
-#include "th04/formats/cfg.hpp"
 extern "C" {
 #include "th04/snd/snd.h"
 }

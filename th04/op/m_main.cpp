@@ -11,12 +11,10 @@
 
 #include <conio.h>
 #include <string.h>
-#include "x86real.h"
 #include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
-#include "th02/hardware/frmdelay.h"
 #include "th02/op/menu.hpp"
 #include "th02/op/m_music.hpp"
 #include "th03/core/initexit.h"

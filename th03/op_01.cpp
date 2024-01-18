@@ -10,7 +10,7 @@
 #include "th03/playchar.hpp"
 #include "th03/score.hpp"
 #include "th03/resident.hpp"
-#include "th03/formats/cfg.hpp"
+#include "th03/formats/cfg_impl.hpp"
 extern "C" {
 #include "th03/snd/snd.h"
 }
