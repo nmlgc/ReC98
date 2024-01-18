@@ -27,7 +27,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-group_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT
+group_01 group MAINE_E_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -154,9 +154,9 @@ _TEXT		ends
 
 ; ===========================================================================
 
-CFG_LRES_TEXT	segment	byte public 'CODE' use16
+MAINE_E_TEXT segment byte public 'CODE' use16
 	@cfg_load_resident_ptr$qv procdesc near
-CFG_LRES_TEXT	ends
+MAINE_E_TEXT ends
 
 ; Segment type:	Pure code
 CUTSCENE_TEXT segment byte public 'CODE' use16
@@ -6648,8 +6648,7 @@ aStf00_bft	db 'stf00.bft',0
 
 	.data?
 
-public _resident
-_resident	dd ?
+	extern _resident:dword
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm
