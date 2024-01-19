@@ -23,7 +23,6 @@ include th05/th05.inc
 include th01/math/subpixel.inc
 include th04/hardware/grppsafx.inc
 
-	extern _execl:proc
 	extern _tolower:proc
 	extern __ctype:byte
 
@@ -156,6 +155,8 @@ _TEXT		ends
 
 MAINE_E_TEXT segment byte public 'CODE' use16
 	@cfg_load_resident_ptr$qv procdesc near
+	@GAME_EXIT_AND_EXEC$QNC procdesc pascal near \
+		fn_off:word, fn_seg:word
 MAINE_E_TEXT ends
 
 ; Segment type:	Pure code
@@ -163,31 +164,6 @@ CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_A576(char *arg0)
-sub_A576	proc near
-
-_arg0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		call	cdg_free_all
-		call	graph_hide
-		call	text_clear
-		call	@game_exit$qv
-		pushd	0
-		pushd	[bp+_arg0]	; arg0
-		pushd	[bp+_arg0]	; path
-		call	_execl
-		add	sp, 0Ch
-		pop	bp
-		retn	4
-sub_A576	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -292,9 +268,7 @@ loc_A67E:
 
 loc_A684:
 		kajacall	KAJA_SONG_FADE, 4
-		push	ds
-		push	offset arg0	; "op"
-		call	sub_A576
+		call	@game_exit_and_exec$qnc pascal, ds, offset arg0	; "op"
 
 loc_A693:
 		pop	bp
@@ -6325,7 +6299,6 @@ include th04/hardware/grppsafx.asm
 	extern _snd_se_update:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_free:proc
-	extern @game_exit$qv:proc
 	extern VECTOR2_AT:proc
 	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc

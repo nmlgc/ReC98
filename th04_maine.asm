@@ -22,7 +22,6 @@ include ReC98.inc
 include th04/th04.inc
 include th04/hardware/grppsafx.inc
 
-	extern _execl:proc
 	extern _tolower:proc
 	extern __ctype:byte
 
@@ -149,6 +148,8 @@ _TEXT		ends
 
 MAINE_E_TEXT segment byte public 'CODE' use16
 	@cfg_load_resident_ptr$qv procdesc near
+	@GAME_EXIT_AND_EXEC$QNC procdesc pascal near \
+		fn_off:word, fn_seg:word
 MAINE_E_TEXT ends
 
 ; Segment type:	Pure code
@@ -156,32 +157,6 @@ CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_A08A(char *arg0)
-sub_A08A	proc near
-
-_arg0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		call	cdg_free_all
-		call	graph_hide
-		call	text_clear
-		call	gaiji_restore
-		call	@game_exit$qv
-		pushd	0
-		pushd	[bp+_arg0]	; arg0
-		pushd	[bp+_arg0]	; path
-		call	_execl
-		add	sp, 0Ch
-		pop	bp
-		retn	4
-sub_A08A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -319,9 +294,7 @@ loc_A27E:
 
 loc_A281:
 		kajacall	KAJA_SONG_FADE, 4
-		push	ds
-		push	offset arg0	; "op"
-		call	sub_A08A
+		call	@game_exit_and_exec$qnc pascal, ds, offset arg0	; "op"
 
 locret_A290:
 		leave
@@ -3204,7 +3177,6 @@ SHARED_	segment	word public 'CODE' use16
 
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc
-	extern @game_exit$qv:proc
 	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
