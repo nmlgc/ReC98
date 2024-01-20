@@ -150,6 +150,7 @@ MAINE_E_TEXT segment byte public 'CODE' use16
 	@cfg_load_resident_ptr$qv procdesc near
 	@GAME_EXIT_AND_EXEC$QNC procdesc pascal near \
 		fn_off:word, fn_seg:word
+	@end_animate$qv procdesc near
 MAINE_E_TEXT ends
 
 ; Segment type:	Pure code
@@ -157,36 +158,6 @@ CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A0BD	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.playchar_ascii]
-		les	bx, off_E5C0
-		mov	es:[bx+3], al
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.shottype]
-		add	al, '0'
-		les	bx, off_E5C0
-		mov	es:[bx+4], al
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.end_type_ascii]
-		les	bx, off_E5C0
-		mov	es:[bx+5], al
-		push	word ptr off_E5C0+2
-		push	bx
-		call	@cutscene_script_load$qnxc
-		call	@cutscene_animate$qv
-		call	@cutscene_script_free$qv
-		pop	bp
-		retn
-sub_A0BD	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -226,7 +197,7 @@ _main		proc far
 		les	bx, _resident
 		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jb	loc_A1FE
-		call	sub_A0BD
+		call	@end_animate$qv
 		call	@staffroll_animate$qv
 		call	@verdict_animate$qv
 		les	bx, _resident
@@ -300,11 +271,6 @@ locret_A290:
 		leave
 		retf
 _main		endp
-
-	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
-		fn:dword
-	@cutscene_script_free$qv procdesc near
-	@cutscene_animate$qv procdesc pascal near
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
@@ -3191,11 +3157,7 @@ SHARED_	ends
 
 	.data
 
-off_E5C0	dd a_ed000_txt
-					; "_ED000.TXT"
-include th04/formats/cfg_lres[data].asm
 public _CongFN
-a_ed000_txt	db '_ED000.TXT',0
 _CongFN	db 'CONG00.pi',0
 aMSzlEd_dat	db 'Œ¶‘z‹½ed.dat',0
 aGameft_bft	db 'GAMEFT.bft',0
