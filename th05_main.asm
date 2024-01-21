@@ -2782,13 +2782,13 @@ public @end_game$qv
 		jz	short loc_E45D
 		les	bx, _resident
 		assume es:nothing
-		mov	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		mov	es:[bx+resident_t.end_sequence], ES_BAD
 		jmp	short loc_E466
 ; ---------------------------------------------------------------------------
 
 loc_E45D:
 		les	bx, _resident
-		mov	es:[bx+resident_t.end_sequence], ES_1CC
+		mov	es:[bx+resident_t.end_sequence], ES_GOOD
 
 loc_E466:
 		kajacall	KAJA_SONG_FADE, 4

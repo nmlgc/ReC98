@@ -154,84 +154,11 @@ _TEXT		ends
 ; ===========================================================================
 
 MAINE_E_TEXT segment byte public 'CODE' use16
-	@cfg_load_resident_ptr$qv procdesc near
-	@GAME_EXIT_AND_EXEC$QNC procdesc pascal near \
-		fn_off:word, fn_seg:word
-	@end_animate$qv procdesc near
 MAINE_E_TEXT ends
 
-; Segment type:	Pure code
 CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
-		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		call	@cfg_load_resident_ptr$qv
-		or	ax, ax
-		jz	loc_A693
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
-		call	@game_init_main$qnxuc pascal, ds, offset aKaikidan1_dat
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
-		call	graph_show
-		les	bx, _resident
-		mov	eax, es:[bx+resident_t.rand]
-		mov	random_seed, eax
-		call	@frame_delay$qi pascal, 100
-		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
-		jb	short loc_A665
-		call	@end_animate$qv
-		call	@staffroll_animate$qv
-		jmp	short loc_A679
-; ---------------------------------------------------------------------------
-
-loc_A665:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
-		jnz	short loc_A67E
-		call	@end_animate$qv
-		call	@allcast_animate$qv
-		call	@verdict_animate$qv
-
-loc_A679:
-		call	@regist_menu$qv
-		jmp	short loc_A684
-; ---------------------------------------------------------------------------
-
-loc_A67E:
-		call	@regist_menu$qv
-		call	@verdict_animate$qv
-
-loc_A684:
-		kajacall	KAJA_SONG_FADE, 4
-		call	@game_exit_and_exec$qnc pascal, ds, offset arg0	; "op"
-
-loc_A693:
-		pop	bp
-		retf
-_main		endp
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
@@ -2995,7 +2922,7 @@ sub_CA02	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_1CC
+		cmp	es:[bx+resident_t.end_sequence], ES_GOOD
 		jz	short loc_CA17
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnz	short loc_CA57
@@ -3044,7 +2971,7 @@ loc_CA53:
 
 loc_CA57:
 		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		cmp	es:[bx+resident_t.end_sequence], ES_BAD
 		jnz	short loc_CA66
 		mov	al, 2
 		pop	bp
@@ -3269,7 +3196,7 @@ loc_CBE3:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jz	short loc_CCC6
-		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		cmp	es:[bx+resident_t.end_sequence], ES_BAD
 		jb	short loc_CCB3
 		mov	es:[bx+resident_t.std_frames], 46000
 
@@ -6237,7 +6164,6 @@ maine_01__TEXT	ends
 
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
-	extern SND_DETERMINE_MODES:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
@@ -6263,7 +6189,6 @@ include th04/hardware/grppsafx.asm
 	extern PI_PUT_QUARTER_8:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
-	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern _snd_bgm_measure:proc
@@ -6274,11 +6199,6 @@ SHARED_	ends
 
 	.data
 
-aKaikidan1_dat = ($ - 17)
-aMiko = ($ - 5)
-; char arg0[]
-arg0		db 'op',0
-		db    0
 include libs/master.lib/atan8[data].asm
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm

@@ -1038,7 +1038,7 @@ public @end_game_good$qv
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	es:[bx+resident_t.end_sequence], ES_1CC
+		mov	es:[bx+resident_t.end_sequence], ES_GOOD
 		mov	es:[bx+resident_t.end_type_ascii], '0'
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
@@ -1059,7 +1059,7 @@ public @end_game_bad$qv
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		mov	es:[bx+resident_t.end_sequence], ES_BAD
 		mov	es:[bx+resident_t.end_type_ascii], '1'
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
