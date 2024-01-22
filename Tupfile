@@ -137,12 +137,14 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04\\vector2n.asm |> !as4 |>
 : th04_op.asm |> !as |> bin\\th04\\op.obj
 : th04_op2.asm |> !as |> bin\\th04\\op2.obj
+: th04_op_master.asm |> !as |> bin\\th04\\opm.obj
 : th04_main.asm | \
 	th02/sprites/pellet.asp \
 	th04/sprites/pelletbt.asp \
 	th02/sprites/sparks.asp \
 	th04/sprites/pointnum.asp \
 	|> !as |> bin\\th04\\main.obj
+: th04_maine_master.asm |> !as |> bin\\th04\\mainem.obj
 : th04_maine.asm |> !as |> bin\\th04\\maine.obj
 
 : th05_zuninit.asm |> !as |> bin\\th05\\zuninit.obj
@@ -166,10 +168,12 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05_op2.asm | \
 	th05/sprites/piano_l.asp \
 	|> !as |> bin\\th05\\op2.obj
+: th05_op_master.asm |> !as |> bin\\th05\\opm.obj
 : th05_main.asm | \
 	th02/sprites/pellet.asp \
 	th04/sprites/pelletbt.asp \
 	th02/sprites/sparks.asp \
 	th04/sprites/pointnum.asp \
 	|> !as |> bin\\th05\\main.obj
+: th05_maine_master.asm |> !as |> bin\\th05\\mainem.obj
 : th05_maine.asm |> !as |> bin\\th05\\maine.obj

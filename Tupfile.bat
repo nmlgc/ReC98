@@ -58,8 +58,10 @@ tasm32 /m /mx /kh32768 /t /dGAME=4 th04\spark_a.asm bin\th04\spark_a.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\vector2n.asm bin\th04\vector2n.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_op2.asm bin\th04\op2.obj
+tasm32 /m /mx /kh32768 /t th04_op_master.asm bin\th04\opm.obj
 tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj
 tasm32 /m /mx /kh32768 /t th04_maine.asm bin\th04\maine.obj
+tasm32 /m /mx /kh32768 /t th04_maine_master.asm bin\th04\mainem.obj
 tasm32 /m /mx /kh32768 /t th05_zuninit.asm bin\th05\zuninit.obj
 tasm32 /m /mx /kh32768 /t th05_gjinit.asm bin\th05\gjinit.obj
 tasm32 /m /mx /kh32768 /t th05_memchk.asm bin\th05\memchk.obj
@@ -77,6 +79,8 @@ tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_2.asm bin\th05\pi_asm_2.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\spark_a.asm bin\th05\spark_a.obj
 tasm32 /m /mx /kh32768 /t th05_op.asm bin\th05\op.obj
 tasm32 /m /mx /kh32768 /t th05_op2.asm bin\th05\op2.obj
+tasm32 /m /mx /kh32768 /t th05_op_master.asm bin\th05\opm.obj
 tasm32 /m /mx /kh32768 /t th05_main.asm bin\th05\main.obj
 tasm32 /m /mx /kh32768 /t th05_maine.asm bin\th05\maine.obj
+tasm32 /m /mx /kh32768 /t th05_maine_master.asm bin\th05\mainem.obj
 @echo off
