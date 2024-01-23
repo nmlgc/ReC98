@@ -143,10 +143,6 @@ SHARED segment word public 'CODE' use16
 SHARED ends
 
 SHARED_ segment word public 'CODE' use16
-	assume cs:g_SHARED
-	assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th04/hardware/grppsafx.asm
 SHARED_ ends
 
 	.data
@@ -177,7 +173,6 @@ include libs/master.lib/draw_trapezoid[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
-include th04/hardware/grppsafx[data].asm
 
 	.data?
 

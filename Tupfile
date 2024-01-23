@@ -135,6 +135,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04\\motion_3.asm |> !as4 |>
 : th04\\spark_a.asm |> !as4 |>
 : th04\\vector2n.asm |> !as4 |>
+: th04\\grppsafx.asm |> !as4 |>
 : th04_op.asm |> !as |> bin\\th04\\op.obj
 : th04_op2.asm |> !as |> bin\\th04\\op2.obj
 : th04_op_master.asm |> !as |> bin\\th04\\opm.obj

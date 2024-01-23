@@ -56,6 +56,7 @@ tasm32 /m /mx /kh32768 /t /dGAME=4 th04\bgimager.asm bin\th04\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\motion_3.asm bin\th04\motion_3.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\spark_a.asm bin\th04\spark_a.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\vector2n.asm bin\th04\vector2n.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04\grppsafx.asm bin\th04\grppsafx.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_op2.asm bin\th04\op2.obj
 tasm32 /m /mx /kh32768 /t th04_op_master.asm bin\th04\opm.obj

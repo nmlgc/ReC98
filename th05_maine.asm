@@ -6075,6 +6075,7 @@ maine_01__TEXT	ends
 
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
+	extern GRAPH_PUTSA_FX:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
@@ -6084,7 +6085,6 @@ SHARED_	segment	word public 'CODE' use16
 
 include th02/snd/snd.inc
 
-include th04/hardware/grppsafx.asm
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
@@ -6116,7 +6116,9 @@ SHARED_	ends
 	; libs/master/rand[data].mas
 	extern random_seed:dword
 
-include th04/hardware/grppsafx[data].asm
+	; th04/hardware/grppsafx.asm
+	extern _graph_putsa_fx_func:word
+
 include th03/snd/se_state[data].asm
 include th04/hardware/bgimage[data].asm
 include th05/mem[data].asm

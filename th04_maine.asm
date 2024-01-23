@@ -2923,13 +2923,13 @@ include th02/snd/snd.inc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern CDG_PUT_PLANE:proc
 	extern SND_LOAD:proc
+	extern GRAPH_PUTSA_FX:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
@@ -2954,7 +2954,9 @@ SHARED_	ends
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
 
-include th04/hardware/grppsafx[data].asm
+	; th04/hardware/grppsafx.asm
+	extern _graph_putsa_fx_func:word
+
 include th03/snd/se_state[data].asm
 include th04/hardware/bgimage[data].asm
 include th03/formats/cdg[data].asm
