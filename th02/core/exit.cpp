@@ -1,3 +1,5 @@
+#pragma option -zCSHARED
+
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"

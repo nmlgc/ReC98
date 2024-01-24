@@ -1,4 +1,4 @@
-#pragma option -3
+#pragma option -zCSHARED -3
 
 #include <stddef.h>
 #include "master.hpp"

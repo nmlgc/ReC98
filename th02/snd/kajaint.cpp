@@ -1,7 +1,6 @@
+#pragma option -zCSHARED
 #if (GAME == 5)
-	#pragma option -zCSHARED_ -k-
-#else
-	#pragma option -zCSHARED
+	#pragma option -k-
 #endif
 
 #include "platform.h"

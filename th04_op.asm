@@ -772,7 +772,7 @@ op_01_TEXT ends
 
 ; ===========================================================================
 
-SHARED	segment	word public 'CODE' use16
+SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
 	extern @FRAME_DELAY$QI:proc
 	extern PI_PALETTE_APPLY:proc

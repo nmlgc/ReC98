@@ -5,8 +5,6 @@ GAME = 5
 
 include ReC98.inc
 
-g_SHARED group SHARED, SHARED_
-
 _TEXT segment word public 'CODE' use16
 	assume cs:_TEXT
 	assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -138,12 +136,6 @@ HI_VIEW_TEXT ends
 
 M_CHAR_TEXT segment byte public 'CODE' use16
 M_CHAR_TEXT ends
-
-SHARED segment word public 'CODE' use16
-SHARED ends
-
-SHARED_ segment word public 'CODE' use16
-SHARED_ ends
 
 	.data
 

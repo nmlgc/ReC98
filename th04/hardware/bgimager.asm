@@ -1,15 +1,11 @@
 	.386
+	.model use16 large SHARED
 
 include pc98.inc
 
 	extrn _bgimage:word:PLANE_COUNT
 
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
-
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
+	.code SHARED
 
 public BGIMAGE_PUT_RECT_16
 bgimage_put_rect_16 proc far
@@ -89,6 +85,5 @@ endif
 	retf	8
 bgimage_put_rect_16 endp
 	even
-SHARED_	ends
 
 	end

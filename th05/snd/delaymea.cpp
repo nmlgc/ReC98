@@ -1,4 +1,4 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
 #include "platform.h"
 #include "x86real.h"
@@ -23,12 +23,7 @@ void pascal snd_delay_until_measure(int measure, unsigned int frames_if_no_bgm)
 	do {
 		measure_cur = snd_bgm_measure();
 		if(measure_cur < 0) {
-			/* TODO: Replace with the decompiled call
-			 * 	frame_delay(frames_if_no_bgm);
-			 * once the segmentation allows us to, if ever */
-			_asm {
-				push frames_if_no_bgm; nop; push cs; call near ptr frame_delay;
-			}
+			frame_delay(frames_if_no_bgm);
 			return;
 		}
 	} while(measure_cur < measure);

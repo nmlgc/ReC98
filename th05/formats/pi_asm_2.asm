@@ -1,7 +1,7 @@
 ; Second TH05 .PI assembly translation unit.
 
 	.386
-	.model use16 large
+	.model use16 large SHARED
 	locals
 
 include pc98.inc
@@ -13,8 +13,7 @@ include th03/arg_bx.inc
 	extrn _pi_headers:PiHeader
 	extrn _pi_buffers:far ptr
 
-SHARED_	segment word public 'CODE' use16
-	assume cs:SHARED_
+	.code SHARED
 
 public @PI_PUT_8_ROWLOOP$QIIIUI
 @pi_put_8_rowloop$qiiiui proc pascal near
@@ -94,7 +93,5 @@ arg_bx	far, @slot:word
 @@ret:
 	ret	2
 endfunc
-
-SHARED_	ends
 
 	end

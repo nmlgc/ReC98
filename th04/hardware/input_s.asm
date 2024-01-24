@@ -1,5 +1,5 @@
 	.386
-	.model use16 large SHARED_
+	.model use16 large SHARED
 	locals
 
 include pc98kbd.inc
@@ -13,8 +13,7 @@ include th04/hardware/input.inc
 
 	extrn JS_SENSE:proc
 
-SHARED_	segment word public 'CODE' use16
-	assume cs:SHARED_
+	.code SHARED
 
 ; TH05 insists on only updating the affected byte, so...
 if GAME eq 4
@@ -157,6 +156,5 @@ endif
 	retf
 _input_sense endp
 	even
-SHARED_	ends
 
 	end

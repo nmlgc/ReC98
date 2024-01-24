@@ -1,4 +1,4 @@
-#pragma option -zCSHARED_ -k-
+#pragma option -zCSHARED -k-
 
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"

@@ -1,4 +1,4 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
 #include <errno.h>
 #include "platform.h"

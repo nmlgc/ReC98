@@ -1,6 +1,6 @@
 // Second TH05 .PI C++ translation unit.
 
-#pragma option -zCSHARED_ -2 -k-
+#pragma option -zCSHARED -2 -k-
 
 #include <stddef.h>
 #include "platform.h"

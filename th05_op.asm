@@ -431,7 +431,7 @@ HI_VIEW_TEXT ends
 
 ; ===========================================================================
 
-SHARED	segment	word public 'CODE' use16
+SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc

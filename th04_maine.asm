@@ -26,7 +26,6 @@ include th04/hardware/grppsafx.inc
 	extern __ctype:byte
 
 group_01 group maine_01_TEXT
-g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
 
@@ -2911,7 +2910,7 @@ maine_01_TEXT	ends
 
 ; ===========================================================================
 
-SHARED	segment	word public 'CODE' use16
+SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
 	extern @FRAME_DELAY$QI:proc
 	extern PI_PALETTE_APPLY:proc
@@ -2924,12 +2923,6 @@ include th02/snd/snd.inc
 	extern CDG_PUT_PLANE:proc
 	extern SND_LOAD:proc
 	extern GRAPH_PUTSA_FX:proc
-SHARED	ends
-
-SHARED_	segment	word public 'CODE' use16
-		assume cs:g_SHARED
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
 	extern CDG_PUT_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
@@ -2940,7 +2933,7 @@ SHARED_	segment	word public 'CODE' use16
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_FREE:proc
 	extern CDG_FREE_ALL:proc
-SHARED_	ends
+SHARED ends
 
 	.data
 

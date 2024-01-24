@@ -1,3 +1,5 @@
+#pragma option -zCSHARED
+
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"

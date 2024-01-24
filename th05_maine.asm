@@ -27,7 +27,6 @@ include th04/hardware/grppsafx.inc
 	extern __ctype:byte
 
 group_01 group maine_01_TEXT, maine_01__TEXT
-g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
 
@@ -6074,17 +6073,9 @@ maine_01__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-SHARED	segment	word public 'CODE' use16
-	extern GRAPH_PUTSA_FX:proc
-SHARED	ends
-
-SHARED_	segment	word public 'CODE' use16
-		assume cs:g_SHARED
-		;org 0Ch
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
+SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
-
+	extern GRAPH_PUTSA_FX:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
@@ -6106,7 +6097,7 @@ include th02/snd/snd.inc
 	extern @FRAME_DELAY$QI:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE_ALL:proc
-SHARED_	ends
+SHARED ends
 
 	.data
 

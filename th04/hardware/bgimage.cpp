@@ -1,4 +1,4 @@
-#pragma option -zCSHARED_ -k-
+#pragma option -zCSHARED -k-
 
 #include <mem.h>
 #include "platform.h"

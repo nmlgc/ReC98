@@ -6,7 +6,6 @@ GAME = 4
 include ReC98.inc
 
 op_01 group OP_SETUP_TEXT, op_01_TEXT
-g_SHARED group SHARED, SHARED_
 
 _TEXT segment word public 'CODE' use16
 	assume cs:_TEXT
@@ -134,12 +133,6 @@ OP_MUSIC_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
 op_01_TEXT ends
-
-SHARED segment byte public 'CODE' use16
-SHARED ends
-
-SHARED_ segment word public 'CODE' use16
-SHARED_ ends
 
 	.data
 
