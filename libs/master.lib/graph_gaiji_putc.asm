@@ -55,11 +55,16 @@ func GRAPH_GAIJI_PUTC	; graph_gaiji_putc() {
 	mov	DI,[BP+@@y]
 	mov	DX,[BP+@@color]
 	mov	BP,[BP+@@ank]	;BP
+
+	; master.lib bug: This calculation should not add the carry flag – if it's
+	; set, the resulting JIS code point will correspond to ([@@ank] + 1). ADD
+	; is the correct instruction here.
 if GAME ge 4
 	add	BP,5680h	;from gjwrite.asm
 else
 	adc	BP,5680h	;from gjwrite.asm
 endif
+
 	and	BP,0ff7fh
 
 	; GRCG setting..

@@ -4,7 +4,7 @@
 #define PUPPET_HP 500
 
 typedef struct {
-	unsigned char flag;
+	entity_flag_t flag;
 	unsigned char angle;
 	PlayfieldMotion pos;
 	unsigned int phase_frame;

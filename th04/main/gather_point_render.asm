@@ -1,5 +1,5 @@
-public @gather_point_render
-@gather_point_render	proc near
+public @gather_point_render$qii
+@gather_point_render$qii proc near
 
 @@left equ <ax>
 @@top equ <dx>
@@ -63,4 +63,4 @@ public @gather_point_render
 	pop	di
 	pop	si
 	retn
-@gather_point_render	endp
+@gather_point_render$qii endp

@@ -20,7 +20,7 @@ SA_ENABLED = 1
 SA_BLOCKED_FOR_THIS_FRAME = 2
 
 shotpair_t struc
-	flag	db ?
+	SP_alive	db ?
 	unused_1	db ?
 	topleft	Point <?>
 	velocity_y	dw ?

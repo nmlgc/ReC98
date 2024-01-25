@@ -3,6 +3,8 @@
  * Declarations for planar 4bpp graphics
  */
 
+#define PLANAR_H
+
 // 1bpp types, describing horizontal lines of 8, 16, or 32 pixels.
 typedef uint8_t dots8_t;
 typedef uint16_t dots16_t;
@@ -17,7 +19,9 @@ typedef int32_t sdots32_t;
 #define PRESHIFT BYTE_DOTS
 
 typedef enum {
-	PL_B, PL_R, PL_G, PL_E
+	PL_B, PL_R, PL_G, PL_E,
+
+	_vram_plane_t_FORCE_INT16 = 0x7FFF
 } vram_plane_t;
 
 // Abstracted dot and planar types, with their width defined by a macro.
@@ -71,8 +75,8 @@ extern dots8_t far *VRAM_PLANE[PLANE_COUNT];
 // And no, expressing these as a struct won't generate the same ASM.
 // Been there, tried that.
 extern dots8_t far *VRAM_PLANE_B;
-extern dots8_t far *VRAM_PLANE_G;
 extern dots8_t far *VRAM_PLANE_R;
+extern dots8_t far *VRAM_PLANE_G;
 extern dots8_t far *VRAM_PLANE_E;
 
 // Byte offset of an 8-pixel-aligned X/Y position on a VRAM bitplane,
@@ -82,42 +86,63 @@ typedef int16_t vram_offset_t;
 typedef uint16_t uvram_offset_t;
 
 #define VRAM_OFFSET_SHIFT(x, y) \
-	(x >> 3) + (y << 6) + (y << 4)
+	(x >> BYTE_BITS) + (y << 6) + (y << 4)
+
+// Adds [imm] to [vo] and rolls [vo] back to the top of VRAM if it crossed the
+// bottom. Necessary with hardware scrolling.
+#define vram_offset_add_and_roll(vo, imm) { \
+	vo += imm; \
+	if(static_cast<vram_offset_t>(vo) >= PLANE_SIZE) { \
+		vo -= PLANE_SIZE; \
+	} \
+}
 
 #ifdef __cplusplus
 // MODDERS: Replace with a single function
-static inline vram_offset_t vram_offset_shift(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_shift(screen_x_t x, vram_y_t y) {
 	return VRAM_OFFSET_SHIFT(x, y);
 }
 
-static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y)
-{
+// Avoids a reload of [y] (= one MOV instruction) compared to the regular
+// vram_offset_shift().
+#define vram_offset_shift_fast(x, y) ( \
+	(x >> BYTE_BITS) + (_DX = (y << 6)) + (_DX >> 2) \
+)
+
+// Required to get the specific instruction encodings sometimes seen in the
+// original binaries.
+#define vram_offset_shift_fast_asm(asm_ret, asm_x, c_y) { \
+	asm { mov	ax, asm_x; } \
+	static_cast<vram_offset_t>(_AX) >>= BYTE_BITS; \
+	_DX = c_y; \
+	_DX <<= 6; \
+	asm { add	ax, dx; } \
+	_DX >>= 2; \
+	asm { add	ax, dx; } \
+	asm { mov	asm_ret, ax; } \
+}
+
+static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y) {
 	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
 
-static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y) {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
-static inline vram_offset_t vram_offset_divmul_double(double x, double y)
-{
+static inline vram_offset_t vram_offset_divmul_double(double x, double y) {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
-static inline vram_offset_t vram_offset_divmul_wtf(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_divmul_wtf(screen_x_t x, vram_y_t y) {
 	return ((((x + RES_X) / BYTE_DOTS) + (y * ROW_SIZE)) - ROW_SIZE);
 }
 
-static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y)
-{
-	return (y * ROW_SIZE) + (x >> 3);
+static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y) {
+	return (y * ROW_SIZE) + (x >> BYTE_BITS);
 }
 
-static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 	return ((((x + RES_X) / BYTE_DOTS) + (y << 6) + (y << 4)) - ROW_SIZE);
 }
 #endif
@@ -178,6 +203,14 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
 		*(dots32_t*)((dst) + p) = *(dots32_t*)((src) + p); \
 	}
 
+// Converts the given ([x], [y]) position to an x86 segment inside the B plane.
+// Only defined for paragraph-aligned values of [x], i.e., multiples of 128
+// pixels.
+#define grcg_segment(x, y) ( \
+	static_assert((((y * ROW_SIZE) + (x / BYTE_DOTS)) % 16) == 0), \
+	(SEG_PLANE_B + (((y * ROW_SIZE) + (x / BYTE_DOTS)) / 16)) \
+)
+
 #define grcg_chunk(vram_offset, bit_count) \
 	VRAM_CHUNK(B, vram_offset, bit_count)
 
@@ -196,9 +229,15 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
 	/* Nope, pokeb() doesn't generate the same code */ \
 	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, offset)) = src
 
-#define grcg_snap(dst, offset, bit_count) \
-	VRAM_SNAP(dst, B, offset, bit_count)
+// EGC
+// ---
 
-#define egc_put         	grcg_put
-#define egc_put_emptyopt	grcg_put_emptyopt
-#define egc_snap        	grcg_snap
+// ZUN bloat: Dummy value returned from an EGC copy read. Can be replaced with
+// a pseudoregister to avoid one unnecessary store (for snapping) or load (for
+// blitting) per EGC operation.
+typedef dots16_t egc_temp_t;
+
+#define egc_chunk(offset) \
+	/* For code generation reasons, [offset] must NOT be parenthesized here */ \
+	VRAM_CHUNK(B, offset, 16)
+// ----------

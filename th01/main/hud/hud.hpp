@@ -11,23 +11,25 @@ void hud_score_and_cardcombo_render(void);
 void hud_bg_snap_and_put(void);
 extern bool timer_initialized;
 
-// Must be called after every background change.
-inline void hud_rerender(void) {
-	first_stage_in_scene = true;
-	hud_bg_snap_and_put();
-
-	// Unnecessary, already done as part of hud_bg_snap_and_put()
-	hud_score_and_cardcombo_render();
+// Must be called after every background change. Left as a macro to avoid a
+// general dependency on [first_stage_in_scene].
+#define hud_rerender() { \
+	first_stage_in_scene = true; \
+	hud_bg_snap_and_put(); \
+	\
+	/* Unnecessary, already done as part of hud_bg_snap_and_put() */ \
+	hud_score_and_cardcombo_render(); \
 }
 
 // Re-renders the life or bomb display. Assumes [prev] to be the number of
 // lives or bombs displayed before calling this function, with the new count
-// taken from the global [lives] or [bombs], respectively.
+// taken from the global [rem_lives] or [rem_bombs], respectively.
 void hud_lives_put(int prev);
 void hud_bombs_put(int prev);
 
 /// Background
 /// ----------
+
 // Loads the first plane from the .GRF file with the given [fn] into [hud_bg],
 // and sets [hud_bg_size] to its size in bytes. Always returns 0.
 // (The "caller" is "supposed" to delete[] [hud_bg]… which the original game

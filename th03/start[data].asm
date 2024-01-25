@@ -1,3 +1,5 @@
+include th03/chars.inc
+
 public _demo_chars, _demo_rand
 _demo_chars	label byte
 	db	(1 + (PLAYCHAR_MIMA     * 2)),	(1 + (PLAYCHAR_REIMU  * 2))

@@ -7,11 +7,14 @@ static const int BOSS_DEFEAT_INVINCIBILITY_FRAMES = 255;
 	static const unsigned long BOSS_BONUS_UNIT_VALUE = 1000;
 #else
 	static const unsigned int BOSS_BONUS_UNIT_VALUE = 1280;
-
-	// 16 bytes of globally additional state that bosses can use freely?
-	// Architecturally, that's a step back even compared to TH01.
-	extern unsigned char boss_statebyte[16];
 #endif
+
+static const pixel_t BOSS_HITBOX_DEFAULT_W = ((BOSS_W / 2) - (BOSS_W / 8));
+static const pixel_t BOSS_HITBOX_DEFAULT_H = ((BOSS_W / 2) - (BOSS_W / 8));
+
+// 16 bytes of globally additional state that bosses can use freely?
+// Architecturally, that's a step back even compared to TH01.
+extern unsigned char boss_statebyte[16];
 
 typedef struct {
 	PlayfieldMotion pos;
@@ -23,7 +26,13 @@ typedef struct {
 	unsigned char mode;
 	// Used for both movement and bullet angles.
 	unsigned char angle;
-	unsigned char mode_change;
+	union {
+		// Most common interpretation during regular phases.
+		unsigned char patterns_seen;
+
+		// Hardcoded interpretation during the defeat phases.
+		bool defeat_bonus;
+	} phase_state;
 	int phase_end_hp;
 } boss_stuff_t;
 
@@ -37,7 +46,8 @@ void near boss_reset(void);
 // point number popup per unit around the boss sprite.
 void pascal near boss_score_bonus(unsigned int units);
 
-// Callbacks
+// Callbacks. *_func() functions are "activated" by setting the regular
+// function once the boss battle starts.
 extern  farfunc_t_near boss_update;
 extern nearfunc_t_near boss_fg_render;
 
@@ -45,20 +55,15 @@ extern nearfunc_t_near boss_fg_render;
 // [boss_bg_render_func]!
 extern  farfunc_t_near boss_update_func;
 
-extern nearfunc_t_near boss_backdrop_colorfill;
 extern nearfunc_t_near boss_bg_render_func;
 extern nearfunc_t_near boss_fg_render_func;
 
+// Does not include the *_bg_render() function, as this one always goes into a
+// fixed, defined segment. With more decompilation progress, this will be true
+// for these two functions as well, making this macro ultimately redundant.
 #define BOSS_DEC(name) \
 	void pascal  far name##_update(void); \
-	void pascal near name##_bg_render(void); \
 	void pascal near name##_fg_render(void);
-
-// Renders the boss battle background image at the given screen position,
-// surrounded by the given background [col].
-void pascal near boss_backdrop_render(
-	screen_x_t left, vram_y_t top, uint4_t col
-);
 
 // Collision detection
 // -------------------
@@ -87,22 +92,8 @@ bool near boss_hittest_shots(void);
 void near boss_hittest_shots_invincible(void);
 // ------
 
-/// Explosions
-/// ----------
-#define EXPLOSION_SMALL_COUNT 2
-
-struct explosion_t {
-	char flag;
-	unsigned char age;
-	SPPoint center;
-	SPPoint radius_cur;
-	SPPoint radius_delta;
-	int8_t unused;
-	// Offset to add to the angle for the Y coordinate, turning the circle
-	// into a slanted ellipse. See https://www.desmos.com/calculator/faeefi6w1u
-	// for a plot of the effect.
-	unsigned char angle_offset;
-};
+// Explosions
+// ----------
 
 enum explosion_type_t {
 	ET_NONE = -1,
@@ -114,9 +105,6 @@ enum explosion_type_t {
 
 	_explosion_type_t_FORCE_INT16 = 0x7FFF
 };
-
-extern explosion_t explosions_small[EXPLOSION_SMALL_COUNT];
-extern explosion_t explosions_big;
 
 void pascal near boss_explode_small(explosion_type_t type);
 #if (GAME == 5)
@@ -134,13 +122,14 @@ void near explosions_small_update_and_render(void);
 void near explosions_big_update_and_render(void);
 
 void explosions_small_reset(void);
-/// ----------
+// ----------
 
 void near boss_items_drop();
 
 // Shows a small explosion with the given type, clears any bullets if the
-// current phase wasn't timed out, and starts the next one, which will end upon
-// reaching the given amount of HP.
+// current phase wasn't timed out, and starts the next regular non-defeat
+// phase, which will end upon reaching the given amount of HP. Does *not* reset
+// [boss.phase_frame]!
 void pascal near boss_phase_next(
 	explosion_type_t explosion_type, int next_end_hp
 );
@@ -180,18 +169,24 @@ void pascal near boss_phase_next(
 #define boss_defeat_explode_big(type, bonus_units) { \
 	boss_explode_big(type); \
 	boss_phase_explode_big(); \
-	bullet_zap.active = boss.mode_change; \
-	if(boss.mode_change) { \
+	bullet_zap.active = boss.phase_state.defeat_bonus; \
+	if(boss.phase_state.defeat_bonus) { \
 		boss_score_bonus(bonus_units); \
 	} \
 	boss.sprite = PAT_ENEMY_KILL; \
 	boss.phase_frame = 0; \
 }
 
-// Runs a frame of the boss defeat sequence. TH04's version also:
-// • initializes Gengetsu at the end of the last defeat phase during the first
+// Runs a frame of the boss defeat sequence.
+//
+// TH04 specialties:
+// • Initializes Gengetsu at the end of the last defeat phase during the first
 //   time it's shown on the Extra stage,
-// • and takes ownership of [boss.phase_frame], incrementing it on every call.
+// • Takes ownership of [boss.phase_frame], incrementing it on every call.
+//
+// TH05 specialties:
+// • Grants the given amount of score [bonus_units] during BDF_BIG if
+//   [boss.phase_state.defeat_bonus] is `true`.
 #if (GAME == 5)
 	void pascal near boss_defeat_update(unsigned int bonus_units);
 #else

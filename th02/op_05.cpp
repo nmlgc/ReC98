@@ -8,15 +8,18 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
+#include "th02/v_colors.hpp"
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
+}
 
 inline char sel_ring_end() {
 	return SHOTTYPE_COUNT - 1;
@@ -25,7 +28,7 @@ inline char sel_ring_end() {
 char sel = 1;
 int8_t sel_padding = 0;
 
-const char *DESC[SHOTTYPE_COUNT][3] = {
+const shiftjis_t *DESC[SHOTTYPE_COUNT][3] = {
 	" 陰陽玉の力を使わない ",
 	" 広範囲でかつ機動力に ",
 	"　強い高機動力タイプ　",
@@ -38,16 +41,16 @@ const char *DESC[SHOTTYPE_COUNT][3] = {
 	"　攻撃力が優れている　",
 	"　　攻撃重視タイプ　　"
 };
-const char *CHOOSE = "靈夢の戦闘スタイルを、下の３つからえらんでね";
-const char *EXTRA_NOTE[] = {
+const shiftjis_t *CHOOSE = "靈夢の戦闘スタイルを、下の３つからえらんでね";
+const shiftjis_t *EXTRA_NOTE[] = {
 	"注）　エキストラステージでは、難易度、プレイヤー、ボム数は変更出来ません",
 	"　　　それぞれ、難易度ＥＸＴＲＡ、プレイヤー３人、ボム１個となります    "
 };
-const char *CLEARED = "  ☆☆ＣＬＥＡＲＥＤ☆☆  ";
+const shiftjis_t *CLEARED = "  ☆☆ＣＬＥＡＲＥＤ☆☆  ";
 
 char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
-long unused[2];
+long unused[2]; // ZUN bloat
 
 void copy_pic_back(int sel, int highlight)
 {
@@ -92,7 +95,7 @@ void darken_pic_at(screen_x_t x, screen_y_t y)
 	grcg_off();
 }
 
-void draw_shottype_desc(int sel, int color)
+void draw_shottype_desc(int sel, vc2 color)
 {
 	screen_x_t x;
 	screen_y_t y;
@@ -124,8 +127,8 @@ void pascal draw_header(void)
 		grcg_setcolor(GC_RMW, 0);  grcg_round_boxfill(16, 48, 624,  96, 8);
 		grcg_off();
 
-		graph_putsa_fx(32, 56, (15 | FX_WEIGHT_BOLD), EXTRA_NOTE[0]);
-		graph_putsa_fx(32, 72, (15 | FX_WEIGHT_BOLD), EXTRA_NOTE[1]);
+		graph_putsa_fx(32, 56, (V_WHITE | FX_WEIGHT_BOLD), EXTRA_NOTE[0]);
+		graph_putsa_fx(32, 72, (V_WHITE | FX_WEIGHT_BOLD), EXTRA_NOTE[1]);
 	}
 }
 
@@ -133,13 +136,13 @@ void pascal shottype_menu_init(void)
 {
 	#define draw_cleared_for(cleared_mode_with) \
 		if(cleared_mode_with[0]) { \
-			graph_putsa_fx(16, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(16, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		} \
 		if(cleared_mode_with[1]) { \
-			graph_putsa_fx(224, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(224, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		} \
 		if(cleared_mode_with[2]) { \
-			graph_putsa_fx(432, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(432, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
 	palette_black();
@@ -228,6 +231,4 @@ void pascal shottype_menu(void)
 	pi_free(1);
 	pi_free(2);
 	palette_black_out(1);
-}
-
 }

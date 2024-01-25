@@ -21,7 +21,7 @@ inline void bos_header_load_palette(Palette4 &pal, bool load) {
 	if(load) {
 		arc_file_get_far(pal);
 	} else {
-		arc_file_seek(sizeof(spriteformat_header_t<bos_header_t>));
+		arc_file_seek(sizeof(SpriteFormatHeader<bos_header_t>));
 	}
 }
 

@@ -3,7 +3,6 @@
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
-#include "th04/common.h"
 #include "th04/score.h"
 #include "th05/resident.hpp"
 extern "C" {

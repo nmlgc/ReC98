@@ -18,6 +18,7 @@ static const input_t INPUT_Q          = 0x4000;
 
 /// Variables
 /// ---------
+
 // Multi-player P1/P2 controls
 extern input_t input_mp_p1;
 extern input_t input_mp_p2;
@@ -44,6 +45,9 @@ void pascal input_mode_cpu_vs_1p();
 void pascal input_mode_cpu_vs_cpu();
 // Just allows quitting via pressing any button.
 void pascal input_mode_attract();
+
+// Input sense function used in UIs
+#define input_reset_sense_interface input_mode_interface
 /// -----
 
 // Basic keyboard input function in this game. Resets and updates all three
@@ -55,9 +59,10 @@ void input_reset_sense_key_held();
 // `true` if that happened, and `false` otherwise.
 bool16 pascal input_wait_for_ok(unsigned int frames);
 
-// Waits until BGM playback reached the given [measure] for OK or SHOT to be
-// pressed. Returns `true` if that happened, and `false` otherwise. Falls back
-// on input_wait_for_ok() with the given number of [frames] if BGM is disabled.
+// Behaves like a call to snd_delay_until_measure() with the given parameters
+// (and all of its corner case issues) whose delay can be interrupted by
+// pressing OK or SHOT. Returns `true` if such an input happened, and `false`
+// otherwise.
 bool16 pascal input_wait_for_ok_or_measure(int measure, unsigned int frames);
 
 // Waits for all held inputs to be released, then waits the given number of

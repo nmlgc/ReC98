@@ -3,25 +3,23 @@
  * TH05 player character selection menu
  */
 
-#pragma option -zCop_01_TEXT
+#pragma option -zPop_01
 
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th01/rank.h"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"
 #include "th04/score.h"
-#include "th04/common.h"
-#include "th05/playchar.h"
+#include "th04/snd/snd.h"
+#include "th04/op/clear.hpp"
+#include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
-#include "th05/sprites/op_cdg.h"
-#include "th05/snd/snd.h"
 #include "th05/hardware/input.h"
 #include "th05/formats/pi.hpp"
 
@@ -48,9 +46,9 @@ static const screen_x_t YUUKA_LEFT = 400;
 static const vram_y_t YUUKA_TOP = 224;
 
 unsigned char playchar_menu_sel;
-static uint8_t unused_1;
+static uint8_t unused_1; // ZUN bloat
 unsigned char playchar_menu_rank;
-static uint8_t unused_0[4];
+static uint8_t unused_0[4]; // ZUN bloat
 bool extra_playable_with[PLAYCHAR_COUNT];
 bool selectable_with[PLAYCHAR_COUNT];
 

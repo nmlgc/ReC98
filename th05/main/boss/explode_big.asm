@@ -4,7 +4,7 @@ public @boss_explode_big_circle$qv
 	mov	bp, sp
 	push	si
 	mov	si, offset _explosions_big
-	mov	[si+explosion_t.flag], 1
+	mov	[si+explosion_t.EXPLOSION_alive], 1
 	mov	[si+explosion_t.age], 0
 	mov	ax, _boss_pos.cur.x
 	mov	[si+explosion_t.center.x], ax

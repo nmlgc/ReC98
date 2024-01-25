@@ -1,6 +1,3 @@
-#define ENEMY_W 32
-#define ENEMY_H 32
-
 enum enemy_flag_t {
 	EF_FREE = 0,
 	EF_ALIVE = 1,
@@ -19,9 +16,9 @@ struct enemy_t {
 	unsigned char age;
 	PlayfieldMotion pos;
 	unsigned char patnum_base;
-	int8_t unused_1;
+	int8_t unused_1; // ZUN bloat
 	int hp;
-	int16_t unused_2;
+	int16_t unused_2; // ZUN bloat
 	int score;
 	unsigned char near *script;
 	int script_ip;
@@ -52,7 +49,7 @@ struct enemy_t {
 	bool clip_x;
 	bool clip_y;
 
-	int8_t unused_3;
+	int8_t unused_3; // ZUN bloat
 	item_type_t item;
 	bool damaged_this_frame;
 

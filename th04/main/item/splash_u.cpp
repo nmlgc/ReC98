@@ -31,10 +31,10 @@ void pascal near item_splashes_add(Subpixel center_x, Subpixel center_y)
 		item_splash_last_id = 0;
 	}
 
-	if(splash.flag != ISF_FREE) {
+	if(splash.flag != F_FREE) {
 		return;
 	}
-	splash.flag = ISF_ALIVE;
+	splash.flag = F_ALIVE;
 	splash.center.x = center_x;
 	splash.center.y = center_y;
 	splash.radius_cur.set(ITEM_SPLASH_RADIUS_START);
@@ -48,15 +48,15 @@ void near item_splashes_update(void)
 	int i;
 
 	for((p = item_splashes, i = 0); i < ITEM_SPLASH_COUNT; (i++, p++)) {
-		if(p->flag == ISF_FREE) {
+		if(p->flag == F_FREE) {
 			continue;
-		} else if(p->flag == ISF_DONE) {
-			p->flag = ISF_FREE;
+		} else if(p->flag == F_REMOVE) {
+			p->flag = F_FREE;
 		} else {
 			p->radius_prev = p->radius_cur;
 			p->radius_cur += ITEM_SPLASH_RADIUS_DELTA;
 			if(p->radius_cur.v >= to_sp(ITEM_SPLASH_RADIUS_END)) {
-				p->flag = ISF_DONE;
+				p->flag = F_REMOVE;
 			}
 		}
 	}

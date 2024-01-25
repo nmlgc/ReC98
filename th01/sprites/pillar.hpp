@@ -1,0 +1,2 @@
+#define PILLAR_W 32
+#define PILLAR_SEGMENT_H 8

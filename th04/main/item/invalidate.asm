@@ -5,7 +5,7 @@ items_invalidate	proc near
 	mov	_tile_invalidate_box, (ITEM_W shl 16) or ITEM_H
 	mov	si, offset _items
 if GAME eq 5
-	; ZUN bug! ITEM_COUNT was 32 in TH04 and is 40 in TH05. This is the only
+	; ZUN bug: ITEM_COUNT was 32 in TH04 and is 40 in TH05. This is the only
 	; function in TH05 that still has 32.
 	mov	di, 32
 else
@@ -13,7 +13,7 @@ else
 endif
 
 @@item_loop:
-	cmp	[si+item_t.flag], 0
+	cmp	[si+item_t.flag], F_FREE
 	jz	short @@item_next
 	call	tiles_invalidate_around pascal, large dword ptr [si+item_t.pos.prev]
 
@@ -25,7 +25,7 @@ endif
 	mov	di, ITEM_SPLASH_COUNT
 
 @@item_splash_loop:
-	cmp	[si+item_splash_t.flag], 0
+	cmp	[si+item_splash_t.flag], F_FREE
 	jz	short @@item_splash_next
 	mov	ax, [si+item_splash_t.radius_prev]
 	shr	ax, 3

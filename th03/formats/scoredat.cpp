@@ -2,7 +2,6 @@
 
 #include <stddef.h>
 #include "platform.h"
-#include "master.hpp"
 #include "th01/rank.h"
 #include "th03/common.h"
 #include "th03/score.h"
