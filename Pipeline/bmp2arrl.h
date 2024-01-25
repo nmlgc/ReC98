@@ -7,7 +7,8 @@
 /* what to emit */
 enum rec98_bmp2arr_output_type {
     REC98_OUT_NONE=0,
-    REC98_OUT_C,
+    REC98_OUT_C, /* creating a raw multi-dimensional `unsigned char` array */
+    REC98_OUT_CPP, /* using the planar.h DotRect template */
     REC98_OUT_ASM,
     REC98_OUT_BIN,
     REC98_OUT_BMP,
@@ -84,7 +85,7 @@ struct rec98_bmp2arr_task {
     char*           output_symname;     /* what to name the symbol */
     char*           output_file;
     unsigned char   output_type;
-    unsigned char   sprite_width;       /* 8, or 16 [https://github.com/nmlgc/ReC98/issues/8 ref. dots8_t, dots16_t] */
+    unsigned char   sprite_width;       /* 8, 16, or 32 */
     unsigned char   sprite_height;      /* according to list, either 4, 8, or 16 */
     unsigned char   flags;              /* see flag list above */
 

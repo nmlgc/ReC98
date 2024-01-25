@@ -9,6 +9,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "th01/math/polar.hpp"
+#include "th02/v_colors.hpp"
 #include "th02/math/vector.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
@@ -58,7 +59,7 @@ void pascal rotrect_animate(char rot_speed, char start_angle)
 			angles[j] = angles[j+1];
 			rads[j] = rads[j+1];
 		}
-		grcg_setcolor(GC_RMW, 15);
+		grcg_setcolor(GC_RMW, V_WHITE);
 		if(i < 16) {
 			rads[4] -= 4;
 			angles[4] += rot_speed;
@@ -68,7 +69,7 @@ void pascal rotrect_animate(char rot_speed, char start_angle)
 	}
 	grcg_setcolor(GC_RMW, 0);
 	grcg_boxfill(0, 0, 384, 399);
-	grcg_setcolor(GC_RMW, 15);
+	grcg_setcolor(GC_RMW, V_WHITE);
 	grcg_line(356,  96, 356, 304);
 	grcg_line(356, 304,  28, 304);
 	grcg_line( 28, 304,  28,  96);

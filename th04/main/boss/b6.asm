@@ -14,7 +14,7 @@ yuuka6_phase_next proc near
 	call	@boss_explode_small$q16explosion_type_t pascal, [bp+@@explosion_type]
 	inc	_boss_phase
 	mov	_boss_phase_frame, 0
-	mov	_boss_mode_change, 0
+	mov	_boss_phase_state, 0
 	mov	_boss_mode, 0
 	mov	ax, _boss_phase_end_hp
 	mov	_boss_hp, ax

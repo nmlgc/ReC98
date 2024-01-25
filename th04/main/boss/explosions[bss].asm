@@ -1,5 +1,5 @@
 explosion_t struc
-	flag	db ?
+	EXPLOSION_alive	db ?
 	age	db ?
 	center	Point <?>
 	EXPLOSION_radius_cur	Point <?>
@@ -8,12 +8,7 @@ explosion_t struc
 	angle_offset	db ?
 explosion_t ends
 
-EXPLOSION_AGE_MAX = 32
 EXPLOSION_SMALL_COUNT = 2
-EXPLOSION_SMALL_W = 16
-EXPLOSION_SMALL_H = 16
-EXPLOSION_SMALL_SPRITES = 64
-EXPLOSION_BIG_SPRITES = 16
 
 ; explosion_type_t
 ET_NONE = -1

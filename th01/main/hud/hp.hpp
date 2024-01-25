@@ -1,6 +1,6 @@
 // First HP point in the respective color section. Assumes
 // [hud_hp_first_redwhite] < [hud_hp_first_white].
-// Also, these should be even, due to a bug in hud_hp_decrement()...
+// Also, these should be even, due to a landmine in hud_hp_decrement()...
 extern unsigned int hud_hp_first_white;
 extern unsigned int hud_hp_first_redwhite;
 
@@ -27,5 +27,20 @@ bool16 hud_hp_render(int hp_total, int func);
 // Initializes the background used for unblitting the hit point at [hp_cur]
 // (0-based), then renders this one point. Returns true if this was the last
 // hit point (([hp_total] - 1) == hp_cur), false otherwise.
+//
+// ZUN bug: Will lead to heap corruption if ([hp_cur] > (HP_MAX / 2)].
 #define hud_hp_increment(hp_total, hp_cur) \
 	hud_hp_render(hp_total, hp_cur)
+
+// Renders the HP bar increment animation until [done].
+//
+// ZUN bug: If [hp_total] is reduced while [frame] increases, the two values
+// might run past each other without ever meeting hud_hp_increment()'s
+// completion condition, causing its heap corruption bug as the [frame] value
+// increases. This can easily happen in debug mode, by holding ↵ Return (and
+// thus subtracting 1 HP per frame) during the phase that calls this function.
+#define hud_hp_increment_render(done, hp_total, frame) { \
+	if(!done) { \
+		done = hud_hp_increment(hp_total, frame); \
+	} \
+}

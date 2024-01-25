@@ -9,15 +9,18 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/math/polar.hpp"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
+#include "th02/v_colors.hpp"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
+}
 #include "th02/shiftjis/fns.hpp"
 
 static const int MUSIC_CMT_LINE_LEN = 42;
@@ -28,7 +31,7 @@ static const int MUSIC_CMT_LINE_COUNT = 20;
 
 #define MUSIC_POLYGONS 16
 
-const char *MUSIC_TITLES[] = {
+const shiftjis_t *MUSIC_TITLES[] = {
 	"NO.1    ìåï˚ïïñÇò^Å@Å`èÚìyô÷‰∂óÖ",
 	"NO.2    Å@ îéóÌÅ@Å`Eastern Wind ",
 	"NO.3    Å@   End of DaylightÅ@  ",
@@ -96,13 +99,13 @@ void pascal near draw_tracks(unsigned char sel)
 {
 	int i;
 	for(i = 0; i < sizeof(MUSIC_TITLES) / sizeof(MUSIC_TITLES[0]); i++) {
-		draw_track(i, i == sel ? 15 : 3);
+		draw_track(i, (i == sel) ? V_WHITE : 3);
 	}
 }
 
 void pascal near screen_back_B_snap(void)
 {
-	screen_back_B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+	screen_back_B = HMem<dots8_t>::alloc(PLANE_SIZE);
 	plane_dword_blit(screen_back_B, VRAM_PLANE_B);
 }
 
@@ -178,16 +181,14 @@ void pascal near polygons_update_and_render(void)
 		if(pos[i].y >= (RES_Y * 20)) {
 			polygon_init(i, -(RES_Y * 4), (8 - (rand() & 15)));
 		}
-		grcg_polygon_c(
-			reinterpret_cast<Point *>(points), polygon_vertex_count(i)
-		);
+		grcg_polygon_c(points, polygon_vertex_count(i));
 	}
 }
 
 void pascal near music_flip(void)
 {
 	screen_back_B_put();
-	grcg_setcolor(GC_RMW | GC_B, 15);
+	grcg_setcolor((GC_RMW | GC_B), V_WHITE);
 	polygons_update_and_render();
 	grcg_off();
 	graph_showpage(music_page);
@@ -225,7 +226,7 @@ void pascal near cmt_back_snap(void)
 	screen_x_t x;
 	vram_offset_t vo;
 	for(int i = 0; i < PLANE_COUNT; i++) {
-		cmt_back[i] = HMem<dots8_t>::allocbyte(
+		cmt_back[i] = HMem<dots8_t>::alloc(
 			(304 * (320 / BYTE_DOTS)) + (16 * (320 / BYTE_DOTS))
 		);
 	}
@@ -256,7 +257,7 @@ void pascal near draw_cmt(int track)
 	screen_back_B_put();
 	cmt_back_put();
 
-	graph_putsa_fx(160, 64, (15 | FX_WEIGHT_HEAVY), music_cmt[0]);
+	graph_putsa_fx(160, 64, (V_WHITE | FX_WEIGHT_HEAVY), music_cmt[0]);
 	for(line = 1; line < MUSIC_CMT_LINE_COUNT; line++) {
 		graph_putsa_fx(
 			304, ((line + 4) * GLYPH_H), (13 | FX_WEIGHT_HEAVY), music_cmt[line]
@@ -310,7 +311,7 @@ controls:
 			if(music_sel == TRACK_COUNT) {
 				music_sel--;
 			}
-			draw_track(music_sel, 15);
+			draw_track(music_sel, V_WHITE);
 		}
 		if(key_det & INPUT_DOWN) {
 			draw_track(music_sel, 3);
@@ -322,7 +323,7 @@ controls:
 			if(music_sel == TRACK_COUNT) {
 				music_sel++;
 			}
-			draw_track(music_sel, 15);
+			draw_track(music_sel, V_WHITE);
 		}
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			if(music_sel != SEL_QUIT) {
@@ -369,6 +370,4 @@ controls:
 	palette_entry_rgb_show("op.rgb");
 	graph_copy_page(0);
 	graph_accesspage(0);
-}
-
 }

@@ -1,10 +1,13 @@
 bin/*
 .tup/*
 !bin/masters.lib
-Research/*.exe
-Research/*.obj
-RESEARCH/*.EXE
-RESEARCH/*.OBJ
+Research/**/*.exe
+Research/**/*.obj
+RESEARCH/**/*.map
+RESEARCH/**/*.EXE
+RESEARCH/**/*.OBJ
+RESEARCH/**/*.MAP
+
 
 # Borland C++ ILINK32 debug information - can't be deactivated, unfortunately.
 *.tds

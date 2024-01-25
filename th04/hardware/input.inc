@@ -19,8 +19,6 @@ INPUT_MOVEMENT   = \
 	INPUT_UP_LEFT or INPUT_UP_RIGHT or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
 
 if GAME eq 5
-INPUT_REPLAY_END = not INPUT_MOVEMENT
-
 input_reset_sense_interface	equ <_input_reset_sense_held>
 else
 input_reset_sense_interface	equ <_input_reset_sense>
