@@ -7,6 +7,13 @@ struct tx2_header_t {
 	uint16_t offset_for[PLAYCHAR_COUNT + 1];
 };
 
+// Parameters for the 0x06 sprite blitting command.
+struct tx2_op_06_params {
+	screen_x_t left;
+	screen_y_t top;
+	uint8_t patnum;
+};
+
 const uint8_t FACE_NONE = 0xFF;
 
 // Script buffer pointer. The segment part also doubles as the base pointer to

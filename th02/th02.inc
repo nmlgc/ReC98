@@ -5,6 +5,7 @@ include th02/hardware/input.inc
 include th02/math/randring.inc
 include th02/gaiji/gaiji.inc
 include th02/score.inc
+include th02/v_colors.inc
 
 kajacall	macro func, param := <0>
 	call	_snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)
@@ -30,7 +31,7 @@ mikoconfig_t	struc
 	unused_1 dw ?
 	unused_2 db ?
 	main_retval db ?
-	perf db ?
+	reduce_effects db ?
 	unused_3 db ?
 	shottype db ?
 	demo_num db ?
@@ -41,18 +42,11 @@ mikoconfig_t	ends
 
 END_LINE_LEN = 46
 
-MAP_SIZE = 0C00h
-
 ; Player
 ; ------
 MISS_INVINCIBILITY_FRAMES = 220
 CONTINUE_INVINCIBILITY_FRAMES = 200
 ; ------
-
-; Bombs
-; -----
-BOMB_INVINCIBILITY_FRAMES_AFTER = 70
-; -----
 
 ; Bosses
 ; ------

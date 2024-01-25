@@ -2,8 +2,8 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th04/main/frames.h"
-extern "C" {
 #include "th04/main/playfld.hpp"
+extern "C" {
 #include "th04/main/tile/tile.hpp"
 }
 #if (GAME == 5)

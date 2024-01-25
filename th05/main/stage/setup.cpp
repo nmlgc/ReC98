@@ -4,19 +4,21 @@
  */
 
 #include "th04/sprites/main_cdg.h"
-extern "C" {
 #include "th04/main/midboss/midboss.hpp"
+#include "th04/main/boss/backdrop.hpp"
+extern "C" {
 #include "th05/main/stage/stages.hpp"
 }
 #include "th05/main/boss/bosses.hpp"
+#include "th05/sprites/main_pat.h"
 
 void pascal near stage1_setup(void)
 {
 	midboss_update_func = midboss1_update;
 	midboss_render_func = midboss1_render;
 	midboss.frames_until = 2500;
-	midboss.pos. cur.set(192, 96);
-	midboss.pos.prev.set(192, 96);
+	midboss.pos. cur.set((PLAYFIELD_W / 2), ((PLAYFIELD_H * 6) / 23));
+	midboss.pos.prev.set((PLAYFIELD_W / 2), ((PLAYFIELD_H * 6) / 23));
 	midboss.pos.velocity.set(0, 0);
 	midboss.hp = 1000;
 	midboss.sprite = 200;
@@ -26,11 +28,11 @@ void pascal near stage1_setup(void)
 	boss_bg_render_func = sara_bg_render;
 	boss_update_func = sara_update;
 	boss_fg_render_func = sara_fg_render;
-	boss.sprite = 180;
+	boss.sprite = PAT_SARA_STAY;
 	boss_hitbox_radius.set(24, 24);
-	boss_sprite_left = 186;
-	boss_sprite_right = 184;
-	boss_sprite_stay = 180;
+	boss_sprite_left = PAT_SARA_LEFT;
+	boss_sprite_right = PAT_SARA_RIGHT;
+	boss_sprite_stay = PAT_SARA_STAY;
 	boss_backdrop_colorfill = sara_backdrop_colorfill;
 
 	super_entry_bfnt("st00.bmt");
@@ -176,12 +178,12 @@ void pascal near stage6_setup(void)
 	midboss.frames_until = 30000;
 
 	boss_reset();
-	boss.pos.init(192, 64);
+	boss.pos.init((PLAYFIELD_W / 2), ((PLAYFIELD_H * 4) / 23));
 	boss_bg_render_func = shinki_bg_render;
 	boss_update_func = shinki_update;
 	boss_fg_render_func = shinki_fg_render;
-	boss.sprite = 180;
-	boss_hitbox_radius.set(24, 24);
+	boss.sprite = PAT_SHINKI_STILL;
+	boss_hitbox_radius.set(BOSS_HITBOX_DEFAULT_W, BOSS_HITBOX_DEFAULT_H);
 	boss_backdrop_colorfill = shinki_stage_backdrop_colorfill;
 
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st05bk.cdg");

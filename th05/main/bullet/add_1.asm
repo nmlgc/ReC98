@@ -21,7 +21,7 @@ extrn _group_i_velocity:Point
 extrn _bullet_template:bullet_template_t
 extrn _bullet_zap:byte
 
-PLAYER_ANGLE_FROM procdesc pascal near \
+@PLAYER_ANGLE_FROM$Q20%SUBPIXELBASE$TI$TI%T1UC procdesc pascal near \
 	x:word, y:word, plus_angle:byte
 VECTOR2_NEAR procdesc pascal near \
 	ret:word, angle:byte, length:word
@@ -353,7 +353,7 @@ _bullet_velocity_and_angle_set proc pascal near
 @@aim:
 	; Note that the high byte of @@angle is in fact ignored everywhere.
 	mov	_group_i_speed, @@speed
-	call	player_angle_from pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, @@angle
+	call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, @@angle
 	mov	@@speed, _group_i_speed
 	mov	@@angle, ax
 

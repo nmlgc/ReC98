@@ -53,7 +53,7 @@ inline void scoredat_init() {
 }
 
 // Slightly differs from the same function in OP.EXE!
-void pascal score_put(tram_y_t y, long score, unsigned atrb)
+void pascal score_put(tram_y_t y, long score, tram_atrb2 atrb)
 {
 	tram_x_t x;
 	int digit;
@@ -78,7 +78,7 @@ void pascal score_put(tram_y_t y, long score, unsigned atrb)
 
 void pascal near scores_put(int place_to_highlight)
 {
-	unsigned atrb = TX_WHITE;
+	tram_atrb2 atrb = TX_WHITE;
 	int i;
 	int col;
 	gaiji_putsa(20, 2, gbHI_SCORE, TX_GREEN);
@@ -114,7 +114,7 @@ void pascal near scores_put(int place_to_highlight)
 	}
 }
 
-void pascal near alphabet_putca(int col, int row, unsigned atrb)
+void pascal near alphabet_putca(int col, int row, tram_atrb2 atrb)
 {
 	ALPHABET_PUTCA(col, row, atrb);
 }

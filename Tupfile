@@ -1,3 +1,34 @@
+# Tupfile for the 32-part of the build process
+# --------------------------------------------
+
+
+
+
+
+
+
+
+# ⚠️ CAUTION! ⚠️
+
+# You are on the `master` branch, which builds PC-98 DOS binaries that are
+# identical to ZUN's originally released binaries. If you want to port the game
+# to other architectures or develop a mod that doesn't need to be byte-for-byte
+# comparable to the original binary, start from the cleaned-up `debloated`
+# branch instead. That branch is easier to read and modify, and builds smaller
+# and slightly faster PC-98 binaries while leaving all bugs and quirks from
+# ZUN's original code in place.
+# Seriously, you'd just be torturing yourself if you do anything nontrivial
+# based on this branch.
+
+# ⚠️ CAUTION! ⚠️
+
+
+
+
+
+
+
+
 AS = tasm32 /m /mx /kh32768 /t
 CXX32 = bcc32
 
@@ -23,19 +54,24 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 
 !bmp2arr = | $(BMP2ARR) |> $(BMP2ARR) -q -i %f -o %o |> %o
 
-: th01/sprites/leaf_s.bmp |> !bmp2arr -sym sSPARK -of c -sw 8 -sh 8 |> th01/sprites/leaf_s.csp
-: th01/sprites/leaf_l.bmp |> !bmp2arr -sym sLEAF_LEFT -of c -sw 8 -sh 8 |> th01/sprites/leaf_l.csp
-: th01/sprites/leaf_r.bmp |> !bmp2arr -sym sLEAF_RIGHT -of c -sw 8 -sh 8 |> th01/sprites/leaf_r.csp
-: th01/sprites/ileave_m.bmp |> !bmp2arr -sym _sINTERLEAVE_MASKS -of asm -sw 8 -sh 8 |> th01/sprites/ileave_m.asp
+: th01/sprites/leaf_s.bmp |> !bmp2arr -sym sSPARK -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_s.csp
+: th01/sprites/leaf_l.bmp |> !bmp2arr -sym sLEAF_LEFT -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_l.csp
+: th01/sprites/leaf_r.bmp |> !bmp2arr -sym sLEAF_RIGHT -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_r.csp
+: th01/sprites/ileave_m.bmp |> !bmp2arr -sym sINTERLEAVE_MASKS -of cpp -sw 8 -sh 8 |> th01/sprites/ileave_m.csp
 
 # ZUN bug: Supposed to be 8 preshifted sprites, with a height of 1 and a width
 # of SHOOTOUT_LASER_MAX_W pixels each, but ZUN messed up a single pixel in the
 # first pre-shifted sprite. So, we're forced to manually unroll them…
-: th01/sprites/laser_s.bmp |> !bmp2arr -sym _sSHOOTOUT_LASER -of asm -sw 16 -sh 8 |> th01/sprites/laser_s.asp
+: th01/sprites/laser_s.bmp |> !bmp2arr -sym sSHOOTOUT_LASER -of cpp -sw 16 -sh 8 |> th01/sprites/laser_s.csp
 
-: th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of c -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
-: th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
-: th01/sprites/shape8x8.bmp |> !bmp2arr -sym _sSHAPE8X8 -of asm -sw 8 -sh 8 |> th01/sprites/shape8x8.asp
+: th01/sprites/mousecur.bmp |> !bmp2arr -sym sMOUSE_CURSOR -of cpp -sw 16 -sh 16 |> th01/sprites/mousecur.csp
+
+: th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of cpp -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
+: th01/sprites/pellet_c.bmp |> !bmp2arr -sym sPELLET_CLOUD -of cpp -sw 16 -sh 16 |> th01/sprites/pellet_c.csp
+: th01/sprites/pillar.bmp |> !bmp2arr -sym sPILLAR -of cpp -sw 32 -sh 8 |> th01/sprites/pillar.csp
+: th01/sprites/shape8x8.bmp |> !bmp2arr -sym sSHAPE8X8 -of cpp -sw 8 -sh 8 |> th01/sprites/shape8x8.csp
+: th01/sprites/bonusbox.bmp |> !bmp2arr -sym sSTAGEBONUS_BOX -of cpp -sw 8 -sh 4 |> th01/sprites/bonusbox.csp
+: th02/sprites/bombpart.bmp |> !bmp2arr -sym _sBOMB_PARTICLES -of asm -sw 8 -sh 8 |> th02/sprites/bombpart.asp
 : th02/sprites/pellet.bmp |> !bmp2arr -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/pellet.asp
 : th02/sprites/sparks.bmp |> !bmp2arr -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/sparks.asp
 : th02/sprites/pointnum.bmp |> !bmp2arr -sym _sPOINTNUMS -of asm -sw 8 -sh 8 |> th02/sprites/pointnum.asp
@@ -44,6 +80,8 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04/sprites/pointnum.bmp |> !bmp2arr -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner |> th04/sprites/pointnum.asp
 : th05/sprites/gaiji.bmp |> !bmp2arr -sym _sGAIJI -of asm -sw 16 -sh 16 |> th05/sprites/gaiji.asp
 : th05/sprites/piano_l.bmp |> !bmp2arr -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8 |> th05/sprites/piano_l.asp
+
+: Research/blitperf.bmp |> !bmp2arr -sym sBLITPERF -of cpp -sw 16 -sh 16 |> Research/blitperf.csp
 
 !as = |> $(AS) %f %o |> bin\\%B.obj
 !as2 = |> $(AS) /dGAME=2 th02\%b %o |> bin\\th02\\%B.obj
@@ -59,17 +97,13 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : zuncom\\cstmstub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
 
 : th01_op.asm |> !as |> bin\\th01\\op.obj
-: th01_reiiden.asm | \
-	th01/sprites/ileave_m.asp \
-	th01/sprites/laser_s.asp \
-	th01/sprites/pellet_c.asp \
-	th01/sprites/shape8x8.asp \
-	|> !as |> bin\\th01\\reiiden.obj
+: th01_reiiden.asm |> !as |> bin\\th01\\reiiden.obj
 : th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
 
 : th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
 : th02_op.asm |> !as |> bin\\th02\\op.obj
 : th02_main.asm | \
+	th02/sprites/bombpart.asp \
 	th02/sprites/pellet.asp \
 	th02/sprites/sparks.asp \
 	th02/sprites/pointnum.asp \
@@ -82,6 +116,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th03\\hfliplut.asm |> !as3 |>
 : th03\\collmap.asm |> !as3 |>
 : th03_op.asm |> !as |> bin\\th03\\op.obj
+: th03_op2.asm |> !as |> bin\\th03\\op2.obj
 : th03_main.asm | \
 	th03/sprites/score.asp \
 	|> !as |> bin\\th03\\main.obj
@@ -98,7 +133,10 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04\\cdg_load.asm |> !as4 |>
 : th04\\bgimager.asm |> !as4 |>
 : th04\\motion_3.asm |> !as4 |>
+: th04\\spark_a.asm |> !as4 |>
+: th04\\vector2n.asm |> !as4 |>
 : th04_op.asm |> !as |> bin\\th04\\op.obj
+: th04_op2.asm |> !as |> bin\\th04\\op2.obj
 : th04_main.asm | \
 	th02/sprites/pellet.asp \
 	th04/sprites/pelletbt.asp \
@@ -123,9 +161,11 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05\\bgimager.asm |> !as5 |>
 : th05\\pi_asm_1.asm |> !as5 |>
 : th05\\pi_asm_2.asm |> !as5 |>
-: th05_op.asm | \
+: th05\\spark_a.asm |> !as5 |>
+: th05_op.asm |> !as |> bin\\th05\\op.obj
+: th05_op2.asm | \
 	th05/sprites/piano_l.asp \
-	|> !as |> bin\\th05\\op.obj
+	|> !as |> bin\\th05\\op2.obj
 : th05_main.asm | \
 	th02/sprites/pellet.asp \
 	th04/sprites/pelletbt.asp \

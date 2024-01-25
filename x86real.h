@@ -7,7 +7,10 @@
 
 #define X86REAL_H
 
-// This is a subset of Turbo C++ 4.0's <dos.h>.
+// Turbo C++ 4.0J's <conio.h> tries to redefine them otherwise.
+#define _PORT_DEFS
+
+// This file is a subset of Turbo C++ 4.0's <dos.h>, for the most part.
 #if !(defined(__TURBOC__) && defined(__MSDOS__) && defined(__DOS_H))
 
 /// Opcodes
@@ -80,14 +83,18 @@ void segread(struct SREGS *__segp);
 
 #ifdef __cplusplus
 	extern "C" {
-		void interrupt (__far * getvect(int __interruptno))(...);
-		void setvect(int __interruptno, void interrupt (__far *__isr)(...));
-		int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
+		void interrupt (__far * __cdecl getvect(int __interruptno))(...);
+		void __cdecl setvect(
+			int __interruptno, void interrupt (__far *__isr)(...)
+		);
+		int __cdecl int86(
+			int __intno, union REGS *__inregs, union REGS *__outregs
+		);
 	}
 #else
-	void interrupt (__far * getvect(int __interruptno))();
-	void setvect(int __interruptno, void interrupt(__far *__isr)());
-	int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
+	void interrupt (__far * __cdecl getvect(int __interruptno))();
+	void __cdecl setvect(int __interruptno, void interrupt(__far *__isr)());
+	int __cdecl int86(int __intno, union REGS *__inregs, union REGS *__outregs);
 #endif
 
 /// ----------
@@ -95,7 +102,7 @@ void segread(struct SREGS *__segp);
 /// Segmented memory
 /// ----------------
 
-#define MK_FP(seg,ofs) ((void __seg *)(seg) + (void __near *)(ofs))
+#define MK_FP(seg,off) ((void __seg *)(seg) + (void __near *)(off))
 #define FP_SEG(fp)     ((uint16_t)(void __seg *)(void __far *)(fp))
 #define FP_OFF(fp)     ((uint16_t)(fp))
 
@@ -112,12 +119,33 @@ void segread(struct SREGS *__segp);
 	void inline pokeb(uint16_t __segment, uint16_t __offset, int8_t __value) {
 		(*((int8_t __far *)MK_FP(__segment, __offset)) = __value);
 	}
-#else
-	#define peek(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
-	#define peekb(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
-	#define poke(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
-	#define pokeb(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
 #endif
 /// ----------------
 
 #endif
+
+// Optimally inlined variants
+// --------------------------
+// Also required in C++ code from time to time. The naming scheme is inspired
+// by Turbo C++ 4.0J's intrinsics, but using only a single underscore to avoid
+// collisions.
+
+#define _peek_(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
+#define _peekb_(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
+#define _poke_(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
+#define _pokeb_(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
+
+// Alternate versions for 8-bit port numbers that don't spill the port number
+// to DX.
+#ifdef __cplusplus
+	#define _outportb_(port, val) { \
+		_AL = val; \
+		__emit__(0xE6, port); /* OUT port, AL */ \
+	}
+
+	inline uint8_t _inportb_(uint8_t port) {
+		__emit__(0xE4, port); // IN AL, port
+		return _AL;
+	}
+#endif
+// --------------------------

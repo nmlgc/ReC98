@@ -9,3 +9,9 @@ typedef enum {
 } playchar_t;
 
 extern playchar_t playchar;
+
+// Returns the parameter for the current player character.
+int pascal select_for_playchar(
+	int for_reimu, int for_marisa,
+	int for_mima, int for_yuuka
+);

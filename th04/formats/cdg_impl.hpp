@@ -1,12 +1,13 @@
 // Shared parts of the cdg_put_*() functions.
 
+#include "platform/x86real/flags.hpp"
 #include "decomp.hpp"
 
-inline cdg_t near* cdg_slot_offset(const int &slot) {
+inline CDG near* cdg_slot_offset(const int &slot) {
 	_SI = slot;
-	_SI <<= 4;	// MODDERS: Should be sizeof(cdg_t);
+	_SI <<= 4;	// MODDERS: Should be sizeof(CDG);
 	_SI += FP_OFF(cdg_slots);
-	return reinterpret_cast<cdg_t near *>(_SI);
+	return reinterpret_cast<CDG near *>(_SI);
 }
 
 // Returns (vram_offset_shift(left, 0) + cdg->offset_at_bottom_left).
@@ -17,7 +18,7 @@ inline cdg_t near* cdg_slot_offset(const int &slot) {
 	/* returns a value. */ \
 	ret; \
 	ret = left; \
-	ret >>= 3; \
+	ret >>= BYTE_BITS; \
 	ret += cdg->offset_at_bottom_left;
 
 // Returns (SEG_PLANE_B + (top * (ROW_SIZE / 16))).

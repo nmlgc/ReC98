@@ -6,31 +6,22 @@
  * allowing this header to be used on its own if those aren't required.
  */
 
+#define MASTER_HPP
+
 /// Types
 /// -----
 
-// A version of master.lib's Point without the constructor, even in C++
-struct point_t {
-	int x, y;
-};
-
-#ifdef PC98_H
-	struct screen_point_t {
-		screen_x_t x;
-		screen_y_t y;
-	};
-
-	#if defined(__cplusplus)
+#if (defined(PC98_H) && defined(__cplusplus))
 	// master.lib palettes use twice the bits per RGB component for more
 	// toning precision
 	typedef RGB<uint8_t, 256> RGB8;
 	typedef Palette<RGB8> Palette8;
-	#endif
 #endif
 /// -----
 
 /// Memory model definitions (adapted from master.h)
 /// ------------------------------------------------
+
 #if !defined(MASTER_NEAR) && !defined(MASTER_FAR) && !defined(MASTER_COMPACT) && !defined(MASTER_MEDIUM)
 	#if defined(__SMALL__) || defined(__TINY__) || defined(M_I86SM) || defined(M_I86TM)
 		#define MASTER_NEAR
@@ -68,6 +59,7 @@ struct point_t {
 
 /// Original functions (only contains those actually called from ZUN code)
 /// ----------------------------------------------------------------------
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -86,6 +78,8 @@ int MASTER_RET bgm_sound(int num);
 // These use INT 21h syscalls as directly as possible.
 
 int MASTER_RET dos_getch(void);
+void MASTER_RET dos_putch(int chr);
+void MASTER_RET dos_puts(const char MASTER_PTR * str);
 void MASTER_RET dos_puts2(const char MASTER_PTR *string);
 
 void MASTER_RET dos_free(void __seg *seg);
@@ -193,11 +187,20 @@ void MASTER_RET graph_show(void);
 void MASTER_RET graph_hide(void);
 void MASTER_RET graph_start(void);
 int MASTER_RET graph_copy_page(int to_page);
+void MASTER_RET graph_scrollup(unsigned line);
 
 #if defined(PC98_H) && defined(__cplusplus)
-	void MASTER_RET graph_gaiji_putc(int x, int y, int c, int color);
+	// master.lib bug: In all game-specific versions before TH04, these
+	// functions accidentally add the x86 carry flag on top of [c].
+	void MASTER_RET graph_gaiji_putc(
+		screen_x_t left, vram_y_t top, int c, vc2 col
+	);
 	void MASTER_RET graph_gaiji_puts(
-		int x, int y, int step, const char MASTER_PTR *str, int color
+		screen_x_t left,
+		vram_y_t top,
+		pixel_t step,
+		const char MASTER_PTR *str,
+		vc2 col
 	);
 
 	// Clipping
@@ -237,7 +240,9 @@ int MASTER_RET graph_copy_page(int to_page);
 #define GC_TCR	0x80	/* ﾀｲﾙﾚｼﾞｽﾀと同じ色のﾋﾞｯﾄが立って読み込まれる */
 #define GC_RMW	0xc0	/* 書き込みﾋﾞｯﾄが立っているﾄﾞｯﾄにﾀｲﾙﾚｼﾞｽﾀから書く */
 
-void MASTER_RET grcg_setcolor(int mode, int color);
+#ifdef PC98_H
+	void MASTER_RET grcg_setcolor(int mode, vc2 color);
+#endif
 void MASTER_RET grcg_settile_1line(int mode, long tile);
 void MASTER_RET grcg_off(void);
 
@@ -256,10 +261,10 @@ void MASTER_RET grcg_off(void);
 
 	// Polygons
 	void MASTER_RET grcg_polygon_c(
-		const struct Point MASTER_PTR *pts, int npoint
+		const screen_point_t MASTER_PTR *pts, int npoint
 	);
 	void MASTER_RET grcg_polygon_cx(
-		const struct Point MASTER_PTR *pts, int npoint
+		const screen_point_t MASTER_PTR *pts, int npoint
 	);
 
 	// Triangles
@@ -368,8 +373,8 @@ unsigned MASTER_RET get_machine(void);
 // Math
 // ----
 
-extern const short SinTable8[256], CosTable8[256];
-extern long random_seed;
+extern const short __cdecl SinTable8[256], CosTable8[256];
+extern long __cdecl random_seed;
 
 #define Sin8(t) SinTable8[(t) & 0xff]
 #define Cos8(t) CosTable8[(t) & 0xff]
@@ -407,6 +412,9 @@ int MASTER_RET file_delete(const char MASTER_PTR *filename);
 
 // Packfiles
 // ---------
+
+// Maximum file name length
+#define PF_FN_LEN 13
 
 extern unsigned char pfkey; // 復号化キー
 extern unsigned bbufsiz;    // バッファサイズ
@@ -471,7 +479,7 @@ void MASTER_RET palette_white_out(unsigned speed);
 
 #if defined(__cplusplus) && defined(PC98_H)
 	struct PiHeader {
-		char far *comment;	// graph_pi_load.*() sets this to NULL
+		char far *comment;	// graph_pi_load.*() sets this to a nullptr
 		uint16_t commentlen;	//
 		uint8_t mode;	//
 		uint8_t n;	// aspect
@@ -497,7 +505,8 @@ void MASTER_RET palette_white_out(unsigned speed);
 		int x, int y, const void far *linepat, int len
 	);
 	// Copy of graph_pack_put_8() that does not clip the Y coordinate to
-	// the vertical grc_setclip() coordinates.
+	// the vertical grc_setclip() coordinates. Necessary for temporary blits to
+	// the 400th VRAM row.
 	void MASTER_RET graph_pack_put_8_noclip(
 		screen_x_t left, screen_y_t top, const void far *linepat, pixel_t len
 	);
@@ -618,10 +627,9 @@ void MASTER_RET text_hide(void);
 // VSync
 // -----
 
-extern unsigned volatile int vsync_Count1, vsync_Count2;
-
-#define vsync_reset1()	(vsync_Count1 = 0)
-#define vsync_reset2()	(vsync_Count2 = 0)
+// Incremented by 1 on every VSync interrupt. Can be manually reset to 0 to
+// simplify frame delay loops.
+extern __cdecl volatile unsigned int vsync_Count1, vsync_Count2;
 
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);
@@ -645,8 +653,10 @@ void MASTER_RET vsync_end(void);
 #ifdef __cplusplus
 	// Type-safe hmem_* memory allocation
 	template<class T> struct HMem {
-		static T __seg* allocbyte(size_t size) {
-			return reinterpret_cast<T __seg *>(hmem_allocbyte(size));
+		static T __seg* alloc(unsigned int size_in_elements) {
+			return reinterpret_cast<T __seg *>(hmem_allocbyte(
+				size_in_elements * sizeof(T)
+			));
 		}
 
 		static void free(T *&block) {
@@ -689,5 +699,16 @@ void MASTER_RET vsync_end(void);
 			));
 		}
 	};
+
+	#ifdef PC98_H
+		// Generates a super_roll_put_1plane [plane_put] constant for blitting
+		// the sprite in the single given color.
+		inline uint16_t super_plane(vc_t col, bool erase = false) {
+			return (
+				(erase ? PLANE_ERASE : (0xFF00 | GC_RMW)) +
+				((COLOR_COUNT - 1) - col)
+			);
+		}
+	#endif
 #endif
 /// ------------------

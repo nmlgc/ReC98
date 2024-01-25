@@ -203,7 +203,7 @@ loc_9764:
 		push	offset arg0	; "mainl"
 
 loc_9770:
-		nopcall	sub_B454
+		nopcall	@GameExecl$qnxc
 
 @@ret:
 		pop	si
@@ -469,7 +469,7 @@ loc_9A62:
 loc_9A94:
 		test	word_23AF6, 3FFh
 		jnz	short loc_9AB5
-		call	randring_fill
+		call	@randring_fill$qv
 		cmp	_p1.miss_damage_next, 6
 		jnb	short loc_9AAA
 		inc	_p1.miss_damage_next
@@ -947,7 +947,7 @@ var_6		= dword	ptr -6
 		mov	byte_1FBC3, 0
 		mov	byte_1F520, 0
 		call	sub_E313
-		call	randring_fill
+		call	@randring_fill$qv
 		call	sub_17384
 		xor	di, di
 		jmp	short loc_9EFF
@@ -985,7 +985,7 @@ loc_9F1D:
 loc_9F26:
 		mov	bx, di
 		imul	bx, size shotpair_t
-		mov	_shotpairs[bx].flag, 0
+		mov	_shotpairs[bx].SP_alive, 0
 		inc	di
 
 loc_9F31:
@@ -2371,11 +2371,10 @@ sub_B3F6	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @GameExecl$qnxc
+@GameExecl$qnxc	proc far
 
-; int __stdcall	__far sub_B454(char *arg0)
-sub_B454	proc far
-
-_arg0		= dword	ptr  6
+@@binary_fn		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -2386,15 +2385,11 @@ _arg0		= dword	ptr  6
 		call	gaiji_restore
 		call	@mrs_free$qi pascal, 0
 		call	@mrs_free$qi pascal, 1
-		call	_game_exit
-		pushd	0
-		pushd	[bp+_arg0]	; arg0
-		pushd	[bp+_arg0]	; path
-		call	_execl
-		add	sp, 0Ch
+		call	@game_exit$qv
+		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
-sub_B454	endp
+@GameExecl$qnxc	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2683,13 +2678,13 @@ loc_B752:
 		mov	ax, word_20E32
 		add	ax, ax
 		push	ax
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, word_20E2E
 		mov	di, ax
 		mov	ax, word_20E34
 		add	ax, ax
 		push	ax
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, word_20E30
 		mov	[bp+arg_2], ax
 
@@ -2845,7 +2840,7 @@ loc_B88B:
 loc_B88F:
 		cmp	di, 0Ch
 		jl	short loc_B839
-		mov	dx, 15
+		mov	dx, V_WHITE
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
 		cmp	byte ptr [si], 0
@@ -3333,11 +3328,11 @@ loc_BC1D:
 		mov	bx, word_20CE4
 		mov	[bx], di
 		push	1FFh
-		call	randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	ax, 0A80h
 		mov	bx, word_20CE4
 		mov	[bx+2],	ax
-		call	randring1_next16
+		call	@randring1_next16$qv
 		mov	bx, word_20CE4
 		mov	[bx+6],	al
 		call	IRand
@@ -3369,11 +3364,11 @@ loc_BC7A:
 		mov	bx, word_20CE4
 		mov	[bx], di
 		push	1FFh
-		call	randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	ax, 0A80h
 		mov	bx, word_20CE4
 		mov	[bx+2],	ax
-		call	randring1_next16
+		call	@randring1_next16$qv
 		mov	bx, word_20CE4
 		mov	[bx+6],	al
 		call	IRand
@@ -3424,14 +3419,14 @@ loc_BD00:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (80 shl 16) or 0, _CosTable8[bx]
+		call	@polar$qiii c, large (80 shl 16) or 0, _CosTable8[bx]
 		mov	di, ax
 		mov	bx, word_20CE4
 		mov	al, [bx+6]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (80 shl 16) or 0, _SinTable8[bx]
+		call	@polar$qiii c, large (80 shl 16) or 0, _SinTable8[bx]
 		mov	[bp+var_2], ax
 		mov	bx, word_20CE4
 		add	[bx], di
@@ -3613,7 +3608,7 @@ sub_BE5D	proc near
 		jz	loc_C0D5
 		cmp	byte_20CE6, 0
 		jnz	loc_BF51
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	word_20CE4, 3284h
 		xor	si, si
 		jmp	loc_BF41
@@ -3824,7 +3819,7 @@ loc_BFF0:
 loc_C08D:
 		cmp	byte_20CE6, 3
 		jnz	short loc_C0D5
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -3987,7 +3982,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_20E3E, word_20E42, _CosTable8[bx]
+		call	@polar$qiii c, word_20E3E, word_20E42, _CosTable8[bx]
 		mov	dl, _pid_PID_current
 		mov	dh, 0
 		add	dx, dx
@@ -3998,7 +3993,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_20E40, word_20E42, _SinTable8[bx]
+		call	@polar$qiii c, word_20E40, word_20E42, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, [bp+@@left], ax, 34B4h
 		leave
@@ -4405,7 +4400,7 @@ loc_C4E5:
 
 loc_C4E8:
 		mov	[bp+var_7], 0
-		call	randring1_next16
+		call	@randring1_next16$qv
 		mov	bx, 3
 		xor	dx, dx
 		div	bx
@@ -4425,7 +4420,7 @@ loc_C505:
 		inc	[bp+var_7]
 		cmp	word ptr [si+18h], 500h
 		ja	short loc_C52B
-		call	randring1_next16
+		call	@randring1_next16$qv
 		test	al, 3
 		jnz	short loc_C52B
 		call	player_bomb pascal, si
@@ -4766,7 +4761,7 @@ loc_C735:
 		mov	byte ptr [si+16h], 0
 
 loc_C751:
-		call	randring1_next16
+		call	@randring1_next16$qv
 		mov	bx, 3
 		xor	dx, dx
 		div	bx
@@ -4996,7 +4991,7 @@ loc_C901:
 ; ---------------------------------------------------------------------------
 
 loc_C909:
-		push	(GC_RMW shl 16) + 15
+		push	(GC_RMW shl 16) + V_WHITE
 
 loc_C90F:
 		call	grcg_setcolor
@@ -5021,7 +5016,7 @@ loc_C936:
 ; ---------------------------------------------------------------------------
 
 loc_C93E:
-		push	(GC_RMW shl 16) + 15
+		push	(GC_RMW shl 16) + V_WHITE
 
 loc_C944:
 		call	grcg_setcolor
@@ -5037,7 +5032,7 @@ loc_C956:
 		jz	short loc_C9A6
 		cmp	cx, 64
 		jnb	short loc_C968
-		mov	[bp+var_1], 0Fh
+		mov	[bp+var_1], V_WHITE
 		jmp	short loc_C990
 ; ---------------------------------------------------------------------------
 
@@ -5081,7 +5076,7 @@ loc_C9A6:
 		jz	short loc_C9F6
 		cmp	cx, 64
 		jnb	short loc_C9B8
-		mov	[bp+var_1], 0Fh
+		mov	[bp+var_1], V_WHITE
 		jmp	short loc_C9E0
 ; ---------------------------------------------------------------------------
 
@@ -5678,7 +5673,7 @@ loc_CE6F:
 		mov	[si+4],	ax
 		mov	byte ptr [si+6], 0A2h
 		mov	byte ptr [si+7], 0F6h
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	[si+8],	al
 		pop	si
 		pop	bp
@@ -5812,7 +5807,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+2]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	bx, di
 		add	bx, bx
@@ -5828,7 +5823,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+4]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		cwd
 		sub	ax, dx
@@ -6526,7 +6521,7 @@ sub_D50E	endp
 
 
 sub_D52E	proc near
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 0A82Dh
 		mov	es, ax
 		assume es:nothing
@@ -7948,7 +7943,7 @@ arg_0		= word ptr  4
 		jnz	short loc_E036
 		call	snd_se_play pascal, 2
 		push	3Fh ; '?'
-		call	randring1_next16_and
+		call	@randring1_next16_and$qui
 		mov	[si+12h], al
 		cmp	word ptr [si], 900h
 		jge	short loc_E01C
@@ -8211,7 +8206,7 @@ sub_E313	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E31F:
-		mov	[si+shotpair_t.flag], 0
+		mov	[si+shotpair_t.SP_alive], 0
 		inc	ax
 		add	si, size shotpair_t
 
@@ -8677,9 +8672,9 @@ loc_E7D4:
 ; ---------------------------------------------------------------------------
 
 loc_E7E2:
-		cmp	[di+shotpair_t.flag], 0
+		cmp	[di+shotpair_t.SP_alive], 0
 		jnz	short loc_E82F
-		mov	[di+shotpair_t.flag], 1
+		mov	[di+shotpair_t.SP_alive], 1
 		mov	[di+shotpair_t.unused_1], 0
 		mov	ax, [bp+@@left]
 		mov	[di+shotpair_t.topleft.x], ax
@@ -8732,8 +8727,8 @@ SHARED	segment	word public 'CODE' use16
 	extern _snd_determine_mode:proc
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
-	extern _game_exit:proc
-	extern _vector1_at:proc
+	extern @game_exit$qv:proc
+	extern @polar$qiii:proc
 	extern FRAME_DELAY:proc
 	extern _input_reset_sense_key_held:proc
 	extern _snd_se_reset:proc
@@ -8833,14 +8828,14 @@ loc_F26E:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, di, [bp+@@length], _CosTable8[bx]
+		call	@polar$qiii c, di, [bp+@@length], _CosTable8[bx]
 		add	ax, -24
 		mov	[bp+@@left], ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+arg_2], [bp+@@length], _SinTable8[bx]
+		call	@polar$qiii c, [bp+arg_2], [bp+@@length], _SinTable8[bx]
 		add	ax, -24
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, [bp+@@left], ax, 1930h
@@ -8869,7 +8864,7 @@ loc_F2D4:
 		add	ax, ax
 		push	ax
 		push	di
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		add	ax, -24
 		mov	[bp+@@left], ax
@@ -8882,7 +8877,7 @@ loc_F2D4:
 		add	ax, ax
 		push	ax
 		push	[bp+arg_2]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		add	ax, -24
 		mov	[bp+@@top], ax
@@ -8933,7 +8928,7 @@ sub_F356	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (16 shl 16) or 0, _SinTable8[bx]
+		call	@polar$qiii c, large (16 shl 16) or 0, _SinTable8[bx]
 		mov	word_1F348, ax
 		cmp	word_1F33E, 300h
 		jg	short loc_F399
@@ -9022,7 +9017,7 @@ loc_F42B:
 		mov	cx, 10h
 		rep movsw
 		push	7
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		inc	al
 		mov	byte_1F352, al
 		mov	word_1F3B0, 0
@@ -9151,7 +9146,7 @@ var_1		= byte ptr -1
 
 loc_F53B:
 		push	0Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		mov	[bp+var_1], al
 		mov	al, byte_1F324
 		mov	ah, 0
@@ -9387,7 +9382,7 @@ sub_F72D	proc near
 		call	sub_F356
 		test	byte ptr word_1F3B0, 1Fh
 		jnz	short loc_F7A8
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	ax, word_1F33E
@@ -10045,7 +10040,7 @@ loc_FCC6:
 loc_FD12:
 		cmp	word_1F3B0, 40h
 		jnz	short loc_FD47
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	byte_23E45, 25h ; '%'
 		mov	word_23E3E, si
@@ -10171,7 +10166,7 @@ sub_FE2B	proc near
 		cmp	word_1F3B0, 1
 		jnz	short loc_FE54
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		or	ax, ax
 		jz	short loc_FE47
 		mov	al, 7
@@ -10183,7 +10178,7 @@ loc_FE47:
 
 loc_FE49:
 		mov	byte_20E2A, al
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_20E2B, al
 
 loc_FE54:
@@ -10193,13 +10188,13 @@ loc_FE54:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, angle_20E2B
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		mov	al, angle_20E2B
 		add	al, 40h
@@ -10558,13 +10553,13 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_2], si, _CosTable8[bx]
+		call	@polar$qiii c, [bp+var_2], si, _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_4], si, _SinTable8[bx]
+		call	@polar$qiii c, [bp+var_4], si, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
@@ -10576,13 +10571,13 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_2], si, _CosTable8[bx]
+		call	@polar$qiii c, [bp+var_2], si, _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_4], si, _SinTable8[bx]
+		call	@polar$qiii c, [bp+var_4], si, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
@@ -10705,12 +10700,12 @@ sub_10324	proc near
 		cmp	word_1F3B0, 1
 		jnz	short loc_1035A
 		mov	byte_1F353, 1
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	byte_20E4E, al
 		mov	byte_20E4C, 0
 		mov	word_1F356, 100h
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		or	ax, ax
 		jnz	short loc_10355
 		mov	al, 3
@@ -10859,15 +10854,15 @@ loc_104A7:
 		mov	al, byte_20E4E
 		mov	angle_23E43, al
 		push	1Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		add	al, byte_1F3A1
 		mov	byte_23E42, al
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		inc	al
 		mov	byte_23E4E, al
 		push	5
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		mov	bx, ax
 		mov	al, [bx+792h]
 		mov	byte_23E45, al
@@ -10906,10 +10901,10 @@ sub_1050F	proc near
 		mov	byte_23E45, 20h ; ' '
 		mov	byte_23E42, 20h ; ' '
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		inc	al
 		mov	byte_23E4E, al
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
@@ -10917,13 +10912,13 @@ sub_1050F	proc near
 		add	ax, 0FE00h
 		mov	word_23E40, ax
 		call	sub_17730
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	ax, word_1F340
 		add	ax, 200h
 		mov	word_23E40, ax
 		call	sub_17730
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	ax, word_1F33E
 		add	ax, 0FE00h
@@ -10931,7 +10926,7 @@ sub_1050F	proc near
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		call	sub_17730
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	ax, word_1F33E
 		add	ax, 200h
@@ -11071,10 +11066,10 @@ loc_106B8:
 
 loc_106D3:
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		mov	word_23E3E, ax
 		push	3Fh ; '?'
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		add	al, 20h
 		mov	angle_23E43, al
 		call	sub_17730
@@ -11711,7 +11706,7 @@ sub_10C4D	proc near
 		add	ax, 300h
 		mov	point_1F342.y, ax
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		mov	byte_23DC6, al
 		mov	byte_23DC7, 10h
 
@@ -11749,13 +11744,13 @@ loc_10C8D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		call	sub_17730
 		mov	al, [bp+@@angle]
@@ -11768,13 +11763,13 @@ loc_10C8D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		call	sub_17730
 
@@ -11792,7 +11787,7 @@ loc_10D62:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, point_1F342.y, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, point_1F342.y, (48 shl 4), _SinTable8[bx]
 		mov	word_1F340, ax
 		cmp	word_1F3B0, 80h
 		jb	short locret_10D9E
@@ -11872,7 +11867,7 @@ sub_10E16	proc near
 		cmp	word_1F3B0, 0
 		jnz	short loc_10E32
 		mov	byte_1F353, 1
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	byte_23DC8, al
 
 loc_10E32:
@@ -11902,7 +11897,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F33E
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -11917,7 +11912,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F340
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -11956,7 +11951,7 @@ loc_10EC9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+686Ah], ax
@@ -11964,7 +11959,7 @@ loc_10EC9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+6876h], ax
@@ -11990,7 +11985,7 @@ loc_10F26:
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	al, byte_1F3A4
@@ -12437,13 +12432,13 @@ loc_11330:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+arg_0], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+arg_0], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+arg_0], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+arg_0], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, [bp+@@pid_other]
@@ -12712,7 +12707,7 @@ loc_11591:
 		cmp	word_1F3B0, 30h	; '0'
 		jnz	short loc_115D2
 		xor	si, si
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		jmp	short loc_115C4
 ; ---------------------------------------------------------------------------
 
@@ -12745,7 +12740,7 @@ loc_115D2:
 		cmp	word_1F3B0, 60h
 		jnz	short loc_1161D
 		xor	si, si
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		jmp	short loc_11606
 ; ---------------------------------------------------------------------------
 
@@ -13190,13 +13185,13 @@ loc_11978:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+arg_4], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+arg_4], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+arg_4], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+arg_4], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
 		add	ax, -16
@@ -13352,7 +13347,7 @@ arg_0		= word ptr  4
 loc_11ACF:
 		cmp	[bp+arg_0], 0
 		jz	short loc_11ADD
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 
 loc_11ADD:
@@ -13369,13 +13364,13 @@ loc_11ADD:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, word_1F356, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
 		mov	word_23E3E, ax
@@ -13625,13 +13620,13 @@ loc_11D77:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, word_1F356, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
 		mov	word_23E3E, ax
@@ -13930,13 +13925,13 @@ loc_12021:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -14310,7 +14305,7 @@ loc_1239D:
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	byte_23E4E, 2
 		mov	byte_23E45, 25h ; '%'
@@ -14377,7 +14372,7 @@ loc_12447:
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	byte_23E4E, 2
 		mov	byte_23E45, 26h ; '&'
@@ -14766,7 +14761,7 @@ loc_127D6:
 		cmp	byte_1F353, 10h	; jumptable 00012744 case 1
 		jnz	short loc_1280B
 		push	5
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	al, al
 		mov	[bp+var_2], al
 		mov	ah, 0
@@ -14787,7 +14782,7 @@ loc_1280B:
 		jb	short loc_12860	; default
 		mov	word_1F3B0, 0
 		push	0Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		add	al, 2
 		mov	byte_1F34F, al
 		inc	byte_1F351
@@ -14964,13 +14959,13 @@ loc_129A0:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_8], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_8], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_8], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_8], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
 		add	ax, -16
@@ -15080,7 +15075,7 @@ loc_12AD0:
 ; ---------------------------------------------------------------------------
 
 loc_12AD4:
-		push	0Fh
+		push	V_WHITE
 
 loc_12AD6:
 		call	sub_12B38
@@ -15524,11 +15519,11 @@ var_1		= byte ptr -1
 		or	dx, dx
 		jnz	short loc_12EED
 		push	1Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		sub	al, 10h
 		mov	[bp+var_1], al
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		or	ax, ax
 		jz	short loc_12EB0
 		mov	al, 80h
@@ -15594,7 +15589,7 @@ loc_12F17:
 		call	sub_CE0C
 		mov	byte_23DE6, -40h
 		push	3
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		mov	byte_23DE7, al
 		cmp	byte_23DE7, 0
 		jnz	short loc_12F5A
@@ -15985,13 +15980,13 @@ loc_13286:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -16158,7 +16153,7 @@ loc_133DE:
 		mov	byte_23E45, 16h
 		mov	byte_23E42, 1Ch
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		or	ax, ax
 		jz	short loc_1341D
 		mov	al, 30h
@@ -16187,13 +16182,13 @@ loc_13426:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		mov	al, [bp+@@angle]
 		add	al, [bp+var_2]
@@ -16264,7 +16259,7 @@ loc_134E3:
 		sub	dx, ax
 		push	dx
 		call	sub_CDBD
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	[bp+var_1], al
 		xor	si, si
 		jmp	short loc_13532
@@ -16312,7 +16307,7 @@ loc_1353F:
 ; ---------------------------------------------------------------------------
 
 loc_1356B:
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	al, byte_23E42
 		add	al, 8
@@ -16381,10 +16376,10 @@ loc_135CD:
 		mov	[bp+var_1], dl
 		cmp	[bp+var_1], 1
 		jnz	short loc_135F8
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	byte_23DE8, al
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		inc	al
 		mov	byte_23DE9, al
 
@@ -16642,13 +16637,13 @@ loc_1383D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+@@left], 48, _CosTable8[bx]
+		call	@polar$qiii c, [bp+@@left], 48, _CosTable8[bx]
 		mov	[bp+var_6], ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+@@top], 48, _SinTable8[bx]
+		call	@polar$qiii c, [bp+@@top], 48, _SinTable8[bx]
 		mov	[bp+var_8], ax
 		test	di, 3
 		jz	short loc_1388B
@@ -16738,13 +16733,13 @@ loc_13910:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -18183,7 +18178,7 @@ loc_14658:
 loc_1465C:
 		or	si, si
 		jg	short loc_14615
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	bx, word_1FE4E
 		push	word ptr [bx+2]
 		mov	al, _pid_current
@@ -18241,7 +18236,7 @@ loc_146C6:
 		cmp	al, [bp+var_2]
 		jnz	short loc_14723
 		push	1Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		neg	ax
 		shl	ax, 4
 		mov	dl, _pid_current
@@ -18574,10 +18569,10 @@ loc_14967:
 		or	dx, dx
 		jnz	loc_14A1C
 		push	1200h
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	point_1FE52.x, ax
 		push	1700h
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	point_1FE52.y, ax
 		push	point_1FE52.x
 		push	ax
@@ -18916,7 +18911,7 @@ loc_14C36:
 		mov	byte ptr [bx], 2
 		cmp	di, 2
 		jge	short loc_14C4E
-		mov	byte ptr [bx+1Eh], 0B0h	; '°'
+		mov	byte ptr [bx+1Eh], 0B0h	; 'Â°'
 		jmp	short loc_14C56
 ; ---------------------------------------------------------------------------
 
@@ -19632,13 +19627,13 @@ loc_1522B:
 		mov	bx, word_207E0
 		mov	byte ptr [bx], 1
 		push	7Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	dx, 0FFA0h
 		sub	dx, ax
 		mov	bx, word_207E0
 		mov	[bx+6],	dx
 		push	1200h
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	bx, word_207E0
 		mov	[bx+2],	ax
 		mov	word ptr [bx+4], 1800h
@@ -20224,7 +20219,7 @@ loc_156F8:
 		cmp	al, [bp+var_2]
 		jnz	short loc_15786
 		push	1
-		nopcall	randring_far_next16_and
+		nopcall	@randring_far_next16_and$qui
 		or	ax, ax
 		jnz	short loc_15717
 		mov	al, 0F9h
@@ -20490,7 +20485,7 @@ loc_15914:
 ; ---------------------------------------------------------------------------
 
 loc_15950:
-		cmp	[si+shotpair_t.flag], 1
+		cmp	[si+shotpair_t.SP_alive], 1
 		jnz	short loc_159AC
 		mov	al, [si+shotpair_t.pid]
 		cmp	al, pid_20E3A
@@ -20512,7 +20507,7 @@ loc_15950:
 		jl	short loc_159AC
 		cmp	ax, word_20E38
 		jg	short loc_159AC
-		mov	[si+shotpair_t.flag], 0
+		mov	[si+shotpair_t.SP_alive], 0
 		mov	al, [bp+var_5]
 		add	al, 2
 		mov	[bp+var_5], al
@@ -20639,7 +20634,7 @@ loc_15A91:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 144, di, _CosTable8[bx]
+		call	@polar$qiii c, 144, di, _CosTable8[bx]
 		add	ax, [bp+var_2]
 		mov	bx, si
 		add	bx, bx
@@ -20650,7 +20645,7 @@ loc_15A91:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 200, di, _SinTable8[bx]
+		call	@polar$qiii c, 200, di, _SinTable8[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -20683,7 +20678,7 @@ loc_15B29:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 144, di, _CosTable8[bx]
+		call	@polar$qiii c, 144, di, _CosTable8[bx]
 		add	ax, [bp+var_2]
 		mov	bx, si
 		add	bx, bx
@@ -20694,7 +20689,7 @@ loc_15B29:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 200, di, _SinTable8[bx]
+		call	@polar$qiii c, 200, di, _SinTable8[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -22649,14 +22644,14 @@ loc_16BEC:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_6], [bp+@@length], _CosTable8[bx]
+		call	@polar$qiii c, [bp+var_6], [bp+@@length], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+var_A]
 		add	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_8], [bp+@@length], _SinTable8[bx]
+		call	@polar$qiii c, [bp+var_8], [bp+@@length], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -23262,7 +23257,7 @@ loc_170A5:
 		or	dx, dx
 		jnz	short loc_17129
 		push	1200h
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	dl, _pid_current
 		mov	dh, 0
 		shl	dx, 5
@@ -23934,14 +23929,14 @@ loc_17628:
 ; ---------------------------------------------------------------------------
 
 loc_1762D:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	[bp+var_2], ax
 		mov	di, 1
 		jmp	short loc_176A8
 ; ---------------------------------------------------------------------------
 
 loc_17638:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	[bp+var_2], ax
 		mov	al, byte_23E47
 		mov	ah, 0
@@ -23951,10 +23946,10 @@ loc_17638:
 ; ---------------------------------------------------------------------------
 
 loc_17649:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	[bp+var_2], ax
 		push	1Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		add	al, [bp+@@length]
 		mov	[bp+@@length], al
 		mov	al, byte_23E47
@@ -23966,7 +23961,7 @@ loc_17649:
 
 loc_17665:
 		push	1Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	[bp+var_2], ax
 		sub	[bp+var_2], 10h
 		mov	al, byte_23E47
@@ -24239,7 +24234,7 @@ loc_1787E:
 		call	playfield_fg_x_to_screen
 		mov	[bp+var_8], ax
 		push	1200h
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	[bp+var_6], ax
 		mov	[si+6],	ax
 		push	ax
@@ -24264,7 +24259,7 @@ loc_1787E:
 		mov	ax, [bp+var_6]
 		shl	ax, 4
 		push	ax
-		call	randring2_next16_and pascal, 255
+		call	@randring2_next16_and$qui pascal, 255
 		push	ax
 		push	0
 		push	ds
@@ -24799,7 +24794,7 @@ loc_17CD9:
 		mov	dx, 1
 		mov	ah, SPRITE16_SET_MONO
 		int	SPRITE16
-		mov	dx, 15
+		mov	dx, V_WHITE
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
 		mov	_sprite16_put_w, (32 / 16)
@@ -24839,7 +24834,7 @@ loc_17D48:
 
 loc_17D56:
 		call	egc_off
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -24917,7 +24912,7 @@ loc_17DD4:
 		mov	al, [bx+8]
 		mov	[si+8],	al
 		push	1Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	dl, byte_23AF8
 		mov	dh, 0
 		push	ax
@@ -24969,13 +24964,13 @@ loc_17E45:
 		cmp	ax, 100h
 		jnb	short loc_17E6F
 		push	1200h
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		jmp	short loc_17E83
 ; ---------------------------------------------------------------------------
 
 loc_17E6F:
 		push	1FFh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	dl, [bp+var_7]
 		mov	dh, 0
 		shl	dx, 7
@@ -25924,7 +25919,7 @@ loc_18667:
 		mov	ax, word_1FBBE
 		add	ax, 6
 		push	ax
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		push	ax
 		push	224
 		call	vector2
@@ -26354,13 +26349,13 @@ loc_18A68:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 144, _CosTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 144, _CosTable8[bx]
 		mov	si, ax
 		mov	al, angle_1FBD4
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 184, _SinTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 184, _SinTable8[bx]
 		mov	di, ax
 		mov	ax, si
 		shl	ax, 4
@@ -26378,13 +26373,13 @@ loc_18A68:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 144, _CosTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 144, _CosTable8[bx]
 		mov	si, ax
 		mov	al, angle_1FBD4
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 184, _SinTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 184, _SinTable8[bx]
 		mov	di, ax
 		mov	ax, si
 		shl	ax, 4
@@ -26776,7 +26771,7 @@ loc_18E7C:
 		mov	ah, 0
 		push	ax	; altered_colors
 		call	@mrs_put_noalpha_8$qiuiiuc
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 900h
 		sub	ax, word_220EC
 		push	ax
@@ -26831,7 +26826,7 @@ loc_18F38:
 		or	dx, dx
 		jnz	short loc_18F71
 		push	3FFh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		mov	si, ax
 		jmp	short loc_18F6B
 ; ---------------------------------------------------------------------------
@@ -26943,7 +26938,7 @@ loc_19000:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1140h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, 60h
 		push	ax
 		push	0
@@ -26954,7 +26949,7 @@ loc_19000:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1140h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, 60h
 		push	ax
 		push	1780h
@@ -27068,7 +27063,7 @@ loc_190CF:
 		add	ax, 3
 		push	ax
 		call	grcg_trapezoid
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		push	8
 		mov	ax, [bp+var_4]
 		dec	ax
@@ -27141,7 +27136,7 @@ loc_19179:
 		call	grcg_trapezoid
 
 loc_191E4:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		call	grcg_line pascal, [bp+var_4], 8, [bp+var_8], 192
 
 loc_191FF:
@@ -27441,15 +27436,15 @@ arg_4		= word ptr  0Ah
 		push	si
 		mov	[bp+var_5], 0
 		push	0C80h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, 2C0h
 		mov	[bp+var_2], ax
 		push	0C80h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, 500h
 		mov	[bp+var_4], ax
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		or	ax, ax
 		jnz	short loc_19423
 		mov	al, -1
@@ -27461,7 +27456,7 @@ loc_19423:
 
 loc_19425:
 		mov	[bp+var_6], al
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	[bp+var_7], al
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -27783,7 +27778,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+2]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[di+2],	ax
 		mov	bx, [di]
@@ -27795,7 +27790,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+4]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[di+10h], ax
 		mov	ax, [di+2]
@@ -27974,7 +27969,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -27993,13 +27988,13 @@ loc_19847:
 		push	[bp+arg_2]
 		push	[bp+var_2]
 		push	800h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	[bp+arg_0]
 		push	5Ah ; 'Z'
 		call	sub_1A1ED
 		push	1Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		sub	al, 0Fh
 		mov	[si+12h], al
 		cmp	[bp+var_2], 900h
@@ -28359,7 +28354,7 @@ loc_19AD2:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	1700h
 		push	[bp+arg_0]
@@ -28750,20 +28745,20 @@ loc_19D76:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	400h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	[bp+arg_0]
 		push	5Ah ; 'Z'
 		call	sub_1A1ED
 		push	0FFFh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		add	ax, 600h
 		mov	[si+0Eh], ax
 		push	1Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		add	ax, 10h
 		mov	[si+14h], ax
 		mov	byte ptr [si+12h], 0
@@ -29116,7 +29111,7 @@ loc_1A020:
 		cmp	byte ptr [si+11h], 0
 		jz	loc_1A0D5
 		mov	byte_23E42, 1Ch
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	al, [bp+@@pid_other]
@@ -29145,7 +29140,7 @@ loc_1A08B:
 		jnz	short loc_1A0D5
 		call	sub_19EF9
 		mov	byte_23E42, 18h
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	al, [bp+@@pid_other]
@@ -29457,10 +29452,10 @@ loc_1A294:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	7FFh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		push	ax
 		push	[bp+arg_0]
 		push	5Ah ; 'Z'
@@ -29854,10 +29849,10 @@ loc_1A58A:
 		or	al, al
 		jz	short loc_1A5E5
 		push	1Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		mov	[bp+@@angle], al
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		imul	ax, 60h
 		add	al, [bp+@@angle]
 		add	al, 80h
@@ -29974,10 +29969,10 @@ loc_1A641:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	[bp+arg_0]
 		push	5Ah ; 'Z'
@@ -30255,7 +30250,7 @@ loc_1A87E:
 		call	sub_1A1A7
 		or	al, al
 		jz	short loc_1A8BE
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	[si+12h], al
 		mov	byte ptr [si+13h], 0
 		mov	word ptr [si+6], 0
@@ -30360,10 +30355,10 @@ loc_1A918:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	1000h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, 600h
 		push	ax
 		push	[bp+arg_0]
@@ -31174,18 +31169,18 @@ loc_1AFB8:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	1200h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		push	ax
 		push	100h
 		push	[bp+arg_0]
 		push	64h ; 'd'
 		call	sub_1A1ED
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		mov	[si+17h], al
 		mov	byte ptr [si+12h], 40h
 		push	0Fh
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		add	al, 20h	; ' '
 		mov	[si+13h], al
 		jmp	short loc_1B000
@@ -32136,7 +32131,7 @@ loc_1B68E:
 		mov	[bx+4],	ax
 		mov	ax, [bp+@@center_y]
 		mov	[bx+6],	ax
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	bx, word_1F868
 		mov	[bx+2],	al
 		mov	byte ptr [bx+3], 50h ; 'P'
@@ -32183,7 +32178,7 @@ loc_1B6E1:
 		mov	[bx+4],	ax
 		mov	ax, [bp+arg_0]
 		mov	[bx+6],	ax
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	bx, word_1F868
 		mov	[bx+2],	al
 		mov	byte ptr [bx+3], 50h ; 'P'
@@ -32693,7 +32688,7 @@ loc_1BB55:
 		mov	bx, ax
 		cmp	word ptr [bx+2002h], 900h
 		jge	loc_1BBFA
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	al, _pid_current
 		mov	ah, 0
@@ -32732,7 +32727,7 @@ loc_1BB55:
 		push	ax
 		call	sub_CE0C
 		call	sub_17730
-		call	randring_far_next16
+		call	@randring_far_next16$qv
 		mov	angle_23E43, al
 		mov	al, _pid_current
 		mov	ah, 0
@@ -33741,7 +33736,7 @@ loc_1C2F6:
 		mov	bx, dx
 		mov	[bx+2D58h], al
 		push	1
-		call	randring_far_next16_and
+		call	@randring_far_next16_and$qui
 		mov	dl, _pid_current
 		mov	dh, 0
 		shl	dx, 2
@@ -33774,7 +33769,7 @@ loc_1C36B:
 		cmp	byte ptr [bx+28F8h], 0
 		jnz	short loc_1C3A5
 		push	0A00h
-		call	randring_far_next16_mod
+		call	@randring_far_next16_mod$qui
 		add	ax, 400h
 		push	ax
 		push	0
@@ -34065,7 +34060,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3930h]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[si], ax
 		mov	al, [si+4]
@@ -34079,7 +34074,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3934h]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[si+2],	ax
 		test	byte ptr [bp+var_2], 1
@@ -35895,7 +35890,7 @@ byte_220E0	db ?
 byte_220E6	db ?
 		db 5 dup(?)
 word_220EC	dw ?
-public _collmap_topleft, _collmap_center, _collmap_stripe_tile_w,
+public _collmap_topleft, _collmap_center, _collmap_stripe_tile_w
 public _collmap_tile_h, _collmap_bottomright, _collmap_pid, _collmap
 _collmap_topleft label Point
 _collmap_center label Point

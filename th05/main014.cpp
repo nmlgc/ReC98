@@ -5,7 +5,6 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -37,4 +36,4 @@ void pascal score_delta_commit(void)
 	}
 }
 
-static int unused_6CAC[3];
+static int unused_6CAC[3]; // ZUN bloat

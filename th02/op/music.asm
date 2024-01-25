@@ -106,7 +106,7 @@ if GAME ge 4
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 else
 	mov	ah, 0
 	add	ax, ax
@@ -114,7 +114,7 @@ else
 	push	_CosTable8[bx]
 	push	[bp+arg_4]
 	push	[bp+arg_8]
-	call	_vector1_at
+	call	@polar$qiii
 	add	sp, 6
 endif
 
@@ -130,7 +130,7 @@ if GAME ge 4
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 else
 	mov	al, [bp+var_3]
 	mov	ah, 0
@@ -139,7 +139,7 @@ else
 	push	_SinTable8[bx]
 	push	[bp+arg_4]
 	push	[bp+arg_6]
-	call	_vector1_at
+	call	@polar$qiii
 	add	sp, 6
 endif
 
@@ -173,7 +173,10 @@ polygons_update_and_render	proc near
 	cmp	polygons_initialized, 0
 	jnz	loc_A752
 	xor	si, si
-	jmp	loc_A746
+	; Hack (jmp	loc_A746)
+	; No idea why TASM can't assemble this properly after TH04's main() was
+	; decompiled.
+	db	0E9h, 91h, 00h
 
 loc_A6B5:
 	call	IRand
@@ -367,7 +370,7 @@ music_flip	proc near
 if GAME eq 5
 	call	_piano_render
 endif
-	call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
+	call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + V_WHITE
 	call	polygons_update_and_render
 if GAME ge 4
 	GRCG_OFF_CLOBBERING dx

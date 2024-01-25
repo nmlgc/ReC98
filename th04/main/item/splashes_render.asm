@@ -7,14 +7,14 @@ item_splashes_render	proc near
 	enter	4, 0
 	push	si
 	push	di
-	mov	ah, 15
-	call	_grcg_setcolor_direct_seg1_raw
+	mov	ah, V_WHITE
+	call	@grcg_setcolor_direct_raw$qv
 	mov	si, offset _item_splashes
 	mov	[bp+@@i], 0
 	jmp	short @@more?
 
 @@alive?:
-	cmp	[si+item_splash_t.flag], 1
+	cmp	[si+item_splash_t.flag], F_ALIVE
 	jnz	short @@next_circle
 	xor	di, di
 	jmp	short @@drawn_all_dots?
