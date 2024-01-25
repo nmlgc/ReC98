@@ -26,11 +26,6 @@ extern "C" {
 // [boss].
 // [duration] values <12 will move Marisa into the opposite direction instead.
 // Returns `true` if the function was called for [duration] frames.
-//
-// ZUN bug: Not defined for [duration] values of 12 or 13, which will crash the
-// game with a division by zero ("Divide Error"). The two patterns that pass a
-// variable [duration] to this function also only happen to call this function
-// every 4 frames rather than every frame, introducing additional jerkiness.
 bool pascal near marisa_flystep_pointreflected(int duration)
 {
 	enum {
@@ -39,8 +34,8 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 		BRAKE_DURATION = 12,
 	};
 	if(flystep_pointreflected_frame == 0) {
-		// Mod: Prevent the division by zero by not moving Marisa at all in
-		// that case.
+		// Mod: Prevent the original function's division by zero by not moving
+		// Marisa at all in that case.
 		int frames_to_point = ((duration / 2) - (BRAKE_DURATION / 2));
 		if(frames_to_point == 0) {
 			return true;
