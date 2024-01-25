@@ -2,16 +2,16 @@
 
 [![4-week crowdfunding goal…](https://rec98.nmlgc.net/badge/cap)](https://rec98.nmlgc.net)
 
-|    Reverse-engineered: | [![All games…](https://rec98.nmlgc.net/badge/re)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/re/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/re/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/re/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/re/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/re/5)][HP] |
-|-----------------------:|:---|:---|:---|:---|:---|:---|
-| [Finalized]: | [![All games…](https://rec98.nmlgc.net/badge/td)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/td/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/td/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/td/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/td/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/td/5)][HP] |
-| [Position independence]: | [![All games…](https://rec98.nmlgc.net/badge/pi)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/pi/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/pi/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/pi/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/pi/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/pi/5)][HP] |
+|    Reverse-engineered: | [![All games…](https://rec98.nmlgc.net/badge/re)][HP] [![TH01…](https://rec98.nmlgc.net/badge/re/1)][HP] [![TH02…](https://rec98.nmlgc.net/badge/re/2)][HP] [![TH03…](https://rec98.nmlgc.net/badge/re/3)][HP] [![TH04…](https://rec98.nmlgc.net/badge/re/4)][HP] [![TH05…](https://rec98.nmlgc.net/badge/re/5)][HP] |
+|-----------------------:|:---------------|
+| [Finalized]: | [![All games…](https://rec98.nmlgc.net/badge/td)][HP] [![TH01…](https://rec98.nmlgc.net/badge/td/1)][HP] [![TH02…](https://rec98.nmlgc.net/badge/td/2)][HP] [![TH03…](https://rec98.nmlgc.net/badge/td/3)][HP] [![TH04…](https://rec98.nmlgc.net/badge/td/4)][HP] [![TH05…](https://rec98.nmlgc.net/badge/td/5)][HP] |
+| [Position independence]: | [![All games…](https://rec98.nmlgc.net/badge/pi)][HP] [![TH01…](https://rec98.nmlgc.net/badge/pi/1)][HP] [![TH02…](https://rec98.nmlgc.net/badge/pi/2)][HP] [![TH03…](https://rec98.nmlgc.net/badge/pi/3)][HP] [![TH04…](https://rec98.nmlgc.net/badge/pi/4)][HP] [![TH05…](https://rec98.nmlgc.net/badge/pi/5)][HP] |
 
 [Check the homepage for more detailed progress numbers and information about the crowdfunding!][HP]
 
 [HP]: https://rec98.nmlgc.net
 [Finalized]: https://rec98.nmlgc.net/blog/2021-12-15
-[Position independence]: https://rec98.nmlgc.net/faq#position-independence
+[Position independence]: https://rec98.nmlgc.net/faq#pi-what
 
 ----
 
@@ -41,7 +41,12 @@ There are a number reasons why achieving moddability via full decompilation seem
 * These games stopped being sold in 2002, ZUN has confirmed on multiple occasions to have lost all the data of the "earlier games" <sup>[citation needed]</sup>, and PC-98 hardware is long obsolete. In short, these games are as abandoned as they can possibly be, and are unlikely to ever turn a profit again.
 
 #### Is this even viable?
-Definitely. During the development of the static English patches for these games, we identified two main libraries used across all 5 games, and even found their source code. These are:
+
+Ever since crowdfunding has brought a continuous stream of support, progress has been steady. Decompilation of TH01 fully completed in August 2022, and the remaining games are only a matter of time.
+
+Over the years, this project led to a deep understanding of the original compilers and PC-98 hardware, to the point where the decompilation itself has become pretty mechanical. To ensure that this project remains both worthwhile to support and interesting to work on, its focus has shifted more toward meticulous documentation and review of ZUN's original code. The [project blog] details all the findings in a more generally readable way and has arguably become the main attraction, with the source code reconstruction itself almost turning into a byproduct of the underlying deep research into these games.
+
+The project started out pretty viable as well. During the development of the static English patches for these games, we identified two main libraries used across all 5 games, and even found their source code. These are:
 
 * [master.lib](http://www.koizuka.jp/~koizuka/master.lib/), a 16-bit x86 assembly library providing an abstraction layer for all components of a PC-98 DOS system
 * as well as the Borland C/C++ runtime library, version 4.0.
@@ -50,9 +55,7 @@ Definitely. During the development of the static English patches for these games
 
 master.lib and the C/C++ runtime alone make up a sizable amount of the code in all the executables. In TH05, for example, they amount to 74% of all code in `OP.EXE`, and 40% of all code in `MAIN.EXE`. That's already quite a lot of code we do not have to deal with. Identifying the rest of the code shared across the games will further reduce the workload to a more acceptable amount.
 
-With DOSBox-X and [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we now also have two open-source PC-9821 emulators capable of running the games. This will greatly help in understanding all hardware-specific code.
-
-And while this project has made decent progress so far, completing the decompilation of even just a single game will still take a long time. Any help will be appreciated! If you are interested, check [`CONTRIBUTING.md`](CONTRIBUTING.md) for the general contribution guidelines.
+With DOSBox-X and [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we also have two open-source PC-9821 emulators capable of running the games. These have helped to answer most hardware-related questions, together with old books about PC-98 development and occasional tests on real hardware.
 
 ## Dumped executables
 * TH01: `zunsoft.com`, `op.exe`, `reiiden.exe`, `fuuin.exe`
@@ -64,6 +67,51 @@ And while this project has made decent progress so far, completing the decompila
 Crossed-out files are identical to their version in the previous game. ONGCHK.COM is part of the PMD sound driver by KAJA, and therefore doesn't need to be disassembled either; we only need to keep the binary to allow bit-perfect rebuilds of ZUN.COM.
 
 **This project does not include any asset data from the original PC-98 releases. Running the compiled executables will still require an existing copy of the original games.**
+
+## Branches
+
+* [`master`]: ZUN's original code, without mods or bugfixes
+* [`debloated`]: Rearchitected version of ZUN's code that is easier to read and modify, and builds smaller and faster PC-98 binaries. Only removes [bloat] and [landmines]; all [bugs] and [quirks] from ZUN's original code are left in place. **Ports should start from that branch**, and it's also the recommended base for mods that don't care about similarity to the original binary.
+* [`anniversary`]: Takes `debloated` and additionally fixes [bugs], achieving a smoother and flicker-free gameplay experience on the PC-98 platform while still leaving [quirks] in place. Might be an even better starting port for mods and ports.
+* [`BossRush`]
+* [`th03_no_gdc_frequency_check`]: Allows TH03 to be run with the GDC clock set to 5&nbsp;MHz. The original game enforces 2.5&nbsp;MHz, but doesn't functionally require it, even on real hardware.
+* [`xJeePx`]: Code changes for xJeePx's 2014 English translation patch.
+* [`th01_critical_fixes`]: Fixes [two critical bugs in TH01]:
+  * Potential heap corruptions in the game's debug mode when decrementing boss HP by holding ↵ Return while the HP bar is still filling up.
+  * General Protection Faults when defeating bosses with diagonally moving shootout lasers on screen. These are most commonly reported for Elis or Mima, and when playing on real hardware or Anex86.
+* [`th01_end_pic_optimize`]: Speeds up image blitting in TH01's cutscenes to 50% of the original runtime. Mainly serves as an example of how to get close to optimal EGC-powered blitting code out of Turbo C++ 4.0J without writing a single ASM instruction; the EGC is definitely not the best tool for this job.
+* [`th01_orb_debug`]: Shows the following information in TH01's debug mode:
+  * Physics values for the Yin-Yang Orb at the bottom center of the playfield
+  * The frames since the last collision with every bumper bar in the top-left corner of the respective stage object tile
+* [`th01_sariel_fixes`]: Fixes three sprite glitches in the [TH01 Sariel fight] that result from clear logic errors in the original code.
+* [`th03_real_hitbox`]: Renders [TH03's collision bitmap] onto both playfields. Highly unplayable.
+
+* Fixes for the [TH04 Stage 5 Yuuka No-EMS crash]:
+  * [`th04_noems_crash_fix`]: Increases the self-imposed memory limit of TH04's `MAIN.EXE` by just the right amount to fix that one crash.
+  * [`mem_assign_all`]: Removes the self-imposed memory limits in all TH02-TH05 executables, additionally fixing other potential out-of-memory crashes that may occur during modding.
+
+* Workarounds for the [TH04 Kurumi Divide Error crash]:
+  * [`th04_0_ring_ignore`]
+  * ▶ **`th04_0_ring_as_single_bullet`** (You are here!)
+  * [`th04_0_ring_as_cap_bullets`]
+  * [`th04_0_ring_as_gameover`]
+
+* Workarounds for the [TH04 Stage 4 Marisa Divide Error crash]:
+  * [`th04_marisa4_crash_still`]
+  * [`th04_marisa4_crash_move`]
+  * [`th04_marisa4_crash_warp`]
+
+* [`community_choice_fixes`]: Combination branch of all "obvious" bugfixes that don't affect gameplay or visuals:
+  * [`th01_critical_fixes`]
+  * [`th03_no_gdc_frequency_check`]
+  * [`th04_noems_crash_fix`]
+
+  Plus the following workarounds for TH04's `Divide Error` bugs, chosen by community vote:
+
+  * [`th04_0_ring_as_single_bullet`] ([poll results](https://twitter.com/ReC98Project/status/1512941767162798090))
+  * [`th04_marisa4_crash_still`] ([poll results](https://twitter.com/ReC98Project/status/1515018996885688325))
+
+----
 
 ## Building
 
@@ -170,9 +218,45 @@ The final executables will be put into `bin\th0?`, using the same names as the o
 
   ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
 
+## Contribution guidelines
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
 ----
 
 [indistinguishable]: https://github.com/nmlgc/mzdiff
-[can't be decompiled]: Research/Borland%20C++%20decompilation.md#limits-of-decompilability
+[project blog]: https://rec98.nmlgc.net/blog
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
 [Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
+[bloat]: CONTRIBUTING.md#zun-bloat
+[landmines]: CONTRIBUTING.md#zun-landmine
+[bugs]: CONTRIBUTING.md#zun-bug
+[quirks]: CONTRIBUTING.md#zun-quirk
+
+[TH04 Stage 5 Yuuka No-EMS crash]: https://rec98.nmlgc.net/blog/2021-11-29
+[TH01 Sariel fight]: https://rec98.nmlgc.net/blog/2022-01-31
+[TH03's collision bitmap]: https://rec98.nmlgc.net/blog/2022-02-18
+[TH04 Kurumi Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
+[TH04 Stage 4 Marisa Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
+[two critical bugs in TH01]: https://rec98.nmlgc.net/blog/2022-05-31
+
+[`master`]: https://github.com/nmlgc/ReC98/tree/master
+[`anniversary`]: https://github.com/nmlgc/ReC98/tree/anniversary
+[`debloated`]: https://github.com/nmlgc/ReC98/tree/debloated
+[`BossRush`]: https://github.com/nmlgc/ReC98/tree/BossRush
+[`community_choice_fixes`]: https://github.com/nmlgc/ReC98/tree/community_choice_fixes
+[`mem_assign_all`]: https://github.com/nmlgc/ReC98/tree/mem_assign_all
+[`th01_critical_fixes`]: https://github.com/nmlgc/ReC98/tree/th01_critical_fixes
+[`th01_end_pic_optimize`]: https://github.com/nmlgc/ReC98/tree/th01_end_pic_optimize
+[`th01_orb_debug`]: https://github.com/nmlgc/ReC98/tree/th01_orb_debug
+[`th01_sariel_fixes`]: https://github.com/nmlgc/ReC98/tree/th01_sariel_fixes
+[`th03_no_gdc_frequency_check`]: https://github.com/nmlgc/ReC98/tree/th03_no_gdc_frequency_check
+[`th03_real_hitbox`]: https://github.com/nmlgc/ReC98/tree/real_hitbox
+[`th04_0_ring_ignore`]: https://github.com/nmlgc/ReC98/tree/th04_0_ring_ignore
+[`th04_0_ring_as_cap_bullets`]: https://github.com/nmlgc/ReC98/tree/th04_0_ring_as_cap_bullets
+[`th04_0_ring_as_gameover`]: https://github.com/nmlgc/ReC98/tree/th04_0_ring_as_gameover
+[`th04_marisa4_crash_move`]: https://github.com/nmlgc/ReC98/tree/th04_marisa4_crash_move
+[`th04_marisa4_crash_still`]: https://github.com/nmlgc/ReC98/tree/th04_marisa4_crash_still
+[`th04_marisa4_crash_warp`]: https://github.com/nmlgc/ReC98/tree/th04_marisa4_crash_warp
+[`th04_noems_crash_fix`]: https://github.com/nmlgc/ReC98/tree/th04_noems_crash_fix
+[`xJeePx`]: https://github.com/nmlgc/ReC98/tree/xJeePx

@@ -14,7 +14,7 @@ typedef enum {
 
 // Doubles as both the file format header (describing all images in a file)
 // and the internal slot structure (describing a single image).
-typedef struct {
+struct CDG {
 	// Size of a single bitplane.
 	uint16_t bitplane_size;
 
@@ -46,7 +46,7 @@ typedef struct {
 	dots8_t __seg*& seg_colors() {
 		return seg[1];
 	}
-} cdg_t;
+};
 
 #if (GAME >= 4)
 	static const int CDG_SLOT_COUNT = 64;
@@ -54,10 +54,11 @@ typedef struct {
 	static const int CDG_SLOT_COUNT = 32;
 #endif
 
-extern cdg_t cdg_slots[CDG_SLOT_COUNT];
+extern CDG cdg_slots[CDG_SLOT_COUNT];
 
 // Loading and freeing
 // -------------------
+
 // Loads all images of the CDG file [fn], starting at [slot_first] and
 // incrementing the slot number for every further image.
 void pascal cdg_load_all(int slot_first, const char *fn);
@@ -80,6 +81,7 @@ void pascal cdg_free_all(void);
 
 // Blitting
 // --------
+
 // Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top).
 void pascal cdg_put_8(screen_x_t left, vram_y_t top, int slot);
 

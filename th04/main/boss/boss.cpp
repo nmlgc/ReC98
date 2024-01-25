@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
@@ -12,10 +13,11 @@ extern "C" {
 #include "th04/common.h"
 #include "th04/gaiji/gaiji.h"
 #include "th04/math/motion.hpp"
+#include "th04/math/randring.hpp"
 extern "C" {
-#include "th04/math/randring.h"
 #include "th04/snd/snd.h"
 }
+#include "th04/sprites/main_cdg.h"
 #if (GAME == 5)
 	#include "th05/sprites/main_pat.h"
 #else
@@ -36,9 +38,8 @@ extern "C" {
 #include "th04/main/slowdown.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
-extern "C" {
+#include "th04/main/stage/bonus.hpp"
 #include "th04/main/tile/tile.hpp"
-}
 #include "th04/main/dialog/dialog.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/item/item.hpp"
@@ -57,13 +58,10 @@ extern "C" {
 	#include "th04/resident.hpp"
 	#include "th04/formats/bb.h"
 	#include "th04/formats/dialog.hpp"
-	#include "th04/sprites/main_cdg.h"
 	#include "th04/main/boss/boss.hpp"
 	#include "th04/main/boss/bosses.hpp"
 	#include "th04/shiftjis/fns.hpp"
 #endif
-
-inline void optimization_barrier(void) {}
 
 #if (GAME == 5)
 	// Processes any collision between the player and boss sprites.
@@ -212,7 +210,7 @@ void pascal near boss_phase_next(
 	boss.phase++;
 	boss.phase_frame = 0;
 	boss.mode = 0;
-	boss.mode_change = 0;
+	boss.phase_state.patterns_seen = 0;
 	boss.hp = boss.phase_end_hp;
 	boss.phase_end_hp = next_end_hp;
 }
@@ -295,7 +293,12 @@ void pascal near boss_phase_next(
 						boss_statebyte[0] \
 					)
 
+					// Lol, *now* ZUN hardcoded what's effectively a call to
+					// the dialog script 'c' command?
+					// ZUN bloat: Should have been part of dialog_animate() all
+					// along.
 					super_clean(PAT_STAGE, (PAT_STAGE_last + 1));
+
 					dialog_animate();
 
 					if(!gengetsu_started) {
@@ -342,7 +345,7 @@ void pascal near boss_phase_next(
 		}
 	} else if(boss.phase_frame == BDF_FADEOUT) {
 		#if (GAME == 5)
-			// ZUN bug: TH04 doesn't do this. It's not a problem in stages 1
+			// ZUN quirk: TH04 doesn't do this. It's not a problem in stages 1
 			// to 5 because the remaining score delta will carry over into the
 			// next stage and be added to the score there. During the final and
 			// Extra Stage though, the lack of this call causes the Clear Bonus

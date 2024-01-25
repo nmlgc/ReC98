@@ -9,6 +9,7 @@ extern unsigned char bomb_frame;
 
 // Character-specific bomb update and render functions
 // ---------------------------------------------------
+
 extern nearfunc_t_near playchar_bomb_func;
 
 void pascal near bomb_reimu(void);

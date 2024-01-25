@@ -1,3 +1,7 @@
+#define max_macro(a, b) ( \
+	(a > b) ? a : b \
+)
+
 // Yes, these are exactly what every tutorial presents as a bad example of C
 // macros, especially if they are nested within each other.
 // MODDERS: Turn into template functions.
@@ -29,14 +33,42 @@
 	#define ring_min() 0
 #endif
 
-#define ring_inc(val, ring_end) \
+#define ring_inc_range(val, ring_min, ring_max) { \
 	(val)++; \
-	if((val) > (ring_end)) { \
+	if((val) > (ring_max)) { \
+		(val) = (ring_min); \
+	} \
+}
+#define ring_inc(val, ring_end) ring_inc_range(val, 0, ring_end)
+
+#define ring_inc_ge(val, ring_end) \
+	(val)++; \
+	if((val) >= (ring_end)) { \
 		(val) = 0; \
 	}
+
+#define ring_inc_ge_range(val, ring_min, ring_max) { \
+	(val)++; \
+	if((val) >= ((ring_max) + 1)) { \
+		(val) = (ring_min); \
+	} \
+}
+
+#define ring_dec_range(val, ring_min, ring_max) { \
+	if(val == (ring_min)) { \
+		(val) = ((ring_max) + 1); \
+	} \
+	(val)--; \
+}
 
 #define ring_dec(val, ring_end) \
 	(val)--; \
 	if(val < ring_min()) { \
+		(val) = ring_end; \
+	}
+
+#define ring_dec_16(val, ring_end) \
+	(val)--; \
+	if(val < 0) { \
 		(val) = ring_end; \
 	}

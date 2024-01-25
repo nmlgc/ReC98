@@ -1,15 +1,15 @@
 #include "th04/score.h"
 
 #if GAME == 5
-# define SCOREDAT_PLACES 5
-# define SCOREDAT_NOT_CLEARED 18
-# define SCOREDAT_CLEARED 0x80
+	#define SCOREDAT_PLACES 5
+	#define SCOREDAT_NOT_CLEARED 18
+	#define SCOREDAT_CLEARED 0x80
 #else
-# define SCOREDAT_PLACES 10
-# define SCOREDAT_NOT_CLEARED 25
-# define SCOREDAT_CLEARED_A 1
-# define SCOREDAT_CLEARED_B 2
-# define SCOREDAT_CLEARED_BOTH (SCOREDAT_CLEARED_A | SCOREDAT_CLEARED_B)
+	#define SCOREDAT_PLACES 10
+	#define SCOREDAT_NOT_CLEARED 25
+	#define SCOREDAT_CLEARED_A 1
+	#define SCOREDAT_CLEARED_B 2
+	#define SCOREDAT_CLEARED_BOTH (SCOREDAT_CLEARED_A | SCOREDAT_CLEARED_B)
 #endif
 
 #define SCOREDAT_NAME_LEN 8
@@ -53,19 +53,19 @@ extern scoredat_section_t hi2;
 	void pascal near scoredat_decode_both(void);
 	void pascal near scoredat_encode(void);
 
-#	define scoredat_decode_func scoredat_decode_both
+	#define scoredat_decode_func scoredat_decode_both
 #elif (BINARY == 'M') && (GAME == 4)
 	void pascal near scoredat_decode(scoredat_section_t near *hi);
 	void pascal near scoredat_encode(scoredat_section_t near *hi);
 
-#	define scoredat_decode_func() scoredat_decode(&hi)
-#	define scoredat_encode_func() scoredat_encode(&hi)
+	#define scoredat_decode_func() scoredat_decode(&hi)
+	#define scoredat_encode_func() scoredat_encode(&hi)
 #else
 	void pascal near scoredat_decode(void);
 	void pascal near scoredat_encode(void);
 
-#	define scoredat_decode_func scoredat_decode
-#	define scoredat_encode_func scoredat_encode
+	#define scoredat_decode_func scoredat_decode
+	#define scoredat_encode_func scoredat_encode
 #endif
 
 // Recreation
@@ -103,5 +103,4 @@ extern scoredat_section_t hi2;
 	void near scoredat_load_for_cur(void);
 #endif
 // -------
-
 /// ---------

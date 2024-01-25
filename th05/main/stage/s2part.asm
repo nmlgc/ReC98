@@ -11,7 +11,7 @@ stage2_invalidate	proc near
 	jmp	short @@more?
 
 @@loop:
-	cmp	[si+s2particle_t.flag], 0
+	cmp	[si+s2particle_t.S2P_alive], 0
 	jz	short @@next
 	call	tiles_invalidate_around pascal, [si+s2particle_t.pos.prev.y], [si+s2particle_t.pos.prev.x]
 

@@ -26,7 +26,7 @@ bool16 pascal input_wait_for_ok_or_measure(int measure, unsigned int frames)
 
 bool16 pascal input_wait_for_ok(unsigned int frames)
 {
-	vsync_reset1();
+	vsync_Count1 = 0;
 	do {
 		input_mode_interface();
 		if((input_sp & INPUT_SHOT) || (input_sp & INPUT_OK)) {

@@ -3,7 +3,7 @@
  * TH05 Staff Roll
  */
 
-#pragma option -zCmaine_01__TEXT
+#pragma option -zCmaine_01_TEXT
 
 extern "C" {
 #include <stddef.h>
@@ -32,6 +32,7 @@ typedef enum {
 
 // Particle structure
 // ------------------
+
 // Below this [phase_value.radius], the orb is rendered as a monochrome filled
 // circle.
 static const pixel_t ORB_RADIUS_FULL = 16;

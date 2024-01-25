@@ -4,9 +4,7 @@
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
-extern "C" {
 #include "th03/core/initexit.h"
-}
 
 void game_exit_from_mainl_to_main()
 {
