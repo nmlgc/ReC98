@@ -1,7 +1,6 @@
 // Debugging
 // ---------
-// Calls ZUN's interrupt vector set up in ZUNINIT.COM to display an error
-// message.
+
 typedef enum {
 	ERROR_FILE_NOT_FOUND = 2,
 	ERROR_OUT_OF_MEMORY = 3,
@@ -11,5 +10,7 @@ typedef enum {
 	_zun_error_t_FORCE_UINT16 = 0xFFFF
 } zun_error_t;
 
+// Calls ZUN's interrupt vector set up in ZUNINIT.COM to display an error
+// message.
 void pascal zun_error(zun_error_t err);
 // ---------

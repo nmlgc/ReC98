@@ -9,7 +9,7 @@ extern union {
 static const int BULLET_ZAP_FRAMES_PER_CEL = 4;
 
 #ifdef BULLET_ZAP_CELS
-	// ZUN bug: Effectively 1 in TH05, see bullets_update() for the cause.
+	// ZUN quirk: Effectively 1 in TH05, see bullets_update() for the cause.
 	static const int BULLET_ZAP_FRAMES = (
 		BULLET_ZAP_CELS * BULLET_ZAP_FRAMES_PER_CEL
 	);

@@ -1,11 +1,10 @@
 #pragma option -zCPTN_GRP_GRZ
 
-extern "C" {
 #include <stdio.h>
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
-#include "libs/piloadc/piloadc.h"
+#include "libs/piloadc/piloadc.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/formats/grp.h"
 
@@ -16,10 +15,9 @@ extern "C" {
 // *Not* offsetof(PiHeader, palette)!
 #define PI_PALETTE_OFFSET 0x12
 
-extern int8_t* grp_buf;
-extern int flag_palette_show; // = true
-extern int flag_grp_put; // = true
-extern bool flag_grp_colorkey; // = false
+extern bool16 flag_palette_show;
+extern bool16 flag_grp_put;
+extern bool flag_grp_colorkey;
 
 int grp_palette_load_show_sane(const char *fn)
 {
@@ -48,7 +46,7 @@ int grp_palette_load(const char *fn)
 	return 0;
 }
 
-// Random unused function is random
+// ZUN bloat: Random unused function is random
 int getkanji(FILE *fp)
 {
 	int low = getc(fp);
@@ -58,13 +56,14 @@ int getkanji(FILE *fp)
 
 void grp_palette_set_all(const Palette4& pal)
 {
-	int col;
+	svc2 col;
 	int comp;
 	palette_copy(grp_palette, pal, col, comp);
 }
 
 int grp_put_palette_show(const char *fn)
 {
+	extern int8_t* grp_buf;
 	int option = 0;
 	char ret;
 
@@ -114,6 +113,4 @@ int grp_put_colorkey(const char *fn)
 	flag_palette_show = true;
 	flag_grp_colorkey = false;
 	return ret;
-}
-
 }

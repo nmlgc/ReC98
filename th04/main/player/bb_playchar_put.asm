@@ -9,7 +9,7 @@ bb_playchar_put	proc near
 	if (GAME eq 4)
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short @@marisa
-		mov	al, 15
+		mov	al, V_WHITE
 		jmp	short @@set_col
 
 	@@marisa:

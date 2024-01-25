@@ -4,9 +4,9 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "th04/hardware/grcg.hpp"
 extern "C" {
 #include "th05/op/piano.h"
 #include "th05/sprites/piano_l.hpp"
@@ -65,28 +65,21 @@ extern piano_notes_t piano_notes_cur;
 extern piano_notes_t piano_notes_prev;
 /// ---------
 
-/// Redundant garbage
-/// -----------------
+/// ZUN bloat: Redundant garbage
+/// ----------------------------
 
 #undef grcg_setmode
 #undef grcg_off
 
-#define grcg_setmode(mode) _asm { \
-	mov	al, mode; \
-	out	0x7C, al; \
+#define grcg_setmode(mode) { \
+	_outportb_(0x7C, mode); \
 }
 
 #define grcg_off() _asm { \
 	db 	0x32, 0xC0; /* XOR AL, AL (alternate encoding) */ \
 	out	0x7C, al; \
 }
-
-void near grcg_setcolor_direct_seg1_raw();
-#define grcg_setcolor(col) { \
-	_AH = col; \
-	grcg_setcolor_direct_seg1_raw(); \
-}
-/// -----------------
+/// ----------------------------
 
 /// Helper functions
 /// ----------------
@@ -159,7 +152,7 @@ void piano_setup_and_put_initial(void)
 	piano_part_keys_put(4);
 	piano_part_keys_put(5);
 
-	grcg_setcolor(GC_RI);
+	grcg_setcolor_direct(5);
 	piano_label_puts(0, F, M, 1);
 	piano_label_puts(1, F, M, 2);
 	piano_label_puts(2, F, M, 3);
@@ -200,7 +193,7 @@ void piano_render(void)
 	piano_fm_part_put(3, _BX);	_BX++;	// BX = FMPart[4]
 	piano_fm_part_put(4, _BX);
 
-	grcg_setcolor(GC_RI);
+	grcg_setcolor_direct(5);
 	_DI = vram_offset_shift(0, part_top(5));
 	_BX += 2;	// BX = SSGPart[0]
 	piano_pressed_key_put(piano_current_note_from(_AX, _DX, _BX));

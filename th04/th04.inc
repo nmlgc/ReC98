@@ -3,6 +3,7 @@ include th04/chars.inc
 include th04/mem.inc
 include th04/shared.inc
 include th04/gaiji/gaiji.inc
+include th02/v_colors.inc
 
 resident_t struc
 	id	db 11 dup(?)
@@ -46,8 +47,5 @@ resident_t struc
 	turbo_mode	db ?
 		db 54 dup(?)
 resident_t ends
-
-playchar_speed_aligned = 4 shl 4
-playchar_speed_diagonal = 3 shl 4
 
 BOMB_INVINCIBILITY_FRAMES = 255

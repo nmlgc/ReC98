@@ -40,7 +40,9 @@ where the scalar-type variable is declared in relation to them.
 
 | | |
 |-|-|
+| `ADD r8, imm8` | For non-`AL` registers, `imm8` must be `static_cast` to `uint8_t`. Otherwise, the addition is done on `AL` and then `MOV`ed to `r8`. |
 | `ADD [m8], imm8` | Only achievable through a C++ method operating on a  member? |
+| `MOV AX, [m16]`<br />`ADD AL, [m8]` | Same – `[m16]` must be returned from an inlined function to avoid the optimization of it being directly shortened to 8 bits. |
 | `MOV AL, [m8]`<br />`ADD AL, imm8`<br />`MOV [m8], AL` | Opposite; *not* an inlined function |
 | `CWD`<br />`SUB AX, DX`<br />`SAR AX, 1` | `AX / 2`, `AX` is *int* |
 | `MOV [new_var], AX`<br />`CWD`<br />`XOR AX, DX`<br />`SUB AX, DX` | `abs(AX)`, defined in `<stdlib.h>`. `AX` is *int* |
@@ -61,7 +63,7 @@ where the scalar-type variable is declared in relation to them.
 
 ### Arithmetic on a register *after* assigning it to a variable?
 
-Assigment is part of the C expression. If it's a comparison, that comparison
+Assignment is part of the C expression. If it's a comparison, that comparison
 must be spelled out to silence the `Possibly incorrect assignment` warning.
 
 | | |
@@ -142,6 +144,9 @@ case it's part of an arithmetic expression that was promoted to `int`.
 * The same `fpu_tmp` variable is also used as the destination for `FNSTSW`,
   used in comparisons.
 
+* On the stack, `fpu_tmp` is placed after all variables declared at the
+  beginning of the function.
+
 * Performing arithmetic or comparisons between `float` and `double` variables
   *always* `FLD`s the `float` first, before emitting the corresponding FPU
   instruction for the `double`, regardless of how the variables are placed in
@@ -168,7 +173,7 @@ case it's part of an arithmetic expression that was promoted to `int`.
 |-|-|
 | `MOV ???, [SI+????]` | Only achievable through pointer arithmetic? |
 
-* When assigning to a array element at a variable or non-0 index, the array
+* When assigning to an array element at a variable or non-0 index, the array
   element address is typically evaluated before the expression to be assigned.
   But when assigning
   * the result of any arithmetic expression of a *16-bit type*
@@ -258,29 +263,6 @@ Type syntax (cf. [platform.h](../platform.h)):
 | Far pointer to…  | `int (near *far  nf_t)()` | `int (far *far  ff_t)()` |
 
 Calling conventions can be added before the `*`.
-
-* Assigning a `near` function defined in a different group to a `nn_t` will
-  cause a fixup overflow error at link time. The reason for that is pointed
-  out in the compiler's assembly output (`-S)`:
-
-  | C                        | ASM                                                                                  |
-  |--------------------------|--------------------------------------------------------------------------------------|
-  | `void near bar();`       | `extrn _bar:near`                                                                    |
-  | `static nn_t foo = bar;` | `mov   word ptr DGROUP:_foo, offset CURRENTLY_​COMPILED_​BUT_​NOT_​ACTUAL_​GROUP_​OF:_bar` |
-
-  The only known way of enforcing this assignment involves declaring `bar()` as
-  a far function and then casting its implicit segment away:
-
-  ```c++
-  void far bar();
-  static nn_t foo = reinterpret_cast<nn_t>(bar);
-  ```
-
-  This wrong declaration of `bar()` must, of course, not be `#include`d into
-  the translation unit that actually defines `bar()` as a `near` function, as
-  it was intended. It can't also be local to an inlined function that's part of
-  a public header, since those declarations seem to escape to the global scope
-  there.
 
 ## `switch` statements
 
@@ -450,6 +432,30 @@ void foo(int i) {
 
   This also applies to divisors stored in `BX`.
 
+### `-3` (80386 Instructions)
+
+* 32-bit function return values are stored in `DX:AX` even with this option
+  enabled. Assigning such a returned value generates different instructions
+  if the signedness of the return type differs from the signedness of the
+  target variable:
+
+  ```c
+  /*    */ long ret_signed(void)   { return 0x12345678; }
+  unsigned long ret_unsigned(void) { return 0x12345678; }
+
+  void foo(void) {
+    long s;
+    unsigned long u;
+
+    s = ret_signed();   // MOV WORD PTR [s+2], DX; MOV WORD PTR [s+0], AX;
+    s = ret_unsigned(); // PUSH DX; PUSH AX; POP EAX; MOV DWORD PTR [s], EAX;
+    u = ret_signed();   // PUSH DX; PUSH AX; POP EAX; MOV DWORD PTR [u], EAX;
+    u = ret_unsigned(); // MOV WORD PTR [u+2], DX; MOV WORD PTR [u+0], AX;
+  }
+  ```
+
+  Without `-3`, the two-`MOV WORD PTR` variant is generated in all four cases.
+
 ### `-3` (80386 Instructions) + `-Z` (Suppress register reloads)
 
 Bundles two consecutive 16-bit function parameters into a single 32-bit one,
@@ -499,8 +505,8 @@ Inhibited by:
       // Second declaration of [v]. Even though it's assigned to the same stack
       // offset, the second `PUSH c` call will still be emitted separately.
       // Thus, jump optimization only reuses the `CALL use` instruction.
-      // Move the `int v;` declaraion to the beginning of the function to avoid
-      // this.
+      // Move the `int v;` declaration to the beginning of the function to
+      // avoid this.
       int v = set_v();
       use(v);
   }
@@ -537,17 +543,6 @@ Provides its own kind of slight jump optimization if combined with `-O-`. Yes,
 seriously. Might be required to decompile code that seems to contain both some
 of the jump optimizations from `-O` and the stack-clearing instructions after
 every function call from `-O-`.
-
-## Inlining
-
-Always worth a try to get rid of a potential macro. Some edge cases don't
-inline optimally though:
-
-* Assignments to a pointer in `SI` – that pointer is moved to `DI`,
-  [clobbering that register](#clobbering-di). Try a [class method](#C++)
-  instead.
-* Nested `if` statements – inlining will always generate a useless
-  `JMP SHORT $+2` at the end of the last branch.
 
 ## Initialization
 
@@ -603,6 +598,72 @@ static_storage  db  2, 0, 6
   **Certainty**: Reverse-engineering `TCC.EXE` confirmed that these are the
   only ways.
 
+## Memory segmentation
+
+The segment and group a function will be emitted into can be controlled via
+`#pragma option -zC` / `#pragma option -zP` and `#pragma codeseg`. These
+mechanisms apply equally to function declarations and definitions. The active
+segment/group during a function's first reference will take precedence over any
+later segment/group the function shows up in:
+
+```c++
+#pragma option -zCfoo_TEXT -zPfoo
+
+void bar(void);
+
+#pragma codeseg baz_TEXT baz
+
+// Despite the segment change in the line above, this function will still be
+// put into `foo_TEXT`, the active segment during the first appearance of the
+// function name.
+void bar(void) {
+}
+
+// This function hasn't been declared yet, so it will go into `baz_TEXT` as
+// expected.
+void baz(void) {
+}
+```
+
+When fixing up near references, the linker takes the actual flat/linear address
+and subtracts it from the base address of the reference's declared segment,
+assuming that the respective segment register is set to that specific segment
+at runtime. Therefore, incorrect segment declarations lead to incorrectly
+calculated offsets, and the linker can't realistically warn about such cases.
+There *is* the `Fixup overflow` error, but the linker only throws that one if
+the calculated distance exceeds 64 KiB and thus couldn't be expressed in a near
+reference to begin with.
+
+Generally, it's better to just fix wrong segments at declaration time:
+
+```c++
+// Set the correct segment and group
+#pragma codeseg bar_TEXT bar_correct_group
+
+void near bar(void);
+
+// Return to the default code segment
+#pragma codeseg
+```
+
+However, there is a workaround if the intended near offset should simply be
+relative to the actual segment of the symbol: Declaring the identifier as `far`
+rather than near, and casting its implicit segment away for the near context.
+In the case of [function pointers]:
+
+```c++
+void far bar();
+static nn_t qux = reinterpret_cast<nn_t>(bar);
+```
+
+This works because a `far` symbol always includes the segment it was emitted
+into. The cast simply reduces such a reference to its offset part within that
+segment.\
+This wrong declaration of `bar()` must, of course, not be `#include`d into the
+translation unit that actually defines `bar()` as a `near` function, as it was
+intended. It can't also be local to an inlined function that's part of a public
+header, since those declarations seem to escape to the global scope there.
+
 ## C++
 
 In C++ mode, the value of a `const` scalar-type variable declared at global
@@ -623,6 +684,34 @@ Note the distinction between *`struct`/`class` distance* and *method distance*:
 These can be freely combined, and one does not imply the other.
 
 #### Inlining
+
+Support for inlined functions is exclusive to C++ mode, with both top-level
+`inline` and class methods defined inside class declarations (obviously) not
+being supported in C mode. The compiler will inline every function defined in
+one of these ways, unless it contains one of these language constructs:
+
+* Loops (`do`, `for`, `while`, `break`, `continue`)
+* `goto`
+* `switch` and `case`
+* `throw`
+
+If it doesn't, inlining is always worth a try to get rid of a potential macro,
+especially if all parameters are compile-time constants. There are a few
+further constructs that typically don't inline optimally though:
+
+* Assigning lvalues to value parameters (spills the value into a new
+  compiler-generated local variable)
+* Assigning *either* rvalues *or* lvalues stored in registers to reference
+  parameters (same)
+* Nested `if` statements – inlining will always generate a useless
+  `JMP SHORT $+2` at the end of the last branch.
+
+Due to lazy code generation, values returned from inlined functions always
+preserve their type during the instruction generated for the `return` statement,
+and are only later cast into whatever the call site requires. Thus, certain
+type-mismatched instructions in arithmetic expressions can only be generated by
+returning one of the operands from an inlined function – unlike `static_cast`
+and `reinterpret_cast`, which can be optimized away.
 
 Class methods inline to their ideal representation if all of these are true:
 
@@ -691,6 +780,9 @@ Resulting ASM:
 @MyClass@$bctr$qv endp
 ```
 
+* Arrays of nontrivially constructible objects are always constructed via
+  `_vector_new_`. Conversely, no `_vector_new_` = no array.
+
 ## Limits of decompilability
 
 ### `MOV BX, SP`-style functions, or others with no standard stack frame
@@ -730,3 +822,4 @@ contains one of the following:
 ----
 
 [Bug:]: #compiler-bugs
+[function pointers]: #function-pointers

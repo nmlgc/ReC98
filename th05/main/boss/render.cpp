@@ -11,13 +11,15 @@
 #include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
-extern "C" {
-#include "th04/hardware/grcg.h"
+#include "th02/v_colors.hpp"
+#include "th04/hardware/grcg.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/math/motion.hpp"
-#include "th04/math/randring.h"
+#include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
+extern "C" {
 #include "th04/formats/cdg.h"
+}
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/phase.hpp"
@@ -27,8 +29,10 @@ extern "C" {
 #include "th04/main/tile/bb.hpp"
 #include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
+extern "C" {
 #include "th05/formats/super.h"
 }
+#include "th04/main/boss/backdrop.hpp"
 #include "th05/main/boss/boss.hpp"
 #include "th05/main/boss/bosses.hpp"
 
@@ -81,7 +85,7 @@ void pascal near louise_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_after_custom(boss.phase_frame),
 		int,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		LOUISE_BACKDROP_LEFT,
 		LOUISE_BACKDROP_TOP,
 		1,
@@ -95,12 +99,12 @@ void pascal near alice_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_after_custom(boss.phase_frame),
 		int,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		ALICE_BACKDROP_LEFT,
 		ALICE_BACKDROP_TOP,
 		1,
 		alice_backdrop_colorfill,
-		15
+		V_WHITE
 	);
 }
 
@@ -109,7 +113,7 @@ void pascal near mai_yuki_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_after_custom(boss.phase_frame),
 		unsigned char,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		MAI_YUKI_BACKDROP_LEFT,
 		MAI_YUKI_BACKDROP_TOP,
 		1,
@@ -123,12 +127,12 @@ void pascal near yumeko_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_all(),
 		unsigned char,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		YUMEKO_BACKDROP_LEFT,
 		YUMEKO_BACKDROP_TOP,
 		1,
 		yumeko_backdrop_colorfill,
-		15
+		V_WHITE
 	);
 }
 
@@ -289,7 +293,7 @@ void near shinki_bg_type_a_update_part1(void)
 			vector2_at(
 				particle->velocity,
 				0.0f, 0.0f,
-				(randring1_next16_and(to_sp(4.0f) - 1) + to_sp(2.0f)),
+				randring1_next16_and_ge_lt_sp(2.0f, 6.0f),
 				particle->angle
 			);
 			shinki_bg_type_a_particles_alive++;
@@ -334,22 +338,21 @@ void pascal near shinki_lineset_forward_copy(lineset_t near &set)
 	}
 }
 
-inline void shinki_bg_render_blue_particles_and_lines(void)
-{
-	grcg_setmode_rmw_seg1();
+inline void shinki_bg_render_blue_particles_and_lines(void) {
+	grcg_setmode_rmw();
 
-	grcg_setcolor_direct_seg1(8);
+	grcg_setcolor_direct(8);
 	shinki_bg_particles_render();
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_4);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_3);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_4);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_3);
 
-	grcg_setcolor_direct_seg1(9);
+	grcg_setcolor_direct(9);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_2);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_2);
 
-	grcg_setcolor_direct_seg1(15);
+	grcg_setcolor_direct(V_WHITE);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_MAIN);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_MAIN);
 
@@ -420,8 +423,8 @@ void near shinki_bg_type_b_update_part1(void)
 			particle->origin.x = particle->pos.x;
 			particle->origin.y.set(-1.0f);
 			particle->velocity.set(0.0f, 0.0f);
-			particle->patnum = (
-				PAT_PARTICLE + randring1_next16_and(PARTICLE_CELS - 1)
+			particle->patnum = randring1_next8_and_ge_lt(
+				PAT_PARTICLE, (PAT_PARTICLE_last + 1)
 			);
 			i++;
 			particle++;
@@ -593,12 +596,14 @@ void near shinki_bg_type_d_update(void)
 
 void pascal near shinki_bg_render(void)
 {
-	if(boss.phase == PHASE_BOSS_HP_FILL) {
+	if(boss.phase == PHASE_HP_FILL) {
 		boss_backdrop_render(
 			SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1
 		);
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
-		unsigned char entrance_cel = (boss.phase_frame / 4);
+		unsigned char entrance_cel = (
+			boss.phase_frame / ENTRANCE_BB_FRAMES_PER_CEL
+		);
 		if(entrance_cel < (TILES_BB_CELS / 2)) {
 			boss_backdrop_render(
 				SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1
@@ -606,7 +611,7 @@ void pascal near shinki_bg_render(void)
 		} else {
 			boss_bg_fill_col_0();
 		}
-		tiles_bb_col = 15;
+		tiles_bb_col = V_WHITE;
 		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < 4) {
 		boss_bg_fill_col_0();
@@ -722,22 +727,20 @@ void near exalice_hexagrams_update_and_render(void)
 	grcg_setcolor(GC_RMW, 9);
 	exalice_grcg_hexagram_put(set.radius[9].v, set.angle[9]);
 	if(boss.phase < 9 || boss.phase > 12) {
-		grcg_setcolor(GC_RMW, 15);
+		grcg_setcolor(GC_RMW, V_WHITE);
 	}
 	exalice_grcg_hexagram_put(set.radius[0].v, set.angle[0]);
 	grcg_off();
-
-	#undef state
 }
 
 void pascal near exalice_bg_render(void)
 {
-	if(boss.phase == PHASE_BOSS_HP_FILL) {
+	if(boss.phase == PHASE_HP_FILL) {
 		tiles_render_after_custom(boss.phase_frame);
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
 		boss_bg_fill_col_0();
-		tiles_bb_col = 15;
+		tiles_bb_col = V_WHITE;
 		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) {
 		boss_bg_fill_col_0();

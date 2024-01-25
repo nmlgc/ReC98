@@ -5,22 +5,19 @@
 /// color #15. With functions for raw allocation and VRAM snapping, this can
 /// also be used to store the backgrounds of frequently updated VRAM regions.
 
-}
-
-#include "th01/sprites/main_ptn.h"
+#define PTN_HPP
 
 // Color #15 (1111) is always the transparent one, meaning that transparent
 // dots are 1 in all 4 bitplanes. The alpha mask therefore simply is the
 // negation of ANDing all bitplanes together. Nifty!
-template <class T> inline T ptn_alpha_from(T B, T R, T G, T E)
-{
+template <class T> inline T ptn_alpha_from(T B, T R, T G, T E) {
 	return ~((B) & (R) & (G) & (E));
 }
 
-extern "C" {
-
 #define PTN_W 32
 #define PTN_H 32
+
+#include "th01/sprites/main_ptn.h"
 
 typedef dot_rect_t(PTN_W, PTN_H) ptn_plane_t;
 
@@ -34,6 +31,10 @@ struct ptn_file_image_t {
 struct ptn_t : public ptn_file_image_t {
 	ptn_plane_t alpha; // Derived from color #15 at load time
 };
+
+template <class T> inline int32_t ptn_sizeof_array(const T& count) {
+	return (count * static_cast<int32_t>(sizeof(ptn_t)));
+}
 
 extern ptn_t* ptn_images[PTN_SLOT_COUNT];
 extern int8_t ptn_image_count[PTN_SLOT_COUNT];
@@ -72,7 +73,12 @@ void ptn_free(main_ptn_slot_t slot);
 // If true, the affected 32×32 or 16×16 area is restored from VRAM page 1
 // before a byte-aligned alpha put operation.
 // (Because calling egc_copy_rect_1_to_0_16() yourself is way too much to ask?)
-extern bool ptn_unput_before_alpha_put;
+//
+// ZUN bug: egc_copy_rect_1_to_0_16() is word-aligned rather than byte-aligned.
+// Blitting to a non-word-aligned X position will cause an additional 8 pixels
+// to the left and/or right side of the sprite to be unblitted as well.
+// Really, this hack should never be used.
+extern bool ptn_sloppy_unput_before_alpha_put;
 
 // 32×32 access
 // ------------
@@ -120,6 +126,7 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id);
 // like this:
 // | 0 | 1 |
 // | 2 | 3 |
+
 #define PTN_QUARTER_W 16
 #define PTN_QUARTER_H 16
 
@@ -137,7 +144,7 @@ struct PTNQuarter
 };
 
 // Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top),
-// diregarding its alpha plane.
+// disregarding its alpha plane.
 void ptn_put_quarter_noalpha_8(
 	screen_x_t left, vram_y_t top, int ptn_id, int quarter
 );

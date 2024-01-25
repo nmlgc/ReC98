@@ -1,5 +1,6 @@
 // Fixed-point format for expressing world-space coordinates, with 4 bits of
 // fractional resolution.
+// -------------------------------------------------------------------------
 
 #define SUBPIXEL_HPP
 
@@ -101,6 +102,26 @@ struct SPPoint : public SPPointBase<Subpixel> {
 };
 
 // 8-bit (Q4.4)
-typedef SubpixelBase<subpixel_length_8_t, subpixel_length_8_t> SubpixelLength8;
-typedef SubpixelBase<char, char> Subpixel8;
+typedef SubpixelBase<subpixel_length_8_t, pixel_length_8_t> SubpixelLength8;
+typedef SubpixelBase<char, pixel_delta_8_t> Subpixel8;
 typedef SPPointBase<Subpixel8> SPPoint8;
+// -------------------------------------------------------------------------
+
+// Subpixels with one decimal digit of fractional resolution?! Sure, if you
+// absolutely want those precise multiples of 0.1 in your movement code...
+// -------------------------------------------------------------------------
+
+typedef int decimal_subpixel_t;
+
+struct DecimalSubpixel {
+	decimal_subpixel_t v;
+
+	pixel_t to_pixel() const {
+		return static_cast<pixel_t>(v / 10);
+	}
+};
+
+inline decimal_subpixel_t to_dsp(float pixel_v) {
+	return static_cast<decimal_subpixel_t>(pixel_v * 10);
+}
+// -------------------------------------------------------------------------

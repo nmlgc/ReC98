@@ -362,13 +362,13 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 		goto no_aim;
 	case BG_RANDOM_ANGLE_AND_SPEED:
 		angle = randring2_next16();
-		speed += randring2_next16_and(to_sp(2.0f) - 1);
+		speed += randring2_next8_and_ge_lt_sp(0.0f, 2.0f);
 		if(last_bullet_in_group(group_i)) {
 			done = true;
 		}
 		goto no_aim;
 	case BG_RANDOM_CONSTRAINED_ANGLE_AIMED:
-		angle = randring2_next16_and(0x1F);
+		angle = randring2_next16_and_ge_lt(0x00, 0x20);
 		angle -= 0x10;
 		if(last_bullet_in_group(group_i)) {
 			done = true;
@@ -425,8 +425,6 @@ void near bullet_template_speedtune_for_playperf(void)
 
 // The bytes we saved above, and don't need for our modded bugfix below
 #pragma codestring "\x90\x90\x90\x90"
-
-static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
 
 unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 {
@@ -559,11 +557,11 @@ void pascal near bullets_add_regular_raw(void)
 
 	group_i = 0;
 	while(bullets_available > 0) {
-		if(bullet->flag == 0) {
-			bullet->flag = 1;
+		if(bullet->flag == F_FREE) {
+			bullet->flag = F_ALIVE;
 			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
-			bullet->ax.slowdown_time = BMS_SLOWDOWN_FRAMES;
-			bullet->dx.slowdown_speed_delta.v = (
+			bullet->u1.slowdown_time = BMS_SLOWDOWN_FRAMES;
+			bullet->u2.slowdown_speed_delta.v = (
 				to_sp8(BMS_SLOWDOWN_BASE_SPEED) - bullet_template.speed
 			);
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
@@ -594,12 +592,12 @@ void pascal near bullets_add_special_raw(void)
 	);
 	group_i = 0;
 	while(bullets_available > 0) {
-		if(bullet->flag == 0) {
-			bullet->flag = 1;
+		if(bullet->flag == F_FREE) {
+			bullet->flag = F_ALIVE;
 			bullet->move_state = BMS_SPECIAL;
 			bullet->special_motion = bullet_template.special_motion;
-			bullet->ax.turns_done = 0;
-			bullet->dx.angle.v = bullet_template_special_angle.v;
+			bullet->u1.turns_done = 0;
+			bullet->u2.angle.v = bullet_template_special_angle.v;
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
 			if(group_done) {
 				break;

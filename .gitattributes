@@ -1,3 +1,4 @@
 *.asm text eol=crlf
 *.[ch]* text eol=lf
+*.mak text eol=lf
 zuncom/zun*.txt -text

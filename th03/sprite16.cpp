@@ -9,8 +9,8 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "master.hpp"
+#include "platform/x86real/flags.hpp"
 #include "libs/sprite16/sprite16.h"
 extern "C" {
 #include "th03/sprite16.hpp"
@@ -34,8 +34,8 @@ void pascal sprite16_sprites_commit(void)
 #define put_w_words (_AL)
 #define should_draw_column (_SI)
 
-#define SETUP_VARS(left, top, sprite_offset) \
-	sprite_offset_local = sprite_offset; \
+#define SETUP_VARS(left, top, so) \
+	sprite_offset_local = so; \
 	putpos_left = left; \
 	put_w_words = sprite16_put_w.v; \
 	putpos_right_high ^= putpos_right_high; \
@@ -45,14 +45,14 @@ void pascal sprite16_sprites_commit(void)
 	clip_left = sprite16_clip_left; \
 	clip_right = sprite16_clip_right;
 
-#define CALL_PUT(left, top, put_w_words, sprite_offset) \
+#define CALL_PUT(left, top, put_w_words, so) \
 	_AH = SPRITE16_PUT; \
 	_DX = left; \
 	_BX = top; \
 	static_cast<int>(_BX) >>= 1; \
 	_AL = put_w_words; \
 	_CX = sprite16_put_h; \
-	_DI = sprite_offset; \
+	_DI = so; \
 	geninterrupt(SPRITE16); \
 
 #define CLIP_LEFT_PART \
@@ -74,9 +74,9 @@ void pascal sprite16_sprites_commit(void)
 		} \
 	} while(putpos_right >= clip_right);
 
-void pascal sprite16_put(screen_x_t left, screen_y_t top, int sprite_offset)
+void pascal sprite16_put(screen_x_t left, screen_y_t top, sprite16_offset_t so)
 {
-	SETUP_VARS(left, top, sprite_offset);
+	SETUP_VARS(left, top, so);
 	if(putpos_right < clip_right) {
 		if(putpos_left >= clip_left) {
 put:
@@ -99,10 +99,13 @@ put:
 #pragma codestring "\x90"
 
 void pascal sprite16_putx(
-	screen_x_t left, screen_y_t top, int sprite_offset, sprite16_put_func_t func
+	screen_x_t left,
+	screen_y_t top,
+	sprite16_offset_t so,
+	sprite16_put_func_t func
 )
 {
-	SETUP_VARS(left, top, sprite_offset);
+	SETUP_VARS(left, top, so);
 	if(putpos_right < clip_right) {
 		if(putpos_left >= clip_left) {
 put:
@@ -142,12 +145,12 @@ end:
 #pragma codestring "\x90"
 
 void pascal sprite16_put_noclip(
-	screen_x_t left, screen_y_t top, int sprite_offset
+	screen_x_t left, screen_y_t top, sprite16_offset_t so
 )
 {
 	// A completely useless SETUP_VARS variant without the `put_w_words`
 	// assignment, which actually makes it incorrect...
-	sprite_offset_local = sprite_offset;
+	sprite_offset_local = so;
 	putpos_left = left;
 	putpos_right_high ^= putpos_right_high;
 	static_cast<char>(putpos_right) = put_w_words;

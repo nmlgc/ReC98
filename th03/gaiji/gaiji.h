@@ -3,7 +3,6 @@
 // Gaiji available to TH03
 
 #include "th02/gaiji/from_2.h"
-#include "th03/gaiji/bar.h"
 
 typedef enum {
 	// 1P/2P selection cursor

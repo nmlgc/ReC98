@@ -1,13 +1,12 @@
 #pragma option -zCBULLET_A_TEXT -zPmain_03 -k-
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
-#include "planar.h"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
+extern "C" {
 #include "th04/main/player/player.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/bullet/clearzap.hpp"

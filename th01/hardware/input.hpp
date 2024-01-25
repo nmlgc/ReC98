@@ -6,6 +6,7 @@ extern bool input_ok;
 
 // REIIDEN.EXE and FUUIN.EXE
 // -------------------------
+
 // Hey, at least two inputs merged into a single variable! It's a start.
 enum input_lr_t {
 	INPUT_NONE = 0,
@@ -24,7 +25,6 @@ extern bool input_strike;
 extern bool input_mem_enter;
 extern bool input_mem_leave;
 extern bool paused;
-extern bool done;
 extern bool input_bomb;
 
 // Updates all input-related variables if the held state of their associated
@@ -34,6 +34,13 @@ void input_sense(bool16 reset_repeat);
 // Resets all input-related variables, then updates them according to the
 // keyboard state.
 void input_reset_sense(void);
+
+// Resets just menu-related inputs.
+inline void input_reset_menu_related(void) {
+	input_lr = INPUT_NONE;
+	input_shot = false;
+	input_ok = false;
+}
 
 #define input_func_flag(var, flag) { var |= flag; } else { var &= ~flag; }
 
@@ -85,10 +92,16 @@ void input_reset_sense(void);
 	}) \
 	input_onchange(prev_slot_ok, (group3 & K3_RETURN), { \
 		if((paused == true) && (input_shot == true)) { \
-			done = true; \
+			/**
+			 * ZUN bloat: The fact that the Pause menu even writes to this \
+			 * flag is completely disgusting. It doesn't even do anything \
+			 * meaningful with it! \
+			 */ \
+			player_is_hit = true; \
 		} \
 		input_ok = true; \
 	} else { \
 		input_ok = false; \
 	});
+extern bool player_is_hit; // ZUN bloat: See above
 // -------------------------

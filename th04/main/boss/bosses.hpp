@@ -3,8 +3,7 @@
 /// Backdrops
 /// ---------
 
-// Boss-specific [boss_backdrop_colorfill] functions, called with the GRCG in
-// TDW mode and the tile register set to the intended color.
+// Boss-specific [boss_backdrop_colorfill] functions.
 void pascal near orange_backdrop_colorfill(void);
 void pascal near kurumi_backdrop_colorfill(void);
 void pascal near elly_backdrop_colorfill(void);

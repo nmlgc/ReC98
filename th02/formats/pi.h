@@ -1,13 +1,17 @@
 #include "defconv.h"
 
 #if GAME == 5
-# define PI_SLOT_COUNT 8
+	#define PI_SLOT_COUNT 8
 #else
-# define PI_SLOT_COUNT 6
+	#define PI_SLOT_COUNT 6
 #endif
 
 #define PI_W RES_X
 #define PI_H RES_Y
+
+static const int PI_QUARTER_COUNT = 4;
+static const pixel_t PI_QUARTER_W = (PI_W / 2);
+static const pixel_t PI_QUARTER_H = (PI_H / 2);
 
 // Global PI file slots.
 extern PiHeader pi_headers[PI_SLOT_COUNT];
@@ -51,4 +55,16 @@ typedef uint8_t far *pi_buffer_p_t;
 
 #define pi_buffer_p_next_row(p, slot) \
 	pi_buffer_p_offset(p, pi_headers[slot].xsize, 0);
+
+#define pi_buffer_p_init_quarter(p, slot, quarter) { \
+	pi_buffer_p_init(p, slot); \
+	if(quarter == 1) { \
+		pi_buffer_p_offset(p, PI_QUARTER_W, 0); \
+	} else if(quarter == 2) { \
+		pi_buffer_p_offset(p, 0, PI_QUARTER_H); \
+	} else if(quarter == 3) { \
+		pi_buffer_p_offset(p, PI_QUARTER_W, PI_QUARTER_H); \
+	} \
+	pi_buffer_p_normalize(p); \
+}
 // --------------------------

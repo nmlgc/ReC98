@@ -7,9 +7,9 @@
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
+extern "C" {
 #include "th04/main/scroll.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
@@ -17,12 +17,13 @@ extern "C" {
 #include "th04/main/rank.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/slowdown.hpp"
-#include "th04/main/spark.hpp"
 #include "th04/main/bullet/bullet.hpp"
+#include "th04/main/bullet/pellet_r.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/player/player.hpp"
 }
-#include "th04/main/hud/hud.h"
+#include "th04/main/spark.hpp"
+#include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
 #include "th04/main/gather.hpp"
@@ -68,9 +69,9 @@ extern "C" {
 
 void pascal near bullet_turn_x(bullet_t near &bullet)
 {
-	bullet.ax.turns_done++;
+	bullet.u1.turns_done++;
 	bullet.angle = (0x80 - bullet.angle);
-	if(bullet.ax.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -79,9 +80,9 @@ void pascal near bullet_turn_x(bullet_t near &bullet)
 
 void pascal near bullet_turn_y(bullet_t near &bullet)
 {
-	bullet.ax.turns_done++;
+	bullet.u1.turns_done++;
 	bullet.angle = (/* 0x00 */ - bullet.angle);
-	if(bullet.ax.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -91,7 +92,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 #define bullet_turn_complete(bullet) \
 	bullet_update_patnum(bullet); \
 	bullet.speed_cur = bullet.speed_final; \
-	if(bullet.ax.turns_done >= bullet_special_motion.turns_max) { \
+	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) { \
 		bullet.move_state = BMS_REGULAR; \
 	} \
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -126,7 +127,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
 		} else {
-			bullet.ax.turns_done++;
+			bullet.u1.turns_done++;
 			bullet.angle = iatan2(
 				(player_pos.cur.y.v - bullet.pos.cur.y.v),
 				(player_pos.cur.x.v - bullet.pos.cur.x.v)
@@ -140,8 +141,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
 		} else {
-			bullet.ax.turns_done++;
-			bullet.angle += bullet.dx.angle.turn_by;
+			bullet.u1.turns_done++;
+			bullet.angle += bullet.u2.angle.turn_by;
 			bullet_turn_complete(bullet);
 		}
 		break;
@@ -162,11 +163,11 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			}
 			if(bullet.speed_cur.v < to_sp8(2.0f)) {
 				bullet.angle += (static_cast<int8_t>(
-					bullet.dx.angle.target - bullet.angle
+					bullet.u2.angle.target - bullet.angle
 				) / 4);
 			}
 		} else {
-			bullet.angle = bullet.dx.angle.target;
+			bullet.angle = bullet.u2.angle.target;
 			bullet.speed_cur.v = bullet.speed_final.v;
 			bullet.move_state = BMS_REGULAR;
 			bullet_velocity_set_from_angle_and_speed(bullet);
@@ -232,11 +233,11 @@ void bullets_update(void)
 
 	if(bullet_zap.active == false) {
 		for(i = 0; i < BULLET_COUNT; i++, bullet--) {
-			if(bullet->flag == 0) {
+			if(bullet->flag == F_FREE) {
 				continue;
 			}
-			if(bullet->flag == 2) {
-				bullet->flag = 0;
+			if(bullet->flag == F_REMOVE) {
+				bullet->flag = F_FREE;
 				continue;
 			}
 			bullets_seen++;
@@ -256,7 +257,7 @@ void bullets_update(void)
 					reinterpret_cast<unsigned char &>(bullet->move_state)++;
 					if(bullet->move_state >= BMS_DECAY_END) {
 						bullet->pos.update_seg3();
-						bullet->flag = 2;
+						bullet->flag = F_REMOVE;
 						continue;
 					}
 					if((bullet->move_state % BMS_DECAY_FRAMES_PER_CEL) == 0) {
@@ -291,7 +292,7 @@ void bullets_update(void)
 								BULLET16_W,
 								BULLET16_H
 							)) {
-								bullet->flag = 2;
+								bullet->flag = F_REMOVE;
 								continue;
 							}
 						#endif
@@ -309,11 +310,11 @@ void bullets_update(void)
 			if(bullet->move_state == BMS_SPECIAL) {
 				bullet_update_special(*bullet);
 			} else if(bullet->move_state == BMS_SLOWDOWN) {
-				bullet->ax.slowdown_time--;
+				bullet->u1.slowdown_time--;
 				bullet->speed_cur.v = (bullet->speed_final.v + ((
-					bullet->ax.slowdown_time * bullet->dx.slowdown_speed_delta.v
+					bullet->u1.slowdown_time * bullet->u2.slowdown_speed_delta.v
 				) / BMS_SLOWDOWN_FRAMES));
-				if(bullet->ax.slowdown_time == 0) {
+				if(bullet->u1.slowdown_time == 0) {
 					bullet->speed_cur = bullet->speed_final;
 					bullet->move_state = BMS_REGULAR;
 				}
@@ -322,7 +323,7 @@ void bullets_update(void)
 
 			/* DX:AX = */ bullet->pos.update_seg3();
 			if(!playfield_encloses(_AX, _DX, BULLET16_W, BULLET16_H)) {
-				bullet->flag = 2;
+				bullet->flag = F_REMOVE;
 				continue;
 			}
 
@@ -338,7 +339,7 @@ void bullets_update(void)
 					if(overlap_wh_inplace_fast(
 						_AX, _DX, BULLET_KILLBOX_W, BULLET_KILLBOX_H
 					)) {
-						bullet->flag = 2;
+						bullet->flag = F_REMOVE;
 						player_is_hit = true;
 						continue;
 					}
@@ -351,7 +352,7 @@ void bullets_update(void)
 					)) {
 						/* TODO: Replace with the decompiled call
 						 * 	sparks_add_random(bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2);
-						 * once that function is part of this translation unit */
+						 * once that function is part of the same segment */
 						_asm {
 							db  	0xFF, 0x74, 0x02;
 							db  	0xFF, 0x74, 0x04;
@@ -426,8 +427,8 @@ void bullets_update(void)
 		score_per_bullet = 1;
 		score_step = 1;
 		#if (GAME == 5)
-			// ZUN bug: All code below uses TH04's patnum for that sprite. This
-			// causes the decay animation to never actually play in TH05.
+			// ZUN quirk: All code below uses TH04's patnum for that sprite.
+			// This causes the decay animation to never actually play in TH05.
 			#define PAT_BULLET_ZAP 72
 
 			score_per_bullet_cap = (rank == RANK_EXTRA)
@@ -451,13 +452,13 @@ void bullets_update(void)
 
 		overlay_popup_bonus = 0;
 		for(i = 0; i < BULLET_COUNT; i++, bullet--) {
-			if(bullet->flag != 1) {
+			if(bullet->flag != F_ALIVE) {
 				continue;
 			}
 			bullet->pos.velocity.set(0.0f, 0.0f);
 			bullet->pos.update_seg3();
 
-			// ZUN bug: Always false in TH05, see above
+			// ZUN quirk: Always false in TH05, see above
 			if(patnum < (PAT_BULLET_ZAP + BULLET_DECAY_CELS)) {
 				bullet->patnum = patnum;
 				#if (GAME == 5)
@@ -477,7 +478,7 @@ void bullets_update(void)
 				score_per_bullet = score_per_bullet_cap;
 			}
 
-			bullet->flag = 2;
+			bullet->flag = F_REMOVE;
 			#if (GAME == 5)
 				if(bullet_zap_drop_point_items && ((bullets_seen % 4) == 0)) {
 					items_add(bullet->pos.cur.x, bullet->pos.cur.y, IT_POINT);
@@ -493,7 +494,7 @@ void bullets_update(void)
 		}
 		bullet_zap.frames++;
 
-		// ZUN bug: Always true in TH05, see above
+		// ZUN quirk: Always true in TH05, see above
 		if(patnum >= (PAT_BULLET_ZAP + BULLET_ZAP_CELS)) {
 			bullet_zap.active = false;
 		}
