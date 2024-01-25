@@ -3,7 +3,6 @@
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
-extern "C" {
 #include "th01/hardware/vplanset.h"
 #include "th02/shiftjis/fns.hpp"
 #include "th02/mem.h"
@@ -27,6 +26,4 @@ int game_init_op(void)
 	egc_start();
 	game_pfopen();
 	return 0;
-}
-
 }

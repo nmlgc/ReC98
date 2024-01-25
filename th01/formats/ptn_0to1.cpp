@@ -1,6 +1,5 @@
 #pragma option -zCSHARED
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -17,6 +16,4 @@ void ptn_copy_8_0_to_1(screen_x_t left, vram_y_t top)
 		vram_offset += ROW_SIZE;
 	}
 	graph_accesspage_func(0);
-}
-
 }

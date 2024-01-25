@@ -1,11 +1,11 @@
 #pragma option -zPmain_01
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
+extern "C" {
 #include "th04/main/player/player.hpp"
 
 static const pixel_t MOVE_MARGIN_LEFT = 8;

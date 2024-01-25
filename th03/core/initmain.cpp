@@ -1,9 +1,9 @@
 #pragma option -3
 
-extern "C" {
 #include <stddef.h>
 #include "master.hpp"
 #include "th01/hardware/vplanset.h"
+extern "C" {
 #include "th03/core/initexit.h"
 
 #if (GAME <= 3)

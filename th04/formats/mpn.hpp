@@ -5,7 +5,7 @@ struct mpn_t {
 	mpn_image_t *images;
 	size_t count;
 	Palette8 palette;
-	int8_t unused[10];
+	int8_t unused[10]; // ZUN bloat
 };
 
 // TH04 reserves memory for 8 slots, but only actually uses the first one.

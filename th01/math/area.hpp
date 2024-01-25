@@ -1,4 +1,4 @@
-template <class TX, class TY> struct area_t {
+template <class TX, class TY> struct Area {
 	TX left, right;
 	TY top, bottom;
 };

@@ -21,7 +21,7 @@ typedef struct {
 	unsigned char se_mode;
 	char shottype;
 	bool debug;
-	int16_t unused_1;
+	int16_t unused_1; // ZUN bloat
 	score_lebcd_t score_last;
 
 	// (directly inserted into the ending .TXT file name template)
@@ -35,7 +35,7 @@ typedef struct {
 	unsigned char end_sequence;
 	unsigned char miss_count;
 	unsigned char bombs_used;
-	int8_t unused_2;
+	int8_t unused_2; // ZUN bloat
 
 	// *Not* spawned. # of enemies that either left the screen or were killed.
 	unsigned int enemies_gone;
@@ -45,14 +45,14 @@ typedef struct {
 	unsigned char cfg_lives;
 	unsigned char cfg_bombs;
 	unsigned char demo_stage;
-	int8_t unused_3;
+	int8_t unused_3; // ZUN bloat
 	unsigned char demo_num;
-	int8_t unused_4;
+	int8_t unused_4; // ZUN bloat
 	unsigned long slow_frames;
 	unsigned long frames;	// (including bosses, see th04/frames.h)
 	bool zunsoft_shown;
 	bool turbo_mode;
-	int8_t unused_5[182];
+	int8_t unused_5[182]; // ZUN bloat
 } resident_t;
 
 extern resident_t far *resident;

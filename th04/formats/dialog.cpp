@@ -1,4 +1,4 @@
-#pragma option -zCmain_TEXT
+#pragma option -zCM4_RENDER_TEXT
 
 #include <stddef.h>
 #include "platform.h"
@@ -11,7 +11,7 @@ void pascal near dialog_load(const char *fn)
 {
 	size_t size;
 
-	// While hmem_free() isn't specified to perform a NULL check, it does in
+	// While hmem_free() isn't specified to perform a nullptr check, it does in
 	// practice. So while this is *technically* fine, it's not the cleanest
 	// solution. Fixed in TH05.
 	// PORTERS: See the note in dialog_free() – and maybe just call that
@@ -52,6 +52,6 @@ void near dialog_free(void)
 		// returned. You'll need to introduce a separate "dialog buffer base
 		// pointer" when porting to flat memory models.
 		hmem_free(reinterpret_cast<void __seg *>(dialog_p));
-		dialog_p = NULL;
+		dialog_p = nullptr;
 	}
 }

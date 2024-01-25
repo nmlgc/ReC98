@@ -11,7 +11,7 @@ mugetsu_phase2_next	proc near
 	inc	_boss_phase
 	mov	_boss_phase_frame, 0
 	mov	_boss_mode, 0
-	mov	_boss_mode_change, 0
+	mov	_boss_phase_state, 0
 	mov	ax, _boss_phase_end_hp
 	mov	_boss_hp, ax
 	mov	ax, [bp+@@next_end_hp]

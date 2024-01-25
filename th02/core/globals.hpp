@@ -1,4 +1,2 @@
 extern char rank;
-extern char lives;
-extern char bombs;
-extern long score;
+extern int32_t score;

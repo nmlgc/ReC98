@@ -84,9 +84,8 @@ PLAYER_INVALIDATE	endp
 	even
 
 
-; move_ret_t pascal near player_move(int input);
-public PLAYER_MOVE
-PLAYER_MOVE	proc near
+public @PLAYER_MOVE$QUI
+@player_move$qui proc near
 arg_bx	near, @input:word
 
 @@diagonal_x equ ax
@@ -183,7 +182,7 @@ arg_bx	near, @input:word
 	dw @@invalid
 	dw @@invalid
 	dw @@down_right
-PLAYER_MOVE	endp
+@player_move$qui endp
 MAIN_01_TEXT	ends
 
 	end

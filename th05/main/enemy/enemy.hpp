@@ -38,10 +38,10 @@ struct enemy_t {
 	// scripts via conditional jumps based on this value.
 	unsigned char subtype;
 
-	int8_t unused_1;
-	int16_t unused_2;
-	int8_t unused_3;
-	int8_t padding[5];
+	int8_t unused_1; // ZUN bloat
+	int16_t unused_2; // ZUN bloat
+	int8_t unused_3; // ZUN bloat
+	int8_t padding[5]; // ZUN bloat
 };
 
 #include "th04/main/enemy/enemy.hpp"

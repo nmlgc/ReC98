@@ -156,7 +156,7 @@ arg_bx near, @patnum:word
 	MRETURN
 ; ---------------------------------------------------------------------------
 
-; void __usercall near @@grcg_setcolor(uint4_t col<ah>);
+; void __usercall near @@grcg_setcolor(vc_t col<ah>);
 @@grcg_setcolor:
 	GRCG_SETCOLOR_DIRECT ah
 	ret
@@ -245,7 +245,7 @@ put32_odd:	; if X is odd
 Z_SUPER_ROLL_PUT_TINY_32X32_RAW	endp
 
 
-public Z_SUPER_ROLL_PUT_TINY_16x16_RAW
+public Z_SUPER_ROLL_PUT_TINY_16X16_RAW
 Z_SUPER_ROLL_PUT_TINY_16x16_RAW proc near	; z_super_roll_put_tiny_16x16_raw() {
 	even
 	mov	BX,SP

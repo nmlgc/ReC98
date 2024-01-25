@@ -3,17 +3,19 @@
  * Code segment #4 of TH02's OP.EXE
  */
 
-extern "C" {
 #include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th02/common.h"
+extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
+}
 #include "th02/core/globals.hpp"
 #include "th02/formats/scoredat.h"
 #include "th02/gaiji/gaiji.h"
@@ -28,7 +30,7 @@ const unsigned char gbcRANKS[4][8] = {
 	gb_L_, gb_U_, gb_N_, gb_A_, gb_T_, gb_I_, gb_C_, 0,
 };
 
-const char *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
+const shiftjis_t *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
 int logo_step = 0;
 char need_op_h_bft = 1;
 int8_t need_op_h_bft_padding = 0;
@@ -41,7 +43,7 @@ unsigned int score_duration;
 #include "th02/scorelod.c"
 
 // Slightly differs from the same function in MAINE.EXE!
-void pascal near score_put(unsigned y, long score, unsigned atrb)
+void pascal near score_put(unsigned y, long score, tram_atrb2 atrb)
 {
 	unsigned digit = gb_0_;
 	long divisor = 10000000;
@@ -61,7 +63,7 @@ void pascal near score_put(unsigned y, long score, unsigned atrb)
 	}
 }
 
-void pascal near shottype_put(tram_y_t y, int type, int atrb)
+void pascal near shottype_put(tram_y_t y, int type, tram_atrb2 atrb)
 {
 	text_putsa(48, y, SHOTTYPES[type], atrb);
 }
@@ -84,7 +86,7 @@ void int_to_string(char *str, int val, int chars)
 	str[c] = 0;
 }
 
-void pascal near scoredat_date_put(tram_y_t y, int place, int atrb)
+void pascal near scoredat_date_put(tram_y_t y, int place, tram_atrb2 atrb)
 {
 	char str[6];
 	int_to_string(str, hi.score.date[place].da_year, 4);
@@ -99,7 +101,7 @@ void pascal near scoredat_date_put(tram_y_t y, int place, int atrb)
 
 void pascal near scores_put(int place_to_highlight)
 {
-	unsigned atrb = TX_WHITE;
+	tram_atrb2 atrb = TX_WHITE;
 	int i;
 	gaiji_putsa(22, 2, gbHI_SCORE, TX_GREEN);
 	gaiji_putsa(40, 2, gbcRANKS[rank], TX_GREEN);
@@ -229,6 +231,4 @@ int cleardata_load(void)
 		}
 	}
 	return extra_unlocked;
-}
-
 }

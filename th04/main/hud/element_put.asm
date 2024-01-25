@@ -1,8 +1,8 @@
 HUD_HP_CAPTION_TRAM_Y = 8
 HUD_HP_BAR_TRAM_Y = 9
 
-public HUD_HP_PUT
-hud_hp_put proc far
+public @HUD_HP_PUT$QI
+@hud_hp_put$qi proc far
 
 @@bar_colors	= word ptr -10h
 @@blank	= word ptr -0Ah
@@ -71,4 +71,4 @@ endif
 	pop	si
 	leave
 	retf	2
-hud_hp_put endp
+@hud_hp_put$qi endp

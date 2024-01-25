@@ -15,12 +15,12 @@ extrn _pellets:bullet_t:PELLET_COUNT
 extrn _bullets16:bullet_t:PELLET_COUNT
 extrn _gather_template:gather_template_t
 
-BULLET_PATNUM_FOR_ANGLE procdesc pascal near \
+@BULLET_PATNUM_FOR_ANGLE$QUIUC procdesc pascal near \
 	patnum_base:word, angle:byte
 _bullets_add_regular procdesc near
 _bullet_velocity_and_angle_set procdesc near
 _bullet_template_clip procdesc near
-_gather_add_bullets procdesc near
+@gather_add_bullets$qv procdesc near
 
 ; Own data
 extrn _group_is_special:byte
@@ -69,7 +69,7 @@ _bullets_add_raw proc near
 	mov	_bullet_template.spawn_type, BST_GATHER_NORMAL_SPECIAL_MOVE
 
 @@gather_not_special:
-	call	_gather_add_bullets
+	call	@gather_add_bullets$qv
 	pop	word ptr _bullet_template.spawn_type
 
 @@clipped:
@@ -134,9 +134,9 @@ _bullets_add_raw proc near
 	jmp	short $+2
 
 @@loop:
-	cmp	[si+bullet_t.flag], 0
+	cmp	[si+bullet_t.flag], F_FREE
 	jnz	@@next
-	mov	[si+bullet_t.flag], 1
+	mov	[si+bullet_t.flag], F_ALIVE
 
 	@@spawn_state = byte ptr $+3
 	mov	[si+bullet_t.spawn_state], 123
@@ -174,7 +174,7 @@ _bullets_add_raw proc near
 	mov	ah, 0
 	cmp	al, PAT_BULLET16_D
 	jb	short @@is_nondirectional
-	call	bullet_patnum_for_angle pascal, ax, word ptr _group_i_absolute_angle
+	call	@bullet_patnum_for_angle$quiuc pascal, ax, word ptr _group_i_absolute_angle
 
 @@is_nondirectional:
 	mov	[si+bullet_t.BULLET_patnum], ax

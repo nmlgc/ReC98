@@ -1,5 +1,6 @@
 // Growing or shrinking circles
 // ----------------------------
+
 // [center_x] and [center_y] are *passed* as subpixels, but stored at pixel
 // precision, as master.lib's grcg_circle() function doesn't support more than
 // that anyway.

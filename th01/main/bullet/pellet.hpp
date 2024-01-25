@@ -13,6 +13,7 @@ enum pellet_motion_t {
 	PM_REGULAR = 0,
 
 	// Accelerates the Y velocity of the pellet by its [speed] every frame.
+	// Exclusively used with the pellets_add_single_rain() helper function.
 	PM_GRAVITY = 1,
 
 	// Slings the pellet in a (counter-)clockwise motion around its spawn
@@ -22,18 +23,18 @@ enum pellet_motion_t {
 	// frame, in a straight line at the same [speed].
 	PM_SLING_AIMED = 2,
 
-	// Lets the pellet bounce off the top of the playfield once, negating its
-	// X velocity, and zeroing its Y velocity. The pellet then switches to
-	// PM_GRAVITY.
+	// Behaves like PM_REGULAR until the pellet reaches the top of the
+	// playfield. There, it bounces off by negating its X velocity, and zeroing
+	// its Y velocity before switching to PM_GRAVITY.
 	// Unused in the original game. Should have bounced the bullets off the
-	// left and right edge of the playfield as well, but that code doesn't
+	// left and right edge of the playfield as well, but that part doesn't
 	// actually work in ZUN's original code.
 	PM_BOUNCE_FROM_TOP_THEN_GRAVITY = 3,
 
-	// Lets the pellet bounce off the top of the playfield once, zeroing its
-	// X velocity, and setting its Y velocity to [speed]. The pellet then
-	// switches to PM_REGULAR.
-	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL = 4,
+	// Behaves like PM_REGULAR until the pellet reaches the top of the
+	// playfield. There, it zeroes its X velocity and sets its Y velocity to
+	// [speed] before switching to PM_REGULAR.
+	PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR = 4,
 
 	// Spins the pellet on a circle around a [spin_center] point, which moves
 	// at [spin_velocity], with [PELLET_SPIN_CIRCLE_RADIUS] and a rotational
@@ -75,7 +76,8 @@ enum pellet_sling_direction_t {
 // • spreads with  odd numbers of pellets are aimed *at* the player, while
 // • spreads with even numbers of pellets are aimed *around* the player.
 enum pellet_group_t {
-	// Does not actually work, due to a ZUN bug in group_velocity_set()!
+	// Not a valid pellet type, due to a potential ZUN bug in
+	// group_velocity_set()!
 	PG_NONE = 0,
 
 	PG_1 = 1,
@@ -111,24 +113,7 @@ enum pellet_group_t {
 	_pellet_group_t_FORCE_INT16 = 0x7FFF
 };
 
-struct pellet_t {
-protected:
-	friend class CPellets;
-
-	// Why, I don't even?!?
-	void sloppy_wide_unput(void) {
-		egc_copy_rect_1_to_0_16_word_w(
-			prev_left.to_pixel(), prev_top.to_pixel(), PELLET_W, PELLET_H
-		);
-	}
-
-	void sloppy_wide_unput_at_cur_pos(void) {
-		egc_copy_rect_1_to_0_16_word_w(
-			cur_left.to_pixel(), cur_top.to_pixel(), PELLET_W, PELLET_H
-		);
-	}
-
-public:
+struct Pellet {
 	bool moving;
 	unsigned char motion_type;
 
@@ -162,19 +147,25 @@ public:
 };
 
 class CPellets {
-	pellet_t near pellets[PELLET_COUNT];
-	int alive_count; // only used for one single optimization
-	int unknown_zero[10];
+	Pellet near pellets[PELLET_COUNT];
+
+	// Only used to skip the looping over all pellets in the spawn functions if
+	// this reached [PELLET_COUNT]. Should *not* be used to skip any other
+	// loop, as the ZUN quirk that led to this name causes it to no longer
+	// accurately reflect all living pellets after a reset.
+	int alive_count_excluding_cloud_pellets_after_reset;
+
+	int unknown_zero[10]; // ZUN bloat
 public:
-	int unknown_seven;
+	int unknown_seven; // ZUN bloat
 
 	// Rendering pellets at odd or even indices this frame?
 	bool16 interlace_field;
 	bool spawn_with_cloud;
 
 protected:
-	pellet_t near* iteration_start(void) {
-		return static_cast<pellet_t near *>(pellets);
+	Pellet near* iteration_start(void) {
+		return static_cast<Pellet near *>(pellets);
 	}
 
 	// Updates the velocity of the currently iterated pellet, depending on its
@@ -216,7 +207,7 @@ public:
 	// the resident [pellet_speed]; [speed_for_motion_fixed] is never tuned.
 	//
 	// [spin_center_x] and [spin_center_y] are only used with PM_SPIN,
-	// while [speed_base] is *ignored* for PM_SPIN.
+	// while [speed_base] is *ignored* for PM_SPIN and PM_SLING_AIMED.
 	void add_single(
 		screen_x_t left,
 		screen_y_t top,
@@ -235,21 +226,30 @@ public:
 	// Also calls Shots.unput_update_render()!
 	void unput_update_render(void);
 
-	void unput_and_reset(void);
-	void reset(void);
+	void unput_and_reset_nonclouds(void);
+	void reset_nonclouds(void);
 };
 
 /// Globals
 /// -------
 extern CPellets Pellets;
 
+// Helper function for rain pellets.
+#define pellets_add_single_rain(left, top, angle, speed_base) { \
+	Pellets.add_single( \
+		left, top, angle, to_sp(speed_base), PM_GRAVITY, to_sp(0.0625f) \
+	); \
+}
+
 // If true, CPellets::unput_update_render() performs
 // • rendering,
-// • and hit testing against the Orb and the player
-// for only half of the [pellets] each frame, alternating between even and odd
-// [pellets] array indices. However,
+// • hit testing against the Orb,
+// • and deflection testing against the player
+// for only half of the [Pellets] each frame, alternating between even and odd
+// [Pellets] array indices. However,
 // • motion updates,
-// • and hit testing against *player shots*
+// • life-losing hit testing against the player
+// • and hit testing against player shots
 // are still done for all pellets every frame.
 //
 // Probably not really meant to save CPU and/or VRAM accesses, but rather to

@@ -5,7 +5,6 @@
  */
 
 #include <dos.h>
-#include <stddef.h>
 #include "platform.h"
 #include "master.hpp"
 #include "th01/rank.h"
@@ -17,7 +16,7 @@ extern "C" int pascal scoredat_verify(void);
 
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {
-	RANK_NORMAL, SND_BGM_FM, CFG_BOMBS_DEFAULT, CFG_LIVES_DEFAULT, 0
+	RANK_NORMAL, SND_BGM_FM, CFG_BOMBS_DEFAULT, CFG_LIVES_DEFAULT, false
 };
 
 #include "th02/formats/cfg_init.c"
@@ -31,10 +30,10 @@ const cfg_options_t OPTS_DEFAULT = {
 		return 1; \
 	}
 
-#define optimization_barrier_3()
+#define optimization_barrier()
 
 #define RES_INIT_BOTTOM \
-	cfg_init(sgm);
+	cfg_init(seg);
 
 #include "th02/res_init.cpp"
 

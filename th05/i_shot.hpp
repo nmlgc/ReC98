@@ -3,15 +3,12 @@
  * Shared #includes for the shot type control translation units
  */
 
-#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"
-extern "C" {
-#include "th03/math/randring.h"
+#include "th03/math/randring.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
-}
 #include "th04/main/player/player.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/main/player/shot.hpp"
