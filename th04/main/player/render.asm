@@ -53,7 +53,7 @@ player_render	proc near
 @@got_options?:
 	cmp	_shot_level, 2
 	jb	@@ret
-	call	_grcg_setmode_rmw_seg1
+	call	@grcg_setmode_rmw$qv
 	mov	ax, _player_option_pos_cur.x
 	sar	ax, 4
 	; Technically, DI = AX + PLAYFIELD_LEFT - PLAYER_OPTION_DISTANCE - (PLAYER_OPTION_W / 2)

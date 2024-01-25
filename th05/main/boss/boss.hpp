@@ -19,7 +19,7 @@ typedef enum {
 	Y_DOWN,
 } y_direction_t;
 
-extern area_t<Subpixel, Subpixel> boss_flystep_random_clamp;
+extern Area<Subpixel, Subpixel> boss_flystep_random_clamp;
 static const subpixel_t BOSS_FLYSTEP_RANDOM_FIELD_LEFT = TO_SP(
 	(PLAYFIELD_W / 2) - (PLAYFIELD_W / 8)
 );
@@ -34,6 +34,7 @@ static const int BOSS_FLYSTEP_RANDOM_FRAMES = 28;
 // [boss] into this direction with a hardcoded, [frame]-dependent speed for
 // all [frame]s between 0 and [BOSS_FLYSTEP_RANDOM_FRAMES], after which the
 // function returns true.
+// Does nothing for [frame]s < 0 (and the game relies on that).
 bool pascal near boss_flystep_random(int frame);
 
 // Steps the [boss] from its current position towards the target point, moving

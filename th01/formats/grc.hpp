@@ -23,8 +23,6 @@ struct grc_t {
 	dots8_t* dots[GRC_IMAGES_PER_SLOT];
 };
 
-extern grc_t grc_images[GRC_SLOT_COUNT];
-
 // Loads all images from the .GRC file with the given [fn] inside the
 // currently active packfile into the given .GRC [slot]. Always returns 0.
 int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN]);
@@ -35,6 +33,11 @@ void grc_free(main_grc_slot_t slot);
 // Blits the sub[image] from the given [slot] to (⌊left/8⌋*8, top) with the
 // given [col]. Correctly clips the sprite at all 4 edges of VRAM.
 void grc_put_8(
-	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, int col
+	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, vc2 col
 );
+
+// For some reason, all code assumes .GRC entities to be 48×32, rather than
+// 32×32. Why?!
+#define grc_sloppy_unput(left, top) \
+	egc_copy_rect_1_to_0_16(left, top, 48, 32);
 /// ------------------------------------------

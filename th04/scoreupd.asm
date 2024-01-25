@@ -37,7 +37,7 @@ if GAME eq 4
 
 	MAIN_01 group MAIN_0_TEXT
 	MAIN_0_TEXT	segment byte public 'CODE' use16
-		SCORE_EXTEND_UPDATE procdesc near
+		SCORE_EXTEND_UPDATE_AND_RENDER procdesc near
 	MAIN_0_TEXT ends
 else
 	_temp_lebcd equ _hud_gaiji_row
@@ -163,7 +163,7 @@ endif
 	call	HUD_SCORE_PUT
 if GAME eq 4
 	mov	_score_unused, 0
-	call	SCORE_EXTEND_UPDATE
+	call	SCORE_EXTEND_UPDATE_AND_RENDER
 endif
 
 @@ret:

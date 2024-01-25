@@ -34,6 +34,7 @@ void pascal sprite16_sprites_commit(void);
 // pixels right of `sprite16_clip_left` and left of `sprite16_clip_right` on
 // purpose.
 void pascal sprite16_put(screen_x_t left, screen_y_t top, sprite16_offset_t so);
+
 // Like sprite16_put(), but using an optional drawing function.
 void pascal sprite16_putx(
 	screen_x_t left,
@@ -41,6 +42,7 @@ void pascal sprite16_putx(
 	sprite16_offset_t so,
 	sprite16_put_func_t func
 );
+
 // Like sprite16_put(), but ignores the clipping points.
 void pascal sprite16_put_noclip(
 	screen_x_t left, screen_y_t top, sprite16_offset_t so

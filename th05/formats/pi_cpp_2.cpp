@@ -1,6 +1,6 @@
 // Second TH05 .PI C++ translation unit.
 
-#pragma option -zCSHARED_
+#pragma option -zCSHARED_ -2 -k-
 
 #include <stddef.h>
 #include "platform.h"
@@ -22,8 +22,6 @@ extern unsigned int pi_mask_y;
 void pascal near pi_put_8_rowloop(
 	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
 );
-
-#pragma option -k-
 
 // MODDERS: Just give egc_setup_copy() a mask parameter and remove this
 // abomination of a function.
@@ -66,7 +64,7 @@ int DEFCONV pi_load(int slot, const char *fn)
 	_SI = _DI;
 	_SI <<= 2;	// *= sizeof(void far *)
 	_SI += reinterpret_cast<uint16_t>(pi_buffers);
-	imul_di(sizeof(PiHeader));
+	imul_reg_to_reg(_DI, _DI, sizeof(PiHeader));
 	_DI += reinterpret_cast<uint16_t>(pi_headers);
 	return graph_pi_load_pack(
 		fn,

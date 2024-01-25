@@ -22,15 +22,15 @@ enum shot_active_t {
 };
 
 struct shotpair_t {
-	char flag;
-	char unused_1;
+	bool alive;
+	char unused_1; // ZUN bloat
 	PlayfieldPoint topleft;
 	Subpixel velocity_y;
 	sprite16_offset_t so_pid;
 	unsigned char so_anim;
-	char unused_2;
-	unsigned char pid;
-	char unused_3;
+	char unused_2; // ZUN bloat
+	pid_t pid;
+	char unused_3; // ZUN bloat
 };
 
 #define SHOTPAIR_DISTANCE 16

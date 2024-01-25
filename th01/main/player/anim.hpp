@@ -1,13 +1,13 @@
 static const int PLAYER_ANIM_IMAGES_PER_SLOT = 32;
 
-struct player_anim_images_t {
+struct PlayerAnimImages {
 	dots8_t *img[PLAYER_ANIM_IMAGES_PER_SLOT];
 
 	dots8_t*& operator [](int image) {
 		return img[image];
 	}
 
-	const dots8_t* operator [](int image) const{
+	const dots8_t* operator [](int image) const {
 		return img[image];
 	}
 };
@@ -17,7 +17,7 @@ struct player_anim_images_t {
 // sprites with a width ≠ [PTN_W] or a height ≠ [PTN_H].
 class CPlayerAnim {
 	dots8_t *alpha[PLAYER_ANIM_IMAGES_PER_SLOT];
-	Planar<player_anim_images_t> planes;
+	Planar<PlayerAnimImages> planes;
 	vram_byte_amount_t vram_w;
 	pixel_t h;
 	int bos_image_count;

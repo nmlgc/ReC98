@@ -1,6 +1,8 @@
 ; Everything here needs to be kept in sync with the C++ versions in
 ; bullet.hpp!
 
+include th02/main/entity.inc
+
 ; States and modes
 ; ----------------
 BSS_CLOUD_FRAMES = 16

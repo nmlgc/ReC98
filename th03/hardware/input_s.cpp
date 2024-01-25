@@ -2,9 +2,9 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "decomp.hpp"
 #include "pc98kbd.h"
 #include "master.hpp"
+#include "platform/x86real/flags.hpp"
 extern "C" {
 #include "th03/hardware/input.h"
 

@@ -17,9 +17,9 @@ swords_add proc near
 ; ---------------------------------------------------------------------------
 
 @@loop:
-	cmp	[si+sword_t.flag], 0
+	cmp	[si+sword_t.flag], F_FREE
 	jnz	short @@more?
-	mov	[si+sword_t.flag], 1
+	mov	[si+sword_t.flag], F_ALIVE
 	mov	eax, sword_template.pos.cur
 	mov	dword ptr [si+sword_t.pos.cur], eax
 	call	circles_add_shrinking pascal, sword_template.pos.cur.x, sword_template.pos.cur.y
@@ -27,7 +27,7 @@ swords_add proc near
 	call	vector2_near pascal, ax, word ptr sword_template.SWORD_angle, [bp+@@speed]
 	mov	al, sword_template.SWORD_angle
 	mov	[si+sword_t.SWORD_angle], al
-	call	bullet_patnum_for_angle pascal, PAT_SWORD, word ptr sword_template.SWORD_angle
+	call	@bullet_patnum_for_angle$quiuc pascal, PAT_SWORD, word ptr sword_template.SWORD_angle
 	mov	ah, 0
 	mov	[si+sword_t.SWORD_patnum_tiny], ax
 	mov	al, byte ptr [bp+@@speed]
@@ -65,13 +65,13 @@ swords_update proc near
 ; ---------------------------------------------------------------------------
 
 @@loop:
-	cmp	[si+sword_t.flag], 0
+	cmp	[si+sword_t.flag], F_FREE
 	jz	@@next
 	cmp	_bullet_clear_time, 0
 	jz	short @@still_twirling?
-	cmp	[si+sword_t.flag], 1
+	cmp	[si+sword_t.flag], F_ALIVE
 	jnz	short @@still_twirling?
-	mov	[si+sword_t.flag], 2
+	mov	[si+sword_t.flag], F_REMOVE
 	mov	[si+sword_t.twirl_time], 0
 
 @@still_twirling?:
@@ -80,7 +80,7 @@ swords_update proc near
 	dec	[si+sword_t.twirl_time]
 	cmp	[si+sword_t.twirl_time], 0
 	jnz	short @@twirl
-	call	bullet_patnum_for_angle pascal, PAT_SWORD, word ptr [si+sword_t.SWORD_angle]
+	call	@bullet_patnum_for_angle$quiuc pascal, PAT_SWORD, word ptr [si+sword_t.SWORD_angle]
 	mov	ah, 0
 	mov	[si+sword_t.SWORD_patnum_tiny], ax
 	call	snd_se_play pascal, 3
@@ -122,7 +122,7 @@ swords_update proc near
 ; ---------------------------------------------------------------------------
 
 @@hitbox_active_or_already_decaying?:
-	cmp	[si+sword_t.flag], 2
+	cmp	[si+sword_t.flag], F_REMOVE
 	jz	short @@in_decay_state
 	sub	ax, _player_pos.cur.x
 	sub	dx, _player_pos.cur.y
@@ -133,7 +133,7 @@ swords_update proc near
 	cmp	dx, (14 shl 4)
 	ja	short @@not_hitting_player
 	mov	_player_is_hit, 1
-	mov	[si+sword_t.flag], 2
+	mov	[si+sword_t.flag], F_REMOVE
 	jmp	short @@next
 ; ---------------------------------------------------------------------------
 
@@ -172,7 +172,7 @@ swords_update proc near
 	jl	short @@next
 
 @@remove:
-	mov	[si+sword_t.flag], 0
+	mov	[si+sword_t.flag], F_FREE
 
 @@next:
 	inc	di

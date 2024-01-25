@@ -8,7 +8,7 @@ void pascal frame_delay(int frames)
 {
 	_BX = _SP;
 	asm { mov	bx, ss:[bx+4]; } /* = */ (frames);
-	vsync_reset1();
+	vsync_Count1 = 0;
 	while(vsync_Count1 < _BX) {}
 }
 

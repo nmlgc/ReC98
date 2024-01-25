@@ -1,5 +1,5 @@
 EXPLOSION_TYPED macro
-	mov	[si+explosion_t.flag], 1
+	mov	[si+explosion_t.EXPLOSION_alive], 1
 	mov	[si+explosion_t.age], 0
 	mov	ax, _boss_pos.cur.x
 	mov	[si+explosion_t.center.x], ax
@@ -59,7 +59,7 @@ public @BOSS_EXPLODE_SMALL$Q16EXPLOSION_TYPE_T
 	mov	bp, sp
 	push	si
 	mov	si, offset _explosions_small
-	cmp	[si+explosion_t.flag], 0
+	cmp	[si+explosion_t.EXPLOSION_alive], 0
 	jz	short @@set
 	add	si, size explosion_t
 

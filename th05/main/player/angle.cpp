@@ -1,6 +1,3 @@
-#pragma option -zCmain_031_TEXT -zPmain_03
-
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
@@ -18,5 +15,3 @@ unsigned char pascal near player_angle_from(
 	);
 }
 #pragma codestring "\x90"
-
-}

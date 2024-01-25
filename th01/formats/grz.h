@@ -5,6 +5,35 @@
 /// format) to be used with the same RLE stream, or the RLE stream to be used
 /// on its own for a monochrome byte-aligned pattern.
 
+// Static arrays
+#define GRX_COUNT 16
+#define PLANAR_STREAM_PER_GRX_COUNT 16
+
+// File format limit
+#define GRZ_IMAGE_COUNT 16
+
+#define HGRZ_MAGIC "HGRZ"
+#define HGRX_MAGIC "HGRX"
+
+struct grz_header_t {
+	char magic[sizeof(HGRZ_MAGIC) - 1];
+	uint8_t image_count;
+	int8_t padding[3];
+	int32_t offsets[GRZ_IMAGE_COUNT];
+	int32_t total_size; // including this header
+	int8_t unknown[20];
+};
+
+struct grx_header_t {
+	char magic[sizeof(HGRX_MAGIC) - 1];
+	uint8_t planar_stream_count;
+	int8_t unused_1[3];
+	uint16_t rle_stream_size;
+	uint16_t planar_stream_size;
+	int8_t unused_2[4];
+	Palette4 palette;
+};
+
 // RLE stream format
 enum grx_rle_t {
 	// Puts the next byte from the pixel data source. No parameters.
@@ -15,13 +44,6 @@ enum grx_rle_t {
 	//   else = skip)
 	GC_RUN = 1,
 };
-
-// Static arrays
-#define GRX_COUNT 16
-#define PLANAR_STREAM_PER_GRX_COUNT 16
-
-// File format limit
-#define GRZ_IMAGE_COUNT 16
 
 // Loading
 // -------
@@ -42,6 +64,7 @@ int grx_load_noplanar(unsigned int slot, const char *fn);
 
 // Display
 // -------
+
 // Equivalent to grz_put_stream(slot, 0);
 void grx_put(unsigned int slot);
 
@@ -51,7 +74,7 @@ void grx_put_stream(unsigned int slot, int planar_stream);
 
 // Renders only the RLE stream in the given [col] via the GRCG, using a 0xFF
 // pattern for every 8 dots to be displayed.
-void grx_put_col(unsigned int slot, uint4_t col);
+void grx_put_col(unsigned int slot, vc_t col);
 // -------
 
 // Frees both the RLE and any planar streams in the given GRX [slot].

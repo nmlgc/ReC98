@@ -11,30 +11,31 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th01/rank.h"
+#include "shiftjis.hpp"
 extern "C" {
+#include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
-#include "th04/playchar.h"
 #include "th04/formats/scoredat.h"
 #include "th04/resident.hpp"
 #include "th04/hardware/input.h"
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
 #include "th04/snd/snd.h"
-#include "th04/sprites/op_cdg.h"
+#include "th04/op/clear.hpp"
 #include "th04/op/op.hpp"
+#include "th04/sprites/op_cdg.hpp"
 
 #include "th04/shiftjis/m_char.cpp"
 
 static const pixel_t PIC_W = 256;
 static const pixel_t PIC_H = 244;
 
-static const int COL_SELECTED = 15;
-static const int COL_NOT_SELECTED = 3;
-static const int COL_BOX = 2;
-static const int COL_SHADOW = 1;
+static const vc2 COL_SELECTED = V_WHITE;
+static const vc2 COL_NOT_SELECTED = 3;
+static const vc2 COL_BOX = 2;
+static const vc2 COL_SHADOW = 1;
 
 // Raised edge
 // -----------
@@ -169,8 +170,8 @@ void near raise_bg_allocate_and_snap(void)
 	vram_offset_t vo_marisa_row;
 	vram_offset_t vo_marisa;
 
-	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
-	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
+	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
+	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
 
 	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  REIMU_TOP));
 	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));
