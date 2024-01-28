@@ -7145,7 +7145,7 @@ loc_102A9:
 		jl	short loc_10294
 		mov	word_20650, 0
 		mov	byte_2066A, 0
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	byte_2066B, 0
 		mov	dword_20682, 0
 		mov	word_20686, 0
@@ -12960,7 +12960,7 @@ var_2		= word ptr -2
 		mov	word_20654, 0C0h
 		mov	word_20656, 0FFF0h
 		mov	word_20658, 0FFF0h
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	word_24E84, 94h
 		mov	word_24E82, 1
 		mov	word_1ED94, 1
@@ -13048,8 +13048,8 @@ loc_13A1D:
 		mov	[bp+var_2], ax
 		or	ax, ax
 		jz	short loc_13A85
-		add	word_2065A, ax
-		cmp	word_2065A, 12Ch
+		add	_boss_damage, ax
+		cmp	_boss_damage, 300
 		jle	short loc_13A4B
 		cmp	si, 130h
 		jl	short loc_13A6B
@@ -13126,7 +13126,7 @@ rika_init	proc far
 		mov	angle_1E510, 20h
 		mov	word_20652, 0C0h
 		mov	word_20654, 0C0h
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	byte_2066A, 0
 		mov	patnum_2064E, 150
 		mov	dword_20612, 0
@@ -13292,7 +13292,7 @@ var_1		= byte ptr -1
 		mov	ax, point_24E7C.x
 		add	ax, 28
 		mov	si, ax
-		cmp	word_2065A, 2BCh
+		cmp	_boss_damage, 700
 		jge	short loc_13CE0
 		mov	word_24E80, 0
 		test	byte ptr word_20650, 3Fh
@@ -13314,7 +13314,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_13CE0:
-		cmp	word_2065A, 578h
+		cmp	_boss_damage, 1400
 		jge	short loc_13D63
 		test	byte ptr dword_20612, 1Fh
 		jnz	loc_13ECA
@@ -13517,7 +13517,7 @@ sub_13C91	endp
 
 sub_13ECD	proc far
 
-var_2		= word ptr -2
+@@damage		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -13526,11 +13526,11 @@ var_2		= word ptr -2
 		push	300040h
 		push	60h
 		call	sub_1283C
-		mov	[bp+var_2], ax
+		mov	[bp+@@damage], ax
 		or	ax, ax
 		jz	short loc_13F30
-		add	word_2065A, ax
-		cmp	word_2065A, 8D4h
+		add	_boss_damage, ax
+		cmp	_boss_damage, 2260
 		jg	short loc_13F18
 		call	_snd_se_play c, 4
 		call	super_roll_put_1plane pascal, point_24E7C.x, point_24E7C.y, patnum_2064E, large PLANE_PUT or GC_BRGI
@@ -13938,7 +13938,7 @@ sub_14203	endp
 
 sub_1424A	proc far
 
-var_4		= word ptr -4
+@@damage		= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -13959,7 +13959,7 @@ var_2		= word ptr -2
 		mov	word_20654, 0C0h
 		mov	word_20656, 0FFF0h
 		mov	word_20658, 0FFF0h
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	word_250E2, 1
 		mov	word_1EDA4, 1
 		jmp	loc_143E1
@@ -14006,7 +14006,7 @@ loc_142E1:
 		call	_snd_se_play c, 4
 		mov	bx, word_2065C
 		call	super_roll_put_1plane pascal, word ptr [bx], si, (136 shl 16) or 0, PLANE_PUT or GC_BRGI
-		inc	word_2065A
+		inc	_boss_damage
 		jmp	loc_143E1
 ; ---------------------------------------------------------------------------
 
@@ -14046,11 +14046,11 @@ loc_1435F:
 		push	word ptr [bx]
 		push	40003Ah
 		call	sub_1283C
-		mov	[bp+var_4], ax
+		mov	[bp+@@damage], ax
 		or	ax, ax
 		jz	short loc_143C7
-		add	word_2065A, ax
-		cmp	word_2065A, 17Ch
+		add	_boss_damage, ax
+		cmp	_boss_damage, 380
 		jle	short loc_1438D
 		cmp	si, 130h
 		jl	short loc_143AD
@@ -14313,7 +14313,7 @@ sub_14519	endp
 
 sub_145E1	proc near
 
-var_2		= word ptr -2
+@@damage		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -14351,14 +14351,14 @@ loc_14628:
 		push	word ptr [bx]
 		push	300030h
 		call	sub_1283C
-		mov	[bp+var_2], ax
+		mov	[bp+@@damage], ax
 		or	ax, ax
 		jz	short loc_14689
-		add	word_2065A, ax
+		add	_boss_damage, ax
 		call	_snd_se_play c, 4
 		mov	bx, word_2065C
 		call	super_roll_put_1plane pascal, word ptr [bx], si, patnum_2064E, large PLANE_PUT or GC_BRGI
-		cmp	word_2065A, 960h
+		cmp	_boss_damage, 2400
 		jl	short loc_14699
 		mov	byte_2066A, 1
 		add	_score_delta, 30000
@@ -15666,7 +15666,7 @@ loc_15157:
 		mov	byte_252F7, 0
 
 loc_15170:
-		cmp	word_2065A, 2BCh
+		cmp	_boss_damage, 700
 		jle	loc_15203
 		cmp	byte_252F7, 1
 		jz	loc_15203
@@ -15709,7 +15709,7 @@ loc_151AE:
 		mov	byte_252F7, 0
 
 loc_151C5:
-		cmp	word_2065A, 5DCh
+		cmp	_boss_damage, 1500
 		jle	short loc_15203
 
 loc_151CD:
@@ -15827,7 +15827,7 @@ loc_15296:
 		call	palette_white_in
 		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_PREBOSS
 		call	@dialog_post$qv
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	byte_2066A, 0
 		mov	word_21748, 2
 		mov	angle_1E510, 0
@@ -16591,7 +16591,7 @@ sub_158DC	endp
 sub_15907	proc near
 
 @@patnum		= word ptr -4
-var_2		= word ptr -2
+@@damage		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -16610,11 +16610,11 @@ var_2		= word ptr -2
 		push	ax
 		push	380020h
 		call	sub_1283C
-		mov	[bp+var_2], ax
+		mov	[bp+@@damage], ax
 		or	ax, ax
 		jz	short loc_1594A
 		mov	patnum_2064E, 130
-		add	word_2065A, ax
+		add	_boss_damage, ax
 
 loc_1594A:
 		mov	al, _page_front
@@ -18180,10 +18180,10 @@ loc_16706:
 		mov	byte_255B3, 1
 
 loc_16725:
-		mov	ax, word_2065A
+		mov	ax, _boss_damage
 		cmp	ax, word_255BC
 		jl	short loc_16742
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		inc	byte ptr word_255B1+1
 		mov	byte_255B4, 0
 		mov	byte_255B3, 0
@@ -18364,7 +18364,7 @@ loc_1691C:
 		push	3
 		call	sub_166DE
 		add	sp, 2
-		cmp	word_2065A, 514h
+		cmp	_boss_damage, 1300
 		jl	short loc_16948
 		mov	byte_2066A, 1
 		add	_score, 300000
@@ -18413,7 +18413,7 @@ evileye_init	proc far
 		mov	word_20656, 30h	; '0'
 		mov	word_20658, 30h	; '0'
 		mov	point_254E6.y, 48
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	word_20650, 0
 		mov	patnum_2064E, 128
 		mov	byte ptr word_255B1+1, 0
@@ -20627,8 +20627,8 @@ var_2		= word ptr -2
 		mov	byte_2066B, 1
 		mov	ax, word_26C66
 		imul	[bp+var_2]
-		add	word_2065A, ax
-		cmp	word_2065A, 1770h
+		add	_boss_damage, ax
+		cmp	_boss_damage, 6000
 		jl	short loc_17CF9
 		call	_snd_se_play c, 2
 		mov	byte_2066A, 1
@@ -23029,7 +23029,7 @@ sub_193A4	proc near
 		push	si
 		cmp	word_20650, 0
 		jnz	loc_19443
-		mov	ax, word_2065A
+		mov	ax, _boss_damage
 		cmp	ax, word_26CF0
 		jge	short loc_193C3
 		mov	ax, word_26CBE
@@ -23246,7 +23246,7 @@ loc_1953B:
 		mov	word_26CF6, 2
 		mov	word_26CF2, 0Ah
 		mov	word_26CF4, 3
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		jmp	loc_198A8
 ; ---------------------------------------------------------------------------
 
@@ -23404,7 +23404,7 @@ loc_19728:
 		mov	word_26CF6, 2
 		mov	word_26CF2, 0Ch
 		mov	word_26CF4, 3
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		jmp	loc_198A8
 ; ---------------------------------------------------------------------------
 
@@ -23478,7 +23478,7 @@ loc_19770:
 		mov	word_26CF2, 0C8h
 		mov	word_26CF4, 9
 		mov	byte_26CC0, 1
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	byte_26CC4, 2
 		jmp	loc_198A8
 ; ---------------------------------------------------------------------------
@@ -23610,7 +23610,7 @@ loc_198A8:
 		idiv	bx
 		mov	word_26C6A, dx
 		mov	word_26CBE, 0
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	word_26CF0, 44Ch
 		mov	word_26CF6, 2
 		mov	word_26CF2, 0C8h
@@ -23820,7 +23820,7 @@ mima_init	proc far
 		call	@dialog_script_stage5_pre_winged_$qv
 		call	@dialog_post$qv
 		call	sub_D376
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	byte_2066A, 0
 		mov	word_20650, 0
 		mov	byte_2066B, 0
@@ -24311,7 +24311,7 @@ sub_1A044	proc near
 		or	ax, ax
 		jz	short loc_1A0CA
 		mov	byte_2066B, 1
-		add	word_2065A, di
+		add	_boss_damage, di
 		mov	si, point_26D76.y
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -24319,7 +24319,7 @@ sub_1A044	proc near
 		sub	si, RES_Y
 
 loc_1A07E:
-		cmp	word_2065A, 190h
+		cmp	_boss_damage, 400
 		jl	short loc_1A0CA
 		cmp	si, 336
 		jge	short loc_1A0CA
@@ -24572,7 +24572,7 @@ loc_1A240:
 		mov	word_20658, 0FFF0h
 		mov	word_2065C, 2BE2h
 		mov	word_2065E, 2BE6h
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	byte_2066A, 0
 		mov	byte_2066B, 0
 		mov	word_26CFC, 0
@@ -25215,7 +25215,7 @@ marisa_init	proc far
 		graph_showpage _page_front
 		mov	_tile_mode, TM_NONE
 		call	sub_D376
-		mov	word_2065A, 0
+		mov	_boss_damage, 0
 		mov	byte_2066A, 0
 		mov	word_20650, 0
 		mov	byte_2066B, 0
@@ -25289,7 +25289,7 @@ var_2		= word ptr -2
 		mov	al, byte_1EE96
 		mov	ah, 0
 		imul	[bp+var_2]
-		add	word_2065A, ax
+		add	_boss_damage, ax
 		jmp	short loc_1AABB
 ; ---------------------------------------------------------------------------
 
@@ -25297,7 +25297,7 @@ loc_1AAB1:
 		call	_snd_se_play c, 11
 
 loc_1AABB:
-		cmp	word_2065A, 384h
+		cmp	_boss_damage, 900
 		jl	short loc_1AAD6
 		mov	byte_2066A, 1
 		add	_score_delta, 20000
@@ -30522,7 +30522,8 @@ word_20652	dw ?
 word_20654	dw ?
 word_20656	dw ?
 word_20658	dw ?
-word_2065A	dw ?
+public _boss_damage
+_boss_damage	dw ?
 word_2065C	dw ?
 word_2065E	dw ?
 byte_20660	db ?
