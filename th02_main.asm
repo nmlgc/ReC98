@@ -9637,10 +9637,10 @@ loc_116B5:
 		jnb	short loc_116E3
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]	; left
+		push	_stone_left[bx]	; left
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+531Eh]	; top
+		push	_stone_top[bx]	; top
 		push	(32 shl 16) or 32	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
 		cmp	byte ptr [si+2BF0h], 3
@@ -9651,7 +9651,7 @@ loc_116E3:
 		inc	si
 
 loc_116E4:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_116B5
 		pop	si
 		pop	bp
@@ -9677,7 +9677,7 @@ loc_116F5:
 		jnb	short loc_1175C
 		mov	bx, si
 		add	bx, bx
-		mov	di, [bx+531Eh]
+		mov	di, _stone_top[bx]
 		add	di, _scroll_line
 		cmp	di, RES_Y
 		jl	short loc_11712
@@ -9689,7 +9689,7 @@ loc_11712:
 		call	_snd_se_play c, 4
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]
+		push	_stone_left[bx]
 		push	di
 		mov	bx, si
 		add	bx, bx
@@ -9703,7 +9703,7 @@ loc_11712:
 loc_11746:
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]
+		push	_stone_left[bx]
 		push	di
 		mov	bx, si
 		add	bx, bx
@@ -9714,7 +9714,7 @@ loc_1175C:
 		inc	si
 
 loc_1175D:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_116F5
 		pop	di
 		pop	si
@@ -9742,13 +9742,13 @@ arg_0		= word ptr  4
 		mov	[bp+var_4], 40h
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5314h]
-		add	ax, 10h
+		mov	ax, _stone_left[bx]
+		add	ax, 16
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+531Eh]
-		add	ax, 0Ch
+		mov	ax, _stone_top[bx]
+		add	ax, 12
 		push	ax
 		push	500002h
 		push	0
@@ -9756,7 +9756,7 @@ arg_0		= word ptr  4
 		mov	[bp+var_2], 0Ah
 		mov	bx, si
 		add	bx, bx
-		mov	di, [bx+531Eh]
+		mov	di, _stone_top[bx]
 		add	di, _scroll_line
 		cmp	di, RES_Y
 		jl	short loc_117B6
@@ -9766,20 +9766,20 @@ loc_117B6:
 		cmp	si, 4
 		jnz	short loc_11824
 		add	[bp+var_4], 20h	; ' '
-		mov	ax, word_22D8C
+		mov	ax, _stone_left[STONE_NORTH * word]
 		add	ax, 8
 		push	ax
-		mov	ax, word_22D96
+		mov	ax, _stone_top[STONE_NORTH * word]
 		add	ax, 8
 		push	ax
 		push	word_1EB26
 		call	sub_FFF8
 		cmp	word_1EB26, 18h
 		jl	short loc_117F3
-		mov	ax, word_22D8C
+		mov	ax, _stone_left[STONE_NORTH * word]
 		add	ax, 8
 		push	ax
-		mov	ax, word_22D96
+		mov	ax, _stone_top[STONE_NORTH * word]
 		add	ax, 8
 		push	ax
 		mov	ax, word_1EB26
@@ -9790,7 +9790,7 @@ loc_117B6:
 loc_117F3:
 		cmp	word_1EB26, 20h	; ' '
 		jge	short loc_11810
-		call	super_roll_put pascal, word_22D8C, di, patnum_22D54
+		call	super_roll_put pascal, _stone_left[STONE_NORTH * word], di, patnum_22D54
 		inc	word_1EB26
 		xor	ax, ax
 		jmp	short loc_11871
@@ -9836,7 +9836,7 @@ loc_1182C:
 loc_1185E:
 		mov	bx, si
 		add	bx, bx
-		call	super_put pascal, word ptr [bx+5314h], di, [bp+var_2]
+		call	super_put pascal, _stone_left[bx], di, [bp+var_2]
 		xor	ax, ax
 
 loc_11871:
@@ -9866,10 +9866,10 @@ loc_11885:
 		ja	loc_1193E
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]
+		push	_stone_left[bx]
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+531Eh]
+		push	_stone_top[bx]
 		push	200028h
 		call	sub_1283C
 		mov	di, ax
@@ -9908,13 +9908,13 @@ loc_118DC:
 		jg	short loc_11939
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5314h]
+		mov	ax, _stone_left[bx]
 		add	ax, 8
 		push	ax	; left
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+531Eh]
-		add	ax, 0Ch
+		mov	ax, _stone_top[bx]
+		add	ax, 12
 		push	ax	; top
 		or	si, si
 		jnz	short loc_1191A
@@ -9946,7 +9946,7 @@ loc_1193E:
 		inc	si
 
 loc_1193F:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	loc_11885
 		xor	si, si
 		jmp	short loc_11970
@@ -9957,12 +9957,12 @@ loc_1194A:
 		jnz	short loc_1196F
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5314h]
+		mov	ax, _stone_left[bx]
 		add	ax, 8
 		mov	word_205D8, ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+531Eh]
+		mov	ax, _stone_top[bx]
 		add	ax, 8
 		mov	word_205DA, ax
 		jmp	short loc_11975
@@ -9972,7 +9972,7 @@ loc_1196F:
 		inc	si
 
 loc_11970:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_1194A
 
 loc_11975:
@@ -10049,12 +10049,12 @@ loc_119F5:
 		jnz	short loc_11A1F
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5314h]
-		add	ax, 0Ch
+		mov	ax, _stone_left[bx]
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+531Eh]
+		mov	ax, _stone_top[bx]
 		add	ax, 8
 		push	ax
 		push	0
@@ -10087,12 +10087,12 @@ loc_11A42:
 		jnz	short loc_11A6E
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5314h]
-		add	ax, 0Ch
+		mov	ax, _stone_left[bx]
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+531Eh]
+		mov	ax, _stone_top[bx]
 		add	ax, 8
 		push	ax
 		push	0
@@ -10104,7 +10104,7 @@ loc_11A6E:
 		inc	si
 
 loc_11A6F:
-		cmp	si, 2
+		cmp	si, STONE_OUTER_WEST
 		jl	short loc_11A42
 		jmp	short loc_11A84
 ; ---------------------------------------------------------------------------
@@ -10146,7 +10146,7 @@ arg_0		= word ptr  4
 		idiv	bx
 		or	dx, dx
 		jnz	loc_11B57
-		mov	di, 2
+		mov	di, STONE_OUTER_WEST
 		jmp	short loc_11AF5
 ; ---------------------------------------------------------------------------
 
@@ -10160,12 +10160,12 @@ loc_11AB9:
 loc_11AC4:
 		mov	bx, di
 		add	bx, bx
-		mov	ax, [bx+5314h]
-		add	ax, 0Ch
+		mov	ax, _stone_left[bx]
+		add	ax, 12
 		push	ax
 		mov	bx, di
 		add	bx, bx
-		mov	ax, [bx+531Eh]
+		mov	ax, _stone_top[bx]
 		add	ax, 8
 		push	ax
 		mov	ax, si
@@ -10184,7 +10184,7 @@ loc_11AF4:
 		inc	di
 
 loc_11AF5:
-		cmp	di, 4
+		cmp	di, STONE_NORTH
 		jl	short loc_11AB9
 		jmp	short loc_11B57
 ; ---------------------------------------------------------------------------
@@ -10199,7 +10199,7 @@ loc_11AFC:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_11B57
-		mov	di, 2
+		mov	di, STONE_OUTER_WEST
 		jmp	short loc_11B52
 ; ---------------------------------------------------------------------------
 
@@ -10213,12 +10213,12 @@ loc_11B16:
 loc_11B21:
 		mov	bx, di
 		add	bx, bx
-		mov	ax, [bx+5314h]
-		add	ax, 0Ch
+		mov	ax, _stone_left[bx]
+		add	ax, 12
 		push	ax
 		mov	bx, di
 		add	bx, bx
-		mov	ax, [bx+531Eh]
+		mov	ax, _stone_top[bx]
 		add	ax, 8
 		push	ax
 		mov	ax, si
@@ -10237,7 +10237,7 @@ loc_11B51:
 		inc	di
 
 loc_11B52:
-		cmp	di, 4
+		cmp	di, STONE_NORTH
 		jl	short loc_11B16
 
 loc_11B57:
@@ -10398,7 +10398,7 @@ var_1		= byte ptr -1
 		add	ax, -32
 		push	ax
 		mov	ax, _player_topleft.x
-		sub	ax, word_22D8C
+		sub	ax, _stone_left[STONE_NORTH * word]
 		push	ax
 		call	iatan2
 		mov	[bp+var_1], al
@@ -10440,7 +10440,7 @@ loc_11CF5:
 		add	ax, -32
 		push	ax
 		mov	ax, _player_topleft.x
-		sub	ax, word_22D8C
+		sub	ax, _stone_left[STONE_NORTH * word]
 		push	ax
 		call	iatan2
 		mov	[bp+var_1], al
@@ -10549,10 +10549,10 @@ sub_11DF6	proc near
 loc_11E0A:
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]
+		push	_stone_left[bx]
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+531Eh]
+		push	_stone_top[bx]
 		call	@randring2_next8$qv
 		push	ax
 		push	83h
@@ -10561,7 +10561,7 @@ loc_11E0A:
 		inc	si
 
 loc_11E2B:
-		cmp	si, 4
+		cmp	si, STONE_NORTH
 		jl	short loc_11E0A
 
 loc_11E30:
@@ -10730,20 +10730,20 @@ loc_11F46:
 loc_11F57:
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]
+		push	_stone_left[bx]
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+531Eh]
+		push	_stone_top[bx]
 		push	word_22FAF
 		push	19h
 		push	52003Ch
 		call	sub_10865
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]
+		push	_stone_left[bx]
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+531Eh]
+		push	_stone_top[bx]
 		mov	al, byte ptr word_22FAF
 		neg	al
 		push	ax
@@ -10753,7 +10753,7 @@ loc_11F57:
 		inc	si
 
 loc_11F98:
-		cmp	si, 4
+		cmp	si, STONE_NORTH
 		jl	short loc_11F57
 		mov	al, byte ptr word_22FAF
 		add	al, 0FDh
@@ -10839,14 +10839,14 @@ loc_1202D:
 		mov	bx, si
 		add	bx, bx
 		mov	ax, _player_topleft.x
-		sub	ax, [bx+5314h]
+		sub	ax, _stone_left[bx]
 		push	ax
 		call	iatan2
 		mov	[si+5541h], al
 		inc	si
 
 loc_1204A:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_1202D
 
 loc_1204F:
@@ -10868,13 +10868,13 @@ loc_1204F:
 loc_12075:
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5314h]
-		add	ax, 0Ch
+		mov	ax, _stone_left[bx]
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+531Eh]
-		add	ax, 0Ch
+		mov	ax, _stone_top[bx]
+		add	ax, 12
 		push	ax
 		mov	al, [si+5541h]
 		push	ax
@@ -10884,7 +10884,7 @@ loc_12075:
 		inc	si
 
 loc_1209A:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_12075
 		jmp	short loc_120D7
 ; ---------------------------------------------------------------------------
@@ -10899,12 +10899,12 @@ loc_120A1:
 loc_120AA:
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5314h]
+		mov	ax, _stone_left[bx]
 		add	ax, 8
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+531Eh]
+		mov	ax, _stone_top[bx]
 		add	ax, 8
 		push	ax
 		push	word_22FB5
@@ -10914,7 +10914,7 @@ loc_120AA:
 		inc	si
 
 loc_120D2:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_120AA
 
 loc_120D7:
@@ -11463,7 +11463,7 @@ loc_124EC:
 		mov	word_20650, 0
 		mov	byte_22D57, 0
 		mov	word_22FAA, 0
-		mov	ax, word_22D8C
+		mov	ax, _stone_left[STONE_NORTH * word]
 		add	ax, 8
 		mov	word_205D8, ax
 		mov	word_205DA, 20h	; ' '
@@ -11774,16 +11774,16 @@ loc_12786:
 loc_127A5:
 		cmp	si, 5
 		jl	short loc_12786
-		mov	word_22D84, 80h
-		mov	word_22D8E, 20h	; ' '
-		mov	word_22D86, 120h
-		mov	word_22D90, 20h	; ' '
-		mov	word_22D88, 30h	; '0'
-		mov	word_22D92, 30h	; '0'
-		mov	word_22D8A, 170h
-		mov	word_22D94, 30h	; '0'
-		mov	word_22D8C, 0D0h
-		mov	word_22D96, 20h	; ' '
+		mov	_stone_left[STONE_INNER_WEST * word], (PLAYFIELD_LEFT + 16 + (1 * 80))
+		mov	_stone_top[STONE_INNER_WEST * word], (PLAYFIELD_TOP + 16)
+		mov	_stone_left[STONE_INNER_EAST * word], (PLAYFIELD_LEFT + 16 + (3 * 80))
+		mov	_stone_top[STONE_INNER_EAST * word], (PLAYFIELD_TOP + 16)
+		mov	_stone_left[STONE_OUTER_WEST * word], (PLAYFIELD_LEFT + 16 + (0 * 80))
+		mov	_stone_top[STONE_OUTER_WEST * word], (PLAYFIELD_TOP + 32)
+		mov	_stone_left[STONE_OUTER_EAST * word], (PLAYFIELD_LEFT + 16 + (4 * 80))
+		mov	_stone_top[STONE_OUTER_EAST * word], (PLAYFIELD_TOP + 32)
+		mov	_stone_left[STONE_NORTH * word], (PLAYFIELD_LEFT + 16 + (2 * 80))
+		mov	_stone_top[STONE_NORTH * word], (PLAYFIELD_TOP + 16)
 		mov	word_22D9A, 28h	; '('
 		mov	word_22D98, 0DCh
 		nopcall	sub_17A55
@@ -30695,16 +30695,20 @@ byte_22D56	db ?
 byte_22D57	db ?
 dword_22D58	dd ?
 		db 40 dup(?)
-word_22D84	dw ?
-word_22D86	dw ?
-word_22D88	dw ?
-word_22D8A	dw ?
-word_22D8C	dw ?
-word_22D8E	dw ?
-word_22D90	dw ?
-word_22D92	dw ?
-word_22D94	dw ?
-word_22D96	dw ?
+
+STONE_INNER_WEST = 0
+STONE_INNER_EAST = 1
+STONE_OUTER_WEST = 2
+STONE_OUTER_EAST = 3
+STONE_NORTH = 4
+STONE_COUNT = 5
+
+STONE_W = 32
+
+public _stone_left, _stone_top
+_stone_left	dw STONE_COUNT dup(?)
+_stone_top 	dw STONE_COUNT dup(?)
+
 word_22D98	dw ?
 word_22D9A	dw ?
 y_22D9C	dw ?
