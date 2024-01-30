@@ -7,20 +7,16 @@
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th04/hardware/grcg.hpp"
-#include "th05/op/piano.h"
+#include "th05/op/piano.hpp"
 #include "th05/sprites/piano_l.hpp"
 
 /// Coordinates
 /// -----------
 
 static const screen_x_t PIANO_LEFT = 384;
-static const vram_y_t PIANO_TOP = 64;
-static const pixel_t PIANO_H = 15;
 static const pixel_t PIANO_KEY_W = 4;
 static const pixel_t PIANO_BLACK_H = 9;
 static const pixel_t PIANO_BLACK_PRESSED_H = 8;
-static const pixel_t PIANO_PADDING_BOTTOM = 3;
-static const pixel_t PIANO_H_PADDED = (PIANO_H + PIANO_PADDING_BOTTOM);
 
 static const int PIANO_OCTAVES = 8;
 static const pixel_t PIANO_OCTAVE_W = (7 * PIANO_KEY_W);
@@ -39,10 +35,6 @@ static inline screen_x_t label_left(int col) {
 
 static inline screen_x_t label_top(int row) {
 	return 	(PIANO_TOP  + PIANO_LABEL_DIST_Y + (row * PIANO_H_PADDED));
-}
-
-static inline vram_y_t part_top(int part_id) {
-	return (PIANO_TOP + (part_id * PIANO_H_PADDED));
 }
 /// -----------
 
@@ -95,7 +87,7 @@ void __fastcall near piano_fm_part_put_raw(
 	int16_t ax_unused, int16_t dx_unused, QQ near *near *qq
 );
 #define piano_fm_part_put(part_id, qq) \
-	_DI = vram_offset_shift(0, part_top(part_id)); \
+	_DI = vram_offset_shift(0, piano_part_top(part_id)); \
 	_asm { mov si, part_id; } \
 	piano_fm_part_put_raw(_AX, _DX, qq);
 
@@ -111,7 +103,7 @@ char __fastcall near piano_current_note_from(
 // ES:DI.
 void near piano_part_keys_put_raw();
 inline void piano_part_keys_put(int part_id) {
-	_DI = vram_offset_shift(0, part_top(part_id));
+	_DI = vram_offset_shift(0, piano_part_top(part_id));
 	piano_part_keys_put_raw();
 }
 
@@ -146,6 +138,7 @@ void piano_setup_and_put_initial(void)
 	// saved in this function!
 	_SI = _SI;
 
+	static_assert(PIANO_PART_COUNT == 6);
 	piano_part_keys_put(0);
 	piano_part_keys_put(1);
 	piano_part_keys_put(2);
@@ -188,6 +181,7 @@ void piano_render(void)
 
 	#define _BX	reinterpret_cast<QQ near *near *>(_BX)
 
+	static_assert(PIANO_PART_COUNT == 6);
 	piano_fm_part_put(0, _BX);	_BX++;	// BX = FMPart[1]
 	piano_fm_part_put(1, _BX);	_BX++;	// BX = FMPart[2]
 	piano_fm_part_put(2, _BX);	_BX++;	// BX = FMPart[3]
@@ -195,7 +189,7 @@ void piano_render(void)
 	piano_fm_part_put(4, _BX);
 
 	grcg_setcolor_direct(5);
-	_DI = vram_offset_shift(0, part_top(5));
+	_DI = vram_offset_shift(0, piano_part_top(5));
 	_BX += 2;	// BX = SSGPart[0]
 	piano_pressed_key_put(piano_current_note_from(_AX, _DX, _BX));
 	_BX++;	// BX = SSGPart[1]
