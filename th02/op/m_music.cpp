@@ -68,6 +68,24 @@ extern "C" {
 
 // Colors
 // ------
+// The Music Room only redraws text whenever it changes, but fully redraws the
+// B plane on every frame – first by blitting [nopoly_B], then by drawing the
+// polygons on top. This places the following constraints on text colors:
+// 1) Colors 0 or 1 can't be used, because those don't include any of the bits
+//    that can stay constant between frames.
+// 2) The hardware palette colors should be identical regardless of the state
+//    of the lowest bit to make the text show up on top of the polygons. That
+//    is, if a color is 5 *or* 6, hardware colors 5 *and* 6 should be
+//    identical. (TH04 and TH05 rely on this.)
+// 3) TH02, TH03, and TH04 populate [nopoly_B] *after* they've blitted the
+//    constant tracklist, thereby including all of the text pixels in the B
+//    plane. TH02 and TH03 also update [nopoly_B] with the B plane from VRAM
+//    every time they blit a new comment. This allows the tracklist (TH04)
+//    and/or comment colors (TH02/TH03/TH04) to simply be odd, even if 2) would
+//    not apply. In that case, that lowest/least significant bit will always be
+//    set when blitting back [nopoly_B], and the polygons can't affect it.
+//    Together with the other constant color bits, the text then appears on top
+//    of the polygons, and in the defined color. (TH02 and TH03 rely on this.)
 
 static const vc_t COL_TRACKLIST_SELECTED = ((GAME >= 4) ? 3 : V_WHITE);
 static const vc_t COL_TRACKLIST          = ((GAME >= 4) ? 5 : 3);
@@ -651,6 +669,13 @@ void pascal near cmt_load(int track)
 		cmt_unput();
 		cmt_put_macro(FX_WEIGHT_HEAVY);
 
+		// Update [nopoly_B] to match the B plane of the comment we just
+		// blitted into the respective area. Since this buffer is reblitted
+		// every frame, updating it here preserves the lowest bit of the
+		// comment text pixels regardless of the polygons rendered on top.
+		// This allows comment colors to have any odd value, just like the
+		// tracklist colors.
+		//
 		// ZUN bloat: Same as above – the second call overwrites the previously
 		// snapped contents with the exact same pixels from the other page.
 		// ZUN bloat: Also, limiting it to just the comment area would have
