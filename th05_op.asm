@@ -129,7 +129,7 @@ loc_BEF4:
 		lea	ax, [si+96]
 		push	ax
 		push	(320 shl 16) or 16
-		call	bgimage_put_rect
+		call	bgimage_put_rect_16
 
 loc_BF05:
 		mov	al, [bp+arg_2]
@@ -296,11 +296,11 @@ sub_C3A7	proc near
 		push	bp
 		mov	bp, sp
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	bgimage_put_rect pascal, (320 shl 16) or  32, (320 shl 16) or  16
-		call	bgimage_put_rect pascal, (320 shl 16) or 180, (320 shl 16) or 144
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or  32, (320 shl 16) or  16
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or 180, (320 shl 16) or 144
 		call	music_flip
-		call	bgimage_put_rect pascal, (320 shl 16) or  32, (320 shl 16) or  16
-		call	bgimage_put_rect pascal, (320 shl 16) or 180, (320 shl 16) or 144
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or  32, (320 shl 16) or  16
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or 180, (320 shl 16) or 144
 		pop	bp
 		retn
 sub_C3A7	endp
@@ -323,7 +323,7 @@ draw_cmt	proc near
 loc_C406:
 		call	music_cmt_load pascal, [bp+@@track]
 		call	screen_back_B_put
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 256
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 256
 		cmp	byte_13E96, 0
 		jz	short loc_C42C
 		call	sub_C376
@@ -355,12 +355,12 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		call	bgimage_put_rect pascal, large (0 shl 16) or 32, (320 shl 16) or  16
-		call	bgimage_put_rect pascal, large (0 shl 16) or 96, (320 shl 16) or 192
+		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
+		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
 		call	draw_tracks pascal, si
 		call	music_flip
-		call	bgimage_put_rect pascal, large (0 shl 16) or 32, (320 shl 16) or  16
-		call	bgimage_put_rect pascal, large (0 shl 16) or 96, (320 shl 16) or 192
+		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 32, (320 shl 16) or  16
+		call	bgimage_put_rect_16 pascal, large (0 shl 16) or 96, (320 shl 16) or 192
 		call	draw_tracks pascal, si
 		pop	si
 		pop	bp
@@ -1003,7 +1003,7 @@ include th02/snd/snd.inc
 	extern @POLAR$QIII:proc
 	extern @piano_render$qv:proc
 	extern @piano_setup_and_put_initial$qv:proc
-	extern BGIMAGE_PUT_RECT:proc
+	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_LOAD:proc

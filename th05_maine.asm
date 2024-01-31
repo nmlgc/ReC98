@@ -1225,7 +1225,7 @@ loc_BAFE:
 		mov	di, ax
 
 loc_BB00:
-		call	bgimage_put_rect pascal, si, di, (130 shl 16) or 18
+		call	bgimage_put_rect_16 pascal, si, di, (130 shl 16) or 18
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
@@ -1787,7 +1787,7 @@ loc_BEA6:
 		add	ax, -(GLYPHBALL_CLOUD_SPLASH_H / 2)
 		push	ax
 		push	(GLYPHBALL_CLOUD_SPLASH_W shl 16) or GLYPHBALL_CLOUD_SPLASH_H
-		call	bgimage_put_rect
+		call	bgimage_put_rect_16
 
 loc_BEC8:
 		inc	di
@@ -6326,7 +6326,7 @@ include th04/hardware/grppsafx.asm
 	extern _bgimage_free:proc
 	extern @game_exit$qv:proc
 	extern VECTOR2_AT:proc
-	extern BGIMAGE_PUT_RECT:proc
+	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_PUT_QUARTER_MASKED_8:proc

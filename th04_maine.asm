@@ -763,7 +763,7 @@ arg_8		= word ptr  0Ch
 		add	ax, ax
 		add	ax, [bp+arg_2]
 		push	ax
-		call	bgimage_put_rect
+		call	bgimage_put_rect_16
 		pop	si
 		pop	bp
 		retn	0Ah
@@ -3210,7 +3210,7 @@ include th04/hardware/grppsafx.asm
 	extern _input_sense:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_free:proc
-	extern BGIMAGE_PUT_RECT:proc
+	extern BGIMAGE_PUT_RECT_16:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_FREE:proc

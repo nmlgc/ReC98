@@ -134,8 +134,8 @@ void pascal near pic_put(bool16 darkened)
 		}
 	} else {
 		// Raised area of the highlighted pic
-		bgimage_put_rect(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
-		bgimage_put_rect(pic_raised_left, pic_top, RAISE_W, PIC_H);
+		bgimage_put_rect_16(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
+		bgimage_put_rect_16(pic_raised_left, pic_top, RAISE_W, PIC_H);
 
 		// Pic
 		if(selectable_with[playchar_menu_sel]) {

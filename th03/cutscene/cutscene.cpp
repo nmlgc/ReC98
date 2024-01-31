@@ -528,7 +528,7 @@ void near cursor_advance_and_animate(void)
 
 			// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
 			// applying boldface… why not just show it on TRAM?
-			bgimage_put_rect(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
+			bgimage_put_rect_16(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
 
 			if(
 				(frames_to_wait <= 0) ||
@@ -606,7 +606,7 @@ script_ret_t pascal near script_op(unsigned char c)
 
 		#if (GAME == 5)
 			graph_accesspage(1);
-			bgimage_put_rect(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
+			bgimage_put_rect_16(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
 
 			// ZUN bloat: All blitting operations in this module access the
 			// intended page before they blit. That's why preliminary state

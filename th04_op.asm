@@ -248,9 +248,9 @@ sub_C33F	proc near
 		push	bp
 		mov	bp, sp
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		call	music_flip
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		pop	bp
 		retn
 sub_C33F	endp
@@ -273,7 +273,7 @@ draw_cmt	proc near
 loc_C37C:
 		call	music_cmt_load pascal, [bp+@@track]
 		call	screen_back_B_put
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
+		call	bgimage_put_rect_16 pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		cmp	byte_12DBE, 0
 		jz	short loc_C3A2
 		call	sub_C30E
@@ -1158,7 +1158,7 @@ include th02/snd/snd.inc
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
-	extern BGIMAGE_PUT_RECT:proc
+	extern BGIMAGE_PUT_RECT_16:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc

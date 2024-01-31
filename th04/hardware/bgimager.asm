@@ -11,8 +11,8 @@ SHARED	ends
 SHARED_	segment word public 'CODE' use16
 	assume cs:g_SHARED
 
-public BGIMAGE_PUT_RECT
-bgimage_put_rect proc far
+public BGIMAGE_PUT_RECT_16
+bgimage_put_rect_16 proc far
 	; (PASCAL calling convention, parameter list needs to be reversed here)
 	arg @@h:word, @@w:word, @@top:word, @@left:word
 	@@planes_left	equ <dl>
@@ -87,7 +87,7 @@ endif
 	pop	di
 	pop	bp
 	retf	8
-bgimage_put_rect endp
+bgimage_put_rect_16 endp
 	even
 SHARED_	ends
 
