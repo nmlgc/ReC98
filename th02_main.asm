@@ -2007,7 +2007,7 @@ loc_BE3B:
 		; all sprites blitted during the boss fight appear at their correct Y
 		; coordinate.
 		; ZUN bug: But we've just rendered a full frame of sprites *at* the
-		; wrong [scroll_line]Å :zunpet: As a result, these will appear one pixel
+		; wrong [scroll_line] :zunpet: As a result, these will appear one pixel
 		; higher than where they should be, since we skip the GDC SCROLL that
 		; would compensate for it.
 		inc	_scroll_line
