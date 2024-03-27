@@ -5,11 +5,11 @@
 // will reveal how many elements of this array we would need to preserve – or
 // turn this into a landmine if that maximum score is indeed below ZUN's
 // assumption of (99,999,999 × 10).
-extern const int32_t EXTEND_SCORES[];
+extern const score_t EXTEND_SCORES[];
 
 extern unsigned int extends_gained;
-extern int32_t score_delta;
-extern int32_t hiscore;
+extern score_t score_delta;
+extern score_t hiscore;
 extern uint8_t hiscore_continues;
 
 // Sets [extends_gained] based on the current [score].

@@ -1,3 +1,5 @@
+#include "th02/score.h"
+
 static const int8_t LIVES_MAX = 5;
 static const int8_t BOMBS_MAX = 5;
 
@@ -7,7 +9,7 @@ struct resident_t {
 	unsigned char stage;
 	char debug;
 	int8_t padding_1;
-	long score;
+	score_t score;
 	unsigned int continues_used;
 	char rem_bombs;
 	char rem_lives;

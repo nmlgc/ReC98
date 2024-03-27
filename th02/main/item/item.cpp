@@ -82,7 +82,7 @@ extern union {
 	vram_y_t vram;
 } p_top;
 extern uint8_t semirandom_ring_p;
-extern int32_t item_score_this_frame;
+extern score_t item_score_this_frame;
 // -----
 
 void near items_init_and_reset(void)

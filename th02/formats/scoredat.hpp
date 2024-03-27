@@ -1,3 +1,5 @@
+#include "th02/score.h"
+
 #define SCOREDAT_PLACES 10
 #define SCOREDAT_NAME_LEN 6 /* excluding the terminating 0 */
 #define EXTRA_CLEAR_FLAGS {1, 2, 4}
@@ -22,7 +24,7 @@ struct scoredat_t {
 	 */
 	int16_t cleared;
 
-	int32_t score[SCOREDAT_PLACES];
+	score_t score[SCOREDAT_PLACES];
 	int32_t score_sum;
 	unsigned char g_name[SCOREDAT_PLACES][SCOREDAT_NAME_LEN + 1];
 	unsigned char g_name_first_sum;

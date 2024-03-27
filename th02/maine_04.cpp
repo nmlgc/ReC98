@@ -15,12 +15,11 @@
 #include "th02/core/globals.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/formats/scoredat.hpp"
-#include "th02/score.h"
 
 #include "th02/score.c"
 #include "th02/scoreenc.c"
 
-long score_highest;
+score_t score_highest;
 scoredat_section_t hi;
 
 extern "C" {
@@ -53,12 +52,12 @@ inline void scoredat_init() {
 }
 
 // Slightly differs from the same function in OP.EXE!
-void pascal score_put(tram_y_t y, long score, tram_atrb2 atrb)
+void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
 	tram_x_t x;
 	int digit;
-	long divisor = 10000000;
-	long result;
+	score_t divisor = 10000000;
+	score_t result;
 	char putting = 0;
 	for(x = 26; x < 26 + (8 * 2); x += 2) {
 		result = (score / divisor) % 10;

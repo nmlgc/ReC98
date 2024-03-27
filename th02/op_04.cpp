@@ -41,11 +41,11 @@ unsigned int score_duration;
 #include "th02/scorelod.c"
 
 // Slightly differs from the same function in MAINE.EXE!
-void pascal near score_put(unsigned y, long score, tram_atrb2 atrb)
+void pascal near score_put(unsigned y, score_t score, tram_atrb2 atrb)
 {
 	unsigned digit = gb_0_;
-	long divisor = 10000000;
-	long result;
+	score_t divisor = 10000000;
+	score_t result;
 	char putting = 0;
 	int i;
 	for(i = 0; i < 8; i++) {
