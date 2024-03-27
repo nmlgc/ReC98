@@ -117,6 +117,8 @@ _TEXT		ends
 END_TEXT segment byte public 'CODE' use16
 	@END_LOAD$QNXC procdesc pascal near \
 		fn_seg:word, fn_off:word
+	@VERDICT_VALUE_SCORE_PUT$QIIL procdesc pascal near \
+		left_and_top:dword, score:dword
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -124,69 +126,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_95CB	proc near
-
-var_9		= byte ptr -9
-var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-arg_0		= dword	ptr  4
-@@y		= word ptr  8
-@@x		= word ptr  0Ah
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	di, gb_0_
-		mov	[bp+var_4], 10000000
-		mov	[bp+var_9], 0
-		xor	si, si
-		jmp	short loc_9638
-; ---------------------------------------------------------------------------
-
-loc_95E4:
-		mov	eax, [bp+arg_0]
-		cdq
-		idiv	[bp+var_4]
-		mov	ebx, 10
-		cdq
-		idiv	ebx
-		mov	[bp+var_8], edx
-		mov	eax, [bp+var_4]
-		cdq
-		idiv	ebx
-		mov	[bp+var_4], eax
-		mov	ax, word ptr [bp+var_8]
-		add	ax, gb_0_
-		mov	di, ax
-		cmp	[bp+var_8], 0
-		jz	short loc_961D
-		mov	[bp+var_9], 1
-
-loc_961D:
-		cmp	[bp+var_9], 0
-		jz	short loc_9637
-		mov	ax, si
-		shl	ax, 4
-		add	ax, [bp+@@x]
-		call	graph_gaiji_putc pascal, ax, [bp+@@y], di, V_WHITE
-
-loc_9637:
-		inc	si
-
-loc_9638:
-		cmp	si, 8
-		jl	short loc_95E4
-		pop	di
-		pop	si
-		leave
-		retn	8
-sub_95CB	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2468,9 +2407,7 @@ loc_A992:
 		push	(128 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	0C00080h
-		pushd	[_score]
-		call	sub_95CB
+		call	@verdict_value_score_put$qiil pascal, (192 shl 16) or 128, large [_score]
 		push	100080h
 		push	40h
 		call	sub_97F1
