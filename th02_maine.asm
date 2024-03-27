@@ -119,6 +119,8 @@ END_TEXT segment byte public 'CODE' use16
 		fn_seg:word, fn_off:word
 	@VERDICT_VALUE_SCORE_PUT$QIIL procdesc pascal near \
 		left_and_top:dword, score:dword
+	@LINE_TYPE$QIIINUCI procdesc pascal near \
+		left_and_top:dword, len:word, str_seg:word, str_off:word, frames_per_kanji:word
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -126,119 +128,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9643	proc near
-
-@@str		= byte ptr -50h
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-@@top		= word ptr  0Ch
-@@left		= word ptr  0Eh
-
-		enter	50h, 0
-		push	si
-		push	di
-		lea	ax, [bp+@@str]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_D030
-		mov	cx, 50h	; 'P'
-		call	SCOPY@
-		xor	si, si
-		xor	di, di
-		jmp	short loc_96C4
-; ---------------------------------------------------------------------------
-
-loc_9660:
-		call	@input_reset_sense$qv
-		les	bx, [bp+arg_2]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+si+@@str], al
-		inc	si
-		mov	bx, word ptr [bp+arg_2]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+si+@@str], al
-		inc	si
-		mov	[bp+si+@@str], 0
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		mov	al, col_and_fx_F02A
-		cbw
-		push	ax
-		push	[bp+@@top]
-		push	[bp+@@left]
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		cmp	byte_F02B, 0
-		jz	short loc_96B9
-		cmp	_key_det, 0
-		jz	short loc_96B9
-		test	di, 3
-		jz	short loc_96C1
-		mov	ax, [bp+arg_0]
-		mov	bx, 3
-		cwd
-		idiv	bx
-		push	ax
-		jmp	short loc_96BC
-; ---------------------------------------------------------------------------
-
-loc_96B9:
-		push	[bp+arg_0]
-
-loc_96BC:
-		call	@frame_delay$qi
-
-loc_96C1:
-		add	di, 2
-
-loc_96C4:
-		cmp	di, [bp+arg_6]
-		jl	short loc_9660
-		xor	si, si
-		jmp	short loc_96EC
-; ---------------------------------------------------------------------------
-
-loc_96CD:
-		call	@input_reset_sense$qv
-		cmp	byte_F02B, 0
-		jz	short loc_96E4
-		cmp	_key_det, 0
-		jz	short loc_96E4
-		push	0
-		jmp	short loc_96E6
-; ---------------------------------------------------------------------------
-
-loc_96E4:
-		push	2
-
-loc_96E6:
-		call	@frame_delay$qi
-		inc	si
-
-loc_96EC:
-		cmp	si, 14h
-		jl	short loc_96CD
-		cmp	byte_F02B, 0
-		jz	short loc_96FB
-		call	sub_9A7E
-
-loc_96FB:
-		pop	di
-		pop	si
-		leave
-		retn	0Ch
-sub_9643	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -759,8 +648,8 @@ sub_99E4	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9A7E	proc near
+public @end_line_clear$qv
+@end_line_clear$qv	proc near
 
 var_2		= word ptr -2
 
@@ -805,7 +694,7 @@ loc_9AC5:
 		pop	si
 		leave
 		retn
-sub_9A7E	endp
+@end_line_clear$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -823,7 +712,7 @@ sub_9AD4	proc near
 		call	_snd_load c, offset aEnding_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
-		call	sub_9A7E
+		call	@end_line_clear$qv
 		push	4
 		call	palette_white_in
 		call	_snd_delay_until_measure stdcall, 5
@@ -885,14 +774,9 @@ sub_9B64	proc near
 		call	@frame_delay$qi pascal, 40
 		push	0
 		call	sub_98B5
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		mov	byte_F02B, 1
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_type_allow_fast_forward_and, 1
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text, 6
 		call	@frame_delay$qi pascal, 20
 		push	1
 		call	palette_black_out
@@ -905,15 +789,15 @@ sub_9B64	proc near
 ; ---------------------------------------------------------------------------
 
 loc_9C15:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9C2D:
@@ -926,68 +810,48 @@ loc_9C2D:
 ; ---------------------------------------------------------------------------
 
 loc_9C3C:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9C54:
 		cmp	si, 5
 		jle	short loc_9C3C
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 6)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 6), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 7
 		jmp	short loc_9C91
 ; ---------------------------------------------------------------------------
 
 loc_9C79:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9C91:
 		cmp	si, 9
 		jle	short loc_9C79
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 10)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 11)
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 10), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 11), 6
 		call	@frame_delay$qi pascal, 20
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 12)
-		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 12), 6
 		xor	si, si
 		jmp	short loc_9D10
 ; ---------------------------------------------------------------------------
@@ -1009,93 +873,73 @@ loc_9CDE:
 loc_9D10:
 		cmp	si, 64h	; 'd'
 		jl	short loc_9CDE
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 13)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 13), 6
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
 		mov	si, 0Eh
 		jmp	short loc_9D48
 ; ---------------------------------------------------------------------------
 
 loc_9D30:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9D48:
 		cmp	si, 0Fh
 		jle	short loc_9D30
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 10h
 		jmp	short loc_9D6F
 ; ---------------------------------------------------------------------------
 
 loc_9D57:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9D6F:
 		cmp	si, 11h
 		jle	short loc_9D57
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
 		mov	si, 12h
 		jmp	short loc_9D96
 ; ---------------------------------------------------------------------------
 
 loc_9D7E:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9D96:
 		cmp	si, 14h
 		jle	short loc_9D7E
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 21)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 22)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 23)
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 21), 6
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 22), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 23), 6
 		graph_accesspage 1
 		call	_pi_load c, 0, offset aEd02_pi, ds
 		call	_pi_palette_apply stdcall, 0
@@ -1126,34 +970,29 @@ loc_9E3B:
 		call	sub_98B5
 		push	2
 		call	palette_black_in
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 24)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 24), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 19h
 		jmp	short loc_9E7D
 ; ---------------------------------------------------------------------------
 
 loc_9E65:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9E7D:
 		cmp	si, 1Ah
 		jle	short loc_9E65
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_9F22
@@ -1162,35 +1001,35 @@ loc_9E7D:
 ; ---------------------------------------------------------------------------
 
 loc_9E99:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9EB1:
 		cmp	si, 1Ch
 		jle	short loc_9E99
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 1Dh
 		jmp	short loc_9ED8
 ; ---------------------------------------------------------------------------
 
 loc_9EC0:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9ED8:
@@ -1198,23 +1037,13 @@ loc_9ED8:
 		jle	short loc_9EC0
 		push	1
 		call	sub_98B5
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 31)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 32)
-		push	0Ch
-		call	sub_9643
-		mov	byte_F02B, 0
-		push	90014Ch
-		push	2Ch ; ','
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 31), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 32), 12
+		mov	_line_type_allow_fast_forward_and, 0
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		push	ds
 		push	offset _end_text + (END_LINE_SIZE * 33)
 		jmp	loc_A092
@@ -1224,63 +1053,38 @@ loc_9F22:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	loc_9FD3
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 34)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 35)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 36)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 34), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 35), 6
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 36), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 25h	; '%'
 		jmp	short loc_9F8E
 ; ---------------------------------------------------------------------------
 
 loc_9F76:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_9F8E:
 		cmp	si, 26h	; '&'
 		jle	short loc_9F76
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 39)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 40)
-		push	0Ch
-		call	sub_9643
-		mov	byte_F02B, 0
-		push	90014Ch
-		push	2Ch ; ','
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 39), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 40), 12
+		mov	_line_type_allow_fast_forward_and, 0
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		push	ds
 		push	offset _end_text + (END_LINE_SIZE * 41)
 		jmp	loc_A092
@@ -1290,82 +1094,62 @@ loc_9FD3:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 2
 		jnz	loc_A097
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 42)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 43)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 42), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 43), 6
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
 		mov	si, 2Ch	; ','
 		jmp	short loc_A029
 ; ---------------------------------------------------------------------------
 
 loc_A011:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A029:
 		cmp	si, 2Dh	; '-'
 		jle	short loc_A011
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 2Eh	; '.'
 		jmp	short loc_A050
 ; ---------------------------------------------------------------------------
 
 loc_A038:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A050:
 		cmp	si, 2Fh	; '/'
 		jle	short loc_A038
-		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 48)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 49)
-		push	0Ch
-		call	sub_9643
-		mov	byte_F02B, 0
-		push	90014Ch
-		push	2Ch ; ','
+		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 48), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 49), 12
+		mov	_line_type_allow_fast_forward_and, 0
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		push	ds
 		push	offset _end_text + (END_LINE_SIZE * 50)
 
 loc_A092:
 		push	9
-		call	sub_9643
+		call	@line_type$qiiinuci
 
 loc_A097:
 		call	sub_9AD4
@@ -1400,14 +1184,9 @@ sub_A09D	proc near
 		call	@frame_delay$qi pascal, 40
 		push	0
 		call	sub_98B5
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		mov	byte_F02B, 1
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_type_allow_fast_forward_and, 1
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text, 6
 		call	@frame_delay$qi pascal, 20
 		push	1
 		call	palette_black_out
@@ -1426,15 +1205,15 @@ sub_A09D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A185:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A19D:
@@ -1447,15 +1226,15 @@ loc_A19D:
 ; ---------------------------------------------------------------------------
 
 loc_A1AC:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A1C4:
@@ -1468,15 +1247,15 @@ loc_A1C4:
 ; ---------------------------------------------------------------------------
 
 loc_A1D3:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A1EB:
@@ -1489,15 +1268,15 @@ loc_A1EB:
 ; ---------------------------------------------------------------------------
 
 loc_A1FA:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A212:
@@ -1507,21 +1286,21 @@ loc_A212:
 		push	offset aEd03a_rgb ; "ed03a.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 0Eh
 		jmp	short loc_A247
 ; ---------------------------------------------------------------------------
 
 loc_A22F:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A247:
@@ -1540,35 +1319,25 @@ loc_A247:
 		call	sub_98B5
 		push	2
 		call	palette_black_in
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 16)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 17)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 16), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 17), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 12h
 		jmp	short loc_A2EA
 ; ---------------------------------------------------------------------------
 
 loc_A2D2:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A2EA:
@@ -1576,162 +1345,127 @@ loc_A2EA:
 		jle	short loc_A2D2
 		push	1
 		call	sub_98B5
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 14h
 		jmp	short loc_A316
 ; ---------------------------------------------------------------------------
 
 loc_A2FE:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A316:
 		cmp	si, 15h
 		jle	short loc_A2FE
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 22)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 22), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 17h
 		jmp	short loc_A353
 ; ---------------------------------------------------------------------------
 
 loc_A33B:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A353:
 		cmp	si, 18h
 		jle	short loc_A33B
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 25)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 26)
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 25), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 26), 6
 		call	@frame_delay$qi pascal, 10
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_A4EC
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 27)
-		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 27), 6
 		call	@frame_delay$qi pascal, 30
 		push	2
 		call	sub_98B5
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 28)
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 28), 6
 		push	3
 		call	sub_98B5
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 29)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 29), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 1Eh
 		jmp	short loc_A403
 ; ---------------------------------------------------------------------------
 
 loc_A3EB:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A403:
 		cmp	si, 1Fh
 		jle	short loc_A3EB
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 20h	; ' '
 		jmp	short loc_A42A
 ; ---------------------------------------------------------------------------
 
 loc_A412:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A42A:
 		cmp	si, 24h	; '$'
 		jle	short loc_A412
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 25h	; '%'
 		jmp	short loc_A451
 ; ---------------------------------------------------------------------------
 
 loc_A439:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A451:
 		cmp	si, 26h	; '&'
 		jle	short loc_A439
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 39)
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 39), 6
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
@@ -1749,23 +1483,23 @@ loc_A451:
 ; ---------------------------------------------------------------------------
 
 loc_A4BB:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A4D3:
 		cmp	si, 2Eh	; '.'
 		jle	short loc_A4BB
-		mov	byte_F02B, 0
-		push	90014Ch
-		push	2Ch ; ','
+		mov	_line_type_allow_fast_forward_and, 0
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		push	ds
 		push	offset _end_text + (END_LINE_SIZE * 47)
 		jmp	loc_A869
@@ -1775,113 +1509,63 @@ loc_A4EC:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	loc_A6B6
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 48)
-		push	6
-		call	sub_9643
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 49)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 50)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 51)
-		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 48), 6
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 49), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 50), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 51), 6
 		call	@frame_delay$qi pascal, 30
 		push	2
 		call	sub_98B5
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 52)
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 52), 6
 		push	3
 		call	sub_98B5
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 53)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 54)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 55)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 56)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 57)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 53), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 54), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 55), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 56), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 57), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 3Ah	; ':'
 		jmp	short loc_A5F9
 ; ---------------------------------------------------------------------------
 
 loc_A5E1:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A5F9:
 		cmp	si, 3Dh	; '='
 		jle	short loc_A5E1
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	si, 3Eh	; '>'
 		jmp	short loc_A620
 ; ---------------------------------------------------------------------------
 
 loc_A608:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A620:
@@ -1904,129 +1588,59 @@ loc_A620:
 ; ---------------------------------------------------------------------------
 
 loc_A674:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A68C:
 		cmp	si, 44h	; 'D'
 		jle	short loc_A674
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 69)
-		push	0Ch
-		call	sub_9643
-		mov	byte_F02B, 0
-		push	90014Ch
-		push	2Ch ; ','
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 69), 12
+		mov	_line_type_allow_fast_forward_and, 0
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		push	ds
 		push	offset _end_text + (END_LINE_SIZE * 70)
 		jmp	loc_A869
 ; ---------------------------------------------------------------------------
 
 loc_A6B6:
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 71)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 72)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 73)
-		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 71), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 72), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 73), 6
 		call	@frame_delay$qi pascal, 30
 		push	2
 		call	sub_98B5
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 74)
-		push	6
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 74), 6
 		push	3
 		call	sub_98B5
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 75)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 76)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 77)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 78)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 79)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 80)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 81)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 82)
-		push	6
-		call	sub_9643
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 83)
-		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 75), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 76), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 77), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 78), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 79), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 80), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 81), 6
+		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 82), 6
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 83), 6
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
@@ -2044,35 +1658,30 @@ loc_A6B6:
 ; ---------------------------------------------------------------------------
 
 loc_A82A:
-		push	90014Ch
-		push	2Ch ; ','
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		mov	ax, si
 		imul	ax, END_LINE_SIZE
 		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
-		call	sub_9643
+		call	@line_type$qiiinuci
 		inc	si
 
 loc_A842:
 		cmp	si, 5Bh	; '['
 		jle	short loc_A82A
-		push	90014Ch
-		push	2Ch ; ','
-		push	ds
-		push	offset _end_text + (END_LINE_SIZE * 92)
-		push	6
-		call	sub_9643
-		mov	byte_F02B, 0
-		push	90014Ch
-		push	2Ch ; ','
+		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 92), 6
+		mov	_line_type_allow_fast_forward_and, 0
+		push	(144 shl 16) or 332
+		push	END_LINE_LENGTH
 		push	ds
 		push	offset _end_text + (END_LINE_SIZE * 93)
 
 loc_A869:
-		push	0Ch
-		call	sub_9643
+		push	12
+		call	@line_type$qiiinuci
 		call	sub_9AD4
 		pop	si
 		pop	bp
@@ -2226,13 +1835,8 @@ loc_A992:
 		jl	short loc_A947
 		call	_snd_delay_until_measure stdcall, 9
 		pop	cx
-		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
-		push	1B000C0h
-		push	14h
-		push	ds
-		push	offset aXxcvsB@b@vrvsv ; "ïïñÇò^Å@Å@ÇrÇsÇ`ÇeÇe"
-		push	0Ch
-		call	sub_9643
+		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
+		call	@line_type$qiiinuci pascal, (432 shl 16) or 192, 20, ds, offset aXxcvsB@b@vrvsv, 12
 		call	_snd_delay_until_measure stdcall, 13
 		pop	cx
 		graph_accesspage 1
@@ -2387,7 +1991,7 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aVsvivbvovlb@vs
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(96 shl 16) or 24
@@ -2401,7 +2005,7 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aB@nPiuU_ ; "Å@ç≈èIìæì_"
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(128 shl 16) or 64
@@ -2416,7 +2020,7 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aGrgugegbgjgeb ;	"ÉRÉìÉeÉBÉjÉÖÅ["
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(160 shl 16) or 64
@@ -2437,7 +2041,7 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aB@Gigugn ; "Å@ ÉâÉìÉN"
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(192 shl 16) or 64
@@ -2461,7 +2065,7 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aGvgmgcgdbPik ; "ÉvÉåÉCÉÑÅ[èâä˙"
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(224 shl 16) or 64
@@ -2483,7 +2087,7 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aCMvpik	; " óÏåÇèâä˙êî"
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(256 shl 16) or 64
@@ -2519,7 +2123,7 @@ loc_AEAC:
 loc_AEB2:
 		push	ds
 		push	offset aVavVVSrso ; "Ç†Ç»ÇΩÇÃòrëO"
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(288 shl 16) or 64
@@ -2622,7 +2226,7 @@ loc_AF56:
 		add	ax, offset _end_text
 		push	ds
 		push	ax
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(288 shl 16) or 240
@@ -2641,7 +2245,7 @@ loc_AF56:
 		graph_accesspage 1
 		push	ds
 		push	offset aVpvxvxvvb@vyvt ; "ÇPÇXÇXÇVÅ@ÇyÇtÇm  (Amusement Makers)"
-		mov	al, col_and_fx_F02A
+		mov	al, _line_col_and_fx
 		cbw
 		push	ax
 		push	(352 shl 16) or 64
@@ -2843,7 +2447,6 @@ include th02/snd/snd.inc
 	extern @key_delay$qv:proc
 	extern _pi_load:proc
 	extern @FRAME_DELAY$QI:proc
-	extern @input_reset_sense$qv:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
@@ -2875,7 +2478,6 @@ maine_04_TEXT	ends
 	.data
 
 	extern _gbcRANKS:byte
-unk_D030	db 50h dup(0)
 label byte_D080 byte
 	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
 	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
@@ -2967,8 +2569,8 @@ END_LINE_LENGTH = 44
 END_LINE_SIZE = (END_LINE_LENGTH + 2)
 
 	extern _end_text:byte:(100 * END_LINE_SIZE)
-col_and_fx_F02A	db ?
-byte_F02B	db ?
+	extern _line_col_and_fx:byte
+	extern _line_type_allow_fast_forward_and:byte
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/pal[bss].asm
