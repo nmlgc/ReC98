@@ -17,6 +17,7 @@
 #include "th02/core/globals.hpp"
 #include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
+#include "th02/gaiji/score_p.hpp"
 #include "th02/op/op.h"
 
 #include "th02/score.c"
@@ -40,25 +41,13 @@ unsigned int score_duration;
 
 #include "th02/scorelod.c"
 
-// Slightly differs from the same function in MAINE.EXE!
-void pascal near score_put(unsigned y, score_t score, tram_atrb2 atrb)
+void pascal near score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
-	unsigned digit = gb_0_;
-	score_t divisor = 10000000;
-	score_t result;
-	char putting = 0;
-	int i;
-	for(i = 0; i < 8; i++) {
-		result = divisor ? ((score / divisor) % 10) : (score % 10);
-		divisor /= 10;
-		digit = result + gb_0_;
-		if(result) {
-			putting = 1;
-		}
-		if(putting) {
-			gaiji_putca((i * 2) + 26, y, digit, atrb);
-		}
+	#define on_digit(i, gaiji) { \
+		gaiji_putca((26 + (i * GAIJI_TRAM_W)), y, gaiji, atrb); \
 	}
+	gaiji_score_put(score, on_digit, true);
+	#undef on_digit
 }
 
 void pascal near shottype_put(tram_y_t y, int type, tram_atrb2 atrb)

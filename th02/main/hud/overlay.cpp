@@ -3,7 +3,9 @@
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "th02/score.h"
 #include "th02/gaiji/gaiji.h"
+#include "th02/gaiji/score_p.hpp"
 #include "th02/main/playfld.hpp"
 #include "th02/main/hud/overlay.hpp"
 
@@ -11,33 +13,11 @@ void pascal near overlay_uint_put(
 	tram_x_t left, tram_y_t y, int digits, long val
 )
 {
-	enum {
-		DIGITS_MAX = 8,
-	};
-
-	int i;
-	int gaiji = gb_0_; // ACTUAL TYPE: gaiji_th02_t
-	long divisor = 10000000; // Must match DIGITS_MAX!
-	long digit;
-	bool past_leading_zeroes = false;
-
-	for(i = DIGITS_MAX; i > digits; i--) {
-		divisor /= 10;
+	#define on_digit(i, gaiji) { \
+		gaiji_putca((left + (i * GAIJI_TRAM_W)), y, gaiji, TX_WHITE); \
 	}
-	for(i = 0; i < digits; i++) {
-		digit = ((val / divisor) % 10);
-		divisor /= 10;
-		gaiji = (digit + gb_0_);
-		if(digit != 0) {
-			past_leading_zeroes = true;
-		}
-		if(i == (digits - 1)) {
-			past_leading_zeroes = true;
-		}
-		if(past_leading_zeroes) {
-			gaiji_putca((left + (i * GAIJI_TRAM_W)), y, gaiji, TX_WHITE);
-		}
-	}
+	gaiji_score_put_digits(val, digits, on_digit);
+	#undef on_digit
 }
 
 void overlay_wipe(void)
