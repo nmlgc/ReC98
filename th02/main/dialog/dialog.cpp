@@ -76,6 +76,7 @@ void dialog_load_and_init(void)
 	file_ropen(fn);
 
 	// ZUN landmine: No check to ensure that the size is ≤ sizeof(dialog_text).
+	// Dynamic allocation would have made more sense...
 	size_t size = file_size();
 	file_read(dialog_text, size);
 

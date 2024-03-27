@@ -23,6 +23,8 @@ include th02/th02.inc
 	extern SCOPY@:proc
 	extern _execl:proc
 
+maine_01 group END_TEXT, maine_01_TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -112,35 +114,16 @@ _TEXT		ends
 
 ; ===========================================================================
 
+END_TEXT segment byte public 'CODE' use16
+	@END_LOAD$QNXC procdesc pascal near \
+		fn_seg:word, fn_off:word
+END_TEXT ends
+
 ; Segment type:	Pure code
 maine_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:maine_01_TEXT
+		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_95A3	proc near
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-
-		enter	2, 0
-		pushd	[bp+arg_0]
-		call	file_ropen
-		call	file_size
-		mov	[bp+var_2], ax
-		push	ds
-		push	offset end_buf
-		push	ax
-		call	file_read
-		call	file_close
-		leave
-		retn	4
-sub_95A3	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -894,9 +877,7 @@ sub_9AD4	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aEnd3_txt ; "end3.txt"
-		call	sub_95A3
+		call	@end_load$qnxc pascal, ds, offset aEnd3_txt ; "end3.txt"
 		call	@frame_delay$qi pascal, 30
 		push	1
 		call	palette_white_out
@@ -948,9 +929,7 @@ sub_9B64	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aEnd1_txt ; "end1.txt"
-		call	sub_95A3
+		call	@end_load$qnxc pascal, ds, offset aEnd1_txt ; "end1.txt"
 		call	_snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
@@ -972,7 +951,7 @@ sub_9B64	proc near
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf
+		push	offset _end_text
 		push	6
 		call	sub_9643
 		call	@frame_delay$qi pascal, 20
@@ -990,8 +969,8 @@ loc_9C15:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1011,8 +990,8 @@ loc_9C3C:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1026,7 +1005,7 @@ loc_9C54:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 6)
+		push	offset _end_text + (END_LINE_SIZE * 6)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -1038,8 +1017,8 @@ loc_9C79:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1053,21 +1032,21 @@ loc_9C91:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 10)
+		push	offset _end_text + (END_LINE_SIZE * 10)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 11)
+		push	offset _end_text + (END_LINE_SIZE * 11)
 		push	6
 		call	sub_9643
 		call	@frame_delay$qi pascal, 20
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 12)
+		push	offset _end_text + (END_LINE_SIZE * 12)
 		push	6
 		call	sub_9643
 		xor	si, si
@@ -1094,7 +1073,7 @@ loc_9D10:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 13)
+		push	offset _end_text + (END_LINE_SIZE * 13)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
@@ -1106,8 +1085,8 @@ loc_9D30:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1126,8 +1105,8 @@ loc_9D57:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1146,8 +1125,8 @@ loc_9D7E:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1161,21 +1140,21 @@ loc_9D96:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 21)
+		push	offset _end_text + (END_LINE_SIZE * 21)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 22)
+		push	offset _end_text + (END_LINE_SIZE * 22)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 23)
+		push	offset _end_text + (END_LINE_SIZE * 23)
 		push	6
 		call	sub_9643
 		graph_accesspage 1
@@ -1212,7 +1191,7 @@ loc_9E3B:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 24)
+		push	offset _end_text + (END_LINE_SIZE * 24)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -1224,8 +1203,8 @@ loc_9E65:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1247,8 +1226,8 @@ loc_9E99:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1267,8 +1246,8 @@ loc_9EC0:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1284,21 +1263,21 @@ loc_9ED8:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 31)
+		push	offset _end_text + (END_LINE_SIZE * 31)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 32)
+		push	offset _end_text + (END_LINE_SIZE * 32)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 33)
+		push	offset _end_text + (END_LINE_SIZE * 33)
 		jmp	loc_A092
 ; ---------------------------------------------------------------------------
 
@@ -1309,21 +1288,21 @@ loc_9F22:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 34)
+		push	offset _end_text + (END_LINE_SIZE * 34)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 35)
+		push	offset _end_text + (END_LINE_SIZE * 35)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 36)
+		push	offset _end_text + (END_LINE_SIZE * 36)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -1335,8 +1314,8 @@ loc_9F76:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1350,21 +1329,21 @@ loc_9F8E:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 39)
+		push	offset _end_text + (END_LINE_SIZE * 39)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 40)
+		push	offset _end_text + (END_LINE_SIZE * 40)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 41)
+		push	offset _end_text + (END_LINE_SIZE * 41)
 		jmp	loc_A092
 ; ---------------------------------------------------------------------------
 
@@ -1375,14 +1354,14 @@ loc_9FD3:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 42)
+		push	offset _end_text + (END_LINE_SIZE * 42)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 43)
+		push	offset _end_text + (END_LINE_SIZE * 43)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
@@ -1394,8 +1373,8 @@ loc_A011:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1414,8 +1393,8 @@ loc_A038:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1429,21 +1408,21 @@ loc_A050:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 48)
+		push	offset _end_text + (END_LINE_SIZE * 48)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 49)
+		push	offset _end_text + (END_LINE_SIZE * 49)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 50)
+		push	offset _end_text + (END_LINE_SIZE * 50)
 
 loc_A092:
 		push	9
@@ -1465,9 +1444,7 @@ sub_A09D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aEnd2_txt ; "end2.txt"
-		call	sub_95A3
+		call	@end_load$qnxc pascal, ds, offset aEnd2_txt ; "end2.txt"
 		call	_snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
@@ -1489,7 +1466,7 @@ sub_A09D	proc near
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf
+		push	offset _end_text
 		push	6
 		call	sub_9643
 		call	@frame_delay$qi pascal, 20
@@ -1513,8 +1490,8 @@ loc_A185:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1534,8 +1511,8 @@ loc_A1AC:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1555,8 +1532,8 @@ loc_A1D3:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1576,8 +1553,8 @@ loc_A1FA:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1600,8 +1577,8 @@ loc_A22F:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1628,14 +1605,14 @@ loc_A247:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 16)
+		push	offset _end_text + (END_LINE_SIZE * 16)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 17)
+		push	offset _end_text + (END_LINE_SIZE * 17)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
@@ -1647,8 +1624,8 @@ loc_A2D2:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1669,8 +1646,8 @@ loc_A2FE:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1684,7 +1661,7 @@ loc_A316:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 22)
+		push	offset _end_text + (END_LINE_SIZE * 22)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
@@ -1696,8 +1673,8 @@ loc_A33B:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1711,14 +1688,14 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 25)
+		push	offset _end_text + (END_LINE_SIZE * 25)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 26)
+		push	offset _end_text + (END_LINE_SIZE * 26)
 		push	6
 		call	sub_9643
 		call	@frame_delay$qi pascal, 10
@@ -1728,7 +1705,7 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 27)
+		push	offset _end_text + (END_LINE_SIZE * 27)
 		push	6
 		call	sub_9643
 		call	@frame_delay$qi pascal, 30
@@ -1738,7 +1715,7 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 28)
+		push	offset _end_text + (END_LINE_SIZE * 28)
 		push	6
 		call	sub_9643
 		push	3
@@ -1746,7 +1723,7 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 29)
+		push	offset _end_text + (END_LINE_SIZE * 29)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
@@ -1758,8 +1735,8 @@ loc_A3EB:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1778,8 +1755,8 @@ loc_A412:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1798,8 +1775,8 @@ loc_A439:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1813,7 +1790,7 @@ loc_A451:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 39)
+		push	offset _end_text + (END_LINE_SIZE * 39)
 		push	6
 		call	sub_9643
 		push	2
@@ -1836,8 +1813,8 @@ loc_A4BB:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1851,7 +1828,7 @@ loc_A4D3:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 47)
+		push	offset _end_text + (END_LINE_SIZE * 47)
 		jmp	loc_A869
 ; ---------------------------------------------------------------------------
 
@@ -1862,27 +1839,27 @@ loc_A4EC:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 48)
+		push	offset _end_text + (END_LINE_SIZE * 48)
 		push	6
 		call	sub_9643
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 49)
+		push	offset _end_text + (END_LINE_SIZE * 49)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 50)
+		push	offset _end_text + (END_LINE_SIZE * 50)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 51)
+		push	offset _end_text + (END_LINE_SIZE * 51)
 		push	6
 		call	sub_9643
 		call	@frame_delay$qi pascal, 30
@@ -1892,7 +1869,7 @@ loc_A4EC:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 52)
+		push	offset _end_text + (END_LINE_SIZE * 52)
 		push	6
 		call	sub_9643
 		push	3
@@ -1900,35 +1877,35 @@ loc_A4EC:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 53)
+		push	offset _end_text + (END_LINE_SIZE * 53)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 54)
+		push	offset _end_text + (END_LINE_SIZE * 54)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 55)
+		push	offset _end_text + (END_LINE_SIZE * 55)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 56)
+		push	offset _end_text + (END_LINE_SIZE * 56)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 57)
+		push	offset _end_text + (END_LINE_SIZE * 57)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
@@ -1940,8 +1917,8 @@ loc_A5E1:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1960,8 +1937,8 @@ loc_A608:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -1991,8 +1968,8 @@ loc_A674:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -2005,14 +1982,14 @@ loc_A68C:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 69)
+		push	offset _end_text + (END_LINE_SIZE * 69)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 70)
+		push	offset _end_text + (END_LINE_SIZE * 70)
 		jmp	loc_A869
 ; ---------------------------------------------------------------------------
 
@@ -2020,21 +1997,21 @@ loc_A6B6:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 71)
+		push	offset _end_text + (END_LINE_SIZE * 71)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 72)
+		push	offset _end_text + (END_LINE_SIZE * 72)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 73)
+		push	offset _end_text + (END_LINE_SIZE * 73)
 		push	6
 		call	sub_9643
 		call	@frame_delay$qi pascal, 30
@@ -2044,7 +2021,7 @@ loc_A6B6:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 74)
+		push	offset _end_text + (END_LINE_SIZE * 74)
 		push	6
 		call	sub_9643
 		push	3
@@ -2052,63 +2029,63 @@ loc_A6B6:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 75)
+		push	offset _end_text + (END_LINE_SIZE * 75)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 76)
+		push	offset _end_text + (END_LINE_SIZE * 76)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 77)
+		push	offset _end_text + (END_LINE_SIZE * 77)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 78)
+		push	offset _end_text + (END_LINE_SIZE * 78)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 79)
+		push	offset _end_text + (END_LINE_SIZE * 79)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 80)
+		push	offset _end_text + (END_LINE_SIZE * 80)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 81)
+		push	offset _end_text + (END_LINE_SIZE * 81)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 82)
+		push	offset _end_text + (END_LINE_SIZE * 82)
 		push	6
 		call	sub_9643
 		mov	col_and_fx_F02A, (V_WHITE or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 83)
+		push	offset _end_text + (END_LINE_SIZE * 83)
 		push	6
 		call	sub_9643
 		push	2
@@ -2131,8 +2108,8 @@ loc_A82A:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		push	6
@@ -2145,14 +2122,14 @@ loc_A842:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 92)
+		push	offset _end_text + (END_LINE_SIZE * 92)
 		push	6
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset end_buf + (END_LINE_LEN * 93)
+		push	offset _end_text + (END_LINE_SIZE * 93)
 
 loc_A869:
 		push	0Ch
@@ -2704,8 +2681,8 @@ loc_AF53:
 
 loc_AF56:
 		mov	ax, si
-		imul	ax, END_LINE_LEN
-		add	ax, offset end_buf
+		imul	ax, END_LINE_SIZE
+		add	ax, offset _end_text
 		push	ds
 		push	ax
 		mov	al, col_and_fx_F02A
@@ -3049,7 +3026,10 @@ extern _rank:byte
 
 	.data?
 
-end_buf	db 100 dup(END_LINE_LEN dup(?))
+END_LINE_LENGTH = 44
+END_LINE_SIZE = (END_LINE_LENGTH + 2)
+
+	extern _end_text:byte:(100 * END_LINE_SIZE)
 col_and_fx_F02A	db ?
 byte_F02B	db ?
 include libs/master.lib/clip[bss].asm

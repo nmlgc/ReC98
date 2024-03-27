@@ -40,8 +40,6 @@ mikoconfig_t	struc
 	score_highest dd ?
 mikoconfig_t	ends
 
-END_LINE_LEN = 46
-
 ; Player
 ; ------
 MISS_INVINCIBILITY_FRAMES = 220
