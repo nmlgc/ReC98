@@ -3,7 +3,6 @@
 #include "platform.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th03/hardware/input.h"
 
 /// Modes
@@ -111,6 +110,4 @@ void pascal input_wait_for_change(int frames_to_wait)
 			frames_waited = 0;
 		}
 	}
-}
-
 }

@@ -20,8 +20,11 @@ extern "C" {
 #include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
+}
 #include "th05/hardware/input.h"
+extern "C" {
 #include "th05/formats/pi.hpp"
+}
 
 #pragma option -a2
 
@@ -252,6 +255,4 @@ bool16 near playchar_menu(void)
 		}
 		frame_delay(1);
 	}
-}
-
 }

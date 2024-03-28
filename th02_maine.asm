@@ -234,7 +234,7 @@ arg_6		= word ptr  0Ah
 ; ---------------------------------------------------------------------------
 
 loc_9660:
-		call	_input_sense
+		call	@input_sense$qv
 		les	bx, [bp+arg_2]
 		add	bx, si
 		mov	al, es:[bx]
@@ -287,7 +287,7 @@ loc_96C4:
 ; ---------------------------------------------------------------------------
 
 loc_96CD:
-		call	_input_sense
+		call	@input_sense$qv
 		cmp	byte_F02B, 0
 		jz	short loc_96E4
 		cmp	_key_det, 0
@@ -2737,7 +2737,7 @@ loc_AF56:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		call	_key_delay
+		call	@key_delay$qv
 		push	5
 		call	palette_black_out
 		nopcall	sub_AFE7
@@ -2775,7 +2775,7 @@ sub_AFE7	proc far
 		pop	cx
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
-		call	_key_delay
+		call	@key_delay$qv
 		push	5
 		call	palette_black_out
 
@@ -2810,7 +2810,7 @@ sub_B07F	proc far
 		pop	cx
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
-		call	_key_delay
+		call	@key_delay$qv
 		push	5
 		call	palette_black_out
 
@@ -2926,10 +2926,10 @@ maine_01_TEXT	ends
 SHARED	segment	word public 'CODE' use16
 include th02/snd/snd.inc
 	extern _graph_putsa_fx:proc
-	extern _key_delay:proc
+	extern @key_delay$qv:proc
 	extern _pi_load:proc
 	extern @FRAME_DELAY$QI:proc
-	extern _input_sense:proc
+	extern @input_sense$qv:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc

@@ -32,14 +32,14 @@ else
 	endm
 endif
 
-public _input_reset_sense
-_input_reset_sense label proc
+public @input_reset_sense$qv
+@input_reset_sense$qv label proc
 	xor	ax, ax
 	mov	_key_det, ax
 	mov	js_stat, ax
 
-public _input_sense
-_input_sense proc far
+public @input_sense$qv
+@input_sense$qv proc far
 	xor	ax, ax
 	mov	es, ax
 	mov	ah, byte ptr es:[KEYGROUP_7]
@@ -154,7 +154,7 @@ if GAME eq 5
 	mov	ax, _key_det
 endif
 	retf
-_input_sense endp
+@input_sense$qv endp
 	even
 
 	end

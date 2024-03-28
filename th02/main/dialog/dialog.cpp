@@ -10,9 +10,9 @@
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/hardware/pages.hpp"
+extern "C" {
 #include "th02/snd/snd.h"
 }
 #include "th02/formats/dialog.hpp"

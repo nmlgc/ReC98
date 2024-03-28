@@ -2,9 +2,7 @@
 
 #include "platform.h"
 #include "master.hpp"
-extern "C" {
 #include "th02/hardware/input.hpp"
-}
 #include "th02/hardware/frmdelay.h"
 
 int key_delay_sense(void)

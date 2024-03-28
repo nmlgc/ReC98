@@ -5,7 +5,9 @@ extern "C" {
 #include "th02/formats/pi.h"
 #include "th04/common.h"
 #include "th04/playchar.h"
+}
 #include "th04/hardware/input.h"
+extern "C" {
 #include "th04/op/op.hpp"
 }
 #include "th04/op/start.hpp"

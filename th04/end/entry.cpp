@@ -9,11 +9,13 @@
 #include "th02/hardware/frmdelay.h"
 extern "C" {
 #include "th03/formats/cdg.h"
+}
 #if (GAME == 4)
+	extern "C" {
 	#include "th03/formats/pi.hpp"
+	}
 	#include "th04/hardware/input.h"
 #endif
-}
 #include "th03/formats/cfg_impl.hpp"
 #include "th03/core/initexit.h"
 #include "th03/cutscene/cutscene.hpp"

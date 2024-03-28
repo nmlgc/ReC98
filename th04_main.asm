@@ -341,10 +341,10 @@ sub_AB88	proc near
 		push	si
 		mov	_slowdown_factor, 1
 		call	@frame_delay$qi pascal, 1
-		call	main_01:far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 
 loc_AB9E:
-		call	_input_sense
+		call	@input_sense$qv
 		call	fp_23D90
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_ABBA
@@ -396,7 +396,7 @@ loc_ABBA:
 		call	_overlay1
 		call	_overlay2
 		call	@playfield_shake_update_and_rende$qv
-		call	main_01:far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		mov	ax, vsync_Count1
 		cmp	ax, _slowdown_factor
 		jb	short loc_AC56
@@ -3543,7 +3543,7 @@ loc_E5EF:
 		cmp	[bp+var_2], 14h
 		jl	short loc_E5C2
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds, offset gGAMEOVER, TX_WHITE
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		call	@overlay_wipe$qv
 		call	main_01:sub_E67A
 		mov	ah, 0
@@ -3627,10 +3627,10 @@ var_1		= byte ptr -1
 		push	ax
 		push	TX_GREEN
 		call	gaiji_putca
-		call	main_01:far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 
 loc_E703:
-		call	_input_sense
+		call	@input_sense$qv
 		or	si, si
 		jnz	short loc_E783
 		mov	si, _key_det
@@ -3697,7 +3697,7 @@ loc_E783:
 		mov	si, _key_det
 
 loc_E787:
-		call	main_01:far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		call	@frame_delay$qi pascal, 1
 		jmp	loc_E703
 ; ---------------------------------------------------------------------------
@@ -10480,7 +10480,7 @@ include th02/snd/snd.inc
 	extern VECTOR2:proc
 	extern @FRAME_DELAY$QI:proc
 	extern MPN_FREE:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern MPN_LOAD_PALETTE_SHOW:proc
 	extern @POLAR$QIII:proc
 	extern VECTOR2_AT:proc
@@ -10490,8 +10490,8 @@ include th02/snd/snd.inc
 	extern @game_exit$qv:proc
 	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern CDG_PUT_NOALPHA_8:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc

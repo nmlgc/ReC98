@@ -369,7 +369,7 @@ loc_CC9F:
 		call	palette_black_in pascal, 1
 
 loc_CCA9:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		call	@frame_delay$qi pascal, 1
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CD17
@@ -413,7 +413,7 @@ loc_CD17:
 		call	palette_black_in pascal, 1
 
 loc_CD64:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		call	@frame_delay$qi pascal, 1
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CD64
@@ -445,7 +445,7 @@ include th02/snd/snd.inc
 	extern PI_PUT_8:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
-	extern _input_reset_sense_held:proc
+	extern @input_reset_sense_held$qv:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern @FRAME_DELAY$QI:proc
 SHARED	ends

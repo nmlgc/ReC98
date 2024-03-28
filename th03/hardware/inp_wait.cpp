@@ -4,9 +4,10 @@
 #include "x86real.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
-extern "C" {
 #include "th03/hardware/input.h"
+extern "C" {
 #include "th03/snd/snd.h"
+}
 #include "th02/snd/measure.hpp"
 
 bool16 pascal input_wait_for_ok_or_measure(int measure, unsigned int frames)
@@ -34,6 +35,4 @@ bool16 pascal input_wait_for_ok(unsigned int frames)
 		}
 	} while(vsync_Count1 < frames);
 	return false;
-}
-
 }

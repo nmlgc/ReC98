@@ -382,10 +382,10 @@ sub_AEA6	proc near
 		mov	bp, sp
 		mov	_slowdown_factor, 1
 		call	@frame_delay$qi pascal, 1
-		call	far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 
 loc_AEBB:
-		call	_input_sense
+		call	@input_sense$qv
 		call	fp_2300E
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_AED7
@@ -443,7 +443,7 @@ loc_AF2D:
 		call	_overlay1
 		call	_overlay2
 		call	@playfield_shake_update_and_rende$qv
-		call	far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		mov	al, _slowdown_caused_by_bullets
 		mov	ah, 0
 		push	ax
@@ -3570,7 +3570,7 @@ loc_FA18:
 		cmp	[bp+var_2], 14h
 		jl	short loc_F9EB
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds offset gGAMEOVER, TX_WHITE
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		call	@overlay_wipe$qv
 		call	sub_FAA3
 		mov	ah, 0
@@ -3656,7 +3656,7 @@ var_1		= byte ptr -1
 		call	gaiji_putca
 
 loc_FB27:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		or	si, si
 		jnz	short loc_FBA7
 		mov	si, _key_det
@@ -7249,10 +7249,10 @@ include th02/snd/snd.inc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @GAME_INIT_MAIN$QNXUC:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
-	extern _input_reset_sense_held:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
+	extern @input_reset_sense_held$qv:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern @FRAME_DELAY$QI:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc

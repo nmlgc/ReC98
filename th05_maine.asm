@@ -2108,7 +2108,7 @@ loc_C3AA:
 		mov	[bp+var_2], 1
 
 loc_C3CD:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		cmp	[bp+var_2], 0
 		jnz	loc_C58A
 		test	_key_det.lo, low INPUT_MOVEMENT
@@ -2341,7 +2341,7 @@ loc_C5BE:
 
 loc_C5C3:
 		call	sub_B6A3
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 
 loc_C5CD:
 		call	_bgimage_free
@@ -3597,7 +3597,7 @@ public @verdict_animate$qv
 		call	sub_CA9B
 		call	@frame_delay$qi pascal, 64
 		call	sub_D16F
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		push	2
 		call	palette_black_out
 		pop	bp
@@ -5940,7 +5940,7 @@ loc_E6B4:
 		mov	[bp+var_4], 0
 
 loc_E6DB:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		cmp	si, 256
 		jz	short loc_E6EC
 		cmp	si, 257
@@ -6091,8 +6091,8 @@ include th02/snd/snd.inc
 	extern PI_PUT_QUARTER_8:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
-	extern _input_reset_sense_held:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @input_reset_sense_held$qv:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern _snd_bgm_measure:proc
 	extern @FRAME_DELAY$QI:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc

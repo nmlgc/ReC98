@@ -309,7 +309,7 @@ var_2		= word ptr -2
 		call	sub_9B9D
 
 loc_9C1B:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		or	si, si
 		jnz	short loc_9C7E
 		test	_input_sp.lo, low INPUT_UP
@@ -463,7 +463,7 @@ sub_9E16	proc near
 ; ---------------------------------------------------------------------------
 
 loc_9E24:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		les	bx, _resident
 		inc	es:[bx+resident_t.rand]
 		inc	si
@@ -1279,7 +1279,7 @@ loc_A4BC:
 ; ---------------------------------------------------------------------------
 
 loc_A4D2:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		mov	al, _in_option
 		cbw
 		or	ax, ax
@@ -2579,7 +2579,7 @@ sub_BA88	proc near
 		mov	byte_FC5B, 0
 		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
 		jnz	short loc_BAD4
-		setfarfp	_input_mode, input_mode_key_vs_key
+		setfarfp	_input_mode, @input_mode_key_vs_key$qv
 		jmp	short loc_BAF9
 ; ---------------------------------------------------------------------------
 
@@ -2587,12 +2587,12 @@ loc_BAD4:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.key_mode], KM_JOY_KEY
 		jnz	short loc_BAED
-		setfarfp	_input_mode, input_mode_joy_vs_key
+		setfarfp	_input_mode, @input_mode_joy_vs_key$qv
 		jmp	short loc_BAF9
 ; ---------------------------------------------------------------------------
 
 loc_BAED:
-		setfarfp	_input_mode, input_mode_key_vs_joy
+		setfarfp	_input_mode, @input_mode_key_vs_joy$qv
 
 loc_BAF9:
 		call	@frame_delay$qi pascal, 16
@@ -2630,7 +2630,7 @@ loc_BB35:
 loc_BB37:
 		push	ax
 		call	p_cursor_put
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	_input_mp_p1
 		push	0
@@ -2729,7 +2729,7 @@ sub_BC1F	proc near
 		mov	_playchars[1], al
 		mov	byte_FC5A, 0
 		mov	byte_FC5B, 0
-		setfarfp	_input_mode, input_mode_interface
+		setfarfp	_input_mode, @input_mode_interface$qv
 		xor	si, si
 		jmp	loc_BD8B
 ; ---------------------------------------------------------------------------
@@ -2743,7 +2743,7 @@ loc_BC69:
 		call	sub_B565
 		call	sub_B636
 		call	sub_B670
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	0
 		cmp	byte_FC5A, 0
@@ -2869,7 +2869,7 @@ sub_BD9A	proc near
 		mov	_playchars[0], 0
 		mov	byte_FC5A, 0
 		mov	byte_FC5B, 1
-		setfarfp	_input_mode, input_mode_interface
+		setfarfp	_input_mode, @input_mode_interface$qv
 		mov	word_FC62, 0
 
 loc_BDC1:
@@ -2891,7 +2891,7 @@ loc_BDDD:
 loc_BDDF:
 		push	ax
 		call	p_cursor_put
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	_input_sp
 		push	0
@@ -2973,7 +2973,7 @@ include th02/snd/snd.inc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
 	extern @FRAME_DELAY$QI:proc
-	extern _input_reset_sense_key_held:proc
+	extern @input_reset_sense_key_held$qv:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern SND_KAJA_INTERRUPT:proc
@@ -2983,10 +2983,10 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE:proc
 	extern PI_LOAD:proc
-	extern INPUT_MODE_INTERFACE:proc
-	extern INPUT_MODE_KEY_VS_KEY:proc
-	extern INPUT_MODE_JOY_VS_KEY:proc
-	extern INPUT_MODE_KEY_VS_JOY:proc
+	extern @INPUT_MODE_INTERFACE$QV:proc
+	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
+	extern @INPUT_MODE_JOY_VS_KEY$QV:proc
+	extern @INPUT_MODE_KEY_VS_JOY$QV:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
 SHARED	ends

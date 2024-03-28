@@ -2,7 +2,6 @@
 
 #include "platform.h"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th04/hardware/input.h"
 
 void pascal input_wait_for_change(int frames_to_wait)
@@ -33,6 +32,4 @@ void pascal input_wait_for_change(int frames_to_wait)
 			frames_waited = 0;
 		}
 	}
-}
-
 }

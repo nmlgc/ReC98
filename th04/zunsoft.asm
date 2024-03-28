@@ -332,7 +332,7 @@ endif
 	graph_accesspage 1
 	graph_showpage 0
 if GAME eq 4
-	call	_input_reset_sense
+	call	@input_reset_sense$qv
 endif
 	xor	di, di
 	jmp	@@more_frames?
@@ -340,9 +340,9 @@ endif
 
 @@next_frame:
 if GAME eq 5
-	call	_input_reset_sense_held
+	call	@input_reset_sense_held$qv
 else
-	call	_input_sense
+	call	@input_sense$qv
 endif
 	cmp	_key_det, INPUT_NONE
 	jz	short @@not_skipping
@@ -423,7 +423,7 @@ frame_68:	; case 68
 	call	_bgimage_put	; default
 	call	zunsoft_update_and_render
 if GAME eq 4
-	call	_input_reset_sense
+	call	@input_reset_sense$qv
 endif
 
 @@2_frame_delay:

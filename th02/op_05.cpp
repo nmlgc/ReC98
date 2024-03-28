@@ -18,8 +18,8 @@ extern "C" {
 }
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
-extern "C" {
 #include "th02/hardware/input.hpp"
+extern "C" {
 #include "th02/formats/pi.h"
 }
 

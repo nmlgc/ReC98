@@ -16,12 +16,12 @@
 #include "th02/formats/tile.hpp"
 extern "C" {
 #include "th03/formats/cdg.h"
+}
 #if (GAME == 5)
 	#include "th05/hardware/input.h"
 #else
 	#include "th04/hardware/input.h"
 #endif
-}
 #include "th04/common.h"
 #if (GAME == 4)
 	#include "th04/playchar.h"

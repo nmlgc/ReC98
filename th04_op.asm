@@ -407,7 +407,7 @@ loc_CADA:
 		call	palette_black_in
 
 loc_CAE4:
-		call	far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		call	@frame_delay$qi pascal, 1
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CB58
@@ -456,7 +456,7 @@ loc_CB58:
 		call	palette_black_in
 
 loc_CBB3:
-		call	far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		call	@frame_delay$qi pascal, 1
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CBB3
@@ -782,8 +782,8 @@ include th02/snd/snd.inc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern SND_LOAD:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern _bgimage_snap:proc

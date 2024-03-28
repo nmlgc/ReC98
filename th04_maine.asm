@@ -1635,7 +1635,7 @@ loc_C0AE:
 
 loc_C0CB:
 		call	graph_putsa_fx
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		push	2
 		call	palette_black_out
 		pop	si
@@ -2587,11 +2587,11 @@ loc_C9CB:
 		call	gaiji_putca
 		xor	di, di
 		mov	[bp+@@row], 0
-		call	far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		mov	[bp+var_4], 1
 
 loc_C9F6:
-		call	_input_sense
+		call	@input_sense$qv
 		cmp	[bp+var_4], 0
 		jnz	loc_CB3B
 		test	_key_det.lo, low INPUT_MOVEMENT
@@ -2780,7 +2780,7 @@ loc_CB67:
 		mov	[bp+var_9], 0
 
 loc_CB6B:
-		call	far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		call	@frame_delay$qi pascal, 1
 		jmp	loc_C9F6
 ; ---------------------------------------------------------------------------
@@ -2792,7 +2792,7 @@ loc_CB6B:
 
 loc_CB7F:
 		call	sub_C316
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 
 loc_CB89:
 		call	super_free
@@ -2916,7 +2916,7 @@ include th02/snd/snd.inc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern PI_LOAD:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
@@ -2924,8 +2924,8 @@ include th02/snd/snd.inc
 	extern SND_LOAD:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern CDG_PUT_8:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_free:proc
 	extern BGIMAGE_PUT_RECT_16:proc

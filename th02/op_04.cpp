@@ -13,9 +13,7 @@
 #include "th01/rank.h"
 #include "th02/common.h"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th02/hardware/input.hpp"
-}
 #include "th02/core/globals.hpp"
 #include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"

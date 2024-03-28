@@ -200,7 +200,7 @@ loc_97FC:
 		call	sub_990C
 
 loc_9868:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_987D
 		call	@frame_delay$qi pascal, 1
@@ -592,7 +592,7 @@ loc_9C42:
 ; ---------------------------------------------------------------------------
 
 loc_9C4B:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 
 loc_9C50:
 		cmp	vsync_Count1, 60h
@@ -966,7 +966,7 @@ loc_9FC8:
 		call	palette_black_in
 
 loc_A00B:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		test	_input_sp.lo, low INPUT_LEFT
 		jnz	short loc_A01E
 		test	_input_sp.lo, low INPUT_RIGHT
@@ -1215,7 +1215,7 @@ loc_B835:
 		call	@regist_rows_put$qv
 
 loc_B858:
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rem_credits], 0
 		jz	short loc_B871
@@ -2603,7 +2603,7 @@ loc_C735:
 		xor	di, di
 
 loc_C781:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		call	sub_BB51
 		call	sub_BCD5
 		inc	word_10BB2
@@ -2676,8 +2676,8 @@ include th02/snd/snd.inc
 	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern PI_LOAD:proc
-	extern INPUT_MODE_INTERFACE:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @INPUT_MODE_INTERFACE$QV:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
 SHARED	ends

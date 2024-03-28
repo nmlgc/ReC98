@@ -5,7 +5,6 @@
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "platform/x86real/flags.hpp"
-extern "C" {
 #include "th03/hardware/input.h"
 
 void input_reset_sense_key_held(void)
@@ -143,5 +142,3 @@ void input_reset_sense_key_held(void)
 	} while(1);
 }
 #pragma codestring "\x90"
-
-}

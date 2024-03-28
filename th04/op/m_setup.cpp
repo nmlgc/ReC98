@@ -18,7 +18,9 @@ extern "C" {
 	#include "th03/formats/pi.hpp"
 #endif
 #include "th04/hardware/grppsafx.h"
+}
 #include "th04/hardware/input.h"
+extern "C" {
 #include "th04/snd/snd.h"
 #include "th04/op/op.hpp"
 }

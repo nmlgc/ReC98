@@ -1664,7 +1664,7 @@ loc_BA33:
 loc_BA3D:
 		push	TX_WHITE
 		call	gaiji_putsa
-		call	_input_sense
+		call	@input_sense$qv
 		inc	si
 		cmp	[bp+var_1], 0
 		jnz	short loc_BA5C
@@ -1943,7 +1943,7 @@ loc_BDA2:
 		mov	dx, _scroll_line
 		mov	bx, ax
 		mov	ss:[bx], dx
-		call	_input_sense
+		call	@input_sense$qv
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_BDCC
@@ -2546,7 +2546,7 @@ loc_C3E5:
 ; ---------------------------------------------------------------------------
 
 loc_C3FB:
-		call	_input_sense
+		call	@input_sense$qv
 
 loc_C400:
 		cmp	_key_det, 0
@@ -2573,7 +2573,7 @@ loc_C400:
 		mov	di, 1
 
 loc_C47A:
-		call	_input_sense
+		call	@input_sense$qv
 		cmp	[bp+var_2], 0
 		jnz	short loc_C493
 		cmp	_key_det, 0
@@ -6470,14 +6470,14 @@ main_01____TEXT	ends
 SHARED	segment	word public 'CODE' use16
 include th02/snd/snd.inc
 	extern @ZUN_ERROR$Q11ZUN_ERROR_T:proc
-	extern _key_delay:proc
+	extern @key_delay$qv:proc
 	extern MPN_LOAD:proc
 	extern _mpn_free:proc
 	extern _pi_load:proc
 	extern @VECTOR2$QMIT1UCI:proc
 	extern @VECTOR2_BETWEEN_PLUS$QIIIIUCMIT6I:proc
 	extern @FRAME_DELAY$QI:proc
-	extern _input_sense:proc
+	extern @input_sense$qv:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
@@ -6706,7 +6706,7 @@ loc_FD5A:
 
 		call	_snd_se_update
 		mov	_key_det, 1
-		call	_key_delay
+		call	@key_delay$qv
 		pop	si
 		leave
 		retn
@@ -6842,7 +6842,7 @@ loc_FEB9:
 
 		call	_snd_se_update
 		mov	_key_det, 1
-		call	_key_delay
+		call	@key_delay$qv
 		pop	si
 		leave
 		retn
@@ -13173,7 +13173,7 @@ rika_end	proc far
 		call	@dialog_pre$qv
 		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		call	@stage_clear_bonus_animate$qv
-		call	_key_delay
+		call	@key_delay$qv
 		call	@overlay_stage_leave_animate$qv
 		inc	_stage_id
 		mov	_spark_accel_x, 0
@@ -15773,7 +15773,7 @@ meira_end	proc far
 		call	@dialog_pre$qv
 		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		call	@stage_clear_bonus_animate$qv
-		call	_key_delay
+		call	@key_delay$qv
 		call	@overlay_stage_leave_animate$qv
 		inc	_stage_id
 		mov	_spark_accel_x, 0
@@ -18446,7 +18446,7 @@ evileye_end	proc far
 		call	@dialog_pre$qv
 		call	@dialog_script_generic_part_anima$q17dialog_sequence_t pascal, DS_POSTBOSS
 		call	@stage_extra_clear_bonus_animate$qv
-		call	_key_delay
+		call	@key_delay$qv
 		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.stage], 7Fh
 		mov	eax, _score
@@ -29033,7 +29033,7 @@ loc_1CA1D:
 		jle	short loc_1CA50
 		push	0FFFFh
 		call	sub_1C785
-		call	_key_delay
+		call	@key_delay$qv
 		jmp	loc_1CD32
 ; ---------------------------------------------------------------------------
 
@@ -29157,7 +29157,7 @@ loc_1CB89:
 		mov	[bp+var_B], 0
 
 loc_1CB8D:
-		call	_input_sense
+		call	@input_sense$qv
 		cmp	[bp+var_A], 0
 		jnz	loc_1CCFE
 		test	byte ptr _key_det, INPUT_UP

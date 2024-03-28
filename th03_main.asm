@@ -730,7 +730,7 @@ loc_9CD0:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_9CF0
-		setfarfp	_input_mode, input_mode_attract
+		setfarfp	_input_mode, @input_mode_attract$qv
 		jmp	loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -740,7 +740,7 @@ loc_9CF0:
 		jz	short loc_9D10
 		cmp	es:[bx+resident_t.RESIDENT_is_cpu][0], 0
 		jz	short loc_9D10
-		setfarfp	_input_mode, input_mode_cpu_vs_cpu
+		setfarfp	_input_mode, @input_mode_cpu_vs_cpu$qv
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -748,7 +748,7 @@ loc_9D10:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.RESIDENT_is_cpu][1], 0
 		jz	short loc_9D29
-		setfarfp	_input_mode, input_mode_1p_vs_cpu
+		setfarfp	_input_mode, @input_mode_1p_vs_cpu$qv
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -756,7 +756,7 @@ loc_9D29:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.RESIDENT_is_cpu][0], 0
 		jz	short loc_9D42
-		setfarfp	_input_mode, input_mode_cpu_vs_1p
+		setfarfp	_input_mode, @input_mode_cpu_vs_1p$qv
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -764,7 +764,7 @@ loc_9D42:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
 		jnz	short loc_9D5B
-		setfarfp	_input_mode, input_mode_key_vs_key
+		setfarfp	_input_mode, @input_mode_key_vs_key$qv
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -772,12 +772,12 @@ loc_9D5B:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.key_mode], KM_JOY_KEY
 		jnz	short loc_9D74
-		setfarfp	_input_mode, input_mode_joy_vs_key
+		setfarfp	_input_mode, @input_mode_joy_vs_key$qv
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
 loc_9D74:
-		setfarfp	_input_mode, input_mode_key_vs_joy
+		setfarfp	_input_mode, @input_mode_key_vs_joy$qv
 
 loc_9D80:
 		xor	si, si
@@ -4840,7 +4840,7 @@ loc_C7C8:
 ; ---------------------------------------------------------------------------
 
 loc_C7DB:
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	@frame_delay$qi pascal, 1
 
 loc_C7E7:
@@ -4848,7 +4848,7 @@ loc_C7E7:
 		jnz	short loc_C7DB
 
 loc_C7EE:
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		test	_input_sp.hi, high INPUT_Q
 		jnz	short loc_C7C1
 		test	_input_sp.hi, high INPUT_CANCEL
@@ -4858,7 +4858,7 @@ loc_C7EE:
 ; ---------------------------------------------------------------------------
 
 loc_C80A:
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	@frame_delay$qi pascal, 1
 
 loc_C816:
@@ -5202,7 +5202,7 @@ loc_CA95:
 ; ---------------------------------------------------------------------------
 
 loc_CA99:
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_CAA8
 		call	sub_C7A5
@@ -8726,19 +8726,19 @@ SHARED	segment	word public 'CODE' use16
 	extern @game_exit$qv:proc
 	extern @polar$qiii:proc
 	extern @FRAME_DELAY$QI:proc
-	extern _input_reset_sense_key_held:proc
+	extern @input_reset_sense_key_held$qv:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @GAME_INIT_MAIN$QNXUC:proc
-	extern INPUT_MODE_KEY_VS_KEY:proc
-	extern INPUT_MODE_JOY_VS_KEY:proc
-	extern INPUT_MODE_KEY_VS_JOY:proc
-	extern INPUT_MODE_1P_VS_CPU:proc
-	extern INPUT_MODE_CPU_VS_1P:proc
-	extern INPUT_MODE_CPU_VS_CPU:proc
-	extern INPUT_MODE_ATTRACT:proc
+	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
+	extern @INPUT_MODE_JOY_VS_KEY$QV:proc
+	extern @INPUT_MODE_KEY_VS_JOY$QV:proc
+	extern @INPUT_MODE_1P_VS_CPU$QV:proc
+	extern @INPUT_MODE_CPU_VS_1P$QV:proc
+	extern @INPUT_MODE_CPU_VS_CPU$QV:proc
+	extern @INPUT_MODE_ATTRACT$QV:proc
 	extern _hflip_lut_generate:proc
 	extern @MRS_LOAD$QINXC:proc
 	extern @MRS_FREE$QI:proc

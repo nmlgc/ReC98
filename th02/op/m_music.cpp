@@ -10,23 +10,22 @@
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/musiccmt.hpp"
+#if (GAME == 5)
+	#include "th05/hardware/input.h"
+#elif (GAME == 4)
+	#include "th04/hardware/input.h"
+#elif (GAME == 3)
+	#include "th03/hardware/input.h"
+#else
+	#include "th02/hardware/input.hpp"
+#endif
 extern "C" {
 #if (GAME >= 4)
 	#include "th04/hardware/bgimage.hpp"
 	#include "th04/hardware/grppsafx.h"
-	#if (GAME == 5)
-		#include "th05/hardware/input.h"
-	#else
-		#include "th04/hardware/input.h"
-	#endif
 	#include "th04/snd/snd.h"
 #else
 	#include "th01/hardware/grppsafx.h"
-	#if (GAME == 3)
-		#include "th03/hardware/input.h"
-	#else
-		#include "th02/hardware/input.hpp"
-	#endif
 	#include "th02/snd/snd.h"
 #endif
 }

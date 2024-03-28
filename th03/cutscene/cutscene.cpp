@@ -22,28 +22,32 @@
 #include "libs/kaja/kaja.h"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
+#if (GAME == 5)
+	#include "th05/hardware/input.h"
+#elif (GAME == 4)
+	#include "th04/hardware/input.h"
+#else
+	#include "th03/hardware/input.h"
+
+	// Let's rather not have this one global, since it might be wrong in an
+	// in-game context?
+	#define key_det input_sp
+#endif
 extern "C" {
 #if (GAME == 5)
 	#include "th04/hardware/bgimage.hpp"
 	#include "th04/hardware/grppsafx.h"
 	#include "th04/snd/snd.h"
 	#include "th04/gaiji/gaiji.h"
-	#include "th05/hardware/input.h"
 	#include "th05/formats/pi.hpp"
 #elif (GAME == 4)
 	#include "th03/formats/pi.hpp"
-	#include "th04/hardware/input.h"
 	#include "th04/hardware/grppsafx.h"
 	#include "th04/snd/snd.h"
 #else
 	#include "th01/hardware/grppsafx.h"
-	#include "th03/hardware/input.h"
 	#include "th03/formats/pi.hpp"
 	#include "th03/snd/snd.h"
-
-	// Let's rather not have this one global, since it might be wrong in an
-	// in-game context?
-	#define key_det input_sp
 #endif
 }
 #include "th03/cutscene/cutscene.hpp"

@@ -20,9 +20,7 @@ extern "C" {
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
-extern "C" {
 #include "th02/hardware/input.hpp"
-}
 #include "th02/core/globals.hpp"
 #include "th02/core/zunerror.h"
 #include "th02/core/initexit.h"
