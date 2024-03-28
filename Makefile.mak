@@ -94,17 +94,17 @@ bin\th02\zun_res.com: th02\zun_res1.cpp th02\zun_res2.cpp th02\zun_res3.cpp
 $**
 | masters.lib
 
-bin\th02\op.exe: th02\op_01.cpp bin\th02\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\grp_rect.obj bin\th02\frmdely2.obj bin\th02\input_s.obj bin\th02\initop.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj th02\op_02_3.cpp bin\th02\snd_se_r.obj bin\th02\snd_se.obj bin\th02\frmdely1.obj th02\op_03.cpp bin\th02\globals.obj th02\op_04.cpp th02\op_05.cpp th02\op_music.cpp
+bin\th02\op.exe: th02\op_01.cpp bin\th02\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\grp_rect.obj bin\th02\frmdely2.obj bin\th02\input_rs.obj bin\th02\initop.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj th02\op_02_3.cpp bin\th02\snd_se_r.obj bin\th02\snd_se.obj bin\th02\frmdely1.obj th02\op_03.cpp bin\th02\globals.obj th02\op_04.cpp th02\op_05.cpp th02\op_music.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
 
-bin\th02\main.exe: bin\th02\main.obj bin\th02\tile.obj th02\pointnum.cpp th02\item.cpp th02\hud.cpp th02\player_b.cpp bin\th02\zunerror.obj bin\th02\keydelay.obj th02\main02_1.cpp bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\vector.obj bin\th02\frmdely1.obj bin\th02\input_s.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_dlyv.obj bin\th02\snd_load.obj th02\mpn_l_i.cpp bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\snd_se_r.obj bin\th02\snd_se.obj th02\main_03.cpp th02\hud_ovrl.cpp th02\dialog.cpp
+bin\th02\main.exe: bin\th02\main.obj bin\th02\tile.obj th02\pointnum.cpp th02\item.cpp th02\hud.cpp th02\player_b.cpp bin\th02\zunerror.obj bin\th02\keydelay.obj th02\main02_1.cpp bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\vector.obj bin\th02\frmdely1.obj bin\th02\input_rs.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_dlyv.obj bin\th02\snd_load.obj th02\mpn_l_i.cpp bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\snd_se_r.obj bin\th02\snd_se.obj th02\main_03.cpp th02\hud_ovrl.cpp th02\dialog.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |
 
-bin\th02\maine.exe: bin\th02\ranks_c.obj bin\th02\maine.obj bin\th02\grppsafx.obj bin\th02\keydelay.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\frmdely1.obj th02\maine022.cpp bin\th02\input_s.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\globals.obj th02\maine_03.cpp th02\maine_04.cpp th02\staff.cpp
+bin\th02\maine.exe: bin\th02\ranks_c.obj bin\th02\maine.obj bin\th02\grppsafx.obj bin\th02\keydelay.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\frmdely1.obj th02\maine022.cpp bin\th02\input_rs.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\globals.obj th02\maine_03.cpp th02\maine_04.cpp th02\staff.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |

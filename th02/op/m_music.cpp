@@ -719,7 +719,7 @@ inline void music_input_sense(void) {
 	#elif (GAME == 3)
 		input_mode_interface();
 	#else
-		input_sense();
+		input_reset_sense();
 	#endif
 }
 // --------------

@@ -673,7 +673,7 @@ int main(void)
 	idle_frames = 0;
 
 	while(!quit) {
-		input_sense();
+		input_reset_sense();
 		if(in_option == false) {
 			main_update_and_render();
 		} else if(in_option == true) {

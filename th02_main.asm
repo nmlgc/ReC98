@@ -1664,7 +1664,7 @@ loc_BA33:
 loc_BA3D:
 		push	TX_WHITE
 		call	gaiji_putsa
-		call	@input_sense$qv
+		call	@input_reset_sense$qv
 		inc	si
 		cmp	[bp+var_1], 0
 		jnz	short loc_BA5C
@@ -1943,7 +1943,7 @@ loc_BDA2:
 		mov	dx, _scroll_line
 		mov	bx, ax
 		mov	ss:[bx], dx
-		call	@input_sense$qv
+		call	@input_reset_sense$qv
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_BDCC
@@ -2546,7 +2546,7 @@ loc_C3E5:
 ; ---------------------------------------------------------------------------
 
 loc_C3FB:
-		call	@input_sense$qv
+		call	@input_reset_sense$qv
 
 loc_C400:
 		cmp	_key_det, 0
@@ -2573,7 +2573,7 @@ loc_C400:
 		mov	di, 1
 
 loc_C47A:
-		call	@input_sense$qv
+		call	@input_reset_sense$qv
 		cmp	[bp+var_2], 0
 		jnz	short loc_C493
 		cmp	_key_det, 0
@@ -6477,7 +6477,7 @@ include th02/snd/snd.inc
 	extern @VECTOR2$QMIT1UCI:proc
 	extern @VECTOR2_BETWEEN_PLUS$QIIIIUCMIT6I:proc
 	extern @FRAME_DELAY$QI:proc
-	extern @input_sense$qv:proc
+	extern @input_reset_sense$qv:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
@@ -29157,7 +29157,7 @@ loc_1CB89:
 		mov	[bp+var_B], 0
 
 loc_1CB8D:
-		call	@input_sense$qv
+		call	@input_reset_sense$qv
 		cmp	[bp+var_A], 0
 		jnz	loc_1CCFE
 		test	byte ptr _key_det, INPUT_UP

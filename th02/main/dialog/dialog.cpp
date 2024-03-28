@@ -365,7 +365,7 @@ void pascal near dialog_box_animate_and_advance(
 	int delay_per_kanji;
 	int box = dialog_box_cur;
 	while(box_cursor <= ((DIALOG_BOX_LINES * DIALOG_LINE_LENGTH) + 8)) {
-		input_sense();
+		input_reset_sense();
 		dialog_face_put(face_topleft_id); // ZUN bloat: Every frame?
 
 		static_assert(DIALOG_BOX_LINES == 2);

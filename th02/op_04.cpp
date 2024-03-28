@@ -171,7 +171,7 @@ void pascal score_menu(void)
 	graph_showpage(1);
 
 	do {
-		input_sense();
+		input_reset_sense();
 		if(!input_allowed && !key_det) {
 			input_allowed = 1;
 		} else if(input_allowed == 1 && key_det) {

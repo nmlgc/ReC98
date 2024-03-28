@@ -234,7 +234,7 @@ arg_6		= word ptr  0Ah
 ; ---------------------------------------------------------------------------
 
 loc_9660:
-		call	@input_sense$qv
+		call	@input_reset_sense$qv
 		les	bx, [bp+arg_2]
 		add	bx, si
 		mov	al, es:[bx]
@@ -287,7 +287,7 @@ loc_96C4:
 ; ---------------------------------------------------------------------------
 
 loc_96CD:
-		call	@input_sense$qv
+		call	@input_reset_sense$qv
 		cmp	byte_F02B, 0
 		jz	short loc_96E4
 		cmp	_key_det, 0
@@ -2929,7 +2929,7 @@ include th02/snd/snd.inc
 	extern @key_delay$qv:proc
 	extern _pi_load:proc
 	extern @FRAME_DELAY$QI:proc
-	extern @input_sense$qv:proc
+	extern @input_reset_sense$qv:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc

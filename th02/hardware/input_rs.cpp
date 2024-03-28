@@ -12,7 +12,7 @@ inline uint8_t keygroup_sense(uint8_t group) {
 	return _AH;
 }
 
-void input_sense(void)
+void input_reset_sense(void)
 {
 	key_det = INPUT_NONE;
 

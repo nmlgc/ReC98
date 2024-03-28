@@ -180,7 +180,7 @@ void pascal score_enter(void)
 		alphabet_putca(col, row, TX_GREEN | TX_REVERSE);
 
 	do {
-		input_sense();
+		input_reset_sense();
 		if(!input_locked) {
 			if(key_det & INPUT_UP) {
 				alphabet_cursor_move(row, ALPHABET_ROWS, ring_dec, col, row);

@@ -185,7 +185,7 @@ void pascal shottype_menu(void)
 	shottype_menu_init();
 
 	do {
-		input_sense();
+		input_reset_sense();
 		if(!input_locked) {
 			if(key_det & INPUT_LEFT) {
 				draw_shottype_desc(sel, 7);

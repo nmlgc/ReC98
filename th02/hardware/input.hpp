@@ -25,5 +25,7 @@ static const input_t INPUT_MOVEMENT_DIAGONAL = (
 
 extern input_t key_det; /* ZUN symbol [MAGNet2010] */
 
-void input_sense(void);
+// Resets and updates [key_det].
+void input_reset_sense(void);
+
 void key_delay(void);
