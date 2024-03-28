@@ -75,6 +75,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th02/sprites/pellet.bmp |> !bmp2arr -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/pellet.asp
 : th02/sprites/sparks.bmp |> !bmp2arr -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/sparks.asp
 : th02/sprites/pointnum.bmp |> !bmp2arr -sym _sPOINTNUMS -of asm -sw 8 -sh 8 |> th02/sprites/pointnum.asp
+: th02/sprites/verdict.bmp |> !bmp2arr -sym sVERDICT_MASKS -of cpp -sw 16 -sh 16 |> th02/sprites/verdict.csp
 : th03/sprites/score.bmp |> !bmp2arr -sym _sSCORE_FONT -of asm -sw 8 -sh 8 -u |> th03/sprites/score.asp
 : th04/sprites/pelletbt.bmp |> !bmp2arr -sym _sPELLET_BOTTOM -of asm -sw 8 -sh 4 -pshf outer |> th04/sprites/pelletbt.asp
 : th04/sprites/pointnum.bmp |> !bmp2arr -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner |> th04/sprites/pointnum.asp

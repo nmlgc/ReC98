@@ -192,6 +192,12 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 	VRAM_CHUNK(G, offset, bit_count) |= src.G; \
 	VRAM_CHUNK(E, offset, bit_count) |= src.E;
 
+#define vram_or_planar_masked(offset, src, bit_count, mask) \
+	VRAM_CHUNK(B, offset, bit_count) |= (src.B & mask); \
+	VRAM_CHUNK(R, offset, bit_count) |= (src.R & mask); \
+	VRAM_CHUNK(G, offset, bit_count) |= (src.G & mask); \
+	VRAM_CHUNK(E, offset, bit_count) |= (src.E & mask);
+
 #define vram_or_planar_emptyopt(offset, src, bit_count) \
 	vram_or_emptyopt(B, offset, src.B, bit_count); \
 	vram_or_emptyopt(R, offset, src.R, bit_count); \

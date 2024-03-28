@@ -20,7 +20,6 @@ include ReC98.inc
 include th01/hardware/grppsafx.inc
 include th02/th02.inc
 
-	extern SCOPY@:proc
 	extern _execl:proc
 
 maine_01 group END_TEXT, maine_01_TEXT
@@ -121,6 +120,7 @@ END_TEXT segment byte public 'CODE' use16
 		left_and_top:dword, score:dword
 	@LINE_TYPE$QIIINUCI procdesc pascal near \
 		left_and_top:dword, len:word, str_seg:word, str_off:word, frames_per_kanji:word
+	extern @verdict_row_1_to_0_animate$qiii:proc
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -128,177 +128,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9701	proc far
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	si, ax
-		xor	di, di
-		jmp	loc_97E6
-; ---------------------------------------------------------------------------
-
-loc_9724:
-		graph_accesspage 1
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_8], ax
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_6], ax
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_4], ax
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_2], ax
-		mov	al, 0
-		out	dx, al
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	ax, di
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], ax
-		call	grcg_off
-		mov	ax, di
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		mov	ax, es:[bx]
-		and	ax, [bp+var_8]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		or	es:[bx], ax
-		mov	ax, di
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		mov	ax, es:[bx]
-		and	ax, [bp+var_6]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		or	es:[bx], ax
-		mov	ax, di
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		mov	ax, es:[bx]
-		and	ax, [bp+var_4]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		or	es:[bx], ax
-		mov	ax, di
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		mov	ax, es:[bx]
-		and	ax, [bp+var_2]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		or	es:[bx], ax
-		add	si, 50h	; 'P'
-		inc	di
-
-loc_97E6:
-		cmp	di, 10h
-		jl	loc_9724
-		pop	di
-		pop	si
-		leave
-		retf
-sub_9701	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_97F1	proc far
-
-var_60		= byte ptr -60h
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	60h, 0
-		push	si
-		push	di
-		lea	ax, [bp+var_60]
-		push	ss
-		push	ax
-		push	ds
-		push	offset byte_D080
-		mov	cx, 60h
-		call	SCOPY@
-		xor	di, di
-		jmp	short loc_983D
-; ---------------------------------------------------------------------------
-
-loc_980C:
-		xor	si, si
-		jmp	short loc_9830
-; ---------------------------------------------------------------------------
-
-loc_9810:
-		mov	ax, di
-		shl	ax, 5
-		lea	dx, [bp+var_60]
-		add	ax, dx
-		push	ss
-		push	ax
-		push	[bp+arg_2]
-		mov	ax, si
-		shl	ax, 4
-		add	ax, [bp+arg_0]
-		push	ax
-		call	sub_9701
-		add	sp, 8
-		inc	si
-
-loc_9830:
-		cmp	si, [bp+arg_4]
-		jl	short loc_9810
-		call	@frame_delay$qi pascal, 10
-		inc	di
-
-loc_983D:
-		cmp	di, 3
-		jl	short loc_980C
-		pop	di
-		pop	si
-		leave
-		retf
-sub_97F1	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1997,10 +1826,7 @@ loc_A992:
 		push	(96 shl 16) or 24
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	150060h
-		push	18h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 24, large 96 or (21 shl 16)
 		call	@frame_delay$qi pascal, 200
 		graph_accesspage 1
 		push	ds
@@ -2012,10 +1838,7 @@ loc_A992:
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		call	@verdict_value_score_put$qiil pascal, (192 shl 16) or 128, large [_score]
-		push	100080h
-		push	40h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 64, large 128 or (16 shl 16)
 		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
@@ -2033,10 +1856,7 @@ loc_A992:
 		push	ax
 		push	V_WHITE
 		call	graph_gaiji_putc
-		push	1000A0h
-		push	40h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 64, large (16 shl 16) or 160
 		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
@@ -2057,10 +1877,7 @@ loc_A992:
 		push	ax
 		push	V_WHITE
 		call	graph_gaiji_puts
-		push	1000C0h
-		push	40h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 64, large 192 or (16 shl 16)
 		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
@@ -2079,10 +1896,7 @@ loc_A992:
 		push	ax
 		push	V_WHITE
 		call	graph_gaiji_putc
-		push	1000E0h
-		push	40h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 64, large 224 or (16 shl 16)
 		call	@frame_delay$qi pascal, 100
 		graph_accesspage 1
 		push	ds
@@ -2101,10 +1915,7 @@ loc_A992:
 		push	ax
 		push	V_WHITE
 		call	graph_gaiji_putc
-		push	100100h
-		push	40h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 64, large 256 or (16 shl 16)
 		call	@frame_delay$qi pascal, 150
 		graph_accesspage 1
 		les	bx, _resident
@@ -2232,15 +2043,9 @@ loc_AF56:
 		push	(288 shl 16) or 240
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	60120h
-		push	40h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 64, large 288 or (6 shl 16)
 		call	@frame_delay$qi pascal, 120
-		push	180120h
-		push	0C0h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 192, large 288 or (24 shl 16)
 		call	@frame_delay$qi pascal, 200
 		graph_accesspage 1
 		push	ds
@@ -2251,10 +2056,7 @@ loc_AF56:
 		push	(352 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	120160h
-		push	40h
-		call	sub_97F1
-		add	sp, 6
+		call	@verdict_row_1_to_0_animate$qiii c, 64, large 352 or (18 shl 16)
 		call	@key_delay$qv
 		push	5
 		call	palette_black_out
@@ -2478,19 +2280,6 @@ maine_04_TEXT	ends
 	.data
 
 	extern _gbcRANKS:byte
-label byte_D080 byte
-	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
-	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
-	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
-	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
-	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
-	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
-	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
-	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
-	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
-	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
-	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
-	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
 aEnd3_txt	db 'end3.txt',0
 aEnding_m	db 'ending.m',0
 aEnd1_txt	db 'end1.txt',0

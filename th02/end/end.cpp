@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "th01/hardware/grppsafx.h"
@@ -11,6 +13,7 @@
 #include "th02/formats/end.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
+#include "th02/sprites/verdict.hpp"
 
 // State
 // -----
@@ -124,5 +127,51 @@ void pascal near line_type(
 	}
 	if(line_type_allow_fast_forward_and_automatically_clear_end_line) {
 		end_line_clear();
+	}
+}
+
+void verdict_kanji_1_to_0_masked(
+	screen_x_t left, screen_y_t top, const dots16_t mask[VERDICT_MASK_H]
+)
+{
+	static_assert(VERDICT_MASK_H == GLYPH_H);
+	Planar<dots_t(VERDICT_MASK_W)> dots;
+	vram_offset_t vo = vram_offset_shift(left, top);
+	for(pixel_t row = 0; row < VERDICT_MASK_H; row++) {
+		// ZUN bloat: Thanks to the blit functions being macros, `mask[row]` is
+		// evaluated a total of 5 times. Once would be enough.
+		graph_accesspage(1);
+		VRAM_SNAP_PLANAR(dots, vo, VERDICT_MASK_W);
+
+		graph_accesspage(0);
+
+		grcg_setcolor(GC_RMW, 0);
+		grcg_put(vo, mask[row], VERDICT_MASK_W);
+		grcg_off();
+
+		vram_or_planar_masked(vo, dots, VERDICT_MASK_W, mask[row]);
+
+		vo += ROW_SIZE;
+	}
+}
+
+void verdict_row_1_to_0_animate(
+	screen_x_t left, screen_y_t top, shiftjis_kanji_amount_t len
+)
+{
+	// ZUN bloat: This array is not `static`, and will be needlessly copied
+	// into a local variable at every call to the function.
+	#include "th02/sprites/verdict.csp"
+
+	shiftjis_kanji_amount_t i;
+	for(int mask = 0; mask < VERDICT_MASK_COUNT; mask++) {
+		for(i = 0; i < len; i++) {
+			verdict_kanji_1_to_0_masked(
+				(left + (i * GLYPH_FULL_W)),
+				top,
+				&sVERDICT_MASKS[mask][0]
+			);
+		}
+		frame_delay(10);
 	}
 }
