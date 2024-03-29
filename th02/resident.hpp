@@ -25,7 +25,7 @@ struct resident_t {
 	unsigned char op_main_retval;
 	bool reduce_effects;
 	char unused_3;
-	char shottype;
+	uint8_t shottype;
 	char demo_num;
 	int skill;
 	int unused_4;

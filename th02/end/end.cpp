@@ -11,9 +11,13 @@
 #include "th01/formats/cutscene.hpp"
 #include "th02/score.h"
 #include "th02/v_colors.hpp"
+#include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/end.hpp"
+extern "C" {
+#include "th02/formats/pi.h"
+}
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
 extern "C" {
@@ -21,6 +25,17 @@ extern "C" {
 }
 #include "th02/end/staff.hpp"
 #include "th02/sprites/verdict.hpp"
+
+// Constants
+// ---------
+
+static const int CUTSCENE_PIC_SLOT = 0;
+
+enum end_text_colors_t {
+	V_YELLOW = 6,
+	V_GREEN  = 9,
+};
+// ---------
 
 // Coordinates
 // -----------
@@ -41,6 +56,11 @@ static const screen_y_t END_LINE_BOTTOM = (END_LINE_TOP + GLYPH_H);
 
 shiftjis_t end_text[100][END_LINE_SIZE];
 int8_t line_col_and_fx;
+
+inline void line_col_set(vc_t vc) {
+	line_col_and_fx = (vc | FX_WEIGHT_BOLD);
+}
+
 bool line_type_allow_fast_forward_and_automatically_clear_end_line;
 // -----
 
@@ -343,4 +363,346 @@ void near end_to_staffroll_animate(void)
 		frame_delay(1);
 		left_prev -= VELOCITY;
 	}
+}
+
+inline void end_pics_load_palette_show(const char *fn) {
+	graph_accesspage(1);
+	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, fn);
+}
+
+// Calling line_type(int, int) directly from the loop would add a useless load
+// and store for [line].
+#define end_line_type_raw(line, frames) { \
+	line_type( \
+		END_LINE_LEFT, END_LINE_TOP, END_LINE_LENGTH, end_text[line], frames \
+	); \
+}
+
+inline void end_line_type(int line, int frames_per_kanji = 6) {
+	end_line_type_raw(line, frames_per_kanji);
+}
+
+// ZUN bloat: Spending 3,344 bytes of the code segment on script code is way
+// too much. The most effective first compression step would be to turn the
+// text color changes into a line-indexed array (similar to the generic face
+// arrays used for in-game dialog), and this into a proper function.
+#define end_lines_type_from_to(first, last) { \
+	for(i = first; i <= last; i++) { \
+		end_line_type_raw(i, 6); \
+	} \
+}
+
+inline void end_load_and_start_animate(const char* text_fn) {
+	end_load(text_fn);
+	snd_load("end1.m", SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+	palette_black();
+	end_pics_load_palette_show("ed01.pi");
+	palette_black_in(2);
+	frame_delay(40);
+
+	end_pic_show(0);
+	line_col_set(V_WHITE);
+	line_type_allow_fast_forward_and_automatically_clear_end_line = true;
+	end_line_type(0);
+	frame_delay(20);
+	palette_black_out(1);
+}
+
+void near end_bad_animate(void)
+{
+	int i;
+
+	end_load_and_start_animate("end1.txt");
+
+	end_pic_show(1);
+	palette_black_in(1);
+
+	end_lines_type_from_to(1, 3);
+
+	end_pic_show(2);
+	end_lines_type_from_to(4, 5);
+	line_col_set(V_YELLOW);
+	end_line_type(6);
+	line_col_set(V_WHITE);
+	end_lines_type_from_to(7, 9);
+	line_col_set(V_YELLOW);
+	end_line_type(10);
+	line_col_set(V_WHITE);
+	end_line_type(11);
+	frame_delay(20);
+
+	end_line_type(12);
+
+	// Scroll up to Marisa
+	enum {
+		VELOCITY = 2,
+	};
+	#define frame i
+	for(frame = 0; frame < (CUTSCENE_PIC_H / VELOCITY); frame++) {
+		// ZUN bloat: Redundant; end_pic_put_rows() returns with VRAM page 0
+		// accessed.
+		graph_accesspage(0);
+
+		egc_shift_down(
+			CUTSCENE_PIC_LEFT,
+			CUTSCENE_PIC_TOP,
+			(CUTSCENE_PIC_LEFT + CUTSCENE_PIC_W - 1),
+			(CUTSCENE_PIC_TOP + CUTSCENE_PIC_H - 1 - VELOCITY),
+			VELOCITY
+		);
+		end_pic_put_rows(
+			3, ((CUTSCENE_PIC_H - VELOCITY) - (frame * VELOCITY)), VELOCITY
+		);
+		frame_delay(1);
+	}
+	#undef i
+
+	end_line_type(13);
+	line_col_set(V_YELLOW);
+	end_lines_type_from_to(14, 15);
+	line_col_set(V_WHITE);
+	end_lines_type_from_to(16, 17);
+	line_col_set(V_YELLOW);
+	end_lines_type_from_to(18, 20);
+	line_col_set(V_WHITE);
+	end_line_type(21);
+	line_col_set(V_YELLOW);
+	end_line_type(22);
+	line_col_set(V_WHITE);
+	end_line_type(23);
+
+	// ZUN landmine: Blacking out *after* loading runs the black-out animation
+	// with the new palette while the shown VRAM page still contains a pic from
+	// the previous .PI file. This only works in the original game because the
+	// palettes of the original ED01.PI and ED02.PI are identical.
+	end_pics_load_palette_show("ed02.pi");
+	palette_black_out(2);
+
+	if(resident->shottype == 0) {
+		end_pic_show(0);
+	} else if(resident->shottype == 1) {
+		end_pic_show(2);
+	} else {
+		end_pic_show(3);
+	}
+	palette_black_in(2);
+
+	line_col_set(V_YELLOW);
+	end_line_type(24);
+	line_col_set(V_WHITE);
+	end_lines_type_from_to(25, 26);
+	line_col_set(V_YELLOW);
+
+	if(resident->shottype == 0) {
+		end_lines_type_from_to(27, 28);
+		line_col_set(V_WHITE);
+		end_lines_type_from_to(29, 30);
+
+		end_pic_show(1);
+		line_col_set(V_YELLOW);
+		end_line_type(31);
+		line_col_set(V_WHITE);
+		end_line_type(32, 12);
+
+		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
+		end_line_type(33, 9);
+	} else if(resident->shottype == 1) {
+		end_line_type(34);
+		line_col_set(V_WHITE);
+		end_line_type(35);
+		line_col_set(V_YELLOW);
+		end_line_type(36);
+		line_col_set(V_WHITE);
+		end_lines_type_from_to(37, 38);
+		line_col_set(V_YELLOW);
+		end_line_type(39);
+		line_col_set(V_WHITE);
+		end_line_type(40, 12);
+
+		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
+		end_line_type(41, 9);
+	} else if(resident->shottype == 2) {
+		end_line_type(42);
+		line_col_set(V_WHITE);
+		end_line_type(43);
+		line_col_set(V_YELLOW);
+		end_lines_type_from_to(44, 45);
+		line_col_set(V_WHITE);
+		end_lines_type_from_to(46, 47);
+		line_col_set(V_YELLOW);
+		end_line_type(48);
+		line_col_set(V_WHITE);
+		end_line_type(49, 12);
+
+		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
+		end_line_type(50, 9);
+	}
+	end_to_staffroll_animate();
+}
+
+void near end_good_animate(void)
+{
+	int i;
+
+	end_load_and_start_animate("end2.txt");
+
+	end_pics_load_palette_show("ed03.pi");
+	end_pic_show(0);
+	palette_black_in(1);
+
+	end_lines_type_from_to(1, 3);
+
+	end_pic_show(1);
+	end_lines_type_from_to(4, 9);
+
+	end_pic_show(2);
+	end_lines_type_from_to(10, 11);
+
+	end_pic_show(3);
+	end_lines_type_from_to(12, 13);
+
+	palette_entry_rgb("ed03a.rgb"); // Change to a grayscale palette
+	palette_show();
+	line_col_set(V_GREEN);
+	end_lines_type_from_to(14, 15);
+	palette_black_out(2);
+
+	end_pics_load_palette_show("ed04.pi");
+	graph_accesspage(0); // ZUN bloat: Redundant, overridden by end_pic_show()
+	end_pic_show(0);
+	palette_black_in(2);
+
+	line_col_set(V_WHITE);
+	end_line_type(16);
+	line_col_set(V_GREEN);
+	end_line_type(17);
+	line_col_set(V_WHITE);
+	end_lines_type_from_to(18, 19);
+
+	end_pic_show(1);
+	line_col_set(V_GREEN);
+	end_lines_type_from_to(20, 21);
+	line_col_set(V_WHITE);
+	end_line_type(22);
+	line_col_set(V_GREEN);
+	end_lines_type_from_to(23, 24);
+	line_col_set(V_WHITE);
+	end_line_type(25);
+	line_col_set(V_GREEN);
+	end_line_type(26);
+	frame_delay(10);
+
+	if(resident->shottype == 0) {
+		end_line_type(27);
+		frame_delay(30);
+
+		end_pic_show(2);
+		line_col_set(V_WHITE);
+		end_line_type(28);
+
+		end_pic_show(3);
+		end_line_type(29);
+		line_col_set(V_GREEN);
+		end_lines_type_from_to(30, 31);
+		line_col_set(V_WHITE);
+		end_lines_type_from_to(32, 36);
+		line_col_set(V_GREEN);
+		end_lines_type_from_to(37, 38);
+		line_col_set(V_WHITE);
+		end_line_type(39);
+		palette_black_out(2);
+
+		end_pics_load_palette_show("ed05.pi\0ver 1.00");
+		end_pic_show(0);
+		palette_black_in(2);
+
+		end_lines_type_from_to(40, 46);
+
+		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
+		end_line_type(47, 12);
+	} else if(resident->shottype == 1) {
+		end_line_type(48);
+		end_line_type(49);
+		line_col_set(V_WHITE);
+		end_line_type(50);
+		line_col_set(V_GREEN);
+		end_line_type(51);
+		frame_delay(30);
+
+		end_pic_show(2);
+		line_col_set(V_WHITE);
+		end_line_type(52);
+
+		end_pic_show(3);
+		end_line_type(53);
+		line_col_set(V_GREEN);
+		end_line_type(54);
+		line_col_set(V_WHITE);
+		end_line_type(55);
+		line_col_set(V_GREEN);
+		end_line_type(56);
+		line_col_set(V_WHITE);
+		end_line_type(57);
+		line_col_set(V_GREEN);
+		end_lines_type_from_to(58, 61);
+		line_col_set(V_WHITE);
+		end_lines_type_from_to(62, 66);
+		palette_black_out(2);
+
+		end_pics_load_palette_show("ed05.pi");
+		end_pic_show(1);
+		palette_black_in(2);
+
+		end_lines_type_from_to(67, 68);
+		end_line_type(69, 12);
+
+		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
+		end_line_type(70, 12);
+	} else {
+		end_line_type(71);
+		line_col_set(V_WHITE);
+		end_line_type(72);
+		line_col_set(V_GREEN);
+		end_line_type(73);
+		frame_delay(30);
+
+		end_pic_show(2);
+		line_col_set(V_WHITE);
+		end_line_type(74);
+
+		end_pic_show(3);
+		end_line_type(75);
+		line_col_set(V_GREEN);
+		end_line_type(76);
+		line_col_set(V_WHITE);
+		end_line_type(77);
+		line_col_set(V_GREEN);
+		end_line_type(78);
+		line_col_set(V_WHITE);
+		end_line_type(79);
+		line_col_set(V_GREEN);
+		end_line_type(80);
+		line_col_set(V_WHITE);
+		end_line_type(81);
+		line_col_set(V_GREEN);
+		end_line_type(82);
+		line_col_set(V_WHITE);
+		end_line_type(83);
+		palette_black_out(2);
+
+		end_pics_load_palette_show("ed05.pi");
+		end_pic_show(2);
+		palette_black_in(2);
+
+		end_lines_type_from_to(84, 91);
+
+		// ZUN bloat: Could have been included in the loop. (As if it matters
+		// at this point...)
+		end_line_type(92);
+
+		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
+		end_line_type(93, 12);
+	}
+	end_to_staffroll_animate();
 }

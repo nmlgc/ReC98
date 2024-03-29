@@ -3,6 +3,9 @@
  * Code segment #4 of TH02's MAINE.EXE
  */
 
+// Required to ensure the correct order of strings in `th02/score.c`?!
+#pragma option -d-
+
 #include <dos.h>
 #include "platform.h"
 #include "pc98.h"
