@@ -21,6 +21,14 @@
 // -----------
 
 static const screen_y_t CUTSCENE_PIC_TOP = ((RES_Y / 2) - (CUTSCENE_PIC_H / 2));
+static const pixel_t END_LINE_W = (END_LINE_LENGTH * GLYPH_HALF_W);
+
+static const screen_x_t END_LINE_LEFT = ((RES_X / 2) - (END_LINE_W / 2));
+static const screen_y_t END_LINE_TOP = (
+	CUTSCENE_PIC_TOP + CUTSCENE_PIC_H + (GLYPH_H * 2)
+);
+static const screen_x_t END_LINE_RIGHT = (END_LINE_LEFT + END_LINE_W);
+static const screen_y_t END_LINE_BOTTOM = (END_LINE_TOP + GLYPH_H);
 // -----------
 
 // State
@@ -265,4 +273,19 @@ void pascal near end_pic_put_rows(
 	pic_put(
 		CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, rows, quarter, quarter_offset_y
 	);
+}
+
+void near end_line_clear(void)
+{
+	screen_y_t y;
+	screen_y_t x;
+
+	grcg_setcolor(GC_RMW, 0);
+	for(y = END_LINE_TOP; y < END_LINE_BOTTOM; y++) {
+		for(x = END_LINE_LEFT; x < END_LINE_RIGHT; x += GLYPH_FULL_W) {
+			vram_offset_t vo = vram_offset_shift(x, y);
+			grcg_put(vo, 0xFFFF, GLYPH_FULL_W);
+		}
+	}
+	grcg_off();
 }

@@ -127,6 +127,7 @@ END_TEXT segment byte public 'CODE' use16
 	@STAFFROLL_PIC_PUT$QIII procdesc pascal near \
 		left_and_top:dword, quarter:word
 	@END_PIC_PUT_ROWS$QIII procdesc pascal near
+	@end_line_clear$qv procdesc near
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -134,58 +135,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @end_line_clear$qv
-@end_line_clear$qv	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	si, 14Ch
-		jmp	short loc_9AC5
-; ---------------------------------------------------------------------------
-
-loc_9A94:
-		mov	di, 90h
-		jmp	short loc_9ABE
-; ---------------------------------------------------------------------------
-
-loc_9A99:
-		mov	ax, di
-		sar	ax, 3
-		mov	dx, si
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, si
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_2], ax
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_2]
-		mov	word ptr es:[bx], 0FFFFh
-		add	di, 10h
-
-loc_9ABE:
-		cmp	di, 1F0h
-		jl	short loc_9A99
-		inc	si
-
-loc_9AC5:
-		cmp	si, 15Ch
-		jl	short loc_9A94
-		call	grcg_off
-		pop	di
-		pop	si
-		leave
-		retn
-@end_line_clear$qv	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
