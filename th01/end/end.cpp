@@ -31,7 +31,7 @@
 inline void pic_caption_type_n(int line, size_t len, const char str[]) {
 	graph_type_ank_n(
 		(((RES_X / 2) - ((len * GLYPH_HALF_W) / 2) + BYTE_MASK) & ~BYTE_MASK),
-		(PIC_BOTTOM + (((line * 2) + 1) * GLYPH_H)),
+		(CUTSCENE_PIC_TOP + CUTSCENE_PIC_H + (((line * 2) + 1) * GLYPH_H)),
 		len,
 		str
 	);
