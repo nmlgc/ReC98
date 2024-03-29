@@ -121,6 +121,7 @@ END_TEXT segment byte public 'CODE' use16
 	@LINE_TYPE$QIIINUCI procdesc pascal near \
 		left_and_top:dword, len:word, str_seg:word, str_off:word, frames_per_kanji:word
 	extern @verdict_row_1_to_0_animate$qiii:proc
+	@GAIJI_BOLDFONT_STR_FROM_POSITIVE$QIN12GAIJI_TH02_T procdesc pascal near
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -128,81 +129,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9846	proc near
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-@@g_str		= dword	ptr  4
-arg_4		= word ptr  8
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	si, 100
-		mov	[bp+var_2], 0
-		xor	cx, cx
-		jmp	short loc_98A1
-; ---------------------------------------------------------------------------
-
-loc_985A:
-		mov	ax, di
-		cwd
-		idiv	si
-		mov	[bp+var_1], al
-		cmp	[bp+var_2], 0
-		jnz	short loc_986B
-		mov	[bp+var_2], al
-
-loc_986B:
-		cmp	[bp+var_2], 0
-		jnz	short loc_9876
-		cmp	cx, 2
-		jnz	short loc_9885
-
-loc_9876:
-		les	bx, [bp+@@g_str]
-		add	bx, cx
-		mov	al, [bp+var_1]
-		add	al, gb_0_
-		mov	es:[bx], al
-		jmp	short loc_988E
-; ---------------------------------------------------------------------------
-
-loc_9885:
-		les	bx, [bp+@@g_str]
-		add	bx, cx
-		mov	byte ptr es:[bx], gb_SP
-
-loc_988E:
-		mov	al, [bp+var_1]
-		cbw
-		imul	si
-		sub	di, ax
-		inc	cx
-		mov	bx, 10
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	si, ax
-
-loc_98A1:
-		cmp	cx, 3
-		jl	short loc_985A
-		les	bx, [bp+@@g_str]
-		add	bx, cx
-		mov	byte ptr es:[bx], 0
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_9846	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1940,11 +1866,11 @@ loc_AEB2:
 		push	(288 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	di
-		push	ss
+		push	di	; value
+		push	ss	; str (segment)
 		lea	ax, [bp+@@g_str]
-		push	ax
-		call	sub_9846
+		push	ax	; str (offset)
+		call	@gaiji_boldfont_str_from_positive$qin12gaiji_th02_t
 		push	(192 shl 16) or 288
 		push	GAIJI_W
 		push	ss

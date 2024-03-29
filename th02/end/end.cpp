@@ -175,3 +175,32 @@ void verdict_row_1_to_0_animate(
 		frame_delay(10);
 	}
 }
+
+void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
+	int value, // ZUN bloat: Not meant to support unsigned values.
+	gaiji_th02_t str[4]
+)
+{
+	enum {
+		DIGITS = 3,
+	};
+	int divisor = 100; // Must match DIGITS!
+	int8_t digit;
+	uint8_t past_leading_zeroes = 0;
+	int i = 0;
+	while(i < DIGITS) {
+		digit = (value / divisor);
+		if(past_leading_zeroes == 0) {
+			past_leading_zeroes = digit;
+		}
+		if(past_leading_zeroes || (i == (DIGITS - 1))) {
+			str[i] = gaiji_th02_t(gb_0_ + digit);
+		} else {
+			str[i] = gb_SP;
+		}
+		value -= (digit * divisor);
+		i++;
+		divisor /= 10;
+	}
+	str[i] = gs_NULL;
+}
