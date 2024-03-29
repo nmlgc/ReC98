@@ -127,7 +127,7 @@ END_TEXT segment byte public 'CODE' use16
 	@STAFFROLL_PIC_PUT$QIII procdesc pascal near \
 		left_and_top:dword, quarter:word
 	@END_PIC_PUT_ROWS$QIII procdesc pascal near
-	@end_line_clear$qv procdesc near
+	@end_to_staffroll_animate$qv procdesc near
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -135,58 +135,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9AD4	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@end_load$qnxc pascal, ds, offset aEnd3_txt ; "end3.txt"
-		call	@frame_delay$qi pascal, 30
-		push	1
-		call	palette_white_out
-		call	_snd_load c, offset aEnding_m, ds, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		pop	cx
-		call	@end_line_clear$qv
-		push	4
-		call	palette_white_in
-		call	_snd_delay_until_measure stdcall, 5
-		pop	cx
-		mov	si, 0A0h
-		jmp	short loc_9B5C
-; ---------------------------------------------------------------------------
-
-loc_9B1B:
-		push	si
-		push	100
-		lea	ax, [si+319]
-		push	ax
-		push	(299 shl 16) or 4
-		call	egc_shift_left
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		lea	ax, [si+312]
-		push	ax
-		push	100
-		lea	ax, [si+319]
-		push	ax
-		push	299
-		call	grcg_boxfill
-		call	grcg_off
-		call	@frame_delay$qi pascal, 1
-		sub	si, 4
-
-loc_9B5C:
-		cmp	si, 24h	; '$'
-		jg	short loc_9B1B
-		pop	si
-		pop	bp
-		retn
-sub_9AD4	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -587,7 +535,7 @@ loc_A092:
 		call	@line_type$qiiinuci
 
 loc_A097:
-		call	sub_9AD4
+		call	@end_to_staffroll_animate$qv
 		pop	si
 		pop	bp
 		retn
@@ -1101,7 +1049,7 @@ loc_A842:
 loc_A869:
 		push	12
 		call	@line_type$qiiinuci
-		call	sub_9AD4
+		call	@end_to_staffroll_animate$qv
 		pop	si
 		pop	bp
 		retn
@@ -1863,8 +1811,6 @@ maine_04_TEXT	ends
 	.data
 
 	extern _gbcRANKS:byte
-aEnd3_txt	db 'end3.txt',0
-aEnding_m	db 'ending.m',0
 aEnd1_txt	db 'end1.txt',0
 aEnd1_m		db 'end1.m',0
 aEd01_pi	db 'ed01.pi',0

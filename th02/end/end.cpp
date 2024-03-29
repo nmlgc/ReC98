@@ -5,6 +5,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "libs/kaja/kaja.h"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/formats/cutscene.hpp"
@@ -15,6 +16,10 @@
 #include "th02/formats/end.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
+extern "C" {
+#include "th02/snd/snd.h"
+}
+#include "th02/end/staff.hpp"
 #include "th02/sprites/verdict.hpp"
 
 // Coordinates
@@ -288,4 +293,54 @@ void near end_line_clear(void)
 		}
 	}
 	grcg_off();
+}
+
+void near end_to_staffroll_animate(void)
+{
+	enum {
+		VELOCITY = 4,
+
+		// ZUN bloat: (CUTSCENE_PIC_H - 1) would have been enough.
+		SHIFT_H = (RES_Y - 1 - CUTSCENE_PIC_TOP),
+	};
+	end_load("end3.txt");
+	frame_delay(30);
+
+	palette_white_out(1);
+
+	snd_load("ending.m", SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+	end_line_clear();
+	palette_white_in(4);
+
+	snd_delay_until_measure(5);
+
+	screen_x_t left_prev = CUTSCENE_PIC_LEFT;
+
+	// ZUN quirk: Off by 4? Did you mean ">="?
+	while(left_prev > (STAFFROLL_PIC_LEFT + VELOCITY)) {
+		// ZUN bloat: Could have made use of the fact that this image is
+		// surrounded by black pixels. Shifting [CUTSCENE_PIC_W + VELOCITY]
+		// pixels would have avoided the need to use the GRCG below, as well
+		// as the subsequent...
+		egc_shift_left(
+			left_prev,
+			CUTSCENE_PIC_TOP,
+			(left_prev + CUTSCENE_PIC_W - 1),
+			SHIFT_H,
+			VELOCITY
+		);
+
+		grcg_setcolor(GC_RMW, 0);
+		grcg_boxfill(
+			// ZUN bug: …which cuts off [VELOCITY] pixels at the right side.
+			(left_prev + CUTSCENE_PIC_W - (VELOCITY * 2)),
+			CUTSCENE_PIC_TOP,
+			(left_prev + CUTSCENE_PIC_W - 1),
+			SHIFT_H
+		);
+		grcg_off();
+		frame_delay(1);
+		left_prev -= VELOCITY;
+	}
 }
