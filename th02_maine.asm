@@ -122,6 +122,11 @@ END_TEXT segment byte public 'CODE' use16
 		left_and_top:dword, len:word, str_seg:word, str_off:word, frames_per_kanji:word
 	extern @verdict_row_1_to_0_animate$qiii:proc
 	@GAIJI_BOLDFONT_STR_FROM_POSITIVE$QIN12GAIJI_TH02_T procdesc pascal near
+	@END_PIC_SHOW$QI procdesc pascal near \
+		quarter:word
+	@STAFFROLL_PIC_PUT$QIII procdesc pascal near \
+		left_and_top:dword, quarter:word
+	@END_PIC_PUT_ROWS$QIII procdesc pascal near
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -129,276 +134,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_98B5	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	6, 0
-		push	si
-		push	di
-		cmp	[bp+arg_0], 0
-		jnz	short loc_98C5
-		xor	ax, ax
-		jmp	short loc_98DE
-; ---------------------------------------------------------------------------
-
-loc_98C5:
-		cmp	[bp+arg_0], 1
-		jnz	short loc_98D0
-		mov	ax, 28h	; '('
-		jmp	short loc_98DE
-; ---------------------------------------------------------------------------
-
-loc_98D0:
-		cmp	[bp+arg_0], 2
-		jnz	short loc_98DB
-		mov	ax, 3E80h
-		jmp	short loc_98DE
-; ---------------------------------------------------------------------------
-
-loc_98DB:
-		mov	ax, 3EA8h
-
-loc_98DE:
-		mov	si, ax
-		mov	di, 1F54h
-		call	@egc_start_copy$qv
-		mov	[bp+var_2], 0
-		jmp	short loc_9930
-; ---------------------------------------------------------------------------
-
-loc_98EF:
-		mov	[bp+var_4], 0
-		jmp	short loc_9921
-; ---------------------------------------------------------------------------
-
-loc_98F6:
-		graph_accesspage 1
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_6], ax
-		mov	al, 0
-		out	dx, al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	ax, [bp+var_6]
-		mov	es:[bx], ax
-		add	[bp+var_4], 2
-		add	si, 2
-		add	di, 2
-
-loc_9921:
-		cmp	[bp+var_4], 28h	; '('
-		jl	short loc_98F6
-		inc	[bp+var_2]
-		add	di, 28h	; '('
-		add	si, 28h	; '('
-
-loc_9930:
-		cmp	[bp+var_2], 0C8h ; 'È'
-		jl	short loc_98EF
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_98B5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9942	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	6, 0
-		push	si
-		push	di
-		cmp	[bp+arg_0], 0
-		jnz	short loc_9952
-		xor	ax, ax
-		jmp	short loc_996B
-; ---------------------------------------------------------------------------
-
-loc_9952:
-		cmp	[bp+arg_0], 1
-		jnz	short loc_995D
-		mov	ax, 28h	; '('
-		jmp	short loc_996B
-; ---------------------------------------------------------------------------
-
-loc_995D:
-		cmp	[bp+arg_0], 2
-		jnz	short loc_9968
-		mov	ax, 3E80h
-		jmp	short loc_996B
-; ---------------------------------------------------------------------------
-
-loc_9968:
-		mov	ax, 3EA8h
-
-loc_996B:
-		mov	si, ax
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		call	@egc_start_copy$qv
-		mov	[bp+var_2], 0
-		jmp	short loc_99D2
-; ---------------------------------------------------------------------------
-
-loc_9991:
-		mov	[bp+var_4], 0
-		jmp	short loc_99C3
-; ---------------------------------------------------------------------------
-
-loc_9998:
-		graph_accesspage 1
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_6], ax
-		mov	al, 0
-		out	dx, al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	ax, [bp+var_6]
-		mov	es:[bx], ax
-		add	[bp+var_4], 2
-		add	si, 2
-		add	di, 2
-
-loc_99C3:
-		cmp	[bp+var_4], 28h	; '('
-		jl	short loc_9998
-		inc	[bp+var_2]
-		add	di, 28h	; '('
-		add	si, 28h	; '('
-
-loc_99D2:
-		cmp	[bp+var_2], 0C8h ; 'È'
-		jl	short loc_9991
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_9942	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_99E4	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	6, 0
-		push	si
-		push	di
-		cmp	[bp+arg_4], 0
-		jnz	short loc_99F4
-		xor	ax, ax
-		jmp	short loc_9A0D
-; ---------------------------------------------------------------------------
-
-loc_99F4:
-		cmp	[bp+arg_4], 1
-		jnz	short loc_99FF
-		mov	ax, 28h	; '('
-		jmp	short loc_9A0D
-; ---------------------------------------------------------------------------
-
-loc_99FF:
-		cmp	[bp+arg_4], 2
-		jnz	short loc_9A0A
-		mov	ax, 3E80h
-		jmp	short loc_9A0D
-; ---------------------------------------------------------------------------
-
-loc_9A0A:
-		mov	ax, 3EA8h
-
-loc_9A0D:
-		mov	si, ax
-		mov	di, 1F54h
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		add	si, ax
-		call	@egc_start_copy$qv
-		mov	ax, [bp+arg_2]
-		mov	[bp+var_2], ax
-		jmp	short loc_9A68
-; ---------------------------------------------------------------------------
-
-loc_9A27:
-		mov	[bp+var_4], 0
-		jmp	short loc_9A59
-; ---------------------------------------------------------------------------
-
-loc_9A2E:
-		graph_accesspage 1
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_6], ax
-		mov	al, 0
-		out	dx, al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	ax, [bp+var_6]
-		mov	es:[bx], ax
-		add	[bp+var_4], 2
-		add	si, 2
-		add	di, 2
-
-loc_9A59:
-		cmp	[bp+var_4], 28h	; '('
-		jl	short loc_9A2E
-		inc	[bp+var_2]
-		add	di, 28h	; '('
-		add	si, 28h	; '('
-
-loc_9A68:
-		mov	ax, [bp+arg_0]
-		add	ax, [bp+arg_2]
-		cmp	ax, [bp+var_2]
-		jg	short loc_9A27
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_99E4	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -527,16 +262,14 @@ sub_9B64	proc near
 		push	2
 		call	palette_black_in
 		call	@frame_delay$qi pascal, 40
-		push	0
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 0
 		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	_line_type_allow_fast_forward_and, 1
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text, 6
 		call	@frame_delay$qi pascal, 20
 		push	1
 		call	palette_black_out
-		push	1
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 1
 		push	1
 		call	palette_black_in
 		mov	si, 1
@@ -558,8 +291,7 @@ loc_9C15:
 loc_9C2D:
 		cmp	si, 3
 		jle	short loc_9C15
-		push	2
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 2
 		mov	si, 4
 		jmp	short loc_9C54
 ; ---------------------------------------------------------------------------
@@ -614,14 +346,14 @@ loc_9C91:
 loc_9CDE:
 		graph_accesspage 0
 		call	egc_shift_down pascal, (160 shl 16) or 100, (479 shl 16) or 297, 2
-		push	3
+		push	3	; quarter
 		mov	ax, si
 		add	ax, ax
-		mov	dx, 0C6h ; 'Æ'
+		mov	dx, (200 - 2)
 		sub	dx, ax
-		push	dx
-		push	2
-		call	sub_99E4
+		push	dx	; quarter_offset_y
+		push	2	; rows
+		call	@END_PIC_PUT_ROWS$QIII
 		call	@frame_delay$qi pascal, 1
 		inc	si
 
@@ -722,7 +454,7 @@ loc_9E39:
 		push	3
 
 loc_9E3B:
-		call	sub_98B5
+		call	@end_pic_show$qi
 		push	2
 		call	palette_black_in
 		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
@@ -790,8 +522,7 @@ loc_9EC0:
 loc_9ED8:
 		cmp	si, 1Eh
 		jle	short loc_9EC0
-		push	1
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 1
 		mov	_line_col_and_fx, (6 or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 31), 6
 		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
@@ -937,8 +668,7 @@ sub_A09D	proc near
 		push	2
 		call	palette_black_in
 		call	@frame_delay$qi pascal, 40
-		push	0
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 0
 		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		mov	_line_type_allow_fast_forward_and, 1
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text, 6
@@ -951,8 +681,7 @@ sub_A09D	proc near
 		pop	cx
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
-		push	0
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 0
 		push	1
 		call	palette_black_in
 		mov	si, 1
@@ -974,8 +703,7 @@ loc_A185:
 loc_A19D:
 		cmp	si, 3
 		jle	short loc_A185
-		push	1
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 1
 		mov	si, 4
 		jmp	short loc_A1C4
 ; ---------------------------------------------------------------------------
@@ -995,8 +723,7 @@ loc_A1AC:
 loc_A1C4:
 		cmp	si, 9
 		jle	short loc_A1AC
-		push	2
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 2
 		mov	si, 0Ah
 		jmp	short loc_A1EB
 ; ---------------------------------------------------------------------------
@@ -1016,8 +743,7 @@ loc_A1D3:
 loc_A1EB:
 		cmp	si, 0Bh
 		jle	short loc_A1D3
-		push	3
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 3
 		mov	si, 0Ch
 		jmp	short loc_A212
 ; ---------------------------------------------------------------------------
@@ -1070,8 +796,7 @@ loc_A247:
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
-		push	0
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 0
 		push	2
 		call	palette_black_in
 		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
@@ -1098,8 +823,7 @@ loc_A2D2:
 loc_A2EA:
 		cmp	si, 13h
 		jle	short loc_A2D2
-		push	1
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 1
 		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 14h
 		jmp	short loc_A316
@@ -1152,12 +876,10 @@ loc_A353:
 		jnz	loc_A4EC
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 27), 6
 		call	@frame_delay$qi pascal, 30
-		push	2
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 2
 		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 28), 6
-		push	3
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 3
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 29), 6
 		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		mov	si, 1Eh
@@ -1229,8 +951,7 @@ loc_A451:
 		pop	cx
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
-		push	0
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 0
 		push	2
 		call	palette_black_in
 		mov	si, 28h	; '('
@@ -1271,12 +992,10 @@ loc_A4EC:
 		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 51), 6
 		call	@frame_delay$qi pascal, 30
-		push	2
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 2
 		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 52), 6
-		push	3
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 3
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 53), 6
 		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 54), 6
@@ -1334,8 +1053,7 @@ loc_A620:
 		pop	cx
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
-		push	1
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 1
 		push	2
 		call	palette_black_in
 		mov	si, 43h	; 'C'
@@ -1373,12 +1091,10 @@ loc_A6B6:
 		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 73), 6
 		call	@frame_delay$qi pascal, 30
-		push	2
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 2
 		mov	_line_col_and_fx, (V_WHITE or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 74), 6
-		push	3
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 3
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 75), 6
 		mov	_line_col_and_fx, (9 or FX_WEIGHT_BOLD)
 		call	@line_type$qiiinuci pascal, (144 shl 16) or 332, END_LINE_LENGTH, ds, offset _end_text + (END_LINE_SIZE * 76), 6
@@ -1404,8 +1120,7 @@ loc_A6B6:
 		pop	cx
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
-		push	2
-		call	sub_98B5
+		call	@end_pic_show$qi pascal, 2
 		push	2
 		call	palette_black_in
 		mov	si, 54h	; 'T'
@@ -1515,9 +1230,7 @@ arg_4		= word ptr  8
 		push	[bp+arg_4]
 		push	[bp+arg_0]
 		call	@staffroll_rotrect_animate$qucuc
-		push	200064h
-		push	[bp+arg_2]
-		call	sub_9942
+		call	@staffroll_pic_put$qiii pascal, large (32 shl 16) or 100, [bp+arg_2]
 		call	@frame_delay$qi pascal, 4
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -1619,9 +1332,7 @@ loc_A992:
 		call	rotrect
 		call	_snd_delay_until_measure stdcall, 21
 		pop	cx
-		push	200064h
-		push	3
-		call	sub_9942
+		call	@staffroll_pic_put$qiii pascal, large (32 shl 16) or 100, 3
 		push	ds
 		push	offset aEd06c_rgb ; "ed06c.rgb"
 		call	palette_entry_rgb
@@ -1661,9 +1372,7 @@ loc_A992:
 		call	rotrect
 		call	_snd_delay_until_measure stdcall, 33
 		pop	cx
-		push	200064h
-		push	2
-		call	sub_9942
+		call	@staffroll_pic_put$qiii pascal, (32 shl 16) or 100, 2
 		push	0F8h
 		push	2
 		push	0E9h
@@ -2200,7 +1909,6 @@ maine_04_TEXT	segment	byte public 'CODE' use16
 	extern SCORE_ENTER:proc
 maine_04_TEXT	ends
 
-	extern @egc_start_copy$qv:proc
 	extern @STAFFROLL_ROTRECT_ANIMATE$QUCUC:proc
 
 	.data

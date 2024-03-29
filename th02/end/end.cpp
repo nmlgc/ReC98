@@ -5,7 +5,9 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/hardware/grppsafx.h"
+#include "th01/formats/cutscene.hpp"
 #include "th02/score.h"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -14,6 +16,12 @@
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
 #include "th02/sprites/verdict.hpp"
+
+// Coordinates
+// -----------
+
+static const screen_y_t CUTSCENE_PIC_TOP = ((RES_Y / 2) - (CUTSCENE_PIC_H / 2));
+// -----------
 
 // State
 // -----
@@ -203,4 +211,58 @@ void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
 		divisor /= 10;
 	}
 	str[i] = gs_NULL;
+}
+
+// ZUN bloat: Same algorithm as in TH01, same problems. Also could be a
+// single proper function.
+#define pic_put(left, top, rows, quarter, quarter_offset_y) { \
+	uvram_offset_t vram_offset_src = ( \
+		(quarter == 0) ? vram_offset_shift(0, 0) : \
+		(quarter == 1) ? vram_offset_shift(CUTSCENE_PIC_W, 0) : \
+		(quarter == 2) ? vram_offset_shift(0, CUTSCENE_PIC_H) : \
+		/*quarter == 3*/ vram_offset_shift(CUTSCENE_PIC_W, CUTSCENE_PIC_H) \
+	); \
+	uvram_offset_t vram_offset_dst = vram_offset_shift(left, top); \
+	vram_offset_src += (quarter_offset_y * ROW_SIZE); \
+	\
+	egc_start_copy(); \
+	\
+	pixel_t y = quarter_offset_y; \
+	vram_byte_amount_t vram_x; \
+	while(y < (rows + quarter_offset_y)) { \
+		vram_x = 0; \
+		while(vram_x < CUTSCENE_PIC_VRAM_W) { \
+			egc_temp_t d; \
+			\
+			graph_accesspage(1);	d = egc_chunk(vram_offset_src); \
+			graph_accesspage(0);	egc_chunk(vram_offset_dst) = d; \
+			\
+			vram_x += EGC_REGISTER_SIZE; \
+			vram_offset_src += EGC_REGISTER_SIZE; \
+			vram_offset_dst += EGC_REGISTER_SIZE; \
+		} \
+		y++; \
+		vram_offset_dst += (ROW_SIZE - CUTSCENE_PIC_VRAM_W); \
+		vram_offset_src += (ROW_SIZE - CUTSCENE_PIC_VRAM_W); \
+	} \
+	egc_off(); \
+}
+
+void pascal near end_pic_show(int quarter)
+{
+	pic_put(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_H, quarter, 0);
+}
+
+void pascal near staffroll_pic_put(screen_x_t left, screen_y_t top, int quarter)
+{
+	pic_put(left, top, CUTSCENE_PIC_H, quarter, 0);
+}
+
+void pascal near end_pic_put_rows(
+	int quarter, pixel_t quarter_offset_y, pixel_t rows
+)
+{
+	pic_put(
+		CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, rows, quarter, quarter_offset_y
+	);
 }

@@ -20,6 +20,11 @@
 	outport(EGC_MASKREG, mask); \
 }
 
+#if (GAME == 2)
+// TH02 actually calls this by its proper name from a different segment!
+void egc_start_copy(void);
+#endif
+
 // Blits the rectangle from
 // 	(⌊left/16⌋*16, top)
 // to
