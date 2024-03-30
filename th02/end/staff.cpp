@@ -1,8 +1,3 @@
-/* ReC98
- * -----
- * Code segment #5 of TH02's MAINE.EXE
- */
-
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -12,6 +7,7 @@
 #include "th02/v_colors.hpp"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
+#include "th02/end/staff.hpp"
 
 void pascal near rotrect_draw(int rad, unsigned char angle)
 {
@@ -36,13 +32,16 @@ void pascal near rotrect_draw(int rad, unsigned char angle)
 #define graph_accesspage_func graph_accesspage
 #include "th01/hardware/egcrect.cpp"
 
-void pascal rotrect_animate(char rot_speed, char start_angle)
+void pascal staffroll_rotrect_animate(
+	unsigned char angle_speed, unsigned char angle_start
+)
 {
 	int rads[] = {256, 256, 256, 256, 256};
-	char angles[] = {0x29, 0x29, 0x29, 0x29, 0x29};
+	unsigned char angles[] = { 0x29, 0x29, 0x29, 0x29, 0x29 };
+
 	int i, j;
 	for(i = 0; i < 5; i++) {
-		angles[i] = start_angle;
+		angles[i] = angle_start;
 	}
 	grcg_setcolor(GC_RMW, 0);
 	grcg_boxfill(0, 0, 384, 399);
@@ -60,7 +59,7 @@ void pascal rotrect_animate(char rot_speed, char start_angle)
 		grcg_setcolor(GC_RMW, V_WHITE);
 		if(i < 16) {
 			rads[4] -= 4;
-			angles[4] += rot_speed;
+			angles[4] += angle_speed;
 		}
 		rotrect_draw(rads[4], angles[4]);
 		frame_delay(1);

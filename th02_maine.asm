@@ -2234,7 +2234,7 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	[bp+arg_4]
 		push	[bp+arg_0]
-		call	@rotrect_animate$qcc
+		call	@staffroll_rotrect_animate$qucuc
 		push	200064h
 		push	[bp+arg_2]
 		call	sub_9942
@@ -2955,12 +2955,8 @@ maine_04_TEXT	segment	byte public 'CODE' use16
 	extern SCORE_ENTER:proc
 maine_04_TEXT	ends
 
-; ===========================================================================
-
-maine_05_TEXT	segment	byte public 'CODE' use16
 	extern @egc_start_copy$qv:proc
-	extern @ROTRECT_ANIMATE$QCC:proc
-maine_05_TEXT	ends
+	extern @STAFFROLL_ROTRECT_ANIMATE$QUCUC:proc
 
 	.data
 
