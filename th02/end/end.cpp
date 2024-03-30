@@ -49,6 +49,10 @@ static const screen_y_t END_LINE_TOP = (
 );
 static const screen_x_t END_LINE_RIGHT = (END_LINE_LEFT + END_LINE_W);
 static const screen_y_t END_LINE_BOTTOM = (END_LINE_TOP + GLYPH_H);
+
+static const pixel_t ENDFT_W = 80;
+static const pixel_t ENDFT_SEGMENT_W = 16;
+static const pixel_t ENDFT_SEGMENT_COUNT = (ENDFT_W / ENDFT_SEGMENT_W);
 // -----------
 
 // State
@@ -705,4 +709,16 @@ void near end_good_animate(void)
 		end_line_type(93, 12);
 	}
 	end_to_staffroll_animate();
+}
+
+void pascal near endft_put(screen_x_t left, screen_y_t top, int patnum_base)
+{
+	int patnum = patnum_base;
+	int segment = 0;
+	while(segment < ENDFT_SEGMENT_COUNT) {
+		over_put_8(left, top, patnum);
+		segment++;
+		patnum++;
+		left += ENDFT_SEGMENT_W;
+	}
 }

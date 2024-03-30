@@ -124,6 +124,7 @@ END_TEXT segment byte public 'CODE' use16
 		left_and_top:dword, quarter:word
 	@end_bad_animate$qv procdesc near
 	@end_good_animate$qv procdesc near
+	@ENDFT_PUT$QIII procdesc pascal near
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -131,45 +132,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A874	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		mov	[bp+var_2], 0
-		jmp	short loc_A898
-; ---------------------------------------------------------------------------
-
-loc_A887:
-		push	si
-		push	[bp+arg_2]
-		push	di
-		call	over_put_8
-		inc	[bp+var_2]
-		inc	di
-		add	si, 10h
-
-loc_A898:
-		cmp	[bp+var_2], 5
-		jl	short loc_A887
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_A874	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -230,19 +192,19 @@ sub_A8FA	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A90C:
-		push	1B000B8h
-		push	si
-		call	sub_A874
+		push	(432 shl 16) or 184	; (left) or top
+		push	si	; patnum_base
+		call	@endft_put$qiii
 		call	@frame_delay$qi pascal, 4
 		add	si, 5
 
 loc_A920:
-		cmp	si, 37h	; '7'
+		cmp	si, 55
 		jl	short loc_A90C
 		call	_graph_putsa_fx c, 528, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 192, offset aVer1_00, ds	; "ver 1.00"
 		call	_snd_delay_until_measure stdcall, 8
 		pop	cx
-		mov	si, 0B8h
+		mov	si, 184
 		jmp	short loc_A992
 ; ---------------------------------------------------------------------------
 
@@ -256,10 +218,10 @@ loc_A947:
 		push	ax
 		call	grcg_boxfill
 		call	grcg_off
-		push	1B0h
-		push	si
-		push	32h ; '2'
-		call	sub_A874
+		push	432	; left
+		push	si	; top
+		push	50	; patnum_base
+		call	@endft_put$qiii
 		push	ds
 		push	offset aVer1_00	; "ver 1.00"
 		push	(V_WHITE or FX_WEIGHT_BOLD)
@@ -272,7 +234,7 @@ loc_A947:
 		add	si, 4
 
 loc_A992:
-		cmp	si, 170h
+		cmp	si, 368
 		jl	short loc_A947
 		call	_snd_delay_until_measure stdcall, 9
 		pop	cx

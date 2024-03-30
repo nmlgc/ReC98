@@ -560,6 +560,9 @@ extern unsigned super_patnum;
 extern unsigned super_patdata[SUPER_MAXPAT];
 extern unsigned super_patsize[SUPER_MAXPAT];
 
+// Ignores transparency
+void MASTER_RET over_put_8(int x, int y, int num);
+
 int MASTER_RET super_cancel_pat(int num);
 void MASTER_RET super_clean(int min_pat, int max_pat);
 int MASTER_RET super_entry_bfnt(const char MASTER_PTR *);
