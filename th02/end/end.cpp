@@ -53,6 +53,11 @@ static const screen_y_t END_LINE_BOTTOM = (END_LINE_TOP + GLYPH_H);
 static const pixel_t ENDFT_W = 80;
 static const pixel_t ENDFT_SEGMENT_W = 16;
 static const pixel_t ENDFT_SEGMENT_COUNT = (ENDFT_W / ENDFT_SEGMENT_W);
+
+static const screen_x_t STAFFROLL_TEXT_LEFT = (
+	STAFFROLL_PIC_RIGHT + (GLYPH_FULL_W * 4)
+);
+static const screen_y_t STAFFROLL_TEXT_TOP = ((RES_Y / 2) - (GLYPH_H / 2));
 // -----------
 
 // State
@@ -721,4 +726,23 @@ void pascal near endft_put(screen_x_t left, screen_y_t top, int patnum_base)
 		patnum++;
 		left += ENDFT_SEGMENT_W;
 	}
+}
+
+void near staffroll_text_clear(void)
+{
+	grcg_setcolor(GC_RMW, 0);
+
+	// ZUN bloat: 5 lines of text are both too many and too little. There are
+	// only two staff sections that list more people than just ZUN:
+	// • The 「グラフィック」 section covers 4 lines, not 5
+	// • The 「ＴＥＳＴ　ＰＬＡＹＥＲ」 section stretches 7.5 lines, and only
+	//   doesn't need to be covered because it's the last section and the game
+	//   transitions to the verdict screen afterwards.
+	grcg_boxfill(
+		STAFFROLL_TEXT_LEFT,
+		STAFFROLL_TEXT_TOP,
+		(RES_X - 1),
+		(STAFFROLL_TEXT_TOP + (5 * GLYPH_H) - 1)
+	);
+	grcg_off();
 }

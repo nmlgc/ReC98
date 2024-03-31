@@ -125,6 +125,7 @@ END_TEXT segment byte public 'CODE' use16
 	@end_bad_animate$qv procdesc near
 	@end_good_animate$qv procdesc near
 	@ENDFT_PUT$QIII procdesc pascal near
+	@staffroll_text_clear$qv procdesc near
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -132,23 +133,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A8A4	proc near
-		push	bp
-		mov	bp, sp
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	1A000C0h
-		push	27F010Fh
-		call	grcg_boxfill
-		call	grcg_off
-		pop	bp
-		retn
-sub_A8A4	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -253,7 +237,7 @@ loc_A992:
 		push	0
 		push	29h ; ')'
 		call	rotrect
-		call	sub_A8A4
+		call	@staffroll_text_clear$qv
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 192, offset aGvgngogigab@b@, ds	; "プログラム　　　ＺＵＮ"
 		call	_snd_delay_until_measure stdcall, 17
 		pop	cx
@@ -283,7 +267,7 @@ loc_A992:
 		graph_accesspage 0
 		call	_snd_delay_until_measure stdcall, 25
 		pop	cx
-		call	sub_A8A4
+		call	@staffroll_text_clear$qv
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 192, offset aGogigtgbgbgnb@, ds	; "グラフィック　ＺＵＮ"
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@b@b@b@b@b@, ds	; "　　　　　　　高附日向"
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 240, offset aB@b@b@b@bigibG, ds	; "　　　　（オールクリア画）"
@@ -314,7 +298,7 @@ loc_A992:
 		call	rotrect
 		call	_snd_delay_until_measure stdcall, 37
 		pop	cx
-		call	sub_A8A4
+		call	@staffroll_text_clear$qv
 		call	_graph_putsa_fx c, 432, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 192, offset aVlvtvrvhvbb@b@, ds	; "ＭＵＳＩＣ　　ＺＵＮ"
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
@@ -349,7 +333,7 @@ loc_A992:
 		call	rotrect
 		call	_snd_delay_until_measure stdcall, 49
 		pop	cx
-		call	sub_A8A4
+		call	@staffroll_text_clear$qv
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 192, offset aVsvdvrvsb@vovk, ds	; "ＴＥＳＴ　ＰＬＡＹＥＲ"
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@b@b@vivivs, ds	; "　　　　かおる"
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 248, offset aB@b@b@b@vbbVv, ds	;	"　　　　Ｃ－Ｗ"
