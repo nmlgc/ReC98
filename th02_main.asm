@@ -29710,7 +29710,6 @@ _ITEM_PATNUM label byte
 include th02/main/power_overflow[data].asm
 _item_skill	dw 0
 
-public
 public _ITEM_MISS_VELOCITY_Y_CENTER
 _ITEM_MISS_VELOCITY_Y_SIDES 	db 0B0h, 0BCh, 0C8h, 0D4h, 0E0h
 _ITEM_MISS_VELOCITY_X_CENTER	db -2, -1, 0, 1, 2
