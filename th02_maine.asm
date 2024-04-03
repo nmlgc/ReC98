@@ -126,6 +126,8 @@ END_TEXT segment byte public 'CODE' use16
 	@end_good_animate$qv procdesc near
 	@ENDFT_PUT$QIII procdesc pascal near
 	@staffroll_text_clear$qv procdesc near
+	@STAFFROLL_ROTRECT_AND_PUT_PIC_AN$QUCIUC procdesc pascal near \
+		angle_speed:byte, quarter:word, angle_start:byte
 END_TEXT ends
 
 ; Segment type:	Pure code
@@ -133,30 +135,6 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-rotrect	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	[bp+arg_4]
-		push	[bp+arg_0]
-		call	@staffroll_rotrect_animate$qucuc
-		call	@staffroll_pic_put$qiii pascal, large (32 shl 16) or 100, [bp+arg_2]
-		call	@frame_delay$qi pascal, 4
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		pop	bp
-		retn	6
-rotrect	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -233,10 +211,7 @@ loc_A992:
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
-		push	4
-		push	0
-		push	29h ; ')'
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, 04h, 0, 29h
 		call	@staffroll_text_clear$qv
 		call	_graph_putsa_fx c, 416, ((V_WHITE or FX_WEIGHT_BOLD) shl 16) or 192, offset aGvgngogigab@b@, ds	; "ÉvÉçÉOÉâÉÄÅ@Å@Å@ÇyÇtÇm"
 		call	_snd_delay_until_measure stdcall, 17
@@ -245,10 +220,7 @@ loc_A992:
 		push	offset aEd06b_rgb ; "ed06b.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	0FCh
-		push	2
-		push	29h ; ')'
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, (-04h and 255), 2, 29h
 		call	_snd_delay_until_measure stdcall, 21
 		pop	cx
 		call	@staffroll_pic_put$qiii pascal, large (32 shl 16) or 100, 3
@@ -256,10 +228,7 @@ loc_A992:
 		push	offset aEd06c_rgb ; "ed06c.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	4
-		push	3
-		push	29h ; ')'
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, 04h, 3, 29h
 		graph_accesspage 1
 		call	_pi_load c, 0, offset aEd07_pi, ds
 		call	_pi_put_8 c, 0, large 0
@@ -275,27 +244,18 @@ loc_A992:
 		push	offset aEd07a_rgb ; "ed07a.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	0FCh
-		push	0
-		push	29h ; ')'
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, (-04h and 255), 0, 29h
 		call	_snd_delay_until_measure stdcall, 29
 		pop	cx
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	8
-		push	1
-		push	0E9h
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, 08h, 1, (-17h and 255)
 		call	_snd_delay_until_measure stdcall, 33
 		pop	cx
 		call	@staffroll_pic_put$qiii pascal, (32 shl 16) or 100, 2
-		push	0F8h
-		push	2
-		push	0E9h
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, (-08h and 255), 2, (-17h and 255)
 		call	_snd_delay_until_measure stdcall, 37
 		pop	cx
 		call	@staffroll_text_clear$qv
@@ -304,10 +264,7 @@ loc_A992:
 		push	offset aEd07b_rgb ; "ed07b.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	8
-		push	3
-		push	0E9h
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, 08h, 3, (-17h and 255)
 		graph_accesspage 1
 		call	_pi_load c, 0, offset aEd08_pi, ds
 		call	_pi_put_8 c, 0, large 0
@@ -317,20 +274,14 @@ loc_A992:
 		call	_pi_palette_apply stdcall, 0
 		pop	cx
 		freePISlotLarge	0
-		push	0F8h
-		push	0
-		push	0E9h
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, (-08h and 255), 0, (-17h and 255)
 		call	_snd_delay_until_measure stdcall, 45
 		pop	cx
 		push	ds
 		push	offset aEd08a_rgb ; "ed08a.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	0Ch
-		push	1
-		push	29h ; ')'
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, 0Ch, 1, 29h
 		call	_snd_delay_until_measure stdcall, 49
 		pop	cx
 		call	@staffroll_text_clear$qv
@@ -343,20 +294,14 @@ loc_A992:
 		push	offset aEd08b_rgb ; "ed08b.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	0F4h
-		push	2
-		push	29h ; ')'
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, (-0Ch and 255), 2, 29h
 		call	_snd_delay_until_measure stdcall, 53
 		pop	cx
 		push	ds
 		push	offset aEd08c_rgb ; "ed08c.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	0Ch
-		push	3
-		push	29h ; ')'
-		call	rotrect
+		call	@staffroll_rotrect_and_put_pic_an$quciuc pascal, 0Ch, 3, 29h
 		call	_snd_delay_until_measure stdcall, 57
 		pop	cx
 		push	4

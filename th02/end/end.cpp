@@ -746,3 +746,13 @@ void near staffroll_text_clear(void)
 	);
 	grcg_off();
 }
+
+void pascal near staffroll_rotrect_and_put_pic_animate(
+	unsigned char angle_speed, int quarter, unsigned char angle_start
+)
+{
+	staffroll_rotrect_animate(angle_speed, angle_start);
+	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, quarter);
+	frame_delay(4);
+	palette_100();
+}
