@@ -32,6 +32,8 @@
 	// Puts the given [str] onto the graphics RAM at the given position,
 	// with the given graphics color and effect.
 	#if (GAME == 2)
+		// Needed to provide an implicit overload for a non-`const` [str]
+		// parameter for a single call in TH02's verdict screen.
 		extern "C"
 	#endif
 	void DEFCONV graph_putsa_fx(

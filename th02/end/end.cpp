@@ -7,11 +7,19 @@
 #include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/hardware/egc.h"
+
+// ZUN bloat: Needed for code generation reasons in the single graph_putsa_fx()
+// call during the verdict screen that pushes a string pointer with a
+// calculated offset.
+#define const
 #include "th01/hardware/grppsafx.h"
+#undef const
+
 #include "th01/formats/cutscene.hpp"
 #include "th02/score.h"
 #include "th02/v_colors.hpp"
 #include "th02/resident.hpp"
+#include "th02/core/globals.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/end.hpp"
@@ -24,12 +32,17 @@ extern "C" {
 #include "th02/snd/snd.h"
 }
 #include "th02/end/staff.hpp"
+#include "th02/shiftjis/end.hpp"
+#include "th02/shiftjis/title.hpp"
 #include "th02/sprites/verdict.hpp"
+
+#include "th02/gaiji/ranks_c.c"
 
 // Constants
 // ---------
 
 static const int CUTSCENE_PIC_SLOT = 0;
+static const int ENDFT_CELS = 11;
 
 enum end_text_colors_t {
 	V_YELLOW = 6,
@@ -51,6 +64,7 @@ static const screen_x_t END_LINE_RIGHT = (END_LINE_LEFT + END_LINE_W);
 static const screen_y_t END_LINE_BOTTOM = (END_LINE_TOP + GLYPH_H);
 
 static const pixel_t ENDFT_W = 80;
+static const pixel_t ENDFT_H = 32;
 static const pixel_t ENDFT_SEGMENT_W = 16;
 static const pixel_t ENDFT_SEGMENT_COUNT = (ENDFT_W / ENDFT_SEGMENT_W);
 
@@ -58,6 +72,34 @@ static const screen_x_t STAFFROLL_TEXT_LEFT = (
 	STAFFROLL_PIC_RIGHT + (GLYPH_FULL_W * 4)
 );
 static const screen_y_t STAFFROLL_TEXT_TOP = ((RES_Y / 2) - (GLYPH_H / 2));
+
+static const pixel_t VERDICT_LABEL_PADDED_W = (VERDICT_LABEL_W + GLYPH_FULL_W);
+static const pixel_t VERDICT_VALUE_CELL_W = (SCORE_DIGITS * GAIJI_W);
+static const pixel_t VERDICT_W = (
+	VERDICT_LABEL_PADDED_W + VERDICT_VALUE_CELL_W
+);
+
+static const screen_x_t VERDICT_LABEL_LEFT = 64;
+static const screen_x_t VERDICT_VALUE_LEFT = (
+	VERDICT_LABEL_LEFT + VERDICT_LABEL_PADDED_W
+);
+static const screen_x_t VERDICT_THANKYOU_LEFT = (
+	VERDICT_LABEL_LEFT + (VERDICT_W / 2) - (shiftjis_w(VERDICT_THANKYOU) / 2)
+);
+
+// Not quite centered… but then again, nothing in this table really is.
+static const screen_x_t VERDICT_VALUE_SINGLEDIGIT_LEFT = (
+	VERDICT_VALUE_LEFT + (VERDICT_VALUE_CELL_W / 2)
+);
+
+// This one's at least right-aligned correctly.
+static const screen_x_t VERDICT_VALUE_RANK_LEFT = (
+	VERDICT_LABEL_LEFT + VERDICT_W - ((sizeof(gbcRANKS[0]) - 1) * GAIJI_W)
+);
+
+inline screen_y_t verdict_row_top(int row) { \
+	return (96 + (row * GLYPH_H * 2));
+}
 // -----------
 
 // State
@@ -77,6 +119,7 @@ bool line_type_allow_fast_forward_and_automatically_clear_end_line;
 // -----------------------
 
 void near end_line_clear(void);
+void extra_unlock_animate(void);
 // -----------------------
 
 void pascal near end_load(const char *fn)
@@ -91,6 +134,10 @@ void pascal near end_load(const char *fn)
 	file_close();
 }
 
+inline void verdict_label_put(int row, screen_x_t left, shiftjis_t* str) {
+	graph_putsa_fx(left, verdict_row_top(row), line_col_and_fx, str);
+}
+
 void pascal near verdict_value_score_put(
 	screen_x_t left, screen_y_t top, score_t score
 )
@@ -100,6 +147,16 @@ void pascal near verdict_value_score_put(
 	}
 	gaiji_score_put(score, on_digit, false);
 	#undef on_digit
+}
+
+#define verdict_value_singledigit_put(row, gaiji) { \
+	graph_gaiji_putc( \
+		VERDICT_VALUE_SINGLEDIGIT_LEFT, verdict_row_top(row), gaiji, V_WHITE \
+	); \
+}
+
+#define verdict_value_gaiji_string_put(row, left, str) { \
+	graph_gaiji_puts(left, verdict_row_top(row), GAIJI_W, str, V_WHITE); \
 }
 
 void pascal near line_type(
@@ -224,6 +281,13 @@ void verdict_row_1_to_0_animate(
 		}
 		frame_delay(10);
 	}
+}
+
+// Full row
+inline void verdict_row_1_to_0_animate(
+	int row, shiftjis_kanji_amount_t len = (VERDICT_W / GLYPH_FULL_W)
+) {
+	verdict_row_1_to_0_animate(VERDICT_LABEL_LEFT, verdict_row_top(row), len);
 }
 
 void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
@@ -622,7 +686,7 @@ void near end_good_animate(void)
 		end_line_type(39);
 		palette_black_out(2);
 
-		end_pics_load_palette_show("ed05.pi\0ver 1.00");
+		end_pics_load_palette_show("ed05.pi");
 		end_pic_show(0);
 		palette_black_in(2);
 
@@ -751,8 +815,323 @@ void pascal near staffroll_rotrect_and_put_pic_animate(
 	unsigned char angle_speed, int quarter, unsigned char angle_start
 )
 {
+	// ZUN landmine: This function always runs immediately after an expensive
+	// operation (640×400 .PI image loading and blitting to VRAM, 320×200 VRAM
+	// inter-page copy, or hardware palette loading from a packed file),
+	// without any frame_delay() before. As the Staff Roll is single-buffered,
+	// this all but ensures a tearing line on the first frame of the rotating
+	// rectangle animation.
 	staffroll_rotrect_animate(angle_speed, angle_start);
 	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, quarter);
 	frame_delay(4);
 	palette_100();
+}
+
+inline void staffroll_text_put(
+	pixel_t additional_left, float row, shiftjis_t* str
+) {
+	graph_putsa_fx(
+		(STAFFROLL_TEXT_LEFT + additional_left),
+		(STAFFROLL_TEXT_TOP + pixel_t((row * GLYPH_H))),
+		(V_WHITE | FX_WEIGHT_BOLD),
+		str
+	);
+}
+
+void near staffroll_and_verdict_animate(void)
+{
+	/// Staff roll
+	/// ----------
+
+	enum {
+		ENDFT_LEFT = (STAFFROLL_TEXT_LEFT + GLYPH_FULL_W),
+		ENDFT_TOP = (STAFFROLL_TEXT_TOP + (GLYPH_H / 2) - (ENDFT_H / 2)),
+		VERSION_LEFT = (ENDFT_LEFT + ENDFT_W + GLYPH_FULL_W),
+		VELOCITY = 4,
+	};
+
+	snd_delay_until_measure(6);
+
+	int i = 0;
+	while(i < (ENDFT_CELS * ENDFT_SEGMENT_COUNT)) {
+		endft_put(ENDFT_LEFT, ENDFT_TOP, i);
+		frame_delay(4);
+		i += ENDFT_SEGMENT_COUNT;
+	}
+	graph_putsa_fx(
+		VERSION_LEFT,
+		STAFFROLL_TEXT_TOP,
+		(V_WHITE | FX_WEIGHT_BOLD),
+		GAME_VERSION
+	);
+	snd_delay_until_measure(8);
+
+	// Move game title and version down to make room for the staff roll text
+	// ---------------------------------------------------------------------
+
+	// ZUN bloat: Calculated in terms of the ENDFT.BFT top position, but
+	// would have saved a lot of [VELOCITY] additions if it was calculated in
+	// terms of the version string's top position instead. (Note that the first
+	// loop iteration is a no-op, so make sure to pull out the frame_delay(1)
+	// call when debloating.)
+	#define endft_top i
+	endft_top = (STAFFROLL_TEXT_TOP - (VELOCITY * 2));
+	while(endft_top < (RES_Y - ENDFT_H)) {
+		grcg_setcolor(GC_RMW, 0);
+		grcg_boxfill(
+			VERSION_LEFT,
+			(endft_top + VELOCITY),
+			(VERSION_LEFT + shiftjis_w(GAME_VERSION) - 1),
+			(endft_top + VELOCITY + GLYPH_H - 1)
+		);
+		grcg_off();
+
+		endft_put(
+			ENDFT_LEFT, endft_top, ((ENDFT_CELS - 1) * ENDFT_SEGMENT_COUNT)
+		);
+		graph_putsa_fx(
+			VERSION_LEFT,
+			(endft_top + (VELOCITY * 2)),
+			(V_WHITE | FX_WEIGHT_BOLD),
+			GAME_VERSION
+		);
+		frame_delay(1);
+		i += VELOCITY;
+	}
+	#undef endft_top
+	// ---------------------------------------------------------------------
+	snd_delay_until_measure(9);
+
+	line_col_set(V_WHITE);
+	line_type(
+		(STAFFROLL_TEXT_LEFT + GLYPH_FULL_W),
+		STAFFROLL_TEXT_TOP,
+		(sizeof(STAFFROLL_TITLE) - 1),
+		STAFFROLL_TITLE,
+		12
+	);
+	snd_delay_until_measure(13);
+
+	graph_accesspage(1);
+	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, "ed06.pi");
+	graph_accesspage(0);
+	staffroll_rotrect_and_put_pic_animate(0x04, 0, 0x29);
+	staffroll_text_clear();
+	staffroll_text_put(0, 0, STAFFROLL_PROGRAM);
+	snd_delay_until_measure(17);
+
+	// ZUN quirk: This palette has #FCC instead of #FFF at the 0-based index
+	// #15, discoloring every part of the screen.
+	palette_entry_rgb_show("ed06b.rgb");
+
+	staffroll_rotrect_and_put_pic_animate(-0x04, 2, 0x29);
+	snd_delay_until_measure(21);
+
+	// ZUN bloat: Will be immediately overwritten with the animation. (And
+	// we're still on the wrong palette.)
+	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, 3);
+
+	palette_entry_rgb_show("ed06c.rgb");
+	staffroll_rotrect_and_put_pic_animate(0x04, 3, 0x29);
+
+	graph_accesspage(1);
+	pi_fullres_load_put_free(CUTSCENE_PIC_SLOT, "ed07.pi"); // Unchanged palette
+	graph_accesspage(0);
+	snd_delay_until_measure(25);
+
+	staffroll_text_clear();
+	staffroll_text_put(0, 0, STAFFROLL_GRAPHIC_1);
+	staffroll_text_put(0, 2, STAFFROLL_GRAPHIC_2);
+	staffroll_text_put(0, 3, STAFFROLL_GRAPHIC_3);
+	palette_entry_rgb_show("ed07a.rgb");
+	staffroll_rotrect_and_put_pic_animate(-0x04, 0, 0x29);
+	snd_delay_until_measure(29);
+
+	palette_entry_rgb_show("ed07b.rgb");
+	staffroll_rotrect_and_put_pic_animate(0x08, 1, -0x17);
+	snd_delay_until_measure(33);
+
+	// ZUN bloat: Will be immediately overwritten with the animation. It also
+	// wastes time on the frame, since this isn't double-buffered and
+	// staffroll_rotrect_animate() immediately begins drawing (see the landmine
+	// in that function).
+	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, 2);
+
+	staffroll_rotrect_and_put_pic_animate(-0x08, 2, -0x17);
+	snd_delay_until_measure(37);
+
+	staffroll_text_clear();
+	staffroll_text_put(GLYPH_FULL_W, 0, STAFFROLL_MUSIC);
+
+	// ZUN bloat: We're still on this palette. Disk I/O isn't free!
+	palette_entry_rgb_show("ed07b.rgb");
+
+	staffroll_rotrect_and_put_pic_animate(0x08, 3, -0x17);
+
+	graph_accesspage(1);
+	pi_load(CUTSCENE_PIC_SLOT, "ed08.pi");
+	pi_put_8(0, 0, CUTSCENE_PIC_SLOT);
+	graph_accesspage(0);
+	snd_delay_until_measure(41);
+
+	pi_palette_apply(CUTSCENE_PIC_SLOT);
+	pi_free(CUTSCENE_PIC_SLOT);
+	staffroll_rotrect_and_put_pic_animate(-0x08, 0, -0x17);
+	snd_delay_until_measure(45);
+
+	palette_entry_rgb_show("ed08a.rgb");
+	staffroll_rotrect_and_put_pic_animate(0x0C, 1, 0x29);
+	snd_delay_until_measure(49);
+
+	staffroll_text_clear();
+	staffroll_text_put(0, 0.0, STAFFROLL_TESTER_1);
+	staffroll_text_put(0, 2.0, STAFFROLL_TESTER_2);
+	staffroll_text_put(0, 3.5, STAFFROLL_TESTER_3);
+	staffroll_text_put(0, 5.0, STAFFROLL_TESTER_4);
+	staffroll_text_put(0, 6.5, STAFFROLL_TESTER_5);
+	palette_entry_rgb_show("ed08b.rgb");
+	staffroll_rotrect_and_put_pic_animate(-0x0C, 2, 0x29);
+	snd_delay_until_measure(53);
+
+	palette_entry_rgb_show("ed08c.rgb");
+	staffroll_rotrect_and_put_pic_animate(0x0C, 3, 0x29);
+	snd_delay_until_measure(57);
+
+	palette_black_out(4);
+	/// ----------
+
+	/// Verdict
+	/// -------
+	/// VRAM page 1 receives the final text on each line that VRAM page 0
+	/// animates towards.
+
+	enum {
+		SKILL_DIGITS = 3,
+		ROW_FRAMES = 100,
+	};
+
+	graph_accesspage(1);
+	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, "ED09.pi");
+	graph_copy_page(0);
+	palette_black_in(4);
+	frame_delay(100);
+
+	// Thank you for playing
+	graph_accesspage(1);
+	verdict_label_put(0, VERDICT_THANKYOU_LEFT, VERDICT_THANKYOU);
+	verdict_row_1_to_0_animate(
+		VERDICT_THANKYOU_LEFT,
+		verdict_row_top(0),
+		((sizeof(VERDICT_THANKYOU) - 1) / sizeof(shiftjis_kanji_t))
+	);
+	frame_delay(ROW_FRAMES * 2);
+
+	// Score
+	graph_accesspage(1);
+	verdict_label_put(1, VERDICT_LABEL_LEFT, VERDICT_LABEL_SCORE);
+	verdict_value_score_put(VERDICT_VALUE_LEFT, verdict_row_top(1), score);
+	verdict_row_1_to_0_animate(1);
+	frame_delay(ROW_FRAMES);
+
+	// Continues
+	graph_accesspage(1);
+	verdict_label_put(2, VERDICT_LABEL_LEFT, VERDICT_LABEL_CONTINUES);
+	verdict_value_singledigit_put(2, (gb_0_ + resident->continues_used));
+	verdict_row_1_to_0_animate(2);
+	frame_delay(ROW_FRAMES);
+
+	// Rank
+	graph_accesspage(1);
+	verdict_label_put(3, VERDICT_LABEL_LEFT, VERDICT_LABEL_RANK);
+	verdict_value_gaiji_string_put(3, VERDICT_VALUE_RANK_LEFT, gbcRANKS[rank]);
+	verdict_row_1_to_0_animate(3);
+	frame_delay(ROW_FRAMES);
+
+	// Starting lives
+	graph_accesspage(1);
+	verdict_label_put(4, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_LIVES);
+	verdict_value_singledigit_put(4, (gb_1_ + resident->start_lives));
+	verdict_row_1_to_0_animate(4);
+	frame_delay(ROW_FRAMES);
+
+	// Starting bombs
+	graph_accesspage(1);
+	verdict_label_put(5, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_BOMBS);
+	verdict_value_singledigit_put(5, (gb_0_ + resident->start_bombs));
+	verdict_row_1_to_0_animate(5);
+	frame_delay(ROW_FRAMES + (ROW_FRAMES / 2));
+
+	// Skill
+	graph_accesspage(1);
+	int skill = resident->skill;
+
+	// ZUN bloat: Could have been worked into the mapping below.
+	if(skill > 100) {
+		skill = 100;
+	} else if(skill < 0) {
+		skill = 0;
+	}
+
+	gaiji_th02_t skill_gaiji[SKILL_DIGITS + 1];
+	verdict_label_put(6, VERDICT_LABEL_LEFT, VERDICT_LABEL_TITLE);
+	gaiji_boldfont_str_from_positive_3_digit_value(skill, skill_gaiji);
+	verdict_value_gaiji_string_put(
+		6, VERDICT_VALUE_LEFT, reinterpret_cast<const char *>(skill_gaiji)
+	);
+
+	/**/ if(skill == 100) { i =  0; }
+	else if(skill >=  90) { i =  1; }
+	else if(skill >=  80) { i =  2; }
+	else if(skill >=  70) {
+		if(skill == 77) {
+			i = 3;
+		} else {
+			i = 4;
+		}
+	}
+	else if(skill >=  60) { i =  5; }
+	else if(skill >=  50) { i =  6; }
+	else if(skill >=  40) { i =  7; }
+	else if(skill >=  30) { i =  8; }
+	else if(skill >=  20) { i =  9; }
+	else if(skill >=  10) { i = 10; }
+	else /*            */ { i = 11; }
+
+	graph_putsa_fx(
+		(VERDICT_VALUE_LEFT + (SKILL_DIGITS * GAIJI_W)),
+		verdict_row_top(6),
+		line_col_and_fx,
+		end_text[i]
+	);
+	verdict_row_1_to_0_animate(
+		6, ((sizeof(VERDICT_LABEL_TITLE) - 1) / sizeof(shiftjis_kanji_t))
+	);
+	frame_delay(ROW_FRAMES + 20);
+
+	verdict_row_1_to_0_animate(
+		VERDICT_VALUE_LEFT,
+		verdict_row_top(6),
+
+		// ZUN landmine: Should not cut off the final possible kanji.
+		(SKILL_DIGITS + ((END_LINE_LENGTH - 1) / sizeof(shiftjis_kanji_t)))
+	);
+	frame_delay(200);
+
+	// Copyright
+	graph_accesspage(1);
+	verdict_label_put(8, VERDICT_LABEL_LEFT, VERDICT_COPYRIGHT "\0all.pi");
+	verdict_row_1_to_0_animate(
+		8, ((sizeof(VERDICT_COPYRIGHT) - 1) / sizeof(shiftjis_kanji_t))
+	);
+
+	key_delay();
+	palette_black_out(5);
+
+	/* TODO: Replace with the decompiled call
+	* 	extra_unlock_animate();
+	* once that function is part of this translation unit */
+	_asm { nop; push cs; call near ptr extra_unlock_animate; }
+
+	graph_clear();
+	/// -------
 }

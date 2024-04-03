@@ -30,6 +30,12 @@ void DEFCONV pi_palette_apply(int slot);
 // the clipping frame defined via grc_setclip().
 void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot);
 
+#define pi_fullres_load_put_free(slot, fn) { \
+	pi_load(slot, fn); \
+	pi_put_8(0, 0, slot); \
+	pi_free(slot); \
+}
+
 #define pi_fullres_load_palette_apply_put_free(slot, fn) { \
 	pi_load(slot, fn); \
 	pi_palette_apply(slot); \

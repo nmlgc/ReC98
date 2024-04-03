@@ -16,8 +16,8 @@ struct resident_t {
 	char rank;
 	char start_power;
 	char bgm_mode;
-	char start_bombs;
-	char start_lives;
+	uint8_t start_bombs;
+	uint8_t start_lives;
 	int8_t padding_2;
 	long frame;
 	int unused_1;
