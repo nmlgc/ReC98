@@ -149,7 +149,7 @@ void pascal shottype_menu_init(void)
 
 	palette_black();
 	graph_accesspage(0);
-	pi_load_put_8_free(3, "TSELECT.pi");
+	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
 	graph_copy_page(1);
 	graph_accesspage(0);
 	if(resident->stage != 5) {

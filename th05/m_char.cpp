@@ -163,7 +163,7 @@ void near playchar_menu_put_initial(void)
 
 	palette_settone(0);
 	graph_accesspage(1);
-	pi_load_put_8_free(0, "slb1.pi");
+	pi_fullres_load_palette_apply_put_free(0, "slb1.pi");
 	graph_copy_page(0);
 	bgimage_snap();
 

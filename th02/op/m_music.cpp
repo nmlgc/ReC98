@@ -816,9 +816,9 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	graph_accesspage(1);
 
 	#if (GAME >= 4)
-		pi_load_put_8_free(0, "music.pi");
+		pi_fullres_load_palette_apply_put_free(0, "music.pi");
 	#else
-		pi_load_put_8_free(0, "op3.pi");
+		pi_fullres_load_palette_apply_put_free(0, "op3.pi");
 	#endif
 
 	#if (GAME == 5)
@@ -1082,7 +1082,7 @@ controls:
 
 		#if (GAME == 2)
 			// ZUN bloat: The call site would have been a better place for this.
-			pi_load_put_8_free(0, "op2.pi");
+			pi_fullres_load_palette_apply_put_free(0, "op2.pi");
 			palette_entry_rgb_show("op.rgb");
 			graph_copy_page(0);
 		#endif

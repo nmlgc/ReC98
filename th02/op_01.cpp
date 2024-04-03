@@ -426,7 +426,7 @@ void main_update_and_render(void)
 				score_menu();
 				graph_accesspage(1);
 				graph_showpage(0);
-				pi_load_put_8_free(0, "op2.pi");
+				pi_fullres_load_palette_apply_put_free(0, "op2.pi");
 				palette_entry_rgb_show("op.rgb");
 				graph_copy_page(0);
 				graph_accesspage(0);

@@ -91,7 +91,7 @@ void near end_animate(void)
 	 * assert() of sorts.) \
 	 */ \
 	graph_accesspage(1); \
-	pi_load_put_8_free(0, pic_fn); \
+	pi_fullres_load_palette_apply_put_free(0, pic_fn); \
 	graph_copy_page(0); \
 	\
 	palette_black_in(1); \

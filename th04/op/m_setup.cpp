@@ -322,7 +322,7 @@ void near setup_menu(void)
 	palette_black();
 	super_entry_bfnt("mswin.bft");
 	graph_accesspage(1);
-	pi_load_put_8_free(0, "ms.pi");
+	pi_fullres_load_palette_apply_put_free(0, "ms.pi");
 	graph_copy_page(0);
 	palette_black_in(1);
 

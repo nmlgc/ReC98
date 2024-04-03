@@ -103,7 +103,7 @@ void near regist_load_and_put_initial(void)
 	graph_accesspage(0);
 	graph_showpage(0);
 
-	pi_load_put_8_free(0, regib_pi);
+	pi_fullres_load_palette_apply_put_free(0, regib_pi);
 
 	// Kind of assumes that we only show this screen once for the lifetime of
 	// the process.
