@@ -18,5 +18,5 @@
 void regist_menu(
 	score_t score,
 	int16_t stage_num_or_scoredat_constant,
-	const sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
+	sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
 );

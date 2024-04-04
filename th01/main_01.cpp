@@ -1006,8 +1006,7 @@ int main(void)
 	}
 	resident->score = score;
 
-	// ZUN bloat: Unnecessary cast.
-	regist_menu(score, (stage_id + 1), reinterpret_cast<const sshiftjis_t *>(
+	regist_menu(score, (stage_id + 1), (
 		!stage_on_route(stage_id) ? SCOREDAT_ROUTE_SHRINE :
 		(route == ROUTE_MAKAI) ? SCOREDAT_ROUTE_MAKAI : SCOREDAT_ROUTE_JIGOKU
 	));
