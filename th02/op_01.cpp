@@ -13,9 +13,7 @@
 #include "libs/kaja/kaja.h"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
-}
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"

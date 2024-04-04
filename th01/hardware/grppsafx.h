@@ -31,6 +31,9 @@
 
 	// Puts the given [str] onto the graphics RAM at the given position,
 	// with the given graphics color and effect.
+	#if (GAME == 2)
+		extern "C"
+	#endif
 	void DEFCONV graph_putsa_fx(
 		screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 	);
