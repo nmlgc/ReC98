@@ -15,6 +15,7 @@ extern "C" {
 }
 #include "th02/main/entity.hpp"
 #include "th02/main/playfld.hpp"
+#include "th02/main/playperf.hpp"
 #include "th02/main/score.hpp"
 #include "th02/main/scroll.hpp"
 #include "th02/main/hud/hud.hpp"

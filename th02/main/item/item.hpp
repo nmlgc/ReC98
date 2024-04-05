@@ -15,12 +15,6 @@ enum item_type_t {
 // items. Used for recharging power after using a continue after a Game Over.
 extern unsigned int item_bigpower_override;
 
-// Increases by varying amounts depending on how well items are collected,
-// decrements for every 16 dropped items.
-extern int item_skill;
-
-extern int point_items_collected;
-
 // Spawns the Game Over item set on the next call to items_miss_add().
 // ZUN bloat: Both turning this into a parameter or hardcoding the condition
 // (as TH04 and TH05 do it) would have been better than this.
