@@ -74,7 +74,7 @@ FACE_EXRIKA_FROWN = 156
 FACE_COL_0 = 255
 
 main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
-main_03 group main_03_TEXT, DIALOG_TEXT, main_03__TEXT
+main_03 group main_03_TEXT, DIALOG_TEXT, BOSS_5_TEXT, main_03__TEXT
 
 ; ===========================================================================
 
@@ -12416,7 +12416,7 @@ DS_POSTBOSS = 1
 	@dialog_script_extra_pre_intro_an$qv procdesc near
 DIALOG_TEXT	ends
 
-main_03__TEXT	segment	byte public 'CODE' use16
+BOSS_5_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23650,60 +23650,10 @@ off_19937	dw offset loc_19821
 		dw offset loc_19844
 		dw offset loc_19849
 
-; =============== S U B	R O U T	I N E =======================================
+	@skill_calculate$qv procdesc pascal near
+BOSS_5_TEXT	ends
 
-; Attributes: bp-based frame
-
-sub_19949	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	al, _rank
-		cbw
-		imul	ax, 14h
-		mov	cx, ax
-		les	bx, _resident
-		mov	ax, es:[bx+mikoconfig_t.continues_used]
-		imul	ax, 3
-		mov	dx, 0Ah
-		sub	dx, ax
-		add	dx, cx
-		mov	cx, dx
-		mov	al, _total_miss_count
-		mov	ah, 0
-		imul	ax, 3
-		mov	dx, 32h	; '2'
-		sub	dx, ax
-		mov	al, _total_bombs_used
-		mov	ah, 0
-		sub	dx, ax
-		mov	si, dx
-		or	si, si
-		jge	short loc_19986
-		xor	si, si
-
-loc_19986:
-		add	cx, si
-		cmp	_item_skill, 25
-		jle	short loc_19997
-		mov	_item_skill, 25
-		jmp	short loc_199A4
-; ---------------------------------------------------------------------------
-
-loc_19997:
-		cmp	_item_skill, 0
-		jge	short loc_199A4
-		mov	_item_skill, 0
-
-loc_199A4:
-		add	cx, _item_skill
-		les	bx, _resident
-		mov	es:[bx+mikoconfig_t.skill], cx
-		pop	si
-		pop	bp
-		retn
-sub_19949	endp
-
+main_03__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23903,7 +23853,7 @@ loc_19C4A:
 		mov	es:[bx+mikoconfig_t.rem_lives], al
 		mov	al, _bombs
 		mov	es:[bx+mikoconfig_t.rem_bombs], al
-		call	sub_19949
+		call	@skill_calculate$qv
 		call	@GameExecl$qnxc c, offset aMaine_0, ds	; "maine"
 		pop	bp
 		retn
