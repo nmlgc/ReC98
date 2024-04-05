@@ -6515,45 +6515,8 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@OVERLAY_UINT_PUT$QIIIL procdesc pascal near \
 		left_and_y:dword, digits:word, val:dword
 	extern @overlay_wipe$qv:far
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FC15	proc near
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= dword	ptr  0Ah
-arg_A		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_A]
-		mov	si, [bp+arg_0]
-		call	text_putsa pascal, 8, di, [bp+arg_6], TX_WHITE
-		push	22
-		push	di
-		push	5
-		movsx	eax, si
-		push	eax
-		call	@overlay_uint_put$qiiil
-		mov	bx, 0Ah
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	si, ax
-		les	bx, [bp+arg_2]
-		assume es:nothing
-		add	es:[bx], si
-		pop	di
-		pop	si
-		pop	bp
-		retn	0Ch
-sub_FC15	endp
-
+	@BONUS_ROW_PUT_AND_ADD$QINXUCMII procdesc pascal near \
+		y:word, label:dword, total:dword, val_x10:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6562,12 +6525,12 @@ public @stage_clear_bonus_animate$qv
 @stage_clear_bonus_animate$qv	proc near
 
 var_C		= byte ptr -0Ch
-var_6		= word ptr -6
+@@sum	= word ptr -6
 var_4		= dword	ptr -4
 
 		enter	0Ch, 0
 		push	si
-		mov	[bp+var_6], 0
+		mov	[bp+@@sum], 0
 		lea	ax, [bp+var_C]
 		push	ss
 		push	ax
@@ -6584,32 +6547,32 @@ var_4		= dword	ptr -4
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putsa
-		push	6
-		push	ds
-		push	offset aUqiUx	; " 難易度"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
+		push	6	; y
+		push	ds	; label (segment)
+		push	offset aUqiUx	; " 難易度"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
 		mov	al, _rank
 		cbw
-		imul	ax, 7D0h
-		push	ax
-		call	sub_FC15
-		push	8
-		push	ds
-		push	offset aGxgebGw	; "ステージ"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
+		imul	ax, 2000
+		push	ax	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
+		push	8	; y
+		push	ds	; label (segment)
+		push	offset aGxgebGw	; "ステージ"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
 		mov	ax, _playperf
 		add	ax, 16
 		imul	ax, 200
-		push	ax
-		call	sub_FC15
+		push	ax	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
 		mov	al, _stage_bombs_used
 		mov	ah, 0
-		imul	ax, 1F4h
-		mov	dx, 9C4h
+		imul	ax, 500
+		mov	dx, 2500
 		sub	dx, ax
 		mov	si, dx
 		or	si, si
@@ -6617,18 +6580,18 @@ var_4		= dword	ptr -4
 		xor	si, si
 
 loc_FCD6:
-		push	0Ah
-		push	ds
-		push	offset aGGa	; "ボム"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	si
-		call	sub_FC15
+		push	10	; y
+		push	ds	; label (segment)
+		push	offset aGGa	; "ボム"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
+		push	si	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
 		mov	al, _stage_miss_count
 		mov	ah, 0
-		imul	ax, 3E8h
-		mov	dx, 0BB8h
+		imul	ax, 1000
+		mov	dx, 3000
 		sub	dx, ax
 		mov	si, dx
 		or	si, si
@@ -6636,45 +6599,45 @@ loc_FCD6:
 		xor	si, si
 
 loc_FCFB:
-		push	0Ch
-		push	ds
-		push	offset aGGx	; "ミス"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	si
-		call	sub_FC15
-		push	0Eh
-		push	ds
-		push	offset aSMvpik	; "靈撃初期数"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
+		push	12	; y
+		push	ds	; label (segment)
+		push	offset aGGx	; "ミス"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
+		push	si	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
+		push	14	; y
+		push	ds	; label (segment)
+		push	offset aSMvpik	; "靈撃初期数"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
 		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	ah, 0
 		mov	dx, 4
 		sub	dx, ax
-		imul	dx, 320h
-		push	dx
-		call	sub_FC15
-		push	10h
-		push	ds
-		push	offset aSCPik	; "靈夢初期数"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
+		imul	dx, 800
+		push	dx	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
+		push	16
+		push	ds	; label (segment)
+		push	offset aSCPik	; "靈夢初期数"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
 		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	ah, 0
 		mov	dx, 4
 		sub	dx, ax
-		imul	dx, 3E8h
-		push	dx
-		call	sub_FC15
-		cmp	[bp+var_6], 6400h
+		imul	dx, 1000
+		push	dx	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
+		cmp	[bp+@@sum], 25600
 		jle	short loc_FD5A
-		mov	[bp+var_6], 6400h
+		mov	[bp+@@sum], 25600
 
 loc_FD5A:
 		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
@@ -6684,7 +6647,7 @@ loc_FD5A:
 		push	eax
 		call	@overlay_uint_put$qiiil
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
-		movsx	eax, [bp+var_6]
+		movsx	eax, [bp+@@sum]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
 		mov	[bp+var_4], eax
@@ -6722,12 +6685,12 @@ public @stage_extra_clear_bonus_animate$qv
 @stage_extra_clear_bonus_animate$qv	proc near
 
 var_C		= byte ptr -0Ch
-var_6		= word ptr -6
+@@sum		= word ptr -6
 var_4		= dword	ptr -4
 
 		enter	0Ch, 0
 		push	si
-		mov	[bp+var_6], 0
+		mov	[bp+@@sum], 0
 		lea	ax, [bp+var_C]
 		push	ss
 		push	ax
@@ -6744,18 +6707,18 @@ var_4		= dword	ptr -4
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putsa
-		push	6
-		push	ds
-		push	offset aGngkga	; "クリア"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	2710h
-		call	sub_FC15
+		push	6	; y
+		push	ds	; label (segment)
+		push	offset aGngkga	; "クリア"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
+		push	10000	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
 		mov	al, _stage_miss_count
 		mov	ah, 0
-		imul	ax, 0FA0h
-		mov	dx, 4E20h
+		imul	ax, 4000
+		mov	dx, 20000
 		sub	dx, ax
 		mov	si, dx
 		or	si, si
@@ -6763,18 +6726,18 @@ var_4		= dword	ptr -4
 		xor	si, si
 
 loc_FE76:
-		push	8
-		push	ds
-		push	offset aGGxi	; "ミス回数"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	si
-		call	sub_FC15
+		push	8	; y
+		push	ds	; label (segment)
+		push	offset aGGxi	; "ミス回数"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
+		push	si	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
 		mov	al, _stage_bombs_used
 		mov	ah, 0
-		imul	ax, 0FA0h
-		mov	dx, 4E20h
+		imul	ax, 4000
+		mov	dx, 20000
 		sub	dx, ax
 		mov	si, dx
 		or	si, si
@@ -6782,15 +6745,15 @@ loc_FE76:
 		xor	si, si
 
 loc_FE9B:
-		push	0Ah
-		push	ds
-		push	offset aGGai	; "ボム回数"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	si
-		call	sub_FC15
-		mov	ax, 4E20h
+		push	10	; y
+		push	ds	; label (segment)
+		push	offset aGGai	; "ボム回数"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
+		push	si	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
+		mov	ax, 20000
 		sub	ax, word ptr _sigma_frames
 		mov	si, ax
 		or	si, si
@@ -6798,22 +6761,22 @@ loc_FE9B:
 		xor	si, si
 
 loc_FEB9:
-		mov	bx, 0Ah
+		mov	bx, 10
 		mov	ax, si
 		cwd
 		idiv	bx
 		mov	si, ax
-		mov	ax, 0Ah
+		mov	ax, 10
 		imul	si
 		mov	si, ax
-		push	0Ch
-		push	ds
-		push	offset aGngkgagGcga ; "クリアタイム"
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	si
-		call	sub_FC15
+		push	12	; y
+		push	ds	; label (segment)
+		push	offset aGngkgagGcga ; "クリアタイム"	; label (offset)
+		push	ss	; sum (segment)
+		lea	ax, [bp+@@sum]
+		push	ax	; sum (offset)
+		push	si	; val_x10
+		call	@bonus_row_put_and_add$qinxucmii
 		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
 		push	(10 shl 16) or 18
 		push	3
@@ -6821,7 +6784,7 @@ loc_FEB9:
 		push	eax
 		call	@overlay_uint_put$qiiil
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
-		movsx	eax, [bp+var_6]
+		movsx	eax, [bp+@@sum]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
 		mov	[bp+var_4], eax

@@ -24,3 +24,5 @@ void overlay_wipe(void)
 {
 	overlay_fill(TX_WHITE);
 }
+
+#include "th02/main/stage/bonus.cpp"
