@@ -6510,7 +6510,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@randring2_next16$qv procdesc near
 	PELLET_RENDER procdesc pascal near \
 		left:word, top:word
-	@OVERLAY_INT_PUT$QIIIL procdesc pascal near \
+	@OVERLAY_UINT_PUT$QIIIL procdesc pascal near \
 		left_and_y:dword, digits:word, val:dword
 	extern @overlay_wipe$qv:far
 
@@ -6537,7 +6537,7 @@ arg_A		= word ptr  0Eh
 		push	5
 		movsx	eax, si
 		push	eax
-		call	@overlay_int_put$qiiil
+		call	@overlay_uint_put$qiiil
 		mov	bx, 0Ah
 		mov	ax, si
 		cwd
@@ -6680,18 +6680,18 @@ loc_FD5A:
 		push	3
 		movsx	eax, _point_items_collected
 		push	eax
-		call	@overlay_int_put$qiiil
+		call	@overlay_uint_put$qiiil
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
 		movsx	eax, [bp+var_6]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
 		mov	[bp+var_4], eax
-		call	@overlay_int_put$qiiil pascal, (22 shl 16) or 18, 5, eax
+		call	@overlay_uint_put$qiiil pascal, (22 shl 16) or 18, 5, eax
 		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
 		movsx	eax, _point_items_collected
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
-		call	@overlay_int_put$qiiil pascal, (38 shl 16) or 18, 6, eax
+		call	@overlay_uint_put$qiiil pascal, (38 shl 16) or 18, 6, eax
 		mov	ebx, 0Ah
 		mov	eax, [bp+var_4]
 		cdq
@@ -6817,18 +6817,18 @@ loc_FEB9:
 		push	3
 		movsx	eax, _point_items_collected
 		push	eax
-		call	@overlay_int_put$qiiil
+		call	@overlay_uint_put$qiiil
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
 		movsx	eax, [bp+var_6]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
 		mov	[bp+var_4], eax
-		call	@overlay_int_put$qiiil pascal, (22 shl 16) or 18, 5, eax
+		call	@overlay_uint_put$qiiil pascal, (22 shl 16) or 18, 5, eax
 		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
 		movsx	eax, _point_items_collected
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
-		call	@overlay_int_put$qiiil pascal, (36 shl 16) or 18, 7, eax
+		call	@overlay_uint_put$qiiil pascal, (36 shl 16) or 18, 7, eax
 		mov	ebx, 0Ah
 		mov	eax, [bp+var_4]
 		cdq

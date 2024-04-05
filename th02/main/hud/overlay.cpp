@@ -7,7 +7,7 @@
 #include "th02/main/playfld.hpp"
 #include "th02/main/hud/overlay.hpp"
 
-void pascal near overlay_int_put(
+void pascal near overlay_uint_put(
 	tram_x_t left, tram_y_t y, int digits, long val
 )
 {
