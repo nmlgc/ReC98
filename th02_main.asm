@@ -6791,7 +6791,7 @@ loc_FE9B:
 		push	si
 		call	sub_FC15
 		mov	ax, 4E20h
-		sub	ax, word ptr dword_20682
+		sub	ax, word ptr _sigma_frames
 		mov	si, ax
 		or	si, si
 		jge	short loc_FEB9
@@ -7149,7 +7149,7 @@ loc_102A9:
 		mov	byte_2066A, 0
 		mov	_boss_damage, 0
 		mov	byte_2066B, 0
-		mov	dword_20682, 0
+		mov	_sigma_frames, 0
 		mov	word_20686, 0
 		pop	si
 		pop	bp
@@ -18380,7 +18380,7 @@ loc_16948:
 		mov	ax, [bx]
 		mov	point_254E6.y, ax
 		call	sub_15907
-		inc	dword_20682
+		inc	_sigma_frames
 
 loc_16962:
 		call	sub_1566F
@@ -30549,7 +30549,8 @@ word_2066E	dw ?
 word_20670	dw ?
 byte_20672	db ?
 		db 15 dup(?)
-dword_20682	dd ?
+public _sigma_frames
+_sigma_frames	dd ?
 word_20686	dw ?
 		db 3000 dup(?)
 
