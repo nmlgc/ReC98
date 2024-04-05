@@ -2717,7 +2717,7 @@ loc_C5C2:
 		mov	_player_invincibility_time, 0
 		mov	_player_invincible_via_bomb, 0
 		mov	byte_20607, 0
-		mov	byte_20608, 0
+		mov	_stage_miss_count, 0
 		mov	byte_20609, 0
 		mov	byte_205DF, 8
 		mov	byte_205E0, 0
@@ -4729,7 +4729,7 @@ sub_E24A	endp
 sub_E271	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte_218C2, 0
+		mov	_stage_bombs_used, 0
 		mov	_bombing, 0
 		pop	bp
 		retn
@@ -4752,8 +4752,8 @@ player_bomb	proc near
 		dec	_bombs
 		call	@hud_bombs_put$qv
 		mov	_bomb_frame, 0
-		inc	byte_218C2
-		inc	byte_1E64E
+		inc	_stage_bombs_used
+		inc	_total_bombs_used
 		call	_snd_se_play c, 9
 		mov	_bomb_circle_center.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - 4)
 		mov	_bomb_circle_center.y, (PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 4)
@@ -5969,7 +5969,7 @@ sub_EFF2	proc near
 		jnz	short loc_F03D
 		call	_snd_se_play c, 2
 		mov	byte_1E517, 1
-		inc	byte_20608
+		inc	_stage_miss_count
 
 		; ZUN bug: The fact that this function does not re-render the score
 		; means that any existing [score_delta] will stop being animated. The
@@ -5977,7 +5977,7 @@ sub_EFF2	proc near
 		; after the player gained another point.
 		nopcall	@score_delta_commit$qv
 
-		inc	byte_1EB0C
+		inc	_total_miss_count
 		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
 		add	ax, (PLAYER_W / 2)
@@ -6604,7 +6604,7 @@ var_4		= dword	ptr -4
 		imul	ax, 0C8h
 		push	ax
 		call	sub_FC15
-		mov	al, byte_218C2
+		mov	al, _stage_bombs_used
 		mov	ah, 0
 		imul	ax, 1F4h
 		mov	dx, 9C4h
@@ -6623,7 +6623,7 @@ loc_FCD6:
 		push	ax
 		push	si
 		call	sub_FC15
-		mov	al, byte_20608
+		mov	al, _stage_miss_count
 		mov	ah, 0
 		imul	ax, 3E8h
 		mov	dx, 0BB8h
@@ -6750,7 +6750,7 @@ var_4		= dword	ptr -4
 		push	ax
 		push	2710h
 		call	sub_FC15
-		mov	al, byte_20608
+		mov	al, _stage_miss_count
 		mov	ah, 0
 		imul	ax, 0FA0h
 		mov	dx, 4E20h
@@ -6769,7 +6769,7 @@ loc_FE76:
 		push	ax
 		push	si
 		call	sub_FC15
-		mov	al, byte_218C2
+		mov	al, _stage_bombs_used
 		mov	ah, 0
 		imul	ax, 0FA0h
 		mov	dx, 4E20h
@@ -23667,12 +23667,12 @@ sub_19949	proc near
 		sub	dx, ax
 		add	dx, cx
 		mov	cx, dx
-		mov	al, byte_1EB0C
+		mov	al, _total_miss_count
 		mov	ah, 0
 		imul	ax, 3
 		mov	dx, 32h	; '2'
 		sub	dx, ax
-		mov	al, byte_1E64E
+		mov	al, _total_bombs_used
 		mov	ah, 0
 		sub	dx, ax
 		mov	si, dx
@@ -29751,7 +29751,8 @@ _gsREIRYOKU	db gs_REIRYOKU_REI, gs_REIRYOKU_RYOKU, 0, 0, 0
 public _GAIJI_FN, _POWER_TO_SHOT_LEVEL
 _GAIJI_FN	db 'MIKOFT.bft',0
 _POWER_TO_SHOT_LEVEL	db 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9
-byte_1E64E	db 0
+public _total_bombs_used
+_total_bombs_used	db 0
 		db 0
 		db    4
 		db    0
@@ -29857,9 +29858,9 @@ aBomb1_bft	db 'bomb1.bft',0
 asc_1E6DF	db '  ',0
 include th02/sprites/bombpart.asp
 include th02/sprites/sparks.asp
-public _spark_accel_x
+public _spark_accel_x, _total_miss_count
 _spark_accel_x	dw 0
-byte_1EB0C	db 0
+_total_miss_count	db 0
 byte_1EB0D	db -1
 byte_1EB0E	db -1
 		db    1
@@ -30489,7 +30490,8 @@ public _player_invincibility_time, _player_invincible_via_bomb
 _player_invincibility_time	db ?
 _player_invincible_via_bomb	db ?
 byte_20607	db ?
-byte_20608	db ?
+public _stage_miss_count
+_stage_miss_count	db ?
 byte_20609	db ?
 include th02/main/player/speed[bss].asm
 byte_2060E	db ?
@@ -30642,8 +30644,9 @@ include th02/main/player/bomb[bss].asm
 dword_218BA	dd ?
 word_218BE	dw ?
 word_218C0	dw ?
-byte_218C2	db ?
-		db ?
+public _stage_bombs_used
+_stage_bombs_used	db ?
+	evendata
 public _bomb_circle_center, _bomb_circle_frame, _bomb_circle_done
 _bomb_circle_center	Point <?>
 _bomb_circle_frame	dw ?
