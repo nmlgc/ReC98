@@ -1,4 +1,4 @@
-#pragma option -zCmain_03_TEXT
+#pragma option -zCmain_03_TEXT -d-
 
 #include "platform.h"
 #include "pc98.h"

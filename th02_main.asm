@@ -6512,307 +6512,9 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@randring2_next16$qv procdesc near
 	PELLET_RENDER procdesc pascal near \
 		left:word, top:word
-	@OVERLAY_UINT_PUT$QIIIL procdesc pascal near \
-		left_and_y:dword, digits:word, val:dword
 	extern @overlay_wipe$qv:far
-	@BONUS_ROW_PUT_AND_ADD$QINXUCMII procdesc pascal near \
-		y:word, label:dword, total:dword, val_x10:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @stage_clear_bonus_animate$qv
-@stage_clear_bonus_animate$qv	proc near
-
-var_C		= byte ptr -0Ch
-@@sum	= word ptr -6
-var_4		= dword	ptr -4
-
-		enter	0Ch, 0
-		push	si
-		mov	[bp+@@sum], 0
-		lea	ax, [bp+var_C]
-		push	ss
-		push	ax
-		push	ds
-		push	offset gBONUS
-		mov	cx, 6
-		call	SCOPY@
-		call	@overlay_wipe$qv
-		mov	PaletteTone, 62
-		call	far ptr	palette_show
-		push	(24 shl 16) + 4
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putsa
-		push	6	; y
-		push	ds	; label (segment)
-		push	offset aUqiUx	; " 難易度"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		mov	al, _rank
-		cbw
-		imul	ax, 2000
-		push	ax	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		push	8	; y
-		push	ds	; label (segment)
-		push	offset aGxgebGw	; "ステージ"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		mov	ax, _playperf
-		add	ax, 16
-		imul	ax, 200
-		push	ax	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		mov	al, _stage_bombs_used
-		mov	ah, 0
-		imul	ax, 500
-		mov	dx, 2500
-		sub	dx, ax
-		mov	si, dx
-		or	si, si
-		jge	short loc_FCD6
-		xor	si, si
-
-loc_FCD6:
-		push	10	; y
-		push	ds	; label (segment)
-		push	offset aGGa	; "ボム"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		push	si	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		mov	al, _stage_miss_count
-		mov	ah, 0
-		imul	ax, 1000
-		mov	dx, 3000
-		sub	dx, ax
-		mov	si, dx
-		or	si, si
-		jge	short loc_FCFB
-		xor	si, si
-
-loc_FCFB:
-		push	12	; y
-		push	ds	; label (segment)
-		push	offset aGGx	; "ミス"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		push	si	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		push	14	; y
-		push	ds	; label (segment)
-		push	offset aSMvpik	; "靈撃初期数"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		les	bx, _resident
-		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	ah, 0
-		mov	dx, 4
-		sub	dx, ax
-		imul	dx, 800
-		push	dx	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		push	16
-		push	ds	; label (segment)
-		push	offset aSCPik	; "靈夢初期数"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		les	bx, _resident
-		mov	al, es:[bx+mikoconfig_t.start_lives]
-		mov	ah, 0
-		mov	dx, 4
-		sub	dx, ax
-		imul	dx, 1000
-		push	dx	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		cmp	[bp+@@sum], 25600
-		jle	short loc_FD5A
-		mov	[bp+@@sum], 25600
-
-loc_FD5A:
-		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
-		push	(10 shl 16) or 18
-		push	3
-		movsx	eax, _point_items_collected
-		push	eax
-		call	@overlay_uint_put$qiiil
-		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
-		movsx	eax, [bp+@@sum]
-		mov	[bp+var_4], eax
-		imul	eax, 0Ah
-		mov	[bp+var_4], eax
-		call	@overlay_uint_put$qiiil pascal, (22 shl 16) or 18, 5, eax
-		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
-		movsx	eax, _point_items_collected
-		imul	eax, [bp+var_4]
-		mov	[bp+var_4], eax
-		call	@overlay_uint_put$qiiil pascal, (38 shl 16) or 18, 6, eax
-		mov	ebx, 0Ah
-		mov	eax, [bp+var_4]
-		cdq
-		idiv	ebx
-		mov	[bp+var_4], eax
-		add	_score_delta, eax
-		call	_snd_se_reset
-
-		; Not a quirk because the game immediately moves to the next stage and
-		; calls score_reset() before rendering the next game frame.
-		call	@score_grant_current_delta_as_bon$qv
-
-		call	_snd_se_update
-		mov	_key_det, 1
-		call	@key_delay$qv
-		pop	si
-		leave
-		retn
-@stage_clear_bonus_animate$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @stage_extra_clear_bonus_animate$qv
-@stage_extra_clear_bonus_animate$qv	proc near
-
-var_C		= byte ptr -0Ch
-@@sum		= word ptr -6
-var_4		= dword	ptr -4
-
-		enter	0Ch, 0
-		push	si
-		mov	[bp+@@sum], 0
-		lea	ax, [bp+var_C]
-		push	ss
-		push	ax
-		push	ds
-		push	offset gBONUS_0
-		mov	cx, 6
-		call	SCOPY@
-		call	@overlay_wipe$qv
-		mov	PaletteTone, 62
-		call	far ptr	palette_show
-		push	(24 shl 16) + 4
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putsa
-		push	6	; y
-		push	ds	; label (segment)
-		push	offset aGngkga	; "クリア"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		push	10000	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		mov	al, _stage_miss_count
-		mov	ah, 0
-		imul	ax, 4000
-		mov	dx, 20000
-		sub	dx, ax
-		mov	si, dx
-		or	si, si
-		jge	short loc_FE76
-		xor	si, si
-
-loc_FE76:
-		push	8	; y
-		push	ds	; label (segment)
-		push	offset aGGxi	; "ミス回数"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		push	si	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		mov	al, _stage_bombs_used
-		mov	ah, 0
-		imul	ax, 4000
-		mov	dx, 20000
-		sub	dx, ax
-		mov	si, dx
-		or	si, si
-		jge	short loc_FE9B
-		xor	si, si
-
-loc_FE9B:
-		push	10	; y
-		push	ds	; label (segment)
-		push	offset aGGai	; "ボム回数"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		push	si	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		mov	ax, 20000
-		sub	ax, word ptr _sigma_frames
-		mov	si, ax
-		or	si, si
-		jge	short loc_FEB9
-		xor	si, si
-
-loc_FEB9:
-		mov	bx, 10
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	si, ax
-		mov	ax, 10
-		imul	si
-		mov	si, ax
-		push	12	; y
-		push	ds	; label (segment)
-		push	offset aGngkgagGcga ; "クリアタイム"	; label (offset)
-		push	ss	; sum (segment)
-		lea	ax, [bp+@@sum]
-		push	ax	; sum (offset)
-		push	si	; val_x10
-		call	@bonus_row_put_and_add$qinxucmii
-		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
-		push	(10 shl 16) or 18
-		push	3
-		movsx	eax, _point_items_collected
-		push	eax
-		call	@overlay_uint_put$qiiil
-		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
-		movsx	eax, [bp+@@sum]
-		mov	[bp+var_4], eax
-		imul	eax, 0Ah
-		mov	[bp+var_4], eax
-		call	@overlay_uint_put$qiiil pascal, (22 shl 16) or 18, 5, eax
-		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
-		movsx	eax, _point_items_collected
-		imul	eax, [bp+var_4]
-		mov	[bp+var_4], eax
-		call	@overlay_uint_put$qiiil pascal, (36 shl 16) or 18, 7, eax
-		mov	ebx, 0Ah
-		mov	eax, [bp+var_4]
-		cdq
-		idiv	ebx
-		mov	[bp+var_4], eax
-		add	_score_delta, eax
-		call	_snd_se_reset
-
-		; Not a quirk because the game launches MAINE.EXE soon afterward.
-		call	@score_grant_current_delta_as_bon$qv
-
-		call	_snd_se_update
-		mov	_key_det, 1
-		call	@key_delay$qv
-		pop	si
-		leave
-		retn
-@stage_extra_clear_bonus_animate$qv	endp
-
+	@stage_clear_bonus_animate$qv procdesc near
+	@stage_extra_clear_bonus_animate$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -29546,21 +29248,30 @@ _rank	db RANK_NORMAL
 _stage_id	db 0
 aHuuma_cfg	db 'huuma.cfg',0
 include th02/sprites/pellet.asp
-gBONUS		db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
-gBONUS_0	db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
-aUqiUx		db ' 難易度',0
-aGxgebGw	db 'ステージ',0
-aGGa		db 'ボム',0
-aGGx		db 'ミス',0
-aSMvpik		db '靈撃初期数',0
-aSCPik		db '靈夢初期数',0
-aU_		db '点',0
-aB		db '×',0
-aBb		db '＝',0
-aGngkga		db 'クリア',0
-aGGxi		db 'ミス回数',0
-aGGai		db 'ボム回数',0
-aGngkgagGcga	db 'クリアタイム',0
+public _gBONUS_0, _gBONUS_1
+_gBONUS_0	db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
+_gBONUS_1	db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
+public _BONUS_RANK, _BONUS_PLAYPERF, _BONUS_BOMBS, _BONUS_LIVES
+public _BONUS_START_BOMBS, _BONUS_START_LIVES, _BONUS_POINT, _BONUS_TIMES
+public _BONUS_EQUALS, _BONUS_EXTRA_CLEAR, _BONUS_EXTRA_LIVES
+public _BONUS_EXTRA_BOMBS, _BONUS_EXTRA_SIGMA_FRAMES
+
+; ZUN bug: Why is that space here? None of the other labels even attempt to be
+; centered.
+_BONUS_RANK       	db ' 難易度',0
+
+_BONUS_PLAYPERF   	db 'ステージ',0
+_BONUS_BOMBS      	db 'ボム',0
+_BONUS_LIVES      	db 'ミス',0
+_BONUS_START_BOMBS	db '靈撃初期数',0
+_BONUS_START_LIVES	db '靈夢初期数',0
+_BONUS_POINT 	db '点',0
+_BONUS_TIMES 	db '×',0
+_BONUS_EQUALS	db '＝',0
+_BONUS_EXTRA_CLEAR       	db 'クリア',0
+_BONUS_EXTRA_LIVES       	db 'ミス回数',0
+_BONUS_EXTRA_BOMBS       	db 'ボム回数',0
+_BONUS_EXTRA_SIGMA_FRAMES	db 'クリアタイム',0
 include th02/gaiji/gameover[data].asm
 asc_1E47E	db '                ',0
 		db 0
