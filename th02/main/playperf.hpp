@@ -1,6 +1,10 @@
 // Player performance metrics
 // --------------------------
 
+extern int playperf;
+static const int playperf_min = -6;
+extern uint8_t playperf_max;
+
 extern uint8_t total_miss_count;
 extern uint8_t total_bombs_used;
 

@@ -34,6 +34,8 @@ include th02/sprites/main_pat.inc
 	extern _getdate:proc
 	extern _memcpy:proc
 
+playperf_min = -6
+
 SP_STAGE = 0
 SP_BOSS = 1
 SP_CLEAR = 2
@@ -1189,12 +1191,12 @@ loc_B333:
 loc_B34C:
 		cmp	_rank, RANK_EASY
 		jnz	short loc_B35A
-		mov	byte_1F4AC, 4
+		mov	_playperf_max, 4
 		jmp	short loc_B35F
 ; ---------------------------------------------------------------------------
 
 loc_B35A:
-		mov	byte_1F4AC, 10h
+		mov	_playperf_max, 16
 
 loc_B35F:
 		pop	si
@@ -2101,11 +2103,11 @@ loc_BF36:
 		div	ebx
 		cmp	edx, 1500
 		jnz	short loc_BF60
-		mov	al, byte_1F4AC
+		mov	al, _playperf_max
 		mov	ah, 0
-		cmp	ax, word_20272
+		cmp	ax, _playperf
 		jle	short loc_BF60
-		inc	word_20272
+		inc	_playperf
 		jmp	short $+2
 
 loc_BF60:
@@ -2316,7 +2318,7 @@ demo_load	proc far
 		mov	word ptr _DemoBuf+2, ax
 		mov	word ptr _DemoBuf, 0
 		mov	_power, POWER_MAX
-		mov	word_20272, 0Ch
+		mov	_playperf, 12
 		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.frame], 12h
 		cmp	es:[bx+mikoconfig_t.demo_num], 1
@@ -2438,7 +2440,7 @@ cfg_load	proc near
 		inc	_power
 
 loc_C2DF:
-		mov	word_20272, 0
+		mov	_playperf, 0
 		mov	_item_bigpower_override, 0
 		mov	ax, 1
 		leave
@@ -6021,17 +6023,17 @@ loc_F08A:
 		cmp	byte_20609, 18h
 		jnz	loc_F12A
 		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
-		cmp	word_20272, 2
+		cmp	_playperf, 2
 		jle	short loc_F0A7
-		mov	word_20272, 0
+		mov	_playperf, 0
 		jmp	short loc_F0B9
 ; ---------------------------------------------------------------------------
 
 loc_F0A7:
-		sub	word_20272, 2
-		cmp	word_20272, 0FFFAh
+		sub	_playperf, 2
+		cmp	_playperf, playperf_min
 		jge	short loc_F0B9
-		mov	word_20272, 0FFFAh
+		mov	_playperf, playperf_min
 
 loc_F0B9:
 		mov	bx, _player_left_on_back_page
@@ -6599,9 +6601,9 @@ var_4		= dword	ptr -4
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		mov	ax, word_20272
-		add	ax, 10h
-		imul	ax, 0C8h
+		mov	ax, _playperf
+		add	ax, 16
+		imul	ax, 200
 		push	ax
 		call	sub_FC15
 		mov	al, _stage_bombs_used
@@ -7745,7 +7747,7 @@ arg_0		= dword	ptr  4
 		mov	bp, sp
 		les	bx, [bp+arg_0]
 		mov	ax, es:[bx]
-		imul	word_20272
+		imul	_playperf
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
@@ -30386,7 +30388,8 @@ _boss_bg_render_func	dd ?
 farfp_1F4A0	dd ?
 farfp_1F4A4	dd ?
 include th02/main/demo[bss].asm
-byte_1F4AC	db ?
+public _playperf_max
+_playperf_max	db ?
 unk_1F4AD	db    ?	;
 		db 47 dup(?)
 byte_1F4DD	db ?
@@ -30423,10 +30426,10 @@ word_20166	dw ?
 byte_20168	db ?
 byte_20169	db ?
 include th02/math/randring[bss].asm
-public _resident
+public _resident, _playperf
 _resident	dd ?
 		db 2 dup(?)
-word_20272	dw ?
+_playperf	dw ?
 public _spark_ring_i
 _spark_ring_i	dw ?
 
