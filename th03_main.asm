@@ -803,19 +803,19 @@ loc_9D85:
 		mov	di, ax
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed.aligned.x8], al
+		mov	[di+player_t.speed_base.aligned.x8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed.aligned.y8], al
+		mov	[di+player_t.speed_base.aligned.y8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed.diagonal.x8], al
+		mov	[di+player_t.speed_base.diagonal.x8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed.diagonal.y8], al
+		mov	[di+player_t.speed_base.diagonal.y8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
@@ -6761,62 +6761,62 @@ loc_D75D:
 ; ---------------------------------------------------------------------------
 
 loc_D76B:
-		mov	al, byte_23AE2
+		mov	al, _player_speed_base.aligned.x8
 		neg	al
 		mov	byte_23AE6, al
 		jmp	short loc_D7D5
 ; ---------------------------------------------------------------------------
 
 loc_D775:
-		mov	al, byte_23AE4
+		mov	al, _player_speed_base.diagonal.x8
 		neg	al
 		mov	byte_23AE6, al
-		mov	al, byte_23AE5
+		mov	al, _player_speed_base.diagonal.y8
 		mov	byte_23AE7, al
 		jmp	short loc_D7D5
 ; ---------------------------------------------------------------------------
 
 loc_D785:
-		mov	al, byte_23AE3
+		mov	al, _player_speed_base.aligned.y8
 		mov	byte_23AE7, al
 		jmp	short loc_D7D5
 ; ---------------------------------------------------------------------------
 
 loc_D78D:
-		mov	al, byte_23AE4
+		mov	al, _player_speed_base.diagonal.x8
 		mov	byte_23AE6, al
-		mov	al, byte_23AE5
+		mov	al, _player_speed_base.diagonal.y8
 		mov	byte_23AE7, al
 		jmp	short loc_D7D5
 ; ---------------------------------------------------------------------------
 
 loc_D79B:
-		mov	al, byte_23AE2
+		mov	al, _player_speed_base.aligned.x8
 		mov	byte_23AE6, al
 		jmp	short loc_D7D5
 ; ---------------------------------------------------------------------------
 
 loc_D7A3:
-		mov	al, byte_23AE4
+		mov	al, _player_speed_base.diagonal.x8
 		mov	byte_23AE6, al
-		mov	al, byte_23AE5
+		mov	al, _player_speed_base.diagonal.y8
 		neg	al
 		mov	byte_23AE7, al
 		jmp	short loc_D7D5
 ; ---------------------------------------------------------------------------
 
 loc_D7B3:
-		mov	al, byte_23AE3
+		mov	al, _player_speed_base.aligned.y8
 		neg	al
 		mov	byte_23AE7, al
 		jmp	short loc_D7D5
 ; ---------------------------------------------------------------------------
 
 loc_D7BD:
-		mov	al, byte_23AE4
+		mov	al, _player_speed_base.diagonal.x8
 		neg	al
 		mov	byte_23AE6, al
-		mov	al, byte_23AE5
+		mov	al, _player_speed_base.diagonal.y8
 		neg	al
 		mov	byte_23AE7, al
 		jmp	short loc_D7D5
@@ -6888,18 +6888,18 @@ hyper_reimu	proc near
 loc_D81D:
 		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_REIMU_HYPER
-		mov	al, byte_23AE2
-		add	al, 20h	; ' '
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 20h	; ' '
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 18h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 18h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_reimu	endp
@@ -6924,18 +6924,18 @@ loc_D85B:
 		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_2_PAIRS
 		mov	[bx+player_t.shot_active], SA_BLOCKED_FOR_THIS_FRAME
-		mov	al, byte_23AE2
-		add	al, 20h	; ' '
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 20h	; ' '
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 18h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 18h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_mima	endp
@@ -6960,18 +6960,18 @@ loc_D89D:
 		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SA_DISABLED
 		call	sub_14340
-		mov	al, byte_23AE2
-		add	al, 0F0h
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 0F0h
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 0F4h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 0F4h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (-1 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (-1 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, -0Ch
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, -0Ch
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_marisa	endp
@@ -7025,18 +7025,18 @@ hyper_kotohime	proc near
 loc_D90F:
 		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
-		mov	al, byte_23AE2
-		add	al, 20h	; ' '
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 20h	; ' '
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 18h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 18h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_kotohime	endp
@@ -7060,18 +7060,18 @@ hyper_chiyuri	proc near
 loc_D94D:
 		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
-		mov	al, byte_23AE2
-		add	al, 20h	; ' '
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 20h	; ' '
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 18h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 18h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_chiyuri	endp
@@ -7095,18 +7095,18 @@ hyper_yumemi	proc near
 loc_D98B:
 		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
-		mov	al, byte_23AE2
-		add	al, 20h	; ' '
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 20h	; ' '
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 18h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 18h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_yumemi	endp
@@ -7130,18 +7130,18 @@ hyper_kana	proc near
 loc_D9C9:
 		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
-		mov	al, byte_23AE2
-		add	al, 20h	; ' '
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 20h	; ' '
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 18h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 18h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (2 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, (1 shl 4) + 8
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_kana	endp
@@ -7170,18 +7170,18 @@ loc_DA0C:
 		call	rikako_1C497 pascal, word ptr [bx], word ptr [bx+2]
 
 loc_DA21:
-		mov	al, byte_23AE2
-		add	al, 0F0h
-		mov	byte_23AE2, al
-		mov	al, byte_23AE3
-		add	al, 0F0h
-		mov	byte_23AE3, al
-		mov	al, byte_23AE4
-		add	al, 0F8h
-		mov	byte_23AE4, al
-		mov	al, byte_23AE5
-		add	al, 0F8h
-		mov	byte_23AE5, al
+		mov	al, _player_speed_base.aligned.x8
+		add	al, (-1 shl 4)
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, _player_speed_base.aligned.y8
+		add	al, (-1 shl 4)
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, _player_speed_base.diagonal.x8
+		add	al, -08h
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, _player_speed_base.diagonal.y8
+		add	al, -08h
+		mov	_player_speed_base.diagonal.y8, al
 		pop	bp
 		retn
 hyper_rikako	endp
@@ -7232,14 +7232,14 @@ loc_DA81:
 		jz	loc_DE4F
 		cmp	byte ptr [si+1Fh], 0
 		jnz	loc_DE45
-		mov	al, [si+9]
-		mov	byte_23AE2, al
-		mov	al, [si+0Ah]
-		mov	byte_23AE3, al
-		mov	al, [si+0Bh]
-		mov	byte_23AE4, al
-		mov	al, [si+0Ch]
-		mov	byte_23AE5, al
+		mov	al, [si+player_t.speed_base.aligned.x8]
+		mov	_player_speed_base.aligned.x8, al
+		mov	al, [si+player_t.speed_base.aligned.y8]
+		mov	_player_speed_base.aligned.y8, al
+		mov	al, [si+player_t.speed_base.diagonal.x8]
+		mov	_player_speed_base.diagonal.x8, al
+		mov	al, [si+player_t.speed_base.diagonal.y8]
+		mov	_player_speed_base.diagonal.y8, al
 		call	word ptr [si+64h]
 		cmp	byte ptr [si+11h], 0
 		jnz	loc_DBDC
@@ -35815,12 +35815,9 @@ _collmap_bottomright	Point <?>
 _collmap_pid	db ?
 		db 5 dup(?)
 _collmap	db (PLAYER_COUNT * COLLMAP_SIZE) dup(?)
-public _bomb_state
+public _bomb_state, _player_speed_base
 _bomb_state	db PLAYER_COUNT dup(?)
-byte_23AE2	db ?
-byte_23AE3	db ?
-byte_23AE4	db ?
-byte_23AE5	db ?
+_player_speed_base	speed_t <?>
 byte_23AE6	db ?
 byte_23AE7	db ?
 public _player_cur, _cpu_hit_damage_additional, _damage_all_enemies_on

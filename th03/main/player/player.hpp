@@ -38,7 +38,7 @@ struct player_t {
 	unsigned char invincibility_time;
 	char halfhearts;
 	PlaycharPalettedOptional playchar_paletted;
-	speed_t speed;
+	speed_t speed_base;
 	shot_mode_t shot_mode;
 	unsigned char patnum_movement;
 	unsigned char patnum_glow;
