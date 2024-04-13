@@ -28,7 +28,7 @@ include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
 
-main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, main_010_TEXT, main_011_TEXT
+main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
 
 ; ===========================================================================
@@ -1348,7 +1348,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
-main_010_TEXT	segment	word public 'CODE' use16
+PLAYER_M_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4296,42 +4296,42 @@ loc_C4A8:
 		jmp	cs:off_C536[bx]
 
 loc_C4C2:
-		mov	di, 4
+		mov	di, INPUT_LEFT
 		jmp	short loc_C4E8
 ; ---------------------------------------------------------------------------
 
 loc_C4C7:
-		mov	di, 8
+		mov	di, INPUT_RIGHT
 		jmp	short loc_C4E8
 ; ---------------------------------------------------------------------------
 
 loc_C4CC:
-		mov	di, 1
+		mov	di, INPUT_UP
 		jmp	short loc_C4E8
 ; ---------------------------------------------------------------------------
 
 loc_C4D1:
-		mov	di, 2
+		mov	di, INPUT_DOWN
 		jmp	short loc_C4E8
 ; ---------------------------------------------------------------------------
 
 loc_C4D6:
-		mov	di, 5
+		mov	di, (INPUT_UP or INPUT_LEFT)
 		jmp	short loc_C4E8
 ; ---------------------------------------------------------------------------
 
 loc_C4DB:
-		mov	di, 6
+		mov	di, (INPUT_DOWN or INPUT_LEFT)
 		jmp	short loc_C4E8
 ; ---------------------------------------------------------------------------
 
 loc_C4E0:
-		mov	di, 9
+		mov	di, (INPUT_UP or INPUT_RIGHT)
 		jmp	short loc_C4E8
 ; ---------------------------------------------------------------------------
 
 loc_C4E5:
-		mov	di, 0Ah
+		mov	di, (INPUT_DOWN or INPUT_RIGHT)
 
 loc_C4E8:
 		mov	[bp+var_7], 0
@@ -4340,9 +4340,8 @@ loc_C4E8:
 		xor	dx, dx
 		div	bx
 		mov	[bp+var_6], dx
-		push	di
-		call	sub_D71E
-		cmp	al, 1
+		call	@player_move$qui pascal, di
+		cmp	al, MOVE_VALID
 		jnz	short loc_C505
 		push	si
 		call	sub_D6D4
@@ -4534,42 +4533,42 @@ loc_C611:
 		jmp	cs:off_C791[bx]
 
 loc_C62D:
-		mov	di, 4
+		mov	di, INPUT_LEFT
 		jmp	loc_C6BF
 ; ---------------------------------------------------------------------------
 
 loc_C633:
-		mov	di, 8
+		mov	di, INPUT_RIGHT
 		jmp	loc_C6BF
 ; ---------------------------------------------------------------------------
 
 loc_C639:
-		mov	di, 1
+		mov	di, INPUT_UP
 		jmp	loc_C6BF
 ; ---------------------------------------------------------------------------
 
 loc_C63F:
-		mov	di, 2
+		mov	di, INPUT_DOWN
 		jmp	short loc_C6BF
 ; ---------------------------------------------------------------------------
 
 loc_C644:
-		mov	di, 5
+		mov	di, (INPUT_UP or INPUT_LEFT)
 		jmp	short loc_C6BF
 ; ---------------------------------------------------------------------------
 
 loc_C649:
-		mov	di, 6
+		mov	di, (INPUT_DOWN or INPUT_LEFT)
 		jmp	short loc_C6BF
 ; ---------------------------------------------------------------------------
 
 loc_C64E:
-		mov	di, 9
+		mov	di, (INPUT_UP or INPUT_RIGHT)
 		jmp	short loc_C6BF
 ; ---------------------------------------------------------------------------
 
 loc_C653:
-		mov	di, 0Ah
+		mov	di, (INPUT_DOWN or INPUT_RIGHT)
 		jmp	short loc_C6BF
 ; ---------------------------------------------------------------------------
 
@@ -4625,9 +4624,8 @@ loc_C6BF:
 		mov	[bp+var_B], 0
 
 loc_C6C7:
-		push	di
-		call	sub_D71E
-		cmp	al, 1
+		call	@player_move$qui pascal, di
+		cmp	al, MOVE_VALID
 		jnz	short loc_C6D3
 		push	si
 		call	sub_D6D4
@@ -6679,10 +6677,10 @@ arg_0		= word ptr  4
 		mov	si, [bp+arg_0]
 		mov	dx, [si]
 		mov	cx, [si+2]
-		mov	al, byte_23AE6
+		mov	al, _player_velocity.x8
 		cbw
 		add	dx, ax
-		mov	al, byte_23AE7
+		mov	al, _player_velocity.y8
 		cbw
 		add	cx, ax
 		cmp	dx, 80h
@@ -6716,139 +6714,15 @@ loc_D714:
 		retn	2
 sub_D6D4	endp
 
+MOVE_INVALID = 0
+MOVE_VALID = 1
+MOVE_NOINPUT = 2
 
-; =============== S U B	R O U T	I N E =======================================
+	@PLAYER_MOVE$QUI procdesc pascal near \
+		input:word
+PLAYER_M_TEXT	ends
 
-; Attributes: bp-based frame
-
-sub_D71E	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	byte_23AE6, 0
-		mov	byte_23AE7, 0
-		mov	bx, [bp+arg_0]
-		cmp	bx, 8
-		jz	short loc_D79B
-		ja	short loc_D743
-		cmp	bx, 6
-		ja	loc_D7CF
-		add	bx, bx
-		jmp	cs:off_D7E2[bx]
-; ---------------------------------------------------------------------------
-
-loc_D743:
-		cmp	bx, 200h
-		jz	short loc_D775
-		ja	short loc_D75D
-		cmp	bx, 9
-		jz	short loc_D7A3
-		cmp	bx, 0Ah
-		jz	short loc_D78D
-		cmp	bx, 100h
-		jz	short loc_D7BD
-		jmp	short loc_D7CF
-; ---------------------------------------------------------------------------
-
-loc_D75D:
-		cmp	bx, 400h
-		jz	short loc_D7A3
-		cmp	bx, 800h
-		jz	short loc_D78D
-		jmp	short loc_D7CF
-; ---------------------------------------------------------------------------
-
-loc_D76B:
-		mov	al, _player_speed_base.aligned.x8
-		neg	al
-		mov	byte_23AE6, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D775:
-		mov	al, _player_speed_base.diagonal.x8
-		neg	al
-		mov	byte_23AE6, al
-		mov	al, _player_speed_base.diagonal.y8
-		mov	byte_23AE7, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D785:
-		mov	al, _player_speed_base.aligned.y8
-		mov	byte_23AE7, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D78D:
-		mov	al, _player_speed_base.diagonal.x8
-		mov	byte_23AE6, al
-		mov	al, _player_speed_base.diagonal.y8
-		mov	byte_23AE7, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D79B:
-		mov	al, _player_speed_base.aligned.x8
-		mov	byte_23AE6, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D7A3:
-		mov	al, _player_speed_base.diagonal.x8
-		mov	byte_23AE6, al
-		mov	al, _player_speed_base.diagonal.y8
-		neg	al
-		mov	byte_23AE7, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D7B3:
-		mov	al, _player_speed_base.aligned.y8
-		neg	al
-		mov	byte_23AE7, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D7BD:
-		mov	al, _player_speed_base.diagonal.x8
-		neg	al
-		mov	byte_23AE6, al
-		mov	al, _player_speed_base.diagonal.y8
-		neg	al
-		mov	byte_23AE7, al
-		jmp	short loc_D7D5
-; ---------------------------------------------------------------------------
-
-loc_D7CF:
-		mov	al, 0
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_D7D5:
-		mov	al, 1
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_D7DB:
-		mov	al, 2
-		pop	bp
-		retn	2
-sub_D71E	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_D7E2	dw offset loc_D7DB
-		dw offset loc_D7B3
-		dw offset loc_D785
-		dw offset loc_D7CF
-		dw offset loc_D76B
-		dw offset loc_D7BD
-		dw offset loc_D775
+main_010_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7195,7 +7069,7 @@ sub_DA43	proc near
 
 var_6		= byte ptr -6
 var_5		= byte ptr -5
-var_4		= word ptr -4
+@@input		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -7246,29 +7120,28 @@ loc_DA81:
 		cmp	byte ptr [si+15h], 0
 		jnz	short loc_DB0A
 		mov	ax, di
-		and	ax, 0F0Fh
-		mov	[bp+var_4], ax
+		and	ax, INPUT_MOVEMENT
+		mov	[bp+@@input], ax
 		mov	[bp+var_6], 1
 
 loc_DAC7:
-		push	[bp+var_4]
-		call	sub_D71E
+		call	@player_move$qui pascal, [bp+@@input]
 		mov	[bp+var_5], al
-		cmp	[bp+var_5], 0
+		cmp	[bp+var_5], MOVE_INVALID
 		jnz	short loc_DAEF
 		cmp	[bp+var_6], 0
 		jz	short loc_DAEF
 		mov	ax, [si+20h]
-		cmp	ax, [bp+var_4]
+		cmp	ax, [bp+@@input]
 		jz	short loc_DAF9
 		not	ax
-		and	[bp+var_4], ax
+		and	[bp+@@input], ax
 		mov	[bp+var_6], 0
 		jmp	short loc_DAC7
 ; ---------------------------------------------------------------------------
 
 loc_DAEF:
-		cmp	[bp+var_5], 1
+		cmp	[bp+var_5], MOVE_VALID
 		jnz	short loc_DAF9
 		push	si
 		call	sub_D6D4
@@ -7276,7 +7149,7 @@ loc_DAEF:
 loc_DAF9:
 		cmp	[bp+var_6], 0
 		jz	loc_DBDF
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@input]
 		mov	[si+20h], ax
 		jmp	loc_DBDF
 ; ---------------------------------------------------------------------------
@@ -7650,14 +7523,14 @@ loc_DE45:
 		call	sub_C0D8
 
 loc_DE4F:
-		cmp	byte_23AE6, 0
+		cmp	_player_velocity.x8, 0
 		jnz	short loc_DE5C
 		mov	byte ptr [si+0Eh], 0
 		jmp	short loc_DE6E
 ; ---------------------------------------------------------------------------
 
 loc_DE5C:
-		mov	al, byte_23AE6
+		mov	al, _player_velocity.x8
 		cbw
 		or	ax, ax
 		jge	short loc_DE6A
@@ -7921,9 +7794,9 @@ loc_E036:
 		push	ax
 		call	vector2
 		mov	al, [bp+@@vector_x]
-		mov	byte_23AE6, al
+		mov	_player_velocity.x8, al
 		mov	al, [bp+@@vector_y]
-		mov	byte_23AE7, al
+		mov	_player_velocity.y8, al
 		push	si
 		call	sub_D6D4
 		jmp	short loc_E078
@@ -35815,11 +35688,10 @@ _collmap_bottomright	Point <?>
 _collmap_pid	db ?
 		db 5 dup(?)
 _collmap	db (PLAYER_COUNT * COLLMAP_SIZE) dup(?)
-public _bomb_state, _player_speed_base
+public _bomb_state, _player_speed_base, _player_velocity
 _bomb_state	db PLAYER_COUNT dup(?)
 _player_speed_base	speed_t <?>
-byte_23AE6	db ?
-byte_23AE7	db ?
+_player_velocity  	SPPoint8 <?>
 public _player_cur, _cpu_hit_damage_additional, _damage_all_enemies_on
 _player_cur	dw ?
 _cpu_hit_damage_additional	db ?

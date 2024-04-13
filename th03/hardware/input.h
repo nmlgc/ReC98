@@ -16,6 +16,11 @@ static const input_t INPUT_CANCEL     = 0x1000;
 static const input_t INPUT_OK         = 0x2000;
 static const input_t INPUT_Q          = 0x4000;
 
+static const input_t INPUT_MOVEMENT = (
+	INPUT_UP | INPUT_DOWN | INPUT_LEFT | INPUT_RIGHT |
+	INPUT_UP_LEFT | INPUT_UP_RIGHT | INPUT_DOWN_LEFT | INPUT_DOWN_RIGHT
+);
+
 /// Variables
 /// ---------
 
