@@ -11,6 +11,14 @@
 #define clamp_min_2(v, min) ((v) < min ? min : (v))
 #define clamp_max_2_ge(v, max) ((v) >= max ? max : (v))
 
+#define clamp_minmax(v, min, max) { \
+	if(v < min) { \
+		v = min; \
+	} else if(v > max) { \
+		v = max; \
+	} \
+}
+
 #define clamp_inc(v, max) \
 	(v)++; \
 	if((v) > (max)) { \

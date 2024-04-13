@@ -4343,8 +4343,7 @@ loc_C4E8:
 		call	@player_move$qui pascal, di
 		cmp	al, MOVE_VALID
 		jnz	short loc_C505
-		push	si
-		call	sub_D6D4
+		call	@player_pos_update_and_clamp$qr8player_t pascal, si
 
 loc_C505:
 		call	@player_hittest$qi pascal, (8 / 2)
@@ -4627,8 +4626,7 @@ loc_C6C7:
 		call	@player_move$qui pascal, di
 		cmp	al, MOVE_VALID
 		jnz	short loc_C6D3
-		push	si
-		call	sub_D6D4
+		call	@player_pos_update_and_clamp$qr8player_t pascal, si
 
 loc_C6D3:
 		cmp	[bp+var_B], 0
@@ -6663,61 +6661,12 @@ sub_D6C0	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D6D4	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		mov	dx, [si]
-		mov	cx, [si+2]
-		mov	al, _player_velocity.x8
-		cbw
-		add	dx, ax
-		mov	al, _player_velocity.y8
-		cbw
-		add	cx, ax
-		cmp	dx, 80h
-		jge	short loc_D6F7
-		mov	dx, 80h
-		jmp	short loc_D700
-; ---------------------------------------------------------------------------
-
-loc_D6F7:
-		cmp	dx, 1180h
-		jle	short loc_D700
-		mov	dx, 1180h
-
-loc_D700:
-		cmp	cx, 180h
-		jge	short loc_D70B
-		mov	cx, 180h
-		jmp	short loc_D714
-; ---------------------------------------------------------------------------
-
-loc_D70B:
-		cmp	cx, 1600h
-		jle	short loc_D714
-		mov	cx, 1600h
-
-loc_D714:
-		mov	[si], dx
-		mov	[si+2],	cx
-		pop	si
-		pop	bp
-		retn	2
-sub_D6D4	endp
-
 MOVE_INVALID = 0
 MOVE_VALID = 1
 MOVE_NOINPUT = 2
 
+	@PLAYER_POS_UPDATE_AND_CLAMP$QR8PLAYER_T procdesc pascal near \
+		player:word
 	@PLAYER_MOVE$QUI procdesc pascal near \
 		input:word
 PLAYER_M_TEXT	ends
@@ -7143,8 +7092,7 @@ loc_DAC7:
 loc_DAEF:
 		cmp	[bp+var_5], MOVE_VALID
 		jnz	short loc_DAF9
-		push	si
-		call	sub_D6D4
+		call	@player_pos_update_and_clamp$qr8player_t pascal, si
 
 loc_DAF9:
 		cmp	[bp+var_6], 0
@@ -7797,8 +7745,7 @@ loc_E036:
 		mov	_player_velocity.x8, al
 		mov	al, [bp+@@vector_y]
 		mov	_player_velocity.y8, al
-		push	si
-		call	sub_D6D4
+		call	@player_pos_update_and_clamp$qr8player_t pascal, si
 		jmp	short loc_E078
 ; ---------------------------------------------------------------------------
 

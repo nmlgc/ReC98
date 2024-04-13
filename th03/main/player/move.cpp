@@ -1,12 +1,34 @@
 #pragma option -zPmain_01 -G
 
+#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
-#include "th01/math/subpixel.hpp"
+#include "th01/math/clamp.hpp"
 #include "th03/hardware/input.h"
+#include "th03/common.h"
 #include "th03/playchar.hpp"
+#include "th03/main/playfld.hpp"
+#include "th03/main/collmap.hpp"
+#include "th03/main/sprite16.hpp"
 #include "th03/main/chars/speed.hpp"
+#include "th03/main/player/shot.hpp"
+#include "th03/main/player/player.hpp"
 #include "th03/main/player/move.hpp"
+
+void pascal near player_pos_update_and_clamp(player_t near& player)
+{
+	subpixel_t x = player.center.x;
+	subpixel_t y = player.center.y;
+
+	x += player_velocity.x.v;
+	y += player_velocity.y.v;
+
+	clamp_minmax(x, to_sp( 8), to_sp(PLAYFIELD_W -  8));
+	clamp_minmax(y, to_sp(24), to_sp(PLAYFIELD_H - 16));
+
+	player.center.x.v = x;
+	player.center.y.v = y;
+}
 
 #pragma option -a2
 
