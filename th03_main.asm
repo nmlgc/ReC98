@@ -280,7 +280,7 @@ loc_9845:
 		call	farfp_20F24
 		cmp	byte_23AFA, 0
 		jz	short loc_986C
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jz	loc_9A62
 
 loc_986C:
@@ -334,7 +334,7 @@ loc_986C:
 		jnb	short loc_994E
 		cmp	_p2.rounds_won, 2
 		jnb	short loc_994E
-		cmp	word_23AF6, 0A0h
+		cmp	_round_or_result_frame, 160
 		jz	short loc_9986
 		cmp	byte_1FBC3, 0
 		jz	short loc_99B1
@@ -343,7 +343,7 @@ loc_986C:
 
 loc_994E:
 		call	sub_E3F2
-		mov	ax, word_23AF6
+		mov	ax, _round_or_result_frame
 		cmp	ax, word_1E6E8
 		jz	short loc_9986
 		cmp	byte_1FBC3, 0
@@ -362,7 +362,7 @@ loc_9973:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.pid_winner], 0
 		jz	short loc_994E
-		cmp	word_23AF6, 0A0h
+		cmp	_round_or_result_frame, 160
 		jnz	short loc_998E
 
 loc_9986:
@@ -418,7 +418,7 @@ loc_99DF:
 ; ---------------------------------------------------------------------------
 
 loc_99F7:
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jnz	short loc_9A14
 		mov	vsync_Count1, 0
 
@@ -450,7 +450,7 @@ loc_9A25:
 
 loc_9A62:
 		inc	_round_frame
-		inc	word_23AF6
+		inc	_round_or_result_frame
 		mov	al, byte ptr _round_frame
 		and	al, 0Fh
 		mov	_round_frame_mod16, al
@@ -460,14 +460,14 @@ loc_9A62:
 		mov	_round_frame_mod4, al
 		and	al, 1
 		mov	_round_frame_mod2, al
-		test	byte ptr word_23AF6, 3Fh
+		test	byte ptr _round_or_result_frame, 63
 		jnz	short loc_9AC9
 		cmp	byte_23AF8, 7Fh
 		jnb	short loc_9A94
 		inc	byte_23AF8
 
 loc_9A94:
-		test	word_23AF6, 3FFh
+		test	_round_or_result_frame, 1023
 		jnz	short loc_9AB5
 		call	@randring_fill$qv
 		cmp	_p1.miss_damage_next, 6
@@ -480,7 +480,7 @@ loc_9AAA:
 		inc	_p2.miss_damage_next
 
 loc_9AB5:
-		cmp	word_23AF6, 7D0h
+		cmp	_round_or_result_frame, 2000
 		jnb	short loc_9AC9
 		mov	_p1.cpu_frame, 0
 		mov	_p2.cpu_frame, 0
@@ -2721,7 +2721,7 @@ sub_B80B	proc near
 		mov	dx, 1
 		mov	ah, SPRITE16_SET_MONO
 		int	SPRITE16
-		mov	dx, word_23AF6
+		mov	dx, _round_or_result_frame
 		; Hack (and dx, 1)
 		db 081h
 		db 0e2h
@@ -3878,7 +3878,7 @@ loc_C159:
 		mov	al, 1
 		sub	al, _pid_PID_current
 		mov	es:[bx+resident_t.pid_winner], al
-		mov	word_23AF6, 0
+		mov	_round_or_result_frame, 0
 		mov	al, 1
 		sub	al, _pid_PID_current
 		push	ax
@@ -3887,7 +3887,7 @@ loc_C159:
 ; ---------------------------------------------------------------------------
 
 loc_C1CD:
-		mov	ax, word_23AF6
+		mov	ax, _round_or_result_frame
 		and	ax, 1
 		imul	ax, 30
 		add	ax, 100
@@ -4041,7 +4041,7 @@ sub_C248	endp
 
 sub_C2F9	proc near
 
-var_2		= word ptr -2
+@@frame_mod_32	= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -4061,10 +4061,10 @@ var_2		= word ptr -2
 		imul	dx, PLAYFIELD_W_BORDERED
 		add	dx, 96
 		mov	si, dx
-		mov	ax, word_23AF6
-		and	ax, 1Fh
-		mov	[bp+var_2], ax
-		cmp	[bp+var_2], 10h
+		mov	ax, _round_or_result_frame
+		and	ax, 31
+		mov	[bp+@@frame_mod_32], ax
+		cmp	[bp+@@frame_mod_32], 16
 		jge	short loc_C34F
 		add	ax, 32
 		jmp	short loc_C355
@@ -4072,7 +4072,7 @@ var_2		= word ptr -2
 
 loc_C34F:
 		mov	ax, 64
-		sub	ax, [bp+var_2]
+		sub	ax, [bp+@@frame_mod_32]
 
 loc_C355:
 		mov	di, ax
@@ -4439,7 +4439,7 @@ arg_0		= word ptr  4
 		mov	[bp+var_6], ax
 		mov	ax, [si+2]
 		mov	[bp+var_8], ax
-		test	byte ptr word_23AF6, 3
+		test	byte ptr _round_or_result_frame, 3
 		jnz	short loc_C5AA
 		mov	[bp+var_B], (64 / 2)
 		jmp	short loc_C5A1
@@ -4816,7 +4816,7 @@ sub_C830	proc near
 		call	egc_off
 		cmp	_p1.hyper_active, 0
 		jz	short loc_C881
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jz	short loc_C881
 		mov	ax, _p1.gauge_avail
 		shr	ax, 10
@@ -4846,7 +4846,7 @@ loc_C86E:
 loc_C881:
 		cmp	_p2.hyper_active, 0
 		jz	short loc_C8C1
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jz	short loc_C8C1
 		mov	ax, _p2.gauge_avail
 		shr	ax, 10
@@ -4910,7 +4910,7 @@ var_1		= byte ptr -1
 		jle	short loc_C921
 		cmp	_p1.hyper_active, 0
 		jz	short loc_C901
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jz	short loc_C909
 
 loc_C901:
@@ -4935,7 +4935,7 @@ loc_C921:
 		jle	short loc_C956
 		cmp	_p2.hyper_active, 0
 		jz	short loc_C936
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jz	short loc_C93E
 
 loc_C936:
@@ -6034,41 +6034,41 @@ sub_D135	endp
 sub_D1E7	proc far
 
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@frame_mod_4096	= word ptr -2
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	ax, word_23AF6
-		and	ax, 0FFFh
-		mov	[bp+var_2], ax
-		cmp	[bp+var_2], 400h
+		mov	ax, _round_or_result_frame
+		and	ax, 4095
+		mov	[bp+@@frame_mod_4096], ax
+		cmp	[bp+@@frame_mod_4096], 1024
 		jl	short loc_D24B
-		cmp	[bp+var_2], 500h
+		cmp	[bp+@@frame_mod_4096], 1280
 		jge	short loc_D20C
-		test	byte ptr [bp+var_2], 7
+		test	byte ptr [bp+@@frame_mod_4096], 7
 		jnz	short loc_D24F
 		jmp	short loc_D23B
 ; ---------------------------------------------------------------------------
 
 loc_D20C:
-		cmp	[bp+var_2], 800h
+		cmp	[bp+@@frame_mod_4096], 2048
 		jl	short loc_D24B
-		cmp	[bp+var_2], 900h
+		cmp	[bp+@@frame_mod_4096], 2304
 		jge	short loc_D222
-		test	byte ptr [bp+var_2], 3
+		test	byte ptr [bp+@@frame_mod_4096], 3
 		jnz	short loc_D24F
 		jmp	short loc_D241
 ; ---------------------------------------------------------------------------
 
 loc_D222:
-		cmp	[bp+var_2], 0C00h
+		cmp	[bp+@@frame_mod_4096], 3072
 		jl	short loc_D24B
-		cmp	[bp+var_2], 0FE0h
+		cmp	[bp+@@frame_mod_4096], 4064
 		jge	short loc_D24B
-		mov	ax, [bp+var_2]
-		and	ax, 7Fh
-		cmp	ax, 40h
+		mov	ax, [bp+@@frame_mod_4096]
+		and	ax, 127
+		cmp	ax, 64
 		jge	short loc_D241
 
 loc_D23B:
@@ -6284,41 +6284,41 @@ sub_D340	endp
 sub_D3F9	proc far
 
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@frame_mod_4096	= word ptr -2
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	ax, word_23AF6
-		and	ax, 0FFFh
-		mov	[bp+var_2], ax
-		cmp	[bp+var_2], 400h
+		mov	ax, _round_or_result_frame
+		and	ax, 4095
+		mov	[bp+@@frame_mod_4096], ax
+		cmp	[bp+@@frame_mod_4096], 1024
 		jl	short loc_D45D
-		cmp	[bp+var_2], 500h
+		cmp	[bp+@@frame_mod_4096], 1280
 		jge	short loc_D41E
-		test	byte ptr [bp+var_2], 7
+		test	byte ptr [bp+@@frame_mod_4096], 7
 		jnz	short loc_D461
 		jmp	short loc_D44D
 ; ---------------------------------------------------------------------------
 
 loc_D41E:
-		cmp	[bp+var_2], 800h
+		cmp	[bp+@@frame_mod_4096], 2048
 		jl	short loc_D45D
-		cmp	[bp+var_2], 900h
+		cmp	[bp+@@frame_mod_4096], 2304
 		jge	short loc_D434
-		test	byte ptr [bp+var_2], 3
+		test	byte ptr [bp+@@frame_mod_4096], 3
 		jnz	short loc_D461
 		jmp	short loc_D453
 ; ---------------------------------------------------------------------------
 
 loc_D434:
-		cmp	[bp+var_2], 0C00h
+		cmp	[bp+@@frame_mod_4096], 3072
 		jl	short loc_D45D
-		cmp	[bp+var_2], 0FE0h
+		cmp	[bp+@@frame_mod_4096], 4064
 		jge	short loc_D45D
-		mov	ax, [bp+var_2]
-		and	ax, 7Fh
-		cmp	ax, 40h
+		mov	ax, [bp+@@frame_mod_4096]
+		and	ax, 127
+		cmp	ax, 64
 		jge	short loc_D453
 
 loc_D44D:
@@ -6386,7 +6386,7 @@ loc_D4D3:
 		xor	dx, dx
 		cmp	si, 28h	; '('
 		jb	short loc_D4E6
-		mov	dx, [bp+var_2]
+		mov	dx, [bp+@@frame_mod_4096]
 		; Hack (and dx, 1Fh)
 		db 081h
 		db 0e2h
@@ -7133,7 +7133,7 @@ loc_DB3C:
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		push	ax
-		mov	ax, word_23AF6
+		mov	ax, _round_or_result_frame
 		xor	dx, dx
 		pop	bx
 		div	bx
@@ -7661,7 +7661,7 @@ loc_DFAB:
 		sar	ax, 5
 		add	ax, -15
 		mov	[bp+@@y], ax
-		mov	ax, word_23AF6
+		mov	ax, _round_or_result_frame
 		shr	ax, 2
 		and	ax, 3
 		add	ax, di
@@ -7978,7 +7978,7 @@ loc_E339:
 		cmp	ax, 40h
 		jl	short loc_E332
 		mov	_round_frame, 0
-		mov	word_23AF6, 0
+		mov	_round_or_result_frame, 0
 		mov	byte_23AF9, 1
 		mov	byte_23B00, 0
 		pop	di
@@ -8096,7 +8096,7 @@ var_6		= dword	ptr -6
 		add	si, 28h	; '('
 
 loc_E411:
-		mov	ax, word_23AF6
+		mov	ax, _round_or_result_frame
 		and	ax, 7
 		cmp	ax, 1
 		jnz	loc_E602
@@ -8130,7 +8130,7 @@ loc_E4A2:
 		shl	ax, 7
 		add	ax, offset _players
 		mov	di, ax
-		cmp	word_23AF6, 1
+		cmp	_round_or_result_frame, 1
 		jnz	loc_E5AC
 		mov	al, [di+player_t.combo_hits_max]
 		mov	_win_combo_hits_max, al
@@ -9450,7 +9450,7 @@ var_2		= word ptr -2
 loc_FA0A:
 		cmp	byte_1F353, 1
 		jnz	short loc_FA6D
-		mov	ax, word_23AF6
+		mov	ax, _round_or_result_frame
 		and	ax, 3
 		cmp	ax, 2
 		jnb	short loc_FA49
@@ -14579,7 +14579,7 @@ loc_12859:
 
 loc_12860:
 		mov	byte_23E50, 1	; default
-		test	byte ptr word_23AF6, 3
+		test	byte ptr _round_or_result_frame, 3
 		jnz	short loc_12871
 		mov	ax, 1
 		jmp	short loc_12873
@@ -16456,7 +16456,7 @@ var_6		= word ptr -6
 		mov	_sprite16_put_h, 24
 		cmp	word_1F3B0, 40h
 		jnb	short loc_138E4
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jnz	loc_13987
 
 loc_138E4:
@@ -18714,7 +18714,7 @@ arg_4		= word ptr  8
 		mov	di, [bp+arg_4]
 		mov	si, [bp+arg_0]
 		mov	ax, si
-		add	ax, word_23AF6
+		add	ax, _round_or_result_frame
 		mov	si, ax
 		and	si, 3
 		mov	ax, si
@@ -18753,7 +18753,7 @@ reimu_14CE3	proc far
 		push	si
 		cmp	byte_205CC, 0
 		jz	short loc_14CF7
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jnz	loc_14D7E
 
 loc_14CF7:
@@ -20295,7 +20295,7 @@ loc_159DD:
 		mov	bx, ax
 		cmp	_bomb_state[bx], BOMB_INACTIVE
 		jz	short loc_159F8
-		test	byte ptr word_23AF6, 1
+		test	byte ptr _round_or_result_frame, 1
 		jnz	short loc_159F8
 		inc	[bp+var_5]
 
@@ -20758,7 +20758,7 @@ loc_15E27:
 
 loc_15E29:
 		push	ax
-		mov	ax, word_23AF6
+		mov	ax, _round_or_result_frame
 		and	ax, 3
 		cmp	ax, 2
 		jnb	short loc_15E3A
@@ -24705,9 +24705,9 @@ loc_17E45:
 		push	dx	; pid
 		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@x], ax
-		mov	ax, word_23AF6
-		and	ax, 1FFh
-		cmp	ax, 100h
+		mov	ax, _round_or_result_frame
+		and	ax, 511
+		cmp	ax, 256
 		jnb	short loc_17E6F
 		push	1200h
 		call	@randring2_next16_mod$qui
@@ -35650,9 +35650,9 @@ _pid_PID_current  	label byte
 _pid_PID_so_attack	label byte
 _pid	db ?
 	evendata
-public _round_frame
+public _round_frame, _round_or_result_frame
 _round_frame	dd ?
-word_23AF6	dw ?
+_round_or_result_frame	dw ?
 byte_23AF8	db ?
 byte_23AF9	db ?
 byte_23AFA	db ?
