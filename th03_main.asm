@@ -2594,20 +2594,20 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		mov	di, [bp+arg_4]
-		inc	byte_1FDE0
-		cmp	byte_1FDE0, 0Ch
+		inc	_hitcircles_enemy_last_id
+		cmp	_hitcircles_enemy_last_id, HITCIRCLE_ENEMY_COUNT
 		jb	short loc_B752
-		mov	byte_1FDE0, 0
+		mov	_hitcircles_enemy_last_id, 0
 
 loc_B752:
-		mov	al, byte_1FDE0
+		mov	al, _hitcircles_enemy_last_id
 		mov	ah, 0
-		imul	ax, 6
-		add	ax, 2832h
+		imul	ax, size hitcircle_t
+		add	ax, offset _hitcircles
 		mov	si, ax
-		mov	byte ptr [si], 1
+		mov	[si+hitcircle_t.HITCIRCLE_age], 1
 		mov	al, byte ptr [bp+@@pid]
-		mov	[si+1],	al
+		mov	[si+hitcircle_t.HITCIRCLE_pid], al
 		cmp	byte_1FDE1, 0
 		jnz	short loc_B792
 		mov	ax, _hitbox_radius.x
@@ -2628,11 +2628,11 @@ loc_B792:
 		push	[bp+@@pid] ; pid
 		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -24
-		mov	[si+2],	ax
+		mov	[si+hitcircle_t.HITCIRCLE_topleft.x], ax
 		mov	ax, [bp+arg_2]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[si+4],	ax
+		add	ax, -8
+		mov	[si+hitcircle_t.HITCIRCLE_topleft.y], ax
 		pop	di
 		pop	si
 		pop	bp
@@ -2653,19 +2653,19 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 287Ah
-		mov	byte ptr [si], 1
+		mov	si, offset (_hitcircles + (HITCIRCLE_ENEMY_COUNT * size hitcircle_t))
+		mov	[si+hitcircle_t.HITCIRCLE_age], 1
 		mov	al, byte ptr [bp+@@pid]
-		mov	[si+1],	al
+		mov	[si+hitcircle_t.HITCIRCLE_pid],	al
 		push	[bp+@@x]	; x
 		push	[bp+@@pid]	; pid
 		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -24
-		mov	[si+2],	ax
+		mov	[si+hitcircle_t.HITCIRCLE_topleft.x], ax
 		mov	ax, [bp+arg_2]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[si+4],	ax
+		add	ax, -8
+		mov	[si+hitcircle_t.HITCIRCLE_topleft.y], ax
 		pop	si
 		pop	bp
 		retf	6
@@ -2680,25 +2680,25 @@ sub_B7E5	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 2832h
+		mov	si, offset _hitcircles
 		xor	ax, ax
 		jmp	short loc_B803
 ; ---------------------------------------------------------------------------
 
 loc_B7F0:
-		cmp	byte ptr [si], 0
+		cmp	[si+hitcircle_t.HITCIRCLE_age], 0
 		jz	short loc_B7FF
-		inc	byte ptr [si]
-		cmp	byte ptr [si], 10h
+		inc	[si+hitcircle_t.HITCIRCLE_age]
+		cmp	[si+hitcircle_t.HITCIRCLE_age], HITCIRCLE_FRAMES
 		jbe	short loc_B7FF
-		mov	byte ptr [si], 0
+		mov	[si+hitcircle_t.HITCIRCLE_age], 0
 
 loc_B7FF:
 		inc	ax
-		add	si, 6
+		add	si, size hitcircle_t
 
 loc_B803:
-		cmp	ax, 0Dh
+		cmp	ax, HITCIRCLE_COUNT
 		jl	short loc_B7F0
 		pop	si
 		pop	bp
@@ -2717,7 +2717,7 @@ sub_B80B	proc near
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, 2832h
+		mov	si, offset _hitcircles
 		mov	dx, 1
 		mov	ah, SPRITE16_SET_MONO
 		int	SPRITE16
@@ -2737,9 +2737,9 @@ sub_B80B	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B839:
-		cmp	byte ptr [si], 0
+		cmp	[si+hitcircle_t.HITCIRCLE_age], 0
 		jz	short loc_B88B
-		cmp	byte ptr [si+1], 0
+		cmp	[si+hitcircle_t.HITCIRCLE_pid], 0
 		jnz	short loc_B852
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
@@ -2751,7 +2751,7 @@ loc_B852:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_B85E:
-		mov	al, [si]
+		mov	al, [si+hitcircle_t.HITCIRCLE_age]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -2766,21 +2766,21 @@ loc_B85E:
 		add	ax, bx
 		add	ax, 1910h
 		mov	[bp+@@sprite_offset], ax
-		call	sprite16_put pascal, word ptr [si+2], word ptr [si+4], ax
+		call	sprite16_put pascal, [si+HITCIRCLE_topleft.x], [si+HITCIRCLE_topleft.y], ax
 
 loc_B88B:
 		inc	di
-		add	si, 6
+		add	si, size hitcircle_t
 
 loc_B88F:
-		cmp	di, 0Ch
+		cmp	di, HITCIRCLE_ENEMY_COUNT
 		jl	short loc_B839
 		mov	dx, V_WHITE
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
-		cmp	byte ptr [si], 0
+		cmp	[si+hitcircle_t.HITCIRCLE_age], 0
 		jz	short loc_B8ED
-		cmp	byte ptr [si+1], 0
+		cmp	[si+hitcircle_t.HITCIRCLE_pid], 0
 		jnz	short loc_B8B4
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
@@ -2792,7 +2792,7 @@ loc_B8B4:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_B8C0:
-		mov	al, [si]
+		mov	al, [si+hitcircle_t.HITCIRCLE_age]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -2807,7 +2807,7 @@ loc_B8C0:
 		add	ax, bx
 		add	ax, 1910h
 		mov	[bp+@@sprite_offset], ax
-		call	sprite16_put pascal, word ptr [si+2], word ptr [si+4], ax
+		call	sprite16_put pascal, [si+HITCIRCLE_topleft.x], [si+HITCIRCLE_topleft.y], ax
 
 loc_B8ED:
 		xor	dx, dx
@@ -35476,8 +35476,22 @@ angle_1FBD4	db ?
 word_1FD8C	dw ?
 byte_1FD8E	db ?
 byte_1FD8F	db ?
-		db 80 dup(?)
-byte_1FDE0	db ?
+		db 2 dup(?)
+
+hitcircle_t struct
+	HITCIRCLE_age    	db ?
+	HITCIRCLE_pid    	db ?
+	HITCIRCLE_topleft	Point <?>
+hitcircle_t ends
+
+HITCIRCLE_FRAMES = 16
+HITCIRCLE_ENEMY_COUNT = 12
+HITCIRCLE_PLAYER_COUNT = 1
+HITCIRCLE_COUNT = (HITCIRCLE_ENEMY_COUNT + HITCIRCLE_PLAYER_COUNT)
+
+public _hitcircles, _hitcircles_enemy_last_id
+_hitcircles	hitcircle_t HITCIRCLE_COUNT dup (<?>)
+_hitcircles_enemy_last_id	db ?
 byte_1FDE1	db ?
 		db 8 dup(?)
 byte_1FDEA	db ?
