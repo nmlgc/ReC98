@@ -2610,17 +2610,17 @@ loc_B752:
 		mov	[si+1],	al
 		cmp	byte_1FDE1, 0
 		jnz	short loc_B792
-		mov	ax, word_20E32
+		mov	ax, _hitbox_radius.x
 		add	ax, ax
 		push	ax
 		call	@randring_far_next16_mod$qui
-		add	ax, word_20E2E
+		add	ax, _hitbox_origin_topleft.x
 		mov	di, ax
-		mov	ax, word_20E34
+		mov	ax, _hitbox_radius.y
 		add	ax, ax
 		push	ax
 		call	@randring_far_next16_mod$qui
-		add	ax, word_20E30
+		add	ax, _hitbox_origin_topleft.y
 		mov	[bp+arg_2], ax
 
 loc_B792:
@@ -9357,14 +9357,14 @@ loc_F8F5:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -10090,14 +10090,14 @@ loc_FFA2:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -10995,14 +10995,14 @@ loc_1081A:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -11949,14 +11949,14 @@ loc_110FB:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -12695,14 +12695,14 @@ loc_11763:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 180h
-		mov	word_20E34, 180h
+		mov	_hitbox_radius.x, (24 shl 4)
+		mov	_hitbox_radius.y, (24 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -13583,14 +13583,14 @@ loc_11F34:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -14620,14 +14620,14 @@ loc_128AD:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -15545,14 +15545,14 @@ loc_130C0:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -16288,14 +16288,14 @@ loc_13717:
 		mov	_collmap_pid, al
 		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
-		mov	word_20E32, 200h
-		mov	word_20E34, 200h
+		mov	_hitbox_radius.x, (32 shl 4)
+		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, word_1F33E
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_1F34E, al
 		mov	ah, 0
@@ -17743,25 +17743,25 @@ loc_144AF:
 		add	bx, bx
 		add	bx, word_1FE4E
 		mov	ax, [bx+2]
-		cmp	ax, word_20E2E
+		cmp	ax, _hitbox_origin_topleft.x
 		jl	short loc_14503
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
-		cmp	ax, word_20E36
+		cmp	ax, _hitbox_right
 		jg	short loc_14503
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
 		mov	ax, [bx+1Ah]
-		cmp	ax, word_20E30
+		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_14503
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
 		push	word ptr [bx+2]
-		mov	ax, word_20E30
-		add	ax, word_20E34
+		mov	ax, _hitbox_origin_topleft.y
+		add	ax, _hitbox_radius.y
 		push	ax
 		mov	al, pid_20E3A
 		mov	ah, 0
@@ -18771,28 +18771,28 @@ loc_14D0A:
 		cmp	byte ptr [bx], 0
 		jz	short loc_14D73
 		mov	bx, word_205CA
-		cmp	word ptr [bx+2], 0FF00h
+		cmp	word ptr [bx+2], (-16 shl 4)
 		jle	short loc_14D73
-		cmp	word ptr [bx+2], 1200h
+		cmp	word ptr [bx+2], (PLAYFIELD_W shl 4)
 		jge	short loc_14D73
-		cmp	word ptr [bx+10h], 0FF00h
+		cmp	word ptr [bx+10h], (-16 shl 4)
 		jle	short loc_14D73
 		mov	bx, word_205CA
 		mov	ax, [bx+2]
-		sub	ax, word_20E36
-		cmp	ax, 140h
+		sub	ax, _hitbox_right
+		cmp	ax, (20 shl 4)
 		jg	short loc_14D73
-		mov	ax, word_20E2E
+		mov	ax, _hitbox_origin_topleft.x
 		sub	ax, [bx+2]
-		cmp	ax, 140h
+		cmp	ax, (20 shl 4)
 		jg	short loc_14D73
 		mov	ax, [bx+10h]
-		sub	ax, word_20E38
-		cmp	ax, 140h
+		sub	ax, _hitbox_bottom
+		cmp	ax, (20 shl 4)
 		jg	short loc_14D73
-		mov	ax, word_20E30
+		mov	ax, _hitbox_origin_topleft.y
 		sub	ax, [bx+10h]
-		cmp	ax, 140h
+		cmp	ax, (20 shl 4)
 		jg	short loc_14D73
 		push	word ptr [bx+2]
 		push	word ptr [bx+10h]
@@ -19796,17 +19796,17 @@ loc_155C5:
 		jz	short loc_1560B
 		mov	bx, word_20E22
 		mov	ax, [bx+2]
-		add	ax, 0FF00h
-		cmp	ax, word_20E36
+		add	ax, (-16 shl 4)
+		cmp	ax, _hitbox_right
 		jg	short loc_1560B
 		mov	ax, [bx+2]
-		add	ax, 100h
-		cmp	ax, word_20E2E
+		add	ax, (16 shl 4)
+		cmp	ax, _hitbox_origin_topleft.x
 		jl	short loc_1560B
 		mov	ax, [bx+4]
-		cmp	ax, word_20E30
+		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_1560B
-		cmp	ax, word_20E38
+		cmp	ax, _hitbox_bottom
 		jg	short loc_1560B
 		push	word ptr [bx+2]
 		push	ax
@@ -20201,7 +20201,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_5], 0
-		cmp	word_20E30, 0
+		cmp	_hitbox_origin_center.y, 0
 		jl	short loc_1590F
 		cmp	byte_20E3C, 2
 		jnz	short loc_15914
@@ -20214,18 +20214,18 @@ loc_1590F:
 loc_15914:
 		mov	byte_26356, 0
 		mov	si, offset _shotpairs
-		mov	ax, word_20E2E
-		add	ax, word_20E32
-		mov	word_20E36, ax
-		mov	ax, word_20E30
-		add	ax, word_20E34
-		mov	word_20E38, ax
-		mov	ax, word_20E2E
-		sub	ax, word_20E32
-		mov	word_20E2E, ax
-		mov	ax, word_20E30
-		sub	ax, word_20E34
-		mov	word_20E30, ax
+		mov	ax, _hitbox_origin_center.x
+		add	ax, _hitbox_radius.x
+		mov	_hitbox_right, ax
+		mov	ax, _hitbox_origin_center.y
+		add	ax, _hitbox_radius.y
+		mov	_hitbox_bottom, ax
+		mov	ax, _hitbox_origin_center.x
+		sub	ax, _hitbox_radius.x
+		mov	_hitbox_origin_topleft.x, ax
+		mov	ax, _hitbox_origin_center.y
+		sub	ax, _hitbox_radius.y
+		mov	_hitbox_origin_topleft.y, ax
 		mov	byte_1FDE1, 1
 		mov	[bp+var_2], 0
 		jmp	short loc_159B2
@@ -20244,15 +20244,15 @@ loc_15950:
 		add	ax, (8 shl 4)
 		mov	[bp+var_4], ax
 		lea	ax, [di-(16 shl 4)]
-		cmp	ax, word_20E36
+		cmp	ax, _hitbox_right
 		jg	short loc_159AC
 		lea	ax, [di+(16 shl 4)]
-		cmp	ax, word_20E2E
+		cmp	ax, _hitbox_origin_topleft.x
 		jl	short loc_159AC
 		mov	ax, [bp+var_4]
-		cmp	ax, word_20E30
+		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_159AC
-		cmp	ax, word_20E38
+		cmp	ax, _hitbox_bottom
 		jg	short loc_159AC
 		mov	[si+shotpair_t.SP_alive], 0
 		mov	al, [bp+var_5]
@@ -21152,7 +21152,7 @@ sub_1615D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_16184:
-		mov	si, 0A0h
+		mov	si, (10 shl 4)
 
 loc_16187:
 		mov	bx, word_2203C
@@ -21207,14 +21207,14 @@ loc_16187:
 loc_16212:
 		mov	bx, word_2203C
 		mov	ax, [bx+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [bx+4]
-		mov	word_20E30, ax
-		mov	word_20E32, si
-		mov	word_20E34, si
+		mov	_hitbox_origin_center.y, ax
+		mov	_hitbox_radius.x, si
+		mov	_hitbox_radius.y, si
 		mov	al, [bx+8]
 		mov	pid_20E3A, al
-		cmp	word_20E30, 0
+		cmp	_hitbox_origin_center.y, 0
 		jl	loc_164AA
 		nopcall	sub_158F5
 		or	al, al
@@ -21843,20 +21843,20 @@ loc_16769:
 		mov	ax, [si+4]
 		sub	ax, [bp+var_8]
 		mov	[bp+var_6], ax
-		mov	ax, word_20E36
+		mov	ax, _hitbox_right
 		cmp	ax, [bp+var_4]
 		jl	loc_1696E
-		mov	ax, word_20E38
+		mov	ax, _hitbox_bottom
 		cmp	ax, [bp+var_6]
 		jl	loc_1696E
 		shl	[bp+var_8], 1
 		mov	ax, [bp+var_8]
 		add	[bp+var_4], ax
 		add	[bp+var_6], ax
-		mov	ax, word_20E2E
+		mov	ax, _hitbox_origin_topleft.x
 		cmp	ax, [bp+var_4]
 		jg	loc_1696E
-		mov	ax, word_20E30
+		mov	ax, _hitbox_origin_topleft.y
 		cmp	ax, [bp+var_6]
 		jg	loc_1696E
 		mov	al, [si+1Ch]
@@ -22290,20 +22290,20 @@ yumemi_16B0C	proc far
 		cmp	byte ptr [si], 1
 		jnz	short loc_16B69
 		mov	ax, [si+2]
-		add	ax, 0FF80h
-		cmp	ax, word_20E36
+		add	ax, (-8 shl 4)
+		cmp	ax, _hitbox_right
 		jg	short loc_16BB0
 		mov	ax, [si+2]
-		add	ax, 80h
-		cmp	ax, word_20E2E
+		add	ax, (8 shl 4)
+		cmp	ax, _hitbox_origin_topleft.x
 		jl	short loc_16BB0
 		mov	ax, [si+4]
-		add	ax, 0FF80h
-		cmp	ax, word_20E38
+		add	ax, (-8 shl 4)
+		cmp	ax, _hitbox_bottom
 		jg	short loc_16BB0
 		mov	ax, [si+4]
-		add	ax, 80h
-		cmp	ax, word_20E30
+		add	ax, (8 shl 4)
+		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_16BB0
 		mov	byte ptr [si], 2
 		mov	byte ptr [si+1], 0
@@ -22313,23 +22313,23 @@ yumemi_16B0C	proc far
 
 loc_16B69:
 		mov	ax, [si+2]
-		add	ax, 0FC80h
-		cmp	ax, word_20E36
+		add	ax, (-56 shl 4)
+		cmp	ax, _hitbox_right
 		jg	short loc_16BB0
 		mov	ax, [si+2]
-		add	ax, 380h
-		cmp	ax, word_20E2E
+		add	ax, (56 shl 4)
+		cmp	ax, _hitbox_origin_topleft.x
 		jl	short loc_16BB0
 		mov	ax, [si+4]
-		add	ax, 0FC80h
-		cmp	ax, word_20E38
+		add	ax, (-56 shl 4)
+		cmp	ax, _hitbox_bottom
 		jg	short loc_16BB0
 		mov	ax, [si+4]
-		add	ax, 380h
-		cmp	ax, word_20E30
+		add	ax, (56 shl 4)
+		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_16BB0
-		push	word_20E2E
-		push	word_20E30
+		push	_hitbox_origin_topleft.x
+		push	_hitbox_origin_topleft.y
 		mov	al, pid_20E3A
 		mov	ah, 0
 		push	ax
@@ -24367,14 +24367,14 @@ loc_17B52:
 		cmp	byte ptr [si], 1
 		jnz	short loc_17BA9
 		mov	dx, [si+2]
-		sub	dx, 60h
-		sub	ax, 60h
-		mov	word_20E2E, dx
-		mov	word_20E30, ax
-		add	dx, 0C0h
-		add	ax, 0C0h
-		mov	word_20E36, dx
-		mov	word_20E38, ax
+		sub	dx, (6 shl 4)
+		sub	ax, (6 shl 4)
+		mov	_hitbox_origin_topleft.x, dx
+		mov	_hitbox_origin_topleft.y, ax
+		add	dx, (12 shl 4)
+		add	ax, (12 shl 4)
+		mov	_hitbox_right, dx
+		mov	_hitbox_bottom, ax
 		mov	bl, [si+10h]
 		mov	pid_20E3A, bl
 		call	sub_1670D
@@ -25150,8 +25150,8 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	word_20E32, 0C0h
-		mov	word_20E34, 0A0h
+		mov	_hitbox_radius.x, (12 shl 4)
+		mov	_hitbox_radius.y, (10 shl 4)
 		mov	word_2203C, 4AA6h
 		mov	byte_1E14C, 1
 		mov	si, 3Fh	; '?'
@@ -25168,10 +25168,10 @@ loc_181E5:
 		mov	al, [bx+8]
 		mov	[bp+@@pid], al
 		mov	ax, [bx+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [bx+4]
-		add	ax, 30h	; '0'
-		mov	word_20E30, ax
+		add	ax, (3 shl 4)
+		mov	_hitbox_origin_center.y, ax
 		mov	al, [bp+@@pid]
 		mov	pid_20E3A, al
 		nopcall	sub_158F5
@@ -27571,14 +27571,14 @@ loc_19732:
 
 loc_19740:
 		mov	byte_20E2C, 1
-		mov	word_20E32, 100h
-		mov	word_20E34, 100h
+		mov	_hitbox_radius.x, (16 shl 4)
+		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, [di+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [di+10h]
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_20E2C, 0
 		mov	ax, [di+2]
@@ -28910,14 +28910,14 @@ loc_1A0DA:
 		mov	ax, [si+14h]
 		add	[si+4],	ax
 		mov	byte_20E2C, 1
-		mov	word_20E32, 100h
-		mov	word_20E34, 100h
+		mov	_hitbox_radius.x, (16 shl 4)
+		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
 		mov	ax, [si+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_20E2C, 0
 		mov	ax, [si+2]
@@ -29514,8 +29514,8 @@ reimu_1A4E0	proc far
 		push	si
 		push	di
 		mov	byte_20E2C, 1
-		mov	word_20E32, 100h
-		mov	word_20E34, 100h
+		mov	_hitbox_radius.x, (16 shl 4)
+		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, 1
 		sub	al, _pid_current
 		mov	pid_20E3A, al
@@ -29569,9 +29569,9 @@ loc_1A55F:
 loc_1A56B:
 		inc	word ptr [si+8]
 		mov	ax, [si+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		push	word ptr [si+2]
 		push	word ptr [si+4]
@@ -29844,7 +29844,7 @@ mima_1A745	proc far
 
 @@pid_other		= byte ptr -7
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@center_y		= word ptr -4
 var_2		= word ptr -2
 
 		enter	8, 0
@@ -29875,10 +29875,10 @@ loc_1A778:
 		mov	di, ax
 		mov	ax, [si+4]
 		add	ax, [si+8]
-		mov	[bp+var_4], ax
+		mov	[bp+@@center_y], ax
 		or	di, di
 		jle	short loc_1A7A1
-		cmp	di, 1200h
+		cmp	di, (PLAYFIELD_W shl 4)
 		jl	short loc_1A7B4
 
 loc_1A7A1:
@@ -29892,9 +29892,9 @@ loc_1A7A1:
 ; ---------------------------------------------------------------------------
 
 loc_1A7B4:
-		cmp	[bp+var_4], 0
+		cmp	[bp+@@center_y], 0
 		jle	short loc_1A7C1
-		cmp	[bp+var_4], 1700h
+		cmp	[bp+@@center_y], (PLAYFIELD_H shl 4)
 		jl	short loc_1A7E8
 
 loc_1A7C1:
@@ -29920,7 +29920,7 @@ loc_1A7E2:
 
 loc_1A7E8:
 		mov	[si+2],	di
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@center_y]
 		mov	[si+4],	ax
 
 loc_1A7F1:
@@ -29960,13 +29960,13 @@ loc_1A81C:
 
 loc_1A83A:
 		mov	byte_20E2C, 1
-		mov	word_20E32, 100h
-		mov	word_20E34, 100h
+		mov	_hitbox_radius.x, (16 shl 4)
+		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
 		mov	pid_20E3A, al
-		mov	word_20E2E, di
-		mov	ax, [bp+var_4]
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.x, di
+		mov	ax, [bp+@@center_y]
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		or	al, al
 		jz	short loc_1A868
@@ -29975,7 +29975,7 @@ loc_1A83A:
 loc_1A868:
 		mov	byte_20E2C, 0
 		mov	_collmap_center.x, di
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@center_y]
 		mov	_collmap_center.y, ax
 		call	_collmap_set_rect_striped
 		jmp	short loc_1A8BE
@@ -30761,21 +30761,21 @@ loc_1AE9D:
 		mov	pid_20E3A, al
 		mov	ax, [si+14h]
 		shl	ax, 3
-		mov	word_20E32, ax
-		mov	word_20E34, 40h
+		mov	_hitbox_radius.x, ax
+		mov	_hitbox_radius.y, (4 shl 4)
 		mov	ax, [si+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
-		mov	word_20E32, 40h
+		mov	_hitbox_radius.x, (4 shl 4)
 		mov	ax, [si+14h]
 		shl	ax, 3
-		mov	word_20E34, ax
+		mov	_hitbox_radius.y, ax
 		mov	ax, [si+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		mov	byte_20E2C, 0
 		mov	ax, [si+14h]
@@ -31108,8 +31108,8 @@ var_6		= byte ptr -6
 		mov	_playfield_clip_negative_radius.x, (-32 shl 4)
 		mov	_playfield_clip_negative_radius.y, (-32 shl 4)
 		mov	byte_20E2C, 1
-		mov	word_20E32, 100h
-		mov	word_20E34, 100h
+		mov	_hitbox_radius.x, (16 shl 4)
+		mov	_hitbox_radius.y, (16 shl 4)
 		mov	pid_20E3A, al
 		xor	di, di
 		jmp	loc_1B221
@@ -31177,9 +31177,9 @@ loc_1B1CC:
 
 loc_1B1E0:
 		mov	ax, [si+2]
-		mov	word_20E2E, ax
+		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
-		mov	word_20E30, ax
+		mov	_hitbox_origin_center.y, ax
 		call	sub_158F5
 		push	word ptr [si+2]
 		push	word ptr [si+4]
@@ -31497,20 +31497,20 @@ loc_1B3CB:
 		cmp	byte ptr [si], 1
 		jnz	short loc_1B417
 		mov	ax, [si+2]
-		sub	ax, word_20E36
-		cmp	ax, 0E0h
+		sub	ax, _hitbox_right
+		cmp	ax, (14 shl 4)
 		jg	short loc_1B417
-		mov	ax, word_20E2E
+		mov	ax, _hitbox_origin_topleft.x
 		sub	ax, [si+2]
-		cmp	ax, 0E0h
+		cmp	ax, (14 shl 4)
 		jg	short loc_1B417
 		mov	ax, [si+4]
-		sub	ax, word_20E38
-		cmp	ax, 200h
+		sub	ax, _hitbox_bottom
+		cmp	ax, (32 shl 4)
 		jg	short loc_1B417
-		mov	ax, word_20E30
+		mov	ax, _hitbox_origin_topleft.y
 		sub	ax, [si+4]
-		cmp	ax, 0FF00h
+		cmp	ax, (-16 shl 4)
 		jg	short loc_1B417
 		push	word ptr [si+2]
 		push	word ptr [si+4]
@@ -32181,14 +32181,14 @@ loc_1B91F:
 		jnz	short loc_1B968
 		mov	bx, word_1F868
 		mov	ax, [bx+4]
-		cmp	ax, word_20E2E
+		cmp	ax, _hitbox_origin_topleft.x
 		jl	short loc_1B968
-		cmp	ax, word_20E36
+		cmp	ax, _hitbox_right
 		jg	short loc_1B968
 		mov	ax, [bx+6]
-		cmp	ax, word_20E30
+		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_1B968
-		cmp	ax, word_20E38
+		cmp	ax, _hitbox_bottom
 		jg	short loc_1B968
 		push	word ptr [bx+4]
 		push	ax
@@ -32858,26 +32858,26 @@ loc_1BE81:
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+di]
-		sub	ax, word_20E36
-		cmp	ax, 0C0h
+		sub	ax, _hitbox_right
+		cmp	ax, (12 shl 4)
 		jg	short loc_1BED9
 		mov	bx, si
 		add	bx, bx
-		mov	ax, word_20E2E
+		mov	ax, _hitbox_origin_topleft.x
 		sub	ax, [bx+di]
-		cmp	ax, 0C0h
+		cmp	ax, (12 shl 4)
 		jg	short loc_1BED9
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+di+1Ah]
-		sub	ax, word_20E38
-		cmp	ax, 0C0h
+		sub	ax, _hitbox_bottom
+		cmp	ax, (12 shl 4)
 		jg	short loc_1BED9
 		mov	bx, si
 		add	bx, bx
-		mov	ax, word_20E30
+		mov	ax, _hitbox_origin_topleft.y
 		sub	ax, [bx+di+1Ah]
-		cmp	ax, 0C0h
+		cmp	ax, (12 shl 4)
 		jg	short loc_1BED9
 		mov	bx, si
 		add	bx, bx
@@ -33353,21 +33353,21 @@ kotohime_1C22E	proc far
 		jz	short loc_1C291
 		mov	bx, word_1FE6A
 		mov	ax, [bx+2]
-		sub	ax, word_20E36
-		cmp	ax, 280h
+		sub	ax, _hitbox_right
+		cmp	ax, (40 shl 4)
 		jg	short loc_1C291
-		mov	ax, word_20E2E
+		mov	ax, _hitbox_origin_topleft.x
 		sub	ax, [bx+2]
-		cmp	ax, 280h
+		cmp	ax, (40 shl 4)
 		jg	short loc_1C291
 		mov	ax, [bx+4]
-		cmp	ax, word_20E30
+		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_1C291
-		cmp	ax, word_20E38
+		cmp	ax, _hitbox_bottom
 		jg	short loc_1C291
 		mov	byte_26356, 1
-		mov	ax, word_20E2E
-		add	ax, word_20E32
+		mov	ax, _hitbox_origin_topleft.x
+		add	ax, _hitbox_radius.x
 		push	ax
 		push	word ptr [bx+4]
 		mov	al, pid_20E3A
@@ -33944,20 +33944,20 @@ loc_1C683:
 
 loc_1C699:
 		mov	ax, [si]
-		sub	ax, word_20E36
-		cmp	ax, 0C0h
+		sub	ax, _hitbox_right
+		cmp	ax, (12 shl 4)
 		jg	short loc_1C6D8
-		mov	ax, word_20E2E
+		mov	ax, _hitbox_origin_topleft.x
 		sub	ax, [si]
-		cmp	ax, 0C0h
+		cmp	ax, (12 shl 4)
 		jg	short loc_1C6D8
 		mov	ax, [si+2]
-		sub	ax, word_20E38
-		cmp	ax, 0C0h
+		sub	ax, _hitbox_bottom
+		cmp	ax, (12 shl 4)
 		jg	short loc_1C6D8
-		mov	ax, word_20E30
+		mov	ax, _hitbox_origin_topleft.y
 		sub	ax, [si+2]
-		cmp	ax, 0C0h
+		cmp	ax, (12 shl 4)
 		jg	short loc_1C6D8
 		push	word ptr [si]
 		push	word ptr [si+2]
@@ -35549,12 +35549,14 @@ byte_20E2A	db ?
 angle_20E2B	db ?
 byte_20E2C	db ?
 		db ?
-word_20E2E	dw ?
-word_20E30	dw ?
-word_20E32	dw ?
-word_20E34	dw ?
-word_20E36	dw ?
-word_20E38	dw ?
+public _hitbox
+_hitbox label byte
+_hitbox_origin_center label Point
+_hitbox_origin_topleft label Point
+	Point <?>
+_hitbox_radius	Point <?>
+_hitbox_right 	dw ?
+_hitbox_bottom	dw ?
 pid_20E3A	db ?
 	evendata
 byte_20E3C	db ?
