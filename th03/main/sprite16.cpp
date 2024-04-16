@@ -34,7 +34,7 @@ void pascal sprite16_sprites_commit(void)
 #define put_w_words (_AL)
 #define should_draw_column (_SI)
 
-#define SETUP_VARS(left, top, so) \
+#define SETUP_VARS(left, top, so) { \
 	sprite_offset_local = so; \
 	putpos_left = left; \
 	put_w_words = sprite16_put_size.w.v; \
@@ -42,8 +42,9 @@ void pascal sprite16_sprites_commit(void)
 	static_cast<char>(putpos_right) = put_w_words; \
 	putpos_right <<= 4; \
 	putpos_right += putpos_left; \
-	clip_left = sprite16_clip_left; \
-	clip_right = sprite16_clip_right;
+	clip_left = sprite16_clip.left; \
+	clip_right = sprite16_clip.right; \
+}
 
 #define CALL_PUT(left, top, put_w_words, so) \
 	_AH = SPRITE16_PUT; \

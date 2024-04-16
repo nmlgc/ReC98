@@ -13,8 +13,36 @@ extern struct {
 		h = (h_ / 2);
 	}
 } sprite16_put_size;
-extern screen_x_t sprite16_clip_left;
-extern screen_x_t sprite16_clip_right;
+extern struct {
+	screen_x_t left;
+	screen_x_t right;
+
+	#ifdef PLAYFIELD1_CLIP_LEFT
+		void reset(void) {
+			left  = PLAYFIELD1_CLIP_LEFT;
+			right = PLAYFIELD2_CLIP_RIGHT;
+		}
+
+		// Additional variants for static constants
+		void set_for_pid_0(void) {
+			left  = PLAYFIELD1_CLIP_LEFT;
+			right = PLAYFIELD1_CLIP_RIGHT;
+		}
+
+		void set_for_pid_1(void) {
+			left  = PLAYFIELD2_CLIP_LEFT;
+			right = PLAYFIELD2_CLIP_RIGHT;
+		}
+	#endif
+} sprite16_clip;
+
+#define sprite16_clip_set_for_pid(pid) { \
+	if(pid == 0) { \
+		sprite16_clip.set_for_pid_0(); \
+	} else { \
+		sprite16_clip.set_for_pid_1(); \
+	} \
+}
 
 enum sprite16_put_func_t {
 	SPF_NORMAL = 0,

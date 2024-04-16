@@ -29,8 +29,7 @@ void pascal near shots_render(void)
 	shotpair_t near *shotpair = shotpairs;
 
 	sprite16_put_size.set(SHOT_W, SHOT_H);
-	sprite16_clip_left = 0;
-	sprite16_clip_right = RES_X - 1;
+	sprite16_clip.reset();
 
 	for(int i = 0; i < SHOTPAIR_COUNT; i++, shotpair++) {
 		if(shotpair->alive) {
