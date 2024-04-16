@@ -28,8 +28,7 @@ void pascal near shots_render(void)
 {
 	shotpair_t near *shotpair = shotpairs;
 
-	sprite16_put_w = SHOT_W;
-	sprite16_put_h = SHOT_H;
+	sprite16_put_size.set(SHOT_W, SHOT_H);
 	sprite16_clip_left = 0;
 	sprite16_clip_right = RES_X - 1;
 

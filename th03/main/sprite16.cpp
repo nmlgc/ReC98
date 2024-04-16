@@ -37,7 +37,7 @@ void pascal sprite16_sprites_commit(void)
 #define SETUP_VARS(left, top, so) \
 	sprite_offset_local = so; \
 	putpos_left = left; \
-	put_w_words = sprite16_put_w.v; \
+	put_w_words = sprite16_put_size.w.v; \
 	putpos_right_high ^= putpos_right_high; \
 	static_cast<char>(putpos_right) = put_w_words; \
 	putpos_right <<= 4; \
@@ -51,7 +51,7 @@ void pascal sprite16_sprites_commit(void)
 	_BX = top; \
 	static_cast<int>(_BX) >>= 1; \
 	_AL = put_w_words; \
-	_CX = sprite16_put_h; \
+	_CX = sprite16_put_size.h; \
 	_DI = so; \
 	geninterrupt(SPRITE16); \
 
@@ -114,7 +114,7 @@ put:
 			_BX = top;
 			static_cast<int>(_BX) >>= 1;
 			_AL = put_w_words;
-			_CX = sprite16_put_h;
+			_CX = sprite16_put_size.h;
 			_DI = sprite_offset_local;
 			while(1) {
 				should_draw_column = func;
@@ -157,7 +157,7 @@ void pascal sprite16_put_noclip(
 	putpos_right <<= 4;
 	putpos_right += putpos_left;
 
-	CALL_PUT(putpos_left, top, sprite16_put_w.v, sprite_offset_local);
+	CALL_PUT(putpos_left, top, sprite16_put_size.w.v, sprite_offset_local);
 }
 
 }

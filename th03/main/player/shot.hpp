@@ -2,10 +2,10 @@
 #define SHOT_SO_PID (320 / 8)
 
 #define SHOT_SPRITE_COUNT 4
-#define SHOT_W 16
-#define SHOT_H 8
-#define SHOT_VRAM_W (SHOT_W / BYTE_DOTS)
-#define SHOT_VRAM_H (SHOT_H / 2)
+
+static const pixel_t SHOT_W = 16;
+static const pixel_t SHOT_H = 16;
+static const vram_byte_amount_t SHOT_VRAM_W = (SHOT_W / BYTE_DOTS);
 
 enum shot_mode_t {
 	SM_NONE = 0,

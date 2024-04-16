@@ -4,8 +4,15 @@
 // SPRITE16_OFFSET.
 typedef uvram_byte_amount_t sprite16_offset_t;
 
-extern pixel_t sprite16_put_h;
-extern VRAMWord sprite16_put_w;
+extern struct {
+	vram_h_t h;
+	VRAMWord w;
+
+	void set(pixel_t w_, pixel_t h_) {
+		w = w_;
+		h = (h_ / 2);
+	}
+} sprite16_put_size;
 extern screen_x_t sprite16_clip_left;
 extern screen_x_t sprite16_clip_right;
 
