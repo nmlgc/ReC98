@@ -1,6 +1,6 @@
 // SPRITE16 sprite area contents for MAIN.EXE.
 
-#include "th03/sprite16.hpp"
+#include "th03/main/sprite16.hpp"
 
 #define XY(x, y) ((y * ROW_SIZE) + (x / BYTE_DOTS))
 
