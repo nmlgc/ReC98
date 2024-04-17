@@ -28,7 +28,7 @@ include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
 
-main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
+main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
 
 ; ===========================================================================
@@ -1348,7 +1348,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
-PLAYER_M_TEXT	segment	word public 'CODE' use16
+HITCIRC_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2578,67 +2578,10 @@ loc_B724:
 		retn
 sub_B60A	endp
 
+	extern @HITCIRCLES_ENEMY_ADD$QIII:proc
+HITCIRC_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B73A	proc far
-
-@@pid		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		inc	_hitcircles_enemy_last_id
-		cmp	_hitcircles_enemy_last_id, HITCIRCLE_ENEMY_COUNT
-		jb	short loc_B752
-		mov	_hitcircles_enemy_last_id, 0
-
-loc_B752:
-		mov	al, _hitcircles_enemy_last_id
-		mov	ah, 0
-		imul	ax, size hitcircle_t
-		add	ax, offset _hitcircles
-		mov	si, ax
-		mov	[si+hitcircle_t.HITCIRCLE_age], 1
-		mov	al, byte ptr [bp+@@pid]
-		mov	[si+hitcircle_t.HITCIRCLE_pid], al
-		cmp	byte_1FDE1, 0
-		jnz	short loc_B792
-		mov	ax, _hitbox_radius.x
-		add	ax, ax
-		push	ax
-		call	@randring_far_next16_mod$qui
-		add	ax, _hitbox_origin_topleft.x
-		mov	di, ax
-		mov	ax, _hitbox_radius.y
-		add	ax, ax
-		push	ax
-		call	@randring_far_next16_mod$qui
-		add	ax, _hitbox_origin_topleft.y
-		mov	[bp+arg_2], ax
-
-loc_B792:
-		push	di	; x
-		push	[bp+@@pid] ; pid
-		nopcall	@playfield_fg_x_to_screen$qii
-		add	ax, -24
-		mov	[si+hitcircle_t.HITCIRCLE_topleft.x], ax
-		mov	ax, [bp+arg_2]
-		sar	ax, 4
-		add	ax, -8
-		mov	[si+hitcircle_t.HITCIRCLE_topleft.y], ax
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_B73A	endp
-
+PLAYER_M_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17759,14 +17702,14 @@ loc_144AF:
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; center_x
 		mov	ax, _hitbox_origin_topleft.y
 		add	ax, _hitbox_radius.y
-		push	ax
+		push	ax	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		mov	[bp+var_1], 1
 		jmp	short loc_1450B
 ; ---------------------------------------------------------------------------
@@ -18794,12 +18737,12 @@ loc_14D0A:
 		sub	ax, [bx+10h]
 		cmp	ax, (20 shl 4)
 		jg	short loc_14D73
-		push	word ptr [bx+2]
-		push	word ptr [bx+10h]
+		push	word ptr [bx+2]	; center_x
+		push	word ptr [bx+10h]	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		mov	al, 1
 		jmp	short loc_14D80
 ; ---------------------------------------------------------------------------
@@ -19808,12 +19751,12 @@ loc_155C5:
 		jl	short loc_1560B
 		cmp	ax, _hitbox_bottom
 		jg	short loc_1560B
-		push	word ptr [bx+2]
-		push	ax
+		push	word ptr [bx+2]	; center_x
+		push	ax	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		inc	[bp+var_1]
 
 loc_1560B:
@@ -20192,7 +20135,7 @@ mima_158DD	endp
 sub_158F5	proc far
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
+@@center_y	= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -20226,7 +20169,7 @@ loc_15914:
 		mov	ax, _hitbox_origin_center.y
 		sub	ax, _hitbox_radius.y
 		mov	_hitbox_origin_topleft.y, ax
-		mov	byte_1FDE1, 1
+		mov	_hitcircles_enemy_add_do_not_rand, 1
 		mov	[bp+var_2], 0
 		jmp	short loc_159B2
 ; ---------------------------------------------------------------------------
@@ -20242,14 +20185,14 @@ loc_15950:
 		mov	di, ax
 		mov	ax, [si+shotpair_t.topleft.y]
 		add	ax, (8 shl 4)
-		mov	[bp+var_4], ax
+		mov	[bp+@@center_y], ax
 		lea	ax, [di-(16 shl 4)]
 		cmp	ax, _hitbox_right
 		jg	short loc_159AC
 		lea	ax, [di+(16 shl 4)]
 		cmp	ax, _hitbox_origin_topleft.x
 		jl	short loc_159AC
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@center_y]
 		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_159AC
 		cmp	ax, _hitbox_bottom
@@ -20258,12 +20201,12 @@ loc_15950:
 		mov	al, [bp+var_5]
 		add	al, 2
 		mov	[bp+var_5], al
-		push	di
-		push	[bp+var_4]
+		push	di	; center_x
+		push	[bp+@@center_y]	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 
 loc_159AC:
 		inc	[bp+var_2]
@@ -20272,7 +20215,7 @@ loc_159AC:
 loc_159B2:
 		cmp	[bp+var_2], SHOTPAIR_COUNT
 		jl	short loc_15950
-		mov	byte_1FDE1, 0
+		mov	_hitcircles_enemy_add_do_not_rand, 0
 		cmp	byte_20E2C, 0
 		jnz	short loc_159CC
 		nopcall	sub_1670D
@@ -22328,12 +22271,12 @@ loc_16B69:
 		add	ax, (56 shl 4)
 		cmp	ax, _hitbox_origin_topleft.y
 		jl	short loc_16BB0
-		push	_hitbox_origin_topleft.x
-		push	_hitbox_origin_topleft.y
+		push	_hitbox_origin_topleft.x	; center_x
+		push	_hitbox_origin_topleft.y	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		mov	al, 1
 		jmp	short loc_16BB2
 ; ---------------------------------------------------------------------------
@@ -31512,12 +31455,12 @@ loc_1B3CB:
 		sub	ax, [si+4]
 		cmp	ax, (-16 shl 4)
 		jg	short loc_1B417
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	word ptr [si+2]	; center_x
+		push	word ptr [si+4]	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		inc	[bp+var_1]
 
 loc_1B417:
@@ -32190,12 +32133,12 @@ loc_1B91F:
 		jl	short loc_1B968
 		cmp	ax, _hitbox_bottom
 		jg	short loc_1B968
-		push	word ptr [bx+4]
-		push	ax
+		push	word ptr [bx+4]	; center_x
+		push	ax	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		mov	bx, word_1F868
 		mov	byte ptr [bx], 0
 		mov	al, [bp+var_1]
@@ -32881,14 +32824,14 @@ loc_1BE81:
 		jg	short loc_1BED9
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+di]
+		push	word ptr [bx+di]	; center_x
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+di+1Ah]
+		push	word ptr [bx+di+1Ah]	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		mov	al, 1
 		jmp	short loc_1BEEF
 ; ---------------------------------------------------------------------------
@@ -33368,12 +33311,12 @@ kotohime_1C22E	proc far
 		mov	byte_26356, 1
 		mov	ax, _hitbox_origin_topleft.x
 		add	ax, _hitbox_radius.x
-		push	ax
-		push	word ptr [bx+4]
+		push	ax	; center_x
+		push	word ptr [bx+4]	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		mov	al, 3
 		pop	bp
 		retf
@@ -33959,12 +33902,12 @@ loc_1C699:
 		sub	ax, [si+2]
 		cmp	ax, (12 shl 4)
 		jg	short loc_1C6D8
-		push	word ptr [si]
-		push	word ptr [si+2]
+		push	word ptr [si]	; center_x
+		push	word ptr [si+2]	; center_y
 		mov	al, pid_20E3A
 		mov	ah, 0
-		push	ax
-		call	sub_B73A
+		push	ax	; pid
+		call	@hitcircles_enemy_add$qiii
 		inc	[bp+var_2]
 
 loc_1C6D8:
@@ -35490,9 +35433,10 @@ HITCIRCLE_PLAYER_COUNT = 1
 HITCIRCLE_COUNT = (HITCIRCLE_ENEMY_COUNT + HITCIRCLE_PLAYER_COUNT)
 
 public _hitcircles, _hitcircles_enemy_last_id
+public _hitcircles_enemy_add_do_not_rand
 _hitcircles	hitcircle_t HITCIRCLE_COUNT dup (<?>)
 _hitcircles_enemy_last_id	db ?
-byte_1FDE1	db ?
+_hitcircles_enemy_add_do_not_rand	db ?
 		db 8 dup(?)
 byte_1FDEA	db ?
 		db 49 dup(?)
