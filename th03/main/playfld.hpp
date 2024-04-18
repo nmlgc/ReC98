@@ -1,4 +1,5 @@
 #include "th01/math/subpixel.hpp"
+#include "th03/common.h"
 
 #define PLAYFIELD_COUNT 2
 #define PLAYFIELD_W 288
@@ -30,6 +31,7 @@ typedef SPPoint PlayfieldPoint;
 extern screen_x_t playfield_fg_shift_x[PLAYFIELD_COUNT];
 
 screen_x_t pascal playfield_fg_x_to_screen(Subpixel x, unsigned int pid);
+playfield_subpixel_t pascal screen_x_to_playfield(screen_x_t x, pid2 pid);
 
 // Negative size of the sprite to be clipped, divided by 2.
 extern PlayfieldPoint playfield_clip_negative_radius;

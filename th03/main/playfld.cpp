@@ -2,6 +2,19 @@
 #include "pc98.h"
 #include "th03/main/playfld.hpp"
 
+playfield_subpixel_t pascal screen_x_to_playfield(screen_x_t x, pid2 pid)
+{
+	_BX = _SP; // ZUN bloat: Has no effect.
+
+	// ZUN bloat: Abuses the assertion.
+	screen_x_t playfield_left = pid;
+	static_assert(PLAYFIELD1_CLIP_LEFT == 0);
+	if(static_cast<int8_t>(playfield_left)) { // ZUN bloat: Needless 8-bit cast
+		playfield_left = PLAYFIELD_W_BORDERED;
+	}
+	return TO_SP(((x - playfield_left) - PLAYFIELD_BORDER));
+}
+
 bool pascal playfield_clip(
 	PlayfieldSubpixel center_x, PlayfieldSubpixel center_y
 )

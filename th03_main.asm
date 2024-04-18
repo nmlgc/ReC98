@@ -1340,33 +1340,7 @@ loc_A2C6:
 sub_A289	endp
 
 include th03/main/playfield_fg_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A2F2	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	bx, sp
-		mov	dx, [bp+arg_0]
-		or	dl, dl
-		jz	short loc_A301
-		mov	dx, 140h
-
-loc_A301:
-		mov	ax, [bp+arg_2]
-		sub	ax, dx
-		add	ax, 0FFF0h
-		shl	ax, 4
-		pop	bp
-		retf	4
-sub_A2F2	endp
-
+	extern @SCREEN_X_TO_PLAYFIELD$QII:proc
 	extern @PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1:proc
 PLAYFLD_TEXT	ends
 
@@ -24223,11 +24197,11 @@ loc_1787E:
 		push	ax
 		push	[bp+@@length]
 		call	vector2_between_plus
-		push	[bp+var_6]
+		push	[bp+var_6]	; x
 		mov	al, _pid_other
 		mov	ah, 0
-		push	ax
-		call	sub_A2F2
+		push	ax	; pid
+		call	@screen_x_to_playfield$qii
 		mov	[si+8],	ax
 		mov	al, angle_23E43
 		mov	[si+0Fh], al
@@ -24849,7 +24823,7 @@ var_4		= word ptr -4
 		mov	si, 4656h
 		mov	al, 1
 		sub	al, [bx+8]
-		mov	[bp+var_7], al
+		mov	[bp+@@pid], al
 		mov	[bp+var_4], 0
 		jmp	loc_17EEB
 ; ---------------------------------------------------------------------------
@@ -24905,7 +24879,7 @@ loc_17E40:
 loc_17E45:
 		mov	[si+20h], al
 		push	di
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
@@ -24924,7 +24898,7 @@ loc_17E45:
 loc_17E6F:
 		push	1FFh
 		call	@randring2_next16_and$qui
-		mov	dl, [bp+var_7]
+		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 7
 		mov	bx, dx
@@ -24934,7 +24908,7 @@ loc_17E83:
 		mov	di, ax
 		mov	[si+14h], di
 		push	di
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		push	ax
 		call	playfield_fg_x_to_screen
@@ -24965,13 +24939,13 @@ loc_17E83:
 		mov	ah, 0
 		push	ax
 		call	vector2_between_plus
-		push	di
-		mov	al, [bp+var_7]
+		push	di	; x
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	sub_A2F2
+		push	dx	; pid
+		call	@screen_x_to_playfield$qii
 		mov	[si+16h], ax
 		jmp	short loc_17EF3
 ; ---------------------------------------------------------------------------
@@ -29297,7 +29271,7 @@ sub_1A1A7	endp
 sub_1A1ED	proc near
 
 arg_0		= word ptr  4
-arg_2		= byte ptr  6
+@@pid		= byte ptr  6
 @@y2		= word ptr  8
 arg_6		= word ptr  0Ah
 @@y1		= word ptr  0Ch
@@ -29315,7 +29289,7 @@ arg_6		= word ptr  0Ah
 		mov	[si+2],	ax
 		mov	ax, [bp+@@y1]
 		mov	[si+4],	ax
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@pid]
 		mov	[si+10h], al
 		push	[bp+@@x]
 		mov	ah, 0
@@ -29324,7 +29298,7 @@ arg_6		= word ptr  0Ah
 		mov	[bp+@@x], ax
 		mov	[si+0Ah], di
 		push	di
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
@@ -29354,11 +29328,11 @@ arg_6		= word ptr  0Ah
 		add	ax, [bp+arg_0]
 		push	ax
 		call	vector2_between_plus
-		push	di
-		mov	al, [bp+arg_2]
+		push	di	; x
+		mov	al, [bp+@@pid]
 		mov	ah, 0
-		push	ax
-		call	sub_A2F2
+		push	ax	; pid
+		call	@screen_x_to_playfield$qii
 		mov	[si+0Ch], ax
 		pop	di
 		pop	si
