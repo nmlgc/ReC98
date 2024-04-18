@@ -28,7 +28,7 @@ include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
 
-main_01 group main_0_TEXT, CFG_LRES_TEXT, main_010_TEXT, main_011_TEXT
+main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, main_010_TEXT, main_011_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
 
 ; ===========================================================================
@@ -133,7 +133,7 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_0_TEXT	segment	word public 'CODE' use16
+PLAYFLD_TEXT segment word public 'CODE' use16
 		assume cs:main_01
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -1367,47 +1367,8 @@ loc_A301:
 		retf	4
 sub_A2F2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A310	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	cx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bx, word_1F2EC
-		cmp	cx, bx
-		jle	short loc_A33F
-		neg	bx
-		add	bx, 1200h
-		cmp	cx, bx
-		jge	short loc_A33F
-		mov	bx, word_1F2EE
-		cmp	dx, bx
-		jle	short loc_A33F
-		neg	bx
-		add	bx, 1700h
-		cmp	dx, bx
-		jl	short loc_A341
-
-loc_A33F:
-		mov	al, 1
-
-loc_A341:
-		pop	bp
-		retf	4
-sub_A310	endp
-
-; ---------------------------------------------------------------------------
-		nop
-main_0_TEXT	ends
+	extern @PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1:proc
+PLAYFLD_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
 	@cfg_load_resident_ptr$qv procdesc near
@@ -18832,8 +18793,8 @@ chargeshot_update_reimu	proc far
 		imul	ax, 180h
 		add	ax, 2D6Ah
 		mov	word_205CA, ax
-		mov	word_1F2EC, 0FE80h
-		mov	word_1F2EE, 0FE80h
+		mov	_playfield_clip_negative_radius.x, (-24 shl 4)
+		mov	_playfield_clip_negative_radius.y, (-24 shl 4)
 		xor	di, di
 		jmp	loc_14C81
 ; ---------------------------------------------------------------------------
@@ -18922,9 +18883,7 @@ loc_14C56:
 loc_14C5E:
 		mov	bx, word_205CA
 		inc	byte ptr [bx+1]
-		push	word ptr [bx+0Eh]
-		push	word ptr [bx+1Ch]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [bx+0Eh], word ptr [bx+1Ch]
 		or	al, al
 		jz	short loc_14C7B
 		mov	bx, word_205CA
@@ -19927,8 +19886,8 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		cmp	byte ptr [bx+38C4h], 0
 		jz	loc_15594
-		mov	word_1F2EC, 0FF00h
-		mov	word_1F2EE, 0FF00h
+		mov	_playfield_clip_negative_radius.x, (-16 shl 4)
+		mov	_playfield_clip_negative_radius.y, (-16 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, 96h
@@ -19957,9 +19916,7 @@ loc_15514:
 		add	[bx+2],	ax
 		mov	ax, [bx+8]
 		add	[bx+4],	ax
-		push	word ptr [bx+2]
-		push	word ptr [bx+4]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [bx+2], word ptr [bx+4]
 		or	al, al
 		jz	short loc_15554
 		mov	bx, word_20E22
@@ -25874,8 +25831,8 @@ loc_1860D:
 		mov	ah, 0
 		mov	bx, ax
 		inc	_bomb_frame[bx]
-		mov	word_1F2EC, 0FE00h
-		mov	word_1F2EE, 0FE00h
+		mov	_playfield_clip_negative_radius.x, (-32 shl 4)
+		mov	_playfield_clip_negative_radius.y, (-32 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 6
@@ -25897,9 +25854,7 @@ loc_18636:
 		add	[bx], ax
 		mov	ax, [bx+6]
 		add	[bx+2],	ax
-		push	word ptr [bx]
-		push	word ptr [bx+2]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [bx], word ptr [bx+2]
 		or	al, al
 		jz	short loc_18692
 
@@ -27723,8 +27678,8 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	word_1F2EC, 0FE80h
-		mov	word_1F2EE, 0FE80h
+		mov	_playfield_clip_negative_radius.x, (-24 shl 4)
+		mov	_playfield_clip_negative_radius.y, (-24 shl 4)
 		mov	_collmap_stripe_tile_w, (12 / COLLMAP_TILE_W)
 		mov	_collmap_tile_h, (12 / COLLMAP_TILE_H)
 		mov	_collmap_pid, al
@@ -27803,14 +27758,10 @@ loc_1969B:
 ; ---------------------------------------------------------------------------
 
 loc_1970C:
-		push	word ptr [di+2]
-		push	word ptr [di+10h]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [di+2], word ptr [di+10h]
 		or	al, al
 		jz	short loc_19732
-		push	word ptr [di+0Eh]
-		push	word ptr [di+1Ch]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [di+0Eh], word ptr [di+1Ch]
 		or	al, al
 		jz	short loc_19732
 		mov	bx, [di]
@@ -28184,8 +28135,8 @@ kana_19999	proc far
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	word_1F2EC, 0FE80h
-		mov	word_1F2EE, 0FE80h
+		mov	_playfield_clip_negative_radius.x, (-24 shl 4)
+		mov	_playfield_clip_negative_radius.y, (-24 shl 4)
 		xor	di, di
 		jmp	loc_19A82
 ; ---------------------------------------------------------------------------
@@ -28237,9 +28188,7 @@ loc_199C6:
 		call	sub_17730
 
 loc_19A49:
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [si+2], word ptr [si+4]
 		or	al, al
 		jz	short loc_19A7B
 		mov	byte ptr [si], 0
@@ -31363,8 +31312,8 @@ var_6		= byte ptr -6
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	word_1F2EC, 0FE00h
-		mov	word_1F2EE, 0FE00h
+		mov	_playfield_clip_negative_radius.x, (-32 shl 4)
+		mov	_playfield_clip_negative_radius.y, (-32 shl 4)
 		mov	byte_20E2C, 1
 		mov	word_20E32, 100h
 		mov	word_20E34, 100h
@@ -31426,9 +31375,7 @@ loc_1B146:
 		add	[si+12h], al
 
 loc_1B1CC:
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [si+2], word ptr [si+4]
 		or	al, al
 		jz	short loc_1B1E0
 		mov	byte ptr [si], 0
@@ -32262,8 +32209,8 @@ loc_1B752:
 		mov	bx, ax
 		mov	ax, _players[bx].center.y
 		mov	[bp+var_8], ax
-		mov	word_1F2EC, 0FF80h
-		mov	word_1F2EE, 0FF80h
+		mov	_playfield_clip_negative_radius.x, (-8 shl 4)
+		mov	_playfield_clip_negative_radius.y, (-8 shl 4)
 		xor	si, si
 		jmp	loc_1B89C
 ; ---------------------------------------------------------------------------
@@ -32328,9 +32275,7 @@ loc_1B7BC:
 
 loc_1B855:
 		mov	bx, word_1F868
-		push	word ptr [bx+4]
-		push	word ptr [bx+6]
-		call	sub_A310
+		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [bx+4], word ptr [bx+6]
 		or	al, al
 		jz	short loc_1B896
 		mov	bx, word_1F868
@@ -35656,8 +35601,8 @@ MRS_SLOT_COUNT = 8
 public _mrs_images
 _mrs_images	dd MRS_SLOT_COUNT dup(?)
 include th03/sprite16[bss].asm
-word_1F2EC	dw ?
-word_1F2EE	dw ?
+public _playfield_clip_negative_radius
+_playfield_clip_negative_radius	Point <?>
 public _resident
 _resident	dd ?
 palette_1F2F4	palette_t <?>
