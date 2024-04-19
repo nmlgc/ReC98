@@ -1339,7 +1339,7 @@ loc_A2C6:
 		retn	2
 sub_A289	endp
 
-include th03/main/playfield_fg_x.asm
+	extern @PLAYFIELD_FG_X_TO_SCREEN$QII:proc
 	extern @SCREEN_X_TO_PLAYFIELD$QII:proc
 	extern @PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1:proc
 PLAYFLD_TEXT	ends
@@ -2624,9 +2624,9 @@ loc_B752:
 		mov	[bp+arg_2], ax
 
 loc_B792:
-		push	di
-		push	[bp+@@pid]
-		nopcall	playfield_fg_x_to_screen
+		push	di	; x
+		push	[bp+@@pid] ; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -24
 		mov	[si+2],	ax
 		mov	ax, [bp+arg_2]
@@ -2657,9 +2657,9 @@ arg_2		= word ptr  8
 		mov	byte ptr [si], 1
 		mov	al, byte ptr [bp+@@pid]
 		mov	[si+1],	al
-		push	[bp+@@x]
-		push	[bp+@@pid]
-		nopcall	playfield_fg_x_to_screen
+		push	[bp+@@x]	; x
+		push	[bp+@@pid]	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -24
 		mov	[si+2],	ax
 		mov	ax, [bp+arg_2]
@@ -3804,11 +3804,11 @@ arg_0		= word ptr  4
 		mov	si, [bp+arg_0]
 		cmp	byte ptr [si+1Fh], 30h ; '0'
 		jnz	short loc_C127
-		push	word ptr [si]
+		push	word ptr [si]	; x
 		mov	al, _pid_PID_current
 		mov	ah, 0
-		push	ax
-		nopcall	playfield_fg_x_to_screen
+		push	ax	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -24
 		mov	word_20E3E, ax
 		mov	ax, [si+2]
@@ -5510,9 +5510,9 @@ loc_CDD1:
 		mov	si, ax
 		mov	byte ptr [si], 1
 		mov	byte ptr [si+1], 0
-		push	[bp+@@x]
-		push	[bp+@@pid]
-		nopcall	playfield_fg_x_to_screen
+		push	[bp+@@x]	; x
+		push	[bp+@@pid]	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		mov	[si+2],	ax
 		mov	ax, [bp+arg_2]
 		sar	ax, 4
@@ -5552,9 +5552,9 @@ loc_CE20:
 		mov	si, ax
 		mov	byte ptr [si], 1
 		mov	byte ptr [si+1], 0
-		push	[bp+@@x]
-		push	[bp+@@pid]
-		nopcall	playfield_fg_x_to_screen
+		push	[bp+@@x]	; x
+		push	[bp+@@pid]	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		mov	[si+2],	ax
 		mov	ax, [bp+arg_2]
 		sar	ax, 4
@@ -5594,9 +5594,9 @@ loc_CE6F:
 		mov	si, ax
 		mov	byte ptr [si], 2
 		mov	byte ptr [si+1], 0
-		push	[bp+@@x]
-		push	[bp+@@pid]
-		nopcall	playfield_fg_x_to_screen
+		push	[bp+@@x]	; x
+		push	[bp+@@pid]	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		mov	[si+2],	ax
 		mov	ax, [bp+arg_2]
 		sar	ax, 4
@@ -7723,11 +7723,11 @@ loc_DEB2:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 32
-		push	[si+player_t.center.x]
+		push	[si+player_t.center.x]	; x
 		mov	al, _pid_PID_current
 		mov	ah, 0
-		push	ax
-		nopcall	playfield_fg_x_to_screen
+		push	ax	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
 		mov	ax, [si+player_t.center.y]
@@ -7774,11 +7774,11 @@ arg_0		= word ptr  4
 		jnz	loc_DFE3
 		cmp	byte ptr [si+0Fh], 0
 		jz	short loc_DF7D
-		push	word ptr [si]
+		push	word ptr [si]	; x
 		mov	al, _pid_PID_current
 		mov	ah, 0
-		push	ax
-		nopcall	playfield_fg_x_to_screen
+		push	ax	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@x], ax
 		mov	ax, [si+2]
@@ -7829,11 +7829,11 @@ loc_DFA8:
 		mov	di, 38h	; '8'
 
 loc_DFAB:
-		push	word ptr [si]
+		push	word ptr [si]	; x
 		mov	al, _pid_PID_current
 		mov	ah, 0
-		push	ax
-		nopcall	playfield_fg_x_to_screen
+		push	ax	; pid
+		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@x], ax
 		mov	ax, [si+2]
@@ -8708,24 +8708,24 @@ sub_F1FA	proc near
 @@left		= word ptr -2
 @@length		= word ptr  4
 arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@x		= word ptr  8
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_4]
+		mov	di, [bp+@@x]
 		cmp	[bp+@@length], 1
 		jnz	short loc_F210
 		call	snd_se_play pascal, 16
 
 loc_F210:
-		push	di
+		push	di	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	ax, [bp+arg_2]
 		sar	ax, 4
@@ -9602,10 +9602,10 @@ var_2		= word ptr -2
 		mov	[bp+@@pid_other], al
 		mov	_sprite16_put_w, (176 / 16)
 		mov	_sprite16_put_h, 48
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -88
 		mov	si, ax
 		mov	ax, word_1F340
@@ -9695,10 +9695,10 @@ arg_0		= word ptr  4
 		mov	[bp+@@pid_other], al
 		mov	_sprite16_put_w, (176 / 16)
 		mov	_sprite16_put_h, 48
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -88
 		mov	di, ax
 		mov	ax, word_1F340
@@ -10335,10 +10335,10 @@ sub_10053	proc near
 		mov	[bp+@@pid_other], al
 		mov	_sprite16_put_w, (144 / 16)
 		mov	_sprite16_put_h, 56
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -72
 		mov	si, ax
 		mov	ax, word_1F340
@@ -10467,10 +10467,10 @@ arg_2		= word ptr  6
 		mov	[bp+@@pid_other], al
 		mov	_sprite16_put_w, (144 / 16)
 		mov	_sprite16_put_h, 56
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -72
 		mov	[bp+var_2], ax
 		mov	ax, word_1F340
@@ -11241,10 +11241,10 @@ var_2		= word ptr -2
 		mov	[bp+@@pid_other], al
 		mov	_sprite16_put_w, (112 / 16)
 		mov	_sprite16_put_h, 56
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -56
 		mov	si, ax
 		mov	ax, word_1F340
@@ -11309,11 +11309,11 @@ loc_1098A:
 		call	grc_setclip
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
-		push	word_20E50
+		push	word_20E50	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		mov	ax, word_20E52
 		sar	ax, 5
@@ -11326,11 +11326,11 @@ loc_1098A:
 ; ---------------------------------------------------------------------------
 
 loc_109D2:
-		push	point_1F342.x
+		push	point_1F342.x	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+var_4], ax
 		mov	ax, point_1F342.y
 		sar	ax, 5
@@ -11378,21 +11378,21 @@ var_4		= byte ptr -4
 		mov	[bp+@@top], ax
 		cmp	word_1F3B0, 18h
 		jnb	short loc_10A8D
-		push	(-104 shl 4)
+		push	(-104 shl 4)	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		mov	ax, word_1F3B0
 		shl	ax, 3
 		shl	ax, 4
 		sub	ax, (104 shl 4)
-		push	ax
+		push	ax	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		jmp	short loc_10A86
 ; ---------------------------------------------------------------------------
@@ -11417,17 +11417,17 @@ loc_10A8D:
 		shl	ax, 3
 		shl	ax, 4
 		add	ax, (-104 shl 4)
-		push	ax
+		push	ax	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
-		push	(88 shl 4)
+		push	(88 shl 4)	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		jmp	short loc_10AD7
 ; ---------------------------------------------------------------------------
@@ -11448,11 +11448,11 @@ loc_10ADE:
 		mov	al, byte ptr word_1F3B0
 		sub	al, 30h	; '0'
 		mov	[bp+var_4], al
-		push	(272 shl 4)
+		push	(272 shl 4)	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		mov	al, [bp+var_4]
 		mov	ah, 0
@@ -11460,11 +11460,11 @@ loc_10ADE:
 		shl	ax, 4
 		mov	dx, (272 shl 4)
 		sub	dx, ax
-		push	dx
+		push	dx	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		jmp	short loc_10B2D
 ; ---------------------------------------------------------------------------
@@ -11476,11 +11476,11 @@ loc_10B1D:
 loc_10B2D:
 		cmp	si, di
 		jge	short loc_10B1D
-		push	(88 shl 4)
+		push	(88 shl 4)	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		call	sprite16_put pascal, ax, [bp+@@top], sprite_1F34C
 		jmp	short loc_10BA0
@@ -11495,19 +11495,19 @@ loc_10B50:
 		mov	ah, 0
 		shl	ax, 3
 		shl	ax, 4
-		mov	dx, 1100h
+		mov	dx, (272 shl 4)
 		sub	dx, ax
-		push	dx
+		push	dx	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
-		push	(88 shl 4)
+		push	(88 shl 4)	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		jmp	short loc_10B9C
 ; ---------------------------------------------------------------------------
@@ -12211,11 +12211,11 @@ loc_111DD:
 		add	si, 0Ch
 
 loc_111EB:
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -48
 		mov	[bp+@@left], ax
 		mov	ax, word_1F340
@@ -12259,11 +12259,11 @@ loc_11260:
 loc_11264:
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+686Ah]
+		push	word ptr [bx+686Ah]	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -24
 		mov	[bp+@@left], ax
 		mov	bx, di
@@ -12371,11 +12371,11 @@ loc_11330:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, [bp+arg_0], _SinTable8[bx]
 		mov	[bp+@@top], ax
-		push	di
+		push	di	; x
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -24
 		mov	di, ax
 		mov	ax, [bp+@@top]
@@ -12952,13 +12952,13 @@ arg_0		= word ptr  4
 		sub	ax, dx
 		sar	ax, 1
 		mov	_sprite16_put_h, ax
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -48
 		mov	[bp+@@left], ax
 		mov	ax, word_1F340
@@ -12993,10 +12993,10 @@ sub_11885	proc near
 		mov	[bp+@@pid_other], al
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 48
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -32
 		mov	[bp+@@left], ax
 		mov	ax, word_1F340
@@ -13124,7 +13124,7 @@ loc_11978:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, [bp+arg_4], _SinTable8[bx]
 		mov	[bp+@@top], ax
-		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
+		call	@playfield_fg_x_to_screen$qii pascal, di, [bp+@@pid_other]
 		add	ax, -16
 		mov	di, ax
 		mov	ax, [bp+@@top]
@@ -13864,13 +13864,13 @@ loc_12021:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
-		push	di
+		push	di	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	di, ax
 		mov	ax, [bp+@@top]
@@ -13902,13 +13902,13 @@ sub_120A0	proc near
 		push	si
 		mov	_sprite16_put_w, (128 / 16)
 		mov	_sprite16_put_h, 48
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -64
 		mov	[bp+@@left], ax
 		mov	ax, word_1F340
@@ -14898,7 +14898,7 @@ loc_129A0:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, [bp+var_8], _SinTable8[bx]
 		mov	[bp+@@top], ax
-		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
+		call	@playfield_fg_x_to_screen$qii pascal, di, [bp+@@pid_other]
 		add	ax, -16
 		mov	di, ax
 		mov	ax, [bp+@@top]
@@ -14935,13 +14935,13 @@ sub_12A10	proc near
 		jnz	loc_12AA5
 		mov	_sprite16_put_w, (128 / 16)
 		mov	_sprite16_put_h, 64
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -64
 		mov	di, ax
 		mov	ax, word_1F340
@@ -15091,13 +15091,13 @@ sub_12B38	proc near
 		enter	6, 0
 		mov	_sprite16_put_w, (128 / 16)
 		mov	_sprite16_put_h, 64
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -64
 		mov	[bp+@@left], ax
 		mov	ax, word_1F340
@@ -15785,13 +15785,13 @@ sub_13174	proc near
 		push	di
 		mov	_sprite16_put_w, (128 / 16)
 		mov	_sprite16_put_h, 40
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -64
 		mov	di, ax
 		mov	ax, word_1F340
@@ -15919,13 +15919,13 @@ loc_13286:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
-		push	di
+		push	di	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	di, ax
 		mov	ax, [bp+@@top]
@@ -16533,13 +16533,13 @@ var_6		= word ptr -6
 		push	di
 		mov	_sprite16_put_w, (96 / 16)
 		mov	_sprite16_put_h, 48
-		push	word_1F33E
+		push	word_1F33E	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -48
 		mov	[bp+@@left], ax
 		mov	ax, word_1F340
@@ -16672,13 +16672,13 @@ loc_13910:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
-		push	di
+		push	di	; x
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -24
 		mov	di, ax
 		mov	ax, [bp+@@top]
@@ -17999,11 +17999,11 @@ loc_1454D:
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	bx, si
 		add	bx, bx
@@ -18039,11 +18039,11 @@ loc_145B1:
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	bx, si
 		add	bx, bx
@@ -18079,11 +18079,11 @@ loc_14615:
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	bx, si
 		add	bx, bx
@@ -18111,11 +18111,11 @@ loc_1465C:
 		jg	short loc_14615
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	bx, word_1FE4E
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	bx, word_1FE4E
 		mov	ax, [bx+1Ah]
@@ -18511,11 +18511,11 @@ loc_14967:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		push	point_1FE52.x
+		push	point_1FE52.x	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	point_1FE52.x, ax
 		mov	ax, point_1FE52.y
 		sar	ax, 4
@@ -18904,11 +18904,11 @@ arg_4		= word ptr  8
 		add	ax, dx
 		add	ax, 1180h
 		mov	[bp+@@sprite_offset], ax
-		push	di
+		push	di	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -24
 		mov	di, ax
 		mov	ax, [bp+@@top]
@@ -19479,11 +19479,11 @@ loc_15196:
 		cmp	byte ptr [bx], 0
 		jz	short loc_151D3
 		mov	bx, word_207E0
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -8
 		mov	[bp+@@left], ax
 		mov	bx, word_207E0
@@ -20020,19 +20020,19 @@ sub_1561C	proc near
 
 @@sprite_offset		= word ptr  4
 arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_4]
+		mov	si, [bp+@@x]
 		mov	di, [bp+arg_2]
-		push	si
+		push	si	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	si, ax
 		mov	ax, di
@@ -21074,11 +21074,11 @@ var_5		= byte ptr -5
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_5], al
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, [bx+8]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	dl, [bp+var_5]
 		mov	dh, 0
 		sub	ax, dx
@@ -21210,11 +21210,11 @@ loc_16044:
 		mov	_sprite16_put_h, ax
 		sar	si, 1
 		mov	bx, word_2203C
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, [bx+8]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		sub	ax, si
 		mov	[bp+@@left], ax
 		mov	bx, word_2203C
@@ -22580,11 +22580,11 @@ loc_16BEC:
 		mov	bx, ax
 		call	@polar$qiii c, [bp+var_8], [bp+@@length], _SinTable8[bx]
 		mov	[bp+@@top], ax
-		push	di
+		push	di	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	ax, [bp+@@top]
 		sar	ax, 4
@@ -22653,11 +22653,11 @@ loc_16CAB:
 loc_16CC4:
 		cmp	byte ptr [di], 1
 		jnz	short loc_16CF3
-		push	word ptr [di+2]
+		push	word ptr [di+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
 		mov	ax, [di+4]
@@ -23259,11 +23259,11 @@ loc_1717D:
 		cmp	word ptr [bx+2], 0
 		jz	short loc_171B7
 		mov	bx, word_23E3A
-		push	word ptr [bx]
+		push	word ptr [bx]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@x], ax
 		push	ax
 		push	PLAYFIELD_TOP
@@ -24154,23 +24154,22 @@ loc_1787A:
 loc_1787E:
 		cmp	[bp+var_D], 3
 		jnz	loc_17914
-		push	word_23E3E
+		push	word_23E3E	; x
 		mov	al, _pid_other
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+var_8], ax
-		push	1200h
-		call	@randring2_next16_mod$qui
+		call	@randring2_next16_mod$qui pascal, (288 shl 4)
 		mov	[bp+var_6], ax
 		mov	[si+6],	ax
-		push	ax
+		push	ax	; x
 		mov	al, _pid_other
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+var_6], ax
 		mov	al, byte_23AF8
 		mov	ah, 0
@@ -24651,12 +24650,12 @@ loc_17C27:
 		mov	bx, [bp+var_C]
 		add	ax, [bx+18h]
 		mov	bx, ax
-		push	word ptr [bx]
+		push	word ptr [bx]	; x
 		mov	bx, [bp+var_C]
 		mov	al, [bx+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -8
 		mov	[bp+@@left], ax
 		mov	ax, [bp+var_A]
@@ -24678,11 +24677,11 @@ loc_17C77:
 
 loc_17C7D:
 		mov	bx, [bp+var_C]
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, [bx+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -8
 		mov	[bp+@@left], ax
 		mov	bx, [bp+var_C]
@@ -24735,11 +24734,11 @@ loc_17D0D:
 		mov	bx, [bp+var_C]
 		cmp	byte ptr [bx], 4
 		jnz	short loc_17D41
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, [bx+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
 		mov	bx, [bp+var_C]
@@ -24771,11 +24770,11 @@ loc_17D56:
 loc_17D71:
 		test	byte ptr [si], 1
 		jz	short loc_17D9C
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		xor	ah, ah
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -4
 		mov	bx, [si+4]
 		sar	bx, 5
@@ -24878,13 +24877,13 @@ loc_17E40:
 
 loc_17E45:
 		mov	[si+20h], al
-		push	di
+		push	di	; x
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@x], ax
 		mov	ax, word_23AF6
 		and	ax, 1FFh
@@ -24907,11 +24906,11 @@ loc_17E6F:
 loc_17E83:
 		mov	di, ax
 		mov	[si+14h], di
-		push	di
+		push	di	; x
 		mov	al, [bp+@@pid]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	al, byte_23AF8
 		mov	ah, 0
@@ -25020,11 +25019,11 @@ loc_17F4B:
 loc_17F5A:
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+8]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	dl, [bp+var_5]
 		mov	dh, 0
 		sub	ax, dx
@@ -25127,11 +25126,11 @@ loc_18019:
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 32
 		mov	bx, word_2203C
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, [bx+8]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -32
 		mov	[bp+@@left], ax
 		mov	bx, word_2203C
@@ -25922,11 +25921,11 @@ loc_18711:
 		cmp	word ptr [bx], 270Fh
 		jz	short loc_18758
 		mov	bx, word_1FBBE
-		push	word ptr [bx]
+		push	word ptr [bx]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -32
 		mov	[bp+@@left], ax
 		mov	bx, word_1FBBE
@@ -26697,43 +26696,43 @@ loc_18E7C:
 		push	ax	; altered_colors
 		call	@mrs_put_noalpha_8$qiuiiuc
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		mov	ax, 900h
+		mov	ax, (144 shl 4)
 		sub	ax, word_220EC
-		push	ax
+		push	ax	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		mov	ax, word_220EC
-		add	ax, 900h
-		push	ax
+		add	ax, (144 shl 4)
+		push	ax	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		mov	ax, word_220EC
 		add	ax, ax
-		mov	dx, 900h
+		mov	dx, (144 shl 4)
 		sub	dx, ax
-		push	dx
+		push	dx	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		mov	ax, word_220EC
 		add	ax, ax
-		add	ax, 900h
-		push	ax
+		add	ax, (144 shl 4)
+		push	ax	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	si, ax
 		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		add	word_220EC, 41h	; 'A'
@@ -26918,22 +26917,22 @@ var_1		= byte ptr -1
 		mov	si, word_2028A
 		mov	al, [si+1]
 		mov	[bp+var_1], al
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+var_4], ax
 		mov	ax, [si+4]
 		sar	ax, 4
 		add	ax, 10h
 		mov	[bp+var_6], ax
 		add	si, 20h	; ' '
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+var_8], ax
 		mov	ax, [si+4]
 		sar	ax, 4
@@ -27521,13 +27520,13 @@ var_4		= word ptr -4
 		push	di
 		mov	bx, word_1FB3A
 		mov	bx, [bx]
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	bx, word_1FB3A
 		mov	bx, [bx]
 		mov	al, [bx+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@x], ax
 		mov	bx, word_1FB3A
 		mov	bx, [bx]
@@ -27571,13 +27570,13 @@ loc_1959C:
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FB3A
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	bx, word_1FB3A
 		mov	bx, [bx]
 		mov	al, [bx+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@left], ax
 		mov	bx, si
 		add	bx, bx
@@ -28008,11 +28007,11 @@ var_5		= word ptr -5
 		push	si
 		push	di
 		mov	si, word_2028A
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
@@ -28365,11 +28364,11 @@ var_5		= byte ptr -5
 		push	si
 		push	di
 		mov	si, word_2028A
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
@@ -28761,11 +28760,11 @@ var_5		= word ptr -5
 		push	si
 		push	di
 		mov	si, word_2028A
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@x], ax
 		mov	ax, [si+4]
 		sar	ax, 4
@@ -29291,19 +29290,19 @@ arg_6		= word ptr  0Ah
 		mov	[si+4],	ax
 		mov	al, [bp+@@pid]
 		mov	[si+10h], al
-		push	[bp+@@x]
+		push	[bp+@@x]	; x
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@x], ax
 		mov	[si+0Ah], di
-		push	di
+		push	di	; x
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		push	dx
-		call	playfield_fg_x_to_screen
+		push	dx	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	ax, [bp+@@x]
 		shl	ax, 4
@@ -29561,11 +29560,11 @@ var_5		= byte ptr -5
 		push	si
 		push	di
 		mov	si, word_2028A
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
@@ -29931,11 +29930,11 @@ var_5		= word ptr -5
 		push	si
 		push	di
 		mov	si, word_2028A
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
@@ -30376,11 +30375,11 @@ var_2		= word ptr -2
 		mov	ax, word_2028A
 		mov	[bp+var_A], ax
 		mov	bx, [bp+var_A]
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, [bx+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
 		mov	bx, [bp+var_A]
 		mov	ax, [bx+4]
@@ -31193,11 +31192,11 @@ var_4		= word ptr -4
 		mov	si, word_2028A
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
-		push	word ptr [si+2]
+		push	word ptr [si+2]	; x
 		mov	al, [si+10h]
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+@@screen_x], ax
 		mov	ax, [si+4]
 		sar	ax, 4
@@ -31632,11 +31631,11 @@ sub_1B35F	proc near
 
 loc_1B37B:
 		mov	bx, word_1F51A
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
 		mov	bx, word_1F51A
@@ -32297,12 +32296,12 @@ sub_1B8A6	proc near
 var_3		= byte ptr -3
 @@sprite_offset		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@x		= word ptr  6
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_2]
+		mov	si, [bp+@@x]
 		mov	di, [bp+arg_0]
 		mov	al, _pid_PID_so_attack
 		mov	ah, 0
@@ -32317,11 +32316,11 @@ arg_2		= word ptr  6
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		add	[bp+@@sprite_offset], ax
-		push	si
+		push	si	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -8
 		mov	si, ax
 		mov	ax, di
@@ -32978,11 +32977,11 @@ loc_1BE0D:
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FD8C
-		push	word ptr [bx]
+		push	word ptr [bx]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
 		mov	bx, si
@@ -33499,11 +33498,11 @@ sub_1C1E9	proc near
 		add	ax, 1188h
 		mov	[bp+@@sprite_offset], ax
 		mov	bx, word_1FE6A
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -48
 		mov	[bp+@@left], ax
 		mov	bx, word_1FE6A
@@ -34075,11 +34074,11 @@ sub_1C62A	proc near
 		add	ax, 280h
 		mov	[bp+@@sprite_offset], ax
 		mov	bx, word_20E86
-		push	word ptr [bx]
+		push	word ptr [bx]	; x
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	playfield_fg_x_to_screen
+		push	ax	; pid
+		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
 		mov	bx, word_20E86
