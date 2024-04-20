@@ -2579,41 +2579,10 @@ loc_B724:
 sub_B60A	endp
 
 	extern @HITCIRCLES_ENEMY_ADD$QIII:proc
+	extern @HITCIRCLES_PLAYER_ADD$QIII:proc
 HITCIRC_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B7B3	proc far
-
-@@pid		= word ptr  6
-arg_2		= word ptr  8
-@@x		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, offset (_hitcircles + (HITCIRCLE_ENEMY_COUNT * size hitcircle_t))
-		mov	[si+hitcircle_t.HITCIRCLE_age], 1
-		mov	al, byte ptr [bp+@@pid]
-		mov	[si+hitcircle_t.HITCIRCLE_pid],	al
-		push	[bp+@@x]	; x
-		push	[bp+@@pid]	; pid
-		nopcall	@playfield_fg_x_to_screen$qii
-		add	ax, -24
-		mov	[si+hitcircle_t.HITCIRCLE_topleft.x], ax
-		mov	ax, [bp+arg_2]
-		sar	ax, 4
-		add	ax, -8
-		mov	[si+hitcircle_t.HITCIRCLE_topleft.y], ax
-		pop	si
-		pop	bp
-		retf	6
-sub_B7B3	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7366,12 +7335,12 @@ loc_DDCE:
 		jz	short loc_DE4F
 		cmp	byte ptr [si+7], 0
 		jz	short loc_DE3F
-		push	word ptr [si]
-		push	word ptr [si+2]
+		push	word ptr [si]	; center_x
+		push	word ptr [si+2]	; center_y
 		mov	al, _pid_PID_current
 		mov	ah, 0
-		push	ax
-		nopcall	sub_B7B3
+		push	ax	; pid
+		nopcall	@hitcircles_player_add$qiii
 		push	si
 		call	sub_E1D5
 		mov	dl, [si+7]

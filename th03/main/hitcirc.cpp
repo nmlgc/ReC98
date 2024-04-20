@@ -73,3 +73,12 @@ void pascal hitcircles_enemy_add(
 
 	#undef last_id
 }
+
+void pascal hitcircles_player_add(
+	subpixel_t center_x, subpixel_t center_y, pid2 pid
+)
+{
+	HitCircle near& p = hitcircles[HITCIRCLE_ENEMY_COUNT];
+	p.spawn(pid);
+	hitcircle_set_topleft(p, center_x, center_y, pid);
+}
