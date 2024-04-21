@@ -235,7 +235,7 @@ loc_977E:
 		call	p2_1FE7C
 		call	p2_1F332
 		call	p2_205D2
-		call	sub_B7E5
+		call	@hitcircles_update$qv
 		call	shots_update
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
@@ -2580,43 +2580,10 @@ sub_B60A	endp
 
 	extern @HITCIRCLES_ENEMY_ADD$QIII:proc
 	extern @HITCIRCLES_PLAYER_ADD$QIII:proc
+	@hitcircles_update$qv procdesc near
 HITCIRC_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B7E5	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, offset _hitcircles
-		xor	ax, ax
-		jmp	short loc_B803
-; ---------------------------------------------------------------------------
-
-loc_B7F0:
-		cmp	[si+hitcircle_t.HITCIRCLE_age], 0
-		jz	short loc_B7FF
-		inc	[si+hitcircle_t.HITCIRCLE_age]
-		cmp	[si+hitcircle_t.HITCIRCLE_age], HITCIRCLE_FRAMES
-		jbe	short loc_B7FF
-		mov	[si+hitcircle_t.HITCIRCLE_age], 0
-
-loc_B7FF:
-		inc	ax
-		add	si, size hitcircle_t
-
-loc_B803:
-		cmp	ax, HITCIRCLE_COUNT
-		jl	short loc_B7F0
-		pop	si
-		pop	bp
-		retn
-sub_B7E5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

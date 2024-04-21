@@ -11,3 +11,4 @@ void pascal hitcircles_enemy_add(
 void pascal hitcircles_player_add(
 	subpixel_t center_x, subpixel_t center_y, pid2 pid
 );
+void near hitcircles_update(void);

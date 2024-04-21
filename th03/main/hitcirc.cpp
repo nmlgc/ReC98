@@ -82,3 +82,21 @@ void pascal hitcircles_player_add(
 	p.spawn(pid);
 	hitcircle_set_topleft(p, center_x, center_y, pid);
 }
+
+void near hitcircles_update(void)
+{
+	HitCircle near* p = hitcircles;
+	int i = 0;
+	while(i < HITCIRCLE_COUNT) {
+		if(p->age) {
+			p->age++;
+
+			// Not off-by-one, since [age] starts at 1.
+			if(p->age > HITCIRCLE_FRAMES) {
+				p->age = 0;
+			}
+		}
+		i++;
+		p++;
+	}
+}
