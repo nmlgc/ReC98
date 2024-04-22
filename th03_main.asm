@@ -300,7 +300,7 @@ loc_986C:
 		call	shots_render
 		call	sub_164DA
 		call	sub_1837C
-		call	sub_B80B
+		call	@hitcircles_render$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	p1_1FE74
@@ -2581,123 +2581,10 @@ sub_B60A	endp
 	extern @HITCIRCLES_ENEMY_ADD$QIII:proc
 	extern @HITCIRCLES_PLAYER_ADD$QIII:proc
 	@hitcircles_update$qv procdesc near
+	@hitcircles_render$qv procdesc near
 HITCIRC_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B80B	proc near
-
-@@sprite_offset		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, offset _hitcircles
-		mov	dx, 1
-		mov	ah, SPRITE16_SET_MONO
-		int	SPRITE16
-		mov	dx, _round_or_result_frame
-		; Hack (and dx, 1)
-		db 081h
-		db 0e2h
-		db 001h
-		db 000h
-		add	dx, 11
-		mov	ah, SPRITE16_SET_COLOR
-		int	SPRITE16
-		mov	_sprite16_put_w, (48 / 16)
-		mov	_sprite16_put_h, 24
-		xor	di, di
-		jmp	short loc_B88F
-; ---------------------------------------------------------------------------
-
-loc_B839:
-		cmp	[si+hitcircle_t.HITCIRCLE_age], 0
-		jz	short loc_B88B
-		cmp	[si+hitcircle_t.HITCIRCLE_pid], 0
-		jnz	short loc_B852
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
-		jmp	short loc_B85E
-; ---------------------------------------------------------------------------
-
-loc_B852:
-		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-
-loc_B85E:
-		mov	al, [si+hitcircle_t.HITCIRCLE_age]
-		mov	ah, 0
-		dec	ax
-		mov	bx, ax
-		mov	ax, bx
-		shr	ax, 2
-		mov	bx, ax
-		mov	ax, 2
-		imul	bx
-		mov	bx, ax
-		mov	ax, bx
-		add	ax, bx
-		add	ax, bx
-		add	ax, 1910h
-		mov	[bp+@@sprite_offset], ax
-		call	sprite16_put pascal, [si+HITCIRCLE_topleft.x], [si+HITCIRCLE_topleft.y], ax
-
-loc_B88B:
-		inc	di
-		add	si, size hitcircle_t
-
-loc_B88F:
-		cmp	di, HITCIRCLE_ENEMY_COUNT
-		jl	short loc_B839
-		mov	dx, V_WHITE
-		mov	ah, SPRITE16_SET_COLOR
-		int	SPRITE16
-		cmp	[si+hitcircle_t.HITCIRCLE_age], 0
-		jz	short loc_B8ED
-		cmp	[si+hitcircle_t.HITCIRCLE_pid], 0
-		jnz	short loc_B8B4
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
-		jmp	short loc_B8C0
-; ---------------------------------------------------------------------------
-
-loc_B8B4:
-		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-
-loc_B8C0:
-		mov	al, [si+hitcircle_t.HITCIRCLE_age]
-		mov	ah, 0
-		dec	ax
-		mov	bx, ax
-		mov	ax, bx
-		shr	ax, 2
-		mov	bx, ax
-		mov	ax, 2
-		imul	bx
-		mov	bx, ax
-		mov	ax, bx
-		add	ax, bx
-		add	ax, bx
-		add	ax, 1910h
-		mov	[bp+@@sprite_offset], ax
-		call	sprite16_put pascal, [si+HITCIRCLE_topleft.x], [si+HITCIRCLE_topleft.y], ax
-
-loc_B8ED:
-		xor	dx, dx
-		mov	ah, SPRITE16_SET_MONO
-		int	SPRITE16
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B80B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
