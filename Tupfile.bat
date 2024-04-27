@@ -28,24 +28,24 @@ bin\\Pipeline\\bmp2arr.exe -q -i Research/blitperf.bmp -o Research/blitperf.csp 
 tasm32 /m /mx /kh32768 /t /ml libs\piloadc\piloadc.asm bin\piloadc.obj
 tasm32 /m /mx /kh32768 /t zuncom\zun_stub.asm bin\zuncom\zun_stub.obj
 tasm32 /m /mx /kh32768 /t zuncom\cstmstub.asm bin\zuncom\cstmstub.obj
-tasm32 /m /mx /kh32768 /t th01_op.asm bin\th01\op.obj
-tasm32 /m /mx /kh32768 /t th01_reiiden.asm bin\th01\reiiden.obj
-tasm32 /m /mx /kh32768 /t th01_fuuin.asm bin\th01\fuuin.obj
-tasm32 /m /mx /kh32768 /t th02_zuninit.asm bin\th02\zuninit.obj
-tasm32 /m /mx /kh32768 /t th02_op.asm bin\th02\op.obj
-tasm32 /m /mx /kh32768 /t th02_main.asm bin\th02\main.obj
-tasm32 /m /mx /kh32768 /t th02_maine.asm bin\th02\maine.obj
+tasm32 /m /mx /kh32768 /t /dGAME=1 th01_op.asm bin\th01\op.obj
+tasm32 /m /mx /kh32768 /t /dGAME=1 th01_reiiden.asm bin\th01\reiiden.obj
+tasm32 /m /mx /kh32768 /t /dGAME=1 th01_fuuin.asm bin\th01\fuuin.obj
+tasm32 /m /mx /kh32768 /t /dGAME=2 th02_zuninit.asm bin\th02\zuninit.obj
+tasm32 /m /mx /kh32768 /t /dGAME=2 th02_op.asm bin\th02\op.obj
+tasm32 /m /mx /kh32768 /t /dGAME=2 th02_main.asm bin\th02\main.obj
+tasm32 /m /mx /kh32768 /t /dGAME=2 th02_maine.asm bin\th02\maine.obj
 tasm32 /m /mx /kh32768 /t /DTHIEF libs\sprite16\sprite16.asm bin\th03\zunsp.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\cdg_put.asm bin\th03\cdg_put.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\cdg_p_na.asm bin\th03\cdg_p_na.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\\collmap.asm bin\th03\collmap.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\\hfliplut.asm bin\th03\hfliplut.obj
-tasm32 /m /mx /kh32768 /t th03_op.asm bin\th03\op.obj
-tasm32 /m /mx /kh32768 /t th03_op2.asm bin\th03\op2.obj
-tasm32 /m /mx /kh32768 /t th03_main.asm bin\th03\main.obj
-tasm32 /m /mx /kh32768 /t th03_mainl.asm bin\th03\mainl.obj
-tasm32 /m /mx /kh32768 /t th04_zuninit.asm bin\th04\zuninit.obj
-tasm32 /m /mx /kh32768 /t th04_memchk.asm bin\th04\memchk.obj
+tasm32 /m /mx /kh32768 /t /dGAME=3 th03_op.asm bin\th03\op.obj
+tasm32 /m /mx /kh32768 /t /dGAME=3 th03_op2.asm bin\th03\op2.obj
+tasm32 /m /mx /kh32768 /t /dGAME=3 th03_main.asm bin\th03\main.obj
+tasm32 /m /mx /kh32768 /t /dGAME=3 th03_mainl.asm bin\th03\mainl.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_zuninit.asm bin\th04\zuninit.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_memchk.asm bin\th04\memchk.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\scoreupd.asm bin\th04\scoreupd.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_put.asm bin\th04\cdg_put.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_p_nc.asm bin\th04\cdg_p_nc.obj
@@ -58,15 +58,15 @@ tasm32 /m /mx /kh32768 /t /dGAME=4 th04\motion_3.asm bin\th04\motion_3.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\spark_a.asm bin\th04\spark_a.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\vector2n.asm bin\th04\vector2n.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\grppsafx.asm bin\th04\grppsafx.obj
-tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
-tasm32 /m /mx /kh32768 /t th04_op2.asm bin\th04\op2.obj
-tasm32 /m /mx /kh32768 /t th04_op_master.asm bin\th04\opm.obj
-tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj
-tasm32 /m /mx /kh32768 /t th04_maine.asm bin\th04\maine.obj
-tasm32 /m /mx /kh32768 /t th04_maine_master.asm bin\th04\mainem.obj
-tasm32 /m /mx /kh32768 /t th05_zuninit.asm bin\th05\zuninit.obj
-tasm32 /m /mx /kh32768 /t th05_gjinit.asm bin\th05\gjinit.obj
-tasm32 /m /mx /kh32768 /t th05_memchk.asm bin\th05\memchk.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_op.asm bin\th04\op.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_op2.asm bin\th04\op2.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_op_master.asm bin\th04\opm.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_main.asm bin\th04\main.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_maine.asm bin\th04\maine.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04_maine_master.asm bin\th04\mainem.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_zuninit.asm bin\th05\zuninit.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_gjinit.asm bin\th05\gjinit.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_memchk.asm bin\th05\memchk.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th04\scoreupd.asm bin\th05\scoreupd.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\player.asm bin\th05\player.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\hud_bar.asm bin\th05\hud_bar.obj
@@ -79,10 +79,10 @@ tasm32 /m /mx /kh32768 /t /dGAME=5 th05\bgimager.asm bin\th05\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_1.asm bin\th05\pi_asm_1.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_2.asm bin\th05\pi_asm_2.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\spark_a.asm bin\th05\spark_a.obj
-tasm32 /m /mx /kh32768 /t th05_op.asm bin\th05\op.obj
-tasm32 /m /mx /kh32768 /t th05_op2.asm bin\th05\op2.obj
-tasm32 /m /mx /kh32768 /t th05_op_master.asm bin\th05\opm.obj
-tasm32 /m /mx /kh32768 /t th05_main.asm bin\th05\main.obj
-tasm32 /m /mx /kh32768 /t th05_maine.asm bin\th05\maine.obj
-tasm32 /m /mx /kh32768 /t th05_maine_master.asm bin\th05\mainem.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_op.asm bin\th05\op.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_op2.asm bin\th05\op2.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_op_master.asm bin\th05\opm.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_main.asm bin\th05\main.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_maine.asm bin\th05\maine.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05_maine_master.asm bin\th05\mainem.obj
 @echo off

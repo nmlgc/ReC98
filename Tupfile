@@ -97,34 +97,34 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : zuncom\\zun_stub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
 : zuncom\\cstmstub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
 
-: th01_op.asm |> !as |> bin\\th01\\op.obj
-: th01_reiiden.asm |> !as |> bin\\th01\\reiiden.obj
-: th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
+: th01_op.asm |> $(AS) /dGAME=1 %f %o |> bin\\th01\\op.obj
+: th01_reiiden.asm |> $(AS) /dGAME=1 %f %o |> bin\\th01\\reiiden.obj
+: th01_fuuin.asm |> $(AS) /dGAME=1 %f %o |> bin\\th01\\fuuin.obj
 
-: th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
-: th02_op.asm |> !as |> bin\\th02\\op.obj
+: th02_zuninit.asm |> $(AS) /dGAME=2 %f %o |> bin\\th02\\zuninit.obj
+: th02_op.asm |> $(AS) /dGAME=2 %f %o |> bin\\th02\\op.obj
 : th02_main.asm | \
 	th02/sprites/bombpart.asp \
 	th02/sprites/pellet.asp \
 	th02/sprites/sparks.asp \
 	th02/sprites/pointnum.asp \
-	|> !as |> bin\\th02\\main.obj
-: th02_maine.asm |> !as |> bin\\th02\\maine.obj
+	|> $(AS) /dGAME=2 %f %o |> bin\\th02\\main.obj
+: th02_maine.asm |> $(AS) /dGAME=2 %f %o |> bin\\th02\\maine.obj
 
-: libs/sprite16/sprite16.asm |> $(AS) /DTHIEF libs\sprite16\sprite16.asm %o |> bin\\th03\\zunsp.obj
+: libs/sprite16/sprite16.asm |> $(AS) /dTHIEF libs\sprite16\sprite16.asm %o |> bin\\th03\\zunsp.obj
 : th03\\cdg_put.asm |> !as3 |>
 : th03\\cdg_p_na.asm |> !as3 |>
 : th03\\hfliplut.asm |> !as3 |>
 : th03\\collmap.asm |> !as3 |>
-: th03_op.asm |> !as |> bin\\th03\\op.obj
-: th03_op2.asm |> !as |> bin\\th03\\op2.obj
+: th03_op.asm |> $(AS) /dGAME=3 %f %o |> bin\\th03\\op.obj
+: th03_op2.asm |> $(AS) /dGAME=3 %f %o |> bin\\th03\\op2.obj
 : th03_main.asm | \
 	th03/sprites/score.asp \
-	|> !as |> bin\\th03\\main.obj
-: th03_mainl.asm |> !as |> bin\\th03\\mainl.obj
+	|> $(AS) /dGAME=3 %f %o |> bin\\th03\\main.obj
+: th03_mainl.asm |> $(AS) /dGAME=3 %f %o |> bin\\th03\\mainl.obj
 
-: th04_zuninit.asm |> !as |> bin\\th04\\zuninit.obj
-: th04_memchk.asm |> !as |> bin\\th04\\memchk.obj
+: th04_zuninit.asm |> $(AS) /dGAME=4 %f %o |> bin\\th04\\zuninit.obj
+: th04_memchk.asm |> $(AS) /dGAME=4 %f %o |> bin\\th04\\memchk.obj
 : th04\\scoreupd.asm |> !as4 |>
 : th04\\cdg_put.asm |> !as4 |>
 : th04\\cdg_p_nc.asm |> !as4 |>
@@ -137,23 +137,23 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04\\spark_a.asm |> !as4 |>
 : th04\\vector2n.asm |> !as4 |>
 : th04\\grppsafx.asm |> !as4 |>
-: th04_op.asm |> !as |> bin\\th04\\op.obj
-: th04_op2.asm |> !as |> bin\\th04\\op2.obj
-: th04_op_master.asm |> !as |> bin\\th04\\opm.obj
+: th04_op.asm |> $(AS) /dGAME=4 %f %o |> bin\\th04\\op.obj
+: th04_op2.asm |> $(AS) /dGAME=4 %f %o |> bin\\th04\\op2.obj
+: th04_op_master.asm |> $(AS) /dGAME=4 %f %o |> bin\\th04\\opm.obj
 : th04_main.asm | \
 	th02/sprites/pellet.asp \
 	th04/sprites/pelletbt.asp \
 	th02/sprites/sparks.asp \
 	th04/sprites/pointnum.asp \
-	|> !as |> bin\\th04\\main.obj
-: th04_maine_master.asm |> !as |> bin\\th04\\mainem.obj
-: th04_maine.asm |> !as |> bin\\th04\\maine.obj
+	|> $(AS) /dGAME=4 %f %o |> bin\\th04\\main.obj
+: th04_maine_master.asm |> $(AS) /dGAME=4 %f %o |> bin\\th04\\mainem.obj
+: th04_maine.asm |> $(AS) /dGAME=4 %f %o |> bin\\th04\\maine.obj
 
-: th05_zuninit.asm |> !as |> bin\\th05\\zuninit.obj
+: th05_zuninit.asm |> $(AS) /dGAME=5 %f %o |> bin\\th05\\zuninit.obj
 : th05_gjinit.asm | \
 	th05/sprites/gaiji.asp \
-	|> !as |> bin\\th05\\gjinit.obj
-: th05_memchk.asm |> !as |> bin\\th05\\memchk.obj
+	|> $(AS) /dGAME=5 %f %o |> bin\\th05\\gjinit.obj
+: th05_memchk.asm |> $(AS) /dGAME=5 %f %o |> bin\\th05\\memchk.obj
 : th04\\scoreupd.asm |> $(AS) /dGAME=5 th04\%b, %o |> bin\\th05\\%B.obj
 : th05\\player.asm |> !as5 |>
 : th05\\hud_bar.asm |> !as5 |>
@@ -166,16 +166,16 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05\\pi_asm_1.asm |> !as5 |>
 : th05\\pi_asm_2.asm |> !as5 |>
 : th05\\spark_a.asm |> !as5 |>
-: th05_op.asm |> !as |> bin\\th05\\op.obj
+: th05_op.asm |> $(AS) /dGAME=5 %f %o |> bin\\th05\\op.obj
 : th05_op2.asm | \
 	th05/sprites/piano_l.asp \
-	|> !as |> bin\\th05\\op2.obj
-: th05_op_master.asm |> !as |> bin\\th05\\opm.obj
+	|> $(AS) /dGAME=5 %f %o |> bin\\th05\\op2.obj
+: th05_op_master.asm |> $(AS) /dGAME=5 %f %o |> bin\\th05\\opm.obj
 : th05_main.asm | \
 	th02/sprites/pellet.asp \
 	th04/sprites/pelletbt.asp \
 	th02/sprites/sparks.asp \
 	th04/sprites/pointnum.asp \
-	|> !as |> bin\\th05\\main.obj
-: th05_maine_master.asm |> !as |> bin\\th05\\mainem.obj
-: th05_maine.asm |> !as |> bin\\th05\\maine.obj
+	|> $(AS) /dGAME=5 %f %o |> bin\\th05\\main.obj
+: th05_maine_master.asm |> $(AS) /dGAME=5 %f %o |> bin\\th05\\mainem.obj
+: th05_maine.asm |> $(AS) /dGAME=5 %f %o |> bin\\th05\\maine.obj

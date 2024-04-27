@@ -1,4 +1,3 @@
-GAME = 2
 include th02/mem.inc
 
 include th02/hardware/input.inc

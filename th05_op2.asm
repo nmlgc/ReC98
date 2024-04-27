@@ -1,5 +1,3 @@
-GAME = 5
-
 	.386
 	.model use16 large _TEXT
 
