@@ -1,7 +1,4 @@
-/* ReC98
- * -----
- * Code segment #4 of TH02's OP.EXE
- */
+#pragma option -2 -d- // ZUN bloat
 
 #include <dos.h>
 #include <mbctype.h>

@@ -4,6 +4,8 @@
  * required in order to run TH04.
  */
 
+#pragma option -2 // ZUN bloat
+
 #include <stddef.h>
 #include "platform.h"
 #include "master.hpp"

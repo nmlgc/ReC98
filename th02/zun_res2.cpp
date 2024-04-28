@@ -1,7 +1,7 @@
 // 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT and initializes the high score
 // lists.
 
-#pragma option -O- -k-
+#pragma option -O- -k- -2
 
 #include <dos.h>
 #include "platform.h"

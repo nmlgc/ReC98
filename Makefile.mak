@@ -28,7 +28,7 @@
 
 
 
-CFLAGS = -ls -I. -Lbin\ -O -b-
+CFLAGS = -ls -I. -Lbin\ -O -b- -3 -Z -d
 AFLAGS = /m /ml
 
 # Currently, it only makes sense to enable extended dictionary processing for
@@ -57,7 +57,7 @@ th05:: $(TH05:\=bin\th05\)
 	tlink /t /3 $**
 
 bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp platform\x86real\pc98\palette.cpp
-	$(CC) $(CFLAGS) -Z -DGAME=1 -mt -lt -nbin\Pipeline\ @&&|
+	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\Pipeline\ @&&|
 $**
 | masters.lib
 
@@ -65,123 +65,123 @@ bin\th01\zunsoft.com: th01\zunsoft.cpp
 	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\th01\ $** masters.lib
 
 {th01}.c{bin\th01}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -d -DGAME=1 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=1 -n$(@D) -c $**
 {th01}.cpp{bin\th01}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -d -DGAME=1 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=1 -n$(@D) -c $**
 
 bin\th01\op.exe: bin\piloadc.obj th01\op_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\ptn_0to1.obj bin\th01\vplanset.obj th01\op_07.cpp bin\th01\grp_text.obj bin\th01\ptn.obj th01\op_09.cpp bin\th01\f_imgd.obj bin\th01\grz.obj bin\th01\op.obj bin\th01\resstuff.obj bin\th01\mdrv2.obj bin\th01\pf.obj
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -d -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
 $**
 |
 
 bin\th01\reiiden.exe: bin\piloadc.obj th01\main_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\ptn_0to1.obj bin\th01\vplanset.obj th01\main_07.cpp bin\th01\ptn.obj th01\main_08.cpp bin\th01\f_imgd.obj bin\th01\grz.obj bin\th01\reiiden.obj th01\main_09.cpp th01\bullet_l.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\scrollup.cpp th01\egcrows.cpp th01\pgtrans.cpp th01\2x_main.cpp th01\egcwave.cpp th01\grph1to0.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_17.cpp th01\main_18.cpp th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp bin\th01\pf.obj th01\main_23.cpp th01\main_24.cpp th01\main_25.cpp th01\main_26.cpp th01\main_27.cpp th01\main_28.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_32.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -d -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |
 
 bin\th01\fuuin.exe: bin\piloadc.obj th01\fuuin_01.cpp bin\th01\input_mf.obj th01\fuuin_02.cpp th01\fuuin_03.cpp th01\fuuin_04.cpp bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\grp_text.obj th01\fuuin_10.cpp th01\f_imgd_f.cpp bin\th01\vplanset.obj th01\fuuin_11.cpp th01\2x_fuuin.cpp bin\th01\mdrv2.obj bin\th01\fuuin.obj
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=1 -DBINARY='E' -nbin\th01\ -eFUUIN.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=1 -DBINARY='E' -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |
 
 {th02}.c{bin\th02}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=2 -n$(@D) -c $**
 {th02}.cpp{bin\th02}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=2 -n$(@D) -c $**
 
 bin\th02\zun_res.com: th02\zun_res1.cpp th02\zun_res2.cpp
-	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=2 -nbin\th02\ -eZUN_RES.COM @&&|
+	$(CC) $(CFLAGS) -mt -lt -DGAME=2 -nbin\th02\ -eZUN_RES.COM @&&|
 $**
 | masters.lib
 
 bin\th02\op.exe: th02\op_01.cpp bin\th02\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\grp_rect.obj bin\th02\frmdely2.obj bin\th02\input_rs.obj bin\th02\initop.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj th02\op_02_3.cpp bin\th02\snd_se_r.obj bin\th02\snd_se.obj bin\th02\frmdely1.obj th02\op_03.cpp bin\th02\globals.obj th02\op_04.cpp th02\op_05.cpp th02\op_music.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
 
 bin\th02\main.exe: bin\th02\main.obj bin\th02\tile.obj th02\pointnum.cpp th02\item.cpp th02\hud.cpp th02\player_b.cpp bin\th02\zunerror.obj bin\th02\keydelay.obj th02\main02_1.cpp bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\vector.obj bin\th02\frmdely1.obj bin\th02\input_rs.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_dlyv.obj bin\th02\snd_load.obj th02\mpn_l_i.cpp bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\snd_se_r.obj bin\th02\snd_se.obj th02\main_03.cpp th02\hud_ovrl.cpp th02\dialog.cpp th02\boss_5.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |
 
 bin\th02\maine.exe: th02\end.cpp bin\th02\maine.obj bin\th02\grppsafx.obj bin\th02\keydelay.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\frmdely1.obj th02\maine022.cpp bin\th02\input_rs.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\globals.obj th02\maine_03.cpp th02\maine_04.cpp th02\staff.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -d -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |
 
 {th03}.c{bin\th03}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=3 -n$(@D) -c $**
 {th03}.cpp{bin\th03}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=3 -n$(@D) -c $**
 
 bin\th03\res_yume.com: th03\res_yume.cpp
-	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=3 -nbin\th03\ -eRES_YUME.COM @&&|
+	$(CC) $(CFLAGS) -mt -lt -DGAME=3 -nbin\th03\ -eRES_YUME.COM @&&|
 $**
 | masters.lib
 
 bin\th03\op.exe: th03\op_01.cpp bin\th03\op2.obj th03\op_music.cpp th03\op_02.cpp bin\th03\scoredat.obj th03\op_03.cpp bin\th03\op.obj bin\th02\exit_dos.obj bin\th01\vplanset.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th03\exit.obj bin\th03\polar.obj bin\th03\cdg_put.obj bin\th02\frmdely1.obj bin\th03\input_s.obj bin\th03\pi_put.obj bin\th03\snd_kaja.obj bin\th03\initop.obj bin\th03\cdg_load.obj bin\th03\grppsafx.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\th03\hfliplut.obj bin\th02\frmdely2.obj
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=3 -DBINARY='O' -nbin\th03\ -eOP.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=3 -DBINARY='O' -nbin\th03\ -eOP.EXE @&&|
 $**
 |
 
 bin\th03\main.exe: bin\th03\main.obj th03\playfld.cpp bin\th03\cfg_lres.obj th03\hitcirc.cpp th03\player_m.cpp th03\main_010.cpp th03\main_011.cpp bin\th01\vplanset.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th03\vector.obj bin\th03\exit.obj bin\th03\polar.obj bin\th02\frmdely1.obj bin\th03\input_s.obj bin\th02\snd_se_r.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\collmap.obj bin\th03\hfliplut.obj th03\mrs.cpp th03\sprite16.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
 $**
 |
 
 bin\th03\mainl.exe: bin\th03\cfg_lres.obj th03\mainl_sc.cpp bin\th03\mainl.obj th03\cutscene.cpp bin\th03\scoredat.obj th03\regist.cpp bin\th01\vplanset.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_dlyv.obj bin\th02\snd_load.obj bin\th03\vector.obj bin\th03\exit.obj bin\th03\cdg_put.obj bin\th02\frmdely1.obj bin\th03\input_s.obj bin\th03\pi_put.obj bin\th03\pi_put_i.obj bin\th02\snd_se_r.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\cdg_load.obj th03\exitmain.cpp bin\th03\grppsafx.obj bin\th03\snd_dlym.obj bin\th03\inp_wait.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\th03\hfliplut.obj
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=3 -DBINARY='L' -nbin\th03\ -eMAINL.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=3 -DBINARY='L' -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |
 
 {th04}.c{bin\th04}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=4 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=4 -n$(@D) -c $**
 {th04}.cpp{bin\th04}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=4 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=4 -n$(@D) -c $**
 
 bin\th04\memchk.com: bin\th04\memchk.obj
 	$(CC) $(CFLAGS) -mt -lt $**
 
 bin\th04\res_huma.com: th04\res_huma.cpp
-	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=4 -nbin\th04\ -eRES_HUMA.COM @&&|
+	$(CC) $(CFLAGS) -mt -lt -DGAME=4 -nbin\th04\ -eRES_HUMA.COM @&&|
 $**
 | masters.lib
 
 bin\th04\op.exe: th04\op_main.cpp bin\th04\opm.obj bin\th01\vplanset.obj bin\th02\frmdely1.obj bin\th03\pi_put.obj bin\th03\pi_load.obj bin\th03\hfliplut.obj bin\th04\input_w.obj bin\th04\vector.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_kaja.obj bin\th04\cdg_p_nc.obj bin\th04\snd_mode.obj bin\th04\snd_dlym.obj bin\th02\exit_dos.obj bin\th04\snd_load.obj bin\th04\grppsafx.obj bin\th04\op2.obj bin\th04\cdg_put.obj bin\th04\exit.obj th04\initop.cpp bin\th04\cdg_p_na.obj bin\th04\input_s.obj bin\th02\snd_se_r.obj bin\th04\snd_se.obj bin\th04\egcrect.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj bin\th02\frmdely2.obj th04\op_setup.cpp bin\th04\zunsoft.obj th04\op_music.cpp bin\th04\op.obj th04\m_char.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='O' -3 -Z -d -nbin\th04\ -eOP.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='O' -nbin\th04\ -eOP.EXE @&&|
 $**
 |
 
 bin\th04\main.exe: bin\th04\main.obj bin\th04\slowdown.obj th04\demo.cpp th04\ems.cpp th04\tile_set.cpp th04\std.cpp bin\th04\tile.obj th04\playfld.cpp th04\midboss4.cpp th04\f_dialog.cpp th04\dialog.cpp th04\boss_exp.cpp th04\stages.cpp th04\player_m.cpp bin\th04\player_p.obj bin\th04\scoreupd.obj th04\hud_ovrl.cpp bin\th04\cfg_lres.obj bin\th04\checkerb.obj bin\th04\mb_inv.obj bin\th04\boss_bd.obj bin\th01\vplanset.obj bin\th03\vector.obj bin\th02\frmdely1.obj bin\th03\hfliplut.obj th04\mpn_free.cpp bin\th04\input_w.obj th04\mpn_l_i.cpp bin\th04\vector.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_kaja.obj bin\th04\snd_mode.obj bin\th04\snd_load.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initmain.obj bin\th04\cdg_p_na.obj bin\th04\cdg_p_pr.obj bin\th04\input_s.obj bin\th02\snd_se_r.obj bin\th04\snd_se.obj bin\th04\cdg_load.obj th04\gather.cpp bin\th04\scrolly3.obj bin\th04\motion_3.obj th04\midboss.cpp bin\th04\hud_hp.obj th04\mb_dft.cpp bin\th04\vector2n.obj bin\th04\spark_a.obj bin\th04\grcg_3.obj bin\th04\it_spl_u.obj th04\boss_4m.cpp th04\bullet_u.cpp th04\bullet_a.cpp th04\boss.cpp th04\boss_4r.cpp th04\boss_x2.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='M' -3 -Z -nbin\th04\ -eMAIN.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='M' -nbin\th04\ -eMAIN.EXE @&&|
 $**
 |
 
 bin\th04\maine.exe: th04\maine_e.cpp bin\th04\mainem.obj bin\th01\vplanset.obj bin\th02\frmdely1.obj bin\th03\pi_put.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\hfliplut.obj bin\th04\input_w.obj bin\th04\vector.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_kaja.obj bin\th04\snd_mode.obj bin\th04\snd_dlym.obj bin\th04\cdg_p_pl.obj bin\th04\snd_load.obj bin\th04\grppsafx.obj bin\th04\maine.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initmain.obj bin\th04\input_s.obj bin\th02\snd_se_r.obj bin\th04\snd_se.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj th04\cutscene.cpp th04\staff.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='E' -3 -Z -nbin\th04\ -eMAINE.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='E' -nbin\th04\ -eMAINE.EXE @&&|
 $**
 |
 
 {th05}.cpp{bin\th05}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -DGAME=5 -n$(@D) -c $**
 
 bin\th05\res_kso.com: th05\res_kso.cpp
-	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=5 -nbin\th05\ -eRES_KSO.COM @&&|
+	$(CC) $(CFLAGS) -mt -lt -DGAME=5 -nbin\th05\ -eRES_KSO.COM @&&|
 $**
 | masters.lib
 
 bin\th05\op.exe: th05\op_main.cpp bin\th05\opm.obj bin\th03\hfliplut.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_mode.obj bin\th02\exit_dos.obj bin\th04\grppsafx.obj bin\th05\op2.obj bin\th04\cdg_p_na.obj bin\th02\snd_se_r.obj bin\th04\snd_se.obj bin\th04\bgimage.obj bin\th05\cdg_put.obj bin\th04\exit.obj bin\th05\vector.obj th05\musicp_c.cpp bin\th05\musicp_a.obj bin\th05\bgimager.obj bin\th05\snd_load.obj bin\th05\snd_kaja.obj bin\th05\pi_cpp_1.obj bin\th05\pi_asm_1.obj bin\th05\pi_cpp_2.obj bin\th05\pi_asm_2.obj th05\initop.cpp bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj th05\cdg_p_nc.cpp bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj th05\op_setup.cpp bin\th04\zunsoft.obj th05\cfg.cpp th05\op_title.cpp th05\op_music.cpp bin\th05\op.obj th05\hi_view.cpp th05\m_char.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='O' -3 -Z -d -nbin\th05\ -eOP.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='O' -nbin\th05\ -eOP.EXE @&&|
 $**
 |
 
 bin\th05\main.exe: bin\th05\main.obj bin\th04\slowdown.obj th05\demo.cpp th05\ems.cpp bin\th05\cfg_lres.obj bin\th04\tile.obj th05\main010.cpp th05\f_dialog.cpp th05\dialog.cpp th05\boss_exp.cpp th05\playfld.cpp bin\th04\mb_inv.obj bin\th04\boss_bd.obj th05\boss_bg.cpp th05\laser_rh.cpp th05\p_common.cpp th05\p_reimu.cpp th05\p_marisa.cpp th05\p_mima.cpp th05\p_yuuka.cpp bin\th05\player.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\midboss5.cpp th05\hud_ovrl.cpp bin\th04\player_p.obj bin\th04\vector2n.obj bin\th05\spark_a.obj th05\bullet_p.cpp bin\th04\grcg_3.obj th05\player_a.cpp bin\th05\bullet_1.obj th05\bullet_c.cpp bin\th03\vector.obj bin\th03\hfliplut.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_mode.obj bin\th05\bullet.obj th05\bullet_t.cpp bin\th04\cdg_p_na.obj bin\th02\snd_se_r.obj bin\th04\snd_se.obj bin\th05\cdg_put.obj bin\th04\exit.obj bin\th05\vector.obj bin\th05\snd_load.obj bin\th05\snd_kaja.obj bin\th05\initmain.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th04\scrolly3.obj bin\th04\motion_3.obj th05\gather.cpp th05\main032.cpp th05\midboss.cpp bin\th04\hud_hp.obj th05\mb_dft.cpp th05\laser.cpp th05\cheeto_u.cpp bin\th04\it_spl_u.obj th05\bullet_u.cpp th05\midboss1.cpp th05\boss_1.cpp th05\boss_4.cpp th05\boss_6.cpp th05\boss_x.cpp th05\boss.cpp th05\main014.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=5 -DBINARY='M' -nbin\th05\ -eMAIN.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='M' -nbin\th05\ -eMAIN.EXE @&&|
 $**
 |
 
 bin\th05\maine.exe: th05\maine_e.cpp bin\th05\mainem.obj bin\th03\hfliplut.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_mode.obj bin\th04\grppsafx.obj bin\th05\maine.obj bin\th04\cdg_p_na.obj bin\th02\snd_se_r.obj bin\th04\snd_se.obj bin\th04\bgimage.obj bin\th04\exit.obj bin\th05\vector.obj bin\th05\bgimager.obj bin\th05\snd_load.obj bin\th05\snd_kaja.obj bin\th05\pi_cpp_1.obj bin\th05\pi_asm_1.obj bin\th05\pi_cpp_2.obj bin\th05\pi_asm_2.obj bin\th05\initmain.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj th05\cutscene.cpp th05\regist.cpp th05\staff.cpp
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='E' -3 -Z -nbin\th05\ -eMAINE.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='E' -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |
 

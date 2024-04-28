@@ -1,3 +1,7 @@
+#if (GAME == 2)
+	#pragma option -2 // ZUN bloat
+#endif
+
 #include <mem.h>
 #include "platform.h"
 #include "x86real.h"

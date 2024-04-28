@@ -1,3 +1,5 @@
+#pragma option -2 // ZUN bloat
+
 void cfg_init(resident_t __seg *resident_seg)
 {
 	const char *fn = CFG_FN;

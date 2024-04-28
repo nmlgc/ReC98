@@ -1,7 +1,4 @@
-/* ReC98
- * -----
- * Code segment #5 of TH02's OP.EXE
- */
+#pragma option -2 // ZUN bloat
 
 #include "platform.h"
 #include "x86real.h"

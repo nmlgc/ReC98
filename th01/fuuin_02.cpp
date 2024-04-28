@@ -3,7 +3,7 @@
  * Code segment #2 of TH01's FUUIN.EXE
  */
 
-#pragma option -O- -1 -Z-
+#pragma option -O- -1 -Z- -d-
 
 static long unused_long = { 0 }; // ZUN bloat
 

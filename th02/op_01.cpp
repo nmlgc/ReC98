@@ -33,7 +33,7 @@ extern "C" {
 #include "th02/op/menu.hpp"
 #include "th02/op/m_music.hpp"
 
-#pragma option -d -a2
+#pragma option -2 -a2
 
 char menu_sel = 0;
 bool in_option = false;

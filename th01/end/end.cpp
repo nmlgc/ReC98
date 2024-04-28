@@ -1,4 +1,4 @@
-#pragma option -O- -1 -Z-
+#pragma option -O- -1 -Z- -d-
 
 #include <stddef.h>
 #include "platform.h"
