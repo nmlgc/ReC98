@@ -1,7 +1,5 @@
-/* ReC98
- * -----
- * 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT.
- */
+// 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT and initializes the high score
+// lists.
 
 #pragma option -O- -k-
 
@@ -10,8 +8,8 @@
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th02/formats/scoredat.hpp"
+#include "th02/gaiji/gaiji.h"
 
-extern int8_t rank;
 scoredat_section_t hi;
 
 void pascal scoredat_recreate(void);
@@ -23,6 +21,7 @@ unsigned char stage_sum = 0;
 unsigned char unused_2 = 0; // ZUN bloat
 long score_sum = 0;
 long section_sum = 0;
+int8_t rank;
 
 // ZUN bloat: Needed to circumvent 16-bit promotion in a single comparison.
 inline int8_t rank_count(void) {
@@ -75,3 +74,68 @@ remove:
 }
 
 #pragma codestring "\x90"
+#pragma option -O -k
+
+// Slightly differs from the same function in MAINE.EXE!
+// And seriously, I wasted half a week trying to figure out how to get these
+// exact same instructions out of the compiler, and it just didn't work.
+void pascal scoredat_defaults_set(void)
+{
+	_SI = 0;
+	_DI = 1000 * SCOREDAT_PLACES;
+	goto place_loop;
+
+place_set:
+	hi.score.cleared = 0;
+	hi.score.score[_SI] = _DI;
+	_DI -= 1000;
+	hi.score.stage[_SI] = 5 - ((int)_SI >> 1);
+	_BX = _SI;
+	asm {
+		imul bx, bx, 7
+		mov cx, 6
+
+name_loop:
+		mov byte ptr hi.(scoredat_section_t)score.g_name[bx], gs_BULLET
+		inc bx
+		loop name_loop
+		mov byte ptr hi.(scoredat_section_t)score.g_name[bx], 0
+	}
+	_BX = _SI;
+	_BX <<= 2;
+	asm {
+		mov word ptr hi.(scoredat_section_t)score.date[bx].da_year, 1900
+		mov byte ptr hi.(scoredat_section_t)score.date[bx].da_day, 1
+		mov byte ptr hi.(scoredat_section_t)score.date[bx].da_mon, 1
+		mov byte ptr hi.(scoredat_section_t)score.shottype[si], 1
+		inc si
+
+place_loop:
+		cmp si, SCOREDAT_PLACES
+		jge end
+		jmp place_set
+	}
+end:
+}
+
+#include "th02/scoreenc.c"
+
+void pascal scoredat_create(void)
+{
+	SCOREDAT_ENCODE();
+	file_create(SCOREDAT_FN);
+	file_write(&hi, sizeof(hi));
+	file_write(&hi, sizeof(hi));
+	file_write(&hi, sizeof(hi));
+	file_write(&hi, sizeof(hi));
+	file_write(&hi, sizeof(hi));
+	file_close();
+}
+
+void pascal scoredat_recreate(void)
+{
+	scoredat_defaults_set();
+	scoredat_create();
+}
+
+#include "th02/scorelod.c"
