@@ -154,7 +154,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 	th05/sprites/gaiji.asp \
 	|> $(AS) /dGAME=5 %f %o |> bin\\th05\\gjinit.obj
 : th05_memchk.asm |> $(AS) /dGAME=5 %f %o |> bin\\th05\\memchk.obj
-: th04\\scoreupd.asm |> $(AS) /dGAME=5 th04\%b, %o |> bin\\th05\\%B.obj
+: th05\\scoreupd.asm |> !as5 |>
 : th05\\player.asm |> !as5 |>
 : th05\\hud_bar.asm |> !as5 |>
 : th05\\bullet_1.asm |> !as5 |>

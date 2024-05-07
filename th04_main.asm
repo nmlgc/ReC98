@@ -30141,7 +30141,7 @@ aPnpcuyszlB@bCa	db 'è≠èó„Yëzã»Å@Å` Capriccio ',0
 include th04/formats/bb_txt_load[data].asm
 word_231F2	dw 10h
 include th03/main/5_powers_of_10[data].asm
-include th04/scoreupd[data].asm
+include th04/main/scoreupd[data].asm
 include th04/main/hud/gaiji_row[data].asm
 include th04/main/hud/hud[data].asm
 angle_23212	db 0
