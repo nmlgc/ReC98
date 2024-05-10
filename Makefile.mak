@@ -192,39 +192,39 @@ Research:
 
 # ZUN.COM packing
 
-{bin\zuncom}.obj{bin\zuncom}.bin:
+{bin\Pipeline}.obj{bin\Pipeline}.bin:
 	tlink -t $**, $@
 
-bin\zuncom\zungen.com: zuncom\zungen.c
-	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eZUNGEN.COM $**
+bin\Pipeline\zungen.com: Pipeline\zungen.c
+	$(CC) $(CFLAGS) -mt -lt -IPipeline\ -nbin\Pipeline\ -eZUNGEN.COM $**
 
-bin\zuncom\comcstm.com: zuncom\comcstm.c
-	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eCOMCSTM.com $**
+bin\Pipeline\comcstm.com: Pipeline\comcstm.c
+	$(CC) $(CFLAGS) -mt -lt -IPipeline\ -nbin\Pipeline\ -eCOMCSTM.com $**
 
-ZUNCOM_PREREQ = bin\zuncom\zungen.com bin\zuncom\zun_stub.bin
+ZUNCOM_PREREQ = bin\Pipeline\zungen.com bin\Pipeline\zun_stub.bin
 
 bin\th02\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th02\zun_res.com bin\th01\zunsoft.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
+	bin\Pipeline\zungen bin\Pipeline\zun_stub.bin &&|
 4 ONGCHK ZUNINIT ZUN_RES ZUNSOFT libs\kaja\ongchk.com bin\th02\zuninit.com bin\th02\zun_res.com bin\th01\zunsoft.com
 | bin\th02\zun.com
 
 bin\th03\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th01\zunsoft.com bin\th03\zunsp.com bin\th03\res_yume.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
+	bin\Pipeline\zungen bin\Pipeline\zun_stub.bin &&|
 5 -1 -2 -3 -4 -5 libs\kaja\ongchk.com bin\th02\zuninit.com bin\th01\zunsoft.com bin\th03\zunsp.com bin\th03\res_yume.com
 | bin\th03\zun.com
 
 bin\th04\zuncom.bin : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th04\zuninit.com bin\th04\res_huma.com bin\th04\memchk.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
+	bin\Pipeline\zungen bin\Pipeline\zun_stub.bin &&|
 4 -O -I -S -M libs\kaja\ongchk.com bin\th04\zuninit.com bin\th04\res_huma.com bin\th04\memchk.com
 | bin\th04\zuncom.bin
 
 bin\th05\zuncom.bin : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th05\zuninit.com bin\th05\res_kso.com bin\th05\gjinit.com bin\th05\memchk.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
+	bin\Pipeline\zungen bin\Pipeline\zun_stub.bin &&|
 5 -O -I -S -G -M libs\kaja\ongchk.com bin\th05\zuninit.com bin\th05\res_kso.com bin\th05\gjinit.com bin\th05\memchk.com
 | bin\th05\zuncom.bin
 
-bin\th04\zun.com : bin\zuncom\comcstm.com zuncom\zun4.txt bin\th04\zuncom.bin bin\zuncom\cstmstub.bin
-	bin\zuncom\comcstm zuncom\zun4.txt bin\th04\zuncom.bin bin\zuncom\cstmstub.bin 621381155 bin\th04\zun.com
+bin\th04\zun.com : bin\Pipeline\comcstm.com th04\zun.txt bin\th04\zuncom.bin bin\Pipeline\cstmstub.bin
+	bin\Pipeline\comcstm th04\zun.txt bin\th04\zuncom.bin bin\Pipeline\cstmstub.bin 621381155 bin\th04\zun.com
 
-bin\th05\zun.com : bin\zuncom\comcstm.com zuncom\zun5.txt bin\th05\zuncom.bin bin\zuncom\cstmstub.bin
-	bin\zuncom\comcstm zuncom\zun5.txt bin\th05\zuncom.bin bin\zuncom\cstmstub.bin 628731748 bin\th05\zun.com
+bin\th05\zun.com : bin\Pipeline\comcstm.com th05\zun.txt bin\th05\zuncom.bin bin\Pipeline\cstmstub.bin
+	bin\Pipeline\comcstm th05\zun.txt bin\th05\zuncom.bin bin\Pipeline\cstmstub.bin 628731748 bin\th05\zun.com

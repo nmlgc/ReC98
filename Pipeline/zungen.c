@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <dir.h>
-#include "zuncom/common.h"
+#include "./common.h"
 int readparam(char *path, size_t size, FILE* fl) {
 	char c = '\0';
 	char *pathp = path;

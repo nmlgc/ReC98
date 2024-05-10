@@ -94,8 +94,8 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : libs\\piloadc\\piloadc.asm |> $(AS) /ml libs\piloadc\%b %o |> bin\\%B.obj
 
 # ZUN.COM
-: zuncom\\zun_stub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
-: zuncom\\cstmstub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
+: Pipeline\\zun_stub.asm |> $(AS) Pipeline\%b %o |> bin\\Pipeline\\%B.obj
+: Pipeline\\cstmstub.asm |> $(AS) Pipeline\%b %o |> bin\\Pipeline\\%B.obj
 
 : th01_op.asm |> $(AS) /dGAME=1 %f %o |> bin\\th01\\op.obj
 : th01_reiiden.asm |> $(AS) /dGAME=1 %f %o |> bin\\th01\\reiiden.obj

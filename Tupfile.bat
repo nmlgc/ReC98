@@ -26,8 +26,8 @@ bin\\Pipeline\\bmp2arr.exe -q -i th05/sprites/gaiji.bmp -o th05/sprites/gaiji.as
 bin\\Pipeline\\bmp2arr.exe -q -i th05/sprites/piano_l.bmp -o th05/sprites/piano_l.asp -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i Research/blitperf.bmp -o Research/blitperf.csp -sym sBLITPERF -of cpp -sw 16 -sh 16
 tasm32 /m /mx /kh32768 /t /ml libs\piloadc\piloadc.asm bin\piloadc.obj
-tasm32 /m /mx /kh32768 /t zuncom\zun_stub.asm bin\zuncom\zun_stub.obj
-tasm32 /m /mx /kh32768 /t zuncom\cstmstub.asm bin\zuncom\cstmstub.obj
+tasm32 /m /mx /kh32768 /t Pipeline\zun_stub.asm bin\Pipeline\zun_stub.obj
+tasm32 /m /mx /kh32768 /t Pipeline\cstmstub.asm bin\Pipeline\cstmstub.obj
 tasm32 /m /mx /kh32768 /t /dGAME=1 th01_op.asm bin\th01\op.obj
 tasm32 /m /mx /kh32768 /t /dGAME=1 th01_reiiden.asm bin\th01\reiiden.obj
 tasm32 /m /mx /kh32768 /t /dGAME=1 th01_fuuin.asm bin\th01\fuuin.obj

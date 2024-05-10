@@ -2,7 +2,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
-#include "zuncom/common.h"
+#include "./common.h"
 static const char copyright[] = "comcstm (c)O.Morikawa 1996";
 #define HEADER_SIZE (3+2+2+2+4+sizeof(copyright)-1)
 int main(int argc, char **argv) {
