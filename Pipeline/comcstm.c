@@ -5,7 +5,7 @@
 #include "./common.h"
 static const char copyright[] = "comcstm (c)O.Morikawa 1996";
 #define HEADER_SIZE (3+2+2+2+4+sizeof(copyright)-1)
-int main(int argc, char **argv) {
+int __cdecl main(int argc, char **argv) {
 	FILE *fo;
 	long sz_usage, sz_program;
 	int tmp;

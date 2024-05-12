@@ -30,7 +30,7 @@ static const char moveup[] = {
 	0x50,             /* PUSH AX      */
 	0xC3,             /* RETN         */
 };
-int main(int argc, char** argv) {
+int __cdecl main(int argc, char** argv) {
 	static char path[MAXPATH+1];
 	static char names[8*MAX_COUNT];
 	static int entries[MAX_COUNT+1];

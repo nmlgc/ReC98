@@ -31,6 +31,10 @@
 CFLAGS = -ls -I. -Lbin\ -O -b- -3 -Z -d
 AFLAGS = /m /ml
 
+# Additional generally good compilation flags. Should be used for all code that
+# does not need to match the original binaries.
+CFLAGS_OPTIMIZED = $(CFLAGS) -G -k- -p -x-
+
 # Currently, it only makes sense to enable extended dictionary processing for
 # binaries that don't link the original binary release of MASTERS.LIB, which
 # doesn't come with them.
@@ -57,7 +61,7 @@ th05:: $(TH05:\=bin\th05\)
 	tlink /t /3 $**
 
 bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp platform\x86real\pc98\palette.cpp
-	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\Pipeline\ @&&|
+	$(CC) $(CFLAGS_OPTIMIZED) -mt -lt -DGAME=1 -nbin\Pipeline\ @&&|
 $**
 | masters.lib
 
@@ -196,10 +200,10 @@ Research:
 	tlink -t $**, $@
 
 bin\Pipeline\zungen.com: Pipeline\zungen.c
-	$(CC) $(CFLAGS) -mt -lt -IPipeline\ -nbin\Pipeline\ -eZUNGEN.COM $**
+	$(CC) $(CFLAGS_OPTIMIZED) -mt -lt -IPipeline\ -nbin\Pipeline\ -eZUNGEN.COM $**
 
 bin\Pipeline\comcstm.com: Pipeline\comcstm.c
-	$(CC) $(CFLAGS) -mt -lt -IPipeline\ -nbin\Pipeline\ -eCOMCSTM.com $**
+	$(CC) $(CFLAGS_OPTIMIZED) -mt -lt -IPipeline\ -nbin\Pipeline\ -eCOMCSTM.com $**
 
 ZUNCOM_PREREQ = bin\Pipeline\zungen.com bin\Pipeline\zun_stub.bin
 
