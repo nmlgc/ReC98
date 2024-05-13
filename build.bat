@@ -1,2 +1,1 @@
 @call BUILD32B.BAT
-@call BUILD16B.BAT

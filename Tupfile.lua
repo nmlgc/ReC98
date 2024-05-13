@@ -52,7 +52,14 @@ Config.__index = Config
 
 local Rules = NewRules(Config.obj_root)
 
+MODEL_ASM = { lflags = "-t -3" }
 MODEL_TINY = { cflags = "-mt", lflags = "-t" }
+MODEL_SMALL = { cflags = "-ms" }
+
+-- Currently, it only makes sense to enable extended dictionary processing for
+-- binaries that don't link the original binary release of MASTERS.LIB, which
+-- doesn't come with them.
+MODEL_LARGE = { cflags = "-ml", lflags = "-E" }
 
 ---Generates a ConfigShape for an output subdirectory.
 ---@param dir string
@@ -133,13 +140,11 @@ function Config:build(inputs)
 	return ret
 end
 
+---@param exe_stem string
 ---@param inputs ReC98Input[]
 function Config:link(exe_stem, inputs)
 	local model_c = self.cflags:match("-m([tsmclh])")
 	local objs = self:build(inputs)
-	if model_c == nil then
-		return
-	end
 
 	local obj_root = self.obj_root:gsub("/", "\\")
 	local bin_root = self.bin_root:gsub("/", "\\")
@@ -198,6 +203,14 @@ local pipeline_cfg = optimized_cfg:branch(Subdir("Pipeline/"), {
 })
 
 local pipeline_tool_cfg = pipeline_cfg:branch(MODEL_TINY)
+local pipeline_stub_cfg = pipeline_cfg:branch(MODEL_ASM)
+
+pipeline_tool_cfg:link("grzview", {
+	"Pipeline/grzview.cpp",
+	"th01/formats/grz.cpp",
+	"platform/x86real/pc98/palette.cpp",
+	"bin/masters.lib",
+})
 
 local bmp2arr = pipeline_tool_cfg:link("bmp2arr", {
 	"Pipeline/bmp2arrl.c",
@@ -235,12 +248,51 @@ function Sprites(bmps)
 	return ret
 end
 
-local zun_stub = pipeline_cfg:build({ "Pipeline/zun_stub.asm" })
-local cstmstub = pipeline_cfg:build({ "Pipeline/cstmstub.asm" })
+---@param input string
+function Config:stub(input)
+	local obj_fn = self:build({ input })[1]
+	local bin_fn = obj_fn:gsub("%..+$", ".bin")
+	local args = string.format("-x -t %s, %s", obj_fn, bin_fn)
+	return Rules:add_16(obj_fn, "tlink", args:gsub("/", "\\"), bin_fn)[1]
+end
+
+local zungen = pipeline_tool_cfg:link("zungen", { "Pipeline/zungen.c" })
+local comcstm = pipeline_tool_cfg:link("comcstm", { "Pipeline/comcstm.c" })
+local zun_stub = pipeline_stub_cfg:stub("Pipeline/zun_stub.asm")
+local cstmstub = pipeline_stub_cfg:stub("Pipeline/cstmstub.asm")
 
 ---@param bin_fn string
 ---@param procs [string, string][] [Menu name, input filename]
 function Config:zungen(bin_fn, procs)
+	local rsp_fn = string.format(
+		"%s%s.@z", self.obj_root, tup.base(bin_fn)
+	):gsub("/", "\\")
+	local inputs = { extra_inputs = { zungen, zun_stub, rsp_fn }}
+
+	local names = ""
+	local fns = ""
+	for _, proc in pairs(procs) do
+		inputs += { proc[2] }
+		names = string.format("%s %s", names, proc[1])
+		fns = string.format("%s %s", fns, proc[2])
+	end
+
+	Rules:add_32(
+		{}, "echo", string.format("%d%s%s>%%o", #procs, names, fns), rsp_fn
+	)
+	return Rules:add_16(inputs, zungen, "%2i %3i %o", bin_fn)[1]
+end
+
+---@param out_basename string
+---@param prog_fn string
+---@param usage_fn string
+---@param timestamp number
+function Config:comcstm(out_basename, usage_fn, prog_fn, timestamp)
+	local inputs = { comcstm, usage_fn, prog_fn, cstmstub }
+	local cmd = string.format("%%2f %%3f %%4f %d %%o", timestamp)
+	return Rules:add_16(
+		inputs, comcstm, cmd, (self.bin_root .. out_basename)
+	)[1]
 end
 -- --------
 
@@ -262,6 +314,7 @@ local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 function GameShape(game)
 	local ret = Subdir(string.format("th0%d/", game))
 	ret.aflags = string.format("/dGAME=%d", game)
+	ret.cflags = string.format("-DGAME=%d", game)
 	return ret
 end
 
@@ -295,13 +348,105 @@ local th01_sprites = Sprites({
 	{ "th01/sprites/bonusbox.bmp", "cpp", "sSTAGEBONUS_BOX", 8, 4 },
 })
 
-th01:link("op", {
+local th01_zunsoft = th01:branch(MODEL_TINY):link("zunsoft", {
+	"th01/zunsoft.cpp",
+	"bin/masters.lib",
+})
+th01:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
+	piloadc,
+	"th01/op_01.cpp",
+	"th01/frmdelay.cpp",
+	{ "th01/vsync.cpp", extra_inputs = th01_sprites["mousecur"] },
+	"th01/ztext.cpp",
+	"th01/initexit.cpp",
+	"th01/graph.cpp",
+	"th01/ptn_0to1.cpp",
+	"th01/vplanset.cpp",
+	"th01/op_07.cpp",
+	"th01/grp_text.cpp",
+	"th01/ptn.cpp",
+	"th01/op_09.cpp",
+	"th01/f_imgd.cpp",
+	"th01/grz.cpp",
 	"th01_op.asm",
+	"th01/resstuff.cpp",
+	"th01/mdrv2.cpp",
+	"th01/pf.cpp",
 })
-th01:link("reiiden", {
+th01:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("reiiden", {
+	piloadc,
+	"th01/main_01.cpp",
+	"th01/frmdelay.cpp",
+	{ "th01/vsync.cpp", extra_inputs = th01_sprites["mousecur"] },
+	"th01/ztext.cpp",
+	"th01/initexit.cpp",
+	"th01/graph.cpp",
+	"th01/ptn_0to1.cpp",
+	"th01/vplanset.cpp",
+	"th01/main_07.cpp",
+	"th01/ptn.cpp",
+	"th01/main_08.cpp",
+	"th01/f_imgd.cpp",
+	"th01/grz.cpp",
 	"th01_reiiden.asm",
+	{ "th01/main_09.cpp", extra_inputs = th01_sprites["pellet_c"] },
+	"th01/bullet_l.cpp",
+	"th01/grpinv32.cpp",
+	"th01/resstuff.cpp",
+	"th01/scrollup.cpp",
+	"th01/egcrows.cpp",
+	{ "th01/pgtrans.cpp", extra_inputs = th01_sprites["ileave_m"] },
+	"th01/2x_main.cpp",
+	"th01/egcwave.cpp",
+	"th01/grph1to0.cpp",
+	"th01/main_14.cpp",
+	{ "th01/main_15.cpp", extra_inputs = th01_sprites["laser_s"] },
+	"th01/mdrv2.cpp",
+	"th01/main_17.cpp",
+	{ "th01/main_18.cpp", extra_inputs = th01_sprites["bonusbox"] },
+	"th01/main_19.cpp",
+	"th01/main_20.cpp",
+	"th01/main_21.cpp",
+	"th01/pf.cpp",
+	{ "th01/main_23.cpp", extra_inputs = th01_sprites["shape8x8"] },
+	"th01/main_24.cpp",
+	"th01/main_25.cpp",
+	"th01/main_26.cpp",
+	"th01/main_27.cpp",
+	"th01/main_28.cpp",
+	{ "th01/main_29.cpp", extra_inputs = th01_sprites["pillar"] },
+	"th01/main_30.cpp",
+	"th01/main_31.cpp",
+	"th01/main_32.cpp",
+	"th01/main_33.cpp",
+	"th01/main_34.cpp",
+	"th01/main_35.cpp",
+	{ "th01/main_36.cpp", extra_inputs = {
+		th01_sprites["leaf_s"],
+		th01_sprites["leaf_l"],
+		th01_sprites["leaf_r"],
+	} },
+	"th01/main_37.cpp",
+	{ "th01/main_38.cpp", extra_inputs = th01_sprites["pellet"] },
 })
-th01:link("fuuin", {
+th01:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("fuuin", {
+	piloadc,
+	"th01/fuuin_01.cpp",
+	"th01/input_mf.cpp",
+	"th01/fuuin_02.cpp",
+	"th01/fuuin_03.cpp",
+	"th01/fuuin_04.cpp",
+	{ "th01/vsync.cpp", extra_inputs = th01_sprites["mousecur"] },
+	"th01/ztext.cpp",
+	"th01/initexit.cpp",
+	"th01/graph.cpp",
+	"th01/grp_text.cpp",
+	"th01/fuuin_10.cpp",
+	"th01/f_imgd_f.cpp",
+	"th01/vplanset.cpp",
+	"th01/fuuin_11.cpp",
+	"th01/2x_fuuin.cpp",
+	"th01/mdrv2.cpp",
 	"th01_fuuin.asm",
 })
 -- ----
@@ -317,22 +462,109 @@ local th02_sprites = Sprites({
 	{ "th02/sprites/verdict.bmp", "cpp", "sVERDICT_MASKS", 16, 16 },
 })
 
-local th02_zuninit = th02:link("zuninit", {
+local th02_zuninit = th02:branch(MODEL_ASM):link("zuninit", {
 	"th02_zuninit.asm",
 })
-th02:link("op", {
-	"th02_op.asm",
+th02:zungen("bin/th02/zun.com", {
+	{ "ONGCHK", "libs/kaja/ongchk.com" },
+	{ "ZUNINIT", th02_zuninit },
+	{ "ZUN_RES", th02:branch(MODEL_TINY):link("zun_res", {
+		"th02/zun_res1.cpp",
+		"th02/zun_res2.cpp",
+		"bin/masters.lib",
+	}) },
+	{ "ZUNSOFT", th01_zunsoft },
 })
-th02:link("main", {
+th02:branch(MODEL_LARGE):link("op", {
+	"th02/op_01.cpp",
+	"th02/exit_dos.cpp",
+	"th02/zunerror.cpp",
+	"th02/grppsafx.cpp",
+	"th02_op.asm",
+	"th01/vplanset.cpp",
+	"th02/pi_load.cpp",
+	"th02/grp_rect.cpp",
+	"th02/frmdely2.cpp",
+	"th02/input_rs.cpp",
+	"th02/initop.cpp",
+	"th02/exit.cpp",
+	"th02/snd_mmdr.c",
+	"th02/snd_mode.c",
+	"th02/snd_pmdr.c",
+	"th02/snd_load.cpp",
+	"th02/pi_put.cpp",
+	"th02/snd_kaja.cpp",
+	"th02/op_02_3.cpp",
+	"th02/snd_se_r.cpp",
+	"th02/snd_se.cpp",
+	"th02/frmdely1.cpp",
+	"th02/op_03.cpp",
+	"th02/globals.cpp",
+	"th02/op_04.cpp",
+	"th02/op_05.cpp",
+	"th02/op_music.cpp",
+})
+th02:branch(MODEL_LARGE):link("main", {
 	{ "th02_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["bombpart"],
 		th02_sprites["sparks"],
 		th02_sprites["pointnum"],
 	} },
+	"th02/tile.cpp",
+	"th02/pointnum.cpp",
+	"th02/item.cpp",
+	"th02/hud.cpp",
+	"th02/player_b.cpp",
+	"th02/zunerror.cpp",
+	"th02/keydelay.cpp",
+	"th02/main02_1.cpp",
+	"th01/vplanset.cpp",
+	"th02/pi_load.cpp",
+	"th02/vector.cpp",
+	"th02/frmdely1.cpp",
+	"th02/input_rs.cpp",
+	"th02/exit.cpp",
+	"th02/snd_mmdr.c",
+	"th02/snd_mode.c",
+	"th02/snd_pmdr.c",
+	"th02/snd_dlyv.c",
+	"th02/snd_load.cpp",
+	"th02/mpn_l_i.cpp",
+	"th02/initmain.cpp",
+	"th02/pi_put.cpp",
+	"th02/snd_kaja.cpp",
+	"th02/snd_dlym.cpp",
+	"th02/snd_se_r.cpp",
+	"th02/snd_se.cpp",
+	"th02/main_03.cpp",
+	"th02/hud_ovrl.cpp",
+	"th02/dialog.cpp",
+	"th02/boss_5.cpp",
 })
-th02:link("maine", {
+th02:branch(MODEL_LARGE):link("maine", {
+	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
 	"th02_maine.asm",
+	"th02/grppsafx.cpp",
+	"th02/keydelay.cpp",
+	"th01/vplanset.cpp",
+	"th02/pi_load.cpp",
+	"th02/frmdely1.cpp",
+	"th02/maine022.cpp",
+	"th02/input_rs.cpp",
+	"th02/exit.cpp",
+	"th02/snd_mmdr.c",
+	"th02/snd_mode.c",
+	"th02/snd_pmdr.c",
+	"th02/snd_load.cpp",
+	"th02/initmain.cpp",
+	"th02/pi_put.cpp",
+	"th02/snd_kaja.cpp",
+	"th02/snd_dlym.cpp",
+	"th02/globals.cpp",
+	"th02/maine_03.cpp",
+	"th02/maine_04.cpp",
+	"th02/staff.cpp",
 })
 -- ----
 
@@ -344,23 +576,102 @@ local th03_sprites = Sprites({
 })
 
 th03:zungen("bin/th03/zun.com", {
-	{ "-4", th03:link("zunsp", { sprite16 }) },
+	{ "-1", "libs/kaja/ongchk.com" },
+	{ "-2", th02_zuninit },
+	{ "-3", th01_zunsoft },
+	{ "-4", th03:branch(MODEL_ASM):link("zunsp", { sprite16 }) },
+	{ "-5", th03:branch(MODEL_TINY):link("res_yume", {
+		"th03/res_yume.cpp",
+		"bin/masters.lib",
+	})}
 })
-th03:link("op", {
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
+	"th03/op_01.cpp",
 	"th03_op2.asm",
+	"th03/op_music.cpp",
+	"th03/op_02.cpp",
+	"th03/scoredat.cpp",
+	"th03/op_03.cpp",
 	"th03_op.asm",
+	"th02/exit_dos.cpp",
+	"th01/vplanset.cpp",
+	"th02/snd_mode.c",
+	"th02/snd_pmdr.c",
+	"th02/snd_load.cpp",
+	"th03/exit.cpp",
+	"th03/polar.cpp",
 	"th03/cdg_put.asm",
+	"th02/frmdely1.cpp",
+	"th03/input_s.cpp",
+	"th03/pi_put.cpp",
+	"th03/snd_kaja.cpp",
+	"th03/initop.cpp",
+	"th03/cdg_load.cpp",
+	"th03/grppsafx.cpp",
+	"th03/pi_load.cpp",
+	"th03/inp_m_w.cpp",
 	"th03/cdg_p_na.asm",
 	"th03/hfliplut.asm",
+	"th02/frmdely2.cpp",
 })
-th03:link("main", {
+th03:branch(MODEL_LARGE):link("main", {
 	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
+	"th03/playfld.cpp",
+	"th03/cfg_lres.cpp",
+	"th03/hitcirc.cpp",
+	"th03/player_m.cpp",
+	"th03/main_010.cpp",
+	"th03/main_011.cpp",
+	"th01/vplanset.cpp",
+	"th02/snd_mode.c",
+	"th02/snd_pmdr.c",
+	"th03/vector.cpp",
+	"th03/exit.cpp",
+	"th03/polar.cpp",
+	"th02/frmdely1.cpp",
+	"th03/input_s.cpp",
+	"th02/snd_se_r.cpp",
+	"th03/snd_se.cpp",
+	"th03/snd_kaja.cpp",
+	"th03/initmain.cpp",
+	"th03/pi_load.cpp",
+	"th03/inp_m_w.cpp",
 	"th03/collmap.asm",
 	"th03/hfliplut.asm",
+	"th03/mrs.cpp",
+	"th03/sprite16.cpp",
 })
-th03:link("mainl", {
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='L'" }):link("mainl", {
+	"th03/cfg_lres.cpp",
+	"th03/mainl_sc.cpp",
 	"th03_mainl.asm",
+	"th03/cutscene.cpp",
+	"th03/scoredat.cpp",
+	"th03/regist.cpp",
+	"th01/vplanset.cpp",
+	"th02/snd_mode.c",
+	"th02/snd_pmdr.c",
+	"th02/snd_dlyv.c",
+	"th02/snd_load.cpp",
+	"th03/vector.cpp",
+	"th03/exit.cpp",
 	"th03/cdg_put.asm",
+	"th02/frmdely1.cpp",
+	"th03/input_s.cpp",
+	"th03/pi_put.cpp",
+	"th03/pi_put_i.cpp",
+	"th02/snd_se_r.cpp",
+	"th03/snd_se.cpp",
+	"th03/snd_kaja.cpp",
+	"th03/initmain.cpp",
+	"th03/cdg_load.cpp",
+	"th03/exitmain.cpp",
+	"th03/grppsafx.cpp",
+	"th03/snd_dlym.cpp",
+	"th03/inp_wait.cpp",
+	"th03/pi_load.cpp",
+	"th03/pi_put_q.cpp",
+	"th03/inp_m_w.cpp",
 	"th03/cdg_p_na.asm",
 	"th03/hfliplut.asm",
 })
@@ -375,48 +686,150 @@ local th04_sprites = Sprites({
 })
 
 local th04_zuncom = th04:zungen("obj/th04/zuncom.bin", {
-	{ "-I", th04:link("zuninit", { "th04_zuninit.asm" }) },
-	{ "-M", th04:link("memchk", { "th04_memchk.asm" }) },
+	{ "-O", "libs/kaja/ongchk.com" },
+	{ "-I", th04:branch(MODEL_ASM):link("zuninit", { "th04_zuninit.asm" }) },
+	{ "-S", th04:branch(MODEL_TINY):link("res_huma", {
+		"th04/res_huma.cpp",
+		"bin/masters.lib",
+	}) },
+	{ "-M", th04:branch(MODEL_TINY):link("memchk", { "th04_memchk.asm" }) },
 })
-th04:link("op", {
+th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
+th04:branch(MODEL_LARGE):link("op", {
+	"th04/op_main.cpp",
 	{ "th04_op_master.asm", o = "opm.obj" },
+	"th01/vplanset.cpp",
+	"th02/frmdely1.cpp",
+	"th03/pi_put.cpp",
+	"th03/pi_load.cpp",
 	"th03/hfliplut.asm",
+	"th04/input_w.cpp",
+	"th04/vector.cpp",
+	"th04/snd_pmdr.c",
+	"th04/snd_mmdr.c",
+	"th04/snd_kaja.cpp",
 	"th04/cdg_p_nc.asm",
+	"th04/snd_mode.cpp",
+	"th04/snd_dlym.cpp",
+	"th02/exit_dos.cpp",
+	"th04/snd_load.cpp",
 	"th04/grppsafx.asm",
 	"th04_op2.asm",
 	"th04/cdg_put.asm",
+	"th04/exit.cpp",
+	"th04/initop.cpp",
+	"th04/cdg_p_na.cpp",
 	"th04/input_s.asm",
+	"th02/snd_se_r.cpp",
+	"th04/snd_se.cpp",
+	"th04/egcrect.cpp",
+	"th04/bgimage.cpp",
 	"th04/bgimager.asm",
 	"th04/cdg_load.asm",
+	"th02/frmdely2.cpp",
+	"th04/op_setup.cpp",
+	"th04/zunsoft.cpp",
+	"th04/op_music.cpp",
 	"th04_op.asm",
+	"th04/m_char.cpp",
 })
-th04:link("main", {
+th04:branch(MODEL_LARGE):link("main", {
 	{ "th04_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
 		th04_sprites["pelletbt"],
 		th04_sprites["pointnum"],
 	} },
+	"th04/slowdown.cpp",
+	"th04/demo.cpp",
+	"th04/ems.cpp",
+	"th04/tile_set.cpp",
+	"th04/std.cpp",
+	"th04/tile.cpp",
+	"th04/playfld.cpp",
+	"th04/midboss4.cpp",
+	"th04/f_dialog.cpp",
+	"th04/dialog.cpp",
+	"th04/boss_exp.cpp",
+	"th04/stages.cpp",
+	"th04/player_m.cpp",
+	"th04/player_p.cpp",
 	"th04/scoreupd.asm",
+	"th04/hud_ovrl.cpp",
+	"th04/cfg_lres.cpp",
+	"th04/checkerb.cpp",
+	"th04/mb_inv.cpp",
+	"th04/boss_bd.cpp",
+	"th01/vplanset.cpp",
+	"th03/vector.cpp",
+	"th02/frmdely1.cpp",
 	"th03/hfliplut.asm",
+	"th04/mpn_free.cpp",
+	"th04/input_w.cpp",
+	"th04/mpn_l_i.cpp",
+	"th04/vector.cpp",
+	"th04/snd_pmdr.c",
+	"th04/snd_mmdr.c",
+	"th04/snd_kaja.cpp",
+	"th04/snd_mode.cpp",
+	"th04/snd_load.cpp",
 	"th04/cdg_put.asm",
+	"th04/exit.cpp",
+	"th04/initmain.cpp",
+	"th04/cdg_p_na.cpp",
 	"th04/cdg_p_pr.asm",
 	"th04/input_s.asm",
+	"th02/snd_se_r.cpp",
+	"th04/snd_se.cpp",
 	"th04/cdg_load.asm",
+	"th04/gather.cpp",
+	"th04/scrolly3.cpp",
 	"th04/motion_3.asm",
+	"th04/midboss.cpp",
+	"th04/hud_hp.cpp",
+	"th04/mb_dft.cpp",
 	"th04/vector2n.asm",
 	"th04/spark_a.asm",
+	"th04/grcg_3.cpp",
+	"th04/it_spl_u.cpp",
+	"th04/boss_4m.cpp",
+	"th04/bullet_u.cpp",
+	"th04/bullet_a.cpp",
+	"th04/boss.cpp",
+	"th04/boss_4r.cpp",
+	"th04/boss_x2.cpp",
 })
-th04:link("maine", {
+th04:branch(MODEL_LARGE):link("maine", {
+	"th04/maine_e.cpp",
 	{ "th04_maine_master.asm", o = "mainem.obj" },
+	"th01/vplanset.cpp",
+	"th02/frmdely1.cpp",
+	"th03/pi_put.cpp",
+	"th03/pi_load.cpp",
+	"th03/pi_put_q.cpp",
 	"th03/hfliplut.asm",
+	"th04/input_w.cpp",
+	"th04/vector.cpp",
+	"th04/snd_pmdr.c",
+	"th04/snd_mmdr.c",
+	"th04/snd_kaja.cpp",
+	"th04/snd_mode.cpp",
+	"th04/snd_dlym.cpp",
 	"th04/cdg_p_pl.asm",
+	"th04/snd_load.cpp",
 	"th04/grppsafx.asm",
 	"th04_maine.asm",
 	"th04/cdg_put.asm",
+	"th04/exit.cpp",
+	"th04/initmain.cpp",
 	"th04/input_s.asm",
+	"th02/snd_se_r.cpp",
+	"th04/snd_se.cpp",
+	"th04/bgimage.cpp",
 	"th04/bgimager.asm",
 	"th04/cdg_load.asm",
+	"th04/cutscene.cpp",
+	"th04/staff.cpp",
 })
 -- ----
 
@@ -429,56 +842,171 @@ local th05_sprites = Sprites({
 })
 
 local th05_zuncom = th05:zungen("obj/th05/zuncom.bin", {
-	{ "-I", th05:link("zuninit", { "th05_zuninit.asm" }) },
-	{ "-G", th05:link("gjinit", {
+	{ "-O", "libs/kaja/ongchk.com" },
+	{ "-I", th05:branch(MODEL_ASM):link("zuninit", { "th05_zuninit.asm" }) },
+	{ "-S", th05:branch(MODEL_TINY):link("res_kso", {
+		"th05/res_kso.cpp",
+		"bin/masters.lib",
+	}) },
+	{ "-G", th05:branch(MODEL_ASM):link("gjinit", {
 		{ "th05_gjinit.asm", extra_inputs = th05_sprites["gaiji"] },
 	}) },
-	{ "-M", th05:link("memchk", { "th05_memchk.asm" }) },
+	{ "-M", th05:branch(MODEL_ASM):link("memchk", { "th05_memchk.asm" }) },
 })
-th05:link("op", {
+th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
+th05:branch(MODEL_LARGE):link("op", {
+	"th05/op_main.cpp",
 	{ "th05_op_master.asm", o = "opm.obj" },
 	"th03/hfliplut.asm",
+	"th04/snd_pmdr.c",
+	"th04/snd_mmdr.c",
+	"th04/snd_mode.cpp",
+	"th02/exit_dos.cpp",
 	"th04/grppsafx.asm",
 	{ "th05_op2.asm", extra_inputs = th05_sprites["piano_l"] },
+	"th04/cdg_p_na.cpp",
+	"th02/snd_se_r.cpp",
+	"th04/snd_se.cpp",
+	"th04/bgimage.cpp",
 	"th05/cdg_put.asm",
+	"th04/exit.cpp",
+	"th05/vector.cpp",
+	"th05/musicp_c.cpp",
 	"th05/musicp_a.asm",
 	"th05/bgimager.asm",
+	"th05/snd_load.cpp",
+	"th05/snd_kaja.cpp",
+	"th05/pi_cpp_1.cpp",
 	"th05/pi_asm_1.asm",
+	"th05/pi_cpp_2.cpp",
 	"th05/pi_asm_2.asm",
+	"th05/initop.cpp",
 	"th05/input_s.asm",
+	"th05/inp_h_w.cpp",
+	"th05/snd_dlym.cpp",
+	"th05/cdg_p_nc.cpp",
+	"th05/frmdelay.cpp",
 	"th04/cdg_load.asm",
+	"th05/egcrect.cpp",
+	"th05/op_setup.cpp",
+	"th04/zunsoft.cpp",
+	"th05/cfg.cpp",
+	"th05/op_title.cpp",
+	"th05/op_music.cpp",
 	"th05_op.asm",
+	"th05/hi_view.cpp",
+	"th05/m_char.cpp",
 })
-th05:link("main", {
+th05:branch(MODEL_LARGE):link("main", {
 	{ "th05_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
 		th04_sprites["pelletbt"],
 		th04_sprites["pointnum"],
 	} },
+	"th04/slowdown.cpp",
+	"th05/demo.cpp",
+	"th05/ems.cpp",
+	"th05/cfg_lres.cpp",
+	"th04/tile.cpp",
+	"th05/main010.cpp",
+	"th05/f_dialog.cpp",
+	"th05/dialog.cpp",
+	"th05/boss_exp.cpp",
+	"th05/playfld.cpp",
+	"th04/mb_inv.cpp",
+	"th04/boss_bd.cpp",
+	"th05/boss_bg.cpp",
+	"th05/laser_rh.cpp",
+	"th05/p_common.cpp",
+	"th05/p_reimu.cpp",
+	"th05/p_marisa.cpp",
+	"th05/p_mima.cpp",
+	"th05/p_yuuka.cpp",
 	"th05/player.asm",
 	"th05/hud_bar.asm",
 	"th05/scoreupd.asm",
+	"th05/midboss5.cpp",
+	"th05/hud_ovrl.cpp",
+	"th04/player_p.cpp",
 	"th04/vector2n.asm",
 	"th05/spark_a.asm",
+	"th05/bullet_p.cpp",
+	"th04/grcg_3.cpp",
+	"th05/player_a.cpp",
 	"th05/bullet_1.asm",
+	"th05/bullet_c.cpp",
 	"th05/bullet.asm",
+	"th05/bullet_t.cpp",
+	"th03/vector.cpp",
 	"th03/hfliplut.asm",
+	"th04/snd_pmdr.c",
+	"th04/snd_mmdr.c",
+	"th04/snd_mode.cpp",
+	"th04/cdg_p_na.cpp",
+	"th02/snd_se_r.cpp",
+	"th04/snd_se.cpp",
 	"th05/cdg_put.asm",
+	"th04/exit.cpp",
+	"th05/vector.cpp",
+	"th05/snd_load.cpp",
+	"th05/snd_kaja.cpp",
+	"th05/initmain.cpp",
 	"th05/input_s.asm",
+	"th05/inp_h_w.cpp",
+	"th05/frmdelay.cpp",
 	"th04/cdg_load.asm",
+	"th04/scrolly3.cpp",
 	"th04/motion_3.asm",
+	"th05/gather.cpp",
+	"th05/main032.cpp",
+	"th05/midboss.cpp",
+	"th04/hud_hp.cpp",
+	"th05/mb_dft.cpp",
+	"th05/laser.cpp",
+	"th05/cheeto_u.cpp",
+	"th04/it_spl_u.cpp",
+	"th05/bullet_u.cpp",
+	"th05/midboss1.cpp",
+	"th05/boss_1.cpp",
+	"th05/boss_4.cpp",
+	"th05/boss_6.cpp",
+	"th05/boss_x.cpp",
+	"th05/boss.cpp",
+	"th05/main014.cpp",
 })
-th05:link("maine", {
+th05:branch(MODEL_LARGE):link("maine", {
+	"th05/maine_e.cpp",
 	{ "th05_maine_master.asm", o = "mainem.obj" },
 	"th03/hfliplut.asm",
+	"th04/snd_pmdr.c",
+	"th04/snd_mmdr.c",
+	"th04/snd_mode.cpp",
 	"th04/grppsafx.asm",
 	"th05_maine.asm",
+	"th04/cdg_p_na.cpp",
+	"th02/snd_se_r.cpp",
+	"th04/snd_se.cpp",
+	"th04/bgimage.cpp",
+	"th04/exit.cpp",
+	"th05/vector.cpp",
 	"th05/bgimager.asm",
+	"th05/snd_load.cpp",
+	"th05/snd_kaja.cpp",
+	"th05/pi_cpp_1.cpp",
 	"th05/pi_asm_1.asm",
+	"th05/pi_cpp_2.cpp",
 	"th05/pi_asm_2.asm",
+	"th05/initmain.cpp",
 	"th05/input_s.asm",
+	"th05/inp_h_w.cpp",
+	"th05/snd_dlym.cpp",
+	"th05/frmdelay.cpp",
 	"th04/cdg_load.asm",
+	"th05/egcrect.cpp",
+	"th05/cutscene.cpp",
+	"th05/regist.cpp",
+	"th05/staff.cpp",
 })
 -- ----
 

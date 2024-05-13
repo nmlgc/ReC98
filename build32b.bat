@@ -1,5 +1,4 @@
 @echo off
-echo Running the first, 32-bit part of the ReC98 build process.
 
 : Windows 9x doesn't support stderr redirection, and always sets ERRORLEVEL to
 : 2 if you attempt to do that, regardless of `tasm32`'s existence. NT properly
@@ -86,7 +85,7 @@ exit /b
 
 :tup
 bin\tup
-goto eof
+goto return_from_tup
 
 :fallback
 echo [..] Running on a 32-bit OS, falling back on a dumb full rebuild...
@@ -94,7 +93,9 @@ echo [..] Running on a 32-bit OS, falling back on a dumb full rebuild...
 : Windows 9x wouldn't support %final% in this position.
 call build_dumb.bat
 
-goto eof
+:return_from_tup
+if errorlevel 1 goto eof
+goto success
 
 :no_tasm32
 echo Could not find TASM32.
@@ -111,5 +112,8 @@ goto tc4j_bin
 echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
 goto eof
 
-:eof
+:success
+echo Done. Find the executables in the bin\ subdirectory.
 echo -------------------------------------------------------------------------------
+
+:eof
