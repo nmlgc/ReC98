@@ -1,6 +1,8 @@
 /// Entities
 /// --------
 
+#include "game/pf.h"
+
 // Slot count for unique .BOS files associated with CBossEntity instances.
 // *Not* CBossEntity instances themselves!
 #define BOS_ENTITY_SLOT_COUNT 4

@@ -51,7 +51,7 @@ extern "C" {
 // sets [snd_se_mode] and [snd_bgm_mode] accordingly. Returns [snd_bgm_mode].
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 
-#if defined(PMD) && defined(MASTER_HPP)
+#if defined(PMD)
 // Loads a song ([func] == SND_LOAD_SONG) or a sound effect bank ([func] ==
 // SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must
 // be null-terminated (despite the fixed length) and not have any extension.

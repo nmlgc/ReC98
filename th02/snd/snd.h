@@ -1,3 +1,4 @@
+#include "game/pf.h"
 #include "defconv.h"
 
 #ifdef __cplusplus
@@ -97,7 +98,7 @@ void snd_delay_until_volume(uint8_t volume);
 		SND_LOAD_SE = (PMD_GET_SE_ADDRESS << 8),
 	} snd_load_func_t;
 
-	#if (GAME <= 3) && defined(MASTER_HPP)
+	#if (GAME <= 3)
 		// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound
 		// effect bank in EFC format ([func] == SND_LOAD_SE) into the
 		// respective work buffer of the sound driver. If MIDI is used, 'md'

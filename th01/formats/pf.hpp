@@ -1,3 +1,5 @@
+#include "game/pf.h"
+
 // Encraption key
 extern uint8_t arc_key;
 

@@ -408,9 +408,6 @@ int MASTER_RET file_delete(const char MASTER_PTR *filename);
 // Packfiles
 // ---------
 
-// Maximum file name length
-#define PF_FN_LEN 13
-
 extern unsigned char pfkey; // 復号化キー
 extern unsigned bbufsiz;    // バッファサイズ
 
