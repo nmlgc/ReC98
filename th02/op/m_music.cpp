@@ -363,15 +363,15 @@ void pascal near polygon_build(
 }
 
 #define polygon_init(i, center_y, velocity_x) { \
-	center[i].x = (rand() % RES_X); \
+	center[i].x = (irand() % RES_X); \
 	center[i].y.v = center_y; \
 	velocity[i].x = velocity_x; \
 	if(velocity[i].x == 0) { \
 		velocity[i].x = 1; \
 	} \
-	velocity[i].y.v = (to_sp(2.0f) + TO_SP(rand() & 3)); \
-	angle[i] = rand(); \
-	angle_speed[i] = (0x04 - (rand() & 0x07)); \
+	velocity[i].y.v = (to_sp(2.0f) + TO_SP(irand() & 3)); \
+	angle[i] = irand(); \
+	angle_speed[i] = (0x04 - (irand() & 0x07)); \
 	if(angle_speed[i] == 0x00) { \
 		angle_speed[i] = 0x04; \
 	} \
@@ -386,7 +386,7 @@ void near polygons_update_and_render(void)
 	int i;
 	if(!polygons_initialized) {
 		for(i = 0; i < POLYGONS_RENDERED; i++) {
-			polygon_init(i, (rand() % to_sp(RES_Y)), (4 - (rand() & 7)));
+			polygon_init(i, (irand() % to_sp(RES_Y)), (4 - (irand() & 7)));
 		}
 
 		// ZUN quirk: This is never reset.
@@ -410,7 +410,7 @@ void near polygons_update_and_render(void)
 
 		// Enough to cover the maximum possible radius of 96.
 		if(center[i].y >= to_sp(RES_Y + 100.0f)) {
-			polygon_init(i, to_sp(-100.0f), (8 - (rand() & 15)));
+			polygon_init(i, to_sp(-100.0f), (8 - (irand() & 15)));
 		}
 
 		grcg_polygon_c(points, polygon_vertex_count(i));

@@ -321,7 +321,7 @@ void pattern_halfcircle_spray_downwards(void)
 	static int8_t direction;
 
 	if(boss_phase_frame == 10) {
-		direction = ((rand() % 2) == 1) ? 1 : -1;
+		direction = ((irand() % 2) == 1) ? 1 : -1;
 	}
 	if(boss_phase_frame < KEYFRAME_FIRE) {
 		sphere_accelerate_rotation_and_render(direction);
@@ -564,7 +564,7 @@ void pascal fire_random_downwards_pellets(void)
 	);
 
 	for(int i = 0; i < 10; i++) {
-		unsigned char angle = (rand() & (0x80 - 1));
+		unsigned char angle = (irand() & (0x80 - 1));
 		Pellets.add_single(
 			(ent.cur_center_x() - (PELLET_W / 2)),
 			(ent.cur_center_y() - (PELLET_H / 2)),
@@ -582,8 +582,8 @@ void pascal fire_random_sling_pellets(void)
 	);
 
 	for(int i = 0; i < 10; i++) {
-		pixel_t offset_x = (rand() % SINGYOKU_W);
-		pixel_t offset_y = (rand() % SINGYOKU_H);
+		pixel_t offset_x = (irand() % SINGYOKU_W);
+		pixel_t offset_y = (irand() % SINGYOKU_H);
 		Pellets.add_single(
 			(ent.cur_left + offset_x),
 			(ent.cur_top + offset_y),
@@ -771,7 +771,7 @@ void singyoku_main(void)
 
 		if(boss_phase_frame == 0) {
 			// Cycle between pattern 4 and any non-4 pattern
-			phase.pattern_cur = (phase.pattern_cur == 4) ? (rand() % 4) : 4;
+			phase.pattern_cur = (phase.pattern_cur == 4) ? (irand() % 4) : 4;
 		}
 
 		hit.update_and_render(flash_colors);

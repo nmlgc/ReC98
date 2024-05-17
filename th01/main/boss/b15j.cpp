@@ -685,7 +685,7 @@ inline void fire_random_aimed_eye_laser(
 	fire_aimed_eye_laser(
 		i,
 		origin_left,
-		((rand() % (aim_range_x * 2)) - aim_range_x),
+		((irand() % (aim_range_x * 2)) - aim_range_x),
 		speed_multiplied_by_8,
 		w
 	);
@@ -894,7 +894,7 @@ int near pattern_vertical_lasers_from_top(void)
 	if((boss_phase_frame % INTERVAL) == 0) {
 		int i = ((boss_phase_frame - KEYFRAME_START) / INTERVAL);
 		pixel_t random_offset_x = (
-			(rand() % ((random_range_x_half * 2) + 1)) - random_range_x_half
+			(irand() % ((random_range_x_half * 2) + 1)) - random_range_x_half
 		);
 		shootout_lasers[i].spawn(
 			(PLAYFIELD_LEFT + (i * DISTANCE_X + random_offset_x)),

@@ -6,6 +6,7 @@
  * allowing this header to be used on its own if those aren't required.
  */
 
+#ifndef MASTER_HPP
 #define MASTER_HPP
 
 /// Types
@@ -383,9 +384,6 @@ int MASTER_RET ihypot(int x, int y);
 #define irand_init(seed) \
 	(random_seed = (seed))
 int MASTER_RET irand(void);
-
-#define srand(s) irand_init(s)
-#define rand()   irand()
 // ----
 
 // Optionally buffered single-file I/O
@@ -712,3 +710,5 @@ void MASTER_RET vsync_end(void);
 	#endif
 #endif
 /// ------------------
+
+#endif /* MASTER_HPP */

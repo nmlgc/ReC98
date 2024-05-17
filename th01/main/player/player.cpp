@@ -918,11 +918,11 @@ void orb_player_hittest(int repel_friction)
 			orb_velocity_x = OVX_4_LEFT;
 		} else if((player_left - orb_cur_left) == 0) {
 			orb_velocity_x = OVX_0;
-			if((rand() % 8) == 0) {
+			if((irand() % 8) == 0) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
 			// ZUN quirk: Shouldn't this be OVX_4_RIGHT, maybe?
-			if((rand() % 8) == 4) {
+			if((irand() % 8) == 4) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
 		} else {

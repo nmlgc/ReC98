@@ -502,7 +502,7 @@ void verdict_title_calculate_and_render(void)
 	else if(credit_lives_extra == 1) { skill +=  5; }
 	else if(credit_lives_extra == 0) { skill += 10; }
 
-	int group = (rand() % VERDICT_GROUPS);
+	int group = (irand() % VERDICT_GROUPS);
 
 	// level = max((min(skill, 80) + 20) / 20), 0);
 	/**/ if(skill >= 80) { level = 5; }

@@ -54,7 +54,7 @@ void cards_hittest(int stage_id)
 		) || (
 			(bomb_damaging == true) &&
 			((bomb_frames % cards.count) == i) &&
-			((rand() % 4) != 0) &&
+			((irand() % 4) != 0) &&
 			(cards.flag[i] == CARD_ALIVE)
 		)) {
 			cards.flag[i] = CARD_FLIPPING;

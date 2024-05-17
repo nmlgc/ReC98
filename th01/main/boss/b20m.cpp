@@ -633,7 +633,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			pellets_add_single_rain(
 				birds.pellet_left(i),
 				birds.pellet_top(i),
-				((rand() & 0x7F) + 0x80),
+				((irand() & 0x7F) + 0x80),
 				4.0f
 			);
 		}
@@ -918,7 +918,7 @@ void near pattern_vortices(void)
 		}
 	} else if(boss_phase_frame < 240) {
 		if(boss_phase_frame == 200) {
-			static_cast<int>(dir_first) = (rand() % 2);
+			static_cast<int>(dir_first) = (irand() % 2);
 			if(dir_first == X_LEFT) {
 				wand_lower_both();
 			}
@@ -930,7 +930,7 @@ void near pattern_vortices(void)
 		}
 	} else if(boss_phase_frame < 320) {
 		if(boss_phase_frame == 240) {
-			static_cast<int>(dir_second) = (rand() % 2);
+			static_cast<int>(dir_second) = (irand() % 2);
 			if((dir_second == X_RIGHT) && (dir_second == dir_first)) {
 				wand_lower_both();
 			} else if((dir_second == X_LEFT) && (dir_second == dir_first)) {
@@ -1045,8 +1045,8 @@ void near pattern_birds_on_ellipse_arc(void)
 		eggs_alive = 0;
 		spawner_left.v = to_sp(WAND_EMIT_LEFT);
 		spawner_top.v = to_sp(WAND_EMIT_TOP);
-		spawner_velocity_x.v = TO_SP(4 - ((rand() % 2) * 8));
-		spawner_velocity_y.v = TO_SP(2 - ((rand() % 2) * 4));
+		spawner_velocity_x.v = TO_SP(4 - ((irand() % 2) * 8));
+		spawner_velocity_y.v = TO_SP(2 - ((irand() % 2) * 4));
 		select_for_rank(pattern_state.interval, 20, 15, 10, 8);
 		mdrv2_se_play(8);
 	} else if(boss_phase_frame < 200) {
@@ -1100,12 +1100,12 @@ void near pattern_birds_on_ellipse_arc(void)
 					: to_sp( 0.25f);
 			}
 			for(int i = (eggs_alive - 1); i >= 0; i--) {
-				vector2(velocity.x, velocity.y, 3, ((rand() & 0x7F) + 0x80));
+				vector2(velocity.x, velocity.y, 3, ((irand() & 0x7F) + 0x80));
 				birds_spawn(egg.left[i], egg.top[i], velocity.x, velocity.y);
 			}
 			wand_lower_both();
 			pellet_group = static_cast<bird_pellet_group_t>(
-				rand() % (BPG_6_RING + 1) // excluding random rain here
+				irand() % (BPG_6_RING + 1) // excluding random rain here
 			);
 		}
 
@@ -1222,7 +1222,7 @@ void pascal near bg_transition(int image_id_new)
 
 	for(row = 0; row < (RES_Y / ROW_SPACING); row++) {
 		grcg_setcolor_tcr(COL_AIR);
-		cell_offset_right = (rand() % 8);
+		cell_offset_right = (irand() % 8);
 
 		graph_accesspage(1);
 		for(stripe_id = 0; stripe_id < (STRIPES_PER_CELL * 2); stripe_id++) {
@@ -1316,11 +1316,11 @@ void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 			if(col[i] != 0) {
 				continue;
 			}
-			left[i] = (rand() % RES_X);
+			left[i] = (irand() % RES_X);
 			top[i] = ((from_bottom == false) ? 0 : (RES_Y - 1 - PARTICLE2X2_H));
 			velocity_y[i] = ((from_bottom == false)
-				? (( rand() % 15) + 2)
-				: ((-rand() % 15) - 8)
+				? (( irand() % 15) + 2)
+				: ((-irand() % 15) - 8)
 			);
 			col[i] = COL_PARTICLE2X2;
 			break;
@@ -1471,7 +1471,7 @@ void near pattern_detonating_snowflake(void)
 		// randomized again.
 		star_left = left.v;
 
-		star_top = (PLAYFIELD_BOTTOM - (rand() % RADIUS_MAX));
+		star_top = (PLAYFIELD_BOTTOM - (irand() % RADIUS_MAX));
 		mdrv2_se_play(10);
 	}
 	if(state.phase >= P_DETONATION_START) {
@@ -1489,10 +1489,10 @@ void near pattern_detonating_snowflake(void)
 		radius_outer_1 -= 6;
 		radius_outer_2 += 6;
 		radius_inner += 4;
-		star_left = ((rand() % ((HITBOX_W * 2) / 3)) + left.to_pixel() - (
+		star_left = ((irand() % ((HITBOX_W * 2) / 3)) + left.to_pixel() - (
 			 ((HITBOX_W * 2) / 6) - (FLAKE_W / 2)
 		));
-		star_top = (PLAYFIELD_BOTTOM - (rand() % RADIUS_MAX));
+		star_top = (PLAYFIELD_BOTTOM - (irand() % RADIUS_MAX));
 		if(radius_outer_1 <= 8) {
 			state.phase = P_RESET;
 			return;
@@ -1558,7 +1558,7 @@ void near pattern_aimed_sling_clusters(void)
 	) {
 		screen_x_t left;
 		vram_y_t top;
-		unsigned char angle = rand();
+		unsigned char angle = irand();
 
 		left = polar_y(PLAYFIELD_CENTER_X, (PLAYFIELD_W / 16), angle);
 		top = polar_x(
@@ -1594,7 +1594,7 @@ void near particles2x2_wavy_unput_update_render()
 			if(col[i] != 0) {
 				continue;
 			}
-			left[i] = (rand() % RES_X);
+			left[i] = (irand() % RES_X);
 			top[i] = RES_Y;
 			velocity_y[i] = -1;
 			age[i] = 0;
@@ -2107,9 +2107,9 @@ void pascal near particles2x2_horizontal_unput_update_render(int frame)
 			if(col[i] != 0) {
 				continue;
 			}
-			left[i] = (rand() % RES_X);
-			top[i] = (rand() % RES_Y);
-			velocity_x[i] = ((rand() % 2) == 0) ? -6 : 6;
+			left[i] = (irand() % RES_X);
+			top[i] = (irand() % RES_Y);
+			velocity_x[i] = ((irand() % 2) == 0) ? -6 : 6;
 			col[i] = COL_PARTICLE2X2;
 			break;
 		}
@@ -2288,7 +2288,7 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 		pellets_add_single_rain(
 			(PLAYFIELD_LEFT + ((PLAYFIELD_W / pattern_state.pellet_count) * i)),
 			SEAL_CENTER_Y,
-			rand(),
+			irand(),
 			1.0f
 		);
 	}
@@ -2388,11 +2388,11 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 				continue;
 			}
 			left[i].v = (
-				to_dsp(PLAYFIELD_LEFT) + (rand() % to_dsp(PLAYFIELD_W))
+				to_dsp(PLAYFIELD_LEFT) + (irand() % to_dsp(PLAYFIELD_W))
 			);
 			top[i].v = (
 				to_dsp(FACE_CENTER_Y) +
-				(rand() % to_dsp((PLAYFIELD_H * 25) / 84))
+				(irand() % to_dsp((PLAYFIELD_H * 25) / 84))
 			);
 			vector2_between(
 				left[i].to_pixel(),
@@ -2434,7 +2434,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			}
 			if(flag[i] == LF_SPLASH_DONE) {
 				flag[i] = LF_LEAF;
-				velocity_y[i].v = (to_dsp(0.3f) + (rand() % to_dsp(0.2f)));
+				velocity_y[i].v = (to_dsp(0.3f) + (irand() % to_dsp(0.2f)));
 				velocity_x[i].v = to_dsp(0.2f);
 			}
 		} else if(flag[i] == LF_LEAF) {
@@ -2447,7 +2447,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			top[i].v += velocity_y[i].v;
 			velocity_y[i].v--;
 			if(velocity_y[i].v < to_dsp(-0.1f)) {
-				velocity_y[i].v = (to_dsp(3.0f) + (rand() % to_dsp(2.0f)));
+				velocity_y[i].v = (to_dsp(3.0f) + (irand() % to_dsp(2.0f)));
 				velocity_x[i].v = (velocity_x[i].v < to_dsp(0.0f))
 					? to_dsp(+2.0f)
 					: to_dsp(-2.0f);
@@ -2625,7 +2625,7 @@ void sariel_main(void)
 				boss_phase = 1;
 				phase.pattern_cur = 0;
 				phase.u1.patterns_done = 0;
-				phase.patterns_until_next = ((rand() % 6) + 1);
+				phase.patterns_until_next = ((irand() % 6) + 1);
 				boss_phase_frame = 0;
 				initial_hp_rendered = 0;
 				boss_palette_show(); // Unnecessary.
@@ -2666,7 +2666,7 @@ entrance_rings_still_active:
 			// Assume that the palette didn't change between background ID 0
 			// and 1...
 			// boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 5) + 1);
+			phase.patterns_until_next = ((irand() % 5) + 1);
 		}
 	} else if(boss_phase == 3) {
 		phase.frame_common(false);
@@ -2692,7 +2692,7 @@ entrance_rings_still_active:
 		if(boss_phase_frame == 0) {
 			phase.next(5);
 			boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 4) + 3);
+			phase.patterns_until_next = ((irand() % 4) + 3);
 		}
 	} else if(boss_phase == 5) {
 		phase.frame_common(false);
@@ -2724,7 +2724,7 @@ entrance_rings_still_active:
 		if(boss_phase_frame == 0) {
 			phase.next(7);
 			boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 5) + 2);
+			phase.patterns_until_next = ((irand() % 5) + 2);
 		}
 	} else if(boss_phase == 7) {
 		phase.frame_common(false);
@@ -2749,7 +2749,7 @@ entrance_rings_still_active:
 		if(boss_phase_frame == 0) {
 			phase.next(1);
 			boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 6) + 1);
+			phase.patterns_until_next = ((irand() % 6) + 1);
 		}
 	} else if(boss_phase == PHASE_FORM1_DEFEATED) {
 		boss_phase_frame = 0;

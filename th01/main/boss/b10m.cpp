@@ -650,7 +650,7 @@ inline void missile_pairs_shift_angle_1_clock(
 	) { \
 		if(missile_subphase_variation_is(subphase, 0, MSP_PREPARE, 1)) { \
 			subphase = missile_subphase_variation( \
-				(rand() % variations_max), MSP_AIM_AND_FIRE_AROUND \
+				(irand() % variations_max), MSP_AIM_AND_FIRE_AROUND \
 			); \
 			target_left = (player_left - (MISSILE_W / 2)); \
 			angle_southwest = missile_angle(eye_southwest, target_left); \

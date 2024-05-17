@@ -687,7 +687,7 @@ void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
 	if(!do_not_initialize) {
 		hop = -1;
 		spreadin_interval = SPREADIN_INTERVAL;
-		direction = static_cast<x_direction_t>(rand() % 2);
+		direction = static_cast<x_direction_t>(irand() % 2);
 		spreadin_speed = ((MIMA_H / 2) / (SPREADIN_FRAMES / SPREADIN_INTERVAL));
 		return;
 	}

@@ -507,7 +507,7 @@ int main(void)
 
 	score = resident->score;
 	extend_next = ((resident->score / SCORE_PER_EXTEND) + 1);
-	srand(frame_rand);
+	irand_init(frame_rand);
 	game_init();
 	key_start();
 
@@ -601,7 +601,7 @@ int main(void)
 	z_graph_init();
 	graph_accesspage_func(0);
 	z_graph_clear();
-	card_flip_cycle = (rand() % CARD_FLIP_CYCLE_INITIAL_MAX);
+	card_flip_cycle = (irand() % CARD_FLIP_CYCLE_INITIAL_MAX);
 	first_stage_in_scene = true;
 	stage_wait_for_shot_to_begin = true;
 	bgm_reload_and_play_if_0 = (!resident->snd_need_init ? 1 : 0);
@@ -813,7 +813,7 @@ int main(void)
 			stage_wait_for_shot_to_begin = false;
 			input_shot = false;
 			timer_initialized = true;
-			srand(frame_rand);
+			irand_init(frame_rand);
 			bomb_doubletap_frames = BOMB_DOUBLETAP_WINDOW;
 			first_stage_in_scene = false;
 			pellet_speed_raise_cycle = 3000; // ZUN bloat: Reassigned below

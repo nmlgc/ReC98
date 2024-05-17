@@ -50,7 +50,7 @@ void invincibility_sprites_update_and_render(bool16 invincible);
 #define player_miss_put() { \
 	orb_put_default(); \
 	player_put(PTN_MIKO_MISS + ( \
-		(rand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0 \
+		(irand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0 \
 	)); \
 }
 

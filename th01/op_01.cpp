@@ -289,12 +289,12 @@ void whitelines_animate(void)
 		egc_copy_rect_1_to_0_16(0, y2, RES_X, 1);
 
 		do {
-			y1 = (rand() % RES_Y);
+			y1 = (irand() % RES_Y);
 		} while(drawn_at[y1]);
 		drawn_at[y1] = true;
 
 		do {
-			y2 = (rand() % RES_Y);
+			y2 = (irand() % RES_Y);
 		} while(drawn_at[y2]);
 		drawn_at[y2] = true;
 
@@ -824,7 +824,7 @@ void main(int argc, const char *argv[])
 
 	// Since [frame_rand] is always 0 here, the white line animation always
 	// looks identical.
-	srand(frame_rand);
+	irand_init(frame_rand);
 
 	while(!quit) {
 		if(menu_id == MID_MAIN) {

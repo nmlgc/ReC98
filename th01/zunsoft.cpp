@@ -109,9 +109,9 @@ void objects_setup(void)
 	wave_amp = 0;
 
 	for(i = 0; i < STAR_COUNT; i++) {
-		star_pos[i].x = rand() % 640;
-		star_pos[i].y = rand() % 400;
-		star_speed[i] = (rand() % 32) + 6;
+		star_pos[i].x = (irand() % RES_X);
+		star_pos[i].y = (irand() % RES_Y);
+		star_speed[i] = ((irand() % 32) + 6);
 	}
 	star_angle = +0x40;
 }
