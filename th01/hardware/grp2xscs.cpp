@@ -57,7 +57,7 @@ void graph_2xscale_byterect_1_to_0_slow(
 				scale_2x(px32_nonzero, px16_nonzero);
 				grcg_setcolor_rmw(0);
 				grcg_put(p0 + scale_p, px32_nonzero, 32);
-				grcg_off();
+				grcg_off_func();
 
 				scale_2x(dst32, px16.B);
 				VRAM_CHUNK(B, p0 + scale_p, 32) |= dst32;

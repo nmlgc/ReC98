@@ -445,7 +445,7 @@ void pellet_render(screen_x_t left, screen_y_t top, int cel)
 {
 	grcg_setcolor_rmw(V_WHITE);
 	pellet_put(left, top, cel);
-	grcg_off();
+	grcg_off_func();
 }
 
 inline bool16 overlaps_shot(

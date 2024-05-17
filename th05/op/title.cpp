@@ -4,6 +4,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 extern "C" {
 #include "th03/formats/cdg.h"

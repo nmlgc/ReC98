@@ -816,7 +816,7 @@ void pillar_put_8(screen_x_t left, vram_y_t bottom, pixel_t h)
 		y++;
 		vo -= ROW_SIZE;
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void pattern_pillars_and_aimed_spreads(void)

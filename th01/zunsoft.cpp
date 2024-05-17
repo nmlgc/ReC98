@@ -12,6 +12,7 @@
 #include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/grcg.hpp"
 #include "th01/math/polar.hpp"
 
 #define CIRCLE_COUNT 4

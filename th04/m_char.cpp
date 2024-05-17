@@ -12,6 +12,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 extern "C" {

@@ -25,6 +25,7 @@
 #endif
 extern "C" {
 #if (GAME >= 4)
+	#include "th01/hardware/grcg.hpp"
 	#include "th04/hardware/bgimage.hpp"
 	#include "th04/hardware/grppsafx.h"
 	#include "th04/snd/snd.h"
@@ -427,9 +428,6 @@ void near polygons_update_and_render(void)
 // ZUN bloat
 #if ((GAME == 3) || (GAME == 4))
 	#define frame_delay frame_delay_2
-#endif
-#if (GAME <= 3)
-	#undef grcg_off
 #endif
 
 void near music_flip(void)

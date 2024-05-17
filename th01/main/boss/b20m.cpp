@@ -1367,7 +1367,7 @@ void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 		grcg_setcolor_rmw(col[i]);
 		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void near pattern_detonating_snowflake(void)
@@ -1640,7 +1640,7 @@ void near particles2x2_wavy_unput_update_render()
 		grcg_setcolor_rmw(col[i]);
 		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void near pattern_four_aimed_lasers(void)
@@ -2153,7 +2153,7 @@ void pascal near particles2x2_horizontal_unput_update_render(int frame)
 		graph_accesspage_func(0);
 		particle2x2_put_left_right(vo, first_bit, dots_left, dots_right);
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 struct CurvedSpray {

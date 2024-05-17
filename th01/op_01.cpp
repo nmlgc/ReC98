@@ -64,7 +64,7 @@ void snap_col_4(void)
 		}
 	}
 
-	grcg_off();
+	grcg_off_func();
 	graph_accesspage_func(0);
 }
 
@@ -274,7 +274,7 @@ void whiteline_put(screen_y_t y)
 		x++;
 		vram_offset += static_cast<vram_offset_t>(sizeof(dots32_t));
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void whitelines_animate(void)

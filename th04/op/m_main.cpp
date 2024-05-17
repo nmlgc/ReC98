@@ -13,6 +13,7 @@
 #include <string.h>
 #include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
 #include "th02/op/menu.hpp"

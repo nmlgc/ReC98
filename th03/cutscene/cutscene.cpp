@@ -20,6 +20,9 @@
 #include "shiftjis.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+#if (GAME >= 4)
+	#include "th01/hardware/grcg.hpp" // ZUN bloat
+#endif
 #include "th01/formats/cutscene.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -54,10 +57,6 @@ extern "C" {
 #include "th03/cutscene/cutscene.hpp"
 
 #pragma option -a2
-
-#if (GAME == 3)
-	#undef grcg_off // ZUN bloat
-#endif
 
 // Constants
 // ---------

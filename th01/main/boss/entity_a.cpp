@@ -191,7 +191,7 @@ void CBossEntity::put_1line(
 				for(b = 0; b < sizeof(dots16_t); b++) {
 					grcg_setcolor_rmw(0);
 					vram_byte(B, b) = cur.alpha.ubyte[b];
-					grcg_off();
+					grcg_off_func();
 
 					vram_byte(B, b) |= cur.B.ubyte[b];
 					vram_byte(R, b) |= cur.R.ubyte[b];
@@ -203,7 +203,7 @@ void CBossEntity::put_1line(
 					grcg_setcolor_rmw(0);
 					vram_byte(B, b + 0) = (cur.alpha.ubyte[b] >> first_bit);
 					vram_byte(B, b + 1) = (cur.alpha.ubyte[b] << other_shift);
-					grcg_off();
+					grcg_off_func();
 
 					vram_byte(B, b + 0) |= (cur.B.ubyte[b] >> first_bit);
 					vram_byte(R, b + 0) |= (cur.R.ubyte[b] >> first_bit);

@@ -10,13 +10,11 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/grcg.hpp"
 #include "th01/hardware/vsync.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/palette.h"
-
-#undef grcg_off
-#define grcg_off() outportb(0x7C, 0);
 
 // Never read from, so it's supposedly only there for debugging purposes?
 static screen_point_t graph_r_last_line_end;

@@ -297,7 +297,7 @@ void near stagebonus_box_open_animate(void)
 			frame_delay(1);
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 static const int8_t FULLWIDTH_NUMERAL_SPACE = 10;

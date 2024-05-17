@@ -12,7 +12,6 @@
 #include "th03/formats/hfliplut.h"
 #include "th03/formats/mrs.hpp"
 
-#undef grcg_off
 #define grcg_off() { \
 	_outportb_(0x7C, (_AL ^= _AL)); \
 }

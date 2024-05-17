@@ -90,7 +90,7 @@ void grc_put_8(
 			break;
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 
 	#undef grc_slot
 }

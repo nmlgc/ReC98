@@ -35,7 +35,7 @@ void grcg_whiteline(screen_y_t y)
 		grcg_put(vo, 0xFFFF, 16);
 		vo += static_cast<vram_offset_t>(sizeof(dots16_t));
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 #define defeat_animate( \

@@ -3,6 +3,7 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th02/main/hud/hud.hpp"
 #include "th03/math/polar.hpp"
 #include "th03/hardware/palette.hpp"

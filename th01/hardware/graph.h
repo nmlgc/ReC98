@@ -41,8 +41,6 @@ void grcg_setcolor_rmw(vc2 col);
 void grcg_setcolor_tcr(vc2 col);
 
 void grcg_off_func(void);
-#undef grcg_off
-#define grcg_off grcg_off_func
 
 void z_grcg_boxfill(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col

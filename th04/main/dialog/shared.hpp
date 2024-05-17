@@ -10,6 +10,7 @@
 #include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/math/subpixel.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th02/hardware/egc.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/pages.hpp"

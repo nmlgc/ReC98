@@ -1,5 +1,7 @@
 // Shared boss implementation macros.
 
+#include "th01/hardware/grcg.hpp"
+
 // Common implementation of [boss_bg_render]:
 // 1) Stage tiles before and after the fight
 // 2) A static backdrop image during the fight

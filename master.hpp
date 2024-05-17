@@ -244,13 +244,10 @@ void MASTER_RET graph_scrollup(unsigned line);
 	void MASTER_RET grcg_setcolor(int mode, vc2 color);
 #endif
 void MASTER_RET grcg_settile_1line(int mode, long tile);
-void MASTER_RET grcg_off(void);
 
-#define grcg_setmode(mode) \
-	outportb(0x7C, mode)
-#if (GAME != 2)
-	#define grcg_off() \
-		outportb(0x7C, 0)
+// Just in case this is #included after `th01/hardware/grcg.hpp`...
+#ifndef grcg_off
+	void MASTER_RET grcg_off(void);
 #endif
 
 #if defined(PC98_H) && defined(__cplusplus)

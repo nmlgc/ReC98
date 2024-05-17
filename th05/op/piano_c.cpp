@@ -59,9 +59,6 @@ extern piano_notes_t piano_notes_prev;
 /// ZUN bloat: Redundant garbage
 /// ----------------------------
 
-#undef grcg_setmode
-#undef grcg_off
-
 #define grcg_setmode(mode) { \
 	_outportb_(0x7C, mode); \
 }

@@ -21,7 +21,7 @@ void pellet_cloud_put_8(screen_x_t left, vram_y_t top, vc2 col, int cel)
 		y++;
 		vram_offset += ROW_SIZE;
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void pellet_cloud_unput_8(screen_x_t left, vram_y_t top, int cel)

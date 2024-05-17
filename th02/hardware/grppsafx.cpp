@@ -13,8 +13,6 @@ extern "C" {
 
 #include "th01/hardware/grppsafx.cpp"
 
-#undef grcg_off
-
 void DEFCONV graph_putsa_fx(
 	screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 )

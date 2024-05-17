@@ -312,7 +312,7 @@ void hud_bg_put(void)
 			grcg_put(vram_offset, byte, 8);
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 	enable();
 }
 

@@ -80,7 +80,7 @@ void grx_put(unsigned int slot)
 		}
 	}
 	if(grx_col) {
-		grcg_off();
+		grcg_off_func();
 	}
 #undef put
 }
