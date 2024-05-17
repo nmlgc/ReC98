@@ -36,7 +36,7 @@
 #include "th01/formats/cfg.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 #include "th01/formats/scoredat.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/hiscore/regist.hpp"

@@ -3,10 +3,8 @@
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
-#include "planar.h"
-#include "libs/master.lib/master.hpp"
 #include "th01/hardware/palette.h"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"
 
 // On-disk .PTN slot file header

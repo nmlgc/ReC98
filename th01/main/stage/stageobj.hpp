@@ -189,6 +189,8 @@ void stageobjs_init_and_render(int stage_id);
 // Blitting
 // --------
 
+struct ptn_t;
+
 // Stationary stage objects are blitted to both VRAM pages, which makes it
 // possible to efficiently unblit the other entities moving on top of them, by
 // simply restoring pixels from VRAM page 1. Since the player can remove

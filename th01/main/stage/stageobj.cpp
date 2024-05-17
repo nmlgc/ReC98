@@ -12,7 +12,7 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"

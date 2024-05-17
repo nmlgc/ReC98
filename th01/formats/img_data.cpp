@@ -4,9 +4,8 @@
 
 #include "platform.h"
 #include "pc98.h"
-#include "planar.h"
 #include "th01/formats/grz.h"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 
 #if (BINARY != 'E')
 	// TODO: Move into vplanset.cpp once we're close to done with TH02-TH04.

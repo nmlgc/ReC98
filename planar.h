@@ -3,6 +3,7 @@
  * Declarations for planar 4bpp graphics
  */
 
+#ifndef PLANAR_H
 #define PLANAR_H
 
 // 1bpp types, describing horizontal lines of 8, 16, or 32 pixels.
@@ -242,3 +243,5 @@ typedef dots16_t egc_temp_t;
 	/* For code generation reasons, [offset] must NOT be parenthesized here */ \
 	VRAM_CHUNK(B, offset, 16)
 // ----------
+
+#endif /* PLANAR_H */
