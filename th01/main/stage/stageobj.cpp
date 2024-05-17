@@ -17,7 +17,6 @@
 #include "th01/sprites/pellet.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/stageobj.hpp"
 

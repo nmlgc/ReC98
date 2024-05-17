@@ -1,3 +1,4 @@
+#include "th01/main/player/orb.hpp"
 #include "decomp.hpp"
 
 // Coordinates
@@ -8,14 +9,12 @@
 static const int STAGEOBJ_W = PTN_W;
 static const int STAGEOBJ_H = PTN_H;
 
-#ifdef ORB_HPP
-	static const pixel_t STAGEOBJ_ORB_DISTANCE_X = (
-		((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_W / 2)
-	);
-	static const pixel_t STAGEOBJ_ORB_DISTANCE_Y = (
-		((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_H / 2)
-	);
-#endif
+static const pixel_t STAGEOBJ_ORB_DISTANCE_X = (
+	((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_W / 2)
+);
+static const pixel_t STAGEOBJ_ORB_DISTANCE_Y = (
+	((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_H / 2)
+);
 // -----------
 
 #define stageobj_safe_delete(ptr) { \

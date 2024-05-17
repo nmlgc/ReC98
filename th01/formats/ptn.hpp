@@ -5,7 +5,8 @@
 /// color #15. With functions for raw allocation and VRAM snapping, this can
 /// also be used to store the backgrounds of frequently updated VRAM regions.
 
-#define PTN_HPP
+#ifndef TH01_FORMATS_PTN_HPP
+#define TH01_FORMATS_PTN_HPP
 
 #define PTN_W 32
 #define PTN_H 32
@@ -189,4 +190,6 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter);
 	} \
 }
 // ------------------
+
+#endif /* TH01_FORMATS_PTN_HPP */
 /// -----------------------------------------

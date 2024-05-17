@@ -43,7 +43,6 @@
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/player/bomb.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
