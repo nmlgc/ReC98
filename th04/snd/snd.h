@@ -30,14 +30,6 @@ static inline bool snd_bgm_active() {
 static inline bool16 snd_se_active() {
 	return (snd_se_mode != SND_SE_OFF);
 }
-
-#ifdef X86REAL_H
-	// MODDERS: Just use [new_se] directly.
-	static inline int16_t snd_get_param(int16_t &param) {
-		_BX = _SP;
-		return peek(_SS, (_BX + 4));
-	}
-#endif
 #endif
 
 #define snd_bgm_is_fm() \
@@ -81,12 +73,6 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 //   [snd_bgm_mode] nor "[fn].m" exist.
 void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 
-#if defined(__cplusplus) && (GAME == 5)
-	// Refer to TH02's implementation for an explanation of how wrong this is.
-	static inline uint16_t snd_load_size() {
-		return 0xFFFF;
-	}
-#endif
 #endif
 
 #ifdef __cplusplus

@@ -2,10 +2,10 @@
 
 #include <errno.h>
 #include "platform.h"
-#include "x86real.h"
 #include "libs/kaja/kaja.h"
 #include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
+#include "th02/snd/impl.hpp"
 #include "th05/snd/snd.h"
 
 extern char snd_load_fn[PF_FN_LEN];

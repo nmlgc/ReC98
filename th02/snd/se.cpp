@@ -1,9 +1,8 @@
 #pragma option -zCSHARED -k-
 
 #include "platform.h"
-#include "x86real.h"
 #include "libs/kaja/kaja.h"
-#include "th02/snd/se_impl.hpp"
+#include "th02/snd/impl.hpp"
 #if (GAME >= 4)
 	#include "libs/master.lib/master.hpp"
 	#include "th04/snd/snd.h"

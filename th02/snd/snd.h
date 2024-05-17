@@ -26,11 +26,6 @@ extern bool snd_midi_possible;
 	static inline bool snd_se_active() {
 		return snd_fm_possible;
 	}
-
-	// MODDERS: Just use [new_se] directly.
-	static inline int16_t snd_get_param(int16_t &param) {
-		return param;
-	}
 	#endif
 
 	#define snd_bgm_is_fm() \
@@ -80,18 +75,6 @@ void snd_delay_until_volume(uint8_t volume);
 	#define snd_kaja_func(func, param) ( \
 		snd_kaja_interrupt(((func) << 8) + (param)) \
 	)
-	#if defined(__cplusplus) && (GAME <= 4)
-		static inline uint16_t snd_load_size() {
-			// ZUN landmine: Should rather retrieve the maximum data size for
-			// song or sound effect data via PMD_GET_BUFFER_SIZES, instead of
-			// hardcoding a random maximum and risking overflowing PMD's data
-			// buffer.
-			// (Unfortunately, MMD lacks a similar function...)
-			// MODDERS: When implementing this properly, rearrange the call
-			// sites to make sure that AX isn't destroyed.
-			return 0x5000;
-		}
-	#endif
 
 	typedef enum {
 		SND_LOAD_SONG = (KAJA_GET_SONG_ADDRESS << 8),

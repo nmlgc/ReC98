@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "th02/snd/snd.h"
-#include "th02/snd/se_impl.hpp"
+#include "th02/snd/impl.hpp"
 
 void snd_se_reset(void)
 {
