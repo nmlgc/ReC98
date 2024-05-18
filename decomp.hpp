@@ -3,6 +3,7 @@
  * Declarations to help decompiling the seemingly impossible
  */
 
+#ifndef DECOMP_HPP
 #define DECOMP_HPP
 
 // Alternate version that sets the value first
@@ -108,3 +109,5 @@ template <class T> union StupidBytewiseWrapperAround {
 // require a 16-bit TASM) just for those.
 #define MOVSD	__emit__(0x66, 0xA5);
 #define REP  	__emit__(0xF3);
+
+#endif /* DECOMP_HPP */

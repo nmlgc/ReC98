@@ -1,13 +1,12 @@
 #pragma option -zCGRAPH_EX_TEXT -2 -Z-
 
 #include "platform.h"
-#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/egcrows.hpp"
+#include "th01/hardware/egc_impl.hpp"
 
 void egc_copy_rows_1_to_0(vram_y_t top, pixel_t h)
 {

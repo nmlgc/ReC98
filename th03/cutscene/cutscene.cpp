@@ -242,6 +242,8 @@ bool16 pascal near cutscene_script_load(const char* fn)
 // (Flipping the visible page on every picture change would have only made
 // everything even more complicated.)
 #if (GAME == 5)
+	#include "th01/hardware/egc.h"
+
 	#define pic_copy_to_other(left, top) { \
 		egc_copy_rect_1_to_0_16(left, top, CUTSCENE_PIC_W, CUTSCENE_PIC_H); \
 	}

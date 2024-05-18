@@ -11,7 +11,7 @@
 #include "th01/math/clamp.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/formats/ptn.hpp"
-#include "th01/hardware/egc.h"
+#include "th01/hardware/egc_impl.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"

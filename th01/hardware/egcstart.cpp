@@ -1,7 +1,4 @@
-#ifndef DECOMP_HPP
-	#include "decomp.hpp"
-#endif
-#include "th01/hardware/egc.h"
+#include "th01/hardware/egc_impl.hpp"
 
 void egc_start_copy(void)
 {
