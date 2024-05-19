@@ -1,5 +1,6 @@
+#include "th04/main/scroll.hpp"
+#include "th04/math/motion.hpp"
 #include "th02/main/playfld.hpp"
-#include "th01/math/subpixel.hpp"
 
 struct PlayfieldPoint : public SPPoint {
 	screen_x_t to_screen_left(pixel_t sprite_w_if_centered = 0) const {
@@ -10,37 +11,29 @@ struct PlayfieldPoint : public SPPoint {
 		return playfield_to_screen_top(y, sprite_h_if_centered);
 	}
 
-	#ifdef SCROLL_HPP
-		vram_y_t to_vram_top_scrolled_seg1(
-			pixel_t sprite_h_if_centered
-		) const {
-			return scroll_subpixel_y_to_vram_seg1(
-				y + (PLAYFIELD_TOP - (sprite_h_if_centered / 2))
-			);
-		}
+	vram_y_t to_vram_top_scrolled_seg1(pixel_t sprite_h_if_centered) const {
+		return scroll_subpixel_y_to_vram_seg1(
+			y + (PLAYFIELD_TOP - (sprite_h_if_centered / 2))
+		);
+	}
 
-		vram_y_t to_vram_top_scrolled_seg3(
-			pixel_t sprite_h_if_centered
-		) const {
-			return scroll_subpixel_y_to_vram_seg3(
-				y + (PLAYFIELD_TOP - (sprite_h_if_centered / 2))
-			);
-		}
-	#endif
+	vram_y_t to_vram_top_scrolled_seg3(pixel_t sprite_h_if_centered) const {
+		return scroll_subpixel_y_to_vram_seg3(
+			y + (PLAYFIELD_TOP - (sprite_h_if_centered / 2))
+		);
+	}
 };
 
-#ifdef MOTION_HPP
-	struct PlayfieldMotion : public MotionBase<PlayfieldPoint> {
-		// Moves by one step, and returns the new current position.
-		// The _seg1() and _seg3() variants are provided for near calls within
-		// code segment #1 (rendering) and code segment #3 (update),
-		// respectively.
-		// Note that some calls to these functions directly access the returned
-		// value through the AX (X) and DX (Y) registers.
-		PlayfieldPoint pascal near update_seg1();
-		PlayfieldPoint pascal near update_seg3();
-	};
-#endif
+struct PlayfieldMotion : public MotionBase<PlayfieldPoint> {
+	// Moves by one step, and returns the new current position.
+	// The _seg1() and _seg3() variants are provided for near calls within
+	// code segment #1 (rendering) and code segment #3 (update),
+	// respectively.
+	// Note that some calls to these functions directly access the returned
+	// value through the AX (X) and DX (Y) registers.
+	PlayfieldPoint pascal near update_seg1();
+	PlayfieldPoint pascal near update_seg3();
+};
 
 /// Shaking
 /// -------

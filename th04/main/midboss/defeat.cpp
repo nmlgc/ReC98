@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "pc98.h"
 #include "th04/math/randring.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/phase.hpp"
 #include "th04/main/score.hpp"

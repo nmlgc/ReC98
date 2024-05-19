@@ -9,7 +9,6 @@
 #include "th01/math/dir.hpp"
 #include "th02/formats/tile.hpp"
 #include "th04/formats/bb.h"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/playfld.hpp"

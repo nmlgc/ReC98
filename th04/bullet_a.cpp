@@ -4,7 +4,6 @@
 #include "pc98.h"
 #include "libs/master.lib/master.hpp"
 #include "th01/math/overlap.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/sprites/main_pat.h"

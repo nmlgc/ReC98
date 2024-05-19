@@ -1,6 +1,5 @@
 #include "platform.h"
 #include "pc98.h"
-#include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/enemy/size.hpp"

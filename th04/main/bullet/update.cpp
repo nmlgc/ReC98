@@ -6,7 +6,6 @@
 #include "libs/master.lib/master.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"

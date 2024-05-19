@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
-#include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th05/sprites/main_pat.h"

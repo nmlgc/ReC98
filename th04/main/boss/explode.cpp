@@ -5,7 +5,6 @@
 #include "th02/main/hud/hud.hpp"
 #include "th03/math/polar.hpp"
 #include "th03/hardware/palette.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/formats/super.h"
 #include "th04/main/phase.hpp"

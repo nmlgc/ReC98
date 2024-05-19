@@ -12,7 +12,6 @@
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/area.hpp"
 #include "th03/formats/cdg.h"
-#include "th04/math/motion.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/null.hpp"

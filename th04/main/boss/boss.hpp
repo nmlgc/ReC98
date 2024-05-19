@@ -1,3 +1,5 @@
+#include "th04/main/hud/overlay.hpp"
+
 // Bosses
 // ------
 static const pixel_t BOSS_W = 64;
@@ -137,22 +139,19 @@ void pascal near boss_phase_next(
 // Defeat sequence
 // ---------------
 
-#ifdef OVERLAY_FADE_CELS
-	enum boss_defeat_frames_t {
-		// Small explosion phase
-		BDF_SMALL_1 = 1,
-		BDF_SMALL_2 = 16,
-		BDF_BIG = 32,
+enum boss_defeat_frames_t {
+	// Small explosion phase
+	BDF_SMALL_1 = 1,
+	BDF_SMALL_2 = 16,
+	BDF_BIG = 32,
 
-		// Big explosion phase. And yes, the (hardcoded) amount of frames to
-		// spend in this one dependes on the (hardcoded) length of the overlay
-		// fade animation, which in turn depends on its (hardcoded) amount of
-		// gaiji cels.
-		BDF_DIALOG = (GAME == 5),
-		BDF_FADEOUT = 416,
-		BDF_NEXT_STAGE = (BDF_FADEOUT + OVERLAY_FADE_DURATION),
-	};
-#endif
+	// Big explosion phase. And yes, the (hardcoded) amount of frames to spend
+	// in this one depends on the (hardcoded) length of the overlay fade
+	// animation, which in turn depends on its (hardcoded) amount of gaiji cels.
+	BDF_DIALOG = (GAME == 5),
+	BDF_FADEOUT = 416,
+	BDF_NEXT_STAGE = (BDF_FADEOUT + OVERLAY_FADE_DURATION),
+};
 
 // A dumb helper function…
 #if (GAME == 5)

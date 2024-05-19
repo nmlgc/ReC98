@@ -13,7 +13,6 @@
 #include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/math/vector.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
 #include "th04/formats/cdg.h"

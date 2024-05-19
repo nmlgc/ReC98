@@ -1,4 +1,5 @@
 #include "th02/main/scroll.hpp"
+#include "th01/math/subpixel.hpp"
 
 // [scroll_line] is advanced by 1 for every 16 units.
 extern SubpixelLength8 scroll_subpixel_line;

@@ -170,9 +170,7 @@ struct bullet_t {
 static const subpixel_t BULLET_KILLBOX_W = TO_SP(8);
 static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 
-#ifdef BULLET_D_CELS
-	static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
-#endif
+static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
 
 #if GAME == 5
 	#define PELLET_COUNT 180

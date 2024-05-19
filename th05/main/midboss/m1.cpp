@@ -7,7 +7,6 @@
 #include "pc98.h"
 #include "libs/master.lib/master.hpp"
 #include "th03/math/polar.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/homing.hpp"

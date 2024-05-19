@@ -14,7 +14,6 @@
 #include "th04/formats/bb.h"
 #include "th04/main/frames.h"
 #include "th04/main/pattern.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
