@@ -2,7 +2,6 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "libs/kaja/kaja.h"
 #include "th04/snd/snd.h"
 
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode)

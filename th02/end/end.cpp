@@ -5,7 +5,6 @@
 #include "shiftjis.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "libs/kaja/kaja.h"
 #include "th01/hardware/egc.h"
 
 // ZUN bloat: Needed for code generation reasons in the single graph_putsa_fx()

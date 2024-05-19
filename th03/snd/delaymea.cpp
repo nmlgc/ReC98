@@ -2,7 +2,6 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "libs/kaja/kaja.h"
 #include "th02/hardware/frmdelay.h"
 #if (GAME >= 4)
 	#include "th04/snd/snd.h"

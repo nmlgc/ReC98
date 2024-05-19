@@ -1,3 +1,4 @@
+#include "libs/kaja/kaja.h"
 #include "game/pf.h"
 #include "defconv.h"
 
@@ -71,30 +72,28 @@ void snd_delay_until_volume(uint8_t volume);
 	void snd_delay_until_measure(int measure);
 #endif
 
-#if defined(PMD) /* requires kaja.h */
-	#define snd_kaja_func(func, param) ( \
-		snd_kaja_interrupt(((func) << 8) + (param)) \
-	)
+#define snd_kaja_func(func, param) ( \
+	snd_kaja_interrupt(((func) << 8) + (param)) \
+)
 
-	typedef enum {
-		SND_LOAD_SONG = (KAJA_GET_SONG_ADDRESS << 8),
-		SND_LOAD_SE = (PMD_GET_SE_ADDRESS << 8),
-	} snd_load_func_t;
+typedef enum {
+	SND_LOAD_SONG = (KAJA_GET_SONG_ADDRESS << 8),
+	SND_LOAD_SE = (PMD_GET_SE_ADDRESS << 8),
+} snd_load_func_t;
 
-	#if (GAME <= 3)
-		// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound
-		// effect bank in EFC format ([func] == SND_LOAD_SE) into the
-		// respective work buffer of the sound driver. If MIDI is used, 'md'
-		// is appended to the file name.
-		// [fn] still needs to be null-terminated, despite its fixed length.
-		//
-		// ZUN landmine: The function doesn't stop any currently playing song
-		// before loading the a new one. This can cause glitches when loading
-		// from a slow storage device: If takes longer than a single period
-		// of the OPN timer to write the full new song to the driver's song
-		// buffer, the driver will play back garbage in the meantime.
-		void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
-	#endif
+#if (GAME <= 3)
+	// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound effect
+	// bank in EFC format ([func] == SND_LOAD_SE) into the respective work
+	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
+	// file name.
+	// [fn] still needs to be null-terminated, despite its fixed length.
+	//
+	// ZUN landmine: The function doesn't stop any currently playing song
+	// before loading the a new one. This can cause glitches when loading from
+	// a slow storage device: If takes longer than a single period of the OPN
+	// timer to write the full new song to the driver's song buffer, the driver
+	// will play back garbage in the meantime.
+	void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 #endif
 
 void snd_se_reset(void);

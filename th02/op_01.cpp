@@ -7,7 +7,6 @@
 #include <process.h>
 #include "platform.h"
 #include "shiftjis.hpp"
-#include "libs/kaja/kaja.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"

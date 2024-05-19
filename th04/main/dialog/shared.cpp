@@ -7,7 +7,6 @@
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "platform/x86real/flags.hpp"
-#include "libs/kaja/kaja.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/subpixel.hpp"

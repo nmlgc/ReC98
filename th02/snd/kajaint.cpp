@@ -4,7 +4,6 @@
 #endif
 
 #include "platform.h"
-#include "libs/kaja/kaja.h"
 #if (GAME >= 4)
 	#include "th04/snd/snd.h"
 #else

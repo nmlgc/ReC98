@@ -43,7 +43,6 @@ extern "C" {
 // sets [snd_se_mode] and [snd_bgm_mode] accordingly. Returns [snd_bgm_mode].
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 
-#if defined(PMD)
 // Loads a song ([func] == SND_LOAD_SONG) or a sound effect bank ([func] ==
 // SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must
 // be null-terminated (despite the fixed length) and not have any extension.
@@ -72,8 +71,6 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 // • The TH05 version will infinitely loop if neither the file for the current
 //   [snd_bgm_mode] nor "[fn].m" exist.
 void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
-
-#endif
 
 #ifdef __cplusplus
 }

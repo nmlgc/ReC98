@@ -2,7 +2,6 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "libs/kaja/kaja.h"
 #include "th04/snd/snd.h"
 
 bool16 snd_pmd_resident(void)

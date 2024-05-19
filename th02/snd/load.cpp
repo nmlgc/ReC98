@@ -1,8 +1,6 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "libs/kaja/kaja.h"
-#include "libs/master.lib/master.hpp"
 #include "th02/snd/snd.h"
 #include "th02/snd/impl.hpp"
 
