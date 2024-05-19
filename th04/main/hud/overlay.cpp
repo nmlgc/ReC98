@@ -5,7 +5,6 @@
 #include "shiftjis.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/score.h"
-#include "th01/math/subpixel.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"

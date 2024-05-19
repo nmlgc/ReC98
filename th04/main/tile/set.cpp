@@ -3,7 +3,6 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "th01/math/subpixel.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/tile/tile.hpp"

@@ -1,4 +1,5 @@
 #include "th02/main/tile/tile.hpp"
+#include "th01/math/subpixel.hpp"
 
 static const int TILE_ROWS_PER_SECTION = 5;
 
@@ -21,7 +22,6 @@ void pascal near tiles_fill_initial(void);
 // Blits all tiles in the ring buffer to the playfield in VRAM.
 void pascal near tiles_render_all(void);
 
-#ifdef SUBPIXEL_HPP
 // Sets the [tile_ring] tile at (x, y) to the given VRAM offset.
 void pascal tile_ring_set_vo(
 	subpixel_t x, subpixel_t y, vram_offset_t image_vo
@@ -31,7 +31,6 @@ void pascal tile_ring_set_vo(
 #define tile_ring_set(x, y, id) ( \
 	tile_ring_set_vo(x, y, tile_image_vo(id)) \
 )
-#endif
 
 /// Redraw
 /// ------

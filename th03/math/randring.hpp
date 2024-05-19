@@ -1,4 +1,5 @@
 #include "th02/math/randring.hpp"
+#include "th01/math/subpixel.hpp"
 
 uint16_t near randring1_next16(void);
 uint16_t pascal near randring1_next16_and(uint16_t mask);
@@ -64,26 +65,24 @@ inline int16_t randring2_next16_ge_lt(int16_t min, int16_t max) {
 	return randring2_next16_mod_ge_lt(min, max);
 }
 
-#ifdef SUBPIXEL_HPP
-	inline subpixel_t randring1_next8_and_ge_lt_sp(float min, float max) {
-		return randring1_next8_and_ge_lt(to_sp8(min), to_sp8(max));
-	}
+inline subpixel_t randring1_next8_and_ge_lt_sp(float min, float max) {
+	return randring1_next8_and_ge_lt(to_sp8(min), to_sp8(max));
+}
 
-	inline subpixel_t randring1_next16_and_ge_lt_sp(float min, float max) {
-		return randring1_next16_and_ge_lt(to_sp(min), to_sp(max));
-	}
+inline subpixel_t randring1_next16_and_ge_lt_sp(float min, float max) {
+	return randring1_next16_and_ge_lt(to_sp(min), to_sp(max));
+}
 
-	inline subpixel_t randring2_next8_and_ge_lt_sp(float min, float max) {
-		return randring2_next8_and_ge_lt(to_sp8(min), to_sp8(max));
-	}
+inline subpixel_t randring2_next8_and_ge_lt_sp(float min, float max) {
+	return randring2_next8_and_ge_lt(to_sp8(min), to_sp8(max));
+}
 
-	// ZUN bloat
-	inline subpixel_t randring2_next16_mod_ge_lt_sp(float min, float max) {
-		return randring2_next16_mod_ge_lt(to_sp(min), to_sp(max));
-	}
+// ZUN bloat
+inline subpixel_t randring2_next16_mod_ge_lt_sp(float min, float max) {
+	return randring2_next16_mod_ge_lt(to_sp(min), to_sp(max));
+}
 
-	inline subpixel_t randring2_next16_ge_lt_sp(float min, float max) {
-		return randring2_next16_ge_lt(to_sp(min), to_sp(max));
-	}
-#endif
+inline subpixel_t randring2_next16_ge_lt_sp(float min, float max) {
+	return randring2_next16_ge_lt(to_sp(min), to_sp(max));
+}
 /// --------------------------

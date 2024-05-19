@@ -7,7 +7,6 @@
 #include "pc98.h"
 #include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th02/formats/tile.hpp"
 #include "th04/formats/bb.h"
 #include "th04/math/motion.hpp"

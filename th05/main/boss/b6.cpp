@@ -8,7 +8,6 @@
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th02/formats/tile.hpp"
 #include "th02/main/player/bomb.hpp"
 #include "th03/hardware/palette.hpp"

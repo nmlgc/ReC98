@@ -4,7 +4,6 @@
 #include "planar.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/hardware/palette.hpp"
 #include "th04/common.h"

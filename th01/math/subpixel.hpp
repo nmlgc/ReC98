@@ -2,7 +2,8 @@
 // fractional resolution.
 // -------------------------------------------------------------------------
 
-#define SUBPIXEL_HPP
+#ifndef TH01_MATH_SUBPIXEL_HPP
+#define TH01_MATH_SUBPIXEL_HPP
 
 #define PIXEL_NONE (-999)
 
@@ -124,4 +125,6 @@ struct DecimalSubpixel {
 inline decimal_subpixel_t to_dsp(float pixel_v) {
 	return static_cast<decimal_subpixel_t>(pixel_v * 10);
 }
+
+#endif /* TH01_MATH_SUBPIXEL_HPP */
 // -------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/main/hud/hud.hpp"
 #include "th03/math/polar.hpp"
