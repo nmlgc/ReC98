@@ -1,3 +1,6 @@
+#ifndef TH03_MAIN_PLAYFLD_HPP
+#define TH03_MAIN_PLAYFLD_HPP
+
 #include "th01/math/subpixel.hpp"
 #include "th03/common.h"
 
@@ -41,3 +44,5 @@ extern PlayfieldPoint playfield_clip_negative_radius;
 bool pascal playfield_clip(
 	PlayfieldSubpixel center_x, PlayfieldSubpixel center_y
 );
+
+#endif /* TH03_MAIN_PLAYFLD_HPP */
