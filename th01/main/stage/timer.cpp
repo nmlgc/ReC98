@@ -1,6 +1,5 @@
 #include <stddef.h>
 #include "platform.h"
-#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"

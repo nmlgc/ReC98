@@ -1,3 +1,5 @@
+#include "decomp.hpp"
+
 // 1-byte JIS X 0201 codepoint (ASCII, numeric, or halfwidth katakana).
 typedef uint8_t ank_t;
 
@@ -28,11 +30,9 @@ typedef unsigned int ushiftjis_kanji_amount_t;
 	(static_cast<shiftjis_kanji_t>(kanji) >> 8) \
 )
 
-#ifdef DECOMP_HPP
-	// Way too often, the games store fullwidth Shift-JIS codepoints in two
-	// 8-bit variables rather than a single 16-bit one.
-	typedef StupidBytewiseWrapperAround<shiftjis_kanji_t> ShiftJISKanji;
-#endif
+// Way too often, the games store fullwidth Shift-JIS codepoints in two
+// 8-bit variables rather than a single 16-bit one.
+typedef StupidBytewiseWrapperAround<shiftjis_kanji_t> ShiftJISKanji;
 
 // Good luck deriving this from the StupidBytewiseWrapperAround template.
 template <unsigned int Length> union ShiftJISKanjiBuffer {

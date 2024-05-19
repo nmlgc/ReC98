@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "platform.h"
-#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"

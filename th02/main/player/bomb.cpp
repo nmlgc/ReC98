@@ -1,6 +1,4 @@
 #include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/overlap.hpp"
 #include "th02/main/playfld.hpp"

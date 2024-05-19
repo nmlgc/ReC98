@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <dos.h>
 #include "platform.h"
-#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "libs/master.lib/master.hpp"

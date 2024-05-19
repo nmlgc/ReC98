@@ -3,7 +3,6 @@
 #include <malloc.h>
 #include "platform.h"
 #include "pc98.h"
-#include "decomp.hpp"
 #include "planar.h"
 #include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
