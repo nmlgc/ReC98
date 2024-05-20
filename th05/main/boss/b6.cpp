@@ -20,7 +20,6 @@
 #include "th04/snd/snd.h"
 #include "th04/main/bg.hpp"
 #include "th04/main/homing.hpp"
-#include "th04/main/rank.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"

@@ -7,7 +7,6 @@
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "game/input.hpp"
-#include "th01/rank.h"
 #include "th01/hardware/grppsafx.h"
 #include "th02/hardware/frmdelay.h"
 #include "th03/common.h"

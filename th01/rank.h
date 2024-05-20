@@ -1,4 +1,5 @@
-#define RANK_H
+#ifndef TH01_RANK_H
+#define TH01_RANK_H
 
 // Rank definitions
 typedef enum {
@@ -34,3 +35,5 @@ typedef enum {
 	" HARD ", \
 	"LUNATIC" \
 }
+
+#endif /* TH01_RANK_H */

@@ -1,6 +1,5 @@
 #include "platform.h"
 #include "libs/master.lib/master.hpp"
-#include "th01/rank.h"
 #include "th03/common.h"
 #include "th03/score.hpp"
 #include "th03/playchar.hpp"

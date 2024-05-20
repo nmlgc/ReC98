@@ -12,7 +12,6 @@
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
-#include "th04/main/rank.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/pattern.hpp"
 #include "th04/main/bullet/bullet.hpp"

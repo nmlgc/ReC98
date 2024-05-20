@@ -2,6 +2,7 @@
 /// bullet.inc!
 
 #include "th02/main/entity.hpp"
+#include "th04/main/rank.hpp"
 #include "th04/sprites/cels.h"
 
 extern "C" {
@@ -245,22 +246,20 @@ private:
 		);
 	}
 
-	#ifdef RANK_H
-		void set16_for_rank(
-			unsigned char& val,
-			uint8_t b0_e, uint8_t b1_e,
-			uint8_t b0_n, uint8_t b1_n,
-			uint8_t b0_h, uint8_t b1_h,
-			uint8_t b0_l, uint8_t b1_l
-		) {
-			reinterpret_cast<uint16_t &>(val) = select_for_rank(
-				(b0_e | (b1_e << 8)),
-				(b0_n | (b1_n << 8)),
-				(b0_h | (b1_h << 8)),
-				(b0_l | (b1_l << 8))
-			);
-		}
-	#endif
+	void set16_for_rank(
+		unsigned char& val,
+		uint8_t b0_e, uint8_t b1_e,
+		uint8_t b0_n, uint8_t b1_n,
+		uint8_t b0_h, uint8_t b1_h,
+		uint8_t b0_l, uint8_t b1_l
+	) {
+		reinterpret_cast<uint16_t &>(val) = select_for_rank(
+			(b0_e | (b1_e << 8)),
+			(b0_n | (b1_n << 8)),
+			(b0_h | (b1_h << 8)),
+			(b0_l | (b1_l << 8))
+		);
+	}
 
 public:
 	void set_spread(unsigned char count, unsigned char angle_delta) {
@@ -282,35 +281,33 @@ public:
 		);
 	}
 
-	#ifdef RANK_H
-		void set_stack_for_rank(
-			unsigned char count_easy, float speed_delta_easy,
-			unsigned char count_normal, float speed_delta_normal,
-			unsigned char count_hard, float speed_delta_hard,
-			unsigned char count_lunatic, float speed_delta_lunatic
-		) {
-			set16_for_rank(stack,
-				count_easy, to_sp8(speed_delta_easy),
-				count_normal, to_sp8(speed_delta_normal),
-				count_hard, to_sp8(speed_delta_hard),
-				count_lunatic, to_sp8(speed_delta_lunatic)
-			);
-		}
+	void set_stack_for_rank(
+		unsigned char count_easy, float speed_delta_easy,
+		unsigned char count_normal, float speed_delta_normal,
+		unsigned char count_hard, float speed_delta_hard,
+		unsigned char count_lunatic, float speed_delta_lunatic
+	) {
+		set16_for_rank(stack,
+			count_easy, to_sp8(speed_delta_easy),
+			count_normal, to_sp8(speed_delta_normal),
+			count_hard, to_sp8(speed_delta_hard),
+			count_lunatic, to_sp8(speed_delta_lunatic)
+		);
+	}
 
-		void set_spread_for_rank(
-			unsigned char count_easy, unsigned char angle_delta_easy,
-			unsigned char count_normal, unsigned char angle_delta_normal,
-			unsigned char count_hard, unsigned char angle_delta_hard,
-			unsigned char count_lunatic, unsigned char angle_delta_lunatic
-		) {
-			set16_for_rank(spread,
-				count_easy, angle_delta_easy,
-				count_normal, angle_delta_normal,
-				count_hard, angle_delta_hard,
-				count_lunatic, angle_delta_lunatic
-			);
-		}
-	#endif
+	void set_spread_for_rank(
+		unsigned char count_easy, unsigned char angle_delta_easy,
+		unsigned char count_normal, unsigned char angle_delta_normal,
+		unsigned char count_hard, unsigned char angle_delta_hard,
+		unsigned char count_lunatic, unsigned char angle_delta_lunatic
+	) {
+		set16_for_rank(spread,
+			count_easy, angle_delta_easy,
+			count_normal, angle_delta_normal,
+			count_hard, angle_delta_hard,
+			count_lunatic, angle_delta_lunatic
+		);
+	}
 #else
 	PlayfieldPoint velocity;
 	bullet_group_t group;

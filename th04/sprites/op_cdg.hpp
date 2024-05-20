@@ -1,8 +1,6 @@
 // CDG slots for TH04's and TH05's OP.EXE
 
-#ifndef RANK_H
 #include "th01/rank.h"
-#endif
 
 typedef enum {
 	// sft1.cd2

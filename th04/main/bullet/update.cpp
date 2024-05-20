@@ -13,7 +13,6 @@
 #include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/playperf.hpp"
-#include "th04/main/rank.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/slowdown.hpp"
 #include "th04/main/bullet/bullet.hpp"
