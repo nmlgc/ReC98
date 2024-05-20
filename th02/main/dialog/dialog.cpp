@@ -4,7 +4,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/array.hpp"
 #include "libs/kaja/kaja.h"
 #include "th02/common.h"

@@ -6,7 +6,7 @@
 #include "platform.h"
 #include "decomp.hpp"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"

@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th02/shiftjis/fns.hpp"
 #include "th02/mem.h"

@@ -2,8 +2,8 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
 #include "th04/snd/snd.h"
 
 extern char snd_load_fn[PF_FN_LEN];

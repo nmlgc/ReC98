@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/hardware/input.h"
 

@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "th05/hardware/input.h"
 

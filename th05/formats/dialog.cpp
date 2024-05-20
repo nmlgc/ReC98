@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th04/score.h"
 #include "th04/main/stage/stage.hpp"
 #include "th05/playchar.h"

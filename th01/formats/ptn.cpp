@@ -4,7 +4,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/pf.hpp"

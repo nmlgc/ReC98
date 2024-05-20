@@ -2,7 +2,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th03/formats/cdg.h"
 #include "th04/hardware/grcg.hpp"

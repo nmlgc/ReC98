@@ -5,7 +5,7 @@
 #include "x86real.h"
 #include "codegen.hpp"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "game/coords.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/polar.hpp"

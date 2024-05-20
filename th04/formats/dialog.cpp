@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th04/score.h"
 #include "th04/resident.hpp"
 #include "th04/formats/dialog.hpp"

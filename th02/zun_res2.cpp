@@ -5,7 +5,7 @@
 
 #include <dos.h>
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"

@@ -6,7 +6,7 @@
 #pragma option -2 -Z-
 
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/resident.hpp"
 #include "th01/core/resstuff.hpp"
 

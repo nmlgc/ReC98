@@ -3,8 +3,8 @@
 #include <errno.h>
 #include "platform.h"
 #include "x86real.h"
-#include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "th05/snd/snd.h"
 

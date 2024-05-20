@@ -6,8 +6,8 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
 #include "shiftjis.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/grppsafx.h"
 
 #include "th01/hardware/grppsafx.cpp"

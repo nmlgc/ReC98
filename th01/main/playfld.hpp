@@ -27,7 +27,7 @@ static inline pixel_t playfield_fraction_y(float fraction = 1.0f) {
 }
 
 #if (GAME == 1)
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 
 // Calculates a random X position between the given minimum and maximum
 // fractions of the playfield width.

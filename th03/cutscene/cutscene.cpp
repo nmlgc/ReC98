@@ -18,8 +18,8 @@
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
-#include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
 #if (GAME >= 4)
 	#include "th01/hardware/grcg.hpp" // ZUN bloat
 #endif

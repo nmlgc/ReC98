@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/core/initexit.h"
 
 void game_exit(void)

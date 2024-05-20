@@ -2,8 +2,8 @@
 
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
 #include "shiftjis.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"

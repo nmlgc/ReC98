@@ -4,7 +4,7 @@
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/egcrows.hpp"

@@ -1,7 +1,7 @@
 #pragma option -zCSHARED -3
 
 #include <stddef.h>
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th03/core/initexit.h"
 

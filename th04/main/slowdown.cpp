@@ -1,5 +1,5 @@
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th04/main/slowdown.hpp"
 
 void near slowdown_frame_delay(void)

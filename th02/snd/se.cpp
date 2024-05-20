@@ -5,7 +5,7 @@
 #include "libs/kaja/kaja.h"
 #include "th02/snd/se_impl.hpp"
 #if (GAME >= 4)
-	#include "master.hpp"
+	#include "libs/master.lib/master.hpp"
 	#include "th04/snd/snd.h"
 
 	// MODDERS: Just replace with [snd_se_playing].

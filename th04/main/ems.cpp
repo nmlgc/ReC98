@@ -7,7 +7,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th03/formats/cdg.h"
 #include "th04/common.h"
 #include "th04/score.h"

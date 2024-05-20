@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/score.h"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"

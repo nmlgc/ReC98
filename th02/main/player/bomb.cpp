@@ -1,7 +1,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/math/overlap.hpp"
 #include "th02/main/playfld.hpp"
 #include "th02/main/scroll.hpp"

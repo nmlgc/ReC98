@@ -9,7 +9,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/formats/tile.hpp"
 #include "th02/formats/mpn.hpp"
 

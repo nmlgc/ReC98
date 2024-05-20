@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th03/math/vector.hpp"
 
 // Completely disgusting. TH02's version was fine!

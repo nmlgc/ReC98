@@ -9,7 +9,7 @@
 #include <dos.h>
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/math/clamp.hpp"
 #include "th02/common.h"
 #include "th02/resident.hpp"

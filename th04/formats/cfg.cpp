@@ -6,7 +6,7 @@
 	#include "pc98.h"
 	#include "libs/kaja/kaja.h"
 #endif
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th03/formats/cfg_impl.hpp"
 #include "th04/score.h"
 #if (GAME == 5)

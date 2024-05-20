@@ -8,7 +8,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th02/v_colors.hpp"

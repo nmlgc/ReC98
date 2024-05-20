@@ -9,7 +9,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "libs/sprite16/sprite16.h"
 #include "th03/main/sprite16.hpp"

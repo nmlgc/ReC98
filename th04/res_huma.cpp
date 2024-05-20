@@ -8,7 +8,7 @@
 
 #include <stddef.h>
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th04/score.h"
 #include "th04/resident.hpp"

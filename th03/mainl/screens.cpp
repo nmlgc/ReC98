@@ -3,7 +3,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/grppsafx.h"
 #include "th02/v_colors.hpp"
 #include "th03/common.h"

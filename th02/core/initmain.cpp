@@ -1,6 +1,6 @@
 #pragma option -zCSHARED
 
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th02/mem.h"
 #include "th02/formats/pf.hpp"

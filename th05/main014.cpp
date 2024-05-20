@@ -8,7 +8,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th03/formats/cdg.h"

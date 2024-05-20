@@ -1,6 +1,6 @@
 #pragma option -zCSHARED
 
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/hardware/frmdelay.h"
 
 void pascal frame_delay_2(int frames)

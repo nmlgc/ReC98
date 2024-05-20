@@ -1,7 +1,7 @@
 #pragma option -zPgroup_01
 
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th03/common.h"
 #include "th03/score.hpp"

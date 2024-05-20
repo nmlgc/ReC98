@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "libs/piloadc/piloadc.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/formats/grp.h"

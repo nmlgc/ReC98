@@ -4,7 +4,7 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/formats/pi.h"
 
 void DEFCONV pi_palette_apply(int slot)

@@ -7,7 +7,7 @@
 #include <io.h>
 #include <stdio.h>
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/formats/pf.hpp"
 
 #undef arc_file_get

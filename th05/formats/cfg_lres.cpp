@@ -1,7 +1,7 @@
 #pragma option -k-
 
 #include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th03/formats/cfg_impl.hpp"
 
 resident_t __seg* near cfg_load_resident_ptr(void)

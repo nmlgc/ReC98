@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include "platform.h"
 #include "decomp.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th04/score.h"
 #include "th05/resident.hpp"

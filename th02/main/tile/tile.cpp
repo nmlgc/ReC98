@@ -5,7 +5,7 @@
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "th02/hardware/egc.hpp"
 #include "th02/hardware/pages.hpp"

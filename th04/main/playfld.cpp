@@ -1,6 +1,6 @@
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"

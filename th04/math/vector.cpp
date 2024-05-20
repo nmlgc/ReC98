@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th03/math/polar.hpp"

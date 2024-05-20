@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/math/wave.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/egcwave.hpp"
