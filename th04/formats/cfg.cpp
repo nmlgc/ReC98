@@ -3,10 +3,10 @@
 #if (GAME == 4)
 	// These are needed for the game startup code, which needs to be part of
 	// the same translation unit in this game...
-	#include "pc98.h"
 	#include "libs/kaja/kaja.h"
 #endif
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th03/formats/cfg_impl.hpp"
 #include "th04/score.h"
 #if (GAME == 5)

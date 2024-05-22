@@ -6,11 +6,10 @@
 #include <stddef.h>
 #include <process.h>
 #include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"

@@ -1,10 +1,9 @@
 #pragma option -zCSHARED -3
 
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/grp_rect.h"
 
 void pascal graph_copy_rect_1_to_0_16(

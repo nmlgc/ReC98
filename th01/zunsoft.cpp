@@ -6,12 +6,10 @@
 #pragma option -2 -d- // ZUN bloat
 
 #include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "libs/master.lib/master.hpp"
 #include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/page.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/grcg.hpp"
 #include "th01/math/polar.hpp"
 

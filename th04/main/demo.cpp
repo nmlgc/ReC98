@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include "platform.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/main/execl.hpp"
 #include "th04/score.h"
 #include "th04/hardware/inputvar.h"

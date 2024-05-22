@@ -1,10 +1,9 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th03/formats/pi.hpp"
 
 void pascal pi_put_quarter_8(

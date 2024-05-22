@@ -1,8 +1,7 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "pc98.h"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/formats/pi.h"
 
 int DEFCONV pi_load(int slot, const char *fn)

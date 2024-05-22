@@ -7,6 +7,7 @@
 #include <dos.h>
 #include "platform.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th02/snd/snd.h"
 #include "th03/common.h"

@@ -10,13 +10,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "platform.h"
-#include "x86real.h"
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "platform/x86real/pc98/keyboard.hpp"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"

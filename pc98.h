@@ -2,6 +2,7 @@
 // -----
 // PC-98 hardware constants not covered by master.lib
 
+#ifndef PC98_H
 #define PC98_H
 
 /// Spaces
@@ -222,3 +223,5 @@ static const int EGC_REGISTER_BITS = 4;
 static const int EGC_REGISTER_MASK = (EGC_REGISTER_DOTS - 1);
 static const int EGC_REGISTER_SIZE = (EGC_REGISTER_DOTS / BYTE_DOTS);
 /// ---
+
+#endif /* PC98_H */

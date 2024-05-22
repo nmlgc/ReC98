@@ -1,10 +1,9 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/flags.hpp"
 #include "platform/x86real/pc98/egc.hpp"
 #include "th01/hardware/egc.h"

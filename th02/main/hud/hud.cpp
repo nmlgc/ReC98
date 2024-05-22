@@ -1,9 +1,8 @@
 #pragma option -G
 
 #include "platform.h"
-#include "pc98.h"
 #include "shiftjis.hpp"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"

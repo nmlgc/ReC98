@@ -2,8 +2,8 @@
 
 #include <stddef.h>
 #include "platform.h"
-#include "x86real.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th03/core/initexit.h"
 

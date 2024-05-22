@@ -1,11 +1,11 @@
 #pragma option -zPgroup_01
 
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "game/input.hpp"
 #include "th01/rank.h"
 #include "th01/hardware/grppsafx.h"

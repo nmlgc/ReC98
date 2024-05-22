@@ -1,8 +1,8 @@
 #pragma option -zCSHARED
 
 #include "platform.h"
-#include "x86real.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/core/initexit.h"
 
 void game_exit(void)

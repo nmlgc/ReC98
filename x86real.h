@@ -5,6 +5,7 @@
 // architectures would remove this file and rewrite any code that then causes
 // compile errors.
 
+#ifndef X86REAL_H
 #define X86REAL_H
 
 // Turbo C++ 4.0J's <conio.h> tries to redefine them otherwise.
@@ -149,3 +150,5 @@ void segread(struct SREGS *__segp);
 	}
 #endif
 // --------------------------
+
+#endif /* X86REAL_H */

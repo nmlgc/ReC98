@@ -1,11 +1,10 @@
 #include <stddef.h>
 #include "platform.h"
-#include "x86real.h"
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"

@@ -1,11 +1,11 @@
 #pragma option -zC_TEXT -2
 
 #include "platform.h"
-#include "x86real.h"
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/flags.hpp"
 #include "th02/hardware/egc.hpp"
 #include "th02/hardware/pages.hpp"

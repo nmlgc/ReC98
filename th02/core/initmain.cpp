@@ -1,6 +1,8 @@
 #pragma option -zCSHARED
 
+#include "platform.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th02/mem.h"
 #include "th02/formats/pf.hpp"

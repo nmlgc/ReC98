@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/formats/scoredat.hpp"
 #include "th04/op/clear.hpp"
 #include "th05/resident.hpp"

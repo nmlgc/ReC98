@@ -2,9 +2,7 @@
 #pragma codestring "\x00"
 
 #include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"

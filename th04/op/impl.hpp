@@ -1,5 +1,6 @@
 #include "x86real.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/frmdelay.h"
 
 // Synchronizes both VRAM pages within a 2-frame delay.

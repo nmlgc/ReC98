@@ -9,7 +9,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/palette.h"

@@ -3,6 +3,7 @@
 #include "planar.h"
 #include "libs/kaja/kaja.h"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/core/initexit.h"

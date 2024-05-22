@@ -1,8 +1,7 @@
 #pragma option -zPmain_01 -G
 
 #include "platform.h"
-#include "pc98.h"
-#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/math/subpixel.hpp"
 #include "th02/common.h"
