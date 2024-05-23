@@ -6,7 +6,6 @@
 #pragma option -zPop_01
 
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
@@ -17,6 +16,7 @@
 #include "th04/score.h"
 #include "th04/snd/snd.h"
 #include "th04/op/clear.hpp"
+#include "th04/op/impl.hpp"
 #include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"

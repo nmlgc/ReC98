@@ -7,7 +7,6 @@
 
 #include <stddef.h>
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
@@ -25,6 +24,7 @@
 #include "th04/snd/snd.h"
 #include "th04/op/clear.hpp"
 #include "th04/op/op.hpp"
+#include "th04/op/impl.hpp"
 #include "th04/sprites/op_cdg.hpp"
 
 #include "th04/shiftjis/m_char.cpp"
