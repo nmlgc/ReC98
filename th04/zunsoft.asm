@@ -234,8 +234,8 @@ loc_B7F6:
 zunsoft_palette_update_and_show	endp
 
 
-public _zunsoft_animate
-_zunsoft_animate proc near
+public @zunsoft_animate$qv
+@zunsoft_animate$qv proc near
 
 @@frame		= word ptr -8
 @@i		= word ptr -6
@@ -253,11 +253,11 @@ _zunsoft_animate proc near
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	pi_load pascal, 0, ds, offset _zun00_pi
-	call	pi_palette_apply pascal, 0
-	call	pi_put_8 pascal, large 0, 0
+	call	@pi_load$qinxc pascal, 0, ds, offset _zun00_pi
+	call	@pi_palette_apply$qi pascal, 0
+	call	@pi_put_8$qiii pascal, large 0, 0
 if GAME eq 5
-	call	pi_free pascal, 0
+	call	@pi_free$qi pascal, 0
 else
 	freePISlotLarge	0
 endif
@@ -480,7 +480,7 @@ endif
 	pop	si
 	leave
 	retn
-_zunsoft_animate endp
+@zunsoft_animate$qv endp
 
 ; ---------------------------------------------------------------------------
 if GAME eq 4

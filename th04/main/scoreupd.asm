@@ -106,9 +106,8 @@ HUD_SCORE_PUT	endp
 
 ; ============================================================================
 
-; void pascal near score_update_and_render(void);
-public SCORE_UPDATE_AND_RENDER
-SCORE_UPDATE_AND_RENDER	proc near
+public @score_update_and_render$qv
+@score_update_and_render$qv proc near
 
 ; The TH04 version is functionally identical, just less optimized.
 if GAME eq 5
@@ -299,7 +298,7 @@ endif
 	pop	di
 	pop	si
 	jmp	@@render
-SCORE_UPDATE_AND_RENDER	endp
+@score_update_and_render$qv endp
 MAIN_01_TEXT	ends
 
 	end

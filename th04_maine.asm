@@ -713,9 +713,9 @@ public @staffroll_animate$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aSff1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aSff1_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	_bgimage_snap
@@ -751,9 +751,9 @@ public @staffroll_animate$qv
 		call	palette_black_out
 		call	cdg_free_all
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aSff2_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aSff2_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	_bgimage_snap
@@ -1667,9 +1667,9 @@ public @verdict_animate$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aUde_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aUde_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	4
@@ -2423,9 +2423,9 @@ var_4		= word ptr -4
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aHi01_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum2_bft ; "scnum2.bft"
@@ -2913,9 +2913,9 @@ maine_01_TEXT	ends
 SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
 	extern @FRAME_DELAY$QI:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
-	extern PI_LOAD:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc

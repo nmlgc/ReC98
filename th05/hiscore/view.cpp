@@ -1,7 +1,8 @@
-extern "C" {
 #include "platform.h"
 #include "master.hpp"
+extern "C" {
 #include "th04/formats/scoredat.hpp"
+}
 #include "th04/op/clear.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
@@ -49,6 +50,4 @@ void near cleardata_and_regist_view_sprites_load(void)
 			cleared_with[playchar][RANK_LUNATIC]
 		);
 	}
-}
-
 }

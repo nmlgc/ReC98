@@ -264,7 +264,7 @@ _TEXT		ends
 ; ===========================================================================
 
 SLOWDOWN_TEXT segment word public 'CODE' use16
-	_slowdown_frame_delay procdesc near
+	@slowdown_frame_delay$qv procdesc near
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
@@ -411,7 +411,7 @@ loc_AC58:
 		cwde
 		add	_total_slow_frames, eax
 		inc	_total_frames
-		call	_slowdown_frame_delay
+		call	@slowdown_frame_delay$qv
 		cmp	_palette_changed, 0
 		jz	short loc_AC7A
 		call	far ptr	palette_show
@@ -468,7 +468,7 @@ loc_ACDE:
 		jmp	short $+2
 
 loc_ACF4:
-		call	main_01:score_update_and_render
+		call	@score_update_and_render$qv
 		cmp	_quit, Q_KEEP_RUNNING
 		jz	loc_AB9E
 		pop	si
@@ -7283,7 +7283,7 @@ PLAYER_M_TEXT	segment	byte public 'CODE' use16
 PLAYER_M_TEXT	ends
 
 PLAYER_P_TEXT	segment	byte public 'CODE' use16
-	_player_pos_update_and_clamp procdesc near
+	@player_pos_update_and_clamp$qv procdesc near
 PLAYER_P_TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
@@ -7478,7 +7478,7 @@ loc_10B58:
 		mov	_player_pos.velocity.y, ax
 
 loc_10B75:
-		call	_player_pos_update_and_clamp
+		call	@player_pos_update_and_clamp$qv
 		cmp	[bp+var_1], 0
 		jz	short loc_10B82
 		mov	word_2598C, si
@@ -7668,7 +7668,7 @@ sub_11647	endp
 main_01_TEXT	ends
 
 	HUD_SCORE_PUT procdesc near
-	SCORE_UPDATE_AND_RENDER procdesc near
+	@score_update_and_render$qv procdesc near
 
 main_012_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_01

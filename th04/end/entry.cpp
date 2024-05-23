@@ -11,9 +11,7 @@ extern "C" {
 #include "th03/formats/cdg.h"
 }
 #if (GAME == 4)
-	extern "C" {
 	#include "th03/formats/pi.hpp"
-	}
 	#include "th04/hardware/input.h"
 #endif
 #include "th03/formats/cfg_impl.hpp"

@@ -15,9 +15,9 @@
 #include "th01/hardware/grcg.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
+extern "C" {
 #include "th04/formats/scoredat.hpp"
 }
 #include "th04/resident.hpp"
@@ -26,6 +26,7 @@ extern "C" {
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
 #include "th04/snd/snd.h"
+}
 #include "th04/op/clear.hpp"
 #include "th04/op/op.hpp"
 #include "th04/sprites/op_cdg.hpp"
@@ -591,6 +592,4 @@ bool16 near playchar_menu(void)
 			frame_delay(1);
 		}
 	}
-}
-
 }

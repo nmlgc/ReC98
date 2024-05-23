@@ -27,12 +27,12 @@ extern "C" {
 #include "th04/main/homing.hpp"
 extern "C" {
 #include "th04/main/null.hpp"
+}
 #include "th04/main/phase.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/quit.hpp"
 #include "th04/main/score.hpp"
-}
 #include "th04/main/slowdown.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"

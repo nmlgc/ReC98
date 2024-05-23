@@ -26,7 +26,6 @@
 score_t score_highest;
 scoredat_section_t hi;
 
-extern "C" {
 void pascal scoredat_defaults_set(void)
 {
 	int i;
@@ -130,7 +129,7 @@ void pascal scoredat_save(void)
 	file_close();
 }
 
-void pascal score_enter(void)
+void score_enter(void)
 {
 	int name_pos = 0;
 	int place;
@@ -251,7 +250,7 @@ void pascal score_highest_get(void)
 	score_highest = (hi.score.score[0] >= score) ? hi.score.score[0] : score;
 }
 
-int pascal scoredat_is_extra_unlocked(void)
+int scoredat_is_extra_unlocked(void)
 {
 	int game_clear_constants[SHOTTYPE_COUNT] = GAME_CLEAR_CONSTANTS;
 	char rank_save = rank;
@@ -264,6 +263,4 @@ int pascal scoredat_is_extra_unlocked(void)
 	}
 	rank = rank_save;
 	return 1;
-}
-
 }

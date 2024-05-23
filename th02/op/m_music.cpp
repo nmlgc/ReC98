@@ -45,9 +45,7 @@ extern "C" {
 #include "th02/op/m_music.hpp"
 #if (GAME == 5)
 	#include "th01/math/clamp.hpp"
-	extern "C" {
 	#include "th05/formats/pi.hpp"
-	}
 	#include "th05/op/piano.hpp"
 	#include "th05/shiftjis/fns.hpp"
 	#include "th05/shiftjis/music.hpp"
@@ -55,9 +53,7 @@ extern "C" {
 	int game_sel = (GAME_COUNT - 1);
 	const int TRACK_COUNT[GAME_COUNT] = { 14, 18, 24, 28, 23 };
 #else
-	extern "C" {
 	#include "th02/formats/pi.h"
-	}
 	#if (GAME == 4)
 		#include "th04/shiftjis/music.hpp"
 	#elif (GAME == 3)

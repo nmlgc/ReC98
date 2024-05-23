@@ -236,7 +236,7 @@ loc_977E:
 		call	p2_1F332
 		call	p2_205D2
 		call	@hitcircles_update$qv
-		call	shots_update
+		call	@shots_update$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	_chargeshot_update_p1
@@ -297,7 +297,7 @@ loc_986C:
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_1F33A
-		call	shots_render
+		call	@shots_render$qv
 		call	sub_164DA
 		call	sub_1837C
 		call	@hitcircles_render$qv
@@ -8234,8 +8234,8 @@ loc_E83B:
 		retn
 sub_E737	endp
 
-	SHOTS_UPDATE procdesc pascal near
-	SHOTS_RENDER procdesc pascal near
+	@shots_update$qv procdesc near
+	@shots_render$qv procdesc near
 main_011_TEXT	ends
 
 ; ===========================================================================

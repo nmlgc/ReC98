@@ -296,11 +296,11 @@ _score_render proc near
 		push	si
 		push	di
 		graph_accesspage 1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		xor	si, si
 		jmp	short loc_CC27
 ; ---------------------------------------------------------------------------
@@ -349,8 +349,8 @@ _score_render endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _regist_view_menu
-_regist_view_menu proc near
+public @regist_view_menu$qv
+@regist_view_menu$qv proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
@@ -362,7 +362,7 @@ _regist_view_menu proc near
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
-		call	pi_load pascal, 0, ds, offset aHi01_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
 
 loc_CC9F:
 		call	_score_render
@@ -403,12 +403,12 @@ loc_CCF8:
 loc_CD17:
 		kajacall	KAJA_SONG_FADE, 1
 		call	palette_black_out pascal, 1
-		call	pi_free pascal, 0
+		call	@pi_free$qi pascal, 0
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi_1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_1
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
+		call	@pi_free$qi pascal, 0
 		call	graph_copy_page pascal, 0
 		call	palette_black_in pascal, 1
 
@@ -422,11 +422,10 @@ loc_CD64:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-_regist_view_menu endp
+@regist_view_menu$qv endp
 op_01_TEXT ends
 
 HI_VIEW_TEXT segment byte public 'CODE' use16
-	_cleardata_and_regist_view_sprite procdesc near
 HI_VIEW_TEXT ends
 
 ; ===========================================================================
@@ -441,10 +440,10 @@ include th02/snd/snd.inc
 	extern @POLAR$QIII:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern PI_LOAD:proc
-	extern PI_PUT_8:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_FREE:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_FREE$QI:proc
 	extern @input_reset_sense_held$qv:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern @FRAME_DELAY$QI:proc

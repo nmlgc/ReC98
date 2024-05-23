@@ -23,8 +23,8 @@
 #include "th02/core/zunerror.h"
 #include "th02/core/initexit.h"
 #include "th02/formats/cfg.hpp"
-extern "C" {
 #include "th02/formats/pi.h"
+extern "C" {
 #include "th02/snd/snd.h"
 }
 #include "th02/gaiji/gaiji.h"

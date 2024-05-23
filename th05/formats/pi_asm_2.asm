@@ -52,8 +52,8 @@ public @PI_PUT_8_ROWLOOP$QIIIUI
 @pi_put_8_rowloop$qiiiui endp
 
 
-public PI_PALETTE_APPLY
-func pi_palette_apply
+public @PI_PALETTE_APPLY$QI
+func @pi_palette_apply$qi
 arg_bx	far, @slot:word
 
 	push	si
@@ -72,8 +72,8 @@ arg_bx	far, @slot:word
 	ret_bx
 endfunc
 
-public PI_FREE
-func pi_free
+public @PI_FREE$QI
+func @pi_free$qi
 arg_bx	far, @slot:word
 
 	mov	bx, @slot

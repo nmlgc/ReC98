@@ -340,11 +340,11 @@ _score_render proc near
 		mov	bp, sp
 		push	si
 		graph_accesspage 1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		push	0
 		call	sub_C8F5
 		mov	si, 1
@@ -384,8 +384,8 @@ _score_render endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _regist_view_menu
-_regist_view_menu proc near
+public @regist_view_menu$qv
+@regist_view_menu$qv proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
@@ -399,7 +399,7 @@ _regist_view_menu proc near
 		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
 		call	_scoredat_load_both
-		call	pi_load pascal, 0, ds, offset aHi01_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
 		call	_score_render
@@ -447,9 +447,9 @@ loc_CB58:
 		call	palette_black_out
 		freePISlotLarge	0
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi_0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -465,14 +465,14 @@ loc_CBB3:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-_regist_view_menu endp
+@regist_view_menu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _cleardata_and_regist_view_sprite
-_cleardata_and_regist_view_sprite	proc near
+public @cleardata_and_regist_view_sprite$qv
+@cleardata_and_regist_view_sprite$qv	proc near
 		push	bp
 		mov	bp, sp
 		mov	_rank, RANK_EASY
@@ -542,14 +542,14 @@ loc_CC78:
 		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
 		pop	bp
 		retn
-_cleardata_and_regist_view_sprite	endp
+@cleardata_and_regist_view_sprite$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _main_cdg_load
-_main_cdg_load	proc near
+public @main_cdg_load$qv
+@main_cdg_load$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_load_all pascal, CDG_NUMERAL, ds, offset aSft1_cd2
@@ -558,27 +558,27 @@ _main_cdg_load	proc near
 		call	cdg_load_all_noalpha pascal, 40, ds, offset aSl_cd2
 		pop	bp
 		retn
-_main_cdg_load	endp
+@main_cdg_load$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _main_cdg_free
-_main_cdg_free	proc near
+public @main_cdg_free$qv
+@main_cdg_free$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_free_all
 		pop	bp
 		retn
-_main_cdg_free	endp
+@main_cdg_free$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _op_animate
-_op_animate	proc near
+public @op_animate$qv
+@op_animate$qv	proc near
 
 @@page		= byte ptr -4
 var_3		= byte ptr -3
@@ -594,13 +594,13 @@ var_3		= byte ptr -3
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	graph_copy_page pascal, 0
-		call	pi_load pascal, 0, ds, offset aOp5b_pi
-		call	pi_load pascal, 1, ds, offset aOp4b_pi
-		call	pi_load pascal, 2, ds, offset aOp3b_pi
-		call	pi_load pascal, 3, ds, offset aOp2b_pi
-		call	pi_load pascal, 4, ds, offset aOp1b_pi
-		call	pi_load pascal, 5, ds, offset aOp0b_pi
-		call	pi_palette_apply pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp5b_pi
+		call	@pi_load$qinxc pascal, 1, ds, offset aOp4b_pi
+		call	@pi_load$qinxc pascal, 2, ds, offset aOp3b_pi
+		call	@pi_load$qinxc pascal, 3, ds, offset aOp2b_pi
+		call	@pi_load$qinxc pascal, 4, ds, offset aOp1b_pi
+		call	@pi_load$qinxc pascal, 5, ds, offset aOp0b_pi
+		call	@pi_palette_apply$qi pascal, 0
 		push	4
 		call	palette_black_in
 		graph_showpage 0
@@ -625,7 +625,7 @@ loc_CD7A:
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	pi_put_8
+		call	@pi_put_8$qiii
 		inc	[bp+var_3]
 		graph_accesspage [bp+@@page]
 		mov	al, 1
@@ -661,9 +661,9 @@ loc_CDC4:
 
 loc_CE50:
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi_1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_1
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		xor	si, si
@@ -760,12 +760,12 @@ loc_CF34:
 loc_CF4E:
 		cmp	si, 63
 		jl	short loc_CEF5
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		pop	di
 		pop	si
 		leave
 		retn
-_op_animate	endp
+@op_animate$qv	endp
 
 	_playchar_menu procdesc near
 op_01_TEXT ends
@@ -775,9 +775,9 @@ op_01_TEXT ends
 SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
 	extern @FRAME_DELAY$QI:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
-	extern PI_LOAD:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_LOAD$QINXC:proc
 	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc

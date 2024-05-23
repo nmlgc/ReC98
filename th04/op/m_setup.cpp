@@ -9,7 +9,6 @@
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th04/score.h"
-extern "C" {
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 	#include "th05/formats/pi.hpp"
@@ -17,13 +16,14 @@ extern "C" {
 	#include "th04/resident.hpp"
 	#include "th03/formats/pi.hpp"
 #endif
+extern "C" {
 #include "th04/hardware/grppsafx.h"
 }
 #include "th04/hardware/input.h"
 extern "C" {
 #include "th04/snd/snd.h"
-#include "th04/op/op.hpp"
 }
+#include "th04/op/op.hpp"
 #include "th04/shiftjis/m_setup.hpp"
 
 // MSWIN.BFT sprites

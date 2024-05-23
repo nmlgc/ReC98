@@ -19,8 +19,8 @@ extern "C" {
 #include "th03/sprites/regi.h"
 extern "C" {
 #include "th03/formats/cdg.h"
-#include "th03/formats/pi.hpp"
 }
+#include "th03/formats/pi.hpp"
 #include "th03/hardware/input.h"
 #include "th03/shiftjis/regist.hpp"
 #include "th03/formats/scoredat.hpp"

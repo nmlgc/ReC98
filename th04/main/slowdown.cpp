@@ -1,4 +1,3 @@
-extern "C" {
 #include "platform.h"
 #include "master.hpp"
 #include "th04/main/slowdown.hpp"
@@ -9,6 +8,4 @@ void near slowdown_frame_delay(void)
 	}
 	vsync_Count1 = 0;
 	slowdown_factor = 1;
-}
-
 }

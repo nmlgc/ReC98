@@ -310,7 +310,7 @@ _TEXT		ends
 ; ===========================================================================
 
 SLOWDOWN_TEXT segment word public 'CODE' use16
-	_slowdown_frame_delay procdesc near
+	@slowdown_frame_delay$qv procdesc near
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
@@ -496,7 +496,7 @@ loc_AFD1:
 loc_AFDF:
 		cmp	byte_20A70, 0
 		jnz	short loc_AFEB
-		call	_slowdown_frame_delay
+		call	@slowdown_frame_delay$qv
 		jmp	short loc_AFF0
 ; ---------------------------------------------------------------------------
 
@@ -537,7 +537,7 @@ loc_B003:
 		jmp	short $+2
 
 loc_B055:
-		call	score_update_and_render
+		call	@score_update_and_render$qv
 		cmp	_quit, Q_KEEP_RUNNING
 		jz	loc_AEBB
 		pop	bp
@@ -1653,7 +1653,7 @@ sub_C52D	endp
 mai_TEXT	ends
 
 MB_INV_TEXT	segment	byte public 'CODE' use16
-	REIMU_STARS_UPDATE_AND_RENDER procdesc pascal near
+	@reimu_stars_update_and_render$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1664,7 +1664,7 @@ sub_C73A	proc near
 		mov	bp, sp
 		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 16, 0
 		call	sub_CEC2
-		call	reimu_stars_update_and_render
+		call	@reimu_stars_update_and_render$qv
 		mov	_circles_color, GC_RG
 		cmp	_bomb_frame, 64
 		ja	short loc_C777
@@ -5703,8 +5703,8 @@ sub_111B7	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public STAGE2_UPDATE
-stage2_update	proc near
+public @STAGE2_UPDATE$QV
+@stage2_update$qv proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -5976,7 +5976,7 @@ loc_1162C:
 		pop	si
 		leave
 		retn
-stage2_update	endp
+@stage2_update$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6285,7 +6285,7 @@ HUD_OVRL_TEXT	segment	byte public 'CODE' use16
 HUD_OVRL_TEXT	ends
 
 PLAYER_P_TEXT	segment	byte public 'CODE' use16
-	_player_pos_update_and_clamp procdesc near
+	@player_pos_update_and_clamp$qv procdesc near
 PLAYER_P_TEXT	ends
 
 main_01_TEXT	segment	byte public 'CODE' use16
@@ -6473,7 +6473,7 @@ loc_121CA:
 		mov	_player_pos.velocity.y, ax
 
 loc_121E7:
-		call	_player_pos_update_and_clamp
+		call	@player_pos_update_and_clamp$qv
 		cmp	[bp+var_1], 0
 		jz	short loc_121F4
 		mov	word_2CE9E, si
@@ -7220,7 +7220,7 @@ sub_12842	endp
 		input:word
 	HUD_BAR_PUT procdesc near
 	HUD_SCORE_PUT procdesc near
-	SCORE_UPDATE_AND_RENDER procdesc near
+	@score_update_and_render$qv procdesc near
 	@bb_boss_free$qv procdesc near
 	@STAGE1_SETUP$QV procdesc near
 	@STAGE2_SETUP$QV procdesc near
@@ -7229,7 +7229,6 @@ sub_12842	endp
 	@STAGE5_SETUP$QV procdesc near
 	@STAGE6_SETUP$QV procdesc near
 	@STAGEX_SETUP$QV procdesc near
-	extern SCORE_DELTA_COMMIT:proc
 main_01_TEXT	ends
 
 ; ===========================================================================

@@ -12,9 +12,9 @@
 #include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/gaiji/gaiji.h"
-extern "C" {
 #include "th04/formats/bb.h"
 #include "th04/math/motion.hpp"
+extern "C" {
 #include "th04/main/null.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"

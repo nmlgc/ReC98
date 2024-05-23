@@ -6,8 +6,8 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th02/formats/pi.h"
+extern "C" {
 #include "th02/snd/snd.h"
 }
 

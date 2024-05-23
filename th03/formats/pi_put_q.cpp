@@ -5,7 +5,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-extern "C" {
 #include "th03/formats/pi.hpp"
 
 void pascal pi_put_quarter_8(
@@ -24,6 +23,4 @@ void pascal pi_put_quarter_8(
 		pi_buffer_p_offset(row_p, PI_W, 0);
 		pi_buffer_p_normalize(row_p);
 	}
-}
-
 }

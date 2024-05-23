@@ -9,9 +9,10 @@
 #include "th03/main/playfld.hpp"
 extern "C" {
 #include "th03/main/sprite16.hpp"
+}
 #include "th03/main/player/shot.hpp"
 
-void pascal near shots_update(void)
+void near shots_update(void)
 {
 	shotpair_t near *shotpair = shotpairs;
 	for(int i = 0; i < SHOTPAIR_COUNT; i++, shotpair++) {
@@ -24,7 +25,7 @@ void pascal near shots_update(void)
 	}
 }
 
-void pascal near shots_render(void)
+void near shots_render(void)
 {
 	shotpair_t near *shotpair = shotpairs;
 
@@ -48,6 +49,4 @@ void pascal near shots_render(void)
 			}
 		}
 	}
-}
-
 }

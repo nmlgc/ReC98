@@ -396,11 +396,11 @@ loc_99D4:
 		mov	_do_not_show_stage_number, 0
 
 loc_99F1:
-		call	pi_load pascal, 0, ds, offset aStnx0_pi
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aStnx0_pi
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
-		call	pi_load pascal, 0, ds, word_E504
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, word_E504
+		call	@pi_put_8$qiii pascal, large 0, 0
 		leave
 		retn
 sub_990C	endp
@@ -421,7 +421,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], 3AAh
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		call	graph_copy_page pascal, 0
 		freePISlotLarge	0
 		call	cdg_put_8 pascal, large (96 shl 16) or 96, 0
@@ -485,8 +485,8 @@ loc_9A8E:
 		call	sub_9D20
 		push	1
 		call	sub_9D20
-		call	pi_load pascal, 0, ds, offset aEn2_pi
-		call	pi_put_interlace_8 pascal, large 280, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aEn2_pi
+		call	@pi_put_interlace_8$qiii pascal, large 280, 0
 		freePISlotLarge	0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
@@ -536,10 +536,10 @@ loc_9BB7:
 		push	offset aEnemy04_pi ; "ENEMY04.pi"
 
 loc_9BBD:
-		call	pi_load
+		call	@pi_load$qinxc
 
 loc_9BC2:
-		call	pi_put_interlace_8 pascal, large 304, 0
+		call	@pi_put_interlace_8$qiii pascal, large 304, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
@@ -608,7 +608,7 @@ loc_9C5E:
 		push	1
 		call	palette_white_in
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		freePISlotLarge	0
 		call	respal_set_palettes
 		pop	si
@@ -640,18 +640,18 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_4]
-		call	pi_load pascal, 0, large [bp+arg_0]
+		call	@pi_load$qinxc pascal, 0, large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 320
-		call	pi_put_interlace_8 pascal, ax, (200 shl 16)
+		call	@pi_put_interlace_8$qiii pascal, ax, (200 shl 16)
 		freePISlotLarge	0
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 'e'
 		mov	byte ptr es:[bx+3], 'x'
-		call	pi_load pascal, 0, word ptr [bp+arg_0+2], bx
+		call	@pi_load$qinxc pascal, 0, word ptr [bp+arg_0+2], bx
 		mov	ax, si
 		imul	ax, 320
-		call	pi_put_interlace_8 pascal, ax, (208 shl 16)
+		call	@pi_put_interlace_8$qiii pascal, ax, (208 shl 16)
 		freePISlotLarge	0
 		pop	si
 		pop	bp
@@ -1037,9 +1037,9 @@ loc_A0C5:
 		graph_showpage al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_load pascal, 0, ds, offset aOver_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOver_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
@@ -1242,9 +1242,9 @@ loc_B879:
 		jz	short loc_B8F1
 		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
 		jz	short loc_B8F1
-		call	pi_load pascal, 0, ds, offset aConti_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aConti_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	cdg_load_all pascal, 0, ds, offset aConti_cd2
 		pop	bp
@@ -1252,9 +1252,9 @@ loc_B879:
 ; ---------------------------------------------------------------------------
 
 loc_B8F1:
-		call	pi_load pascal, 0, ds, offset aOver_pi_0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOver_pi_0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	_snd_delay_until_volume stdcall, 255
 		pop	cx
@@ -2661,9 +2661,9 @@ include th02/snd/snd.inc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
 	extern @FRAME_DELAY$QI:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
-	extern PI_PUT_INTERLACE_8:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_PUT_INTERLACE_8$QIII:proc
 	extern _snd_se_reset:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @GAME_INIT_MAIN$QNXUC:proc
@@ -2675,7 +2675,7 @@ include th02/snd/snd.inc
 	extern @game_exit_from_mainl_to_main$qv:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern PI_LOAD:proc
+	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
 	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern CDG_PUT_NOALPHA_8:proc

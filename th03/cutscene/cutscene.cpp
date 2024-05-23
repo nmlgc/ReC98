@@ -28,10 +28,13 @@
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
 	#include "th05/hardware/input.h"
+	#include "th05/formats/pi.hpp"
 #elif (GAME == 4)
+	#include "th03/formats/pi.hpp"
 	#include "th04/hardware/input.h"
 #else
 	#include "th03/hardware/input.h"
+	#include "th03/formats/pi.hpp"
 
 	// Let's rather not have this one global, since it might be wrong in an
 	// in-game context?
@@ -43,14 +46,11 @@ extern "C" {
 	#include "th04/hardware/grppsafx.h"
 	#include "th04/snd/snd.h"
 	#include "th04/gaiji/gaiji.h"
-	#include "th05/formats/pi.hpp"
 #elif (GAME == 4)
-	#include "th03/formats/pi.hpp"
 	#include "th04/hardware/grppsafx.h"
 	#include "th04/snd/snd.h"
 #else
 	#include "th01/hardware/grppsafx.h"
-	#include "th03/formats/pi.hpp"
 	#include "th03/snd/snd.h"
 #endif
 }

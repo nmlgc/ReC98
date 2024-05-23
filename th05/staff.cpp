@@ -5,7 +5,6 @@
 
 #pragma option -zCmaine_01_TEXT
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
@@ -117,5 +116,3 @@ void pascal near verdict_bitmap_snap(size_t bitmap_offset)
 // in VRAM.
 void pascal near verdict_bitmap_put(size_t bitmap_offset)
 ;
-
-}

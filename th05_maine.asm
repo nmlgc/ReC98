@@ -179,7 +179,7 @@ arg_2		= word ptr  6
 		GRCG_OFF_CLOBBERING dx
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		xor	si, si
 		jmp	short loc_B309
 ; ---------------------------------------------------------------------------
@@ -194,16 +194,16 @@ loc_B2EE:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_put_quarter_masked_8
+		call	@pi_put_quarter_masked_8$qiiiii
 		call	sub_B37C
 		inc	si
 
 loc_B309:
 		cmp	si, 8
 		jl	short loc_B2EE
-		call	pi_put_quarter_8 pascal, di, [bp+arg_0], 0, [bp+@@quarter]
+		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		call	sub_B37C
-		call	pi_put_quarter_8 pascal, di, [bp+arg_0], 0, [bp+@@quarter]
+		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		inc	allcast_screen_plus_one
 		cmp	allcast_screen_plus_one, 8
 		jge	short loc_B357
@@ -216,7 +216,7 @@ loc_B309:
 		add	ax, dx
 		mov	bx, ax
 		pushd	_ALLCAST_BG_FN[bx]
-		call	pi_load
+		call	@pi_load$qinxc
 
 loc_B357:
 		add	word_15012, 2
@@ -308,8 +308,8 @@ public @allcast_animate$qv
 		shl	ax, 5
 		mov	bx, ax
 		pushd	_ALLCAST_BG_FN[bx]
-		call	pi_load
-		call	pi_palette_apply pascal, 0
+		call	@pi_load$qinxc
+		call	@pi_palette_apply$qi pascal, 0
 		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_15012, 2
@@ -342,7 +342,7 @@ loc_B4B5:
 		jz	short loc_B4B5
 		push	4
 		call	palette_black_out
-		call	pi_free pascal, 0
+		call	@pi_free$qi pascal, 0
 		graph_accesspage 0
 		graph_showpage al
 		pop	bp
@@ -1959,10 +1959,10 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aHi01_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
+		call	@pi_free$qi pascal, 0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt pascal, ds, offset aSctm0_bft ; "sctm0.bft"
@@ -3585,10 +3585,10 @@ public @verdict_animate$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aUde_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aUde_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
+		call	@pi_free$qi pascal, 0
 		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
@@ -3716,7 +3716,7 @@ sub_D21D	endp
 maine_01_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
-	SPACE_WINDOW_SET procdesc pascal near \
+	@SPACE_WINDOW_SET$QIIII procdesc pascal near \
 		center_x:word, center_y:word, w:word, h:word
 
 ORB_PARTICLE_CELS = 6
@@ -3768,7 +3768,7 @@ sub_D387	proc near
 		mov	[bp+@@star_center], offset _stars_center
 		push	((RES_X / 2) shl 16) or (RES_Y / 2)	; (center_x shl 16) or center_y
 		push	(384 shl 16) or 320               	; (w shl 16) or h
-		call	space_window_set
+		call	@space_window_set$qiiii
 		mov	word_151DE, 0
 		xor	di, di
 		jmp	short loc_D41B
@@ -4561,7 +4561,7 @@ loc_D9D9:
 		idiv	bx
 		add	ax, 320
 		push	ax	; h
-		call	space_window_set
+		call	@space_window_set$qiiii
 		jmp	short loc_DA31
 ; ---------------------------------------------------------------------------
 
@@ -4714,7 +4714,7 @@ loc_DB1F:
 		jge	short loc_DB45
 		mov	ax, _space_window_center.x
 		add	ax, 4
-		call	space_window_set pascal, ax, (RES_Y / 2), _space_window_w, _space_window_h
+		call	@space_window_set$qiiii pascal, ax, (RES_Y / 2), _space_window_w, _space_window_h
 
 loc_DB45:
 		mov	word_151DE, 0
@@ -6085,12 +6085,12 @@ include th02/snd/snd.inc
 	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern PI_PUT_QUARTER_MASKED_8:proc
-	extern PI_LOAD:proc
-	extern PI_PUT_8:proc
-	extern PI_PUT_QUARTER_8:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_FREE:proc
+	extern @PI_PUT_QUARTER_MASKED_8$QIIIII:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_PUT_QUARTER_8$QIIII:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_FREE$QI:proc
 	extern @input_reset_sense_held$qv:proc
 	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern _snd_bgm_measure:proc

@@ -131,24 +131,24 @@ public @extra_unlock_animate$qv
 @extra_unlock_animate$qv proc far
 		push	bp
 		mov	bp, sp
-		call	scoredat_is_extra_unlocked
+		call	@scoredat_is_extra_unlocked$qv
 		or	ax, ax
 		jz	loc_B07D
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_B07D
-		call	_pi_load c, 0, offset aAll_pi, ds
-		call	_pi_palette_apply stdcall, 0
+		call	@pi_load$qinxc c, 0, offset aAll_pi, ds
+		call	@pi_palette_apply$qi stdcall, 0
 		pop	cx
-		call	_pi_put_8 c, 0, large 0
+		call	@pi_put_8$qiii c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
 		call	@frame_delay$qi pascal, 150
-		call	_pi_load c, 0, offset aBut_pi, ds
-		call	_pi_palette_apply stdcall, 0
+		call	@pi_load$qinxc c, 0, offset aBut_pi, ds
+		call	@pi_palette_apply$qi stdcall, 0
 		pop	cx
-		call	_pi_put_8 c, 0, large 0
+		call	@pi_put_8$qiii c, 0, large 0
 		freePISlotLarge	0
 		call	@key_delay$qv
 		push	5
@@ -167,23 +167,23 @@ loc_B07D:
 sub_B07F	proc far
 		push	bp
 		mov	bp, sp
-		call	scoredat_is_extra_unlocked
+		call	@scoredat_is_extra_unlocked$qv
 		or	ax, ax
 		jz	loc_B115
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	_pi_load c, 0, offset aAll_pi, ds
-		call	_pi_palette_apply stdcall, 0
+		call	@pi_load$qinxc c, 0, offset aAll_pi, ds
+		call	@pi_palette_apply$qi stdcall, 0
 		pop	cx
-		call	_pi_put_8 c, 0, large 0
+		call	@pi_put_8$qiii c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
 		call	@frame_delay$qi pascal, 150
-		call	_pi_load c, 0, offset aExtra_pi, ds
-		call	_pi_palette_apply stdcall, 0
+		call	@pi_load$qinxc c, 0, offset aExtra_pi, ds
+		call	@pi_palette_apply$qi stdcall, 0
 		pop	cx
-		call	_pi_put_8 c, 0, large 0
+		call	@pi_put_8$qiii c, 0, large 0
 		freePISlotLarge	0
 		call	@key_delay$qv
 		push	5
@@ -276,7 +276,7 @@ loc_B1C2:
 loc_B1C6:
 		mov	PaletteTone, 50
 		call	far ptr	palette_show
-		call	score_enter
+		call	@score_enter$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	gaiji_restore
@@ -300,15 +300,15 @@ maine_01_TEXT	ends
 
 SHARED	segment	word public 'CODE' use16
 	extern @key_delay$qv:proc
-	extern _pi_load:proc
+	extern @pi_load$qinxc:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
 	extern _snd_pmd_resident:proc
 	extern @game_init_main$qv:proc
-	extern _pi_palette_apply:proc
-	extern _pi_put_8:proc
+	extern @pi_palette_apply$qi:proc
+	extern @pi_put_8$qiii:proc
 SHARED	ends
 
 ; ===========================================================================
@@ -320,8 +320,8 @@ maine_03_TEXT	ends
 ; ===========================================================================
 
 maine_04_TEXT	segment	byte public 'CODE' use16
-	extern SCOREDAT_IS_EXTRA_UNLOCKED:proc
-	extern SCORE_ENTER:proc
+	extern @scoredat_is_extra_unlocked$qv:proc
+	extern @score_enter$qv:proc
 maine_04_TEXT	ends
 
 	.data

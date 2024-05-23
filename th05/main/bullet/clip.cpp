@@ -6,11 +6,12 @@
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
-extern "C" {
 #include "th04/main/player/player.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/bullet/clearzap.hpp"
+extern "C" {
 #include "th05/main/playperf.hpp"
+}
 
 bool near bullet_template_clip(void)
 {
@@ -53,6 +54,4 @@ clipped:
 		bullet_template.speed.v = playperf_speedtune(bullet_template.speed.v);
 	}
 	return false;
-}
-
 }

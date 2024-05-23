@@ -1334,14 +1334,14 @@ var_2		= word ptr -2
 		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
 		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
-		call	pi_load pascal, 0, ds, offset aTl01_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		call	egc_shift_left_all pascal, 2
 		mov	Palettes[15 * size rgb_t].r, 0
 		mov	Palettes[15 * size rgb_t].g, 0
@@ -1352,7 +1352,7 @@ var_2		= word ptr -2
 		mov	Palettes[11 * size rgb_t].b, 0
 		call	far ptr	palette_show
 		freePISlotLarge	0
-		call	pi_load pascal, 0, ds, offset aTl02_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aTl02_pi
 		graph_showpage 1
 		mov	si, 0A0h
 		jmp	short loc_AF02
@@ -1435,8 +1435,8 @@ loc_AF65:
 		kajacall	KAJA_SONG_PLAY
 		graph_showpage 0
 		graph_accesspage al
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		call	@frame_delay$qi pascal, 1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -1458,7 +1458,7 @@ loc_AFD9:
 		cmp	si, 8
 		jl	short loc_AFB4
 		graph_accesspage 1
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -1481,14 +1481,14 @@ sub_B008	proc near
 		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_load pascal, 0, ds, offset aTl02_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aTl02_pi
 		graph_showpage 0
 		call	sub_B3EF
 		graph_accesspage 1
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -2974,15 +2974,15 @@ include th02/snd/snd.inc
 	extern CDG_PUT_HFLIP_8:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @input_reset_sense_key_held$qv:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @game_init_op$qnxuc:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE:proc
-	extern PI_LOAD:proc
+	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
 	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
 	extern @INPUT_MODE_JOY_VS_KEY$QV:proc

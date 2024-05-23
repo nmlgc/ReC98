@@ -17,15 +17,13 @@ extern "C" {
 #include "th04/hardware/bgimage.hpp"
 #include "th04/score.h"
 #include "th04/snd/snd.h"
+}
 #include "th04/op/clear.hpp"
 #include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
-}
 #include "th05/hardware/input.h"
-extern "C" {
 #include "th05/formats/pi.hpp"
-}
 
 #pragma option -a2
 
