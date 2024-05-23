@@ -4,10 +4,6 @@
 #include "th01/rank.h"
 #endif
 
-#if (RANK_LUNATIC != 3)
-	#error `sft2.cdg` only contains sprites for 4 difficulties
-#endif
-
 typedef enum {
 	// sft1.cd2
 	// --------
@@ -69,6 +65,9 @@ typedef enum {
 } op_cdg_slot_t;
 
 inline void op_cdg_load_shared(void) {
+	// `sft2.cdg` only contains sprites for 4 difficulties
+	static_assert(CDG_OPTION_VALUE_RANK_last == (CDG_OPTION_VALUE_RANK + 3));
+
 	cdg_load_all(CDG_NUMERAL, "sft1.cd2");
 	cdg_load_all(CDG_MAIN, "sft2.cd2");
 	cdg_load_all(CDG_CURSOR, "car.cd2");
