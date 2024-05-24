@@ -3,7 +3,6 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/grp2xscs.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/score.h"
 #include "th01/hiscore/regist.hpp"
 
 // Null-terminated version of scoredat_name_t, used internally.

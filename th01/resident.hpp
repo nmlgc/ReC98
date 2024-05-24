@@ -1,4 +1,5 @@
 #include "th01/common.h"
+#include "th01/score.h"
 
 enum bgm_mode_t {
 	BGM_MODE_OFF,
@@ -43,9 +44,6 @@ static const pellet_speed_t PELLET_SPEED_MULTIPLIER = 40;
 
 #define to_pellet_speed(pixel_v) \
 	static_cast<pellet_speed_t>(pixel_v * PELLET_SPEED_MULTIPLIER)
-
-typedef int32_t score_t; // ZUN bug: Should have maybe been unsigned…
-typedef uint32_t uscore_t; // ZUN bug: …or consistent, at least.
 
 #define RES_ID "ReiidenConfig"
 struct resident_t {
