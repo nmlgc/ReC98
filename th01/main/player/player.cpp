@@ -13,7 +13,6 @@
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/timer.hpp"
 
 /// Durations

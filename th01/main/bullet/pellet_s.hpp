@@ -1,3 +1,17 @@
+#ifndef TH01_MAIN_BULLET_PELLET_S_HPP
+#define TH01_MAIN_BULLET_PELLET_S_HPP
+
+// Much like subpixels, pellet speeds are stored pre-multiplied by 40 to allow
+// an effective resolution of 0.025 pixels to be losslessly stored in an
+// integer. This pre-multiplication is reverted by the pellet spawning
+// functions.
+typedef int pellet_speed_t;
+
+static const pellet_speed_t PELLET_SPEED_MULTIPLIER = 40;
+
+#define to_pellet_speed(pixel_v) \
+	static_cast<pellet_speed_t>(pixel_v * PELLET_SPEED_MULTIPLIER)
+
 #define PELLET_SPEED_LOWER_MIN to_pellet_speed(-0.375f)
 #define PELLET_SPEED_RAISE_MAX to_pellet_speed(0.5f)
 
@@ -17,3 +31,5 @@ void pellet_speed_raise(pellet_speed_t delta);
 inline void pellet_speed_raise(float delta) {
 	pellet_speed_raise(to_pellet_speed(delta));
 }
+
+#endif /* TH01_MAIN_BULLET_PELLET_S_HPP */

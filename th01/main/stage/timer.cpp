@@ -19,7 +19,6 @@
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/timer.hpp"
 
