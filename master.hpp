@@ -114,16 +114,11 @@ long MASTER_RET dos_axdx(int axval, const char MASTER_PTR *strval);
 #define EGC_RL_MEMREAD 	0x0100	/* ^at mem write, <-at mem read */
 #define EGC_RL_NONE    	0x0000	/* no touch */
 
+// TODO: Document and add helpful macros for the EGC raster ops
+
 void MASTER_RET egc_on(void);
 void MASTER_RET egc_off(void);
 void MASTER_RET egc_start(void);
-
-#define egc_selectpat() \
-	outport(EGC_READPLANEREG, 0x00ff)
-
-// TODO: Document and add helpful macros for the EGC raster ops
-#define egc_setrop(mode_rop) \
-	outport(EGC_MODE_ROP_REG, mode_rop)
 
 #ifdef PC98_H
 	typedef void MASTER_RET egc_shift_func_t(

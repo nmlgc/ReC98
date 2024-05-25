@@ -23710,10 +23710,10 @@ sub_19E2F	proc far
 		outw2	EGC_MASKREG, 0FFFFh
 		outw2	EGC_ADDRRESSREG, 0
 		outw2	EGC_BITLENGTHREG, 0Fh
-		egc_setrop	EGC_WS_PATREG or EGC_RL_MEMREAD
+		outw2	EGC_MODE_ROP_REG, (EGC_WS_PATREG or EGC_RL_MEMREAD)
 		call	@tiles_invalidate_rect$qiiii pascal, (176 shl 16) or 156, (96 shl 16) or 96
 		call	@tiles_egc_render$qv
-		egc_setrop	EGC_WS_ROP or 0FCh
+		outw2	EGC_MODE_ROP_REG, (EGC_WS_ROP or 0FCh)
 		mov	word_26D54, 152
 		mov	ax, _scroll_line
 		add	word_26D54, ax

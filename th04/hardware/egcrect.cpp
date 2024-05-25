@@ -36,7 +36,9 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 		_asm { cld; }
 	#endif
 	egc_start_copy();
-	egc_setrop(EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0);
+
+	// (EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0)
+	outport(EGC_MODE_ROP_REG, 0x29F0);
 
 	// Using inline assembly rather than register pseudovariables to prevent
 	// parameters from being moved to the SI register
@@ -116,7 +118,7 @@ static void near egc_start_copy(void)
 	}
 	graph_egc_on();
 	outport(EGC_ACTIVEPLANEREG, 0xFFF0);
-	egc_selectpat();
+	outport(EGC_READPLANEREG, 0x00FF);
 	outport(EGC_MASKREG, 0xFFFF);
 	_DX = EGC_ADDRRESSREG;
 	outport(_DX, (_AX - _AX)); // :zunpet:
