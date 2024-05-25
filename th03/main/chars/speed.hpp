@@ -1,3 +1,6 @@
+#include "th01/math/subpixel.hpp"
+#include "th03/playchar.hpp"
+
 struct speed_t {
 	SPPoint8 aligned;
 	SPPoint8 diagonal;

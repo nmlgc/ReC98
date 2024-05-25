@@ -1,6 +1,8 @@
 /// Shinki's 32×32 ball bullets
 /// ---------------------------
 
+#include "th04/main/playfld.hpp"
+
 #define B6BALL_COUNT 63
 #define B6BALL_W 32
 #define B6BALL_H 32

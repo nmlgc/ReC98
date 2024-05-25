@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 // Moves the DOS text cursor to the text RAM cell at
 // ((max((x - 1), 0), (max((y - 1), 0)).
 #define text_cursor_move_1_based(x, y) { \

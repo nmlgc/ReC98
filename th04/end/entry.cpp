@@ -15,7 +15,6 @@
 #include "th03/formats/cfg_impl.hpp"
 #include "th03/core/initexit.h"
 #include "th03/cutscene/cutscene.hpp"
-#include "th04/score.h"
 #include "th04/snd/snd.h"
 #include "th04/end/end.h"
 #include "th04/end/staff.hpp"

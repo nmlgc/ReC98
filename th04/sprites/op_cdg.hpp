@@ -1,5 +1,12 @@
 // CDG slots for TH04's and TH05's OP.EXE
 
+#if (GAME == 5)
+	#include "th05/playchar.h"
+#else
+	#include "th04/playchar.h"
+#endif
+#include "th04/snd/snd.h"
+#include "th03/formats/cdg.h"
 #include "th01/rank.h"
 
 typedef enum {

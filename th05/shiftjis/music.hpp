@@ -3,6 +3,8 @@
 #include "th04/shiftjis/bgm.hpp"
 #include "th05/shiftjis/bgm.hpp"
 #include "th04/shiftjis/fnshared.hpp"
+#include "pc98.h"
+#include "shiftjis.hpp"
 
 static const unsigned int GAME_COUNT = 5;
 static const unsigned int TRACKS_MAX = 30;

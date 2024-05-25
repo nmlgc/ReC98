@@ -7,7 +7,6 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/math/digit.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"

@@ -30,8 +30,6 @@
 #include "th04/main/bg.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"
-#include "th04/main/phase.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/dialog/dialog.hpp"

@@ -1,6 +1,8 @@
 // Suboptimal and procedural GRCG macros.
 // (Still better than master.lib's proper functions though.)
 
+#include "x86real.h"
+
 #undef grcg_off
 
 #define grcg_setmode(mode) \

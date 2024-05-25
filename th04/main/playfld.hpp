@@ -1,3 +1,6 @@
+#ifndef TH04_MAIN_PLAYFLD_HPP
+#define TH04_MAIN_PLAYFLD_HPP
+
 #include "th04/main/scroll.hpp"
 #include "th04/math/motion.hpp"
 #include "th02/main/playfld.hpp"
@@ -53,3 +56,5 @@ extern int playfield_shake_anim_time;
 // redraw of the unshifted playfield on both VRAM pages.
 void near playfield_shake_update_and_render(void);
 /// -------
+
+#endif /* TH04_MAIN_PLAYFLD_HPP */

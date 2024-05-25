@@ -1,4 +1,7 @@
-#if GAME == 2
+#include "platform.h"
+struct resident_t;
+
+#if (GAME == 2)
 	#define CFG_FN "huuma.cfg"
 	struct cfg_options_t {
 		int8_t rank;

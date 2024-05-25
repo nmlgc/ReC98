@@ -2,6 +2,10 @@
 /// -------------------------------------------------------------------------
 extern "C" {
 
+#include "th02/formats/tile.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "planar.h"
+
 typedef dot_rect_t(TILE_W, TILE_H) mpn_plane_t;
 typedef Planar<mpn_plane_t> mpn_image_t;
 

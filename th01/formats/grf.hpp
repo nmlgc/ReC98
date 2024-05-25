@@ -9,6 +9,8 @@
 /// In contrast to .GRX, .GRF uses a separate RLE command + pixel data stream
 /// for each bitplane, with a customizable [rle_run_byte].
 
+#include "planar.h"
+
 #define GRF_MAGIC "HGRF"
 
 #pragma push(pack, 1)

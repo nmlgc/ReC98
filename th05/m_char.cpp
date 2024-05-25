@@ -14,8 +14,6 @@
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"
-#include "th04/score.h"
-#include "th04/snd/snd.h"
 #include "th04/op/clear.hpp"
 #include "th04/op/impl.hpp"
 #include "th04/sprites/op_cdg.hpp"

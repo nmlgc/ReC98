@@ -7,12 +7,9 @@
 #include "th02/hardware/frmdelay.h"
 #include "th03/hardware/palette.hpp"
 #include "th04/common.h"
-#include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
 #include "th04/sprites/main_cdg.h"
-#if (GAME == 5)
-	#include "th05/sprites/main_pat.h"
-#else
+#if (GAME == 4)
 	#include "th04/sprites/main_pat.h"
 #endif
 #include "th04/main/bg.hpp"
@@ -20,8 +17,6 @@
 #include "th04/main/frames.h"
 #include "th04/main/homing.hpp"
 #include "th04/main/null.hpp"
-#include "th04/main/phase.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/quit.hpp"
 #include "th04/main/score.hpp"
@@ -32,12 +27,10 @@
 #include "th04/main/dialog/dialog.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/item/item.hpp"
-#include "th04/main/player/player.hpp"
 #include "th04/main/player/bomb.hpp"
 #include "th04/main/player/shot.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #if (GAME == 5)
-	#include "th01/math/area.hpp"
 	#include "th05/resident.hpp"
 	#include "th05/main/boss/boss.hpp"
 #else

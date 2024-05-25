@@ -1,3 +1,4 @@
+#include "th04/score.h"
 #include "th04/common.h"
 
 #define RES_ID "KSOConfig"

@@ -4,15 +4,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/clamp.hpp"
-#include "th03/hardware/input.h"
 #include "th03/common.h"
-#include "th03/playchar.hpp"
-#include "th03/main/playfld.hpp"
-#include "th03/main/collmap.hpp"
-#include "th03/main/sprite16.hpp"
-#include "th03/main/chars/speed.hpp"
-#include "th03/main/player/shot.hpp"
-#include "th03/main/player/player.hpp"
 #include "th03/main/player/move.hpp"
 
 void pascal near player_pos_update_and_clamp(player_t near& player)

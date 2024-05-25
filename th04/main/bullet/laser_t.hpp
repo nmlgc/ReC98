@@ -1,6 +1,8 @@
 /// Thick lasers
 /// ------------
 
+#include "th01/math/subpixel.hpp"
+
 #define THICKLASER_COUNT 2
 
 enum thicklaser_flag_t {

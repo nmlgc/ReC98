@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // ZUN bloat: String alignment consistencies are deliberate and match where the
 // strings appear on screen relative to each other. Would be easier to use the
 // same left coordinate for all of them.

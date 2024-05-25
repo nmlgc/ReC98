@@ -1,3 +1,5 @@
+#include "th03/main/playfld.hpp"
+
 // A shared global hitbox.
 extern struct {
 	// ZUN bloat: Use separate variables.

@@ -1,3 +1,5 @@
+#include "th03/common.h"
+
 struct combo_t {
 	unsigned char time;
 	unsigned char hits;

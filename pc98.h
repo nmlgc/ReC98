@@ -5,6 +5,8 @@
 #ifndef PC98_H
 #define PC98_H
 
+#include "platform.h"
+
 /// Spaces
 /// ------
 /// These don't necessarily have to be relative to the top-left corner of the

@@ -6,6 +6,8 @@
 #ifndef DECOMP_HPP
 #define DECOMP_HPP
 
+#include "x86real.h"
+
 // Alternate version that sets the value first
 #define outport2(port, val) _asm { \
 	mov ax, val; \

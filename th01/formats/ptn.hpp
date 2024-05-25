@@ -11,6 +11,7 @@
 #define PTN_W 32
 #define PTN_H 32
 
+#include "th01/hardware/egc.h"
 #include "th01/sprites/main_ptn.h"
 
 // Loading and freeing

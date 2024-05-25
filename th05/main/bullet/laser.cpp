@@ -7,7 +7,6 @@
 #include "th04/math/vector.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/snd/snd.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/drawp.hpp"
 #include "th05/main/playperf.hpp"

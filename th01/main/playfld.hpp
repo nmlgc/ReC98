@@ -1,3 +1,8 @@
+#ifndef TH01_MAIN_PLAYFLD_HPP
+#define TH01_MAIN_PLAYFLD_HPP
+
+#include "pc98.h"
+
 #if (GAME == 1)
 	static const screen_x_t PLAYFIELD_LEFT = 0;
 	static const screen_y_t PLAYFIELD_TOP = 64;
@@ -49,3 +54,5 @@ static inline screen_y_t playfield_rand_y(
 	));
 }
 #endif
+
+#endif /* TH01_MAIN_PLAYFLD_HPP */

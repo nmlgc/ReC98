@@ -1,4 +1,5 @@
 #include "th02/formats/mpn.hpp"
+#include <stddef.h>
 
 // Internal .MPN slot structure
 struct mpn_t {

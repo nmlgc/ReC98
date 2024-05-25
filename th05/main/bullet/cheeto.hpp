@@ -1,3 +1,5 @@
+#include "th04/main/playfld.hpp"
+
 #define CHEETO_W 32
 #define CHEETO_H 32
 #define CHEETO_TRAIL_NODE_COUNT 16

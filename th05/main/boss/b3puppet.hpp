@@ -1,3 +1,6 @@
+#include "th04/main/playfld.hpp"
+#include "th02/main/entity.hpp"
+
 #define PUPPET_COUNT 2
 #define PUPPET_W 32
 #define PUPPET_H 32

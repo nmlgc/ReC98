@@ -1,4 +1,5 @@
 #include "th01/main/player/orb.hpp"
+#include "th01/formats/stagedat.hpp"
 #include "decomp.hpp"
 
 // Coordinates

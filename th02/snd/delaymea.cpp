@@ -3,7 +3,6 @@
 #include "platform.h"
 #include "x86real.h"
 #include "th02/hardware/frmdelay.h"
-#include "th02/snd/snd.h"
 #include "th02/snd/measure.hpp"
 
 void snd_delay_until_measure(int measure)

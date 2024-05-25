@@ -1,5 +1,7 @@
 // Implementation of cfg_load_resident_ptr().
 
+#include "libs/master.lib/master.hpp"
+
 // Referenced in the headers below.
 struct resident_t;
 extern resident_t far* resident;

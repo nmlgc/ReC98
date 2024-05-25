@@ -5,6 +5,8 @@
 #ifndef TH01_MATH_SUBPIXEL_HPP
 #define TH01_MATH_SUBPIXEL_HPP
 
+#include "pc98.h"
+
 #define PIXEL_NONE (-999)
 
 typedef uint8_t subpixel_length_8_t;

@@ -8,6 +8,8 @@
 #ifndef X86REAL_H
 #define X86REAL_H
 
+#include "platform.h"
+
 // Turbo C++ 4.0J's <conio.h> tries to redefine them otherwise.
 #define _PORT_DEFS
 

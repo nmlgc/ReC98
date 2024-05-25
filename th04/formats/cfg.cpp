@@ -3,7 +3,6 @@
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th03/formats/cfg_impl.hpp"
-#include "th04/score.h"
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 #else

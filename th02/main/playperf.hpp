@@ -1,6 +1,8 @@
 // Player performance metrics
 // --------------------------
 
+#include "platform.h"
+
 extern int playperf;
 static const int playperf_min = -6;
 extern uint8_t playperf_max;

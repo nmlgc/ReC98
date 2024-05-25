@@ -1,6 +1,7 @@
 #ifndef TH01_MAIN_PLAYER_ORB_HPP
 #define TH01_MAIN_PLAYER_ORB_HPP
 
+#include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 
 enum orb_velocity_x_t {

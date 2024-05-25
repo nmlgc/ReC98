@@ -7,8 +7,6 @@
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
 #include "th04/main/null.hpp"
-#include "th04/main/playfld.hpp"
-#include "th04/main/phase.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/stage/stage.hpp"

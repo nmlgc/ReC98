@@ -1,3 +1,5 @@
+#include "platform.h"
+
 extern bool extra_unlocked;
 
 void near start_game(void);

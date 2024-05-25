@@ -8,7 +8,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "libs/master.lib/master.hpp"
-#include "th04/score.h"
 #include "th04/resident.hpp"
 #include "th04/formats/std.hpp"
 #include "th04/main/playfld.hpp"

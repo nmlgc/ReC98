@@ -1,3 +1,4 @@
+#include "pc98.h"
 #include "defconv.h"
 
 #if (GAME == 2)

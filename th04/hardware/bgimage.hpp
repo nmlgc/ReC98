@@ -1,3 +1,5 @@
+#include "planar.h"
+
 // Additional 640×400 4-plane background image buffer.
 extern Planar<dots8_t __seg *> bgimage;
 

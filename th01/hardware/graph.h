@@ -1,6 +1,8 @@
 /// BIOS
 /// ----
 
+#include "planar.h"
+
 // Enables the graphics layer in 640x400 mode, applies z_Palettes, and clears
 // page 0.
 void z_graph_init(void);

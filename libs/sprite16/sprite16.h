@@ -3,6 +3,9 @@
 // the comments here only provide additional context.
 // Only includes functions that are actually used in TH03.
 
+#include "planar.h"
+#include "x86real.h"
+
 #define SPRITE16 0x42
 
 typedef enum {

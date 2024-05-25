@@ -1,7 +1,10 @@
+#include "th01/main/boss/boss.hpp"
+#include "th01/main/player/orb.hpp"
+#include "th01/math/area.hpp"
+#include "game/pf.h"
+
 /// Entities
 /// --------
-
-#include "game/pf.h"
 
 // Slot count for unique .BOS files associated with CBossEntity instances.
 // *Not* CBossEntity instances themselves!

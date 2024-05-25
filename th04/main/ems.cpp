@@ -9,13 +9,9 @@
 #include "planar.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "th03/formats/cdg.h"
 #include "th04/common.h"
-#include "th04/score.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
-#include "th04/sprites/main_cdg.h"
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 	#include "th05/playchar.h"

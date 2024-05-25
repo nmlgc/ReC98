@@ -120,6 +120,14 @@ These cases should gradually be removed as development goes along, though.
 
 ## Code organization
 
+* Every header file should individually compile as a valid translation unit,
+  and therefore `#include` any other headers it requires.
+
+* Only use include guards if the code structure necessitates it. This keeps
+  `#include` lists small and speeds up compilation, which is especially useful
+  given that we (still) have to emulate Turbo C++ 4.0J on 64-bit systems.
+  Unfortunately, it doesn't support `#pragma once`.
+
 * Try to avoid repeating numeric constants – after all, easy moddability
   should be one of the goals of this project. For local arrays, use `sizeof()`
   if the size can be expressed in terms of another array or type. Otherwise,

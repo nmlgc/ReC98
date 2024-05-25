@@ -1,5 +1,6 @@
 #include "th02/shiftjis/bgm.hpp"
 #include "th02/shiftjis/fns.hpp"
+#include "shiftjis.hpp"
 
 // ZUN quirk: TH02 first lists all 5 stage themes of the main game, followed by
 // all 5 boss themes.

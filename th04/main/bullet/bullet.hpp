@@ -1,9 +1,10 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// bullet.inc!
 
-#include "th02/main/entity.hpp"
+#include "th04/main/playfld.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/sprites/cels.h"
+#include "th02/main/entity.hpp"
 
 extern "C" {
 

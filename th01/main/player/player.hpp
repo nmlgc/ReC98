@@ -1,3 +1,4 @@
+#include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 
 static const pixel_t PLAYER_W = 32;

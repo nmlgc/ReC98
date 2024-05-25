@@ -1,6 +1,8 @@
 // Midboss and boss state
 // ----------------------
 
+#include "pc98.h"
+
 // Same indirection as used for the player position. Unfortunately not
 // contiguous in memory, or else we could have created a struct for both.
 extern screen_x_t boss_left_on_page[2];

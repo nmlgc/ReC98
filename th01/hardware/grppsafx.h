@@ -1,3 +1,5 @@
+#include "pc98.h"
+#include "shiftjis.hpp"
 #include "defconv.h"
 
 // Font weights

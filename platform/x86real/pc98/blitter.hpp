@@ -1,6 +1,8 @@
 /// Optimized byte-aligned sprite blitter
 /// -------------------------------------
 
+#include "planar.h"
+
 typedef void (* blit_func_t)(seg_t plane_seg, const void far* sprite);
 
 struct Blitter {

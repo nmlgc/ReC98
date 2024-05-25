@@ -1,3 +1,5 @@
+#include "th04/main/playfld.hpp"
+
 #define B4BALL_COUNT 63
 #define B4BALL_W 32
 #define B4BALL_H 32

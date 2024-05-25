@@ -16,7 +16,6 @@
 #include "libs/master.lib/master.hpp"
 #include "game/input.hpp"
 #include "th01/rank.h"
-#include "th01/resident.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/core/resstuff.hpp"

@@ -1,4 +1,5 @@
 #include "th04/main/playperf.hpp"
+#include "th01/math/subpixel.hpp"
 
 #pragma codeseg BULLET_A_TEXT
 

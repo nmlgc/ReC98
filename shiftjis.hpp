@@ -1,3 +1,6 @@
+#ifndef SHIFTJIS_HPP
+#define SHIFTJIS_HPP
+
 #include "decomp.hpp"
 
 // 1-byte JIS X 0201 codepoint (ASCII, numeric, or halfwidth katakana).
@@ -49,3 +52,5 @@ inline jis_t shiftjis_to_jis(shiftjis_kanji_t shiftjis) {
 		) + ((shiftjis & 0x3F) << 9)
 	);
 }
+
+#endif /* SHIFTJIS_HPP */

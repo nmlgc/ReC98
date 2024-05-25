@@ -4,6 +4,8 @@
 // shown between text boxes, the face for each box, and even how many boxes are
 // part of each dialog sequence.
 
+#include "shiftjis.hpp"
+
 static const shiftjis_ank_amount_t DIALOG_LINE_LENGTH = 36;
 static const shiftjis_ank_amount_t DIALOG_LINE_SIZE = (DIALOG_LINE_LENGTH + 4);
 static const int DIALOG_BOX_LINES = 2;

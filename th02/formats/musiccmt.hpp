@@ -10,6 +10,8 @@
 // from being rendered. This is purely a performance hint, and is functionally
 // equivalent to a line consisting of only whitespace.
 
+#include "shiftjis.hpp"
+
 static const shiftjis_ank_amount_t CMT_LINE_LENGTH = ((GAME >= 4) ? 38 : 40);
 static const shiftjis_ank_amount_t CMT_LINE_SIZE = (CMT_LINE_LENGTH + 2);
 static const int CMT_TITLE_LINE = 0;

@@ -1,3 +1,5 @@
+#include "th02/score.h"
+
 // ZUN quirk: Terminated with an "impossibly high" sentinel value of
 // (99,999,999 × 10), and no usage code checks against the size of the array.
 // Classifying as a quirk for the time being, until we can prove the maximum

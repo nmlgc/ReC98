@@ -1,6 +1,9 @@
 // TH02 stores its 48×48 faces for in-game dialogs as 3×3 sets of .MPN tiles in
 // MIKO_K.PTN… yup.
 
+#include "th02/sprites/main_pat.h"
+#include "th02/formats/tile.hpp"
+
 #define FACE_TILES_X (FACE_W / TILE_W)
 #define FACE_TILES_Y (FACE_H / TILE_H)
 

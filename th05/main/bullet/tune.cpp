@@ -4,7 +4,6 @@
 
 #include "platform.h"
 #include "pc98.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/playperf.hpp"
 #include "th04/main/bullet/bullet.hpp"
 

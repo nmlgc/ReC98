@@ -1,3 +1,4 @@
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "defconv.h"
 
 #if GAME == 5

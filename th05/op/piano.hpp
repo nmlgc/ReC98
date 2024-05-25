@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // Coordinates referenced by the Music Room
 // ----------------------------------------
 

@@ -1,3 +1,6 @@
+#ifndef TH04_SND_SND_H
+#define TH04_SND_SND_H
+
 #include "th03/snd/snd.h"
 
 typedef enum {
@@ -75,3 +78,4 @@ void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 #ifdef __cplusplus
 }
 #endif
+#endif /* TH04_SND_SND_H */

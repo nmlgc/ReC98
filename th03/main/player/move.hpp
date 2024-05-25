@@ -1,3 +1,5 @@
+#include "th03/main/player/player.hpp"
+
 enum move_ret_t {
 	MOVE_INVALID = 0,
 	MOVE_VALID = 1,

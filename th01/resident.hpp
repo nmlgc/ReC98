@@ -1,3 +1,6 @@
+#ifndef TH01_RESIDENT_HPP
+#define TH01_RESIDENT_HPP
+
 #include "th01/main/bullet/pellet_s.hpp"
 #include "th01/common.h"
 #include "th01/score.h"
@@ -110,3 +113,5 @@ inline void resident_continue_use(void) {
 	resident->continues_per_scene[resident->stage_id / STAGES_PER_SCENE]++;
 }
 // ------------------------------------------------------------
+
+#endif /* TH01_RESIDENT_HPP */

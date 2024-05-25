@@ -1,3 +1,9 @@
+#include "th01/formats/scoredat.hpp"
+#include "th01/hardware/palette.h"
+#include "th01/score.h"
+#include "th01/v_colors.hpp"
+#include "shiftjis.hpp"
+
 // Needed outside to allow callers to set these to "custom" colors… i.e., the
 // intended ones after they partied on the palette themselves. Would be cleaner
 // if regist_menu() just set the correct hardware palette itself… oh well, it

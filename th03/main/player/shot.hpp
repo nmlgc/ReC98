@@ -1,3 +1,6 @@
+#include "th03/main/playfld.hpp"
+#include "th03/main/sprite16.hpp"
+
 #define SHOT_VELOCITY -12.0f
 #define SHOT_SO_PID (320 / 8)
 

@@ -8,9 +8,7 @@
 #include "th04/hardware/grcg.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/scroll.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
-#include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
 
 #define gather_init(gather) { \

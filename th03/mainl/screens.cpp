@@ -8,8 +8,6 @@
 #include "th01/hardware/grppsafx.h"
 #include "th02/v_colors.hpp"
 #include "th03/common.h"
-#include "th03/playchar.hpp"
-#include "th03/score.hpp"
 #include "th03/resident.hpp"
 #include "th03/formats/cdg.h"
 #include "th03/formats/win.hpp"

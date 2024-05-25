@@ -1,3 +1,6 @@
+#include "th03/sprites/regi.h"
+#include "th03/score.hpp"
+#include "th03/playchar.hpp"
 #include "th01/rank.h"
 
 #define SCOREDAT_FN "YUME.NEM"

@@ -2,6 +2,8 @@
 // ----------------------------
 extern "C" {
 
+#include "th01/math/subpixel.hpp"
+
 // [center_x] and [center_y] are *passed* as subpixels, but stored at pixel
 // precision, as master.lib's grcg_circle() function doesn't support more than
 // that anyway.

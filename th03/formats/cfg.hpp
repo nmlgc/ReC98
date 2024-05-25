@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #if GAME == 3
 	#define CFG_FN "yume.cfg"
 	struct cfg_options_t {

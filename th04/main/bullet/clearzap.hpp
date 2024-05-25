@@ -1,4 +1,5 @@
 #include "th04/sprites/cels.h"
+#include "platform.h"
 
 // Set to `true` to clear all on-screen bullets, giving out a semi-exponential
 // bonus for all bullets that were alive on the first frame of activity.

@@ -1,3 +1,6 @@
+#include "pc98.h"
+#include "shiftjis.hpp"
+
 static const int HELP_LINES = 9;
 static const pixel_t HELP_W = (46 * GLYPH_HALF_W);
 

@@ -1,3 +1,5 @@
+#include "platform.h"
+
 typedef uint16_t input_t;
 
 static const input_t INPUT_NONE       = 0x0000;

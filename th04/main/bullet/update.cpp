@@ -9,12 +9,10 @@
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/playperf.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/slowdown.hpp"
-#include "th04/main/bullet/bullet.hpp"
 #include "th04/main/bullet/pellet_r.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/player/player.hpp"
@@ -22,7 +20,6 @@
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
-#include "th04/main/gather.hpp"
 
 #if (GAME == 5)
 	#include "th04/main/item/item.hpp"

@@ -1,3 +1,5 @@
+#include "th04/main/playfld.hpp"
+
 static const pixel_t MIDBOSS_W_MAX = 64;
 static const pixel_t MIDBOSS_H_MAX = 64;
 static const unsigned int MIDBOSS_BONUS_UNIT_VALUE = 1280;

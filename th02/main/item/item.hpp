@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 enum item_type_t {
 	IT_POWER = 0,
 	IT_POINT = 1,

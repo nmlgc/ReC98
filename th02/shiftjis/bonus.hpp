@@ -1,3 +1,6 @@
+#include "pc98.h"
+#include "shiftjis.hpp"
+
 extern const shiftjis_t BONUS_RANK[];
 extern const shiftjis_t BONUS_PLAYPERF[];
 extern const shiftjis_t BONUS_BOMBS[];

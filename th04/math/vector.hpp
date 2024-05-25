@@ -1,5 +1,6 @@
 extern "C" {
 #include "th02/math/vector.hpp"
+#include "th01/math/subpixel.hpp"
 
 void pascal near vector2_near(
 	SPPoint near &ret, unsigned char angle, subpixel_t length

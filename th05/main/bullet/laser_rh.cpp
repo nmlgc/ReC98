@@ -8,7 +8,6 @@
 #include "game/coords.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/polar.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/player/player.hpp"
 #include "th05/main/bullet/laser.hpp"
 

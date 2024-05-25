@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define SCORE_DIGITS 8
 
 // Later games use a binary-coded decimal representation.

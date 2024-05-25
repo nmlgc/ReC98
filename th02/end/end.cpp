@@ -14,7 +14,6 @@
 #include "th01/hardware/grppsafx.h"
 #undef const
 
-#include "th01/formats/cutscene.hpp"
 #include "th02/score.h"
 #include "th02/v_colors.hpp"
 #include "th02/resident.hpp"

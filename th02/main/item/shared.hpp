@@ -1,6 +1,8 @@
 // Item declarations shared with later games
 // -----------------------------------------
 
+#include "platform.h"
+
 // Amount of items dropped when losing a life
 #define ITEM_MISS_COUNT 5
 

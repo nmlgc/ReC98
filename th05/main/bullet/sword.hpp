@@ -1,3 +1,6 @@
+#include "th04/main/playfld.hpp"
+#include "th02/main/entity.hpp"
+
 #define SWORD_COUNT 63
 #define SWORD_W 32
 #define SWORD_H 32

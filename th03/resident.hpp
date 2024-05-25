@@ -1,3 +1,6 @@
+#include "th03/playchar.hpp"
+#include "th03/score.hpp"
+
 enum key_mode_t {
 	KM_KEY_KEY,
 	KM_JOY_KEY,

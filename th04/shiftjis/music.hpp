@@ -1,5 +1,6 @@
 #include "th04/shiftjis/bgm.hpp"
 #include "th04/shiftjis/fnshared.hpp"
+#include "shiftjis.hpp"
 
 const shiftjis_t* MUSIC_CHOICES[] = {
 	"No.1  " TH04_01,

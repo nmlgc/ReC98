@@ -4,17 +4,14 @@
 #include "pc98.h"
 #include "planar.h"
 #include "libs/master.lib/master.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/wave.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
-#include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/bos.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/orb.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 
 // Slot structures

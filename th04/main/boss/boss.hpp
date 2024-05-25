@@ -1,4 +1,9 @@
+#ifndef TH04_MAIN_BOSS_BOSS_HPP
+#define TH04_MAIN_BOSS_BOSS_HPP
+
 #include "th04/main/hud/overlay.hpp"
+#include "th04/main/phase.hpp"
+#include "th04/main/playfld.hpp"
 
 // Bosses
 // ------
@@ -192,3 +197,5 @@ enum boss_defeat_frames_t {
 	void near boss_defeat_update(void);
 #endif
 // ---------------
+
+#endif /* TH04_MAIN_BOSS_BOSS_HPP */

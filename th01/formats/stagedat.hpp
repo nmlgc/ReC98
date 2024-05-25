@@ -1,3 +1,5 @@
+#include "platform.h"
+
 /// STAGE?.DAT format, describing the object layout of *all* stages in a scene
 /// --------------------------------------------------------------------------
 

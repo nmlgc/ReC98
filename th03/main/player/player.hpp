@@ -1,3 +1,10 @@
+#include "th03/main/player/shot.hpp"
+#include "th03/main/chars/speed.hpp"
+#include "th03/main/collmap.hpp"
+#include "th03/main/playfld.hpp"
+#include "th03/hardware/input.h"
+#include "th01/math/subpixel.hpp"
+
 #define HALFHEARTS_MAX 10
 
 #define ROUND_START_INVINCIBILITY_FRAMES 50

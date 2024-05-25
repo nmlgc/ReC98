@@ -1,3 +1,8 @@
+#ifndef TH04_RESIDENT_HPP
+#define TH04_RESIDENT_HPP
+
+#include "th04/score.h"
+
 #define RES_ID "HUMAConfig"
 struct resident_t {
 	char id[sizeof(RES_ID)];
@@ -56,3 +61,5 @@ struct resident_t {
 };
 
 extern resident_t far *resident;
+
+#endif /* TH04_RESIDENT_HPP */

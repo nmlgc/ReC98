@@ -8,5 +8,7 @@
 //   files, the implementation still treats them as variable. Still defining it
 //   here for consistency with other file formats.
 
+#include "shiftjis.hpp"
+
 static const shiftjis_ank_amount_t END_LINE_LENGTH = 44;
 static const shiftjis_ank_amount_t END_LINE_SIZE = (END_LINE_LENGTH + 2);

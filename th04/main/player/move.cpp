@@ -2,8 +2,6 @@
 
 #include "platform.h"
 #include "pc98.h"
-#include "th04/hardware/inputvar.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/main/player/move.hpp"
 

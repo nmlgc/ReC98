@@ -13,7 +13,6 @@
 #include "th01/hardware/egc.h"
 #include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"

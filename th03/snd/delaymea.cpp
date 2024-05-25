@@ -3,11 +3,6 @@
 #include "platform.h"
 #include "x86real.h"
 #include "th02/hardware/frmdelay.h"
-#if (GAME >= 4)
-	#include "th04/snd/snd.h"
-#else
-	#include "th03/snd/snd.h"
-#endif
 #include "th02/snd/measure.hpp"
 
 void pascal snd_delay_until_measure(int measure, unsigned int frames_if_no_bgm)

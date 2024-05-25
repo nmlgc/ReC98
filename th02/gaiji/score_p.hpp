@@ -1,3 +1,5 @@
+#include "th02/score.h"
+
 // ZUN bloat: The divisor can never be 0. This separate function is just meant
 // to work around the resulting `Condition is always true/false` and
 // `Unreachable code` warnings.

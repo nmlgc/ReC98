@@ -1,3 +1,5 @@
+#include "platform.h"
+
 // Loads the cutscene script from the given file, returning `false` on success.
 // TH03 frees the previously loaded script and allocates a new one with [fn]'s
 // file size before loading it from the file.

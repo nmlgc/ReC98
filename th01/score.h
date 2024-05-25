@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define SCORE_DIGITS 7
 
 typedef int32_t score_t; // ZUN bug: Should have maybe been unsigned…

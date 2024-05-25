@@ -3,6 +3,9 @@
 // into flashing yellow enemy circles and a single consistently white player
 // circle.
 
+#include "th03/common.h"
+#include "th01/math/subpixel.hpp"
+
 extern bool hitcircles_enemy_add_do_not_randomly_center_within_hitbox;
 
 void pascal hitcircles_enemy_add(

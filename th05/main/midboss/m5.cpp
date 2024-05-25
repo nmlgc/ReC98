@@ -9,7 +9,6 @@
 #include "th01/math/subpixel.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/scroll.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/midboss/midboss.hpp"
 
 // Constants

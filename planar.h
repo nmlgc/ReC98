@@ -6,6 +6,8 @@
 #ifndef PLANAR_H
 #define PLANAR_H
 
+#include "pc98.h"
+
 // 1bpp types, describing horizontal lines of 8, 16, or 32 pixels.
 typedef uint8_t dots8_t;
 typedef uint16_t dots16_t;

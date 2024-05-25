@@ -10,8 +10,6 @@
 #include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/homing.hpp"
-#include "th04/main/phase.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/spark.hpp"
 #include "th04/main/bullet/clearzap.hpp"
