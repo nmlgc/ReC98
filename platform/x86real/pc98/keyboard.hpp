@@ -1,6 +1,5 @@
-// ReC98
-// -----
-// PC-98 keyboard constants
+/// PC-98 keyboard constants
+/// ------------------------
 
 // BIOS key press bitmap addresses
 typedef enum {

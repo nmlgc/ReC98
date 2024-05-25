@@ -2,8 +2,8 @@
 	.model use16 large SHARED
 	locals
 
-include pc98kbd.inc
 include twobyte.inc
+include platform/x86real/pc98/keyboard.inc
 include th04/hardware/input.inc
 
 	extrn _key_det:word

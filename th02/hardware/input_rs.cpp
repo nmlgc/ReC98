@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "pc98kbd.h"
+#include "platform/x86real/pc98/keyboard.hpp"
 #include "th02/hardware/input.hpp"
 
 inline uint8_t keygroup_sense(uint8_t group) {
