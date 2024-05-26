@@ -8,7 +8,6 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
 
 #include "th01/hardware/grppsafx.cpp"
@@ -48,6 +47,4 @@ void DEFCONV graph_putsa_fx(
 
 	outportb(0x68, 0xA); // CG ROM code access
 	grcg_off();
-}
-
 }

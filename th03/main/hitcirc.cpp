@@ -10,9 +10,7 @@
 #include "th03/main/hitbox.hpp"
 #include "th03/main/hitcirc.hpp"
 #include "th03/main/v_colors.hpp"
-extern "C" {
 #include "th03/sprites/main_s16.hpp"
-}
 
 static const pixel_t HITCIRCLE_W = 48;
 static const pixel_t HITCIRCLE_H = 48;

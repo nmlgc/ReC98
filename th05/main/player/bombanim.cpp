@@ -6,9 +6,7 @@
 #include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
-extern "C" {
 #include "th04/main/circle.hpp"
-}
 #include "th05/sprites/main_pat.h"
 #include "th05/main/player/bomb.hpp"
 

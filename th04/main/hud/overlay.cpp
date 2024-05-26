@@ -14,12 +14,10 @@
 #include "th04/gaiji/gaiji.h"
 #include "th04/formats/bb.h"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/main/null.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/main/scroll.hpp"
-}
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"

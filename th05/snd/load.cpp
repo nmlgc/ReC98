@@ -6,7 +6,6 @@
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "platform/x86real/flags.hpp"
-extern "C" {
 #include "th05/snd/snd.h"
 
 extern char snd_load_fn[PF_FN_LEN];
@@ -116,6 +115,4 @@ ret:
 	#undef func_local
 	#undef ext
 	#undef _DI
-}
-
 }

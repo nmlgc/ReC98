@@ -7,7 +7,6 @@
 #include "decomp.hpp"
 #include "master.hpp"
 #include "platform/x86real/flags.hpp"
-extern "C" {
 #include "th04/hardware/bgimage.hpp"
 
 inline void memcpy_movsd(
@@ -75,6 +74,4 @@ void bgimage_free(void)
 		HMem<dots8_t>::free(bgimage.E);
 		bgimage.B = nullptr;
 	}
-}
-
 }

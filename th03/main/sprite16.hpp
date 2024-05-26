@@ -53,6 +53,8 @@ enum sprite16_put_func_t {
 	_sprite16_put_func_t_FORCE_UINT16 = 0xFFFF
 };
 
+extern "C" {
+
 // Copies the entire sprite area in VRAM from page [dst_page ^ 1] to
 // [dst_page]. Returns true if successful, false if the temporary memory
 // couldn't be allocated.
@@ -82,3 +84,5 @@ void pascal sprite16_putx(
 void pascal sprite16_put_noclip(
 	screen_x_t left, screen_y_t top, sprite16_offset_t so
 );
+
+}

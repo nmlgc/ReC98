@@ -8,18 +8,14 @@
 #include "shiftjis.hpp"
 #include "game/input.hpp"
 #include "th01/rank.h"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
-}
 #include "th02/hardware/frmdelay.h"
 #include "th03/common.h"
 #include "th03/score.hpp"
 #include "th03/playchar.hpp"
 #include "th03/resident.hpp"
 #include "th03/sprites/regi.h"
-extern "C" {
 #include "th03/formats/cdg.h"
-}
 #include "th03/formats/pi.hpp"
 #include "th03/hardware/input.h"
 #include "th03/shiftjis/regist.hpp"

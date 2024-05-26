@@ -4,9 +4,7 @@
 #include "x86real.h"
 #include "libs/kaja/kaja.h"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th05/snd/snd.h"
-}
 #include "th02/snd/measure.hpp"
 
 int snd_bgm_measure(void)

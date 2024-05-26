@@ -12,9 +12,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/hardware/pages.hpp"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 #include "th02/formats/dialog.hpp"
 #include "th02/formats/tile.hpp"
 #include "th02/formats/mpn.hpp"

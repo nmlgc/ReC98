@@ -7,9 +7,7 @@
 #include "libs/kaja/kaja.h"
 #include "th01/rank.h"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th03/formats/cdg.h"
-}
 #if (GAME == 4)
 	#include "th03/formats/pi.hpp"
 	#include "th04/hardware/input.h"
@@ -18,9 +16,7 @@ extern "C" {
 #include "th03/core/initexit.h"
 #include "th03/cutscene/cutscene.hpp"
 #include "th04/score.h"
-extern "C" {
 #include "th04/snd/snd.h"
-}
 #include "th04/end/end.h"
 #include "th04/end/staff.hpp"
 #include "th04/end/verdict.hpp"

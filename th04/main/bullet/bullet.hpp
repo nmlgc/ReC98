@@ -4,6 +4,8 @@
 #include "th02/main/entity.hpp"
 #include "th04/sprites/cels.h"
 
+extern "C" {
+
 /// Game-specific group and spawn types
 /// -----------------------------------
 
@@ -369,3 +371,5 @@ extern nearfunc_t_near bullet_template_tune;
 void near bullets_add_regular_fixedspeed(void);
 void near bullets_add_special_fixedspeed(void);
 /// --------
+
+}

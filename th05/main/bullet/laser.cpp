@@ -8,13 +8,11 @@
 #include "th02/v_colors.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/hardware/grcg.hpp"
-extern "C" {
 #include "th04/snd/snd.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/drawp.hpp"
 #include "th05/main/playperf.hpp"
-}
 #include "th05/main/bullet/laser.hpp"
 
 // Segment 1 (as allocated in the header)

@@ -1,9 +1,7 @@
 #include "shiftjis.hpp"
 #include "th02/resident.hpp"
 #include "th02/hardware/input.hpp"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 #include "th02/core/globals.hpp"
 #include "th02/main/playperf.hpp"
 #include "th02/main/score.hpp"

@@ -17,9 +17,7 @@
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
-extern "C" {
 #include "th04/formats/cdg.h"
-}
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/phase.hpp"
@@ -29,9 +27,7 @@ extern "C" {
 #include "th04/main/tile/bb.hpp"
 #include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
-extern "C" {
 #include "th05/formats/super.h"
-}
 #include "th04/main/boss/backdrop.hpp"
 #include "th05/main/boss/boss.hpp"
 #include "th05/main/boss/bosses.hpp"

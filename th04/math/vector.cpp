@@ -14,7 +14,7 @@ int pascal polar(int center, int radius, int ratio)
 	return (((static_cast<long>(radius) * ratio) >> 8) + center);
 }
 
-extern "C" void pascal vector2_at(
+void pascal vector2_at(
 	SPPoint near &ret,
 	subpixel_t origin_x,
 	subpixel_t origin_y,

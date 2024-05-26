@@ -12,7 +12,6 @@
 #include "master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "libs/sprite16/sprite16.h"
-extern "C" {
 #include "th03/main/sprite16.hpp"
 
 void pascal sprite16_sprites_commit(void)
@@ -159,6 +158,4 @@ void pascal sprite16_put_noclip(
 	putpos_right += putpos_left;
 
 	CALL_PUT(putpos_left, top, sprite16_put_size.w.v, sprite_offset_local);
-}
-
 }

@@ -26,9 +26,7 @@
 #include "th02/formats/pi.h"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 #include "th02/end/staff.hpp"
 #include "th02/shiftjis/end.hpp"
 #include "th02/shiftjis/title.hpp"

@@ -1,4 +1,3 @@
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"
@@ -71,4 +70,3 @@ struct glyphball_t {
 // 1 additional unused one, for some reason?
 extern glyphball_t glyphballs[SCOREDAT_NAME_LEN + 1];
 /// --------------------------------------------------
-}

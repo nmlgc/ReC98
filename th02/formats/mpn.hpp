@@ -1,5 +1,6 @@
 /// Uncompressed 16-color 16×16 image format with palette, used for map tiles
 /// -------------------------------------------------------------------------
+extern "C" {
 
 typedef dot_rect_t(TILE_W, TILE_H) mpn_plane_t;
 typedef Planar<mpn_plane_t> mpn_image_t;
@@ -33,8 +34,11 @@ struct mpn_header_t {
 	// (⌊left/8⌋*8, top).
 	// ZUN landmine: Does not restrict [image] to ([mpn_count] + 1), which
 	// matters in conjunction with tile_area_init_and_put_both().
+	extern "C++" {
 	void pascal mpn_put_8(screen_x_t left, vram_y_t top, int image);
+	}
 
 	void mpn_free(void);
 #endif
+}
 /// -------------------------------------------------------------------------

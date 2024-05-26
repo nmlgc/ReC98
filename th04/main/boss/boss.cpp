@@ -12,9 +12,7 @@
 #include "th04/gaiji/gaiji.h"
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
-extern "C" {
 #include "th04/snd/snd.h"
-}
 #include "th04/sprites/main_cdg.h"
 #if (GAME == 5)
 	#include "th05/sprites/main_pat.h"
@@ -25,9 +23,7 @@ extern "C" {
 #include "th04/main/end.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/homing.hpp"
-extern "C" {
 #include "th04/main/null.hpp"
-}
 #include "th04/main/phase.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/rank.hpp"
@@ -50,9 +46,7 @@ extern "C" {
 	#include "th05/resident.hpp"
 	#include "th05/main/boss/boss.hpp"
 #else
-	extern "C" {
 	#include "th03/formats/cdg.h"
-	}
 	#include "th04/resident.hpp"
 	#include "th04/formats/bb.h"
 	#include "th04/formats/dialog.hpp"

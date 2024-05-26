@@ -40,7 +40,6 @@
 	// in-game context?
 	#define key_det input_sp
 #endif
-extern "C" {
 #if (GAME == 5)
 	#include "th04/hardware/bgimage.hpp"
 	#include "th04/hardware/grppsafx.h"
@@ -53,7 +52,6 @@ extern "C" {
 	#include "th01/hardware/grppsafx.h"
 	#include "th03/snd/snd.h"
 #endif
-}
 #include "th03/cutscene/cutscene.hpp"
 
 #pragma option -a2

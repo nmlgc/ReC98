@@ -12,12 +12,10 @@
 #include "master.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
-extern "C" {
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"
 #include "th04/score.h"
 #include "th04/snd/snd.h"
-}
 #include "th04/op/clear.hpp"
 #include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"

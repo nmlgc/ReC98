@@ -1,5 +1,6 @@
 // Growing or shrinking circles
 // ----------------------------
+extern "C" {
 
 // [center_x] and [center_y] are *passed* as subpixels, but stored at pixel
 // precision, as master.lib's grcg_circle() function doesn't support more than
@@ -9,4 +10,6 @@ void pascal circles_add_shrinking(subpixel_t center_x, subpixel_t center_y);
 
 void pascal near circles_update(void);
 void pascal near circles_render(void);
+
+}
 // ----------------------------

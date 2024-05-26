@@ -4,9 +4,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "th01/hardware/grcg.hpp"
-extern "C" {
 #include "th03/formats/cdg.h"
-}
 #include "th04/hardware/grcg.hpp"
 #include "th04/main/boss/backdrop.hpp"
 #include "th04/sprites/main_cdg.h"

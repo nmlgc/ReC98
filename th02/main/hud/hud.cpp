@@ -9,9 +9,7 @@
 #include "th02/gaiji/gaiji.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/core/globals.hpp"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 #include "th02/main/playfld.hpp"
 #include "th02/main/player/player.hpp"
 #include "th02/main/hud/hud.hpp"

@@ -23,7 +23,6 @@
 #else
 	#include "th02/hardware/input.hpp"
 #endif
-extern "C" {
 #if (GAME >= 4)
 	#include "th01/hardware/grcg.hpp"
 	#include "th04/hardware/bgimage.hpp"
@@ -33,11 +32,8 @@ extern "C" {
 	#include "th01/hardware/grppsafx.h"
 	#include "th02/snd/snd.h"
 #endif
-}
 #if (GAME >= 3)
-	extern "C" {
 	#include "th03/formats/cdg.h"
-	}
 	#include "th03/math/polar.hpp"
 #else
 	#include "th01/math/polar.hpp"

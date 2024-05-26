@@ -7,9 +7,7 @@
 #include "pc98.h"
 #include "th03/common.h"
 #include "th03/main/playfld.hpp"
-extern "C" {
 #include "th03/main/sprite16.hpp"
-}
 #include "th03/main/player/shot.hpp"
 
 void near shots_update(void)

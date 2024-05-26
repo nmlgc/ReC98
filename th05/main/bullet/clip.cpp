@@ -9,9 +9,7 @@
 #include "th04/main/player/player.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/bullet/clearzap.hpp"
-extern "C" {
 #include "th05/main/playperf.hpp"
-}
 
 bool near bullet_template_clip(void)
 {

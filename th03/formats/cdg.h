@@ -56,6 +56,8 @@ struct CDG {
 
 extern CDG cdg_slots[CDG_SLOT_COUNT];
 
+extern "C" {
+
 // Loading and freeing
 // -------------------
 
@@ -110,4 +112,6 @@ void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot);
 	);
 #endif
 // --------
+
+}
 /// ---------------------------------------------------------------------------

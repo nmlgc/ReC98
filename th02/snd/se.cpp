@@ -4,7 +4,6 @@
 #include "x86real.h"
 #include "libs/kaja/kaja.h"
 #include "th02/snd/se_impl.hpp"
-extern "C" {
 #if (GAME >= 4)
 	#include "master.hpp"
 	#include "th04/snd/snd.h"
@@ -71,6 +70,4 @@ void snd_se_update(void)
 		snd_se_frame = 0;
 		snd_se_playing = SE_NONE;
 	}
-}
-
 }

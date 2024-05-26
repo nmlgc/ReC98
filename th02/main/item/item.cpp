@@ -10,9 +10,7 @@
 #include "th02/math/randring.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/hardware/pages.hpp"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 #include "th02/main/entity.hpp"
 #include "th02/main/playfld.hpp"
 #include "th02/main/playperf.hpp"

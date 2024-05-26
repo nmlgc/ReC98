@@ -43,6 +43,10 @@ static inline bool16 snd_se_active() {
 #define snd_bgm_is_fm() \
 	(snd_bgm_mode != SND_BGM_MIDI)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Checks the requested BGM and SE modes against the available hardware and
 // sets [snd_se_mode] and [snd_bgm_mode] accordingly. Returns [snd_bgm_mode].
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
@@ -83,4 +87,8 @@ void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 		return 0xFFFF;
 	}
 #endif
+#endif
+
+#ifdef __cplusplus
+}
 #endif

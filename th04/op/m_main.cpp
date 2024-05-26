@@ -19,10 +19,8 @@
 #include "th02/op/menu.hpp"
 #include "th02/op/m_music.hpp"
 #include "th03/core/initexit.h"
-extern "C" {
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
-}
 #include "th04/shiftjis/fnshared.hpp"
 #include "th04/shiftjis/m_main.hpp"
 #include "th04/sprites/op_cdg.hpp"

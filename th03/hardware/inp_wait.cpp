@@ -5,9 +5,7 @@
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th03/hardware/input.h"
-extern "C" {
 #include "th03/snd/snd.h"
-}
 #include "th02/snd/measure.hpp"
 
 bool16 pascal input_wait_for_ok_or_measure(int measure, unsigned int frames)

@@ -9,9 +9,7 @@
 #include "th03/hardware/palette.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/hardware/grcg.hpp"
-extern "C" {
 #include "th04/formats/super.h"
-}
 #include "th04/main/phase.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/boss/boss.hpp"

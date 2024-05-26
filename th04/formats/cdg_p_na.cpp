@@ -4,9 +4,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-extern "C" {
 #include "th04/formats/cdg.h"
-}
 #include "th04/formats/cdg_impl.hpp"
 
 void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot)

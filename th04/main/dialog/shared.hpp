@@ -15,9 +15,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/pages.hpp"
 #include "th02/formats/tile.hpp"
-extern "C" {
 #include "th03/formats/cdg.h"
-}
 #if (GAME == 5)
 	#include "th05/hardware/input.h"
 #else
@@ -40,9 +38,7 @@ extern "C" {
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/dialog/dialog.hpp"
 #include "th04/sprites/main_cdg.h"
-extern "C" {
 #include "th04/snd/snd.h"
-}
 
 // A silly TH05 micro-optimization. Could have been 8-bit variables then.
 #if (GAME == 5)

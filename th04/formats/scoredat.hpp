@@ -95,7 +95,9 @@ extern scoredat_section_t hi2;
 	// Loads the score data for the given [playchar] at the global [rank] into
 	// [hi]. Returns false if the data was loaded and decoded correctly, or
 	// true if the defaults were recreated.
+	extern "C" {
 	bool pascal near scoredat_load_for(int playchar);
+	}
 #else
 	// Loads the score data for the current global playchar at the global
 	// [rank] into [hi]. TH04 recreates the default file on a loading or

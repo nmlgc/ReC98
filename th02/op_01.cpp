@@ -24,9 +24,7 @@
 #include "th02/core/initexit.h"
 #include "th02/formats/cfg.hpp"
 #include "th02/formats/pi.h"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 #include "th02/gaiji/gaiji.h"
 #include "th02/shiftjis/fns.hpp"
 #include "th02/op/op.h"

@@ -1,5 +1,9 @@
 #include "defconv.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char snd_interrupt_if_midi;
 extern bool snd_midi_possible;
 #if GAME <= 3
@@ -119,3 +123,7 @@ void snd_se_update(void);
 	snd_se_play(new_se); \
 	snd_se_update(); \
 }
+
+#ifdef __cplusplus
+}
+#endif

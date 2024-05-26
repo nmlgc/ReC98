@@ -17,16 +17,12 @@
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
-extern "C" {
 #include "th04/formats/scoredat.hpp"
-}
 #include "th04/resident.hpp"
 #include "th04/hardware/input.h"
-extern "C" {
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
 #include "th04/snd/snd.h"
-}
 #include "th04/op/clear.hpp"
 #include "th04/op/op.hpp"
 #include "th04/sprites/op_cdg.hpp"

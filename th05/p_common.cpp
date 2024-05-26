@@ -6,9 +6,7 @@
 #pragma option -zCmain_01_TEXT -zPmain_01
 
 #include "th05/i_shot.hpp"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 
 #pragma option -a2
 

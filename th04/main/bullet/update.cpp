@@ -9,7 +9,6 @@
 #include "th04/math/motion.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
-extern "C" {
 #include "th04/main/scroll.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
@@ -21,7 +20,6 @@ extern "C" {
 #include "th04/main/bullet/pellet_r.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/player/player.hpp"
-}
 #include "th04/main/spark.hpp"
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"

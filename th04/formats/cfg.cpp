@@ -14,9 +14,7 @@
 #else
 	#include "th04/resident.hpp"
 #endif
-extern "C" {
 #include "th04/snd/snd.h"
-}
 
 #if (GAME == 4)
 	bool snd_sel_disabled = false; // ZUN bloat: Unused in this game.

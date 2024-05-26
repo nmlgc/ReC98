@@ -13,6 +13,8 @@ static const int MPN_COUNT = 8;
 
 extern mpn_t mpn_slots[MPN_COUNT];
 
+extern "C" {
+
 // Frees the .MPN images in the given [slot].
 void pascal mpn_free(int slot);
 
@@ -24,3 +26,5 @@ void pascal mpn_palette_show(int slot);
 // one in this slot. Returns 0 if allocation succeeded and the tiles were read
 // into the given [slot], -1 otherwise.
 int pascal mpn_load_palette_show(int slot, const char *fn);
+
+}

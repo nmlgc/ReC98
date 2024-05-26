@@ -3,7 +3,6 @@
 
 #pragma option -zPmain_01
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
@@ -16,7 +15,6 @@ extern "C" {
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/sprites/main_cdg.h"
-}
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 	#include "th05/playchar.h"
