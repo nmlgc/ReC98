@@ -1,7 +1,5 @@
 #pragma option -zCSHARED -Z
 
-#include <stddef.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th03/core/initexit.h"

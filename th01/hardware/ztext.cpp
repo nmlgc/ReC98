@@ -9,9 +9,6 @@
 #include <mbctype.h>
 #include <mbstring.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include "platform.h"
-#include "shiftjis.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/ztext.hpp"
 

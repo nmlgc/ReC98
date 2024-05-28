@@ -1,8 +1,4 @@
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/graph.h"
-#include "th01/main/playfld.hpp"
 #include "th01/main/bullet/line.hpp"
 #include "th01/main/player/player.hpp"
 

@@ -1,9 +1,6 @@
 #pragma option -zCSHARED -k-
 
 #include <mem.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
 #include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"

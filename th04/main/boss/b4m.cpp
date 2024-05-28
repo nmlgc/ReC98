@@ -3,8 +3,6 @@
 
 #pragma option -zCB4M_UPDATE_TEXT -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/custom.hpp"
 #include "th04/main/boss/boss.hpp"

@@ -1,7 +1,6 @@
 #pragma option -zCSHARED
 
 #include <errno.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "th02/snd/impl.hpp"

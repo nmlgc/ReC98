@@ -4,7 +4,6 @@
  */
 
 #include <stddef.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "th02/resident.hpp"
 #include "th02/core/globals.hpp"

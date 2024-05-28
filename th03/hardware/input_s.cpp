@@ -1,6 +1,5 @@
 #pragma option -WX -zCSHARED -k-
 
-#include "platform.h"
 #include "x86real.h"
 #include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"

@@ -1,7 +1,6 @@
 #pragma option -zPgroup_01
 
 #include <stddef.h>
-#include "platform.h"
 #include "th03/common.h"
 #include "th03/formats/scoredat.hpp"
 #include "th03/formats/scorecry.hpp"

@@ -3,8 +3,6 @@
 
 #pragma option -O- -k- -2
 
-#include <dos.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th02/formats/scoredat.hpp"

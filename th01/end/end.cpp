@@ -1,11 +1,6 @@
 #pragma option -O- -1 -Z- -d-
 
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
-#include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"

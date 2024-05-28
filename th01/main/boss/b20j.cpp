@@ -2,15 +2,11 @@
 /// -------------------------------
 
 #include <stdio.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
@@ -22,11 +18,8 @@
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 #include "th01/formats/grz.h"
-#include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/spawnray.hpp"
 #include "th01/main/stage/palette.hpp"
 #include "th01/main/stage/stageobj.hpp"

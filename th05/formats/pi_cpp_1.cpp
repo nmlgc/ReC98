@@ -3,10 +3,6 @@
 #pragma option -zCSHARED
 
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "libs/master.lib/pc98_gfx.hpp"
 #include "th05/formats/pi.hpp"
 #include "th05/formats/pi_impl.hpp"
 

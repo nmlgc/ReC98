@@ -1,7 +1,5 @@
 #pragma option -zCPTN_GRP_GRZ
 
-#include <stddef.h>
-#include "platform.h"
 #include "th01/hardware/palette.h"
 #include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"

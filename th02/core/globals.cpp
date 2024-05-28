@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "th01/rank.h"
 #include "th02/resident.hpp"
 

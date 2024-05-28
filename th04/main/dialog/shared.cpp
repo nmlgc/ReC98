@@ -2,9 +2,6 @@
 /// --------------------------------------------------
 
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "shiftjis.hpp"
 #include "platform/x86real/flags.hpp"
 #include "libs/master.lib/master.hpp"

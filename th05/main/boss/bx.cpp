@@ -3,8 +3,6 @@
 
 #pragma option -zCBX_UPDATE_TEXT -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
 #include "th05/main/boss/boss.hpp"
 
 // Structures

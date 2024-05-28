@@ -6,12 +6,6 @@
 #pragma option -zCop_01_TEXT
 
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
-#include "libs/master.lib/master.hpp"
-#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"

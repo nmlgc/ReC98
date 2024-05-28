@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/grcg.hpp"

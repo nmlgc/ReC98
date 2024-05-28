@@ -1,9 +1,6 @@
 #pragma option -zCSHARED
 
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
 #include "codegen.hpp"
 #include "libs/master.lib/master.hpp"

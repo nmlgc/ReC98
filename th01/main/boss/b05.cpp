@@ -1,15 +1,11 @@
 /// Stage 5 Boss - SinGyoku
 /// -----------------------
 
-#include "platform.h"
 #include "decomp.hpp"
-#include "pc98.h"
-#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
@@ -17,12 +13,9 @@
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 #include "th01/sprites/pellet.h"
-#include "th01/main/entity.hpp"
 #include "th01/main/particle.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"

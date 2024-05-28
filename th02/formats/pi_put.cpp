@@ -1,8 +1,6 @@
 #pragma option -zCSHARED
 
 #include <mem.h>
-#include "platform.h"
-#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/formats/pi.h"
 
 void DEFCONV pi_palette_apply(int slot)

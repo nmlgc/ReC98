@@ -3,9 +3,6 @@
  * 2nd part of code segment #1 of TH03's MAIN.EXE
  */
 
-#include "platform.h"
-#include "pc98.h"
-#include "th03/common.h"
 #include "th03/main/player/shot.hpp"
 
 void near shots_update(void)

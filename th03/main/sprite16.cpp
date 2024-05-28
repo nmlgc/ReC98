@@ -5,9 +5,6 @@
 
 #pragma option -zCSHARED -k-
 
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/flags.hpp"
 #include "libs/sprite16/sprite16.h"

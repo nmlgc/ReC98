@@ -1,7 +1,6 @@
 #pragma option -zCM4_RENDER_TEXT
 
 #include <stddef.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "th04/resident.hpp"
 #include "th04/formats/dialog.hpp"

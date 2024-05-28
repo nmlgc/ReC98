@@ -3,9 +3,6 @@
 
 #pragma option -zCB4_UPDATE_TEXT -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/math/randring.hpp"
 #include "th05/sprites/main_pat.h"

@@ -1,8 +1,5 @@
 #pragma option -zCSHARED -k-
 
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "libs/kaja/kaja.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/hardware/grcg.hpp"

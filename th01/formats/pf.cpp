@@ -3,10 +3,6 @@
 /// --------------------------------------------------------------------------
 
 #include <ctype.h>
-#include <dos.h>
-#include <io.h>
-#include <stdio.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "th01/formats/pf.hpp"
 

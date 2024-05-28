@@ -1,8 +1,6 @@
 #pragma option -zCmain_TEXT -zPmain_01
 
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
 #include "libs/master.lib/master.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th05/resident.hpp"

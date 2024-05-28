@@ -5,8 +5,6 @@
 #include "th01/hardware/scrollup.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/math/dir.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th01/main/entity.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"

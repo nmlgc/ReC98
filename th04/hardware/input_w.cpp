@@ -1,6 +1,5 @@
 #pragma option -zCSHARED
 
-#include "platform.h"
 #include "th02/hardware/frmdelay.h"
 #include "th04/hardware/input.h"
 

@@ -1,6 +1,4 @@
-#include "platform.h"
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"

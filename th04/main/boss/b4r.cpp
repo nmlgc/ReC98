@@ -1,8 +1,6 @@
 /// Stage 4 Boss - Reimu
 /// --------------------
 
-#include "platform.h"
-#include "pc98.h"
 #include "th04/main/custom.hpp"
 
 // Constants

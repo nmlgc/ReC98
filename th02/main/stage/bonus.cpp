@@ -1,4 +1,3 @@
-#include "shiftjis.hpp"
 #include "th02/resident.hpp"
 #include "th02/hardware/input.hpp"
 #include "th02/snd/snd.h"

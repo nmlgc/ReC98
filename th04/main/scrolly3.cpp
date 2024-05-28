@@ -1,9 +1,6 @@
 #pragma option -k- -G
 
-#include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
 #include "th04/main/scroll.hpp"
 
 #define roll(y) \

@@ -1,5 +1,3 @@
-#include "platform.h"
-#include "pc98.h"
 #include "libs/master.lib/master.hpp"
 #include "th05/main/player/player.hpp"
 

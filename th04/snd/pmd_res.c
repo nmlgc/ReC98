@@ -1,6 +1,5 @@
 #pragma option -zCSHARED -k-
 
-#include "platform.h"
 #include "x86real.h"
 #include "th04/snd/snd.h"
 

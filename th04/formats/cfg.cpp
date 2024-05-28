@@ -1,7 +1,4 @@
 #include <stddef.h>
-#include "platform.h"
-#include "libs/master.lib/master.hpp"
-#include "libs/master.lib/pc98_gfx.hpp"
 #include "th03/formats/cfg_impl.hpp"
 #if (GAME == 5)
 	#include "th05/resident.hpp"

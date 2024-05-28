@@ -3,7 +3,6 @@
 
 #pragma option -zCB6_UPDATE_TEXT -zPmain_03
 
-#include "platform.h"
 #include "decomp.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/dir.hpp"
@@ -18,14 +17,12 @@
 #include "th04/snd/snd.h"
 #include "th04/main/bg.hpp"
 #include "th04/main/homing.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/gather.hpp"
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/tile/bb.hpp"
 #include "th05/playchar.h"
 #include "th05/main/bullet/cheeto.hpp"
 #include "th05/main/bullet/laser.hpp"
-#include "th05/main/boss/boss.hpp"
 #include "th05/main/boss/bosses.hpp"
 #include "th05/main/player/player.hpp"
 #include "th05/sprites/main_pat.h"

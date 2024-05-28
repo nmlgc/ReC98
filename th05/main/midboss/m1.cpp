@@ -3,8 +3,6 @@
 
 #pragma option -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
 #include "libs/master.lib/master.hpp"
 #include "th03/math/polar.hpp"
 #include "th04/math/randring.hpp"

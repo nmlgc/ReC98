@@ -1,9 +1,5 @@
 #pragma option -zCSHARED
 
-#include <io.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "libs/master.lib/master.hpp"
 #include "th03/formats/cdg.h"
 

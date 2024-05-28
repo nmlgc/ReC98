@@ -1,6 +1,5 @@
 #pragma option -zCmain_03_TEXT -d-
 
-#include "platform.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/score.h"
 #include "th02/gaiji/gaiji.h"

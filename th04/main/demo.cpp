@@ -1,5 +1,3 @@
-#include <stddef.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/main/execl.hpp"

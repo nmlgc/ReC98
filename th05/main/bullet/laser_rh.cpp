@@ -1,9 +1,7 @@
 #pragma option -zPmain_01
 
 #include <stddef.h>
-#include "platform.h"
 #include "codegen.hpp"
-#include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "game/coords.hpp"
 #include "th01/math/overlap.hpp"

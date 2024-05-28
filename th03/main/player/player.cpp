@@ -1,8 +1,5 @@
 #pragma option -G
 
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
 #include "decomp.hpp"
 #include "th03/common.h"
 #include "th03/main/player/player.hpp"

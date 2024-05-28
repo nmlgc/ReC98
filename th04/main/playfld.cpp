@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"

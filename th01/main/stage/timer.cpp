@@ -1,8 +1,4 @@
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -13,7 +9,6 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"
 #include "th01/formats/ptn.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"

@@ -1,9 +1,6 @@
 #pragma option -3 -Z
 
-#include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
 #include "th04/main/null.hpp"

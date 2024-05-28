@@ -5,9 +5,6 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01 -d-
 
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th03/formats/cdg.h"
@@ -17,7 +14,7 @@
 #include "th04/main/item/item.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th05/formats/bb.h"
-#include "th05/main/boss/boss.hpp"
+#include "th05/main/boss/bosses.hpp"
 
 #include "th04/main/boss/reset.cpp"
 #include "th04/formats/bb_boss.cpp"

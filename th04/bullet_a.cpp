@@ -1,7 +1,5 @@
 #pragma option -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
 #include "libs/master.lib/master.hpp"
 #include "th01/math/overlap.hpp"
 #include "th04/math/randring.hpp"

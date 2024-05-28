@@ -1,10 +1,6 @@
 #pragma option -zPmain_01 -G
 
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
 #include "th01/math/clamp.hpp"
-#include "th03/common.h"
 #include "th03/main/player/move.hpp"
 
 void pascal near player_pos_update_and_clamp(player_t near& player)

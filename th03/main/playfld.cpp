@@ -1,6 +1,3 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
 #include "th03/main/playfld.hpp"
 
 screen_x_t pascal playfield_fg_x_to_screen(playfield_subpixel_t x, pid2 pid)

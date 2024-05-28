@@ -1,7 +1,5 @@
 #pragma option -zCSHARED
 
-#include "platform.h"
-#include "x86real.h"
 #include "th02/hardware/frmdelay.h"
 #include "th05/snd/snd.h"
 #include "th02/snd/measure.hpp"

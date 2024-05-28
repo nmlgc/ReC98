@@ -1,7 +1,6 @@
 #pragma option -zPmain_01
 
 #include <string.h>
-#include "platform.h"
 #include "shiftjis.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/grcg.hpp"

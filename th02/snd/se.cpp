@@ -1,6 +1,5 @@
 #pragma option -zCSHARED -k-
 
-#include "platform.h"
 #include "th02/snd/impl.hpp"
 #if (GAME >= 4)
 	#include "libs/master.lib/master.hpp"

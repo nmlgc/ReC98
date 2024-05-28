@@ -4,8 +4,6 @@
  */
 
 #include <stddef.h>
-#include "platform.h"
-#include "libs/master.lib/master.hpp"
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/formats/cfg_impl.hpp"

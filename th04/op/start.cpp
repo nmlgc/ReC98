@@ -1,5 +1,3 @@
-#include "planar.h"
-#include "th01/rank.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
 #include "th04/common.h"

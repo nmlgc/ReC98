@@ -1,10 +1,5 @@
 #pragma option -zCSHARED
 
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "libs/master.lib/pc98_gfx.hpp"
 #include "libs/master.lib/master.hpp"
 #include "th02/formats/tile.hpp"
 #include "th04/formats/mpn.hpp"

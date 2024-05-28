@@ -1,7 +1,3 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"

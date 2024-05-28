@@ -1,7 +1,6 @@
 #pragma option -zCPTN_GRP_GRZ
 
 #include <stdio.h>
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/piloadc/piloadc.hpp"
 #include "th01/hardware/palette.h"

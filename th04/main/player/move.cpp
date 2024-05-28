@@ -1,7 +1,5 @@
 #pragma option -zPmain_01
 
-#include "platform.h"
-#include "pc98.h"
 #include "th04/main/player/player.hpp"
 #include "th04/main/player/move.hpp"
 

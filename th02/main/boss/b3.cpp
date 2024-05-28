@@ -1,7 +1,6 @@
 /// Stage 3 Boss - Five Magic Stones
 /// --------------------------------
 
-#include "platform.h"
 #include "pc98.h"
 
 enum stone_t {

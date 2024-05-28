@@ -1,9 +1,5 @@
 #pragma option -zCSHARED
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th04/formats/cdg_impl.hpp"
 
 void pascal cdg_put_nocolors_8(screen_x_t left, vram_y_t top, int slot)

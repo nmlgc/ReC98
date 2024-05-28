@@ -2,8 +2,6 @@
 // and .GRZ formats to be needlessly linked into OP.EXE and FUUIN.EXE. Just
 // declare the data local to the respective translation unit.
 
-#include "platform.h"
-#include "pc98.h"
 #include "th01/formats/grz.h"
 #include "th01/formats/ptn_data.hpp"
 

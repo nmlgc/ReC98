@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "th04/main/slowdown.hpp"
 

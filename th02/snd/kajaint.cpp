@@ -3,7 +3,6 @@
 	#pragma option -k-
 #endif
 
-#include "platform.h"
 #if (GAME >= 4)
 	#include "th04/snd/snd.h"
 #else

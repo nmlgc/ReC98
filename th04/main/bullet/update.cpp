@@ -1,11 +1,7 @@
 #pragma option -G
 
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "libs/master.lib/master.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"

@@ -1,6 +1,5 @@
 #pragma option -zCSHARED -WX -k-
 
-#include "platform.h"
 #include "th02/snd/snd.h"
 #include "th02/snd/impl.hpp"
 

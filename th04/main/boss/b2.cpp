@@ -1,9 +1,6 @@
 /// Stage 2 Boss - Kurumi
 /// ---------------------
 
-#include "platform.h"
-#include "pc98.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/custom.hpp"
 
 // Spawn rays

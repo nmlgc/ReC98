@@ -3,8 +3,6 @@
 
 #pragma option -zCB1_UPDATE_TEXT -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
 #include "th01/math/dir.hpp"
 #include "th02/formats/tile.hpp"
 #include "th04/formats/bb.h"
@@ -18,7 +16,6 @@
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/tile/bb.hpp"
 #include "th05/sprites/main_pat.h"
-#include "th05/main/boss/boss.hpp"
 #include "th05/main/boss/bosses.hpp"
 #include "th05/main/bullet/laser.hpp"
 

@@ -1,6 +1,5 @@
 #pragma option -zPgroup_01
 
-#include "platform.h"
 #include "libs/master.lib/master.hpp"
 #include "th03/common.h"
 #include "th03/formats/scoredat.hpp"
