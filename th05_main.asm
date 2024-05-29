@@ -766,7 +766,7 @@ loc_B2A5:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_B2DD
-		call	demo_load
+		call	@demo_load$qv
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.demo_stage]
 		mov	es:[bx+resident_t.stage], al
@@ -1113,49 +1113,7 @@ loc_B630:
 sub_B609	endp
 
 include th04/main/pause.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public demo_load
-demo_load	proc near
-
-var_4		= dword	ptr -4
-
-		enter	4, 0
-		push	si
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 4
-		ja	short @@demo_extra
-		mov	ax, DEMO_N * 2
-		jmp	short loc_B76F
-; ---------------------------------------------------------------------------
-
-@@demo_extra:
-		mov	ax, (DEMO_N * 4) * 2
-
-loc_B76F:
-		mov	si, ax
-		call	hmem_allocbyte pascal, ax
-		mov	word ptr _DemoBuf+2, ax
-		mov	word ptr _DemoBuf, 0
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aDemo0_rec
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.demo_num]
-		add	al, ('0' - 1)
-		les	bx, [bp+var_4]
-		mov	es:[bx+4], al
-		push	word ptr [bp+var_4+2]
-		push	bx
-		call	file_ropen
-		call	file_read pascal, large [_DemoBuf], si
-		call	file_close
-		pop	si
-		leave
-		retn
-demo_load	endp
-
+	@demo_load$qv procdesc near
 	@DemoPlay$qv procdesc near
 DEMO_TEXT	ends
 
@@ -19714,7 +19672,6 @@ aBss6_cd2	db 'BSS6.CD2',0
 aSt06_bft	db 'st06.bft',0
 aSt06_mpn	db 'st06.mpn',0
 include th04/main/pause[data].asm
-aDemo0_rec	db 'DEMO0.REC',0
 include th04/main/demo[data].asm
 public _EMS_NAME
 _EMS_NAME	db 'KAIKIEMS',0
