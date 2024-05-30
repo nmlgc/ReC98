@@ -56,7 +56,7 @@ th05:: $(TH05:\=bin\th05\)
 .obj.com:
 	tlink /t /3 $**
 
-bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp bin\th01\f_imgd.obj platform\x86real\pc98\palette.cpp
+bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp platform\x86real\pc98\palette.cpp
 	$(CC) $(CFLAGS) -Z -DGAME=1 -mt -lt -nbin\Pipeline\ @&&|
 $**
 | masters.lib
