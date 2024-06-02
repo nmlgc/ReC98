@@ -28,7 +28,10 @@ if errorlevel 1 goto no_bcc32
 
 : Neither BCC32 nor TASM32 automatically create nonexisting output
 : directories. Tup would, but not everybody can use it.
+mkdir obj %STDERR_IGNORE%
+mkdir obj\Pipeline %STDERR_IGNORE%
 mkdir bin\Pipeline %STDERR_IGNORE%
+for %%i in (1 2 3 4 5) do mkdir obj\th0%%i %STDERR_IGNORE%
 for %%i in (1 2 3 4 5) do mkdir bin\th0%%i %STDERR_IGNORE%
 
 call set_errorlevel_to_1.bat
