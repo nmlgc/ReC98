@@ -119,40 +119,21 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
 * **Borland Turbo C++ 4.0J**
 
-  This was the compiler ZUN originally used, so it's the only one that can deterministically compile this code to executables that are bit-perfect to ZUN's original ones.
+  This was the compiler ZUN originally used, so it's the only one that can deterministically compile this code to executables that are bit-perfect to ZUN's original ones. Borland never made a cross-compiler targeting 16-bit DOS that runs on 32-bit Windows, so the C++ parts *have* to be compiled using a 16-bit DOS program.\
+  ReC98 also uses Turbo C++ 4.0J to build the custom tools in its build pipeline, such as the [converter for hardcoded sprites]. These only have to run natively as part of the build process, so it might appear counter-productive to compile them into 16-bit DOS programs that then need to be emulated on 64-bit operating systems. This still makes sense for several reasons, though:
+
+  * Building on a 64-bit OS already requires DOS emulation to compile the games themselves.
+  * Compared to C++ compilation, the pipeline tools take up a negligible amount of build time, even when emulated.
+  * These tools consist of comparatively little code, so it's not too annoying to write them in standard C or C-like C++. This makes Turbo C++ 4.0J's old age and lacking C++ standard compliance a non-issue.
+
+  Therefore, it makes little sense to add the usually quite heavy dependency on a native C++ compiler.
 
   ----
 
 * **Borland Turbo Assembler (TASM), version 5.0 or later, for 32-bit Windows (`TASM32.EXE`)**
 
-  Borland never made a cross compiler targeting 16-bit DOS that runs on 32-bit Windows, so the C++ parts *have* to be compiled using a 16-bit DOS program. The not yet decompiled ASM parts of the code, however, *can* be assembled using a 32-bit Windows tool. This not only way outperforms any 16-bit solution that would have to be emulated on modern 64-bit systems, making build times, well, tolerable. It also removes any potential EMS or XMS issues we might have had with `TASMX.EXE` on these emulators.
-
-  These advantages were particularly relevant in the early days of ReC98, when the ASM files were pretty huge. That's also when I decided to freely use long file names that don't need to conform to the 8.3 convention… As a result, the build process still starts with a separate 32-bit part (`build32b.bat`), which must be run in Windows (or Wine).
-
-  In the end though, we'd definitely like to have a single-step 16-bit build process that requires no 32-bit tools. This will probably happen some time after reaching 100% position independence over all games.
-
-  ----
-
-* **Borland C++ 5.5, for 32-bit Windows (`BCC32.EXE`)**
-
-  Released as freeware, and as of July 2020, still sort of officially downloadable from
-
-    http://altd.embarcadero.com/download/bcppbuilder/freecommandLinetools.exe
-
-  (SHA-256 `433b44741f07f2ad673eb936511d498c5a6b7f260f98c4d9a6da70c41a56d855`)
-
-  Needed to fulfill the role of being "just *any* native C++ compiler" for our own tools that either don't necessarily *have* to run on 16-bit DOS, or are required by the 32-bit build step, as long as that one still exists (see above).
-
-  Currently, this category of tools only includes the [converter for hardcoded sprites]. Since that one is written to be as platform-independent as possible, it could easily be compiled with any other native C compiler you happen to have already installed. (Which also means that future port developers hopefully have one less thing to worry about.)
-  So, if you dislike additional dependencies, feel free to edit the `Tupfile` so that `bmp2arr` is compiled with any other C compiler of your choice.
-
-  However, choosing Borland C++ 5.5 as a default for everyone else fits ReC98 very well for several reasons:
-
-  * It still happens to be the most hassle- and bloat-free way to get *any* sort of 32-bit Windows C++ compiler to people, clearly beating Open Watcom, and the required registration for [Borland/Embarcadero's own C++ 7.30]. Depending on anything bigger would be way out of proportion, considering how little we use it for
-  * We already rely on a 32-bit Windows tool
-  * Turbo C++ 4.0J defines the lower bound for our allowed level of C++ features anyway, making Borland C++ 5.5's old age and lacking C++ standard compliance a non-issue
-  * Unlike 7.30, 5.5 still works on Windows 9x, which is what typically runs on the real PC-98 hardware that some people might want to compile ReC98 on.
-  * Other tiny C compilers have no C++ support. While the sprite converter is written in C, future tools might not be, and I'm too old to restrict people to C for no good reason.
+  ReC98 not only requires an assembler for the game code that hasn't been decompiled yet, but also for PC-98 Touhou's [third-party libraries] and ZUN's own hand-written and undecompilable assembly code. Thankfully, Borland's 32-bit assembler *can* be used for 16-bit code and runs natively on both 64-bit and 32-bit Windows, outperforming the 16-bit `TASM.EXE` and `TASMX.EXE` tools.\
+  As a side benefit, using a native 32-bit Windows tool also allows the ASM parts to freely use long file names that don't need to conform to the DOS 8.3 convention.
 
   ----
 
@@ -189,14 +170,6 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista and <11, where both the 32-bit and 16-bit build parts can run natively from a single shell. The build process was tested and should work reliably on pretty much every system though – from modern 64-bit Windows and Linux, down to Windows 95, which you might use on actual PC-98 hardware.
 
 ### How to build
-
-* Make sure you've created the `bin/bcc32.cfg` and `bin/ilink32.cfg` files for Borland C++ 5.5, as pointed out in its `readme.txt` file. This fixes errors like
-
-  ```text
-  Error E2209 Pipeline/bmp2arrl.c 12: Unable to open file 'io.h'
-  ```
-
-  that you will encounter otherwise.
 
 * Running on a 64-bit OS? Run `build32b.bat` in a Windows shell, followed `build16b.bat` in your DOSBox of choice.
 * Running on 32-bit Windows? Run just `build.bat`.
@@ -237,7 +210,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [indistinguishable]: https://github.com/nmlgc/mzdiff
 [project blog]: https://rec98.nmlgc.net/blog
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
-[Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
+[third-party libraries]: #is-this-even-viable
 [Takeda Toshiya's upstream builds]: http://takeda-toshiya.my.coocan.jp/msdos/index.html
 [important bugfix for running DOS-based build tools through MS-DOS Player]: https://github.com/gittup/tup/pull/500
 

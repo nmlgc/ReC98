@@ -1,6 +1,3 @@
--- Tupfile for the 32-part of the build process
--- --------------------------------------------
-
 --[[
 
 
@@ -40,16 +37,22 @@ tup.include("Pipeline/rules.lua")
 ---@field obj_root? string Root directory for all intermediate files
 ---@field bin_root? string Root directory for shipped binaries
 ---@field aflags? string
+---@field cflags? string
+---@field lflags? string
 
 ---@class Config
 local Config = {
 	obj_root = "obj/",
 	bin_root = "bin/",
 	aflags = "/m /mx /kh32768 /t",
+	cflags = "-I. -O -b- -3 -Z -d",
+	lflags = "-s",
 }
 Config.__index = Config
 
 local Rules = NewRules(Config.obj_root)
+
+MODEL_TINY = { cflags = "-mt", lflags = "-t" }
 
 ---Generates a ConfigShape for an output subdirectory.
 ---@param dir string
@@ -104,6 +107,11 @@ function Config:build_uncached(input)
 		-- automatically rewrite them to slashes.
 		local args = string.format("%s %s %%o", self.aflags, fn:gsub("/", "\\"))
 		return Rules:add_32(input, "tasm32", args, out_file:gsub("/", "\\"))[1]
+	elseif ((ext == "c") or (ext == "cpp")) then
+		local args = string.format("-c %s -n%s %%f", self.cflags, self.obj_root)
+		return Rules:add_16(input, "tcc", args, out_file)[1]
+	elseif ((ext == "obj") or (ext == "lib")) then
+		return fn
 	end
 	error(string.format("Unknown file extension, can't build: `%s`", fn))
 end
@@ -120,29 +128,81 @@ function Config:build(inputs)
 			output = self:build_uncached(input)
 			PreviousOutputForSource[fn] = output
 		end
+		ret += { output }
 	end
 	return ret
 end
 
 ---@param inputs ReC98Input[]
 function Config:link(exe_stem, inputs)
+	local model_c = self.cflags:match("-m([tsmclh])")
 	local objs = self:build(inputs)
+	if model_c == nil then
+		return
+	end
+
+	local obj_root = self.obj_root:gsub("/", "\\")
+	local bin_root = self.bin_root:gsub("/", "\\")
+
+	local ext = (self.lflags:find("-t") and ".com" or ".exe")
+	local rsp_fn = string.format("%s%s.@l", obj_root, exe_stem)
+	local map_fn = string.format("%s%s.map", obj_root, exe_stem)
+	local bin_fn = string.format("%s%s%s", bin_root, exe_stem, ext)
+
+	-- When TCC spawns TLINK, it writes the entire link command line into a
+	-- file with the fixed name `turboc.$ln`. This can't ever work with
+	-- parallel builds, so we have to replicate TCC's response file generation
+	-- ourselves here.
+	-- This not only saves one emulated process spawn call, but also gives us
+	-- full control over the linker command line, allowing us to place the map
+	-- file under `obj/` rather than next to the binary in `bin/`.
+	-- Thankfully, we can even omit the directory for Borland's C standard
+	-- library and rely on `TLINK.CFG` to supply it. Deriving it from the
+	-- `PATH` would be quite annoying on Windows 9x…
+	local lflags = string.format("-c %s ", self.lflags)
+	if model_c then
+		lflags = string.format("%sc0%s.obj", lflags, model_c)
+	end
+
+	-- Can't use %f because we need backslashes…
+	local libs = ""
+	for _, obj in pairs(objs) do
+		if (obj:sub(-4) == ".lib") then
+			libs = (libs .. obj:gsub("/", "\\") .. " ")
+		else
+			lflags = (lflags .. " " .. obj:gsub("/", "\\"))
+		end
+	end
+	lflags = string.format("%s, %s, %s, %s", lflags, bin_fn, map_fn, libs)
+	if model_c then
+		local model_math = (model_c == "t" and "s" or model_c)
+		lflags = string.format(
+			"%semu.lib math%s.lib c%s.lib", lflags, model_math, model_c
+		)
+	end
+	objs += Rules:add_32({}, "echo", (lflags .. ">%o"), rsp_fn)
+
+	local outputs = { bin_fn, map_fn }
+	return Rules:add_16(objs, "tlink", ("@" .. rsp_fn), outputs)[1]
 end
+
+-- Additional generally good compilation flags. Should be used for all code
+-- that does not need to match the original binaries.
+local optimized_cfg = Config:branch({ cflags = "-G -k- -p -x-" })
 
 -- Pipeline
 -- --------
 
-local pipeline_cfg = Config:branch(Subdir("Pipeline/"), {
+local pipeline_cfg = optimized_cfg:branch(Subdir("Pipeline/"), {
 	cflags = "-IPipeline/",
 })
 
-local bmp2arr = Rules:add_32(
-	{ "Pipeline/bmp2arr.c", "Pipeline/bmp2arrl.c" },
-	"bcc32", "-w-8004 -w-8012 -O2 -v- -x- -nbin/Pipeline/ %f",
-	{ "bin/Pipeline/bmp2arr.exe", extra_outputs = {
-		"%O.tds", "bin/Pipeline/%1B.obj", "bin/Pipeline/%2B.obj"
-	} }
-)[1]
+local pipeline_tool_cfg = pipeline_cfg:branch(MODEL_TINY)
+
+local bmp2arr = pipeline_tool_cfg:link("bmp2arr", {
+	"Pipeline/bmp2arrl.c",
+	"Pipeline/bmp2arr.c",
+})
 
 ---@class BMPShape
 ---@field [1] string Input .BMP file
@@ -162,7 +222,7 @@ function BMP(bmp)
 		"-q -i %%f -o %%o -sym %s -of %s -sw %d -sh %d%s",
 		sym, bmp[2], bmp[4], bmp[5], additional
 	)
-	return Rules:add_32(inputs, bmp2arr, args, out_fn)[1]
+	return Rules:add_16(inputs, bmp2arr, args, out_fn)[1]
 end
 
 ---@param bmps BMPShape[]

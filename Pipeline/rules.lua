@@ -1,6 +1,8 @@
 ---@alias TupInput string | { [1]: string, extra_inputs: string | string[] }
 ---@alias TupOutput string | { [1]: string, extra_outputs: string | string[] }
 
+tup.import("ReC98_DOS=")
+
 ---@class (exact) Rule
 ---@field inputs string[]
 ---@field tool string
@@ -101,7 +103,8 @@ function Rules:insert(inputs, tool, args, outputs)
 	return string.format("%s %s", tool, args)
 end
 
----Adds a rule for a 32-bit build tool.
+---Adds a rule for a 32-bit build tool. Runs natively in both Tup and the batch
+---file.
 ---@param inputs TupInput
 ---@param tool string
 ---@param args string
@@ -109,6 +112,18 @@ end
 ---@return string[]
 function Rules:add_32(inputs, tool, args, outputs)
 	return tup.rule(inputs, self:insert(inputs, tool, args, outputs), outputs)
+end
+
+---Adds a rule for a 16-bit DOS build tool. Runs in `ReC98_DOS` inside Tup, and
+---natively in the batch file.
+---@param inputs TupInput
+---@param tool string
+---@param args string
+---@param outputs TupOutput
+---@return string[]
+function Rules:add_16(inputs, tool, args, outputs)
+	local cmd = self:insert(inputs, tool, args, outputs)
+	return tup.rule(inputs, (ReC98_DOS .. " " .. cmd), outputs)
 end
 
 ---Splits `line` into multiple lines to work around the no longer documented

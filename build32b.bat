@@ -42,10 +42,6 @@ call set_errorlevel_to_1.bat
 %ReC98_DOS% tcc >NUL %STDERR_IGNORE%
 if errorlevel 1 goto no_tcc
 
-call set_errorlevel_to_1.bat
-bcc32 >NUL %STDERR_IGNORE%
-if errorlevel 1 goto no_bcc32
-
 if "%ReC98_DOS%" == "" goto fallback
 
 : If we can run Tup, we're also on a decently modern Windows. Update the dumb
@@ -113,11 +109,6 @@ echo Could not find TLINK.
 goto tc4j_bin
 :tc4j_bin
 echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
-goto eof
-
-:no_bcc32
-echo Could not find BCC32.
-echo Please make sure that the BIN directory of Borland C++ 5.5 is in your PATH.
 goto eof
 
 :eof
