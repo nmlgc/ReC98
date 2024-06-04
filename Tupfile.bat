@@ -3,28 +3,28 @@
 : if the Tupfile changes.
 @echo on
 bcc32 -w-8004 -w-8012 -O2 -v- -x- -nbin/Pipeline/ Pipeline/bmp2arr.c Pipeline/bmp2arrl.c
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_s.bmp -o th01/sprites/leaf_s.csp -sym sSPARK -of cpp -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_l.bmp -o th01/sprites/leaf_l.csp -sym sLEAF_LEFT -of cpp -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_r.bmp -o th01/sprites/leaf_r.csp -sym sLEAF_RIGHT -of cpp -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/ileave_m.bmp -o th01/sprites/ileave_m.csp -sym sINTERLEAVE_MASKS -of cpp -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/laser_s.bmp -o th01/sprites/laser_s.csp -sym sSHOOTOUT_LASER -of cpp -sw 16 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/mousecur.bmp -o th01/sprites/mousecur.csp -sym sMOUSE_CURSOR -of cpp -sw 16 -sh 16
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pellet.bmp -o th01/sprites/pellet.csp -sym sPELLET -of cpp -sw 8 -sh 8 -pshf inner
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pellet_c.bmp -o th01/sprites/pellet_c.csp -sym sPELLET_CLOUD -of cpp -sw 16 -sh 16
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pillar.bmp -o th01/sprites/pillar.csp -sym sPILLAR -of cpp -sw 32 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/shape8x8.bmp -o th01/sprites/shape8x8.csp -sym sSHAPE8X8 -of cpp -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/bonusbox.bmp -o th01/sprites/bonusbox.csp -sym sSTAGEBONUS_BOX -of cpp -sw 8 -sh 4
-bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/bombpart.bmp -o th02/sprites/bombpart.asp -sym _sBOMB_PARTICLES -of asm -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/pellet.bmp -o th02/sprites/pellet.asp -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer
-bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/sparks.bmp -o th02/sprites/sparks.asp -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer
-bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/pointnum.bmp -o th02/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/verdict.bmp -o th02/sprites/verdict.csp -sym sVERDICT_MASKS -of cpp -sw 16 -sh 16
-bin\\Pipeline\\bmp2arr.exe -q -i th03/sprites/score.bmp -o th03/sprites/score.asp -sym _sSCORE_FONT -of asm -sw 8 -sh 8 -u
-bin\\Pipeline\\bmp2arr.exe -q -i th04/sprites/pelletbt.bmp -o th04/sprites/pelletbt.asp -sym _sPELLET_BOTTOM -of asm -sw 8 -sh 4 -pshf outer
-bin\\Pipeline\\bmp2arr.exe -q -i th04/sprites/pointnum.bmp -o th04/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner
-bin\\Pipeline\\bmp2arr.exe -q -i th05/sprites/gaiji.bmp -o th05/sprites/gaiji.asp -sym _sGAIJI -of asm -sw 16 -sh 16
-bin\\Pipeline\\bmp2arr.exe -q -i th05/sprites/piano_l.bmp -o th05/sprites/piano_l.asp -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i Research/blitperf.bmp -o Research/blitperf.csp -sym sBLITPERF -of cpp -sw 16 -sh 16
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/leaf_s.bmp -o th01/sprites/leaf_s.csp -sym sSPARK -of cpp -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/leaf_l.bmp -o th01/sprites/leaf_l.csp -sym sLEAF_LEFT -of cpp -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/leaf_r.bmp -o th01/sprites/leaf_r.csp -sym sLEAF_RIGHT -of cpp -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/ileave_m.bmp -o th01/sprites/ileave_m.csp -sym sINTERLEAVE_MASKS -of cpp -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/laser_s.bmp -o th01/sprites/laser_s.csp -sym sSHOOTOUT_LASER -of cpp -sw 16 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/mousecur.bmp -o th01/sprites/mousecur.csp -sym sMOUSE_CURSOR -of cpp -sw 16 -sh 16
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/pellet.bmp -o th01/sprites/pellet.csp -sym sPELLET -of cpp -sw 8 -sh 8 -pshf inner
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/pellet_c.bmp -o th01/sprites/pellet_c.csp -sym sPELLET_CLOUD -of cpp -sw 16 -sh 16
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/pillar.bmp -o th01/sprites/pillar.csp -sym sPILLAR -of cpp -sw 32 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/shape8x8.bmp -o th01/sprites/shape8x8.csp -sym sSHAPE8X8 -of cpp -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th01/sprites/bonusbox.bmp -o th01/sprites/bonusbox.csp -sym sSTAGEBONUS_BOX -of cpp -sw 8 -sh 4
+bin\Pipeline\bmp2arr.exe -q -i th02/sprites/bombpart.bmp -o th02/sprites/bombpart.asp -sym _sBOMB_PARTICLES -of asm -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th02/sprites/pellet.bmp -o th02/sprites/pellet.asp -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer
+bin\Pipeline\bmp2arr.exe -q -i th02/sprites/sparks.bmp -o th02/sprites/sparks.asp -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer
+bin\Pipeline\bmp2arr.exe -q -i th02/sprites/pointnum.bmp -o th02/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i th02/sprites/verdict.bmp -o th02/sprites/verdict.csp -sym sVERDICT_MASKS -of cpp -sw 16 -sh 16
+bin\Pipeline\bmp2arr.exe -q -i th03/sprites/score.bmp -o th03/sprites/score.asp -sym _sSCORE_FONT -of asm -sw 8 -sh 8 -u
+bin\Pipeline\bmp2arr.exe -q -i th04/sprites/pelletbt.bmp -o th04/sprites/pelletbt.asp -sym _sPELLET_BOTTOM -of asm -sw 8 -sh 4 -pshf outer
+bin\Pipeline\bmp2arr.exe -q -i th04/sprites/pointnum.bmp -o th04/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner
+bin\Pipeline\bmp2arr.exe -q -i th05/sprites/gaiji.bmp -o th05/sprites/gaiji.asp -sym _sGAIJI -of asm -sw 16 -sh 16
+bin\Pipeline\bmp2arr.exe -q -i th05/sprites/piano_l.bmp -o th05/sprites/piano_l.asp -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8
+bin\Pipeline\bmp2arr.exe -q -i Research/blitperf.bmp -o Research/blitperf.csp -sym sBLITPERF -of cpp -sw 16 -sh 16
 tasm32 /m /mx /kh32768 /t /ml libs\piloadc\piloadc.asm obj\piloadc.obj
 tasm32 /m /mx /kh32768 /t Pipeline\zun_stub.asm obj\Pipeline\zun_stub.obj
 tasm32 /m /mx /kh32768 /t Pipeline\cstmstub.asm obj\Pipeline\cstmstub.obj
