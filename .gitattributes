@@ -2,4 +2,5 @@
 *.bat text eol=crlf
 *.[ch]* text eol=lf
 *.mak text eol=lf
+*.lua text eol=lf
 zun.txt -text
