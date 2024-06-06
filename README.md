@@ -156,6 +156,15 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
   ----
 
+* **MS-DOS Player** (bundled)
+
+  A lightweight emulator for running DOS command-line tools on the Windows console subsystem, automatically used when building the codebase on 64-bit operating systems. Despite its stripped-down nature, it still runs noticeably slower than DOSBox as it uses Neko Project 21/W's interpreting x86 core rather than a dynamic recompiler, but the seamless console integration more than makes up for that.
+
+  The bundled build is specifically profile-optimized for building ReC98, running a reduced x86 core that only emulates a 386 with no FPU, paging, or cycle counting. Compared to [Takeda Toshiya's upstream builds], this build speeds up the ReC98 build process by ≈60% for a complete rebuild, ≈80% for compiling and linking the largest translation unit and largest binary, and ≈70% for the median-sized translation unit and binary. It also contains a bugfix required for running Turbo C++ 4.0J in the context of a build system that wasn't available in the upstream builds as of June 2024.\
+  See [`bin/README.md`](bin/README.md) for license and build information.
+
+  ----
+
 * [**Tup**](http://gittup.org/tup/), for Windows (optional, but recommended)
 
   A sane, parallel build system, used to ensure minimal rebuilds during the 32-bit build part. Provides perfect tracking of dependencies via code injection and hooking a compiler's file opening syscalls, allowing it to automatically add all `#include`d files to the build dependency graph. This makes it way superior to most `make` implementations, which lack this vital feature, and are therefore inherently unsuited for pretty much any programming language imaginable. With no abstractions for specific compilers, Tup also fits perfectly with the ancient Borland tools required for this project.
@@ -228,6 +237,8 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [project blog]: https://rec98.nmlgc.net/blog
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
 [Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
+[Takeda Toshiya's upstream builds]: http://takeda-toshiya.my.coocan.jp/msdos/index.html
+
 [bloat]: CONTRIBUTING.md#zun-bloat
 [landmines]: CONTRIBUTING.md#zun-landmine
 [bugs]: CONTRIBUTING.md#zun-bug

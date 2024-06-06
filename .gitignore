@@ -1,6 +1,7 @@
 bin/*
 obj/
 .tup/*
+!bin/README.md
 !bin/masters.lib
 Research/**/*.exe
 Research/**/*.obj
