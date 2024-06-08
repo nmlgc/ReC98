@@ -12,7 +12,7 @@ if errorlevel    2 goto check_tasm32_win9x
 : NT + TASM32 existing confirmed at this point
 setlocal
 set STDERR_IGNORE=2^>NUL
-goto check_bcc32
+goto check_32bit
 
 : Re-run the actual TASM check for Windows 9x. Calling a nonexistent command
 : leaves ERRORLEVEL untouched, so we have to override it ourselves first.
@@ -21,17 +21,32 @@ call set_errorlevel_to_1.bat
 tasm32 >NUL %STDERR_IGNORE%
 if errorlevel 1 goto no_tasm32
 
-:check_bcc32
+: Trying to run either a 64-bit or 16-bit program might look like a better way
+: of checking OS bitness, but
+: • Windows XP insists on showing an ugly message box when trying to run a
+:   64-bit program, and
+: • Wine insists on starting DOSBox to run a 16-bit .COM program, which may or
+:   may not be installed.
+: So, environment variables it is. Thankfully, these are available on every
+: 64-bit version of Windows, so we can assume 32-bit if they don't exist.
+:check_32bit
+set ReC98_DOS=
+if "%PROCESSOR_ARCHITEW6432%" == "AMD64" set ReC98_DOS=bin\msdos -e -x
+if "%PROCESSOR_ARCHITECTURE%" == "AMD64" set ReC98_DOS=bin\msdos -e -x
+
+call set_errorlevel_to_1.bat
+%ReC98_DOS% tlink >NUL %STDERR_IGNORE%
+if errorlevel 1 goto no_tlink
+
+call set_errorlevel_to_1.bat
+%ReC98_DOS% tcc >NUL %STDERR_IGNORE%
+if errorlevel 1 goto no_tcc
+
 call set_errorlevel_to_1.bat
 bcc32 >NUL %STDERR_IGNORE%
 if errorlevel 1 goto no_bcc32
 
-: Regular Tup would return 1 when hitting Ctrl-C, so let's use the immediately
-: returning `version` subcommand to figure out whether we should fall back.
-bin\tup version >NUL
-if     errorlevel 1 goto fallback
-: NT returns negative values for things like DLL import failures
-if not errorlevel 0 goto fallback
+if "%ReC98_DOS%" == "" goto fallback
 
 : If we can run Tup, we're also on a decently modern Windows. Update the dumb
 : full batch build script by parsing out commands from `tup parse`'s stdout.
@@ -88,6 +103,16 @@ goto eof
 :no_tasm32
 echo Could not find TASM32.
 echo Please make sure that the BIN directory of Turbo Assembler 5.0 is in your PATH.
+goto eof
+
+:no_tcc
+echo Could not find TCC.
+goto tc4j_bin
+:no_tlink
+echo Could not find TLINK.
+goto tc4j_bin
+:tc4j_bin
+echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
 goto eof
 
 :no_bcc32
