@@ -1,14 +1,10 @@
 bin/*
 obj/
 .tup/*
+tup.config
+tup-generate.vardict
 !bin/README.md
 !bin/masters.lib
-Research/**/*.exe
-Research/**/*.obj
-RESEARCH/**/*.map
-RESEARCH/**/*.EXE
-RESEARCH/**/*.OBJ
-RESEARCH/**/*.MAP
 
 # Converted sprites
 *.[ac]sp

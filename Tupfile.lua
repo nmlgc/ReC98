@@ -1013,9 +1013,38 @@ th05:branch(MODEL_LARGE):link("maine", {
 -- Research
 -- --------
 
+local research_cfg = optimized_cfg:branch(Subdir("Research/"), MODEL_SMALL)
+
+research_cfg:link("holdkey", {
+	"Research/holdkey.c",
+	"bin/masters.lib",
+})
+
 local research_sprites = Sprites({
 	{ "Research/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 }
 })
+
+-- Must be an ordered table to retain the order for `build_dumb.bat`.
+for _, t in pairs({ { "8086", " -1-" }, { "286", " -2" }, { "386", "" } }) do
+	local cfg = research_cfg:branch({
+		obj_root = (t[1] .. "/"),
+		cflags = string.format("-DCPU=%s%s", t[1], t[2]),
+	})
+	cfg:link(("blit" .. t[1]), {
+		-- Bypass `PreviousOutputForSource` by explicitly building each unit.
+		cfg:build_uncached({ "Research/blitperf.cpp", extra_inputs = {
+			research_sprites["blitperf"],
+			th01_sprites["pellet"],
+		} }),
+		cfg:build_uncached("platform/x86real/noexcept.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/blitter.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/font.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/graph.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/grcg.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/palette.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/vsync.cpp"),
+	})
+end
 -- --------
 
 Rules:print()
