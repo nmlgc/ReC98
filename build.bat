@@ -100,7 +100,7 @@ goto success
 :no_tasm32
 echo Could not find TASM32.
 echo Please make sure that the BIN directory of Turbo Assembler 5.0 is in your PATH.
-goto eof
+goto path
 
 :no_tcc
 echo Could not find TCC.
@@ -110,6 +110,10 @@ echo Could not find TLINK.
 goto tc4j_bin
 :tc4j_bin
 echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
+goto path
+
+:path
+echo (Current PATH: `%PATH%`)
 goto eof
 
 :success
