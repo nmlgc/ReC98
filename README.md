@@ -159,21 +159,11 @@ The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista
 
 ### How to build
 
-* Running on a 64-bit OS? Run `build32b.bat` in a Windows shell.
-* Running on 32-bit Windows? Run just `build.bat`.
-
-All batch files will abort with an error if any of the necessary tools can't be found in the `PATH`.
+Just run `build.bat`; it does the right thing regardless of which operating system you're running. The process will abort with an error if any of the necessary tools can't be found in the Windows `PATH`.
 
 The final executables will be put into `bin\th0?`, using the same names as the originals. Running them requires each game's original assets in the same directory.
 
 ### Troubleshooting
-
-* TCC compiles, but fails to link, with `Error: Unable to execute command 'tlink.exe'`
-
-  **Cause:** To locate TLINK, TCC needlessly copies the `PATH` environment variable into a statically allocated 128-byte buffer. It then constructs absolute `tlink.exe` filenames for each of the semicolon- or `\0`-terminated paths, writing these into a buffer that immediately follows the 128-byte `PATH` buffer in memory. The search is finished as soon as TCC found an existing file, which gives precedence to earlier paths in the `PATH`. If the search didn't complete until a potential "final" path that runs past the 128 bytes, the final attempted filename will consist of the part that still fit into the buffer, followed by the previously attempted path.
-
-  **Workaround:** Make sure that the `BIN\` path to Turbo C++ 4.0J is fully contained within the first 127 bytes of the `PATH` inside your DOS system.
-  (The 128<sup>th</sup> byte must either be a separating `;` or the terminating `\0` of the `PATH` string.)
 
 * TLINK fails with `Loader error (0000): Unrecognized Error` on 32-bit Windows ≥Vista
 
