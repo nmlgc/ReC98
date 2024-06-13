@@ -5,13 +5,20 @@
 #include <stdlib.h>
 #include <dir.h>
 #include "zuncom/common.h"
-int readline(char *path, size_t size, FILE* fl) {
-	char *pathp;
-	if(!fgets(path, size, fl)) return 1;
-	if(*path) {
-		pathp = path+strlen(path)-1;
-		if(*pathp == '\n') *pathp = '\0';
+int readparam(char *path, size_t size, FILE* fl) {
+	char c = '\0';
+	char *pathp = path;
+
+	while((--size > 0) && ((c = getc(fl)) != EOF)) {
+		if(('\n' == c) || (' ' == c)) {
+			break;
+		}
+		*(pathp++) = c;
 	}
+	if((EOF == c) && (path == pathp)) {
+		return 1;
+	}
+	*(pathp++) = '\0';
 	return 0;
 }
 #define MAX_COUNT 32
@@ -51,7 +58,7 @@ int main(int argc, char** argv) {
 	}
 
 	/* read proc count */
-	if(readline(path, sizeof(path), fl)) {
+	if(readparam(path, sizeof(path), fl)) {
 		errval = 4; goto err;
 	}
 	count = atoi(path);
@@ -67,7 +74,7 @@ int main(int argc, char** argv) {
 	/* read proc names */
 	memset(names, ' ', sizeof(names));
 	for(i=0;i<count;i++) {
-		if(readline(path, sizeof(path), fl)) {
+		if(readparam(path, sizeof(path), fl)) {
 			errval = 6; goto err;
 		}
 		for(j=0;j<8;j++) {
@@ -98,7 +105,7 @@ int main(int argc, char** argv) {
 	memset(entries, 0, sizeof(entries));
 	for(i=0;i<count;i++) {
 		entries[i] = size;
-		if(readline(path, sizeof(path), fl)) {
+		if(readparam(path, sizeof(path), fl)) {
 			errval = 9; goto err;
 		}
 		j = filesize(path);
@@ -120,7 +127,7 @@ int main(int argc, char** argv) {
 	/* append com files */
 	fseek(fl, pathpos, SEEK_SET);
 	for(i=0;i<count;i++) {
-		if(readline(path, sizeof(path), fl)) {
+		if(readparam(path, sizeof(path), fl)) {
 			errval = 12; goto err;
 		}
 		if(append(path, fo)) {
