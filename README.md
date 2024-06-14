@@ -165,11 +165,12 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
   ----
 
-* [**Tup**](http://gittup.org/tup/), for Windows (optional, but recommended)
+* [**Tup**](http://gittup.org/tup/), for Windows (bundled)
 
   A sane, parallel build system, used to ensure minimal rebuilds during the 32-bit build part. Provides perfect tracking of dependencies via code injection and hooking a compiler's file opening syscalls, allowing it to automatically add all `#include`d files to the build dependency graph. This makes it way superior to most `make` implementations, which lack this vital feature, and are therefore inherently unsuited for pretty much any programming language imaginable. With no abstractions for specific compilers, Tup also fits perfectly with the ancient Borland tools required for this project.
 
-  As of September 2020, the Windows version of Tup requires Vista or higher. In case Tup can't run or isn't installed, the build process falls back on a dumb batch file, which always fully rebuilds the entire 32-bit part.
+  The bundled 64-bit Windows build includes an [important bugfix for running DOS-based build tools through MS-DOS Player] that hasn't been merged into the upstream repository as of June 2024.\
+  See [`bin/README.md`](bin/README.md) for license and build information.
 
   ----
 
@@ -238,6 +239,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
 [Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
 [Takeda Toshiya's upstream builds]: http://takeda-toshiya.my.coocan.jp/msdos/index.html
+[important bugfix for running DOS-based build tools through MS-DOS Player]: https://github.com/gittup/tup/pull/500
 
 [bloat]: CONTRIBUTING.md#zun-bloat
 [landmines]: CONTRIBUTING.md#zun-landmine
