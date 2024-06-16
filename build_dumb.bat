@@ -2,6 +2,20 @@
 : natively run DOS-based tools. Automatically generated whenever `Tupfile.lua`
 : is modified.
 @echo off
+mkdir Research %STDERR_IGNORE%
+mkdir bin\Pipeline %STDERR_IGNORE%
+mkdir obj %STDERR_IGNORE%
+mkdir obj\Pipeline %STDERR_IGNORE%
+mkdir obj\th01 %STDERR_IGNORE%
+mkdir obj\th02 %STDERR_IGNORE%
+mkdir obj\th03 %STDERR_IGNORE%
+mkdir obj\th04 %STDERR_IGNORE%
+mkdir obj\th05 %STDERR_IGNORE%
+mkdir th01\sprites %STDERR_IGNORE%
+mkdir th02\sprites %STDERR_IGNORE%
+mkdir th03\sprites %STDERR_IGNORE%
+mkdir th04\sprites %STDERR_IGNORE%
+mkdir th05\sprites %STDERR_IGNORE%
 bcc32 -w-8004 -w-8012 -O2 -v- -x- -nbin/Pipeline/ Pipeline/bmp2arr.c Pipeline/bmp2arrl.c
 tasm32 /m /mx /kh32768 /t Pipeline\zun_stub.asm obj\Pipeline\zun_stub.obj
 tasm32 /m /mx /kh32768 /t Pipeline\cstmstub.asm obj\Pipeline\cstmstub.obj

@@ -11,6 +11,8 @@
 ---the following benefits:
 ---
 ---* Automatic slash-to-backslash conversion for tool filenames
+---* Emits `mkdir` commands for *all* referenced output directories, not just
+---  the ones that are missing from the current working tree.
 ---
 ---Since Tup forbids writing files from the Tupfile, we have to abuse stdout
 ---to get the transformed rules back into the repo. All rule lines are printed
@@ -18,6 +20,7 @@
 ---batch file inside `build.bat`.
 ---@class Rules
 ---@field private rules Rule[]
+---@field private outdirs table<string, boolean> Set of output directories
 local Rules = {}
 Rules.__index = Rules
 
@@ -25,6 +28,7 @@ function NewRules()
 	---@type Rules
 	local ret = {
 		rules = {},
+		outdirs = {},
 	}
 	return setmetatable(ret, Rules)
 end
@@ -52,6 +56,14 @@ function Rules:insert(inputs, tool, args, outputs)
 	end)
 	args = args:gsub("%%o", table.concat(outs, " "))
 
+	tup_append_assignment(outs, outputs.extra_outputs)
+	for _, output in ipairs(outs) do
+		local dir = output:gsub("/", "\\"):match("(.*)\\")
+		if (dir ~= nil) then
+			self.outdirs[dir] = true
+		end
+	end
+
 	local rule = { inputs = ins, tool = tool, args = args }
 	table.insert(self.rules, rule)
 	return string.format("%s %s", tool, args)
@@ -75,6 +87,15 @@ $ : natively run DOS-based tools. Automatically generated whenever `Tupfile.lua`
 $ : is modified.
 $ @echo off
 ]])
+	local outdirs_sorted = {}
+	for dir in pairs(self.outdirs) do
+		table.insert(outdirs_sorted, dir)
+	end
+	table.sort(outdirs_sorted)
+	for _, dir in pairs(outdirs_sorted) do
+		print(string.format("$ mkdir %s %%STDERR_IGNORE%%", dir))
+	end
+
 	for _, rule in pairs(self.rules) do
 		local cmd = rule.args:gsub("%%f", table.concat(rule.inputs, " "))
 		print(string.format("$ %s %s", rule.tool:gsub("/", "\\"), cmd))
