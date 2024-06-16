@@ -114,8 +114,9 @@ These cases should gradually be removed as development goes along, though.
 
 ## Build system
 
-* Whenever you edit the `Tupfile`, run `tup generate Tupfile.bat` to update
-  the dumb batch fallback script, for systems that can't run Tup.
+* Each non-refactoring edit to `Tupfile.lua` should be accompanied by a
+  corresponding edit to `build_dumb.bat`. The Tup-based build process
+  automatically rewrites the file in this case.
 
 ## Code organization
 

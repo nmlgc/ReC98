@@ -32,8 +32,9 @@ on this branch.
 
 --]]
 
----@alias TupInput string | { [1]: string, extra_inputs: string | string[] }
 ---@alias ReC98Input string | { [1]: string, extra_inputs: string | string[], o?: string}
+
+tup.include("Pipeline/rules.lua")
 
 ---@class (exact) ConfigShape
 ---@field obj_root? string Root directory for all intermediate files
@@ -47,6 +48,8 @@ local Config = {
 	aflags = "/m /mx /kh32768 /t",
 }
 Config.__index = Config
+
+local Rules = NewRules()
 
 ---Generates a ConfigShape for an output subdirectory.
 ---@param dir string
@@ -99,10 +102,8 @@ function Config:build_uncached(input)
 	if (ext == "asm") then
 		-- We can't use %f since TASM32 wants backslashes and Tup would
 		-- automatically rewrite them to slashes.
-		local cmd = string.format(
-			"tasm32 %s %s %%o", self.aflags, fn:gsub("/", "\\")
-		)
-		return tup.rule(input, cmd, out_file:gsub("/", "\\"))[1]
+		local args = string.format("%s %s %%o", self.aflags, fn:gsub("/", "\\"))
+		return Rules:add_32(input, "tasm32", args, out_file:gsub("/", "\\"))[1]
 	end
 	error(string.format("Unknown file extension, can't build: `%s`", fn))
 end
@@ -135,9 +136,9 @@ local pipeline_cfg = Config:branch(Subdir("Pipeline/"), {
 	cflags = "-IPipeline/",
 })
 
-local bmp2arr = tup.rule(
+local bmp2arr = Rules:add_32(
 	{ "Pipeline/bmp2arr.c", "Pipeline/bmp2arrl.c" },
-	"bcc32 -w-8004 -w-8012 -O2 -v- -x- -nbin/Pipeline/ %f",
+	"bcc32", "-w-8004 -w-8012 -O2 -v- -x- -nbin/Pipeline/ %f",
 	{ "bin/Pipeline/bmp2arr.exe", extra_outputs = {
 		"%O.tds", "bin/Pipeline/%1B.obj", "bin/Pipeline/%2B.obj"
 	} }
@@ -152,17 +153,16 @@ local bmp2arr = tup.rule(
 ---@field [6] string? Additional arguments
 
 ---@param bmp BMPShape
----@return string
 function BMP(bmp)
 	local out_fn = bmp[1]:gsub("%..+$", (bmp[2] == "asm" and ".asp" or ".csp"))
 	local inputs = { bmp[1], extra_inputs = bmp2arr }
 	local sym = ((bmp[2] == "asm" and "_" or "") .. bmp[3])
 	local additional = ((bmp[6] and (" " .. bmp[6])) or "")
-	local cmd = string.format(
-		"%s -q -i %%f -o %%o -sym %s -of %s -sw %d -sh %d%s",
-		bmp2arr:gsub("/", "\\"), sym, bmp[2], bmp[4], bmp[5], additional
+	local args = string.format(
+		"-q -i %%f -o %%o -sym %s -of %s -sw %d -sh %d%s",
+		sym, bmp[2], bmp[4], bmp[5], additional
 	)
-	return tup.rule(inputs, cmd, out_fn)[1]
+	return Rules:add_32(inputs, bmp2arr, args, out_fn)[1]
 end
 
 ---@param bmps BMPShape[]
@@ -429,3 +429,5 @@ local research_sprites = Sprites({
 	{ "Research/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 }
 })
 -- --------
+
+Rules:print()

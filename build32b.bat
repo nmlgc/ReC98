@@ -41,12 +41,50 @@ if     errorlevel 1 goto fallback
 : NT returns negative values for things like DLL import failures
 if not errorlevel 0 goto fallback
 
+: If we can run Tup, we're also on a decently modern Windows. Update the dumb
+: full batch build script by parsing out commands from `tup parse`'s stdout.
+
+: Using three files is the easiest way to preserve the error level of `tup
+: parse`, unfortunately.
+set unparsed=.tup\unparsed.bat
+set parsed=.tup\parsed.bat
+set final=build_dumb.bat
+
+: Tup insists on reparsing the Tupfile if we add or remove any file between
+: `tup parse` and `tup`… unless we place it in `.tup/`, which might not exist
+: yet.
+if not exist .tup\ bin\tup init
+
+bin\tup parse >%unparsed%
+if errorlevel 1 del %unparsed% && goto eof
+
+: Wine doesn't support sub-shell output redirection.
+call :build_dumb_parse %unparsed% >%parsed%
+del %unparsed%
+
+for /f "usebackq" %%f in ('%parsed%') do (
+	if 0 neq %%~zf ( move /y %parsed% %final% >NUL ) else ( del %parsed% )
+)
+goto tup
+
+:build_dumb_parse
+setlocal EnableDelayedExpansion
+for /f "delims=" %%l in (%~1) do (
+	set line=%%l
+	if "!line:~0,2!" == "$ " echo !line:~2!
+)
+endlocal
+exit /b
+
+:tup
 bin\tup
 goto eof
 
 :fallback
 echo [..] Running on a 32-bit OS, falling back on a dumb full rebuild...
-call Tupfile.bat
+
+: Windows 9x wouldn't support %final% in this position.
+call build_dumb.bat
 
 goto eof
 
