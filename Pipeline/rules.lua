@@ -15,6 +15,7 @@
 ---  the ones that are missing from the current working tree.
 ---* Bundles all single-file TCC invocations that share the same compiler flags
 ---  into a single batched one
+---* Splits long `echo` lines to fit within Windows 9x limits.
 ---
 ---Since Tup forbids writing files from the Tupfile, we have to abuse stdout
 ---to get the transformed rules back into the repo. All rule lines are printed
@@ -110,6 +111,87 @@ function Rules:add_32(inputs, tool, args, outputs)
 	return tup.rule(inputs, self:insert(inputs, tool, args, outputs), outputs)
 end
 
+---Splits `line` into multiple lines to work around the no longer documented
+---parsing craziness that Windows 9x's `COMMAND.COM` blindly performs before
+---executing any line of a batch file:
+---
+---* Truncate to 1023 bytes
+---* Parse out redirector
+---* Strip trailing whitespace of remaining line
+---* Split line into up to 64 tokens, around/excluding whitespace and '=' and
+---  before/including '/'
+---* Throw a `Bad command or file name` error once the token count would reach
+---  65, regardless of whether the command would actually need the tokens
+---@param line string
+---@param sub_bytes number | nil Subtracted from 1023.
+---@param sub_args number | nil Subtracted from 64.
+---@return fun(): string | nil it Iterator over the split lines.
+local function split_batch_line_for_win9x(line, sub_bytes, sub_args)
+	local max_bytes = (1023 - ((sub_bytes and sub_bytes) or 0))
+	local max_args = (64 - ((sub_args and sub_args) or 0))
+	local switchar = string.byte("/")
+	local equals = string.byte("=")
+
+	---@param chunk string
+	local function cut(chunk)
+		---@type integer | nil
+		local prev_end = nil
+
+		local argc = 0
+		local cur_start, cur_end = chunk:find("%S+")
+		while ((cur_start ~= nil) and (cur_end ~= nil)) do
+			local cur_argc = 0
+			for i = (cur_start + 1), (cur_end - 1) do
+				local c = chunk:byte(i)
+				if ((c == switchar) or (c == equals)) then
+					cur_argc = (cur_argc + 1)
+
+					-- Subtracting 1 because the surrounding word may or may
+					-- not be OK.
+					if ((argc + cur_argc) >= (max_args - 1)) then
+						-- Back up to the previous word if we can…
+						if (prev_end and (cur_argc < max_args)) then
+							return chunk:sub(1, prev_end)
+						end
+
+						-- …or split the string inside the word. Only here for
+						-- tests, as it would corrupt the response files if it
+						-- ever happened.
+						return chunk:sub(1, (i - 1))
+					end
+				end
+			end
+
+			-- Separator characters are fine? Yield up to the entire word
+			argc = (argc + cur_argc + 1)
+			if (argc >= max_args) then
+				return chunk:sub(1, cur_end)
+			end
+			prev_end = cur_end
+			cur_start, cur_end = chunk:find("%S+", (cur_end + 1))
+		end
+		return chunk
+	end
+
+	---@type string
+	line = line:match("%s*(.*)%s*$")
+
+	return function ()
+		if (#line == 0) then
+			return nil
+		end
+
+		local chunk
+		if (#line > max_bytes) then
+			chunk = cut(line:sub(0, (max_bytes + 1)):match("(.+) "))
+		else
+			chunk = cut(line:sub(0, max_bytes))
+		end
+		line = line:sub(chunk:len() + 1):match("%s*(.*)%s*$")
+		return chunk
+	end
+end
+
 ---Prints the current rules to stdout.
 function Rules:print()
 	print([[
@@ -129,9 +211,18 @@ $ @echo off
 
 	for _, rule in pairs(self.rules) do
 		local cmd = rule.args:gsub("%%f", table.concat(rule.inputs, " "))
+
+		-- Work around command line length limits by splitting long `echo`
+		-- lines. This also must be done for the link response files used for
+		-- the regular Tup build.
 		local ECHO = "echo"
 		if (rule.tool == ECHO) then
-			local rsp_ext = cmd:match(".@(.)$")
+			local redirector = ">"
+
+			---@type string, string
+			local args, fn = cmd:match("(.*)>(.+)")
+
+			local rsp_ext = fn:match(".@(.)$")
 
 			-- Two spaces rather than one are, in fact, necessary to increase
 			-- the stability of TCC's optimizer in very rare cases? Not doing
@@ -139,9 +230,18 @@ $ @echo off
 			-- TH01 Elis translation unit, but only on 32-bit Windows 10.
 			-- Really, I couldn't make this up.
 			if (rsp_ext == "c") then
-				cmd = cmd:gsub(" ", "  ")
+				args = args:gsub(" ", "  ")
 			end
+
+			-- Adding 2 to leave room for the longer `>>` redirector
+			for chunk in split_batch_line_for_win9x(
+				args, (ECHO:len() + 1 + fn:len() + 2), 1
+			) do
+				print(string.format("$ %s %s%s%s", ECHO, chunk, redirector, fn))
+				redirector = ">>"
+			end
+		else
+			print(string.format("$ %s %s", rule.tool:gsub("/", "\\"), cmd))
 		end
-		print(string.format("$ %s %s", rule.tool:gsub("/", "\\"), cmd))
 	end
 end
