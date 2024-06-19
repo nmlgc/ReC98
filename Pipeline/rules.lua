@@ -125,7 +125,7 @@ end
 ---@param line string
 ---@param sub_bytes number | nil Subtracted from 1023.
 ---@param sub_args number | nil Subtracted from 64.
----@return fun(): string | nil it Iterator over the split lines.
+---@return fun(): string | nil,boolean it Iterator over the split lines, plus an indicator of whether the current string is the final one
 local function split_batch_line_for_win9x(line, sub_bytes, sub_args)
 	local max_bytes = (1023 - ((sub_bytes and sub_bytes) or 0))
 	local max_args = (64 - ((sub_args and sub_args) or 0))
@@ -178,7 +178,7 @@ local function split_batch_line_for_win9x(line, sub_bytes, sub_args)
 
 	return function ()
 		if (#line == 0) then
-			return nil
+			return nil, true
 		end
 
 		local chunk
@@ -188,7 +188,7 @@ local function split_batch_line_for_win9x(line, sub_bytes, sub_args)
 			chunk = cut(line:sub(0, max_bytes))
 		end
 		line = line:sub(chunk:len() + 1):match("%s*(.*)%s*$")
-		return chunk
+		return chunk, (#line == 0)
 	end
 end
 
@@ -234,9 +234,19 @@ $ @echo off
 			end
 
 			-- Adding 2 to leave room for the longer `>>` redirector
-			for chunk in split_batch_line_for_win9x(
+			for chunk, final in split_batch_line_for_win9x(
 				args, (ECHO:len() + 1 + fn:len() + 2), 1
 			) do
+				-- TLINK response files need some separate massaging when split
+				-- into multiple lines.
+				if (rsp_ext == "l") then
+					if chunk:sub(-1) == "," then
+						chunk = chunk:sub(0, (chunk:len() - 1))
+					elseif not final then
+						chunk = (chunk .. "+")
+					end
+				end
+
 				print(string.format("$ %s %s%s%s", ECHO, chunk, redirector, fn))
 				redirector = ">>"
 			end
