@@ -153,15 +153,34 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
   The bundled 64-bit Windows build includes an [important bugfix for running DOS-based build tools through MS-DOS Player] that hasn't been merged into the upstream repository as of June 2024.\
   See [`bin/README.md`](bin/README.md) for license and build information.
 
-  ----
-
-The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista and <11, where both the 32-bit and 16-bit build parts can run natively from a single shell. The build process was tested and should work reliably on pretty much every system though – from modern 64-bit Windows and Linux, down to Windows 95, which you might use on actual PC-98 hardware.
-
 ### How to build
 
-Just run `build.bat`; it does the right thing regardless of which operating system you're running. The process will abort with an error if any of the necessary tools can't be found in the Windows `PATH`.
+Just run `build.bat` on any of the [supported build platforms]; it does the right thing regardless of which operating system you're running. The process will abort with an error if any of the necessary tools can't be found in the Windows `PATH`.
 
 The final executables will be put into `bin\th0?`, using the same names as the originals. Running them requires each game's original assets in the same directory.
+
+### Supported build platforms
+
+On 64-bit x86, the build process uses Tup for minimal parallel rebuilds, but all DOS-based build tools get emulated. On 32-bit x86, the build process falls back on a sequential batch file that always builds the entire codebase, but all build tools get to run at native performance.
+
+* **Tier 1**: Regularly tested, best support guaranteed.
+  * **Windows 11 (64-bit x86)**
+  * **Windows XP (32-bit x86)**
+
+* **Tier 2**: Supposed to work, feasible to support, but not regularly tested. Critical bugs in the build process will be fixed for free.
+  * Windows 10 (64-bit x86)
+  * Current version of Wine running on 64-bit x86 *nix
+
+* **Tier 3**: Supposed to work, but a burden to maintain. Fixes for build-related bugs would require funding, but bugfix PRs are likely to be accepted as well.
+  * 64-bit x86 Windows Vista, 7, 8, and 8.1
+  * 32-bit x86 Windows ≠XP
+
+* **Tier 4**: Explicitly unsupported and unfeasible without serious tinkering. Would require dedicated funding or forks, PRs are unlikely to be accepted.
+  * 64-bit x86 Windows XP
+  * 32-bit x86 *nix
+  * Windows <95
+  * Anything that's not 32-bit or 64-bit x86
+  * Platforms without Windows and DOS emulators
 
 ### Troubleshooting
 
@@ -191,6 +210,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [third-party libraries]: #is-this-even-viable
 [Takeda Toshiya's upstream builds]: http://takeda-toshiya.my.coocan.jp/msdos/index.html
 [important bugfix for running DOS-based build tools through MS-DOS Player]: https://github.com/gittup/tup/pull/500
+[supported build platforms]: #supported-build-platforms
 
 [bloat]: CONTRIBUTING.md#zun-bloat
 [landmines]: CONTRIBUTING.md#zun-landmine
