@@ -110,6 +110,9 @@ echo Could not find TLINK.
 goto tc4j_bin
 :tc4j_bin
 echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
+echo All components of its path must contain characters within your system's
+echo *Current language for non-Unicode programs*, but can exceed the 8.3 DOS
+echo limitation.
 goto path
 
 :path
