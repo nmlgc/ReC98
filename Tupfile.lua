@@ -49,7 +49,7 @@ local Config = {
 }
 Config.__index = Config
 
-local Rules = NewRules()
+local Rules = NewRules(Config.obj_root)
 
 ---Generates a ConfigShape for an output subdirectory.
 ---@param dir string

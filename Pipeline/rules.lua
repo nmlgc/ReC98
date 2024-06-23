@@ -8,11 +8,13 @@
 
 ---ReC98-specific reimplementation of `tup generate` in Lua. Wraps `tup.rule()`
 ---and transforms the rules into a full dumb sequential batch file, but with
----the following benefits:
+---the following benefits to create an ideal native 16-/32-bit build:
 ---
 ---* Automatic slash-to-backslash conversion for tool filenames
 ---* Emits `mkdir` commands for *all* referenced output directories, not just
 ---  the ones that are missing from the current working tree.
+---* Bundles all single-file TCC invocations that share the same compiler flags
+---  into a single batched one
 ---
 ---Since Tup forbids writing files from the Tupfile, we have to abuse stdout
 ---to get the transformed rules back into the repo. All rule lines are printed
@@ -21,14 +23,21 @@
 ---@class Rules
 ---@field private rules Rule[]
 ---@field private outdirs table<string, boolean> Set of output directories
+---@field private batch_root string Root directory for TCC batch response files
+---@field private tcc_batch table<string, Rule> Command-line arguments → rule that receives all input files compiled with these arguments
+---@field private tcc_batch_count number Because # only works with sequential tables
 local Rules = {}
 Rules.__index = Rules
 
-function NewRules()
+---@param batch_root string
+function NewRules(batch_root)
 	---@type Rules
 	local ret = {
 		rules = {},
 		outdirs = {},
+		batch_root = batch_root,
+		tcc_batch = {},
+		tcc_batch_count = 0,
 	}
 	return setmetatable(ret, Rules)
 end
@@ -64,8 +73,30 @@ function Rules:insert(inputs, tool, args, outputs)
 		end
 	end
 
-	local rule = { inputs = ins, tool = tool, args = args }
-	table.insert(self.rules, rule)
+	if (tool == "tcc") then
+		local batch = self.tcc_batch[args]
+		if batch == nil then
+			local rsp_fn = string.format(
+				"%sbatch%03d.@c", self.batch_root, self.tcc_batch_count
+			)
+			batch = {
+				inputs = ins,
+				tool = "echo",
+				args = string.format("%s>%s", args, rsp_fn:gsub("/", "\\")),
+			}
+			table.insert(self.rules, batch)
+			table.insert(self.rules, {
+				inputs = { rsp_fn }, tool = "tcc", args = "@%f",
+			})
+			self.tcc_batch[args] = batch
+			self.tcc_batch_count = (self.tcc_batch_count + 1)
+		else
+			batch.inputs += ins
+		end
+	else
+		local rule = { inputs = ins, tool = tool, args = args }
+		table.insert(self.rules, rule)
+	end
 	return string.format("%s %s", tool, args)
 end
 
@@ -98,6 +129,19 @@ $ @echo off
 
 	for _, rule in pairs(self.rules) do
 		local cmd = rule.args:gsub("%%f", table.concat(rule.inputs, " "))
+		local ECHO = "echo"
+		if (rule.tool == ECHO) then
+			local rsp_ext = cmd:match(".@(.)$")
+
+			-- Two spaces rather than one are, in fact, necessary to increase
+			-- the stability of TCC's optimizer in very rare cases? Not doing
+			-- this ends up inserting a bunch of useless instructions into the
+			-- TH01 Elis translation unit, but only on 32-bit Windows 10.
+			-- Really, I couldn't make this up.
+			if (rsp_ext == "c") then
+				cmd = cmd:gsub(" ", "  ")
+			end
+		end
 		print(string.format("$ %s %s", rule.tool:gsub("/", "\\"), cmd))
 	end
 end
