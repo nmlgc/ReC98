@@ -26,8 +26,9 @@
 	#define FX_WEIGHT_BOLD   (WEIGHT_BOLD << 4)
 	#define FX_WEIGHT_BLACK  (WEIGHT_BLACK << 4)
 
+	// Not used in any of the three games that support the feature.
 	#define FX_SPACING(spacing) \
-		(spacing & 7) << 6)
+		((spacing & 7) << 6)
 
 	// Puts the given [str] onto the graphics RAM at the given position,
 	// with the given graphics color and effect.
