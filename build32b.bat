@@ -50,6 +50,11 @@ set unparsed=.tup\unparsed.bat
 set parsed=.tup\parsed.bat
 set final=build_dumb.bat
 
+: The separate `tup parse` call might take some time.
+xcopy /-I /L /D /Y        Tupfile.lua %final% | findstr /B /C:"1 " >NUL || ^
+xcopy /-I /L /D /Y Pipeline\rules.lua %final% | findstr /B /C:"1 " >NUL
+if errorlevel 1 goto tup
+
 : Tup insists on reparsing the Tupfile if we add or remove any file between
 : `tup parse` and `tup`… unless we place it in `.tup/`, which might not exist
 : yet.
