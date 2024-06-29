@@ -147,7 +147,7 @@ struct ModeFrame {
 
 	player_48x48_cel_t to_swing_cel(int8_t frame_offset) const {
 		#if (SWING_FRAMES >= (SWING_CELS * SWING_FRAMES_PER_CEL))
-			#error Original code assumes a shot combo to take no more than 23 frames
+			#error Original code assumes the swing attack to take no more than 23 frames
 		#endif
 		return static_cast<player_48x48_cel_t>(C_SWING + (
 			((v + frame_offset) >= SWING_FRAMES)

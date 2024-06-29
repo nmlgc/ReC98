@@ -185,7 +185,7 @@ void singyoku_defeat_animate_and_select_route(void)
 	}
 
 	// ZUN bloat: Already done at the start of REIIDEN.EXE's main(). The
-	// REIIDEN:EXE process restarts after the end of a scene anyway, making
+	// REIIDEN.EXE process restarts after the end of a scene anyway, making
 	// this load doubly pointless.
 	if(route_sel.v == ROUTE_MAKAI) {
 		scene_init_and_load(1);

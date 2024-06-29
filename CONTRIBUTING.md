@@ -52,7 +52,7 @@ These cases should gradually be removed as development goes along, though.
 * Always use `{ brackets }`, even around single-statement conditional
   branches and single-instruction inline assembly.
 
-* The opening `{ ` bracket of a function goes into
+* The opening `{` bracket of a function goes into
   * the next line if the function is non-inlined (Linux style), and
   * the end of the line with the closing `)` if the function is inlined.
 
@@ -91,7 +91,7 @@ These cases should gradually be removed as development goes along, though.
    | Open Watcom 2.0                   |       |    ✔    |    ✔    |
    | Visual Studio 2022                |       |    ✔    |    ✔    |
    | Clang 13 (default)                |       |         |         |
-   | Clang 13 (with `-fms-extensions)` |   ✔   |    ✔    |    ✔    |
+   | Clang 13 (with `-fms-extensions`) |   ✔   |    ✔    |    ✔    |
 
   * Conversely, use `asm` as the keyword for the particularly dumb small
     pieces of inline assembly that refer to or depend on register
@@ -457,7 +457,7 @@ Examples:
 
 Bloat is removed on the aptly named `debloated` branch. That branch is the
 recommended foundation for nontrivial mods that don't care about being
-byte-for-byte comparable to ZUN's original binary.
+byte-for-byte comparable to ZUN's original binaries.
 
 #### `ZUN landmine`
 

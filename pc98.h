@@ -41,7 +41,7 @@ typedef int tram_cell_amount_t;
 /// Coordinate systems
 /// ------------------
 /// All of these are relative to the top-left corner of the final display.
-/// MODDERS: Remove the unsigned varieties.
+/// MODDERS: Remove the unsigned variants.
 
 // Display-space coordinate, with [0; RES_X[ being the visible area.
 typedef int screen_x_t;

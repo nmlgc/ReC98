@@ -90,9 +90,9 @@ typedef enum {
 	//
 	// ZUN landmine: The function doesn't stop any currently playing song
 	// before loading the a new one. This can cause glitches when loading from
-	// a slow storage device: If takes longer than a single period of the OPN
-	// timer to write the full new song to the driver's song buffer, the driver
-	// will play back garbage in the meantime.
+	// a slow storage device: If it takes longer than a single period of the
+	// OPN timer to write the full new song to the driver's song buffer, the
+	// driver will play back garbage in the meantime.
 	void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 #endif
 
