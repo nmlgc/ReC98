@@ -28144,20 +28144,20 @@ sub_1C647	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1C64F:
-		mov	word_252FE, 0
+		mov	_hi.SCOREDAT_cleared, 0
 		mov	ax, si
-		imul	ax, 3E8h
-		mov	dx, 2710h
+		imul	ax, 1000
+		mov	dx, 10000
 		sub	dx, ax
 		movsx	eax, dx
 		mov	bx, si
 		shl	bx, 2
-		mov	[bx+7890h], eax
+		mov	_hi.SCOREDAT_score[bx], eax
 		mov	ax, si
 		sar	ax, 1
 		mov	dl, 5
 		sub	dl, al
-		mov	[si+7903h], dl
+		mov	_hi.SCOREDAT_stage[si], dl
 		xor	cx, cx
 		jmp	short loc_1C68B
 ; ---------------------------------------------------------------------------
@@ -28166,29 +28166,29 @@ loc_1C67E:
 		mov	bx, si
 		imul	bx, 7
 		add	bx, cx
-		mov	byte ptr [bx+78BCh], 0DAh
+		mov	_hi.SCOREDAT_g_name[bx], gs_BULLET
 		inc	cx
 
 loc_1C68B:
-		cmp	cx, 6
+		cmp	cx, SCOREDAT_NAME_LEN
 		jl	short loc_1C67E
 		mov	bx, si
-		imul	bx, 7
-		mov	byte ptr [bx+78C2h], 0
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	_hi.SCOREDAT_g_name[bx][SCOREDAT_NAME_LEN], 0
 		mov	bx, si
 		shl	bx, 2
-		mov	word ptr [bx+790Eh], 76Ch
+		mov	_hi.SCOREDAT_date.da_year[bx], 1900
 		mov	bx, si
 		shl	bx, 2
-		mov	byte ptr [bx+7910h], 1
+		mov	_hi.SCOREDAT_date.da_day[bx], 1
 		mov	bx, si
 		shl	bx, 2
-		mov	byte ptr [bx+7911h], 1
-		mov	byte ptr [si+7936h], 1
+		mov	_hi.SCOREDAT_date.da_mon[bx], 1
+		mov	_hi.SCOREDAT_shottype[si], 1
 		inc	si
 
 loc_1C6BF:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_1C64F
 		pop	si
 		pop	bp
@@ -28204,31 +28204,31 @@ sub_1C6C7	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		pushd	[HUUHI_DAT]
+		pushd	[_SCOREDAT_FN]
 		call	file_ropen
 		mov	al, _rank
 		cbw
-		imul	ax, 0B6h
+		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		push	eax
 		push	0
 		call	file_seek
 		push	ds
-		push	offset word_252FE
-		push	0B6h
+		push	offset _hi
+		push	size scoredat_section_t
 		call	file_read
 		xor	si, si
 		jmp	short loc_1C705
 ; ---------------------------------------------------------------------------
 
 loc_1C6FA:
-		mov	al, [si+788Eh]
-		add	al, 0EEh
-		mov	[si+788Eh], al
+		mov	al, byte ptr _hi.SCORESECT_score[si]
+		add	al, -12h
+		mov	byte ptr _hi.SCORESECT_score[si], al
 		inc	si
 
 loc_1C705:
-		cmp	si, 0B2h
+		cmp	si, size scoredat_t
 		jl	short loc_1C6FA
 		call	file_close
 		pop	si
@@ -28375,8 +28375,8 @@ loc_1C83F:
 		lea	ax, [si+6]
 		push	ax
 		mov	ax, si
-		imul	ax, 7
-		add	ax, 78BCh
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
+		add	ax, offset _hi.SCOREDAT_g_name
 		push	ds
 		push	ax
 		push	di
@@ -28385,15 +28385,15 @@ loc_1C83F:
 		push	ax
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+7890h]
+		pushd	_hi.SCOREDAT_score[bx]
 		push	di
 		call	sub_1C713
-		cmp	byte ptr [si+7903h], 7Fh
+		cmp	_hi.SCOREDAT_stage[si], 7Fh
 		jz	short loc_1C881
 		push	44
 		lea	ax, [si+6]
 		push	ax
-		mov	al, [si+7903h]
+		mov	al, _hi.SCOREDAT_stage[si]
 		mov	ah, 0
 		add	ax, gb_0_
 		push	ax
@@ -28517,8 +28517,8 @@ arg_2		= word ptr  6
 		lea	ax, [si+6]
 		push	ax
 		mov	ax, si
-		imul	ax, 7
-		add	ax, 78BCh
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
+		add	ax, offset _hi.SCOREDAT_g_name
 		push	ds
 		push	ax
 		push	TX_GREEN
@@ -28530,8 +28530,8 @@ arg_2		= word ptr  6
 		lea	ax, [si+6]
 		push	ax
 		mov	bx, si
-		imul	bx, 7
-		mov	al, [bx+di+78BCh]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	al, _hi.SCOREDAT_g_name[bx+di]
 		mov	ah, 0
 		push	ax
 		push	TX_GREEN + TX_REVERSE
@@ -28551,10 +28551,10 @@ sub_1C95D	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	dword_25328, 0
-		mov	byte_25372, 0
-		mov	byte_2537D, 0
-		mov	dword_253B0, 0
+		mov	_hi.SCOREDAT_score_sum, 0
+		mov	_hi.SCOREDAT_g_name_first_sum, 0
+		mov	_hi.SCOREDAT_stage_sum, 0
+		mov	_hi.SCORESECT_section_sum, 0
 		xor	si, si
 		jmp	short loc_1C9A6
 ; ---------------------------------------------------------------------------
@@ -28562,46 +28562,46 @@ sub_1C95D	proc far
 loc_1C981:
 		mov	bx, si
 		shl	bx, 2
-		mov	eax, [bx+7890h]
-		add	dword_25328, eax
+		mov	eax, _hi.SCOREDAT_score[bx]
+		add	_hi.SCOREDAT_score_sum, eax
 		mov	bx, si
-		imul	bx, 7
-		mov	al, [bx+78BCh]
-		add	byte_25372, al
-		mov	al, [si+7903h]
-		add	byte_2537D, al
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	al, _hi.SCOREDAT_g_name[bx][0]
+		add	_hi.SCOREDAT_g_name_first_sum, al
+		mov	al, _hi.SCOREDAT_stage[si]
+		add	_hi.SCOREDAT_stage_sum, al
 		inc	si
 
 loc_1C9A6:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_1C981
 		xor	si, si
 		jmp	short loc_1C9C5
 ; ---------------------------------------------------------------------------
 
 loc_1C9AF:
-		movzx	eax, byte ptr [si+788Eh]
-		add	dword_253B0, eax
-		mov	al, [si+788Eh]
+		movzx	eax, byte ptr _hi.SCORESECT_score[si]
+		add	_hi.SCORESECT_section_sum, eax
+		mov	al, byte ptr _hi.SCORESECT_score[si]
 		add	al, 12h
-		mov	[si+788Eh], al
+		mov	byte ptr _hi.SCORESECT_score[si], al
 		inc	si
 
 loc_1C9C5:
-		cmp	si, 0B2h
+		cmp	si, size scoredat_t
 		jl	short loc_1C9AF
-		pushd	[HUUHI_DAT]
+		pushd	[_SCOREDAT_FN]
 		call	file_append
 		mov	al, _rank
 		cbw
-		imul	ax, 0B6h
+		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		push	eax
 		push	0
 		call	file_seek
 		push	ds
-		push	offset word_252FE
-		push	0B6h
+		push	offset _hi
+		push	size scoredat_section_t
 		call	file_write
 		call	file_close
 		pop	si
@@ -28619,15 +28619,15 @@ sub_1C9FE	proc far
 var_B		= byte ptr -0Bh
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@c    	= word ptr -6
+@@shift	= word ptr -4
+@@place	= word ptr -2
 
 		enter	0Ch, 0
 		push	si
 		push	di
 		xor	si, si
-		pushd	[HUUHI_DAT]
+		pushd	[_SCOREDAT_FN]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CA1A
@@ -28645,7 +28645,7 @@ loc_1CA1D:
 		les	bx, _resident
 		movzx	eax, es:[bx+mikoconfig_t.continues_used]
 		add	_score, eax
-		mov	eax, dword_25324
+		mov	eax, _hi.SCOREDAT_score[(SCOREDAT_PLACES - 1) * dword]
 		cmp	eax, _score
 		jle	short loc_1CA50
 		push	0FFFFh
@@ -28655,115 +28655,115 @@ loc_1CA1D:
 ; ---------------------------------------------------------------------------
 
 loc_1CA50:
-		mov	[bp+var_2], 9
+		mov	[bp+@@place], (SCOREDAT_PLACES - 1)
 		jmp	short loc_1CA6C
 ; ---------------------------------------------------------------------------
 
 loc_1CA57:
-		mov	bx, [bp+var_2]
+		mov	bx, [bp+@@place]
 		shl	bx, 2
-		mov	eax, [bx+788Ch]
+		mov	eax, (_hi.SCOREDAT_score - dword)[bx]
 		cmp	eax, _score
 		jg	short loc_1CA72
-		dec	[bp+var_2]
+		dec	[bp+@@place]
 
 loc_1CA6C:
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@place], 0
 		jg	short loc_1CA57
 
 loc_1CA72:
-		mov	[bp+var_4], 9
+		mov	[bp+@@shift], (SCOREDAT_PLACES - 1)
 		jmp	loc_1CB0C
 ; ---------------------------------------------------------------------------
 
 loc_1CA7A:
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@shift]
 		shl	bx, 2
-		mov	eax, [bx+788Ch]
-		mov	bx, [bp+var_4]
+		mov	eax, (_hi.SCOREDAT_score - dword)[bx]
+		mov	bx, [bp+@@shift]
 		shl	bx, 2
-		mov	[bx+7890h], eax
-		mov	[bp+var_6], 0
+		mov	_hi.SCOREDAT_score[bx], eax
+		mov	[bp+@@c], 0
 		jmp	short loc_1CAB4
 ; ---------------------------------------------------------------------------
 
 loc_1CA97:
-		mov	bx, [bp+var_4]
-		imul	bx, 7
-		add	bx, [bp+var_6]
-		mov	al, [bx+78B5h]
-		mov	bx, [bp+var_4]
-		imul	bx, 7
-		add	bx, [bp+var_6]
-		mov	[bx+78BCh], al
-		inc	[bp+var_6]
+		mov	bx, [bp+@@shift]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		add	bx, [bp+@@c]
+		mov	al, (_hi.SCOREDAT_g_name - ((SCOREDAT_NAME_LEN + 1) * byte))[bx]
+		mov	bx, [bp+@@shift]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		add	bx, [bp+@@c]
+		mov	_hi.SCOREDAT_g_name[bx], al
+		inc	[bp+@@c]
 
 loc_1CAB4:
-		cmp	[bp+var_6], 6
+		cmp	[bp+@@c], SCOREDAT_NAME_LEN
 		jl	short loc_1CA97
-		mov	bx, [bp+var_4]
-		mov	al, [bx+7902h]
-		mov	[bx+7903h], al
+		mov	bx, [bp+@@shift]
+		mov	al, (_hi.SCOREDAT_stage - byte)[bx]
+		mov	_hi.SCOREDAT_stage[bx], al
 		shl	bx, 2
-		mov	ax, [bx+790Ah]
-		mov	bx, [bp+var_4]
+		mov	ax, (_hi.SCOREDAT_date - size date)[bx].da_year
+		mov	bx, [bp+@@shift]
 		shl	bx, 2
-		mov	[bx+790Eh], ax
-		mov	bx, [bp+var_4]
+		mov	_hi.SCOREDAT_date[bx].da_year, ax
+		mov	bx, [bp+@@shift]
 		shl	bx, 2
-		mov	al, [bx+790Dh]
-		mov	bx, [bp+var_4]
+		mov	al, (_hi.SCOREDAT_date - size date)[bx].da_mon
+		mov	bx, [bp+@@shift]
 		shl	bx, 2
-		mov	[bx+7911h], al
-		mov	bx, [bp+var_4]
+		mov	_hi.SCOREDAT_date[bx].da_mon, al
+		mov	bx, [bp+@@shift]
 		shl	bx, 2
-		mov	al, [bx+790Ch]
-		mov	bx, [bp+var_4]
+		mov	al, (_hi.SCOREDAT_date - size date)[bx].da_day
+		mov	bx, [bp+@@shift]
 		shl	bx, 2
-		mov	[bx+7910h], al
-		mov	bx, [bp+var_4]
-		mov	al, [bx+7935h]
-		mov	[bx+7936h], al
-		dec	[bp+var_4]
+		mov	_hi.SCOREDAT_date[bx].da_day, al
+		mov	bx, [bp+@@shift]
+		mov	al, (_hi.SCOREDAT_shottype - byte)[bx]
+		mov	_hi.SCOREDAT_shottype[bx], al
+		dec	[bp+@@shift]
 
 loc_1CB0C:
-		mov	ax, [bp+var_4]
-		cmp	ax, [bp+var_2]
+		mov	ax, [bp+@@shift]
+		cmp	ax, [bp+@@place]
 		jg	loc_1CA7A
-		mov	bx, [bp+var_2]
+		mov	bx, [bp+@@place]
 		shl	bx, 2
 		mov	eax, _score
-		mov	[bx+7890h], eax
-		mov	bx, [bp+var_2]
+		mov	_hi.SCOREDAT_score[bx], eax
+		mov	bx, [bp+@@place]
 		mov	al, _stage_id
 		inc	al
-		mov	[bx+7903h], al
-		mov	ax, [bp+var_2]
+		mov	_hi.SCOREDAT_stage[bx], al
+		mov	ax, [bp+@@place]
 		shl	ax, 2
-		add	ax, 790Eh
+		add	ax, offset _hi.SCOREDAT_date
 		push	ds
 		push	ax		; datep
 		call	_getdate
 		add	sp, 4
 		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.shottype]
-		mov	bx, [bp+var_2]
-		mov	[bx+7936h], al
-		mov	[bp+var_6], 0
+		mov	bx, [bp+@@place]
+		mov	_hi.SCOREDAT_shottype[bx], al
+		mov	[bp+@@c], 0
 		jmp	short loc_1CB6B
 ; ---------------------------------------------------------------------------
 
 loc_1CB5A:
-		mov	bx, [bp+var_4]
-		imul	bx, 7
-		add	bx, [bp+var_6]
-		mov	byte ptr [bx+78BCh], 0DAh
-		inc	[bp+var_6]
+		mov	bx, [bp+@@shift]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		add	bx, [bp+@@c]
+		mov	_hi.SCOREDAT_g_name[bx], gs_BULLET
+		inc	[bp+@@c]
 
 loc_1CB6B:
-		cmp	[bp+var_6], 6
+		cmp	[bp+@@c], SCOREDAT_NAME_LEN
 		jl	short loc_1CB5A
-		push	[bp+var_2]
+		push	[bp+@@place]
 		call	sub_1C785
 		xor	di, di
 		mov	[bp+var_8], 0
@@ -28864,9 +28864,9 @@ loc_1CC4D:
 		mov	bx, [bp+var_8]
 		imul	bx, 11h
 		mov	al, [bx+di+1351h]
-		mov	bx, [bp+var_2]
-		imul	bx, 7
-		mov	[bx+si+78BCh], al
+		mov	bx, [bp+@@place]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	_hi.SCOREDAT_g_name[bx+si], al
 		cmp	si, 5
 		jnz	short loc_1CC82
 		push	di
@@ -28890,9 +28890,9 @@ loc_1CC82:
 loc_1CC8A:
 		cmp	di, 0Dh
 		jnz	short loc_1CCA2
-		mov	bx, [bp+var_2]
-		imul	bx, 7
-		mov	byte ptr [bx+si+78BCh],	0CFh
+		mov	bx, [bp+@@place]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	_hi.SCOREDAT_g_name[bx+si], gb_SP
 		inc	si
 		cmp	si, 5
 		jle	short loc_1CCD0
@@ -28908,9 +28908,9 @@ loc_1CCA2:
 		xor	si, si
 
 loc_1CCAE:
-		mov	bx, [bp+var_2]
-		imul	bx, 7
-		mov	byte ptr [bx+si+78BCh],	0CFh
+		mov	bx, [bp+@@place]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	_hi.SCOREDAT_g_name[bx+si], gb_SP
 		jmp	short loc_1CCD0
 ; ---------------------------------------------------------------------------
 
@@ -28931,23 +28931,23 @@ loc_1CCCB:
 		jz	short loc_1CD2E
 
 loc_1CCD0:
-		push	[bp+var_2]
+		push	[bp+@@place]
 		push	si
 		call	sub_1C914
 
 loc_1CCD7:
 		test	byte ptr _key_det, INPUT_BOMB
 		jz	short loc_1CCF7
-		mov	bx, [bp+var_2]
+		mov	bx, [bp+@@place]
 		imul	bx, 7
-		mov	byte ptr [bx+si+78BCh],	0CFh
+		mov	_hi.SCOREDAT_g_name[bx+si], gb_SP
 		dec	si
 		or	si, si
 		jge	short loc_1CCF0
 		xor	si, si
 
 loc_1CCF0:
-		push	[bp+var_2]
+		push	[bp+@@place]
 		push	si
 		call	sub_1C914
 
@@ -28988,7 +28988,7 @@ sub_1C9FE	endp
 sub_1CD36	proc far
 		push	bp
 		mov	bp, sp
-		pushd	[HUUHI_DAT]
+		pushd	[_SCOREDAT_FN]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CD4D
@@ -29000,13 +29000,13 @@ loc_1CD4D:
 		call	sub_1C6C7
 
 loc_1CD50:
-		mov	eax, dword_25300
+		mov	eax, _hi.SCOREDAT_score[(0 * SCOREDAT_PLACES) * dword]
 		mov	ebx, 10
 		cdq
 		idiv	ebx
 		cmp	eax, _score
 		jl	short loc_1CD71
-		mov	eax, dword_25300
+		mov	eax, _hi.SCOREDAT_score[(0 * SCOREDAT_PLACES) * dword]
 		cdq
 		idiv	ebx
 		jmp	short loc_1CD75
@@ -29017,7 +29017,7 @@ loc_1CD71:
 
 loc_1CD75:
 		mov	_hiscore, eax
-		mov	eax, dword_25300
+		mov	eax, _hi.SCOREDAT_score[(0 * SCOREDAT_PLACES) * dword]
 		mov	ebx, 0Ah
 		cdq
 		idiv	ebx
@@ -29041,8 +29041,8 @@ var_6		= byte ptr -6
 		push	ss
 		push	ax
 		push	ds
-		push	offset unk_1EE02
-		mov	cx, 6
+		push	offset _GAME_CLEAR_CONSTANTS
+		mov	cx, (SHOTTYPE_COUNT * word)
 		call	SCOPY@
 		mov	al, _rank
 		mov	[bp+@@rank], al
@@ -29057,7 +29057,7 @@ var_6		= byte ptr -6
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
-		mov	word_252FE, ax
+		mov	_hi.SCOREDAT_cleared, ax
 		call	sub_1C95D
 		mov	al, [bp+@@rank]
 		mov	_rank, al
@@ -29080,8 +29080,8 @@ var_4		= byte ptr -4
 		push	ss
 		push	ax
 		push	ds
-		push	offset unk_1EE08
-		mov	cx, 3
+		push	offset _EXTRA_CLEAR_FLAGS
+		mov	cx, SHOTTYPE_COUNT
 		call	SCOPY@
 		mov	al, _rank
 		mov	[bp+@@rank], al
@@ -29097,7 +29097,7 @@ var_4		= byte ptr -4
 		mov	ah, 0
 
 loc_1CE0F:
-		or	word_252FE, ax
+		or	_hi.SCOREDAT_cleared, ax
 		push	cs
 
 loc_1CE14:
@@ -29917,17 +29917,12 @@ byte_1EDA6	db 1
 word_1EDA8	dw 0
 word_1EDAA	dw 0
 aBoss4_m	db 'boss4.m',0
-HUUHI_DAT	dd aHuuhi_dat
+public _SCOREDAT_FN
+_SCOREDAT_FN	dd aHuuhi_dat
 include th02/gaiji/hiscore[data].asm
-unk_1EE02	db  3Eh	; >
-		db    1
-		db  76h	; v
-		db    0
-		db 0DAh
-		db    0
-unk_1EE08	db    1
-		db    2
-		db    4
+public _GAME_CLEAR_CONSTANTS, _EXTRA_CLEAR_FLAGS
+_GAME_CLEAR_CONSTANTS	dw 318, 118, 218
+_EXTRA_CLEAR_FLAGS   	db 1, 2, 4
 aHuuhi_dat	db 'huuhi.dat',0
 		db 0
 word_1EE16	dw 100h
@@ -30409,17 +30404,35 @@ public _hiscore, _hiscore_continues
 _hiscore	dd ?
 _hiscore_continues	db ?
 		db ?
-word_252FE	dw ?
-dword_25300	dd ?
-		db 32 dup(?)
-dword_25324	dd ?
-dword_25328	dd ?
-		db 70 dup(?)
-byte_25372	db ?
-		db 10 dup(?)
-byte_2537D	db ?
-		db 50 dup(?)
-dword_253B0	dd ?
+
+SCOREDAT_PLACES = 10
+SCOREDAT_NAME_LEN = 6
+
+date struc
+	da_year	dw ?
+	da_day 	db ?
+	da_mon 	db ?
+date ends
+
+scoredat_t struc
+	SCOREDAT_cleared         	dw ?
+	SCOREDAT_score           	dd SCOREDAT_PLACES dup(?)
+	SCOREDAT_score_sum       	dd ?
+	SCOREDAT_g_name          	db SCOREDAT_PLACES dup((SCOREDAT_NAME_LEN + 1) dup(?))
+	SCOREDAT_g_name_first_sum	db ?
+	SCOREDAT_stage           	db SCOREDAT_PLACES dup(?)
+	SCOREDAT_stage_sum       	db ?
+	SCOREDAT_date            	date SCOREDAT_PLACES dup(<?>)
+	SCOREDAT_shottype        	db SCOREDAT_PLACES dup(?)
+scoredat_t ends
+
+scoredat_section_t struc
+	SCORESECT_score      	scoredat_t <?>
+	SCORESECT_section_sum	dd ?
+scoredat_section_t ends
+
+public _hi
+_hi	scoredat_section_t <?>
 byte_253B4	db ?
 		db ?
 word_253B6	dw ?
