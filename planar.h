@@ -129,11 +129,7 @@ static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y) {
 	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
 
-static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y) {
-	return (x / BYTE_DOTS) + (y * ROW_SIZE);
-}
-
-static inline vram_offset_t vram_offset_divmul_double(double x, double y) {
+template <class T> inline vram_offset_t vram_offset_divmul(T x, T y) {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 

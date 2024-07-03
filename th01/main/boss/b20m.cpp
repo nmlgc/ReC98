@@ -245,7 +245,7 @@ static const int PARTICLE2X2_COUNT = 30;
 static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
 
 #define particle2x2_linear_vram_offset(vo, first_bit, left, top) { \
-	vo = vram_offset_divmul_double(left, top); \
+	vo = vram_offset_divmul(left, top); \
 	first_bit = (static_cast<screen_x_t>(left) % BYTE_DOTS); \
 }
 
@@ -1342,7 +1342,7 @@ void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 		top[i] += velocity_y[i];
 
 		// Recalculate VRAM offset and clip
-		vo = vram_offset_divmul_double(left[i], top[i]);
+		vo = vram_offset_divmul(left[i], top[i]);
 		if((vo >= (((RES_Y - PARTICLE2X2_H) + 1) * ROW_SIZE) || (vo < 0))) {
 			col[i] = 0;
 			continue;
