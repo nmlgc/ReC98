@@ -74,9 +74,10 @@ remove:
 #pragma codestring "\x90"
 #pragma option -O -k
 
-// Slightly differs from the same function in MAINE.EXE!
-// And seriously, I wasted half a week trying to figure out how to get these
-// exact same instructions out of the compiler, and it just didn't work.
+// Slightly differs from the same function in MAIN.EXE and MAINE.EXE!
+// ZUN bloat: Needlessly micro-optimized. Seriously, I wasted half a week
+// trying to figure out how to get these exact same instructions out of the
+// compiler, and it just didn't work.
 void pascal scoredat_defaults_set(void)
 {
 	_SI = 0;

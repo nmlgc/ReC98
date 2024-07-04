@@ -10,38 +10,19 @@
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
-#include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
-#include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
-#include "th02/formats/scoredat.hpp"
+
+#include "th02/hiscore/regist.cpp"
 
 #include "th02/score.c"
 #include "th02/scoreenc.c"
 
 score_t score_highest;
 scoredat_section_t hi;
-
-void pascal scoredat_defaults_set(void)
-{
-	int i;
-	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		int c;
-		hi.score.score[i] = 10000 - (i * 1000);
-		hi.score.stage[i] = 5 - (i >> 1);
-		for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
-			hi.score.g_name[i][c] = gs_BULLET;
-		}
-		hi.score.g_name[i][SCOREDAT_NAME_LEN] = 0;
-		hi.score.date[i].da_year = 1900;
-		hi.score.date[i].da_day = 1;
-		hi.score.date[i].da_mon = 1;
-		hi.score.shottype[i] = 1;
-	}
-}
 
 #include "th02/scorelod.c"
 

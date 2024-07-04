@@ -75,6 +75,7 @@ FACE_COL_0 = 255
 
 main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
 main_03 group main_03_TEXT, DIALOG_TEXT, BOSS_5_TEXT, main_03__TEXT
+main_06 group REGIST_M_TEXT, main_06_TEXT
 
 ; ===========================================================================
 
@@ -28123,78 +28124,17 @@ sub_1C608	endp
 
 main_05_TEXT	ends
 
+REGIST_M_TEXT segment	byte public 'CODE' use16
+	extern @scoredat_defaults_set$qv:proc
+REGIST_M_TEXT ends
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_06_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_06_TEXT
+		assume cs:main_06
 		;org 7
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C647	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_1C6BF
-; ---------------------------------------------------------------------------
-
-loc_1C64F:
-		mov	_hi.SCOREDAT_cleared, 0
-		mov	ax, si
-		imul	ax, 1000
-		mov	dx, 10000
-		sub	dx, ax
-		movsx	eax, dx
-		mov	bx, si
-		shl	bx, 2
-		mov	_hi.SCOREDAT_score[bx], eax
-		mov	ax, si
-		sar	ax, 1
-		mov	dl, 5
-		sub	dl, al
-		mov	_hi.SCOREDAT_stage[si], dl
-		xor	cx, cx
-		jmp	short loc_1C68B
-; ---------------------------------------------------------------------------
-
-loc_1C67E:
-		mov	bx, si
-		imul	bx, 7
-		add	bx, cx
-		mov	_hi.SCOREDAT_g_name[bx], gs_BULLET
-		inc	cx
-
-loc_1C68B:
-		cmp	cx, SCOREDAT_NAME_LEN
-		jl	short loc_1C67E
-		mov	bx, si
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	_hi.SCOREDAT_g_name[bx][SCOREDAT_NAME_LEN], 0
-		mov	bx, si
-		shl	bx, 2
-		mov	_hi.SCOREDAT_date.da_year[bx], 1900
-		mov	bx, si
-		shl	bx, 2
-		mov	_hi.SCOREDAT_date.da_day[bx], 1
-		mov	bx, si
-		shl	bx, 2
-		mov	_hi.SCOREDAT_date.da_mon[bx], 1
-		mov	_hi.SCOREDAT_shottype[si], 1
-		inc	si
-
-loc_1C6BF:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_1C64F
-		pop	si
-		pop	bp
-		retf
-sub_1C647	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28631,7 +28571,7 @@ var_8		= word ptr -8
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CA1A
-		call	sub_1C647
+		call	@scoredat_defaults_set$qv
 		jmp	short loc_1CA1D
 ; ---------------------------------------------------------------------------
 
@@ -28992,7 +28932,7 @@ sub_1CD36	proc far
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CD4D
-		call	sub_1C647
+		call	@scoredat_defaults_set$qv
 		jmp	short loc_1CD50
 ; ---------------------------------------------------------------------------
 

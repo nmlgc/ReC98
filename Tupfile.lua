@@ -504,7 +504,7 @@ th02:branch(MODEL_LARGE):link("op", {
 	"th02/op_05.cpp",
 	"th02/op_music.cpp",
 })
-th02:branch(MODEL_LARGE):link("main", {
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	{ "th02_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["bombpart"],
@@ -541,8 +541,9 @@ th02:branch(MODEL_LARGE):link("main", {
 	"th02/hud_ovrl.cpp",
 	"th02/dialog.cpp",
 	"th02/boss_5.cpp",
+	"th02/regist_m.cpp",
 })
-th02:branch(MODEL_LARGE):link("maine", {
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
 	"th02_maine.asm",
 	"th02/grppsafx.cpp",
