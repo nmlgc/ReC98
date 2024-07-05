@@ -1,5 +1,6 @@
 #include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
+#include "th02/core/globals.hpp"
 #include "th02/common.h"
 
 extern scoredat_section_t hi;
@@ -31,3 +32,5 @@ void scoredat_defaults_set(void)
 		hi.score.shottype[i] = 1;
 	}
 }
+
+#include "th02/scorelod.c"

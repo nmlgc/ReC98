@@ -7,13 +7,11 @@
 #pragma option -d-
 
 #include <dos.h>
-#include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
-#include "th02/core/globals.hpp"
 #include "th02/gaiji/score_p.hpp"
 
 #include "th02/hiscore/regist.cpp"
@@ -23,8 +21,6 @@
 
 score_t score_highest;
 scoredat_section_t hi;
-
-#include "th02/scorelod.c"
 
 inline void scoredat_init() {
 	if(!file_exist(SCOREDAT_FN)) {

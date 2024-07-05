@@ -28126,6 +28126,7 @@ main_05_TEXT	ends
 
 REGIST_M_TEXT segment	byte public 'CODE' use16
 	extern @scoredat_defaults_set$qv:proc
+	@scoredat_load$qv procdesc near
 REGIST_M_TEXT ends
 
 ; ===========================================================================
@@ -28135,47 +28136,6 @@ main_06_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_06
 		;org 7
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C6C7	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		pushd	[_SCOREDAT_FN]
-		call	file_ropen
-		mov	al, _rank
-		cbw
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset _hi
-		push	size scoredat_section_t
-		call	file_read
-		xor	si, si
-		jmp	short loc_1C705
-; ---------------------------------------------------------------------------
-
-loc_1C6FA:
-		mov	al, byte ptr _hi.SCORESECT_score[si]
-		add	al, -12h
-		mov	byte ptr _hi.SCORESECT_score[si], al
-		inc	si
-
-loc_1C705:
-		cmp	si, size scoredat_t
-		jl	short loc_1C6FA
-		call	file_close
-		pop	si
-		pop	bp
-		retn
-sub_1C6C7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28576,7 +28536,7 @@ var_8		= word ptr -8
 ; ---------------------------------------------------------------------------
 
 loc_1CA1A:
-		call	sub_1C6C7
+		call	@scoredat_load$qv
 
 loc_1CA1D:
 		mov	eax, _score
@@ -28937,7 +28897,7 @@ sub_1CD36	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1CD4D:
-		call	sub_1C6C7
+		call	@scoredat_load$qv
 
 loc_1CD50:
 		mov	eax, _hi.SCOREDAT_score[(0 * SCOREDAT_PLACES) * dword]
@@ -28989,7 +28949,7 @@ var_6		= byte ptr -6
 		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	_rank, al
-		call	sub_1C6C7
+		call	@scoredat_load$qv
 		mov	al, _rank
 		cbw
 		add	ax, ax
@@ -29026,7 +28986,7 @@ var_4		= byte ptr -4
 		mov	al, _rank
 		mov	[bp+@@rank], al
 		mov	_rank, RANK_LUNATIC
-		call	sub_1C6C7
+		call	@scoredat_load$qv
 		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	ah, 0

@@ -11,7 +11,7 @@
 scoredat_section_t hi;
 
 void pascal scoredat_recreate(void);
-void pascal near scoredat_load(void);
+void near scoredat_load(void);
 
 const char *SCOREDAT_FN = "huuhi.dat";
 unsigned char g_name_first_sum = 0;
