@@ -28127,6 +28127,12 @@ main_05_TEXT	ends
 REGIST_M_TEXT segment	byte public 'CODE' use16
 	extern @scoredat_defaults_set$qv:proc
 	@scoredat_load$qv procdesc near
+	@SCORES_PUT$QI procdesc pascal near \
+		place_to_highlignt:word
+	@ALPHABET_PUTCA$QIIUI procdesc pascal near \
+		col:word, row:word, atrb:word
+	@SCOREDAT_NAME_PUTS$QII procdesc pascal near \
+		place:word, char_to_highlight:word
 REGIST_M_TEXT ends
 
 ; ===========================================================================
@@ -28136,312 +28142,6 @@ main_06_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_06
 		;org 7
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C713	proc far
-
-var_B		= byte ptr -0Bh
-var_A		= dword	ptr -0Ah
-var_6		= dword	ptr -6
-@@gaiji		= word ptr -2
-@@atrb		= word ptr  6
-arg_2		= dword	ptr  8
-@@tram_y		= word ptr  0Ch
-
-		enter	0Ch, 0
-		push	si
-		mov	[bp+var_6], 10000000
-		mov	[bp+var_B], 0
-		mov	si, 1Ah
-		jmp	short loc_1C77B
-; ---------------------------------------------------------------------------
-
-loc_1C729:
-		mov	eax, [bp+arg_2]
-		cdq
-		idiv	[bp+var_6]
-		mov	ebx, 10
-		cdq
-		idiv	ebx
-		mov	[bp+var_A], edx
-		mov	eax, [bp+var_6]
-		cdq
-		idiv	ebx
-		mov	[bp+var_6], eax
-		mov	ax, word ptr [bp+var_A]
-		add	ax, gb_0_
-		mov	[bp+@@gaiji], ax
-		cmp	[bp+var_A], 0
-		jz	short loc_1C763
-		mov	[bp+var_B], 1
-
-loc_1C763:
-		cmp	[bp+var_B], 0
-		jz	short loc_1C778
-		call	gaiji_putca pascal, si, [bp+@@tram_y], [bp+@@gaiji], [bp+@@atrb]
-
-loc_1C778:
-		add	si, 2
-
-loc_1C77B:
-		cmp	si, 2Ah	; '*'
-		jl	short loc_1C729
-		pop	si
-		leave
-		retf	8
-sub_1C713	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C785	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, TX_WHITE
-		call	gaiji_putsa pascal, (20 shl 16) + 2, ds, offset gHI_SCORE, TX_GREEN
-		call	gaiji_putsa pascal, (12 shl 16) + 4, ds, offset gNAME, TX_GREEN
-		call	gaiji_putsa pascal, (27 shl 16) + 4, ds, offset gPOINT, TX_GREEN
-		call	gaiji_putsa pascal, (41 shl 16) + 4, ds, offset gST, TX_GREEN
-		cmp	[bp+arg_0], 0FFFFh
-		jz	short loc_1C82E
-		xor	si, si
-		jmp	short loc_1C815
-; ---------------------------------------------------------------------------
-
-loc_1C7E0:
-		mov	[bp+var_2], 0
-		jmp	short loc_1C80E
-; ---------------------------------------------------------------------------
-
-loc_1C7E7:
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, 0Ah
-		push	ax
-		lea	ax, [si+12h]
-		push	ax
-		mov	bx, si
-		imul	bx, 11h
-		add	bx, [bp+var_2]
-		mov	al, gALPHABET[bx]
-		mov	ah, 0
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putca
-		inc	[bp+var_2]
-
-loc_1C80E:
-		cmp	[bp+var_2], 11h
-		jl	short loc_1C7E7
-		inc	si
-
-loc_1C815:
-		cmp	si, 3
-		jl	short loc_1C7E0
-		push	(10 shl 16) + 18
-		mov	al, gALPHABET
-		mov	ah, 0
-		push	ax
-		push	TX_GREEN + TX_REVERSE
-		call	gaiji_putca
-
-loc_1C82E:
-		xor	si, si
-		jmp	short loc_1C891
-; ---------------------------------------------------------------------------
-
-loc_1C832:
-		cmp	si, [bp+arg_0]
-		jnz	short loc_1C83C
-		mov	di, TX_GREEN
-		jmp	short loc_1C83F
-; ---------------------------------------------------------------------------
-
-loc_1C83C:
-		mov	di, TX_WHITE
-
-loc_1C83F:
-		push	0Ah
-		lea	ax, [si+6]
-		push	ax
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi.SCOREDAT_g_name
-		push	ds
-		push	ax
-		push	di
-		call	gaiji_putsa
-		lea	ax, [si+6]
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		pushd	_hi.SCOREDAT_score[bx]
-		push	di
-		call	sub_1C713
-		cmp	_hi.SCOREDAT_stage[si], 7Fh
-		jz	short loc_1C881
-		push	44
-		lea	ax, [si+6]
-		push	ax
-		mov	al, _hi.SCOREDAT_stage[si]
-		mov	ah, 0
-		add	ax, gb_0_
-		push	ax
-		jmp	short loc_1C88A
-; ---------------------------------------------------------------------------
-
-loc_1C881:
-		push	44
-		lea	ax, [si+6]
-		push	ax
-		push	gs_ALL
-
-loc_1C88A:
-		push	di
-		call	gaiji_putca
-		inc	si
-
-loc_1C891:
-		cmp	si, 0Ah
-		jl	short loc_1C832
-		xor	si, si
-		jmp	short loc_1C8D8
-; ---------------------------------------------------------------------------
-
-loc_1C89A:
-		cmp	si, [bp+arg_0]
-		jnz	short loc_1C8A4
-		mov	di, TX_GREEN
-		jmp	short loc_1C8A7
-; ---------------------------------------------------------------------------
-
-loc_1C8A4:
-		mov	di, TX_WHITE
-
-loc_1C8A7:
-		cmp	si, 9
-		jz	short loc_1C8B9
-		push	6
-		lea	ax, [si+6]
-		push	ax
-		lea	ax, [si+gb_1_]
-		push	ax
-		jmp	short loc_1C8D1
-; ---------------------------------------------------------------------------
-
-loc_1C8B9:
-		push	(5 shl 16) + 15
-		push	gb_1_
-		push	di
-		call	gaiji_putca
-		push	(7 shl 16) + 15
-		push	gb_0_
-
-loc_1C8D1:
-		push	di
-		call	gaiji_putca
-		inc	si
-
-loc_1C8D8:
-		cmp	si, 0Ah
-		jl	short loc_1C89A
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_1C785	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C8E3	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		mov	ax, si
-		add	ax, ax
-		add	ax, 0Ah
-		push	ax
-		lea	ax, [di+12h]
-		push	ax
-		mov	bx, di
-		imul	bx, 11h
-		mov	al, gALPHABET[bx+si]
-		mov	ah, 0
-		push	ax
-		push	[bp+arg_0]
-		call	gaiji_putca
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_1C8E3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C914	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		push	0Ah
-		lea	ax, [si+6]
-		push	ax
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi.SCOREDAT_g_name
-		push	ds
-		push	ax
-		push	TX_GREEN
-		call	gaiji_putsa
-		mov	ax, di
-		add	ax, ax
-		add	ax, 0Ah
-		push	ax
-		lea	ax, [si+6]
-		push	ax
-		mov	bx, si
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	al, _hi.SCOREDAT_g_name[bx+di]
-		mov	ah, 0
-		push	ax
-		push	TX_GREEN + TX_REVERSE
-		call	gaiji_putca
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_1C914	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28548,8 +28248,7 @@ loc_1CA1D:
 		mov	eax, _hi.SCOREDAT_score[(SCOREDAT_PLACES - 1) * dword]
 		cmp	eax, _score
 		jle	short loc_1CA50
-		push	0FFFFh
-		call	sub_1C785
+		call	@scores_put$qi pascal, -1
 		call	@key_delay$qv
 		jmp	loc_1CD32
 ; ---------------------------------------------------------------------------
@@ -28663,8 +28362,7 @@ loc_1CB5A:
 loc_1CB6B:
 		cmp	[bp+@@c], SCOREDAT_NAME_LEN
 		jl	short loc_1CB5A
-		push	[bp+@@place]
-		call	sub_1C785
+		call	@scores_put$qi pascal, [bp+@@place]
 		xor	di, di
 		mov	[bp+var_8], 0
 		mov	_key_det, 0
@@ -28679,74 +28377,50 @@ loc_1CB8D:
 		jnz	loc_1CCFE
 		test	byte ptr _key_det, INPUT_UP
 		jz	short loc_1CBC3
-		push	di
-		push	[bp+var_8]
-		push	TX_WHITE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], TX_WHITE
 		dec	[bp+var_8]
 		cmp	[bp+var_8], 0
 		jge	short loc_1CBB9
 		mov	[bp+var_8], 2
 
 loc_1CBB9:
-		push	di
-		push	[bp+var_8]
-		push	TX_GREEN + TX_REVERSE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], (TX_GREEN + TX_REVERSE)
 
 loc_1CBC3:
 		test	byte ptr _key_det, INPUT_DOWN
 		jz	short loc_1CBEC
-		push	di
-		push	[bp+var_8]
-		push	TX_WHITE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], TX_WHITE
 		inc	[bp+var_8]
 		cmp	[bp+var_8], 2
 		jle	short loc_1CBE2
 		mov	[bp+var_8], 0
 
 loc_1CBE2:
-		push	di
-		push	[bp+var_8]
-		push	TX_GREEN + TX_REVERSE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], (TX_GREEN + TX_REVERSE)
 
 loc_1CBEC:
 		test	byte ptr _key_det, INPUT_LEFT
 		jz	short loc_1CC0F
-		push	di
-		push	[bp+var_8]
-		push	TX_WHITE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], TX_WHITE
 		dec	di
 		or	di, di
 		jge	short loc_1CC05
 		mov	di, 10h
 
 loc_1CC05:
-		push	di
-		push	[bp+var_8]
-		push	TX_GREEN + TX_REVERSE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], (TX_GREEN + TX_REVERSE)
 
 loc_1CC0F:
 		test	byte ptr _key_det, INPUT_RIGHT
 		jz	short loc_1CC32
-		push	di
-		push	[bp+var_8]
-		push	TX_WHITE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], TX_WHITE
 		inc	di
 		cmp	di, 10h
 		jle	short loc_1CC28
 		xor	di, di
 
 loc_1CC28:
-		push	di
-		push	[bp+var_8]
-		push	TX_GREEN + TX_REVERSE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], (TX_GREEN + TX_REVERSE)
 
 loc_1CC32:
 		test	byte ptr _key_det, INPUT_SHOT
@@ -28769,16 +28443,10 @@ loc_1CC4D:
 		mov	_hi.SCOREDAT_g_name[bx+si], al
 		cmp	si, 5
 		jnz	short loc_1CC82
-		push	di
-		push	[bp+var_8]
-		push	TX_WHITE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], TX_WHITE
 		mov	di, 10h
 		mov	[bp+var_8], 2
-		push	di
-		push	[bp+var_8]
-		push	TX_GREEN + TX_REVERSE
-		call	sub_1C8E3
+		call	@alphabet_putca$qiiui pascal, di, [bp+var_8], (TX_GREEN + TX_REVERSE)
 
 loc_1CC82:
 		inc	si
@@ -28831,9 +28499,7 @@ loc_1CCCB:
 		jz	short loc_1CD2E
 
 loc_1CCD0:
-		push	[bp+@@place]
-		push	si
-		call	sub_1C914
+		call	@scoredat_name_puts$qii pascal, [bp+@@place], si
 
 loc_1CCD7:
 		test	byte ptr _key_det, INPUT_BOMB
@@ -28847,9 +28513,7 @@ loc_1CCD7:
 		xor	si, si
 
 loc_1CCF0:
-		push	[bp+@@place]
-		push	si
-		call	sub_1C914
+		call	@scoredat_name_puts$qii pascal, [bp+@@place], si
 
 loc_1CCF7:
 		test	byte ptr _key_det, INPUT_CANCEL

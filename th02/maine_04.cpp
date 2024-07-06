@@ -6,13 +6,10 @@
 // Required to ensure the correct order of strings in `th02/score.c`?!
 #pragma option -d-
 
-#include <dos.h>
-#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
-#include "th02/gaiji/score_p.hpp"
 
 #include "th02/hiscore/regist.cpp"
 
@@ -28,72 +25,6 @@ inline void scoredat_init() {
 	} else {
 		scoredat_load();
 	}
-}
-
-void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
-{
-	#define on_digit_at(x, gaiji) { \
-		gaiji_putca(x, y, gaiji, atrb); \
-	}
-	gaiji_score_put_to(26, score, on_digit_at);
-	#undef on_digit_at
-}
-
-#define ALPHABET_PUTCA(col, row, atrb) \
-	gaiji_putca(10 + (col * 2), 18 + row, gALPHABET[row][col], atrb);
-
-void pascal near scores_put(int place_to_highlight)
-{
-	tram_atrb2 atrb = TX_WHITE;
-	int i;
-	int col;
-	gaiji_putsa(20, 2, gbHI_SCORE, TX_GREEN);
-	gaiji_putsa(12, 4, gbNAME, TX_GREEN);
-	gaiji_putsa(28, 4, gbPOINT, TX_GREEN);
-	gaiji_putsa(42, 4, gbST, TX_GREEN);
-	if(place_to_highlight != -1) {
-		for(i = 0; i < ALPHABET_ROWS; i++) {
-			for(col = 0; col < ALPHABET_COLS; col++) {
-				ALPHABET_PUTCA(col, i, TX_WHITE);
-			}
-		}
-		ALPHABET_PUTCA(0, 0, TX_GREEN | TX_REVERSE);
-	}
-	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		score_atrb_set(atrb, i, place_to_highlight);
-		gaiji_putsa(10, 6+i, (const char*)hi.score.g_name[i], atrb);
-		score_put(6+i, hi.score.score[i], atrb);
-		if(hi.score.stage[i] != STAGE_ALL) {
-			gaiji_putca(44, 6+i, hi.score.stage[i] + gb_0_, atrb);
-		} else {
-			gaiji_putca(44, 6+i, gs_ALL, atrb);
-		}
-	}
-	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		score_atrb_set(atrb, i, place_to_highlight);
-		if(i != 9) {
-			gaiji_putca(6, 6+i, gb_1_ + i, atrb);
-		} else {
-			gaiji_putca(4, 15, gb_1_, atrb);
-			gaiji_putca(6, 15, gb_0_, atrb);
-		}
-	}
-}
-
-void pascal near alphabet_putca(int col, int row, tram_atrb2 atrb)
-{
-	ALPHABET_PUTCA(col, row, atrb);
-}
-
-void pascal near scoredat_name_puts(int place, int char_to_highlight)
-{
-	gaiji_putsa(10, 6 + place, (const char*)hi.score.g_name[place], TX_GREEN);
-	gaiji_putca(
-		10 + (char_to_highlight * 2),
-		6 + place,
-		hi.score.g_name[place][char_to_highlight],
-		TX_GREEN | TX_REVERSE
-	);
 }
 
 void pascal scoredat_save(void)
