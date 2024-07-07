@@ -28133,6 +28133,7 @@ REGIST_M_TEXT segment	byte public 'CODE' use16
 		col:word, row:word, atrb:word
 	@SCOREDAT_NAME_PUTS$QII procdesc pascal near \
 		place:word, char_to_highlight:word
+	extern @scoredat_save$qv:proc
 REGIST_M_TEXT ends
 
 ; ===========================================================================
@@ -28142,73 +28143,6 @@ main_06_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_06
 		;org 7
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C95D	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	_hi.SCOREDAT_score_sum, 0
-		mov	_hi.SCOREDAT_g_name_first_sum, 0
-		mov	_hi.SCOREDAT_stage_sum, 0
-		mov	_hi.SCORESECT_section_sum, 0
-		xor	si, si
-		jmp	short loc_1C9A6
-; ---------------------------------------------------------------------------
-
-loc_1C981:
-		mov	bx, si
-		shl	bx, 2
-		mov	eax, _hi.SCOREDAT_score[bx]
-		add	_hi.SCOREDAT_score_sum, eax
-		mov	bx, si
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	al, _hi.SCOREDAT_g_name[bx][0]
-		add	_hi.SCOREDAT_g_name_first_sum, al
-		mov	al, _hi.SCOREDAT_stage[si]
-		add	_hi.SCOREDAT_stage_sum, al
-		inc	si
-
-loc_1C9A6:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_1C981
-		xor	si, si
-		jmp	short loc_1C9C5
-; ---------------------------------------------------------------------------
-
-loc_1C9AF:
-		movzx	eax, byte ptr _hi.SCORESECT_score[si]
-		add	_hi.SCORESECT_section_sum, eax
-		mov	al, byte ptr _hi.SCORESECT_score[si]
-		add	al, 12h
-		mov	byte ptr _hi.SCORESECT_score[si], al
-		inc	si
-
-loc_1C9C5:
-		cmp	si, size scoredat_t
-		jl	short loc_1C9AF
-		pushd	[_SCOREDAT_FN]
-		call	file_append
-		mov	al, _rank
-		cbw
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset _hi
-		push	size scoredat_section_t
-		call	file_write
-		call	file_close
-		pop	si
-		pop	bp
-		retf
-sub_1C95D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28535,7 +28469,7 @@ loc_1CCFE:
 ; ---------------------------------------------------------------------------
 
 loc_1CD2E:
-		call	sub_1C95D
+		call	@scoredat_save$qv
 
 loc_1CD32:
 		pop	di
@@ -28622,7 +28556,7 @@ var_6		= byte ptr -6
 		mov	bx, ax
 		mov	ax, ss:[bx]
 		mov	_hi.SCOREDAT_cleared, ax
-		call	sub_1C95D
+		call	@scoredat_save$qv
 		mov	al, [bp+@@rank]
 		mov	_rank, al
 		leave
@@ -28665,7 +28599,7 @@ loc_1CE0F:
 		push	cs
 
 loc_1CE14:
-		call	near ptr sub_1C95D
+		call	near ptr @scoredat_save$qv
 		mov	al, [bp+@@rank]
 		mov	_rank, al
 		leave

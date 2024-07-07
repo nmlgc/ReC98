@@ -14,7 +14,6 @@
 #include "th02/hiscore/regist.cpp"
 
 #include "th02/score.c"
-#include "th02/scoreenc.c"
 
 score_t score_highest;
 scoredat_section_t hi;
@@ -25,15 +24,6 @@ inline void scoredat_init() {
 	} else {
 		scoredat_load();
 	}
-}
-
-void pascal scoredat_save(void)
-{
-	SCOREDAT_ENCODE();
-	file_append(SCOREDAT_FN);
-	file_seek(rank * sizeof(hi), 0);
-	file_write(&hi, sizeof(hi));
-	file_close();
 }
 
 void score_enter(void)

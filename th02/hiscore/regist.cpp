@@ -211,3 +211,14 @@ void pascal near scoredat_name_puts(int place, int char_to_highlight)
 		(TX_GREEN | TX_REVERSE)
 	);
 }
+
+#include "th02/scoreenc.c"
+
+void scoredat_save(void)
+{
+	scoredat_encode();
+	file_append(SCOREDAT_FN);
+	file_seek((rank * sizeof(hi)), SEEK_SET);
+	file_write(&hi, sizeof(hi));
+	file_close();
+}

@@ -121,7 +121,7 @@ end:
 
 void pascal scoredat_create(void)
 {
-	SCOREDAT_ENCODE();
+	scoredat_encode();
 	file_create(SCOREDAT_FN);
 	file_write(&hi, sizeof(hi));
 	file_write(&hi, sizeof(hi));
