@@ -276,7 +276,7 @@ loc_B1C2:
 loc_B1C6:
 		mov	PaletteTone, 50
 		call	far ptr	palette_show
-		call	@score_enter$qv
+		call	@regist_menu$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	gaiji_restore
@@ -321,7 +321,7 @@ maine_03_TEXT	ends
 
 maine_04_TEXT	segment	byte public 'CODE' use16
 	extern @scoredat_is_extra_unlocked$qv:proc
-	extern @score_enter$qv:proc
+	extern @regist_menu$qv:proc
 maine_04_TEXT	ends
 
 	.data

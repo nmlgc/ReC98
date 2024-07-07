@@ -1,10 +1,17 @@
 #include "th02/hiscore/regist.h"
 #include "th02/main/playfld.hpp"
+#if (BINARY == 'M')
+	#include "th02/main/stage/stage.hpp"
+#endif
 #include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
+#include "th02/hardware/frmdelay.h"
+#include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
+#include "th02/resident.hpp"
 #include "th02/common.h"
+#include "th01/math/clamp.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 
 extern scoredat_section_t hi;
@@ -221,4 +228,148 @@ void scoredat_save(void)
 	file_seek((rank * sizeof(hi)), SEEK_SET);
 	file_write(&hi, sizeof(hi));
 	file_close();
+}
+
+inline void scoredat_init() {
+	if(!file_exist(SCOREDAT_FN)) {
+		scoredat_defaults_set();
+	} else {
+		scoredat_load();
+	}
+}
+
+void regist_menu(void)
+{
+	int name_pos = 0;
+	int place;
+	int shift;
+	int c;
+	int row;
+	int col;
+	int input_locked;
+	unsigned char input_delay;
+
+	scoredat_init();
+
+	// For MAINE.EXE, this is done in MAIN.EXE right before launching into the
+	// former binary. The verdict screen also needs the multiplied and
+	// continue-added value and is always shown before this menu, so it *kinda*
+	// makes sense? (Counted as bloat in the header comment.)
+	#if (BINARY == 'M')
+		score *= 10;
+		score += resident->continues_used;
+	#endif
+
+	if(hi.score.score[SCOREDAT_PLACES - 1] > score) {
+		scores_put(-1);
+		key_delay();
+		return;
+	}
+
+	for(place = (SCOREDAT_PLACES - 1); place > 0; place--) {
+		if(hi.score.score[place-1] > score) {
+			break;
+		}
+	}
+	for(shift = (SCOREDAT_PLACES - 1); shift > place; shift--) {
+		hi.score.score[shift] = hi.score.score[shift - 1];
+		for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
+			hi.score.g_name[shift][c] = hi.score.g_name[shift - 1][c];
+		}
+		hi.score.stage[shift] = hi.score.stage[shift - 1];
+		hi.score.date[shift].da_year = hi.score.date[shift - 1].da_year;
+		hi.score.date[shift].da_mon = hi.score.date[shift - 1].da_mon;
+		hi.score.date[shift].da_day = hi.score.date[shift - 1].da_day;
+		hi.score.shottype[shift] = hi.score.shottype[shift - 1];
+	}
+	hi.score.score[place] = score;
+
+	// ZUN bloat: Could have also been turned into a parameter to avoid
+	// compiling this twice.
+	#if (BINARY == 'E')
+		hi.score.stage[place] = STAGE_ALL;
+	#else
+		hi.score.stage[place] = (stage_id + 1);
+	#endif
+
+	getdate(&hi.score.date[place]);
+	hi.score.shottype[place] = resident->shottype;
+	for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
+		hi.score.g_name[shift][c] = gs_BULLET;
+	}
+	scores_put(place);
+
+	col = 0;
+	row = 0;
+	key_det = 0;
+	input_locked = 1;
+	input_delay = 0;
+
+	#define alphabet_cursor_move(coord, coord_max, ring_direction, col, row) \
+		alphabet_putca(col, row, TX_WHITE); \
+		ring_direction(coord, (coord_max - 1)); \
+		alphabet_putca(col, row, TX_GREEN | TX_REVERSE);
+
+	do {
+		input_reset_sense();
+		if(!input_locked) {
+			if(key_det & INPUT_UP) {
+				alphabet_cursor_move(row, ALPHABET_ROWS, ring_dec, col, row);
+			}
+			if(key_det & INPUT_DOWN) {
+				alphabet_cursor_move(row, ALPHABET_ROWS, ring_inc, col, row);
+			}
+			if(key_det & INPUT_LEFT) {
+				alphabet_cursor_move(col, ALPHABET_COLS, ring_dec, col, row);
+			}
+			if(key_det & INPUT_RIGHT) {
+				alphabet_cursor_move(col, ALPHABET_COLS, ring_inc, col, row);
+			}
+			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+				// ZUN bloat: Checking against the gaiji values would have been
+				// clearer than checking against indices into the alphabet
+				// structure.
+				if((row != 2) || (col < 13)) {
+					hi.score.g_name[place][name_pos] = gALPHABET[row][col];
+					if(name_pos == (SCOREDAT_NAME_LEN - 1)) {
+						alphabet_putca(col, row, TX_WHITE);
+						col = ALPHABET_ENTER_COL;
+						row = ALPHABET_ENTER_ROW;
+						alphabet_putca(col, row, TX_GREEN | TX_REVERSE);
+					}
+					clamp_inc(name_pos, (SCOREDAT_NAME_LEN - 1));
+				} else if(col == 13) {
+					hi.score.g_name[place][name_pos] = gb_SP;
+					clamp_inc(name_pos, (SCOREDAT_NAME_LEN - 1));
+				} else if(col == 14) {
+					clamp_dec(name_pos, 0);
+					hi.score.g_name[place][name_pos] = gb_SP;
+				} else if(col == 15) {
+					clamp_inc(name_pos, (SCOREDAT_NAME_LEN - 1));
+				} else if(col == 16) {
+					break;
+				}
+				scoredat_name_puts(place, name_pos);
+			}
+			if(key_det & INPUT_BOMB) {
+				hi.score.g_name[place][name_pos] = gb_SP;
+				clamp_dec(name_pos, 0);
+				scoredat_name_puts(place, name_pos);
+			}
+			if(key_det & INPUT_CANCEL) {
+				break;
+			}
+		}
+		frame_delay(1);
+		input_locked = key_det;
+		if(input_locked) {
+			input_delay++;
+			if((input_delay > 30) && ((input_delay & 1) == 0)) {
+				input_locked = 0;
+			}
+		} else {
+			input_delay = 0;
+		}
+	} while(1);
+	scoredat_save();
 }
