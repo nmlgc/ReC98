@@ -1,17 +1,14 @@
-#pragma option -zCSHARED_ -k-
+#pragma option -zCSHARED -k-
 
-extern "C" {
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/hardware/frmdelay.h"
 
 void pascal frame_delay(int frames)
 {
 	_BX = _SP;
-	__asm { mov bx, ss:[bx+4]; } /* = */ (frames);
-	vsync_reset1();
+	asm { mov	bx, ss:[bx+4]; } /* = */ (frames);
+	vsync_Count1 = 0;
 	while(vsync_Count1 < _BX) {}
 }
 
 #pragma codestring "\x00"
-
-}

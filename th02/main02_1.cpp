@@ -3,16 +3,10 @@
  * 1st part of code segment #2 of TH02's MAIN.EXE
  */
 
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
-extern "C" {
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th02/main/playfld.hpp"
-#include "th02/main/tile/tile.hpp"
+#include "libs/master.lib/master.hpp"
+#include "th02/formats/tile.hpp"
 #include "th02/formats/mpn.hpp"
 
 int pascal mpn_load(const char *fn)
@@ -31,7 +25,5 @@ void mpn_free(void)
 	if(mpn_images) {
 		HMem<mpn_image_t>::free(mpn_images);
 	}
-	mpn_images = NULL;
-}
-
+	mpn_images = nullptr;
 }

@@ -1,14 +1,8 @@
 // Second TH05 .PI C++ translation unit.
 
-#pragma option -zCSHARED_
+#pragma option -zCSHARED -2 -k-
 
-extern "C" {
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th05/formats/pi.hpp"
 #include "th05/formats/pi_impl.hpp"
 
@@ -21,8 +15,6 @@ extern unsigned int pi_mask_y;
 void pascal near pi_put_8_rowloop(
 	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
 );
-
-#pragma option -k-
 
 // MODDERS: Just give egc_setup_copy() a mask parameter and remove this
 // abomination of a function.
@@ -41,7 +33,7 @@ void near pi_mask_setup_egc_and_advance(void)
 	mask_ptr = reinterpret_cast<uint16_t>(pi_mask_ptr);
 	_AX = (pi_mask_y & (PI_MASK_H - 1));
 	// Turbo C++ is too smart to emit this instruction with pseudo-registers!
-	__asm { shl ax, 1; }
+	asm { shl	ax, 1; }
 	mask_ptr += _AX;
 	outport(EGC_MASKREG, *reinterpret_cast<dots16_t near *>(mask_ptr));
 	pi_mask_y++;
@@ -57,7 +49,7 @@ int DEFCONV pi_load(int slot, const char *fn)
 	/* TODO: Replace with the decompiled call
 	 * 	pi_free(slot);
 	 * once the segmentation allows us to, if ever */
-	__asm { push di; push cs; call near ptr pi_free; }
+	asm { push di; push cs; call near ptr pi_free; }
 
 	/* Actually, also replace this garbage with simply
 	 * 	return graph_pi_load_pack(fn, &pi_headers[slot], &pi_buffers[slot]);
@@ -65,7 +57,7 @@ int DEFCONV pi_load(int slot, const char *fn)
 	_SI = _DI;
 	_SI <<= 2;	// *= sizeof(void far *)
 	_SI += reinterpret_cast<uint16_t>(pi_buffers);
-	imul_di(sizeof(PiHeader));
+	imul_reg_to_reg(_DI, _DI, sizeof(PiHeader));
 	_DI += reinterpret_cast<uint16_t>(pi_headers);
 	return graph_pi_load_pack(
 		fn,
@@ -76,7 +68,7 @@ int DEFCONV pi_load(int slot, const char *fn)
 
 void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot)
 {
-	#define rowloop_func __asm { \
+	#define rowloop_func _asm { \
 		push	left;	/* left */ \
 		push	top; 	/* top */ \
 		mov 	ax, word ptr pi_headers[di].xsize; \
@@ -86,7 +78,7 @@ void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot)
 		mov 	di, word ptr pi_headers[di].ysize; \
 		call	near ptr pi_put_8_rowloop; \
 	}
-	pi_put_impl(left, top, slot, rowloop_func);
+	pi_put_impl(slot, rowloop_func);
 	#undef rowloop_func
 }
 
@@ -96,7 +88,7 @@ void pascal pi_put_quarter_8(
 	screen_x_t left, vram_y_t top, int slot, int quarter
 )
 {
-	#define rowloop_func __asm { \
+	#define rowloop_func _asm { \
 		push	left; \
 		push	top; \
 		push	PI_QUARTER_W; \
@@ -104,8 +96,6 @@ void pascal pi_put_quarter_8(
 		mov 	di, PI_QUARTER_H; \
 		call	near ptr pi_put_8_rowloop; \
 	}
-	pi_put_quarter_impl(left, top, slot, quarter, rowloop_func);
+	pi_put_quarter_impl(slot, quarter, rowloop_func);
 	#undef rowloop_func
-}
-
 }

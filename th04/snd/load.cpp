@@ -1,20 +1,17 @@
-#pragma option -zCSHARED -3 -Z-
+#pragma option -zCSHARED -Z-
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
+#include "th02/snd/impl.hpp"
 #include "th04/snd/snd.h"
 
-extern char snd_load_fn[SND_FN_LEN];
+extern char snd_load_fn[PF_FN_LEN];
 extern const char *SND_LOAD_EXT[4];
 
-void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
+void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 {
 	int i;
 
-	for(i = 0; i < SND_FN_LEN; i++) {
+	for(i = 0; i < PF_FN_LEN; i++) {
 		snd_load_fn[i] = fn[i];
 	}
 
@@ -48,18 +45,18 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 		snd_load_fn[i + 2] = SND_LOAD_EXT[snd_bgm_mode][2];
 	}
 
-	__asm { push ds; }
+	_asm { push ds; }
 
 	// DOS file open
 	reinterpret_cast<char near *>(_DX) = snd_load_fn;
 	_AX = 0x3D00;
 	geninterrupt(0x21);
 	_BX = _AX;
-	// ZUN bug: No error handling
+	// ZUN landmine: No error handling
 
 	// Using inline assembly rather than _AX to prevent parameters from being
 	// moved to the DI register
-	__asm { mov ax, func; }
+	asm { mov ax, func; }
 	if((_AH == KAJA_GET_SONG_ADDRESS) && (snd_bgm_mode == SND_BGM_MIDI)) {
 		geninterrupt(MMD);
 	} else {
@@ -71,11 +68,9 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_CX = snd_load_size();
 	geninterrupt(0x21);
 
-	__asm { pop ds; }
+	_asm { pop ds; }
 
 	// DOS file close
 	_AH = 0x3E;
 	geninterrupt(0x21);
-}
-
 }

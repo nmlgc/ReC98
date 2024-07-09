@@ -1,7 +1,8 @@
 // Darkens the [w]×[h] area starting at [vram_offset], by writing an
-// alternating dot pattern in the given [col]. [x] and [y] store the currently
-// iterated position.
-#define darken(vram_offset, x, y, w, h, col) \
+// alternating dot pattern in the given [col].
+#define darken(vram_offset, w, h, col) \
+	vram_byte_amount_t x; \
+	pixel_t y; \
 	grcg_setcolor(GC_RMW, col); \
 	dots32_t pattern = 0xAAAAAAAA; \
 	\

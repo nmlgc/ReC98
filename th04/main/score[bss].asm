@@ -3,12 +3,12 @@
 ; which is then taken "times 10" ([score_delta] += 1 → 10 more on-screen
 ; points).
 
-public _continues_used, _score_lebcd, _hiscore_lebcd
+public _continues_used, _score, _hiscore
 public _score_delta, _score_delta_frame
 
 label _continues_used byte
-_score_lebcd  	db	SCORE_DIGITS dup(?)
-_hiscore_lebcd	db	SCORE_DIGITS dup(?)
+_score  	db	SCORE_DIGITS dup(?)
+_hiscore	db	SCORE_DIGITS dup(?)
 
 if GAME eq 4
 public _score_unused

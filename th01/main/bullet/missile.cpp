@@ -1,13 +1,74 @@
-extern "C" {
-#include "planar.h"
-#include "th01/math/overlap.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/input.hpp"
-#include "th01/snd/mdrv2.h"
-#include "th01/formats/ptn.hpp"
-}
-#include "th01/main/vars.hpp"
 #include "th01/main/bullet/missile.hpp"
+#include "th01/main/player/player.hpp"
+
+CMissiles Missiles;
+
+void CMissiles::add(
+	screen_x_t left, screen_x_t top, double velocity_x, double velocity_y,
+	int8_t unknown
+)
+{
+	for(int i = 0; i < MISSILE_COUNT; i++) {
+		if(flag[i] != MF_FREE) {
+			continue;
+		}
+		this->cur_left[i].v = TO_SP(left);
+		this->cur_top[i].v = TO_SP(top);
+		this->prev_left[i].v = MISSILE_NEW;
+		this->velocity_x[i].v = (velocity_x * SUBPIXEL_FACTOR);
+		this->velocity_y[i].v = (velocity_y * SUBPIXEL_FACTOR);
+		this->unknown[i] = unknown;
+		this->flag[i] = MF_MOVING;
+		return;
+	}
+}
+
+void CMissiles::ptn_cel_for(int i, main_ptn_id_t& ptn_id, int& quarter) const
+{
+	enum {
+		ANGLE_PER_PTN = (0x100 / MISSILE_PTNS),
+		ANGLE_PER_CEL = (0x100 / MISSILE_CELS),
+	};
+
+	// ZUN bloat: I have no words. Every further line in this function is bad.
+	// A sane version:
+	//
+	// 	unsigned char angle = iatan2(velocity_y[i], velocity_x[i]);
+	// 	ptn_id = (ptn_id_base + (angle / ANGLE_PER_PTN));
+	// 	quarter = (angle % ANGLE_PER_CEL);
+	//
+	// Due to the overhead from mutating references, that should also just be a
+	// part of unput_update_render(), rather than its own function.
+
+	double angle = iatan2(velocity_y[i], velocity_x[i]);
+
+	ptn_id = static_cast<main_ptn_id_t>(
+		(angle < (ANGLE_PER_PTN * 1)) ? 0 :
+		(angle < (ANGLE_PER_PTN * 2)) ? 1 :
+		(angle < (ANGLE_PER_PTN * 3)) ? 2 :
+		(angle < (ANGLE_PER_PTN * 4)) ? 3 : 0
+	);
+	reinterpret_cast<int &>(ptn_id) += ptn_id_base;
+	quarter = (
+		(angle < ((ANGLE_PER_PTN * 0) + (ANGLE_PER_CEL * 1))) ? 0 :
+		(angle < ((ANGLE_PER_PTN * 0) + (ANGLE_PER_CEL * 2))) ? 1 :
+		(angle < ((ANGLE_PER_PTN * 0) + (ANGLE_PER_CEL * 3))) ? 2 :
+		(angle < ((ANGLE_PER_PTN * 0) + (ANGLE_PER_CEL * 4))) ? 3 :
+		(angle < ((ANGLE_PER_PTN * 1) + (ANGLE_PER_CEL * 1))) ? 0 :
+		(angle < ((ANGLE_PER_PTN * 1) + (ANGLE_PER_CEL * 2))) ? 1 :
+		(angle < ((ANGLE_PER_PTN * 1) + (ANGLE_PER_CEL * 3))) ? 2 :
+		(angle < ((ANGLE_PER_PTN * 1) + (ANGLE_PER_CEL * 4))) ? 3 :
+		(angle < ((ANGLE_PER_PTN * 2) + (ANGLE_PER_CEL * 1))) ? 0 :
+		(angle < ((ANGLE_PER_PTN * 2) + (ANGLE_PER_CEL * 2))) ? 1 :
+		(angle < ((ANGLE_PER_PTN * 2) + (ANGLE_PER_CEL * 3))) ? 2 :
+		(angle < ((ANGLE_PER_PTN * 2) + (ANGLE_PER_CEL * 4))) ? 3 :
+		(angle < ((ANGLE_PER_PTN * 3) + (ANGLE_PER_CEL * 1))) ? 0 :
+		(angle < ((ANGLE_PER_PTN * 3) + (ANGLE_PER_CEL * 2))) ? 1 :
+		(angle < ((ANGLE_PER_PTN * 3) + (ANGLE_PER_CEL * 3))) ? 2 :
+		(angle < ((ANGLE_PER_PTN * 3) + (ANGLE_PER_CEL * 4))) ? 3 : 0
+	);
+}
 
 void CMissiles::reset(void)
 {
@@ -35,12 +96,6 @@ void CMissiles::reset(void)
 
 #define in_current_interlace_field(i) \
 	((i % 2) == (frame_rand & 1))
-
-// Calculates the current [ptn_id] and [quarter] for the missile at the given
-// index.
-// TODO: Should be turned into a class method once it can be part of this
-// translation unit.
-void ptn_cel_for(CMissiles& that, int i, main_ptn_id_t& ptn_id, int& quarter);
 
 void CMissiles::unput_update_render(void)
 {
@@ -100,40 +155,10 @@ void CMissiles::unput_update_render(void)
 			main_ptn_id_t ptn_id;
 			int quarter;
 
-			/* TODO: Replace with the decompiled calls
-			 * 	ptn_cel_for(i, ptn_id, quarter);
-			 * 	ptn_put_quarter(
-			 * 		cur_left[i].to_pixel(), cur_top[i].to_pixel(), ptn_id, quarter
-			 * 	);
-			 * once ptn_cel_for() is part of this translation unit */
-			__asm {
-				push	ss;
-				lea 	ax, quarter;
-				push	ax
-				push	ss;
-				lea 	ax, ptn_id;
-				push	ax
-				db  	0x56;	// PUSH SI
-				db  	0x66, 0xFF, 0x76, 0x06;	// PUSH LARGE [this]
-				push	cs;
-				call	near ptr ptn_cel_for;
-				push	quarter;
-				push 	ptn_id;
-			}
-			_AX = cur_top[i].to_pixel();
-			__asm {
-				push	ax;
-			}
-			_AX = ((Subpixel *)(
-				(uint8_t  __seg *)(_ES) +
-				(uint8_t __near *)(_BX) +
-				(uint16_t)&(((CMissiles __near *)0)->cur_left)
-			))->to_pixel();
-			__asm {
-				push	ax;
-				call	far ptr ptn_put_quarter
-				add 	sp, 22
-			}
+			ptn_cel_for(i, ptn_id, quarter);
+			ptn_put_quarter(
+				cur_left[i].to_pixel(), cur_top[i].to_pixel(), ptn_id, quarter
+			);
 			prev_left[i] = cur_left[i];
 			prev_top[i] = cur_top[i];
 		} else { // >= MF_HIT
@@ -168,7 +193,7 @@ void CMissiles::unput_update_render(void)
 			(cur_top[i].to_pixel() < (player_top + HITBOX_OFFSET_BOTTOM)) &&
 			(cur_top[i].to_pixel() > (player_top + HITBOX_OFFSET_TOP))
 		) {
-			done = true;
+			player_is_hit = true;
 			return;
 		}
 	}

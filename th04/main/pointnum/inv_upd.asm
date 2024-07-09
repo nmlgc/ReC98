@@ -16,7 +16,7 @@ pointnums_invalidate	proc near
 	mov	di, POINTNUM_COUNT
 
 @@loop:
-	cmp	[si+pointnum_t.flag], 0
+	cmp	[si+pointnum_t.flag], F_FREE
 	jz	short @@next
 	mov	ax, [si+pointnum_t.PN_width]
 	mov	_tile_invalidate_box.x, ax
@@ -51,11 +51,11 @@ pointnums_update	proc near
 	mov	di, POINTNUM_COUNT
 
 @@loop:
-	cmp	[si+pointnum_t.flag], 0
+	cmp	[si+pointnum_t.flag], F_FREE
 	jz	short @@next
-	cmp	[si+pointnum_t.flag], 2
+	cmp	[si+pointnum_t.flag], F_REMOVE
 	jnz	short @@still_alive
-	mov	[si+pointnum_t.flag], 0
+	mov	[si+pointnum_t.flag], F_FREE
 	jmp	short @@next
 ; ---------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ pointnums_update	proc near
 	mov	[si+pointnum_t.PN_center_cur.y], ax
 	cmp	ax, ((-POINTNUM_H / 2) shl 4)
 	jg	short @@not_clipped
-	mov	[si+pointnum_t.flag], 2
+	mov	[si+pointnum_t.flag], F_REMOVE
 	jmp	short @@next
 ; ---------------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ pointnums_update	proc near
 	mov	[si+pointnum_t.age], cl
 	cmp	cl, POINTNUM_FRAMES
 	jbe	short @@not_remove
-	mov	[si+pointnum_t.flag], 2
+	mov	[si+pointnum_t.flag], F_REMOVE
 	jmp	short @@next
 ; ---------------------------------------------------------------------------
 

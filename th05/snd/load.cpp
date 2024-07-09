@@ -1,39 +1,37 @@
-#pragma option -zCSHARED_ -3
+#pragma option -zCSHARED
 
-extern "C" {
 #include <errno.h>
-#include "platform.h"
-#include "x86real.h"
-#include "decomp.hpp"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
+#include "platform/x86real/flags.hpp"
+#include "th02/snd/impl.hpp"
 #include "th05/snd/snd.h"
 
-extern char snd_load_fn[SND_FN_LEN];
+extern char snd_load_fn[PF_FN_LEN];
 extern const char SND_LOAD_EXT[4][4];
 
-void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
+void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 {
 	#define _DI	reinterpret_cast<char near *>(_DI)
 	#define func_local	_BP
 	#define ext	_EAX
 
-	__asm { mov dx, ds; }
+	asm { mov	dx, ds; }
 
 	// memcpy(snd_load_fn, fn, sizeof(SND_LOAD_FN));
 	_ES = _DX;
 	_DI = snd_load_fn;
-	__asm { lds si, fn; }
+	_DS = FP_SEG(fn);
+	_SI = FP_OFF(fn);
 	func_local = func;
 	_CX = sizeof(snd_load_fn);
-	__asm { rep movsb; }
+	asm { rep movsb; }
 
 	// _DI = strchr(str, '\0');
 	_DS = _DX;
 	_DI = snd_load_fn;
 	_CX--;	// = -1
 	_AX = '\0';
-	__asm { repne scasb; }
+	asm { repne scasb; }
 
 	_DI--;
 	*(_DI) = '.';
@@ -41,7 +39,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	if(func_local == SND_LOAD_SE) {
 		// Only not decompilable because the jump distance happens to exactly
 		// be 127 bytes, for which Turbo C++ doesn't emit short jumps anymore.
-		__asm {
+		_asm {
 			cmp	snd_se_mode, SND_SE_OFF;
 			jz 	short ret;
 		}
@@ -62,7 +60,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 		* 	_BX = (snd_bgm_mode << 2);
 		* Since snd_kaja_interrupt() is undecompilable, this can never work
 		* with the original translation unit structure. */
-		__asm {
+		asm {
 			push	(KAJA_SONG_STOP shl 8);
 			push	cs;
 			call	near ptr snd_kaja_interrupt;
@@ -73,7 +71,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	}
 	ext = *reinterpret_cast<const int32_t *>(&SND_LOAD_EXT[0][_BX]);
 
-	// ZUN bug: Infinite loop if neither the file for the current
+	// ZUN landmine: Infinite loop if neither the file for the current
 	// [snd_bgm_mode] nor "[fn].m" exist.
 	while(1) {
 		*reinterpret_cast<uint32_t near *>(_DI) = ext;
@@ -108,13 +106,11 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_AH = 0x3E;
 	geninterrupt(0x21);
 
-	__asm { push	es; }
-	__asm { pop 	ds; }
+	_asm { push	es; }
+	_asm { pop 	ds; }
 
 ret:
 	#undef func_local
 	#undef ext
 	#undef _DI
-}
-
 }

@@ -11,7 +11,5 @@ HITSHOT_W = 16
 HITSHOT_H = 16
 
 HITSHOT_COUNT = 24
-HITSHOT_AGE_MAX = 13
-HITSHOT_AGE_CLIPPED = 18
 public _hitshots
 _hitshots	hitshot_t HITSHOT_COUNT dup(<?>)

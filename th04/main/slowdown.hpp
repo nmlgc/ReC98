@@ -1,3 +1,5 @@
+#include "platform.h"
+
 extern bool turbo_mode;
 
 // Number of VSync events to wait for at the end of the current frame.

@@ -1,6 +1,3 @@
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/grpinv32.hpp"
 
 bool16 graph_invert_32x32_8(screen_x_t left, vram_y_t top, dots8_t far *plane)

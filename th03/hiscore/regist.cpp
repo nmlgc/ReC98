@@ -1,23 +1,14 @@
 #pragma option -zPgroup_01
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/rank.h"
+#include "libs/master.lib/master.hpp"
+#include "game/input.hpp"
 #include "th01/hardware/grppsafx.h"
 #include "th02/hardware/frmdelay.h"
 #include "th03/common.h"
-#include "th03/score.h"
-#include "th03/playchar.hpp"
 #include "th03/resident.hpp"
-#include "th03/sprites/regi.h"
 #include "th03/formats/cdg.h"
 #include "th03/formats/pi.hpp"
 #include "th03/hardware/input.h"
-}
 #include "th03/shiftjis/regist.hpp"
 #include "th03/formats/scoredat.hpp"
 
@@ -99,7 +90,7 @@ void near regist_load_and_put_initial(void)
 	graph_accesspage(0);
 	graph_showpage(0);
 
-	pi_load_put_8_free(0, regib_pi);
+	pi_fullres_load_palette_apply_put_free(0, regib_pi);
 
 	// Kind of assumes that we only show this screen once for the lifetime of
 	// the process.
@@ -341,17 +332,6 @@ void near regist_name_enter(void)
 		} \
 	}
 
-	#define on_action(condition, lock, func) { \
-		if(condition) { \
-			if(lock == false) { \
-				func \
-			} \
-			lock = true; \
-		} else { \
-			lock = false; \
-		} \
-	}
-
 	struct input_hold_frames_t {
 		int up;
 		int down;
@@ -416,7 +396,7 @@ void near regist_name_enter(void)
 			rerender = true;
 		});
 
-		on_action(
+		on_condition_if_not_locked(
 			((input_sp & INPUT_OK) || (input_sp & INPUT_SHOT)), enter_locked, {
 				if(regi == REGI_BS) {
 					cursor_backspace(cursor_backwards, top);
@@ -434,7 +414,7 @@ void near regist_name_enter(void)
 			}
 		);
 
-		on_action((input_sp & INPUT_BOMB), back_locked, { \
+		on_condition_if_not_locked((input_sp & INPUT_BOMB), back_locked, { \
 			cursor_backspace(cursor_backwards, top);
 			rerender = true;
 		});
@@ -464,6 +444,5 @@ void near regist_name_enter(void)
 		frame_delay(1);
 	}
 
-	#undef on_action
 	#undef on_direction
 }

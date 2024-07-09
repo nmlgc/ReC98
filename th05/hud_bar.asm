@@ -14,7 +14,7 @@ MAIN_01_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_01_TEXT
 
 ; void pascal near hud_bar_put(
-; 	utram_y_t y, unsigned char value, unsigned int atrb
+; 	utram_y_t y, unsigned char value, tram_atrb2 atrb
 ; );
 public HUD_BAR_PUT
 HUD_BAR_PUT proc near

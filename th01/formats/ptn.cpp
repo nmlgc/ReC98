@@ -1,27 +1,21 @@
 #pragma option -zCPTN_GRP_GRZ
 
-extern "C" {
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th01/hardware/palette.h"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"
-
-extern int flag_palette_show;
 
 // On-disk .PTN slot file header
 // -----------------------------
 #define PTN_MAGIC "HPTN"
 
-typedef struct {
+struct ptn_header_t {
 	char magic[sizeof(PTN_MAGIC) - 1];
 	int8_t unused_one;
 	int8_t image_count;
-} ptn_header_t;
+};
 // -----------------------------
+
+extern bool16 flag_palette_show;
 
 ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn)
 {
@@ -102,7 +96,7 @@ void ptn_free(main_ptn_slot_t slot)
 {
 	if(ptn_images[slot]) {
 		delete[] ptn_images[slot];
-		ptn_images[slot] = NULL;
+		ptn_images[slot] = nullptr;
 		ptn_image_count[slot] = 0;
 	}
 }
@@ -112,7 +106,7 @@ void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id)
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
 	for(pixel_t y = 0; y < PTN_H; y++) {
-		vram_put_ptn_planar(vram_offset, ptn);
+		vram_put_ptn_planar(vram_offset, ptn, y);
 		vram_offset += ROW_SIZE;
 	}
 }
@@ -137,6 +131,4 @@ void ptn_put_quarter_noalpha_8(
 		#undef put_quarter_noalpha
 		vram_offset += ROW_SIZE;
 	}
-}
-
 }

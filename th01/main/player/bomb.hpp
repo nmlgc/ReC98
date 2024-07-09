@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define BOMB_DOUBLETAP_WINDOW 20
 
 // Current frame within the BOMB_DOUBLETAP_WINDOW. A bomb is fired if both
@@ -10,6 +12,7 @@ extern int bomb_doubletap_frames;
 extern bool bomb_damaging;
 
 extern unsigned long bomb_frames;
+extern int8_t bombs_extra_per_life_lost;
 
 // Renders the given [frame] of the bomb animation, and applies any
 // frame-specific game state modifications. Returns false if the animation is

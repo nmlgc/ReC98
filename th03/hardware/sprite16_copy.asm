@@ -33,16 +33,16 @@ arg_bx	far, @dst_page:word
 	push	si
 	push	di
 	push	ds
-	mov	src_seg, (SEG_PLANE_B + (SPRITE16_SPRITES_OFFSET / 16))
+	mov	src_seg, (SEG_PLANE_B + (SPRITE16_OFFSET / 16))
 	call	page_blit
 	call	page_blit
-	mov	src_seg, (SEG_PLANE_R + (SPRITE16_SPRITES_OFFSET / 16))
+	mov	src_seg, (SEG_PLANE_R + (SPRITE16_OFFSET / 16))
 	call	page_blit
 	call	page_blit
-	mov	src_seg, (SEG_PLANE_G + (SPRITE16_SPRITES_OFFSET / 16))
+	mov	src_seg, (SEG_PLANE_G + (SPRITE16_OFFSET / 16))
 	call	page_blit
 	call	page_blit
-	mov	src_seg, (SEG_PLANE_E + (SPRITE16_SPRITES_OFFSET / 16))
+	mov	src_seg, (SEG_PLANE_E + (SPRITE16_OFFSET / 16))
 	call	page_blit
 	call	page_blit
 	pop	ds

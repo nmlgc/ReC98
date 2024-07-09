@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 inline unsigned char to_vram_word(pixel_t screen_v) {
 	return static_cast<unsigned char>(screen_v / 16);
 }

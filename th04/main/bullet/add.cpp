@@ -21,7 +21,7 @@ void near tune_for_easy(void)
 	switch(tmpl.group) {
 	case BG_STACK:
 	case BG_STACK_AIMED:
-		tmpl.delta.stack_speed -= (tmpl.delta.stack_speed / 4);
+		tmpl.delta.stack_speed.v -= (tmpl.delta.stack_speed.v / 4);
 		if(tmpl.count >= 2) {
 			tmpl.count--;
 		}
@@ -48,17 +48,17 @@ void near tune_for_hard(void)
 	case BG_SINGLE_AIMED:
 		tmpl.group = BG_STACK_AIMED;
 		tmpl.count = 2;
-		tmpl.delta.stack_speed = to_sp(0.375f);
+		tmpl.delta.stack_speed.set(0.375f);
 		break;
 	case BG_SINGLE:
 		tmpl.group = BG_STACK;
 		tmpl.count = 2;
-		tmpl.delta.stack_speed = to_sp(0.375f);
+		tmpl.delta.stack_speed.set(0.375f);
 		break;
 
 	case BG_STACK:
 	case BG_STACK_AIMED:
-		tmpl.delta.stack_speed += (tmpl.delta.stack_speed / 2);
+		tmpl.delta.stack_speed.v += (tmpl.delta.stack_speed.v / 2);
 		break;
 
 	case BG_SPREAD:
@@ -98,7 +98,7 @@ void near tune_for_lunatic(void)
 
 	case BG_STACK:
 	case BG_STACK_AIMED:
-		tmpl.delta.stack_speed += (tmpl.delta.stack_speed / 2);
+		tmpl.delta.stack_speed.v += (tmpl.delta.stack_speed.v / 2);
 		tmpl.count++;
 		break;
 
@@ -188,7 +188,7 @@ void pascal near bullet_template_tune_lunatic(void)
 
 void pascal near bullets_add_regular_easy(void)
 {
-	unsigned char speed;
+	subpixel_length_8_t speed;
 	unsigned char count;
 
 	if(bullet_zap.active) {
@@ -202,7 +202,7 @@ void pascal near bullets_add_regular_easy(void)
 }
 
 inline void keep_speed_from_being_mutated_when_calling(nearfunc_t_near func) {
-	unsigned char speed = bullet_template.speed.v;
+	subpixel_length_8_t speed = bullet_template.speed.v;
 	func();
 	bullet_template.speed.v = speed;
 }
@@ -261,7 +261,7 @@ void near bullets_add_special_fixedspeed(void)
 	group_fixedspeed = false;
 }
 
-#define last_bullet_in_group(group_ii) \
+#define last_bullet_in_group(group_i) \
 	(group_i >= (bullet_template.count - 1))
 
 // Necessary to compile the switch statement in bullet_velocity_and_angle_set()
@@ -274,7 +274,7 @@ void near bullets_add_special_fixedspeed(void)
 bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 {
 	int angle = 0x00;
-	unsigned char speed;
+	subpixel_length_8_t speed;
 	bool done;
 
 	// Due to this default, invalid group values lead to the spawn functions
@@ -362,13 +362,13 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 		goto no_aim;
 	case BG_RANDOM_ANGLE_AND_SPEED:
 		angle = randring2_next16();
-		speed += randring2_next16_and(to_sp(2.0f) - 1);
+		speed += randring2_next8_and_ge_lt_sp(0.0f, 2.0f);
 		if(last_bullet_in_group(group_i)) {
 			done = true;
 		}
 		goto no_aim;
 	case BG_RANDOM_CONSTRAINED_ANGLE_AIMED:
-		angle = randring2_next16_and(0x1F);
+		angle = randring2_next16_and_ge_lt(0x00, 0x20);
 		angle -= 0x10;
 		if(last_bullet_in_group(group_i)) {
 			done = true;
@@ -422,8 +422,6 @@ void near bullet_template_speedtune_for_playperf(void)
 		bullet_template.speed.set(0.5f);
 	}
 }
-
-static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
 
 unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 {
@@ -546,11 +544,11 @@ void pascal near bullets_add_regular_raw(void)
 
 	group_i = 0;
 	while(bullets_available > 0) {
-		if(bullet->flag == 0) {
-			bullet->flag = 1;
+		if(bullet->flag == F_FREE) {
+			bullet->flag = F_ALIVE;
 			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
-			bullet->ax.slowdown_time = BMS_SLOWDOWN_FRAMES;
-			bullet->dx.slowdown_speed_delta = (
+			bullet->u1.slowdown_time = BMS_SLOWDOWN_FRAMES;
+			bullet->u2.slowdown_speed_delta.v = (
 				to_sp8(BMS_SLOWDOWN_BASE_SPEED) - bullet_template.speed
 			);
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
@@ -581,12 +579,12 @@ void pascal near bullets_add_special_raw(void)
 	);
 	group_i = 0;
 	while(bullets_available > 0) {
-		if(bullet->flag == 0) {
-			bullet->flag = 1;
+		if(bullet->flag == F_FREE) {
+			bullet->flag = F_ALIVE;
 			bullet->move_state = BMS_SPECIAL;
 			bullet->special_motion = bullet_template.special_motion;
-			bullet->ax.turn_count = 0;
-			bullet->dx.turn_angle = bullet_template_turn_angle;
+			bullet->u1.turns_done = 0;
+			bullet->u2.angle.v = bullet_template_special_angle.v;
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
 			if(group_done) {
 				break;
