@@ -1,8 +1,3 @@
-; enum BGM_MODE
-SND_BGM_OFF = 0
-SND_BGM_FM = 1
-SND_BGM_MIDI = 2
-
 public _snd_fm_possible
 _snd_fm_possible	db ?
 public _snd_midi_active

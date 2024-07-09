@@ -1,23 +1,11 @@
 ; ReC98
 ; Main include file
 
-; Order segments alphabetically.
-; Rather ugly workaround to prevent the automatically generated code segment
-; for the large model (filename_TEXT) from enforcing its word alignment
-; between _TEXT and the first code segment even though we never emit anything
-; into it.
-; However, this merely pushes filename_TEXT before _TEXTC, and therefore
-; breaks another group of files. In these, we actually have to rename that
-; automatically generated code segment to one that is expected to have word
-; alignment.
-.alpha
-
 locals
 
-include libs/BorlandC/RULES.ASI
-include libs/BorlandC/doserror.inc
-include libs/BorlandC/errno.inc
-include libs/BorlandC/stdio.inc
+LDATA = @DataSize
+dPtrSize = (@DataSize + 1) * 2
+
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc
@@ -25,9 +13,10 @@ include libs/master.lib/pf.inc
 include libs/master.lib/clip.inc
 include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
+include twobyte.inc
+include pc98.inc
 include th01/hardware/egc.inc
 include th02/formats/pi_slots.inc
-include th03/formats/cdg.inc
 
 nopcall macro func
 if LDATA
@@ -43,48 +32,17 @@ setfarfp macro farfp, func
 	mov word ptr farfp, offset func
 endm
 
-pushSS_ macro
-if LDATA
-	push ss
+ifdef BINARY
+	; See decomp.hpp
+	public _address_0
+	_address_0 = 0
 endif
-endm
 
-popCX_ macro
-if LDATA
-	pop cx
-endif
-endm
-
-twobyte_t struc
-	lo	db ?
-	hi	db ?
-twobyte_t ends
-
-RES_X = 640
-RES_Y = 400
-
-GAIJI_TRAM_W = 2
-
-PLAYFIELD_X = 32
-PLAYFIELD_Y = 16
-PLAYFIELD_W = 384
-PLAYFIELD_H = 368
-PLAYFIELD_VRAM_X = PLAYFIELD_X / 8
-PLAYFIELD_VRAM_W = PLAYFIELD_W / 8
-
-PLAYFIELD_TRAM_X = PLAYFIELD_X / 8
-PLAYFIELD_TRAM_W = PLAYFIELD_W / 8
-
-ROW_SIZE = (RES_X / 8)
-
-TILE_W = 16
-TILE_H = 16
-TILE_VRAM_W = (TILE_W / 8)
-TILES_Y = 1 + (PLAYFIELD_H / TILE_H) + 1
-TILES_X = (PLAYFIELD_W / TILE_W)
-
-TILE_FLAG_H = (TILE_H / 2)
-TILE_FLAGS_Y = TILES_Y * (TILE_H / TILE_FLAG_H)
+; master.lib extensions
+; ---------------------
+; super_roll_put_1plane() plane_put constants
+PLANE_PUT  = 0FF00h or GC_RMW
+; ---------------------
 
 ; Rank definitions
 RANK_EASY = 0

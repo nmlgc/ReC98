@@ -1,6 +1,7 @@
 ; Masks the bits of an 1bpp image word that should be written to the first
 ; VRAM word if that image should be positioned at X = (array_index % 16).
-WORD_PUT_PATTERN label word
+public DOTS16_MASK_UNALIGNED
+DOTS16_MASK_UNALIGNED label word
 	db 11111111b, 11111111b
 	db 01111111b, 11111111b
 	db 00111111b, 11111111b

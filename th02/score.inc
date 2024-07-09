@@ -1,0 +1,1 @@
+SCORE_DIGITS = 8

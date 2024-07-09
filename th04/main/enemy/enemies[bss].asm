@@ -1,0 +1,15 @@
+ENEMY_W = 32
+ENEMY_H = 32
+
+EF_FREE = 0
+EF_ALIVE = 1
+EF_KILLED = 2
+EF_ALIVE_FIRST_FRAME = 3
+EF_KILL_ANIM = 80h
+
+ENEMY_COUNT = 32
+
+ENEMY_POS_RANDOM = (999 shl 4)
+
+public _enemies
+_enemies	enemy_t ENEMY_COUNT dup (<?>)

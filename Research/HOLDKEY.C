@@ -5,7 +5,7 @@
 
 #pragma option -ms
 
-#include "../libs/master.lib/master.h"
+#include "libs/master.lib/master.hpp"
 
 #if defined(__TURBOC__) && defined(__MSDOS__)
 // Remove C++ exception handler bloat on Borland compilers
@@ -44,7 +44,7 @@ void frame(void)
 		states[states_recorded++] = (input >> 2) & 0xF;
 
 		while(delayloop && vsync_Count1 < 1) {
-			_asm out 0x5F, AL;
+			__asm out 0x5F, AL;
 			delayloop--;
 		}
 	} while(vsync_Count1 < 1);
@@ -69,7 +69,7 @@ void frame(void)
 	}
 }
 
-void main(void)
+void __cdecl main(void)
 {
 	vsync_start();
 	hr(79);

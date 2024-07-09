@@ -1,6 +1,5 @@
-; void randring_fill(void)
-public _randring_fill
-_randring_fill	proc near
+public @randring_fill$qv
+@randring_fill$qv proc near
 	push	si
 	mov	si, RANDRING_SIZE - 1
 
@@ -14,4 +13,4 @@ if GAME ge 4
 endif
 	pop	si
 	ret
-_randring_fill	endp
+@randring_fill$qv endp

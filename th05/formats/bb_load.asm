@@ -1,13 +1,14 @@
-; void* pascal near bb_load(const char far *fn);
-public bb_load
-bb_load	proc near
+public @BB_LOAD$QNXC
+@bb_load$qnxc proc near
 	push	si
 	call	hmem_allocbyte pascal, BB_SIZE
 	mov	_bb_load_seg, ax
-	mov	bx, sp
+
+arg_bx	near, @fn:dword
+
 	mov	si, ds
 	mov	ax, 3D00h
-	lds	dx, ss:[bx+4]
+	lds	dx, @fn+2
 	int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 				; DS:DX	-> ASCIZ filename
 				; AL = access mode
@@ -27,6 +28,6 @@ bb_load	proc near
 	mov	ds, si
 	pop	si
 	mov	ax, _bb_load_seg
-	retn	4
-bb_load	endp
+	ret_bx
+@bb_load$qnxc endp
 	nop

@@ -1,23 +1,26 @@
-#pragma option -k-
+#pragma option -WX -zCSHARED -k-
 
-int snd_mmd_resident(void)
+#include "x86real.h"
+#include "th02/snd/snd.h"
+
+bool16 snd_mmd_resident(void)
 {
-	_AX = 0;
-__asm	mov es, ax;
-__asm	les bx, dword ptr es:[MMD * 4];
-__asm	cmp byte ptr es:[bx+2], 'M';
-__asm	jnz nope;
-__asm	cmp byte ptr es:[bx+3], 'M';
-__asm	jnz nope;
-__asm	cmp byte ptr es:[bx+4], 'D';
-__asm	jnz nope;
-	snd_interrupt_if_midi = MMD;
-	snd_midi_active = 1;
-	snd_midi_possible = 1;
-	return 1;
-nope:
-	snd_midi_possible = 0;
-	return 0;
+	_ES = 0;
+	_asm { les bx, dword ptr es:[MMD * 4]; }
+	if(kaja_isr_magic_matches(MK_FP(_ES, _BX), 'M', 'M', 'D')) {
+		snd_interrupt_if_midi = MMD;
+		#if (GAME <= 3)
+			snd_midi_active = true;
+		#endif
+		snd_midi_possible = true;
+		// Enforced by the -WX code generation. Just replace these two lines
+		// with `return true`.
+		_AX = true;
+		_asm { retf; }
+	}
+	#if (GAME <= 3)
+		snd_midi_possible = false;
+	#endif
+	return false;
 }
-
 #pragma codestring "\x90"

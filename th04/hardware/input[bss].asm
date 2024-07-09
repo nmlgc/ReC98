@@ -1,4 +1,4 @@
-public _input, _input_focus
-_input      	twobyte_t <?>
-_input_focus	db ?
+public _key_det, _shiftkey
+_key_det 	twobyte_t <?> ; ZUN symbol [MAGNet2010]
+_shiftkey	db ?  ; ZUN symbol [MAGNet2010]
 	db ? ; word alignment

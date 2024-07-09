@@ -1,28 +1,34 @@
-; Generates a lookup table for flipping one byte, interpreted as a horizontal
-; line of 8 pixels in a single bitplane.
+	extern _hflip_lut:byte:256
 
-; int DEFCONV hflip_lut_generate()
-proc_defconv hflip_lut_generate
+; Would have been decompilable into a mess.
+SHARED	segment word public 'CODE' use16
+	assume cs:SHARED
+
+public _hflip_lut_generate
+_hflip_lut_generate proc far
 	push	di
 	xor	ax, ax
-	mov	di, offset hflip_lut
+	mov	di, offset _hflip_lut
 	xor	dl, dl
-	jmp	short @@check
+	jmp	short @@set_and_loop
 
-@@outer:
+@@permutation_loop:
 	xor	dl, dl
 	mov	cx, 8
 
-@@inner:
+@@generation_loop:
 	rol	al, 1
 	rcr	dl, 1
-	loop	@@inner
+	loop	@@generation_loop
 
-@@check:
+@@set_and_loop:
 	mov	[di], dl
 	inc	di
 	inc	al
-	jnz	short @@outer
+	jnz	short @@permutation_loop
 	pop	di
 	ret
-endp_defconv
+_hflip_lut_generate endp
+SHARED ends
+
+	end

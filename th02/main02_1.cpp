@@ -1,0 +1,29 @@
+/* ReC98
+ * -----
+ * 1st part of code segment #2 of TH02's MAIN.EXE
+ */
+
+#pragma option -zCSHARED
+
+#include "libs/master.lib/master.hpp"
+#include "th02/formats/tile.hpp"
+#include "th02/formats/mpn.hpp"
+
+int pascal mpn_load(const char *fn)
+{
+	extern bool mpn_show_palette_on_load;
+
+	int ret;
+	mpn_show_palette_on_load = false;
+	ret = mpn_load_palette_show(fn);
+	mpn_show_palette_on_load = true;
+	return ret;
+}
+
+void mpn_free(void)
+{
+	if(mpn_images) {
+		HMem<mpn_image_t>::free(mpn_images);
+	}
+	mpn_images = nullptr;
+}

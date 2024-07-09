@@ -1,5 +1,5 @@
-; void near bb_txt_load(void);
-public bb_txt_load
+; void pascal near bb_txt_load(void);
+public BB_TXT_LOAD
 bb_txt_load	proc near
 	call	hmem_allocbyte pascal, BB_SIZE + (BB_SIZE / 2)
 	mov	_bb_txt_seg, ax
@@ -46,8 +46,8 @@ bb_txt_load	proc near
 bb_txt_load	endp
 
 
-; void near bb_txt_free(void);
-public bb_txt_free
+; void pascal near bb_txt_free(void);
+public BB_TXT_FREE
 bb_txt_free	proc near
 	cmp	_bb_txt_seg, 0
 	jz	short @@ret

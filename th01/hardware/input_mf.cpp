@@ -1,0 +1,16 @@
+// Input state of REIIDEN.EXE and FUUIN.EXE.
+
+#include "th01/hardware/input.hpp"
+
+static bool input_unused = false; // ZUN bloat
+uint8_t input_lr = INPUT_NONE;
+bool input_mem_enter = false;
+bool input_mem_leave = false;
+bool input_shot = false;
+bool player_is_hit = false;
+bool input_bomb = false;
+bool paused = false;
+bool input_ok = false;
+bool input_strike = false;
+bool input_up = false;
+bool input_down = false;
