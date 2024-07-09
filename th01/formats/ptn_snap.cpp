@@ -1,4 +1,4 @@
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 
 void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 {

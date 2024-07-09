@@ -1,5 +1,5 @@
 	.386
-	.model use16 large SHARED_
+	.model use16 large SHARED
 	locals
 
 include th03/arg_bx.inc
@@ -15,12 +15,7 @@ include th03/formats/cdg.inc
 	extrn _cdg_noalpha:byte
 	extrn cdg_images_to_load:byte
 
-g_SHARED group SHARED, SHARED_
-SHARED	segment word public 'CODE' use16
-SHARED	ends
-
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
+	.code SHARED
 
 public CDG_LOAD_SINGLE_NOALPHA
 public CDG_LOAD_SINGLE
@@ -195,6 +190,5 @@ cdg_free_all proc far
 	pop	si
 	retf
 cdg_free_all endp
-SHARED_	ends
 
 	end

@@ -4,16 +4,10 @@
  */
 
 #include <stddef.h>
-#include "platform.h"
-#include "master.hpp"
 #include "th03/common.h"
-#include "th03/playchar.hpp"
-#include "th03/score.h"
 #include "th03/resident.hpp"
-#include "th03/formats/cfg.hpp"
-extern "C" {
+#include "th03/formats/cfg_impl.hpp"
 #include "th03/snd/snd.h"
-}
 
 bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 

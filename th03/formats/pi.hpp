@@ -1,4 +1,5 @@
 #include "th02/formats/pi.h"
+#include "planar.h"
 
 #define PI_MASK_COUNT 4
 #define PI_MASK_H 4

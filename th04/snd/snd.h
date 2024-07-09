@@ -1,3 +1,6 @@
+#ifndef TH04_SND_SND_H
+#define TH04_SND_SND_H
+
 #include "th03/snd/snd.h"
 
 typedef enum {
@@ -30,24 +33,19 @@ static inline bool snd_bgm_active() {
 static inline bool16 snd_se_active() {
 	return (snd_se_mode != SND_SE_OFF);
 }
-
-#ifdef X86REAL_H
-	// MODDERS: Just use [new_se] directly.
-	static inline int16_t snd_get_param(int16_t &param) {
-		_BX = _SP;
-		return peek(_SS, (_BX + 4));
-	}
-#endif
 #endif
 
 #define snd_bgm_is_fm() \
 	(snd_bgm_mode != SND_BGM_MIDI)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Checks the requested BGM and SE modes against the available hardware and
 // sets [snd_se_mode] and [snd_bgm_mode] accordingly. Returns [snd_bgm_mode].
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 
-#if defined(PMD) && defined(MASTER_HPP)
 // Loads a song ([func] == SND_LOAD_SONG) or a sound effect bank ([func] ==
 // SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must
 // be null-terminated (despite the fixed length) and not have any extension.
@@ -77,10 +75,7 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 //   [snd_bgm_mode] nor "[fn].m" exist.
 void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 
-#if defined(__cplusplus) && (GAME == 5)
-	// Refer to TH02's implementation for an explanation of how wrong this is.
-	static inline uint16_t snd_load_size() {
-		return 0xFFFF;
-	}
+#ifdef __cplusplus
+}
 #endif
-#endif
+#endif /* TH04_SND_SND_H */

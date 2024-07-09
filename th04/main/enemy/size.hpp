@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 #define ENEMY_W 32
 #define ENEMY_H 32
 

@@ -1,10 +1,6 @@
 #pragma option -k- -G
 
-#include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th04/main/scroll.hpp"
 
 #define roll(y) \
@@ -48,5 +44,3 @@ vram_y_t pascal near scroll_subpixel_y_to_vram_always(subpixel_t y)
 	#undef ret
 }
 #pragma codestring "\x90"
-
-}

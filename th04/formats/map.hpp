@@ -7,6 +7,9 @@
 /// of tile sections (though still limited to [TILE_SECTION_COUNT_MAX]), and
 /// are consequently allocated dynamically.
 
+#include "th02/formats/tile.hpp"
+#include "planar.h"
+
 static const unsigned int MAP_ROWS_PER_SECTION = 5;
 
 // On-disk structures

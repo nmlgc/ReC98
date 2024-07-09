@@ -1,3 +1,6 @@
+#include "platform.h"
+#include <stddef.h>
+
 // Properly declared, DEMO?.REC uses this structure:
 template <size_t Frames> struct REC {
 	input_replay_t input[Frames];

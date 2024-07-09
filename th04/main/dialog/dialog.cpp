@@ -2,7 +2,6 @@
 
 #include "th04/formats/dialog.hpp"
 #include "th04/main/dialog/shared.cpp"
-#include "decomp.hpp"
 #include "th04/main/ems.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/sprites/main_pat.h"

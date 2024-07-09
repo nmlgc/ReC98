@@ -1,6 +1,8 @@
 /// Shinki's 32×32 ball bullets
 /// ---------------------------
 
+#include "th04/main/playfld.hpp"
+
 #define B6BALL_COUNT 63
 #define B6BALL_W 32
 #define B6BALL_H 32
@@ -14,7 +16,7 @@ enum b6ball_flag_t {
 	_b6ball_flag_t_FORCE_UINT8 = 0xFF
 };
 
-typedef struct {
+struct b6ball_t {
 	b6ball_flag_t flag;
 	int8_t unused_1;
 	PlayfieldMotion pos;
@@ -23,7 +25,7 @@ typedef struct {
 	int patnum_tiny;
 	int decay_frames;
 	int8_t unused_2[4];
-} b6ball_t;
+};
 
 struct b6ball_template_t {
 	/* -------------------- */ int8_t _unused_1;

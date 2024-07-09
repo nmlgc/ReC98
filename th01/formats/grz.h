@@ -5,6 +5,8 @@
 /// format) to be used with the same RLE stream, or the RLE stream to be used
 /// on its own for a monochrome byte-aligned pattern.
 
+#include "pc98.h"
+
 // Static arrays
 #define GRX_COUNT 16
 #define PLANAR_STREAM_PER_GRX_COUNT 16

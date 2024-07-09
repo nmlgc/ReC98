@@ -1,4 +1,3 @@
-GAME = 2
 include th02/mem.inc
 
 include th02/hardware/input.inc
@@ -10,6 +9,8 @@ include th02/v_colors.inc
 kajacall	macro func, param := <0>
 	call	_snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)
 endm
+
+SHOTTYPE_COUNT = 3
 
 mikoconfig_t	struc
 	id db 10 dup(?)	; = "MIKOConfig"
@@ -39,8 +40,6 @@ mikoconfig_t	struc
 	unused_4 dw ?
 	score_highest dd ?
 mikoconfig_t	ends
-
-END_LINE_LEN = 46
 
 ; Player
 ; ------

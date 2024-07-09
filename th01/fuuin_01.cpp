@@ -3,12 +3,11 @@
  * Code segment #1 of TH01's FUUIN.EXE
  */
 
-#pragma option -O- -1 -Z-
+#pragma option -O- -1 -Z- -d-
 
 #include <process.h>
 #include <stdio.h>
-#include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/resident.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/end/end.hpp"

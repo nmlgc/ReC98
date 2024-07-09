@@ -5,7 +5,7 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-#include "th05/i_shot.hpp"
+#include "th05/main/player/shot.hpp"
 #define cycle _AL
 
 extern "C" {

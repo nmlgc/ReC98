@@ -1,6 +1,10 @@
 // master.lib text function reimplementations
 // ------------------------------------------
 
+#include "pc98.h"
+#include "shiftjis.hpp"
+#include <stdio.h>
+
 typedef enum {
 	CURSOR_HIDE,
 	CURSOR_BLOCK,

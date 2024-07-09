@@ -1,5 +1,7 @@
 // TH05-specific boss declarations.
 
+#include "th05/main/boss/boss.hpp"
+
 /// Backdrops
 /// ---------
 

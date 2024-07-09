@@ -1,19 +1,8 @@
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
-extern "C" {
+#include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th03/formats/cdg.h"
-#include "th04/score.h"
 #include "th04/op/op.hpp"
-#include "th04/snd/snd.h"
 #include "th04/shiftjis/fnshared.hpp"
 #include "th05/formats/pi.hpp"
-}
-#include "th05/playchar.h"
 #include "th05/resident.hpp"
 #include "th04/sprites/op_cdg.hpp"
 

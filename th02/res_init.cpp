@@ -1,3 +1,5 @@
+#include "libs/master.lib/pc98_gfx.hpp"
+
 #ifndef ERROR_NOT_RESIDENT
 	#define ERROR_NOT_RESIDENT "ÇÌÇΩÇµÅAÇ‹ÇæÇ¢Ç‹ÇπÇÒÇÊÇß"
 #endif

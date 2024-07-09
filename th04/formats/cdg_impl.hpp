@@ -1,5 +1,6 @@
 // Shared parts of the cdg_put_*() functions.
 
+#include "th04/formats/cdg.h"
 #include "platform/x86real/flags.hpp"
 #include "decomp.hpp"
 

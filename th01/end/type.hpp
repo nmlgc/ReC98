@@ -1,3 +1,6 @@
+#include "shiftjis.hpp"
+#include "pc98.h"
+
 static const vc_t COL_TYPE = 15;
 
 // Types [len] half- (ank) or full-width (kanji) characters of [str] onto the

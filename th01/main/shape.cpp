@@ -82,7 +82,7 @@ void shape_ellipse_arc_put(
 			cache_dots |= (0x80 >> (cur_x & BYTE_MASK));
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void shape_ellipse_arc_sloppy_unput(
@@ -161,7 +161,7 @@ void shape8x8_invincibility_put(screen_x_t left, vram_y_t top, int cel)
 
 		#undef sprite
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 // Surely this function was meant to just regularly unblit the sprite via the
@@ -220,7 +220,7 @@ void shape8x8_invincibility_put_with_mask_from_B_plane(
 		}
 		#undef sprite
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 // Why is this here?

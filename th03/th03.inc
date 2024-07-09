@@ -1,5 +1,3 @@
-GAME = 3
-
 include th03/common.inc
 include th03/mem.inc
 include th03/gaiji/gaiji.inc

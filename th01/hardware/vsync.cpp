@@ -6,10 +6,8 @@
 #pragma option -2 -Z-
 #pragma warn -aus
 
-#include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/vsync.hpp"
 
 extern bool vsync_initialized = false;

@@ -1,4 +1,3 @@
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 
 // Global state that is defined here for some reason

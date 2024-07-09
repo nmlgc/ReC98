@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define SCOREDAT_MAGIC "HISCORE"
 #define SCOREDAT_PLACES 10
 #define SCOREDAT_NAME_KANJI 8

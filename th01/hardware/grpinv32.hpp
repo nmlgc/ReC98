@@ -1,3 +1,6 @@
+#include "th01/math/polar.hpp"
+#include "planar.h"
+
 // Inverts the 32×32 square at (⌊left/8⌋*8, top) on the given VRAM [plane].
 // Returns true if the square is not fully within the boundaries of VRAM and
 // was not inverted, false otherwise.

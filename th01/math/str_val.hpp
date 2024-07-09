@@ -1,3 +1,5 @@
+#include "platform.h"
+
 // Equivalent to sprintf(str, "%*u", width, val).
 void pascal str_right_aligned_from_uint16(
 	char *str, uint16_t val, uint16_t width

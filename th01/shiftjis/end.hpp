@@ -1,3 +1,6 @@
+#include "pc98.h"
+#include "shiftjis.hpp"
+
 // Endings
 // -------
 

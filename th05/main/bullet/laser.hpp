@@ -1,3 +1,5 @@
+#include "th04/main/playfld.hpp"
+
 #define LASER_DISTANCE_MIN to_sp(16.0f)
 #define LASER_DISTANCE_MAX to_sp(550.0f) // Far away enough?
 

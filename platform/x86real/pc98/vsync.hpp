@@ -1,6 +1,8 @@
 // VSync interrupts
 // ----------------
 
+#include "platform.h"
+
 // Incremented by 1 on every VSync interrupt. Can be manually reset to 0 to
 // simplify frame delay loops.
 extern volatile uint16_t vsync_count_16;

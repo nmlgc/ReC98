@@ -1,3 +1,10 @@
+#include "th03/main/player/shot.hpp"
+#include "th03/main/chars/speed.hpp"
+#include "th03/main/collmap.hpp"
+#include "th03/main/playfld.hpp"
+#include "th03/hardware/input.h"
+#include "th01/math/subpixel.hpp"
+
 #define HALFHEARTS_MAX 10
 
 #define ROUND_START_INVINCIBILITY_FRAMES 50
@@ -31,14 +38,14 @@ extern farfunc_t_near chargeshot_update[PLAYER_COUNT];
 extern farfunc_t_near chargeshot_render[PLAYER_COUNT];
 // ------------
 
-typedef struct {
+struct player_t {
 	PlayfieldPoint center;
 	bool is_hit;
 	uint8_t unused_1; // ZUN bloat
 	unsigned char invincibility_time;
 	char halfhearts;
 	PlaycharPalettedOptional playchar_paletted;
-	speed_t speed;
+	speed_t speed_base;
 	shot_mode_t shot_mode;
 	unsigned char patnum_movement;
 	unsigned char patnum_glow;
@@ -90,7 +97,7 @@ typedef struct {
 	unsigned char boss_panics_fired;
 
 	uint8_t padding[6];
-} player_t;
+};
 
 extern pid_t pid_current;
 extern pid_t pid_other;

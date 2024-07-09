@@ -17,9 +17,7 @@ inline int16_t randring1_next16_mod_ge_lt(int16_t min, int16_t max) {
 	return (min + randring1_next16_mod(max - min));
 }
 
-#ifdef SUBPIXEL_HPP
-	inline subpixel_t randring1_next16_mod_ge_lt_sp(float min, float max) {
-		return randring1_next16_mod_ge_lt(to_sp(min), to_sp(max));
-	}
-#endif
+inline subpixel_t randring1_next16_mod_ge_lt_sp(float min, float max) {
+	return randring1_next16_mod_ge_lt(to_sp(min), to_sp(max));
+}
 /// --------------------------
