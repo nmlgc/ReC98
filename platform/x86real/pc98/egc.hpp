@@ -3,6 +3,9 @@
 // EGC wrapper that automatically disables the EGC if the object goes out of
 // scope.
 
+#include "pc98.h"
+#include "x86real.h"
+
 struct EGCCopy {
 	EGCCopy();
 	~EGCCopy();

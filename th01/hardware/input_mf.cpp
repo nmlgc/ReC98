@@ -1,6 +1,5 @@
 // Input state of REIIDEN.EXE and FUUIN.EXE.
 
-#include "platform.h"
 #include "th01/hardware/input.hpp"
 
 static bool input_unused = false; // ZUN bloat

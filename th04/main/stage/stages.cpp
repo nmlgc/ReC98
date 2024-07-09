@@ -1,25 +1,14 @@
 #pragma option -3 -Z
 
-#include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
-extern "C" {
 #include "th04/main/null.hpp"
-}
-#include "th04/main/playfld.hpp"
-#include "th04/main/phase.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/boss/boss.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/stage/stages.hpp"
-extern "C" {
 #include "th04/main/tile/tile.hpp"
-}
 #include "th04/sprites/main_cdg.h"
 
 // See tile.hpp for the reason why this declaration is necessary

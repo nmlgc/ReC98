@@ -1,3 +1,5 @@
+#include "platform.h"
+
 // ID of the next dialog box to be shown.
 extern uint8_t dialog_box_cur;
 

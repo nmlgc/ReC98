@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define BOMB_DOUBLETAP_WINDOW 20
 
 // Current frame within the BOMB_DOUBLETAP_WINDOW. A bomb is fired if both

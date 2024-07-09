@@ -16,6 +16,8 @@
 ///
 /// More info on the original format: https://mooncore.eu/bunny/txt/pi-pic.htm
 
+#include "pc98.h"
+
 // Always updated by any of the .GRP loading or blitting functions.
 extern Palette4 grp_palette;
 

@@ -4,6 +4,9 @@
 // scope, and provide the optimal instructions for both dynamic and statically
 // known tiles and colors.
 
+#include "planar.h"
+#include "x86real.h"
+
 // Just in case master.hpp was included before...
 #undef GC_OFF
 #undef GC_TDW

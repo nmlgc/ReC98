@@ -1,5 +1,7 @@
 // TH04-specific boss declarations.
 
+#include "pc98.h"
+
 /// Backdrops
 /// ---------
 

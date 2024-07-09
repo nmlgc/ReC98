@@ -19,7 +19,7 @@ extrn _gather_template:gather_template_t
 	patnum_base:word, angle:byte
 _bullets_add_regular procdesc near
 _bullet_velocity_and_angle_set procdesc near
-_bullet_template_clip procdesc near
+@bullet_template_clip$qv procdesc near
 @gather_add_bullets$qv procdesc near
 
 ; Own data
@@ -77,7 +77,7 @@ _bullets_add_raw proc near
 ; ---------------------------------------------------------------------------
 
 @@no_gather:
-	call	_bullet_template_clip
+	call	@bullet_template_clip$qv
 	or	al, al
 	jnz	short  @@clipped
 	push	si

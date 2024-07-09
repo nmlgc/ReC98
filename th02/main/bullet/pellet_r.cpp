@@ -1,3 +1,4 @@
+#include "planar.h"
 #include "th01/sprites/pellet.h"
 
 extern const dots16_t sPELLET[PELLET_CELS][PRESHIFT][PELLET_H];

@@ -2,7 +2,10 @@
 // -----
 // PC-98 hardware constants not covered by master.lib
 
+#ifndef PC98_H
 #define PC98_H
+
+#include "platform.h"
 
 /// Spaces
 /// ------
@@ -28,6 +31,9 @@ typedef unsigned int uvram_byte_amount_t;
 typedef unsigned int uvram_word_amount_t;
 typedef unsigned int uvram_dword_amount_t;
 
+// VRAM heights. Different from `pixel_t` in 200-line mode.
+typedef int vram_h_t;
+
 // TRAM widths or heights
 typedef int tram_cell_amount_t;
 /// ------
@@ -35,7 +41,7 @@ typedef int tram_cell_amount_t;
 /// Coordinate systems
 /// ------------------
 /// All of these are relative to the top-left corner of the final display.
-/// MODDERS: Remove the unsigned varieties.
+/// MODDERS: Remove the unsigned variants.
 
 // Display-space coordinate, with [0; RES_X[ being the visible area.
 typedef int screen_x_t;
@@ -219,3 +225,5 @@ static const int EGC_REGISTER_BITS = 4;
 static const int EGC_REGISTER_MASK = (EGC_REGISTER_DOTS - 1);
 static const int EGC_REGISTER_SIZE = (EGC_REGISTER_DOTS / BYTE_DOTS);
 /// ---
+
+#endif /* PC98_H */

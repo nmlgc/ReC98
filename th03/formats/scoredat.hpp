@@ -1,3 +1,8 @@
+#include "th03/sprites/regi.h"
+#include "th03/score.hpp"
+#include "th03/playchar.hpp"
+#include "th01/rank.h"
+
 #define SCOREDAT_FN "YUME.NEM"
 
 #undef SCOREDAT_FN
@@ -54,21 +59,19 @@ extern scoredat_section_t hi;
 
 void near scoredat_decode(void);
 
-#ifdef RANK_H
-	// Loads the score data for the given [rank] into [hi]. The OP.EXE version
-	// returns `true` if that data was recreated due to corruption or a
-	// nonexistent file.
-	#if (BINARY == 'O')
-		bool16 pascal near scoredat_load_and_decode(rank_t rank);
-	#elif (BINARY == 'L')
-		void pascal near scoredat_load_and_decode(rank_t rank);
-	#endif
-
-	// Calculates the checksum and encrypts [hi] in-place, then saves it to
-	// the score file under the given [rank]. The MAINL version also sets
-	// [cleared] based on resident data.
-	void pascal near scoredat_encode_and_save(rank_t rank);
+// Loads the score data for the given [rank] into [hi]. The OP.EXE version
+// returns `true` if that data was recreated due to corruption or a nonexistent
+// file.
+#if (BINARY == 'O')
+	bool16 pascal near scoredat_load_and_decode(rank_t rank);
+#elif (BINARY == 'L')
+	void pascal near scoredat_load_and_decode(rank_t rank);
 #endif
+
+// Calculates the checksum and encrypts [hi] in-place, then saves it to the
+// score file under the given [rank]. The MAINL version also sets [cleared]
+// based on resident data.
+void pascal near scoredat_encode_and_save(rank_t rank);
 
 // Fills [hi] with default (decrypted) score data, and writes it to the score
 // file under all ranks.

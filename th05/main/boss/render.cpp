@@ -3,37 +3,23 @@
  * Rendering code for all bosses
  */
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
-#include "master.hpp"
-#include "th01/math/area.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/math/vector.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
-extern "C" {
 #include "th04/formats/cdg.h"
-}
 #include "th04/main/frames.h"
-#include "th04/main/playfld.hpp"
-#include "th04/main/phase.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/boss/impl.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/main/tile/bb.hpp"
 #include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
-extern "C" {
 #include "th05/formats/super.h"
-}
 #include "th04/main/boss/backdrop.hpp"
-#include "th05/main/boss/boss.hpp"
 #include "th05/main/boss/bosses.hpp"
 
 /// Structures

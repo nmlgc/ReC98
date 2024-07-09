@@ -1,18 +1,14 @@
 #pragma option -zCSHARED
 
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
 #include "codegen.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/flags.hpp"
 #include "th03/formats/hfliplut.h"
 #include "th03/formats/mrs.hpp"
 
-#undef grcg_off
 #define grcg_off() { \
 	_outportb_(0x7C, (_AL ^= _AL)); \
 }

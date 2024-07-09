@@ -292,6 +292,9 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
         fprintf(sctx->fp,"/* Sprite sheet: %d sprites (%d x %d) of %d x %d sprites. */\n",sctx->sscols * sctx->ssrows,sctx->sscols,sctx->ssrows,t->sprite_width,t->sprite_height);
         fprintf(sctx->fp,"\n");
 
+        if (t->output_type == REC98_OUT_CPP)
+            fprintf(sctx->fp,"#include \"planar.h\"\n\n");
+
         saveout_write_c_type(t,sctx);
         fprintf(sctx->fp," = {\n");
     }

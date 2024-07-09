@@ -3,6 +3,9 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// spark.inc!
 
+#include "th04/main/playfld.hpp"
+#include "th02/main/entity.hpp"
+
 struct spark_t {
 	entity_flag_t flag;
 	unsigned char age;

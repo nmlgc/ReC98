@@ -1,3 +1,5 @@
+#include "th04/main/playfld.hpp"
+
 #define POINTNUM_POPUP_DISTANCE (12.0f)
 #define POINTNUM_POPUP_FRAMES 24
 #define POINTNUM_FRAMES 36

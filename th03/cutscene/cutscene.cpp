@@ -12,61 +12,48 @@
 #pragma option -zPgroup_01
 
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
+#if (GAME >= 4)
+	#include "th01/hardware/grcg.hpp" // ZUN bloat
+#endif
+#include "th01/formats/cutscene.hpp"
 #include "th02/v_colors.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
-	#include "th04/hardware/bgimage.hpp"
-	#include "th04/hardware/grppsafx.h"
-	#include "th04/snd/snd.h"
-	#include "th04/gaiji/gaiji.h"
 	#include "th05/hardware/input.h"
 	#include "th05/formats/pi.hpp"
 #elif (GAME == 4)
 	#include "th03/formats/pi.hpp"
 	#include "th04/hardware/input.h"
-	#include "th04/hardware/grppsafx.h"
-	#include "th04/snd/snd.h"
 #else
-	#include "th01/hardware/grppsafx.h"
 	#include "th03/hardware/input.h"
 	#include "th03/formats/pi.hpp"
-	#include "th03/snd/snd.h"
 
 	// Let's rather not have this one global, since it might be wrong in an
 	// in-game context?
 	#define key_det input_sp
 #endif
-}
+#if (GAME == 5)
+	#include "th04/hardware/bgimage.hpp"
+	#include "th04/hardware/grppsafx.h"
+	#include "th04/snd/snd.h"
+	#include "th04/gaiji/gaiji.h"
+#elif (GAME == 4)
+	#include "th04/hardware/grppsafx.h"
+	#include "th04/snd/snd.h"
+#else
+	#include "th01/hardware/grppsafx.h"
+	#include "th03/snd/snd.h"
+#endif
 #include "th03/cutscene/cutscene.hpp"
 
 #pragma option -a2
 
-#if (GAME == 3)
-	#undef grcg_off // ZUN bloat
-#endif
-
 // Constants
 // ---------
 
-static const pixel_t PIC_W = PI_QUARTER_W;
-static const pixel_t PIC_H = PI_QUARTER_H;
-static const screen_x_t PIC_LEFT = ((RES_X / 2) - (PIC_W / 2));
-static const screen_y_t PIC_TOP = 64;
-static const screen_x_t PIC_RIGHT = (PIC_LEFT + PIC_W);
-static const screen_x_t PIC_BOTTOM = (PIC_TOP + PIC_H);
-
-static const vram_byte_amount_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
-
-static const int PIC_SLOT = 0;
+static const screen_y_t CUTSCENE_PIC_TOP = 64;
+static const int CUTSCENE_PIC_SLOT = 0;
 
 // Note that this does not correspond to the tiled area painted into TH05's
 // EDBK?.PI images.
@@ -134,12 +121,12 @@ extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 
 	static const int COLMAP_COUNT = 8;
 
-	typedef struct {
+	struct colmap_t {
 		vc_t values[COLMAP_COUNT];
 
 		// Might have been originally meant for a complete character name?
 		ShiftJISKanji keys[COLMAP_COUNT][NAME_KANJI_LEN];
-	} colmap_t;
+	};
 
 	extern colmap_t colmap;
 	extern unsigned char colmap_count;
@@ -169,6 +156,9 @@ extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 #endif
 // -----------------------
 
+// Same game-specific branches as in the Music Room, but they have a much
+// bigger impact here:
+//
 // ZUN quirk: The cutscene system features both
 // 1) a top-level input sensing mechanism (for updating the fast-forward flag),
 //    and
@@ -245,8 +235,10 @@ bool16 pascal near cutscene_script_load(const char* fn)
 // (Flipping the visible page on every picture change would have only made
 // everything even more complicated.)
 #if (GAME == 5)
+	#include "th01/hardware/egc.h"
+
 	#define pic_copy_to_other(left, top) { \
-		egc_copy_rect_1_to_0_16(left, top, PIC_W, PIC_H); \
+		egc_copy_rect_1_to_0_16(left, top, CUTSCENE_PIC_W, CUTSCENE_PIC_H); \
 	}
 
 	void pascal near pic_put_both_masked(
@@ -254,7 +246,7 @@ bool16 pascal near cutscene_script_load(const char* fn)
 	)
 	{
 		graph_accesspage(1);
-		pi_put_quarter_masked_8(left, top, PIC_SLOT, quarter, mask_id);
+		pi_put_quarter_masked_8(left, top, CUTSCENE_PIC_SLOT, quarter, mask_id);
 		pic_copy_to_other(left, top);
 	}
 #else
@@ -270,9 +262,9 @@ bool16 pascal near cutscene_script_load(const char* fn)
 		// as optimal as you can get within the EGC's limited 16-dot tile
 		// register.
 		y = 0;
-		while(y < PIC_H) {
+		while(y < CUTSCENE_PIC_H) {
 			vram_x = 0;
-			while(vram_x < PIC_VRAM_W) {
+			while(vram_x < CUTSCENE_PIC_VRAM_W) {
 				egc_temp_t tmp;
 
 				// ZUN bloat: Remember that the call site temporarily switched
@@ -284,7 +276,7 @@ bool16 pascal near cutscene_script_load(const char* fn)
 				vo += EGC_REGISTER_SIZE;
 			}
 			y++;
-			vo += (ROW_SIZE - PIC_VRAM_W);
+			vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
 		}
 		egc_off();
 
@@ -306,21 +298,21 @@ bool16 pascal near cutscene_script_load(const char* fn)
 		vram_offset_t vo_temp;
 		pi_buffer_p_t row_p;
 
-		pi_buffer_p_init_quarter(row_p, PIC_SLOT, quarter);
+		pi_buffer_p_init_quarter(row_p, CUTSCENE_PIC_SLOT, quarter);
 
 		// ZUN bloat: See the call site.
 		graph_showpage(1);
 		vram_offset_t vo = vram_offset_shift(left, top);
 		graph_accesspage(0);
-		for(pixel_t y = 0; y < PIC_H; y++) {
+		for(pixel_t y = 0; y < CUTSCENE_PIC_H; y++) {
 			// This might actually be faster than clearing the masked pixels
 			// using the GRCG and doing an unaccelerated 4-plane VRAM OR.
-			graph_pack_put_8_noclip(0, TEMP_ROW, row_p, PIC_W);
+			graph_pack_put_8_noclip(0, TEMP_ROW, row_p, CUTSCENE_PIC_W);
 			egc_start_copy();
 			egc_setup_copy_masked(PI_MASKS[mask_id][y & (PI_MASK_COUNT - 1)]);
 			vo_temp = vram_offset_shift(0, TEMP_ROW);
 			vram_word = 0;
-			while(vram_word < (PIC_W / EGC_REGISTER_DOTS)) {
+			while(vram_word < (CUTSCENE_PIC_W / EGC_REGISTER_DOTS)) {
 				egc_chunk(vo) = egc_chunk(vo_temp);
 				vram_word++;
 				vo += EGC_REGISTER_SIZE;
@@ -328,7 +320,7 @@ bool16 pascal near cutscene_script_load(const char* fn)
 			}
 			egc_off();
 
-			vo += (ROW_SIZE - PIC_VRAM_W);
+			vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
 			pi_buffer_p_offset(row_p, PI_W, 0);
 			pi_buffer_p_normalize(row_p);
 		}
@@ -528,7 +520,7 @@ void near cursor_advance_and_animate(void)
 
 			// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
 			// applying boldface… why not just show it on TRAM?
-			bgimage_put_rect(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
+			bgimage_put_rect_16(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
 
 			if(
 				(frames_to_wait <= 0) ||
@@ -606,7 +598,7 @@ script_ret_t pascal near script_op(unsigned char c)
 
 		#if (GAME == 5)
 			graph_accesspage(1);
-			bgimage_put_rect(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
+			bgimage_put_rect_16(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
 
 			// ZUN bloat: All blitting operations in this module access the
 			// intended page before they blit. That's why preliminary state
@@ -809,9 +801,9 @@ script_ret_t pascal near script_op(unsigned char c)
 		if((c == '=') || (c == '@')) {
 			graph_accesspage(1);
 			if(c == '=') {
-				pi_palette_apply(PIC_SLOT);
+				pi_palette_apply(CUTSCENE_PIC_SLOT);
 			}
-			pi_put_8(0, 0, PIC_SLOT);
+			pi_put_8(0, 0, CUTSCENE_PIC_SLOT);
 			graph_copy_page(0);
 			graph_accesspage(0);
 			#if (GAME == 5)
@@ -820,19 +812,19 @@ script_ret_t pascal near script_op(unsigned char c)
 				box_bg_allocate_and_snap();
 			#endif
 		} else if(c == '-') {
-			pi_free(PIC_SLOT);
+			pi_free(CUTSCENE_PIC_SLOT);
 			return CONTINUE;
 		} else if(c == 'p') {
-			pi_palette_apply(PIC_SLOT);
+			pi_palette_apply(CUTSCENE_PIC_SLOT);
 			return CONTINUE;
 		} else if(c != ',') {
 			script_p--;
 		} else {
 			script_param_read_fn(fn, p1, c);
 			#if (GAME >= 4)
-				pi_free(PIC_SLOT);
+				pi_free(CUTSCENE_PIC_SLOT);
 			#endif
-			pi_load(PIC_SLOT, fn);
+			pi_load(CUTSCENE_PIC_SLOT, fn);
 		}
 		break;
 
@@ -883,11 +875,16 @@ script_ret_t pascal near script_op(unsigned char c)
 				graph_accesspage(0);
 			#endif
 			if(p1 < PI_QUARTER_COUNT) {
-				pi_put_quarter_8(PIC_LEFT, PIC_TOP, PIC_SLOT, p1);
+				pi_put_quarter_8(
+					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
+				);
 			} else {
 				grcg_setcolor(GC_RMW, 0);
 				grcg_boxfill_8(
-					PIC_LEFT, PIC_TOP, (PIC_RIGHT - 1), (PIC_BOTTOM - 1)
+					CUTSCENE_PIC_LEFT,
+					CUTSCENE_PIC_TOP,
+					(CUTSCENE_PIC_LEFT + CUTSCENE_PIC_W - 1),
+					(CUTSCENE_PIC_TOP  + CUTSCENE_PIC_H - 1)
 				);
 				grcg_off();
 			}
@@ -897,14 +894,16 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_param_number_default = 1;
 			script_param_read_number_second(p2);
 			for(i = 0; i < PI_MASK_COUNT; i++) {
-				pic_put_both_masked(PIC_LEFT, PIC_TOP, p1, i);
+				pic_put_both_masked(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, p1, i);
 				if(!fast_forward) {
 					frame_delay(p2);
 				}
 			}
 			#if (GAME == 5)
 				graph_accesspage(1);
-				pi_put_quarter_8(PIC_LEFT, PIC_TOP, PIC_SLOT, p1);
+				pi_put_quarter_8(
+					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
+				);
 				frame_delay(1); // ZUN quirk
 			#else
 				// ZUN bloat: See above.
@@ -912,13 +911,17 @@ script_ret_t pascal near script_op(unsigned char c)
 				graph_showpage(1);
 				graph_accesspage(0);
 
-				pi_put_quarter_8(PIC_LEFT, PIC_TOP, PIC_SLOT, p1);
+				pi_put_quarter_8(
+					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
+				);
 			#endif
 		}
 		#if (GAME <= 4)
 			graph_showpage(0); // ZUN bloat: See above.
 		#endif
-		pic_copy_to_other(PIC_LEFT, PIC_TOP);
+		static_assert(CUTSCENE_PIC_W == PI_QUARTER_W);
+		static_assert(CUTSCENE_PIC_H == PI_QUARTER_H);
+		pic_copy_to_other(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
 		break;
 
 	case 'm':
@@ -1136,7 +1139,7 @@ void near cutscene_animate(void)
 	}
 	#if (GAME == 5)
 		bgimage_free();
-		pi_free(PIC_SLOT);
+		pi_free(CUTSCENE_PIC_SLOT);
 	#else
 		box_bg_put();
 		box_bg_free();

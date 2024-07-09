@@ -4,6 +4,12 @@
 /// memory as needed.
 /// (Yes, this is not how you make optimal use of EMS memory.)
 
+#include "th04/main/playfld.hpp"
+#include "th04/sprites/main_cdg.h"
+#include "th03/formats/cdg.h"
+#include "libs/master.lib/master.hpp"
+#include <stddef.h>
+
 #if (GAME == 5)
 	#define EMS_NAME "GENSOEMS"
 #else

@@ -1,12 +1,6 @@
 SHOT_VELOCITY = (-12 shl 4)
 SHOT_SO_PID = (320 / 8)
 
-SHOT_SPRITE_COUNT = 4
-SHOT_W = 16
-SHOT_H = 8
-SHOT_VRAM_W = (SHOT_W / 8)
-SHOT_VRAM_H = (SHOT_H / 2)
-
 ; shot_mode_t
 SM_NONE = 0
 SM_1_PAIR = 1

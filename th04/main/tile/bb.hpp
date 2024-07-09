@@ -2,6 +2,9 @@
 // one colored 16×16 tile per bit. Used for the flashy transitions from regular
 // stage backgrounds to the bomb and boss backgrounds.
 
+#include "th04/formats/bb.h"
+#include "th02/formats/tile.hpp"
+
 // Why store ((TILES_X / 8) * TILES_Y) = 69 bytes, when you can store 128? :P
 static const pixel_t TILES_BB_CEL_W = 512;
 static const pixel_t TILES_BB_CEL_H = 512;

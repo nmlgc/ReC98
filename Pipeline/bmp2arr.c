@@ -149,7 +149,7 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
     return bmp2arr_error_set(tsk, SUCCESS);
 }
 
-int main(int argc,char **argv) {
+int __cdecl main(int argc,char **argv) {
     struct rec98_bmp2arr_task tsk;
 
     if (rec98_bmp2arr_task_init(&tsk))

@@ -1,6 +1,9 @@
 // PC-98 font ROM access
 // ---------------------
 
+#include "planar.h"
+#include "shiftjis.hpp"
+
 // Indicates the size of the glyph (8×8, 8×16, or 16×16), and by extension the
 // amount of bytes returned from font_read().
 struct font_glyph_header_t {

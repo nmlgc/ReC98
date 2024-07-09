@@ -1,8 +1,6 @@
-#include <stddef.h>
-#include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/main/execl.hpp"
-#include "th04/score.h"
 #include "th04/hardware/inputvar.h"
 #include "th04/main/frames.h"
 #include "th04/main/demo.hpp"
@@ -13,6 +11,27 @@
 	#include "th04/mem.h"
 	#include "th04/resident.hpp"
 #endif
+
+void near demo_load(void)
+{
+	#if (GAME == 5)
+		size_t size = ((resident->demo_num <= 4)
+			? sizeof(REC<DEMO_N>)
+			: sizeof(REC<DEMO_N_EXTRA>)
+		);
+	#else
+		#define size sizeof(REC<DEMO_N>)
+	#endif
+
+	extern char near demo_fn[];
+	DemoBuf = static_cast<uint8_t *>(hmem_allocbyte(size));
+	char* fn = demo_fn;
+	fn[4] = ('0' - (GAME == 5) + resident->demo_num);
+
+	file_ropen(fn);
+	file_read(DemoBuf, size);
+	file_close();
+}
 
 void near DemoPlay(void)
 {

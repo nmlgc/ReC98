@@ -127,6 +127,11 @@ typedef enum {
 	PTN_BG_TIMER,
 	PTN_BG_TIMER_last = last_for_quarters(PTN_BG_TIMER, (TIMER_DIGITS / 2)),
 
+	// Copying the declaration from `ptn.hpp`… Thankfully, even Turbo C++ 4.0J
+	// warns on a mismatch.
+	#define PTN_W 32
+	#define PTN_H 32
+
 	PTN_BG_HP,
 	PTN_BG_HP_last = (PTN_BG_HP + (
 		(HP_MAX / ((PTN_W * PTN_H) / (HP_POINT_W * HP_H)))

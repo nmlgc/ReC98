@@ -1,3 +1,7 @@
+#include "th01/main/playfld.hpp"
+#include "th01/formats/ptn.hpp"
+#include "th01/math/subpixel.hpp"
+
 /// Constants
 /// ---------
 
