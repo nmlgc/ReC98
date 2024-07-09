@@ -1,0 +1,5 @@
+#define ROUTE_SEL_1 "‚q‚n‚t‚m‚c@‚P@‚b‚k‚d‚`‚q"
+#define ROUTE_SEL_2 "‚b‚‚Ž‚‡‚’‚‚”‚•‚Œ‚‚”‚‰‚‚ŽII"
+#define ROUTE_SEL_3 "‚r‚…‚Œ‚…‚ƒ‚”@‚Ž‚…‚˜‚”@‚q‚‚•‚Ž‚„"
+#define ROUTE_SEL_4 "–‚ŠE‚Ö"
+#define ROUTE_SEL_5 "’n–‚Ö"

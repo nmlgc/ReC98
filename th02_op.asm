@@ -13,14 +13,11 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large op_02_TEXT
-		__LARGE__ equ 1
-		.386 ; ... then switch to what we actually need.
-		; And yes, we can't move this to an include file for some reason.
+		.386
+		.model use16 large _TEXT
 
 include ReC98.inc
-include th02/th02.asm
+include th02/th02.inc
 
 ; ===========================================================================
 
@@ -125,15 +122,8 @@ _TEXT		ends
 op_01_TEXT	segment	byte public 'CODE' use16
 op_01_TEXT	ends
 
-; ===========================================================================
-
-op_02_TEXT	segment	word public 'CODE' use16
-op_02_TEXT	ends
-
-; ===========================================================================
-
-op_03_TEXT	segment	word public 'CODE' use16
-op_03_TEXT	ends
+SHARED	segment	word public 'CODE' use16
+SHARED	ends
 
 	.data
 
@@ -174,14 +164,5 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/snd/snd[bss].asm
 include th02/snd/load[bss].asm
-public _mikoconfig
-_mikoconfig	dd ?
-		db    ?	;
-public _lives
-_lives	db ?
-public _bombs
-_bombs	db ?
-		dd    ?	;
-		dd    ?	;
 
 		end

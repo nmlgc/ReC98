@@ -11,4 +11,4 @@ _grcg_fill_playfield_rows	proc near
 	jge	short _grcg_fill_playfield_rows
 	retn
 _grcg_fill_playfield_rows	endp
-	even
+	nop

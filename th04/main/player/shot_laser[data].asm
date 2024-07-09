@@ -1,0 +1,7 @@
+public _SHOT_LASER_DOTS
+_SHOT_LASER_DOTS label byte
+	db 00011000b
+	db 00111100b
+	db 01111110b
+	db 10111101b
+	db 11111111b

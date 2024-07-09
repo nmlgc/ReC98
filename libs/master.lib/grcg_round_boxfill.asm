@@ -53,7 +53,6 @@ MRETURN macro
 	y1	= (RETSIZE+4)*2
 	x2	= (RETSIZE+3)*2
 	y2	= (RETSIZE+2)*2
-	r	= (RETSIZE+1)*2
 
 retfunc GC_RBOXF_BOXFILL
 	push	word ptr [BP+x1]
@@ -71,8 +70,9 @@ func GRCG_ROUND_BOXFILL	; {
 	push	DI
 	; 変数
 	s	= -2
+	@@r	= (RETSIZE+1)*2
 
-	mov	AX,[BP+r]
+	mov	AX,[BP+@@r]
 
 	mov	BX,[BP+x1]
 	mov	SI,[BP+x2]

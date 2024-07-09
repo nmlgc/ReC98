@@ -1,2 +1,5 @@
-*.asm text merge=union eol=crlf
-zuncom/zun*.txt -text
+*.asm text eol=crlf
+*.bat text eol=crlf
+*.[ch]* text eol=lf
+*.lua text eol=lf
+zun.txt -text

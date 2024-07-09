@@ -1,5 +1,0 @@
-polygon_points	Point 0Ah dup(<?>)
-polygon_pos	Point 10h dup(<?>)
-polygon_move_speed	Point 10h dup(<?>)
-polygon_angle	db 10h dup(?)
-polygon_rot_speed	db 10h dup(?)

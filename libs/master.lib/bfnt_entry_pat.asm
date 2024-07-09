@@ -79,10 +79,10 @@ func BFNT_ENTRY_PAT	; bfnt_entry_pat() {
 	@@clear_color = (RETSIZE+1)*2
 
 	mov	AX,[BP+@@clear_color]
-	mov	CS:bftentry_color,AX
+	mov	CS:@@color,AX
 	mov	CS:_DS_,DS
 	mov	AX,[BP+@@handle]
-	mov	CS:bftentry_file_handle,AX
+	mov	CS:@@file_handle,AX
 	_push	DS
 	_lds	BX,[BP+@@header]
 	mov	AX,(bfnt_header PTR [BX]).Xdots
@@ -98,9 +98,9 @@ func BFNT_ENTRY_PAT	; bfnt_entry_pat() {
 	mov	CS:@@patsize,DX
 	mov	BYTE PTR CS:[@@ysize],CL
 	mul	CX
-	mov	CS:plane_size,AX
+	mov	CS:@@plane_size,AX
 	shl	AX,2			;pattern size (BRGI)
-	mov	CS:read_byte,AX
+	mov	CS:@@read_byte,AX
 	xchg	BX,AX
 	push	BX
 	_call	SMEM_WGET
@@ -115,9 +115,9 @@ func BFNT_ENTRY_PAT	; bfnt_entry_pat() {
 	mov	DS,CX
 
 @@NEXT_PATTERN:
-	JMOV	CX,read_byte
+	JMOV	CX,@@read_byte
 	xor	DX,DX
-	JMOV	BX,bftentry_file_handle
+	JMOV	BX,@@file_handle
 
 	mov	AH,3fh
 	int	21h			;read handle
@@ -133,7 +133,7 @@ endif
 	jmp	BFTENTRY_INVAL
 @@NEXT_PATTERN_2:
 	xor	SI,SI
-	JMOV	DX,plane_size
+	JMOV	DX,@@plane_size
 
 	xor	BX,BX
 
@@ -211,7 +211,7 @@ B2V_LOOP:
 	push	ES			; seg addr
 	xor	AX,AX
 	push	AX			;offset address
-	JMOV	AX,bftentry_color		;clear_color
+	JMOV	AX,@@color		;clear_color
 	push	AX
 	_call	SUPER_ENTRY_PAT		; (patsize, far addr, clear_color)
 

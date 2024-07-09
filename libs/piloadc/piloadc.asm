@@ -1,17 +1,9 @@
-; *Not* the original file, but an edit to turn it into an includable slice.
-; Changes include:
-; * removal of the segment declarations (for obvious reasons)
-; * no segment prefixes in the constant macros (and instead on every single
-;   reference to them), as TASM somehow parses these as duplicated definitions
-;   (???), resulting in a "symbol already defined elsewhere" error
-; * the "piloadc_" prefix on constants
-; * the @@ prefix on function parameters
-; * unique label names to make up for JWasm's lack of support for truly block-
-;   scoped symbols
-; * "rep segcs movsw" being spelled out to what it's actually supposed to mean
-;   (movs word ptr es:[di], word ptr cs:[si])
-; * the ID check being changed from 'iP' to 'NZ' (lol ZUN)
-; * word alignment at the end of the file
+; The only change in ZUN's fork: The format ID is 'NZ', rather than 'iP'. Lol.
+
+; For compatibility with later TASM versions, "segcs movsw" has also been
+; spelled out to what it's actually supposed to mean.
+; 	(movs word ptr es:[di], word ptr cs:[si])
+; ----------------------------------------------------------------------------
 
 ;//////////////////////////////////////////////////////////////////////////////
 ;
@@ -91,31 +83,33 @@ gw&n	dw	?
 	jmp	short	gb1&n
 	endm
 
-piloadc_coltbl	=	0
-piloadc_PaletteBuff =	100h
-piloadc_x_pos	=	word ptr [130h]
-piloadc_y_pos	=	word ptr [132h]
-piloadc_x_wid	=	word ptr [134h]
-piloadc_y_wid	=	word ptr [136h]
-piloadc_tone	=	byte ptr [138h]
-piloadc_option	=	byte ptr [139h]
-piloadc_tcol	=	byte ptr [13ah]
-piloadc_flg800	=	byte ptr [13bh]
-piloadc_line4	=	word ptr [13ch]
-piloadc_vadr	=	word ptr [13eh]
-piloadc_fhandle	=	word ptr [140h]
-piloadc_bufbgn	=	word ptr [142h]
-piloadc_bufend	=	word ptr [144h]
-piloadc_bufsize	=	word ptr [146h]
-piloadc_yscroll	=	word ptr [148h]
-piloadc_y_wid2	=	word ptr [14ah]
-piloadc_x_wid2	=	word ptr [14ch]
-;piloadc_bfseg	=	word ptr [14eh]
-piloadc_tonetbl	=	150h
-piloadc_gbuff	=	160h
-piloadc_buffer	=	160h+line*(lin+2)
-piloadc_parasize =	piloadc_buffer
-
+	.model	small
+	.186
+coltbl	=	0
+PaletteBuff =	100h
+x_pos	=	word ptr ds:[130h]
+y_pos	=	word ptr ds:[132h]
+x_wid	=	word ptr ds:[134h]
+y_wid	=	word ptr ds:[136h]
+tone	=	byte ptr ds:[138h]
+option	=	byte ptr ds:[139h]
+tcol	=	byte ptr ds:[13ah]
+flg800	=	byte ptr ds:[13bh]
+line4	=	word ptr ds:[13ch]
+vadr	=	word ptr ds:[13eh]
+fhandle	=	word ptr ds:[140h]
+bufbgn	=	word ptr ds:[142h]
+bufend	=	word ptr ds:[144h]
+bufsize	=	word ptr ds:[146h]
+yscroll	=	word ptr ds:[148h]
+y_wid2	=	word ptr ds:[14ah]
+x_wid2	=	word ptr ds:[14ch]
+;bfseg	=	word ptr ds:[14eh]
+tonetbl	=	150h
+gbuff	=	160h
+buffer	=	160h+line*(lin+2)
+parasize =	buffer
+	.code
 	locals
 dftpal	db	0,0,0,	0,0,07h,	7h,0,0,		7h,0,7h
 	db	0,7h,0,	0,7h,7h,	7h,7h,0,	7h,7h,7h
@@ -126,21 +120,21 @@ dsseg	dw	?
 
 	public	PiLoad,ToneSet
 PiLoad	proc	near
-@@opt	=	word ptr 4
-@@ton	=	word ptr 6
-@@y	=	word ptr 8
-@@x	=	word ptr 10
-@@bufsiz	=	word ptr 12
-@@buf	=	dword ptr 14
-@@nam	=	dword ptr 18
+opt	=	word ptr [bp+4]
+ton	=	word ptr [bp+6]
+y	=	word ptr [bp+8]
+x	=	word ptr [bp+10]
+bufsiz	=	word ptr [bp+12]
+buf	=	dword ptr [bp+14]
+nam	=	dword ptr [bp+18]
 	push	bp
 	mov	bp,sp
 	push	ds
-	lds	dx,[bp+@@nam]
-	mov	ax,word ptr [bp+@@buf]
+	lds	dx,nam
+	mov	ax,word ptr buf
 	add	ax,15
 	shr	ax,4
-	add	ax,word ptr [bp+@@buf+2]
+	add	ax,word ptr buf+2
 	mov	es,ax
 	cld
 	mov	si,dx
@@ -154,14 +148,14 @@ PiLoad	proc	near
 	stosb
 	push	es
 	pop	ds
-	mov	si,[bp+@@bufsiz]
-	mov	ax,word ptr [bp+@@buf]
+	mov	si,bufsiz
+	mov	ax,word ptr buf
 	and	ax,15
 	sub	si,ax
-	mov	bx,[bp+@@x]
-	mov	cx,[bp+@@y]
-	mov	di,[bp+@@ton]
-	mov	ax,[bp+@@opt]
+	mov	bx,x
+	mov	cx,y
+	mov	di,ton
+	mov	ax,opt
 	call	piload0
 	pop	ds
 	pop	bp
@@ -175,7 +169,7 @@ ToneSet	proc	near
 	mov	ds,ax
 	mov	es,ax
 	mov	al,ss:[bx+2]
-	mov	ds:piloadc_tone,al
+	mov	tone,al
 	call	palset
 	pop	ds
 	ret	2
@@ -183,7 +177,7 @@ ToneSet	endp
 
 	public	_PiLoad,_ToneSet
 _PiLoad	proc	near
-	arg		@@nam:word,@@buf,@@bufsiz,@@x,@@y,@@ton,@@opt:word
+	arg		nam:word,buf,bufsiz,x,y,ton,opt:word
 	push	bp
 	mov	bp,sp
 	push	si
@@ -191,20 +185,20 @@ _PiLoad	proc	near
 	push	ds
 	mov	bx,ds
 	mov	es,bx
-	mov	dx,@@nam
-	mov	ax,@@buf
+	mov	dx,nam
+	mov	ax,buf
 	add	ax,15
 	shr	ax,4
 	add	ax,bx
 	mov	ds,ax
-	mov	si,@@bufsiz
-	mov	ax,@@buf
+	mov	si,bufsiz
+	mov	ax,buf
 	and	ax,15
 	sub	si,ax
-	mov	bx,@@x
-	mov	cx,@@y
-	mov	di,@@ton
-	mov	ax,@@opt
+	mov	bx,x
+	mov	cx,y
+	mov	di,ton
+	mov	ax,opt
 	call	piload0
 	pop	ds
 	pop	di
@@ -222,7 +216,7 @@ _ToneSet	proc	near
 	mov	ds,ax
 	mov	es,ax
 	mov	al,ss:[bx+2]
-	mov	ds:piloadc_tone,al
+	mov	tone,al
 	call	palset
 	pop	di
 	pop	si
@@ -232,26 +226,26 @@ _ToneSet	endp
 
 	public	_PiLoadL,_ToneSetL
 _PiLoadL	proc	far
-	arg		@@nam:dword,@@buf:dword,@@bufsiz,@@x,@@y,@@ton,@@opt:word
+	arg		nam:dword,buf:dword,bufsiz,x,y,ton,opt:word
 	push	bp
 	mov	bp,sp
 	push	si
 	push	di
 	push	ds
-	les	dx,@@nam
-	mov	ax,word ptr @@buf
+	les	dx,nam
+	mov	ax,word ptr buf
 	add	ax,15
 	shr	ax,4
-	add	ax,word ptr @@buf+2
+	add	ax,word ptr buf+2
 	mov	ds,ax
-	mov	si,@@bufsiz
-	mov	ax,word ptr @@buf
+	mov	si,bufsiz
+	mov	ax,word ptr buf
 	and	ax,15
 	sub	si,ax
-	mov	bx,@@x
-	mov	cx,@@y
-	mov	di,@@ton
-	mov	ax,@@opt
+	mov	bx,x
+	mov	cx,y
+	mov	di,ton
+	mov	ax,opt
 	call	piload0
 	pop	ds
 	pop	di
@@ -269,7 +263,7 @@ _ToneSetL	proc	far
 	mov	ds,ax
 	mov	es,ax
 	mov	al,ss:[bx+4]
-	mov	ds:piloadc_tone,al
+	mov	tone,al
 	call	palset
 	pop	di
 	pop	si
@@ -279,26 +273,26 @@ _ToneSetL	endp
 
 	public	_PiLoadC
 _PiLoadC	proc	near
-	arg		@@nam:dword,@@buf:dword,@@bufsiz,@@x,@@y,@@ton,@@opt:word
+	arg		nam:dword,buf:dword,bufsiz,x,y,ton,opt:word
 	push	bp
 	mov	bp,sp
 	push	si
 	push	di
 	push	ds
-	les	dx,@@nam
-	mov	ax,word ptr @@buf
+	les	dx,nam
+	mov	ax,word ptr buf
 	add	ax,15
 	shr	ax,4
-	add	ax,word ptr @@buf+2
+	add	ax,word ptr buf+2
 	mov	ds,ax
-	mov	si,@@bufsiz
-	mov	ax,word ptr @@buf
+	mov	si,bufsiz
+	mov	ax,word ptr buf
 	and	ax,15
 	sub	si,ax
-	mov	bx,@@x
-	mov	cx,@@y
-	mov	di,@@ton
-	mov	ax,@@opt
+	mov	bx,x
+	mov	cx,y
+	mov	di,ton
+	mov	ax,opt
 	call	piload0
 	pop	ds
 	pop	di
@@ -323,22 +317,22 @@ piload0:
 	cld
 	mov	spreg,sp
 	mov	dsseg,ds
-	mov	ds:piloadc_x_pos,bx
-	mov	ds:piloadc_y_pos,cx
-	mov	word ptr ds:piloadc_option,ax
+	mov	x_pos,bx
+	mov	y_pos,cx
+	mov	word ptr option,ax
 	mov	ax,di
-	mov	ds:piloadc_tone,al
+	mov	tone,al
 
 	xor	ax,ax
-	mov	ds:piloadc_flg800,al
+	mov	flg800,al
 
 	mov	ax,-8
-	cmp	si,piloadc_parasize+18+48
+	cmp	si,parasize+18+48
 	jb	error0
 	mov	ax,si
-	sub	ax,piloadc_parasize
-	mov	ds:piloadc_bufsize,ax
-	add	ax,piloadc_buffer
+	sub	ax,parasize
+	mov	bufsize,ax
+	add	ax,buffer
 ;	mov	buffend,ax
 ;	push	cs
 ;	pop	ds
@@ -354,7 +348,7 @@ piload0:
 	mov	ds,bx
 	mov	es,bx
 	jc	error
-	mov	ds:piloadc_fhandle,ax
+	mov	fhandle,ax
 	call	fread
 	mov	si,bx
 	lodsw
@@ -363,20 +357,20 @@ piload0:
 	jz	pilop
 error:	ret
 pilop:
-	test	ds:piloadc_option,4
-	jz	pilop_lop2
-pilop_lop:
+	test	option,4
+	jz	@@lop2
+@@lop:
 	lodsb
 	cmp	al,1ah
-	jz	pilop_lop2
+	jz	@@lop2
 	mov	dl,al
 	mov	ah,2
 	int	21h
-	jmp	short	pilop_lop
-pilop_lop2:
+	jmp	short	@@lop
+@@lop2:
 	lodsb
 	or	al,al
-	jnz	pilop_lop2
+	jnz	@@lop2
 	lodsb
 	mov	bl,al	;palet flag
 	lodsw		;ドット比率
@@ -385,11 +379,11 @@ pilop_lop2:
 	cmp	al,4	;plane check
 	mov	ax,-32
 	jnz	error
-	test	ds:piloadc_option,8
-	jz	pilop_skip
+	test	option,8
+	jz	@@skip
 	mov	ax,cx
 	call	gmode
-pilop_skip:
+@@skip:
 	add	si,4	;machine code skip
 	lodsw
 	xchg	ah,al	;dmy
@@ -422,37 +416,37 @@ code1:
 code2:
 	add	si,3
 	lodsb
-	test	ds:piloadc_option,40h
+	test	option,40h
 	jnz	ccode
-	cmp	ds:piloadc_tcol,0ffh
+	cmp	tcol,0ffh
 	jz	ccode
-	mov	ds:piloadc_tcol,al
-	or	ds:piloadc_option,40h
+	mov	tcol,al
+	or	option,40h
 	jmp	short	ccode
 
 codee:
 	mov	si,di
-	cmp	ds:piloadc_x_pos,0
-	jge	codee_jmp@
-	mov	ds:piloadc_x_pos,cx
-codee_jmp@:
-	cmp	ds:piloadc_y_pos,0
-	jge	codee_jmp
-	mov	ds:piloadc_y_pos,dx
-codee_jmp:
+	cmp	x_pos,0
+	jge	@@jmp@
+	mov	x_pos,cx
+@@jmp@:
+	cmp	y_pos,0
+	jge	@@jmp
+	mov	y_pos,dx
+@@jmp:
 
-	mov	cx,ds:piloadc_x_pos
-	mov	ax,ds:piloadc_y_pos
+	mov	cx,x_pos
+	mov	ax,y_pos
 	shr	cx,3
 	shl	ax,4
 	add	cx,ax
 	shl	ax,2
 	add	cx,ax
-	mov	ds:piloadc_vadr,cx
+	mov	vadr,cx
 
 	lodsw
 	xchg	ah,al
-	mov	ds:piloadc_x_wid,ax
+	mov	x_wid,ax
 
 	mov	cx,ax		;自己書換(^^;)
 	neg	ax
@@ -464,54 +458,54 @@ codee_jmp:
 	mov	line2,ax	;-x_wid*2
 	shl1	cx
 	mov	ax,cx
-	add	ax,piloadc_gbuff
-	mov	ds:piloadc_bufbgn,ax
+	add	ax,gbuff
+	mov	bufbgn,ax
 	shl1	cx
-	mov	ds:piloadc_line4,cx
+	mov	line4,cx
 	add	ax,cx
-	mov	ds:piloadc_bufend,ax
+	mov	bufend,ax
 	mov	bufend2,ax
 	mov	bufend3,ax
 	mov	bufend4,ax
 
-	mov	ax,ds:piloadc_x_pos
+	mov	ax,x_pos
 	and	ax,7
-	add	ax,ds:piloadc_x_wid
-	mov	ds:piloadc_x_wid2,ax
+	add	ax,x_wid
+	mov	x_wid2,ax
 	mov	cx,ax
 	lodsw
 	xchg	ah,al
-	mov	ds:piloadc_y_wid,ax
-	mov	ds:piloadc_y_wid2,ax
+	mov	y_wid,ax
+	mov	y_wid2,ax
 
 	test	bl,080h	;palet	check
 	jnz	nopalet
 	mov	cx,48
-	mov	di,piloadc_PaletteBuff
-codee_lop1:
+	mov	di,PaletteBuff
+@@lop1:
 	lodsb
 	shr	al,4
 	stosb
-	loop	codee_lop1
+	loop	@@lop1
 	mov	bx,si
 	jmp	short	palend
 nopalet:
 	mov	bx,si
 	mov	si,offset dftpal
-	mov	di,piloadc_PaletteBuff
+	mov	di,PaletteBuff
 	mov	cx,12
-	rep	movs word ptr es:[di], word ptr cs:[si]
+rep	movs word ptr es:[di], word ptr cs:[si]
 palend:
-	test	ds:piloadc_option,1
-	jz	palend_skip
+	test	option,1
+	jz	@@skip
 	call	palset
-palend_skip:
+@@skip:
 	call	maketbl
 	mov	dh,1
-	mov	di,piloadc_gbuff
+	mov	di,gbuff
 	xor	al,al
 	call	color	;ax=col
-	mov	cx,ds:piloadc_x_wid
+	mov	cx,x_wid
 	rep	stosw
 	xor	bp,bp
 	jmp	while1
@@ -613,18 +607,18 @@ jmp2:
 	xchg	cx,ax
 	rep	movsw
 	call	gtrans
-	sub	si,ds:piloadc_line4
+	sub	si,line4
 	jmp	short jmp1
 
 jmp0:
 	xor	cx,cx
 lop0:
 	movsw
-	cmp	di,ds:piloadc_bufend
+	cmp	di,bufend
 	loopnz	lop0
 	jnz	jmp1
 	call	gtrans
-	sub	si,ds:piloadc_line4
+	sub	si,line4
 	jcxz	jmp1
 	jmp	short	lop0
 
@@ -639,10 +633,10 @@ lop0:
 
 bit01:
 	get1bit	e
-	jc	bit01_jmp
+	jc	@@jmp
 	lodsb
 	jmp	short color2
-bit01_jmp:
+@@jmp:
 	mov	ax,[si]
 	xchg	ah,al
 	mov	[si],ax
@@ -655,7 +649,7 @@ color:
 	mov	bp,di
 	xor	ah,ah
 	mov	si,ax
-;	add	si,piloadc_coltbl
+;	add	si,coltbl
 
 	get1bit	0
 	jc	bit01
@@ -684,7 +678,7 @@ bit1:	get1bit	5
 color2:
 	xor	ah,ah
 	mov	si,ax
-;	add	si,piloadc_coltbl
+;	add	si,coltbl
 
 	get1bit	g
 	jc	@bit01
@@ -713,12 +707,12 @@ color2:
 
 @bit01:
 	get1bit	f
-	jc	@bit01_jmp
+	jc	@@jmp
 	mov	ah,[si]
 	mov	di,bp
 	cld
 	ret
-@bit01_jmp:
+@@jmp:
 	mov	cx,[si]
 	xchg	ch,cl
 	mov	[si],cx
@@ -735,7 +729,7 @@ color2:
 	bitsub	f
 
 maketbl:
-;	mov	di,piloadc_coltbl
+;	mov	di,coltbl
 	xor	di,di
 	mov	ax,1000h
 @@lop1:	mov	cx,16
@@ -773,10 +767,10 @@ fread:
 	push	ax
 	push	cx
 	push	dx
-	mov	bx,ds:piloadc_fhandle
-	mov	dx,piloadc_buffer
+	mov	bx,fhandle
+	mov	dx,buffer
 	push	dx
-	mov	cx,ds:piloadc_bufsize
+	mov	cx,bufsize
 	mov	ah,3fh
 	int	21h
 	jc	@err
@@ -792,7 +786,7 @@ fread:
 	ret
 
 fclose:
-	mov	bx,ds:piloadc_fhandle
+	mov	bx,fhandle
 	mov	ah,3eh
 	int	21h
 	ret
@@ -805,7 +799,7 @@ fclose:
 ;	in	ax=ドット比率データ
 gmode:
 	cmp	ax,102h
-	jz	gmode_next
+	jz	@@next
 ;	or	ax,ax
 ;	mov	ax,-32
 ;	jnz	error
@@ -817,7 +811,7 @@ gmode:
 	mov	al,1
 	out	6ah,al
 	ret
-gmode_next:
+@@next:
 	mov	ch,080h
 	mov	ah,42h
 	int	18h
@@ -827,7 +821,7 @@ gmode_next:
 	int	18h
 	mov	al,1
 	out	6ah,al
-	or	ds:piloadc_flg800,4
+	or	flg800,4
 	ret
 
 
@@ -835,19 +829,19 @@ gmode_next:
 gtrans:
 	pusha
 	push	es
-	cmp	ds:piloadc_vadr,32000
-	jl	gtrans_skip
-	sub	ds:piloadc_vadr,32000
-	or	ds:piloadc_flg800,1
+	cmp	vadr,32000
+	jl	@@skip
+	sub	vadr,32000
+	or	flg800,1
 	mov	al,1
 	out	0a6h,al
 ;	out	0a4h,al
-gtrans_skip:
+@@skip:
 
 disp:
-	mov	si,ds:piloadc_bufend
-	mov	di,piloadc_gbuff
-	mov	cx,ds:piloadc_x_wid
+	mov	si,bufend
+	mov	di,gbuff
+	mov	cx,x_wid
 	sub	si,cx
 	sub	si,cx
 	rep	movsw
@@ -855,10 +849,10 @@ disp:
 	mov	cx,lin
 ylop:
 	push	cx
-	mov	di,ds:piloadc_vadr
-	mov	ax,ds:piloadc_x_pos
+	mov	di,vadr
+	mov	ax,x_pos
 	and	ax,7
-	jz	ylop_skip
+	jz	@@skip
 	mov	cx,8
 	sub	cx,ax
 	push	cx
@@ -867,7 +861,7 @@ ylop:
 	not	al
 	xor	bx,bx
 	mov	dx,bx
-ylop_lop:
+@@lop:
 	lodsb
 	shl1	al
 	rcl1	bl
@@ -877,7 +871,7 @@ ylop_lop:
 	rcl1	dl
 	shl1	al
 	rcl1	dh
-	loop	ylop_lop
+	loop	@@lop
 	mov	cx,0a800h
 	mov	es,cx
 
@@ -892,40 +886,40 @@ ylop_lop:
 	mov	al,bl
 	out	7eh,al
 	mov	al,ah
-	test	ds:piloadc_option,40h
-	jz	ylop_skip0
-	mov	ah,ds:piloadc_tcol
+	test	option,40h
+	jz	@@skip0
+	mov	ah,tcol
 	shr	ah,1
-	jnc	ylop_jmp1
+	jnc	@@jmp1
 	not	dh
-ylop_jmp1:
+@@jmp1:
 	shr	ah,1
-	jnc	ylop_jmp2
+	jnc	@@jmp2
 	not	dl
-ylop_jmp2:
+@@jmp2:
 	shr	ah,1
-	jnc	ylop_jmp3
+	jnc	@@jmp3
 	not	bh
-ylop_jmp3:
+@@jmp3:
 	shr	ah,1
-	jnc	ylop_jmp4
+	jnc	@@jmp4
 	not	bl
-ylop_jmp4:
+@@jmp4:
 	or	bx,dx
 	or	bl,bh
 	or	al,bl
-ylop_skip0:
+@@skip0:
 	stosb
 	xor	al,al
 	out	7ch,al
 
 	pop	ax
-	mov	cx,ds:piloadc_x_wid
+	mov	cx,x_wid
 	sub	cx,ax
 	shr	cx,3
 	jmp	short	xlop
-ylop_skip:
-	mov	cx,ds:piloadc_x_wid
+@@skip:
+	mov	cx,x_wid
 	shr	cx,3
 xlop:
 	rept	4
@@ -950,8 +944,8 @@ xlop:
 	mov	ax,0a800h
 	mov	es,ax
 
-	test	ds:piloadc_option,40h
-	jnz	xlop_jmp0
+	test	option,40h
+	jnz	@@jmp0
 	mov	es:[di],dh
 	mov	es:[di+8000h],dl
 	mov	ah,0b8h
@@ -964,8 +958,8 @@ xlop:
 	dec	cx
 	jz	xend
 	jmp	xlop
-xlop_jmp0:
-	mov	ah,ds:piloadc_tcol
+@@jmp0:
+	mov	ah,tcol
 	mov	al,0c0h
 	out	7ch,al
 	mov	al,dh
@@ -978,21 +972,21 @@ xlop_jmp0:
 	out	7eh,al
 
 	shr	ah,1
-	jnc	xlop_jmp1
+	jnc	@@jmp1
 	not	dh
-xlop_jmp1:
+@@jmp1:
 	shr	ah,1
-	jnc	xlop_jmp2
+	jnc	@@jmp2
 	not	dl
-xlop_jmp2:
+@@jmp2:
 	shr	ah,1
-	jnc	xlop_jmp3
+	jnc	@@jmp3
 	not	bh
-xlop_jmp3:
+@@jmp3:
 	shr	ah,1
-	jnc	xlop_jmp4
+	jnc	@@jmp4
 	not	bl
-xlop_jmp4:
+@@jmp4:
 	mov	ax,dx
 	or	ax,bx
 	or	al,ah
@@ -1004,14 +998,14 @@ xlop_jmp4:
 xend:
 	xor	al,al
 	out	7ch,al
-	mov	cx,ds:piloadc_x_wid2
+	mov	cx,x_wid2
 	and	cx,7
 	jz	ext
 	mov	ah,8
 	sub	ah,cl
 	xor	bx,bx
 	mov	dx,bx
-xend_lop:
+@@lop:
 	lodsb
 	shl1	al
 	rcl1	bl
@@ -1021,7 +1015,7 @@ xend_lop:
 	rcl1	dl
 	shl1	al
 	rcl1	dh
-	loop	xend_lop
+	loop	@@lop
 	mov	cl,ah
 	mov	ch,0ffh
 	shl	ch,cl
@@ -1041,54 +1035,54 @@ xend_lop:
 	mov	al,bl
 	out	7eh,al
 	mov	al,ch
-	test	ds:piloadc_option,40h
-	jz	xend_skip0
-	mov	ah,ds:piloadc_tcol
+	test	option,40h
+	jz	@@skip0
+	mov	ah,tcol
 	shr	ah,1
-	jnc	xend_jmp1
+	jnc	@@jmp1
 	not	dh
-xend_jmp1:
+@@jmp1:
 	shr	ah,1
-	jnc	xend_jmp2
+	jnc	@@jmp2
 	not	dl
-xend_jmp2:
+@@jmp2:
 	shr	ah,1
-	jnc	xend_jmp3
+	jnc	@@jmp3
 	not	bh
-xend_jmp3:
+@@jmp3:
 	shr	ah,1
-	jnc	xend_jmp4
+	jnc	@@jmp4
 	not	bl
-xend_jmp4:
+@@jmp4:
 	or	bx,dx
 	or	bl,bh
 	or	al,bl
-xend_skip0:
+@@skip0:
 	stosb
 	xor	al,al
 	out	7ch,al
 
 ext:
 	pop	cx
-	add	ds:piloadc_vadr,80
-	dec	ds:piloadc_y_wid2
-	jz	piloadc_fin
+	add	vadr,80
+	dec	y_wid2
+	jz	fin
 	dec	cx
 	jz	ext2
 	jmp	ylop
 ext2:
 	pop	es
 	popa
-	mov	di,ds:piloadc_bufbgn
+	mov	di,bufbgn
 	ret
-piloadc_fin:
-	test	ds:piloadc_flg800,1
-	jle	fin_jmp
+fin:
+	test	flg800,1
+	jle	@@jmp
 	mov	al,0
 ;	out	0a4h,al
 	out	0a6h,al
-	and	ds:piloadc_flg800,not 2
-fin_jmp:
+	and	flg800,not 2
+@@jmp:
 	call	fclose
 	mov	sp,spreg
 	xor	ax,ax
@@ -1103,26 +1097,26 @@ mul75	dw	0,75,150,225,300,375,450,525,600,675,750,825,900,975,1050,1125
 mul15	dw	0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225
 palset:
 	push	bx
-	mov	bl,ds:piloadc_tone
+	mov	bl,tone
 	mov	bh,100
-	mov	di,piloadc_tonetbl
+	mov	di,tonetbl
 	xor	cx,cx
-palset_plop:
+@@plop:
 	mov	al,cl
 	mul	bl
 	div	bh
 	stosb
 	inc	cl
 	cmp	cl,16
-	jnz	palset_plop
+	jnz	@@plop
 
-	mov	si,piloadc_PaletteBuff
-	mov	bx,piloadc_tonetbl
+	mov	si,PaletteBuff
+	mov	bx,tonetbl
 	mov	cx,16
 	xor	ah,ah
-	test	ds:piloadc_option,16
-	jnz	palset_lop2
-palset_lop:				;通常
+	test	option,16
+	jnz	@@lop2
+@@lop:				;通常
 	mov	al,ah
 	out	0a8h,al	;palet	no
 	lodsb
@@ -1135,10 +1129,10 @@ palset_lop:				;通常
 	xlat	[bx]
 	out	0aeh,al	;blue
 	inc	ah
-	loop	palset_lop
+	loop	@@lop
 	pop	bx
 	ret
-palset_lop2:				;NOTE用
+@@lop2:				;NOTE用
 	mov	al,16
 	sub	al,cl
 	out	0a8h,al	;palet	no
@@ -1164,8 +1158,9 @@ palset_lop2:				;NOTE用
 	sbb	al,al
 	out	port,al
 	endm
-	loop	palset_lop2
+	loop	@@lop2
 	pop	bx
 	ret
 
-	db	0	; word alignment
+	end
+

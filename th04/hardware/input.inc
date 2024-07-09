@@ -14,8 +14,17 @@ INPUT_CANCEL     = 1000h
 INPUT_OK         = 2000h
 INPUT_Q          = 4000h
 
-INPUT_MOVEMENT   = INPUT_UP or INPUT_DOWN or INPUT_LEFT or INPUT_RIGHT
+INPUT_MOVEMENT   = \
+	INPUT_UP or INPUT_DOWN or INPUT_LEFT or INPUT_RIGHT or \
+	INPUT_UP_LEFT or INPUT_UP_RIGHT or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
 
 if GAME eq 5
-INPUT_REPLAY_END = 0F0F0h
+input_reset_sense_interface	equ <@input_reset_sense_held$qv>
+else
+input_reset_sense_interface	equ <@input_reset_sense$qv>
 endif
+
+; move_ret_t
+MOVE_INVALID = 0
+MOVE_VALID = 1
+MOVE_NOINPUT = 2

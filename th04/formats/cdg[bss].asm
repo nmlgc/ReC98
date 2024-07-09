@@ -1,9 +1,4 @@
-; Global CDG data.
-
-CDG_SLOT_COUNT = 64
-
-; CDGHeader cdg_slots[CDG_SLOT_COUNT]
-public _cdg_slots
-_cdg_slots	CDGSlot CDG_SLOT_COUNT dup(<?>)
+include th03/formats/cdg[bss].asm
+public cdg_images_to_load
 cdg_images_to_load db ?
-	db ?	; word alignment
+	evendata

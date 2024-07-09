@@ -1,0 +1,3 @@
+F_FREE = 0
+F_ALIVE = 1
+F_REMOVE = 2

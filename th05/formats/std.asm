@@ -1,14 +1,15 @@
-; TH05 adds stage and BGM titles to the format, but the rest of the format is
-; identical to TH04.
+; TH05 adds stage and BGM titles to the format, and assumes that the tile
+; section IDs come pre-multiplied by the element size of the section offset
+; lookup array – see tiles_fill_initial() for details. The rest of the format
+; is identical to TH04.
 
-; void std_load();
-public std_load
-std_load	proc near
+public @std_load$qv
+@std_load$qv proc near
 	push	si
 	push	di
 	push	ds
-	call	std_free
-	mov	al, stage_id
+	call	@std_free$qv
+	mov	al, _stage_id
 	add	al, '0'
 	mov	byte ptr _std_fn+3, al
 	mov	dx, offset _std_fn
@@ -55,21 +56,21 @@ std_load	proc near
 	mov	word ptr _boss_bgm_title, di
 	repne scasb
 	lea	ax, [di+5]
-	mov	_tile_index_ptr, ax
+	mov	_std_map_section_p, ax
 	xor	al, al
-	mov	_tile_row, al
-	mov	_tile_scrollspeed, al	; 0 immediately triggers the boss battle
+	mov	_tile_row_in_section, al
+	mov	_scroll_speed, al	; 0 immediately triggers the boss battle
 	movzx	ax, byte ptr es:[di]
 	inc	ax
 	add	di, ax
 	lea	ax, [di+5]
-	mov	_tile_scrollspeed_ptr, ax
+	mov	_std_scroll_speed, ax
 	movzx	ax, byte ptr es:[di]
 	inc	ax
 	add	di, ax
 	mov	dl, es:[di]
 	inc	di
-	mov	bx, offset _enemy_script_ptrs
+	mov	bx, offset _std_enemy_scripts
 
 @@enemy_script_loop:
 	movzx	ax, byte ptr es:[di]
@@ -82,16 +83,15 @@ std_load	proc near
 	inc	di
 	mov	word ptr _std_ip+2, es
 	mov	word ptr _std_ip, di
-	setfarfp	_stage_vm, nullsub_1
+	setfarfp	_stage_vm, nullfunc_far
 	pop	di
 	pop	si
 	retn
-std_load	endp
+@std_load$qv endp
 
 
-; void std_free();
-public std_free
-std_free	proc near
+public @std_free$qv
+@std_free$qv proc near
 	cmp	_std_seg, 0
 	jz	short @@ret
 	call	hmem_free pascal, _std_seg
@@ -99,5 +99,5 @@ std_free	proc near
 
 @@ret:
 	retn
-std_free	endp
+@std_free$qv endp
 	even

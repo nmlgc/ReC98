@@ -38,24 +38,6 @@
 ; Revision History:
 ;	93/11/24 Initial: grppifre.asm/master.lib 0.21
 
-PiHeader STRUC
-comment_offset	dw	?
-comment_segment	dw	?
-commentlen	dw	?
-_mode		db	?
-_n		db	?
-_m		db	?
-_plane		db	?
-_machine	db	4 dup (?)
-maexlen		dw	?
-maex_offset	dw	?
-maex_segment	dw	?
-_xsize		dw	?
-_ysize		dw	?
-_palette	db	48 dup (?)
-PiHeader ENDS
-
-
 func GRAPH_PI_FREE	; graph_pi_free() {
 	push	BP
 	mov	BP,SP

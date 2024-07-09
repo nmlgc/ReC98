@@ -1,6 +1,25 @@
 ; ReC98
 ; ASM equivalents of relevant #defines from master.h
 
+; These directly translate to the C OUTB, OUTW and OUTW2 macros.
+outb macro port:req, value:rest
+	mov	dx, port
+ifdifi <value>, <al>
+	mov	al, value
+endif
+	out	dx, al
+endm
+outw macro port:req, value:rest
+	mov	dx, port
+	mov	ax, value
+	out	dx, ax
+endm
+outw2 macro port:req, value:rest
+	mov	ax, value
+	mov	dx, port
+	out	dx, ax
+endm
+
 Point struc
 	x dw ?
 	y dw ?
@@ -21,6 +40,22 @@ TX_WHITE	equ 0e1h
 TX_BLINK	equ 2
 TX_REVERSE	equ 4
 TX_UNDERLINE	equ 8
+
+; グラフィック画面関係 ----------------------------------------------------
+
+graph_showpage	macro	page:rest
+	outb	0A4h, page
+endm
+
+graph_accesspage	macro	page:rest
+	outb	0A6h, page
+endm
+
+; スーパーインポーズ処理 --------------------------------------------------*
+; 出典: super.lib(c)Kazumi supersfx.lib(c)iR
+; $Id: super.h 0.36 93/02/19 20:23:11 Kazumi Rel $
+
+PLANE_ERASE = 00c0h
 
 ; グラフィック画面への多角形描画処理 --------------------------------------
 ; 出典: gc_poly.h 0.16
@@ -85,17 +120,6 @@ endm
 
 ; GRCG color setting macros
 ; -------------------------
-; In contrast to master.lib's own grcg_setcolor(), these keep the current
-; GRCG mode.
-GRCG_SETCOLOR_DIRECT_CLOBBERING macro port_reg:req, col_reg:req
-	mov	port_reg, 7Eh
-	rept 4
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-	endm
-endm
-
 GRCG_SETCOLOR_DIRECT macro col_reg:req
 	rept 4
 		shr	col_reg, 1
@@ -107,18 +131,6 @@ endm
 
 ; EGC
 ; ---
-
-; These directly translate to the C OUTW and OUTW2 macros.
-outw macro port:req, value:rest
-	mov	dx, port
-	mov	ax, value
-	out	dx, ax
-endm
-outw2 macro port:req, value:rest
-	mov	ax, value
-	mov	dx, port
-	out	dx, ax
-endm
 
 EGC_ACTIVEPLANEREG	equ 04a0h
 EGC_READPLANEREG  	equ 04a2h
@@ -138,12 +150,25 @@ EGC_SHIFT_VRAM 	equ 00000h	; cpu write, vram read
 EGC_RL_MEMWRITE	equ 00200h	; RL = pattern Register Load
 EGC_RL_MEMREAD 	equ 00100h	; ^at mem write, <-at mem read
 EGC_RL_NONE    	equ 00000h	; no touch
+; ---
 
-egc_selectpat	macro
-	outw2	EGC_READPLANEREG, 000FFh
-endm
+; .PI
+; ---
 
-egc_setrop	macro mode_rop:rest
-	outw2	EGC_MODE_ROP_REG, mode_rop
-endm
+PiHeader STRUC
+	comment_offset 	dw	?
+	comment_segment	dw	?
+	commentlen     	dw	?
+	PI_mode        	db	?
+	_n             	db	?
+	_m             	db	?
+	_plane         	db	?
+	_machine      	db	4 dup (?)
+	maexlen       	dw	?
+	maex_offset   	dw	?
+	maex_segment  	dw	?
+	_xsize        	dw	?
+	_ysize        	dw	?
+	_palette      	db	48 dup (?)
+PiHeader ENDS
 ; ---
