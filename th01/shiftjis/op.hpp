@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 #define HIT_KEY " ‚g‚h‚s@‚j‚d‚x"
 
 #define MAIN_CHOICES { \

@@ -6,6 +6,9 @@
 /// screen resolution: Every bit corresponds to a tile of 2×2 screen pixels,
 // or 2×1 VRAM pixels.
 
+#include "th03/main/playfld.hpp"
+#include <stddef.h>
+
 typedef int collmap_tile_amount_t;
 
 // Constants

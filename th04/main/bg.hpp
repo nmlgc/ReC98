@@ -1,5 +1,7 @@
 // Background rendering function pointers.
 
+#include "platform.h"
+
 extern nearfunc_t_near bg_render_not_bombing;
 extern nearfunc_t_near bg_render_bombing;
 

@@ -1,3 +1,9 @@
+#if (GAME == 5)
+	#include "th05/sprites/main_pat.h"
+#endif
+#include "th04/main/player/player.hpp"
+#include "th04/math/randring.hpp"
+#include "th04/sprites/cels.h"
 #include "th02/main/entity.hpp"
 
 // Sets [velocity] to a vector with the given [angle] and a 12-pixel length.

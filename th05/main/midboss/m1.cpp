@@ -3,20 +3,12 @@
 
 #pragma option -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th03/math/polar.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
-extern "C" {
 #include "th04/snd/snd.h"
 #include "th04/main/homing.hpp"
-#include "th04/main/phase.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
-}
 #include "th04/main/spark.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/item/item.hpp"

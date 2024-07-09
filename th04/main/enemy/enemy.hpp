@@ -1,3 +1,7 @@
+#include "th04/main/bullet/bullet.hpp"
+#include "th04/main/item/item.hpp"
+#include "th04/sprites/main_pat.h"
+
 enum enemy_flag_t {
 	EF_FREE = 0,
 	EF_ALIVE = 1,
@@ -66,7 +70,7 @@ struct enemy_t {
 	// Not updated to reflect the current playfield half the enemy is in!
 	bool spawned_in_left_half;
 
-	bullet_template_t bullet_template;
+	BulletTemplate bullet_template;
 
 	// If [autofire] is true, the enemy fires bullets, according to its
 	// template, every [autofire_interval] number of frames, with

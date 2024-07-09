@@ -9,7 +9,6 @@
 #include <io.h>
 #include <malloc.h>
 #include <string.h>
-#include "platform.h"
 #include "x86real.h"
 #include "th01/snd/mdrv2.h"
 

@@ -1,3 +1,5 @@
+#include "planar.h"
+
 #define PELLET_CLOUD_W 16
 #define PELLET_CLOUD_H 16
 #define PELLET_CLOUD_CELS 2

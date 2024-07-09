@@ -234,8 +234,8 @@ loc_B7F6:
 zunsoft_palette_update_and_show	endp
 
 
-public _zunsoft_animate
-_zunsoft_animate proc near
+public @zunsoft_animate$qv
+@zunsoft_animate$qv proc near
 
 @@frame		= word ptr -8
 @@i		= word ptr -6
@@ -253,11 +253,11 @@ _zunsoft_animate proc near
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	pi_load pascal, 0, ds, offset _zun00_pi
-	call	pi_palette_apply pascal, 0
-	call	pi_put_8 pascal, large 0, 0
+	call	@pi_load$qinxc pascal, 0, ds, offset _zun00_pi
+	call	@pi_palette_apply$qi pascal, 0
+	call	@pi_put_8$qiii pascal, large 0, 0
 if GAME eq 5
-	call	pi_free pascal, 0
+	call	@pi_free$qi pascal, 0
 else
 	freePISlotLarge	0
 endif
@@ -332,7 +332,7 @@ endif
 	graph_accesspage 1
 	graph_showpage 0
 if GAME eq 4
-	call	_input_reset_sense
+	call	@input_reset_sense$qv
 endif
 	xor	di, di
 	jmp	@@more_frames?
@@ -340,9 +340,9 @@ endif
 
 @@next_frame:
 if GAME eq 5
-	call	_input_reset_sense_held
+	call	@input_reset_sense_held$qv
 else
-	call	_input_sense
+	call	@input_sense$qv
 endif
 	cmp	_key_det, INPUT_NONE
 	jz	short @@not_skipping
@@ -423,7 +423,7 @@ frame_68:	; case 68
 	call	_bgimage_put	; default
 	call	zunsoft_update_and_render
 if GAME eq 4
-	call	_input_reset_sense
+	call	@input_reset_sense$qv
 endif
 
 @@2_frame_delay:
@@ -480,7 +480,7 @@ endif
 	pop	si
 	leave
 	retn
-_zunsoft_animate endp
+@zunsoft_animate$qv endp
 
 ; ---------------------------------------------------------------------------
 if GAME eq 4

@@ -3,6 +3,7 @@
 
 #pragma codeseg HUD_OVRL_TEXT main_01
 
+#include "th04/gaiji/gaiji.h"
 #include "th02/main/hud/overlay.hpp"
 
 extern nearfunc_t_near overlay1; // Rendered first
@@ -18,12 +19,10 @@ void near overlay_black(void);
 // Stage transitions
 // -----------------
 
-#ifdef OVERLAY_FADE_CELS
-	static const int OVERLAY_FADE_INTERVAL = 8;
-	static const int OVERLAY_FADE_DURATION = (
-		(OVERLAY_FADE_CELS + 1) * OVERLAY_FADE_INTERVAL
-	);
-#endif
+static const int OVERLAY_FADE_INTERVAL = 8;
+static const int OVERLAY_FADE_DURATION = (
+	(OVERLAY_FADE_CELS + 1) * OVERLAY_FADE_INTERVAL
+);
 
 // Needs to be here to get the effect of `#pragma codeseg`.
 void pascal near overlay_stage_enter_update_and_render(void);

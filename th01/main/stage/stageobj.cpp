@@ -1,24 +1,14 @@
-#include <stddef.h>
 #include <stdlib.h>
 #include <malloc.h>
-#include "platform.h"
-#include "pc98.h"
-#include "decomp.hpp"
-#include "planar.h"
-#include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
-#include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/stageobj.hpp"
 
@@ -384,11 +374,11 @@ void stageobjs_init_and_render(int stage_id)
 	obstacles.new_counted();
 
 	// ZUN bloat: No, not the ID of the one card that might remain unflipped
-	// after a bomb. That's down to a per-frame rand(), see cards_hittest()
+	// after a bomb. That's down to a per-frame irand(), see cards_hittest()
 	// for the actual algorithm. (It also happens to divide by 0 if cards.count
 	// is 0.)
 	static int a_random_unused_card_id;
-	a_random_unused_card_id = (rand() % cards.count);
+	a_random_unused_card_id = (irand() % cards.count);
 
 	for(i = 0; i < obstacles.count; i++) {
 		obstacles.frames[i].v = 0;
@@ -995,7 +985,7 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		while(1) {
 			if(
 				(static_cast<int>(obstacles.type[dst_slot]) == OT_PORTAL) &&
-				((rand() % 4) == 0) &&
+				((irand() % 4) == 0) &&
 				(dst_slot != obstacle_slot)
 			 ) {
 				break;
@@ -1021,8 +1011,8 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		ptn_sloppy_unput_16(dst_left, dst_top);
 		ptn_put_8(dst_left, dst_top, PTN_PORTAL);
 
-		orb_velocity_x = static_cast<orb_velocity_x_t>(rand() % OVX_COUNT);
-		orb_force_new(((rand() % 19) - 9), OF_IMMEDIATE);
+		orb_velocity_x = static_cast<orb_velocity_x_t>(irand() % OVX_COUNT);
+		orb_force_new(((irand() % 19) - 9), OF_IMMEDIATE);
 		orb_cur_left = dst_left;
 		orb_cur_top = dst_top;
 		orb_in_portal = false;

@@ -4,12 +4,12 @@
  * required in order to run TH05.
  */
 
+#pragma option -2 // ZUN bloat
+
 #include <stddef.h>
-#include "platform.h"
 #include "decomp.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
-#include "th04/score.h"
 #include "th05/resident.hpp"
 #include "th04/snd/snd.h"
 #include "th04/formats/cfg.hpp"

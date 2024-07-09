@@ -1,3 +1,6 @@
+#include "libs/master.lib/master.hpp"
+#include "platform.h"
+
 /// Shared input macros
 extern bool input_shot;
 extern bool input_ok;

@@ -1,2 +1,4 @@
+#include "th02/score.h"
+
 extern char rank;
-extern int32_t score;
+extern score_t score;

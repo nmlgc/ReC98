@@ -1,9 +1,4 @@
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th05/main/player/player.hpp"
 
 unsigned char pascal near player_angle_from(

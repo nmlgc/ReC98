@@ -2,10 +2,6 @@
 // MODDERS: Inline that call into gather_render(), and remove this translation
 // unit.
 
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "x86real.h"
 #include "platform/x86real/pc98/grcg.hpp"
 #include "th04/hardware/grcg.hpp"
 

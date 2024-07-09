@@ -1,6 +1,9 @@
 /// TH05 in-game dialog script format
 /// ---------------------------------
 
+#include "th05/playchar.h"
+#include "pc98.h"
+
 struct tx2_header_t {
 	// The dialog script for player character N is stored between
 	// `offset_for[N]` and `offset_for[N + 1]`.

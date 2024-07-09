@@ -1,5 +1,10 @@
+#ifndef TH04_RESIDENT_HPP
+#define TH04_RESIDENT_HPP
+
+#include "th04/score.h"
+
 #define RES_ID "HUMAConfig"
-typedef struct {
+struct resident_t {
 	char id[sizeof(RES_ID)];
 	unsigned char rem_lives;
 	unsigned char credit_lives;
@@ -53,6 +58,8 @@ typedef struct {
 	bool zunsoft_shown;
 	bool turbo_mode;
 	int8_t unused_5[182]; // ZUN bloat
-} resident_t;
+};
 
 extern resident_t far *resident;
+
+#endif /* TH04_RESIDENT_HPP */

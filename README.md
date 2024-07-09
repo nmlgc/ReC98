@@ -32,12 +32,13 @@ Since we only have the binaries, we obviously can't know how ZUN named any varia
 Aside from the preservation angle and the resulting deep insight into the games' mechanics, the code can then serve as the foundation for any type of mod, or any port to non-PC-98 platforms, developed by the community. This is also why ReC98 values *readable and understandable* code over a pure decompilation.
 
 #### Why?
-There are a number reasons why achieving moddability via full decompilation seems to be more worthwhile for the PC-98 games, in contrast to a [PyTouhou](http://pytouhou.linkmauve.fr/)-style black-box reimplementation:
+
+There are several why achieving moddability via full decompilation seems to be more worthwhile for the PC-98 games, in contrast to a [PyTouhou](http://pytouhou.linkmauve.fr/)-style black-box reimplementation:
 
 * While stage enemies and their bullet patterns are controlled by bytecode in TH04's and TH05's .STD files that *could* just be interpreted by an alternate VM, midboss and boss battles are entirely hardcoded into the executables.
 * Even though complete decompilation will take a long time, partial reverse-engineering results will be very useful to modders who just want to work on the original PC-98 versions of the games.
 * PC-98 emulation is messy and overly complicated. It has been getting better as of 2018 thanks to [DOSBox-X](https://github.com/joncampbell123/dosbox-x) adding support for the platform, but even at its best, it will always consume way more system resources than what would be appropriate for those games.
-* thcrap-style multilingual translation on PC-98 would be painful for languages with non-ASCII scripts. The obvious method of modifying the font ROM specifically for each language is ugly and won't work on real hardware, so a custom renderer would be needed. That by itself requires a lot of reverse-engineering and, preferably, compilable source code to avoid the limits of hex-editing. Or, even better, the prospect to do this entirely on a more modern system.
+* thcrap-style multilingual translation on PC-98 would be painful for languages with non-ASCII scripts. The obvious method of modifying the font ROM specifically for each language is ugly and won't work on real hardware, so a custom renderer would be needed. That by itself requires a lot of reverse-engineering and, preferably, compilable source code to avoid the limits of hex-editing. Or, even better, the prospect of doing this entirely on a more modern system.
 * These games stopped being sold in 2002, ZUN has confirmed on multiple occasions to have lost all the data of the "earlier games" <sup>[citation needed]</sup>, and PC-98 hardware is long obsolete. In short, these games are as abandoned as they can possibly be, and are unlikely to ever turn a profit again.
 
 #### Is this even viable?
@@ -119,104 +120,88 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
 * **Borland Turbo C++ 4.0J**
 
-  This was the compiler ZUN originally used, so it's the only one that can deterministically compile this code to executables that are bit-perfect to ZUN's original ones.
+  This was the compiler ZUN originally used, so it's the only one that can deterministically compile this code to executables that are bit-perfect to ZUN's original ones. Borland never made a cross-compiler targeting 16-bit DOS that runs on 32-bit Windows, so the C++ parts *have* to be compiled using a 16-bit DOS program.\
+  ReC98 also uses Turbo C++ 4.0J to build the custom tools in its build pipeline, such as the [converter for hardcoded sprites]. These only have to run natively as part of the build process, so it might appear counter-productive to compile them into 16-bit DOS programs that then need to be emulated on 64-bit operating systems. This still makes sense for several reasons, though:
+
+  * Building on a 64-bit OS already requires DOS emulation to compile the games themselves.
+  * Compared to C++ compilation, the pipeline tools take up a negligible amount of build time, even when emulated.
+  * These tools consist of comparatively little code, so it's not too annoying to write them in standard C or C-like C++. This makes Turbo C++ 4.0J's old age and lacking C++ standard compliance a non-issue.
+
+  Therefore, it makes little sense to add the usually quite heavy dependency on a native C++ compiler.
 
   ----
 
 * **Borland Turbo Assembler (TASM), version 5.0 or later, for 32-bit Windows (`TASM32.EXE`)**
 
-  Borland never made a cross compiler targeting 16-bit DOS that runs on 32-bit Windows, so the C++ parts *have* to be compiled using a 16-bit DOS program. The not yet decompiled ASM parts of the code, however, *can* be assembled using a 32-bit Windows tool. This not only way outperforms any 16-bit solution that would have to be emulated on modern 64-bit systems, making build times, well, tolerable. It also removes any potential EMS or XMS issues we might have had with `TASMX.EXE` on these emulators.
-
-  These advantages were particularly relevant in the early days of ReC98, when the ASM files were pretty huge. That's also when I decided to freely use long file names that don't need to conform to the 8.3 convention… As a result, the build process still starts with a separate 32-bit part (`build32b.bat`), which must be run in Windows (or Wine).
-
-  In the end though, we'd definitely like to have a single-step 16-bit build process that requires no 32-bit tools. This will probably happen some time after reaching 100% position independence over all games.
+  ReC98 not only requires an assembler for the game code that hasn't been decompiled yet, but also for PC-98 Touhou's [third-party libraries] and ZUN's own hand-written and undecompilable assembly code. Thankfully, Borland's 32-bit assembler *can* be used for 16-bit code and runs natively on both 64-bit and 32-bit Windows, outperforming the 16-bit `TASM.EXE` and `TASMX.EXE` tools.\
+  As a side benefit, using a native 32-bit Windows tool also allows the ASM parts to freely use long file names that don't need to conform to the DOS 8.3 convention.
 
   ----
 
-* **Borland C++ 5.5, for 32-bit Windows (`BCC32.EXE`)**
+* **MS-DOS Player** (bundled)
 
-  Released as freeware, and as of July 2020, still sort of officially downloadable from
+  A lightweight emulator for running DOS command-line tools on the Windows console subsystem, automatically used when building the codebase on 64-bit operating systems. Despite its stripped-down nature, it still runs noticeably slower than DOSBox as it uses Neko Project 21/W's interpreting x86 core rather than a dynamic recompiler, but the seamless console integration more than makes up for that.
 
-    http://altd.embarcadero.com/download/bcppbuilder/freecommandLinetools.exe
-
-  (SHA-256 `433b44741f07f2ad673eb936511d498c5a6b7f260f98c4d9a6da70c41a56d855`)
-
-  Needed to fulfill the role of being "just *any* native C++ compiler" for our own tools that either don't necessarily *have* to run on 16-bit DOS, or are required by the 32-bit build step, as long as that one still exists (see above).
-
-  Currently, this category of tools only includes the [converter for hardcoded sprites]. Since that one is written to be as platform-independent as possible, it could easily be compiled with any other native C compiler you happen to have already installed. (Which also means that future port developers hopefully have one less thing to worry about.)
-  So, if you dislike additional dependencies, feel free to edit the `Tupfile` so that `bmp2arr` is compiled with any other C compiler of your choice.
-
-  However, choosing Borland C++ 5.5 as a default for everyone else fits ReC98 very well for several reasons:
-
-  * It still happens to be the most hassle- and bloat-free way to get *any* sort of 32-bit Windows C++ compiler to people, clearly beating Open Watcom, and the required registration for [Borland/Embarcadero's own C++ 7.30]. Depending on anything bigger would be way out of proportion, considering how little we use it for
-  * We already rely on a 32-bit Windows tool
-  * Turbo C++ 4.0J defines the lower bound for our allowed level of C++ features anyway, making Borland C++ 5.5's old age and lacking C++ standard compliance a non-issue
-  * Unlike 7.30, 5.5 still works on Windows 9x, which is what typically runs on the real PC-98 hardware that some people might want to compile ReC98 on.
-  * Other tiny C compilers have no C++ support. While the sprite converter is written in C, future tools might not be, and I'm too old to restrict people to C for no good reason.
+  The bundled build is specifically profile-optimized for building ReC98, running a reduced x86 core that only emulates a 386 with no FPU, paging, or cycle counting. Compared to [Takeda Toshiya's upstream builds], this build speeds up the ReC98 build process by ≈60% for a complete rebuild, ≈80% for compiling and linking the largest translation unit and largest binary, and ≈70% for the median-sized translation unit and binary. It also contains a bugfix required for running Turbo C++ 4.0J in the context of a build system that wasn't available in the upstream builds as of June 2024.\
+  See [`bin/README.md`](bin/README.md) for license and build information.
 
   ----
 
-* [**Tup**](http://gittup.org/tup/), for Windows (optional, but recommended)
+* [**Tup**](http://gittup.org/tup/), for Windows (bundled)
 
-  A sane, parallel build system, used to ensure minimal rebuilds during the 32-bit build part. Provides perfect tracking of dependencies via code injection and hooking a compiler's file opening syscalls, allowing it to automatically add all `#include`d files to the build dependency graph. This makes it way superior to most `make` implementations, which lack this vital feature, and are therefore inherently unsuited for pretty much any programming language imaginable. With no abstractions for specific compilers, Tup also fits perfectly with the ancient Borland tools required for this project.
+  A sane, parallel build system, used to ensure minimal rebuilds. Provides perfect tracking of dependencies via code injection and hooking a compiler's file opening syscalls, allowing it to automatically add all `#include`d files to the build dependency graph. This makes it way superior to most `make` implementations, which lack this vital feature, and are therefore inherently unsuited for pretty much any programming language imaginable. With no abstractions for specific compilers, Tup also fits perfectly with the ancient Borland tools required for this project.
 
-  As of September 2020, the Windows version of Tup requires Vista or higher. In case Tup can't run or isn't installed, the build process falls back on a dumb batch file, which always fully rebuilds the entire 32-bit part.
-
-  ----
-
-* **DOSBox** (if you're running a 64-bit version of Windows, or a non-Windows operating system)
-
-  For the most part, it shouldn't matter whether you use [the original DOSBox](https://dosbox.com) or your favorite fork. A DOSBox with dynamic recompilation is highly recommended for faster compilation, though. Make sure to enable that feature by setting the following options in its configuration file (`dosbox.conf` for the original version):
-
-  ```ini
-  [cpu]
-  core=dynamic
-  cycles=max
-  ```
-
-  ----
-
-The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista and <11, where both the 32-bit and 16-bit build parts can run natively from a single shell. The build process was tested and should work reliably on pretty much every system though – from modern 64-bit Windows and Linux, down to Windows 95, which you might use on actual PC-98 hardware.
+  The bundled 64-bit Windows build includes an [important bugfix for running DOS-based build tools through MS-DOS Player] that hasn't been merged into the upstream repository as of June 2024.\
+  See [`bin/README.md`](bin/README.md) for license and build information.
 
 ### How to build
 
-* Make sure you've created the `bin/bcc32.cfg` and `bin/ilink32.cfg` files for Borland C++ 5.5, as pointed out in its `readme.txt` file. This fixes errors like
-
-  ```text
-  Error E2209 Pipeline/bmp2arrl.c 12: Unable to open file 'io.h'
-  ```
-
-  that you will encounter otherwise.
-
-* Running on a 64-bit OS? Run `build32b.bat` in a Windows shell, followed `build16b.bat` in your DOSBox of choice.
-* Running on 32-bit Windows? Run just `build.bat`.
-
-All batch files will abort with an error if any of the necessary tools can't be found in the `PATH`.
+Just run `build.bat` on any of the [supported build platforms]; it does the right thing regardless of which operating system you're running. The process will abort with an error if any of the necessary tools can't be found in the Windows `PATH`.
 
 The final executables will be put into `bin\th0?`, using the same names as the originals. Running them requires each game's original assets in the same directory.
 
+### Supported build platforms
+
+On 64-bit x86, the build process uses Tup for minimal parallel rebuilds, but all DOS-based build tools get emulated. On 32-bit x86, the build process falls back on a sequential batch file that always builds the entire codebase, but all build tools get to run at native performance.
+
+* **Tier 1**: Regularly tested, best support guaranteed.
+  * **Windows 11 (64-bit x86)**
+  * **Windows XP (32-bit x86)**
+
+* **Tier 2**: Supposed to work, feasible to support, but not regularly tested. Critical bugs in the build process will be fixed for free.
+  * Windows 10 (64-bit x86)
+  * Current version of Wine running on 64-bit x86 *nix
+
+* **Tier 3**: Supposed to work, but a burden to maintain. Fixes for build-related bugs would require funding, but bugfix PRs are likely to be accepted as well.
+  * 64-bit x86 Windows Vista, 7, 8, and 8.1
+  * 32-bit x86 Windows ≠XP
+
+* **Tier 4**: Explicitly unsupported and unfeasible without serious tinkering. Would require dedicated funding or forks, PRs are unlikely to be accepted.
+  * 64-bit x86 Windows XP
+  * 32-bit x86 *nix
+  * Windows <95
+  * Anything that's not 32-bit or 64-bit x86
+  * Platforms without Windows and DOS emulators
+
 ### Troubleshooting
-
-* TCC compiles, but fails to link, with `Error: Unable to execute command 'tlink.exe'`
-
-  **Cause:** To locate TLINK, TCC needlessly copies the `PATH` environment variable into a statically allocated 128-byte buffer. It then constructs absolute `tlink.exe` filenames for each of the semicolon- or `\0`-terminated paths, writing these into a buffer that immediately follows the 128-byte `PATH` buffer in memory. The search is finished as soon as TCC found an existing file, which gives precedence to earlier paths in the `PATH`. If the search didn't complete until a potential "final" path that runs past the 128 bytes, the final attempted filename will consist of the part that still fit into the buffer, followed by the previously attempted path.
-
-  **Workaround:** Make sure that the `BIN\` path to Turbo C++ 4.0J is fully contained within the first 127 bytes of the `PATH` inside your DOS system.
-  (The 128<sup>th</sup> byte must either be a separating `;` or the terminating `\0` of the `PATH` string.)
 
 * TLINK fails with `Loader error (0000): Unrecognized Error` on 32-bit Windows ≥Vista
 
-  This can be fixed by configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
+  Two known causes:
 
-  ```patch
-  REM Install DPMI support
-  -LH %SystemRoot%\system32\dosx
-  +%SystemRoot%\system32\dosx
-  ```
+  * Try configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
 
-  Requires a reboot after that edit to take effect.
+    ```patch
+    REM Install DPMI support
+    -LH %SystemRoot%\system32\dosx
+    +%SystemRoot%\system32\dosx
+    ```
 
-  ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
+    Requires a reboot after that edit to take effect.
+
+    ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
+
+  * Try building in a regular `cmd.exe` shell instead of PowerShell or Bash.
 
 ## Contribution guidelines
 
@@ -227,7 +212,11 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [indistinguishable]: https://github.com/nmlgc/mzdiff
 [project blog]: https://rec98.nmlgc.net/blog
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
-[Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
+[third-party libraries]: #is-this-even-viable
+[Takeda Toshiya's upstream builds]: http://takeda-toshiya.my.coocan.jp/msdos/index.html
+[important bugfix for running DOS-based build tools through MS-DOS Player]: https://github.com/gittup/tup/pull/500
+[supported build platforms]: #supported-build-platforms
+
 [bloat]: CONTRIBUTING.md#zun-bloat
 [landmines]: CONTRIBUTING.md#zun-landmine
 [bugs]: CONTRIBUTING.md#zun-bug

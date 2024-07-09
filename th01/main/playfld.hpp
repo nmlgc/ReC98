@@ -1,3 +1,8 @@
+#ifndef TH01_MAIN_PLAYFLD_HPP
+#define TH01_MAIN_PLAYFLD_HPP
+
+#include "pc98.h"
+
 #if (GAME == 1)
 	static const screen_x_t PLAYFIELD_LEFT = 0;
 	static const screen_y_t PLAYFIELD_TOP = 64;
@@ -26,14 +31,16 @@ static inline pixel_t playfield_fraction_y(float fraction = 1.0f) {
 	return static_cast<pixel_t>(PLAYFIELD_H * fraction + 0.0001f);
 }
 
-#ifdef rand
+#if (GAME == 1)
+#include "libs/master.lib/master.hpp"
+
 // Calculates a random X position between the given minimum and maximum
 // fractions of the playfield width.
 static inline screen_x_t playfield_rand_x(
 	float fraction_min = 0.0f, float fraction_max = 1.0f
 ) {
 	return (PLAYFIELD_LEFT + playfield_fraction_x(fraction_min) + (
-		(rand() % playfield_fraction_x(fraction_max - fraction_min))
+		(irand() % playfield_fraction_x(fraction_max - fraction_min))
 	));
 }
 
@@ -43,7 +50,9 @@ static inline screen_y_t playfield_rand_y(
 	float fraction_min = 0.0f, float fraction_max = 1.0f
 ) {
 	return (PLAYFIELD_TOP + playfield_fraction_y(fraction_min) + (
-		(rand() % playfield_fraction_y(fraction_max - fraction_min))
+		(irand() % playfield_fraction_y(fraction_max - fraction_min))
 	));
 }
 #endif
+
+#endif /* TH01_MAIN_PLAYFLD_HPP */

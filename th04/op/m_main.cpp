@@ -11,20 +11,15 @@
 
 #include <conio.h>
 #include <string.h>
-#include "x86real.h"
-#include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
-extern "C" {
-#include "th02/hardware/frmdelay.h"
-}
 #include "th02/op/menu.hpp"
+#include "th02/op/m_music.hpp"
 #include "th03/core/initexit.h"
-extern "C" {
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
-}
 #include "th04/shiftjis/fnshared.hpp"
 #include "th04/shiftjis/m_main.hpp"
 #include "th04/sprites/op_cdg.hpp"
@@ -333,7 +328,7 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 
 inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
 	graph_accesspage(1);
-	pi_load_put_8_free(0, MENU_MAIN_BG_FN);
+	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
 	graph_copy_page(0); // switches the accessed page back 0
 	palette_100();
 	main_initialized = false;
@@ -385,7 +380,7 @@ void near main_update_and_render(void)
 			initialized = false;
 			break;
 		case MC_MUSICROOM:
-			musicroom();
+			musicroom_menu();
 			main_cdg_load();
 
 			// ZUN quirk: Moving to MC_GAME in TH04?

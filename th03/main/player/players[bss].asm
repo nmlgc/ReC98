@@ -18,7 +18,7 @@ player_t	struc
 	invincibility_time db ?
 	halfhearts	db ?
 	playchar_paletted	db ?
-	speed	 speed_t <?>
+	speed_base	speed_t <?>
 	shot_mode	 db ?
 	patnum_movement	db ?
 	patnum_glow db ?

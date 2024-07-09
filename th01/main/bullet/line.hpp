@@ -5,6 +5,8 @@
 // YuugenMagan's pentagram (in a group of 5), and the 3-pixel lasers from its
 // north eye.
 
+#include "planar.h"
+
 void linebullet_unput(
 	screen_x_t left, screen_y_t top, screen_x_t right, screen_y_t bottom
 );

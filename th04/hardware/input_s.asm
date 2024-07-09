@@ -1,9 +1,9 @@
 	.386
-	.model use16 large SHARED_
+	.model use16 large SHARED
 	locals
 
-include pc98kbd.inc
 include twobyte.inc
+include platform/x86real/pc98/keyboard.inc
 include th04/hardware/input.inc
 
 	extrn _key_det:word
@@ -13,8 +13,7 @@ include th04/hardware/input.inc
 
 	extrn JS_SENSE:proc
 
-SHARED_	segment word public 'CODE' use16
-	assume cs:SHARED_
+	.code SHARED
 
 ; TH05 insists on only updating the affected byte, so...
 if GAME eq 4
@@ -33,14 +32,14 @@ else
 	endm
 endif
 
-public _input_reset_sense
-_input_reset_sense label proc
+public @input_reset_sense$qv
+@input_reset_sense$qv label proc
 	xor	ax, ax
 	mov	_key_det, ax
 	mov	js_stat, ax
 
-public _input_sense
-_input_sense proc far
+public @input_sense$qv
+@input_sense$qv proc far
 	xor	ax, ax
 	mov	es, ax
 	mov	ah, byte ptr es:[KEYGROUP_7]
@@ -155,8 +154,7 @@ if GAME eq 5
 	mov	ax, _key_det
 endif
 	retf
-_input_sense endp
+@input_sense$qv endp
 	even
-SHARED_	ends
 
 	end

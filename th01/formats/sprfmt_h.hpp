@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // Header structures for multi-sprite formats. Used for .BOS and .GRC.
 #pragma pack(push, 1)
 struct spriteformat_header_inner_t {

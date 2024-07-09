@@ -3,24 +3,17 @@
  * Code segment #2 of TH01's FUUIN.EXE
  */
 
-#pragma option -O- -1 -Z-
+#pragma option -O- -1 -Z- -d-
 
 static long unused_long = { 0 }; // ZUN bloat
 
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "pc98kbd.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
+#include "platform/x86real/pc98/keyboard.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/regist.hpp"

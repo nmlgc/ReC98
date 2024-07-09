@@ -1,10 +1,7 @@
-extern "C" {
-#include "platform.h"
-#include "pc98.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/gaiji/gaiji.h"
-#include "th04/formats/scoredat.h"
+#include "th04/formats/scoredat.hpp"
 
 /// Pattern numbers for the super_*() functions
 /// -------------------------------------------
@@ -57,7 +54,7 @@ typedef enum {
 	_glyphball_phase_t_FORCE_UINT8 = 0xFF
 } glyphball_phase_t;
 
-typedef struct {
+struct glyphball_t {
 	glyphball_phase_t phase;
 	gaiji_th04_t glyph;
 	MotionBase<SPPoint> pos; // Relative to the top-left corner of the screen.
@@ -66,9 +63,8 @@ typedef struct {
 	SubpixelLength8 speed;
 	int phase_frame;
 	int8_t padding[6];
-} glyphball_t;
+};
 
 // 1 additional unused one, for some reason?
 extern glyphball_t glyphballs[SCOREDAT_NAME_LEN + 1];
 /// --------------------------------------------------
-}

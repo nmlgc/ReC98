@@ -1,21 +1,10 @@
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
-#include "th01/rank.h"
+#include "libs/master.lib/master.hpp"
+#include "th02/hardware/frmdelay.h"
 #include "th02/core/initexit.h"
-#include "th04/score.h"
 #include "th04/end/end.h"
-#include "th05/playchar.h"
-#include "th05/resident.hpp"
-#include "th04/formats/cfg.hpp"
-extern "C" {
-#include "th04/snd/snd.h"
 #include "th05/formats/pi.hpp"
 #include "th05/op/op.hpp"
 #include "th05/hardware/input.h"
-}
 #include "th04/op/start.hpp"
 
 #define resident_reset_last_highest_and_stage_scores() \

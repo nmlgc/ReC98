@@ -152,12 +152,12 @@ bool16 group_velocity_set(
 		to_aim_or_not_to_aim();
 
 	case PG_1_RANDOM_NARROW_AIMED:
-		angle = ((rand() & 0x0F) - 0x07);
+		angle = ((irand() & 0x0F) - 0x07);
 		done = true;
 		goto aim;
 
 	case PG_1_RANDOM_WIDE:
-		angle = ((rand() & 0x3F) + 0x20);
+		angle = ((irand() & 0x3F) + 0x20);
 		done = true;
 		goto no_aim;
 
@@ -317,7 +317,7 @@ void CPellets::motion_type_apply_for_cur(void)
 	case PM_SLING_AIMED:
 		if(p->sling_direction == PSD_NONE) {
 			p->sling_direction = static_cast<pellet_sling_direction_t>(
-				(rand() & 1) + PSD_CLOCKWISE
+				(irand() & 1) + PSD_CLOCKWISE
 			);
 		}
 		if(p->sling_direction == PSD_CLOCKWISE) {
@@ -445,7 +445,7 @@ void pellet_render(screen_x_t left, screen_y_t top, int cel)
 {
 	grcg_setcolor_rmw(V_WHITE);
 	pellet_put(left, top, cel);
-	grcg_off();
+	grcg_off_func();
 }
 
 inline bool16 overlaps_shot(

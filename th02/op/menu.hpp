@@ -1,5 +1,7 @@
 // Shared menu code.
 
+#include "pc98.h"
+
 #if (GAME >= 4)
 	typedef void (near pascal *near menu_unput_and_put_func_t)(
 		int sel, vc2 col

@@ -1,3 +1,6 @@
+#include "pc98.h"
+#include "x86real.h"
+
 // Redefined versions of master.lib's grcg_setmode() and grcg_setcolor().
 void near grcg_setmode_rmw(void);
 void near grcg_setmode_tdw(void);

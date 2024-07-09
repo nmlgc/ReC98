@@ -6,12 +6,6 @@
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/formats/grp.h"
