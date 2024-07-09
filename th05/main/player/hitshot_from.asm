@@ -25,7 +25,7 @@ hitshot_from	proc near
 	mov	_hitshot_next_free_id, 0
 
 @@convert_age:
-	mov	[di+shot_t.flag], 2
+	mov	[di+shot_t.flag], F_REMOVE
 	cmp	[si+hitshot_t.HITSHOT_AGE], 0
 	jnz	short @@ret	; Wat?
 	mov	[si+hitshot_t.HITSHOT_AGE], 1

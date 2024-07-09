@@ -1,3 +1,10 @@
+#ifndef TH04_MAIN_BOSS_BOSS_HPP
+#define TH04_MAIN_BOSS_BOSS_HPP
+
+#include "th04/main/hud/overlay.hpp"
+#include "th04/main/phase.hpp"
+#include "th04/main/playfld.hpp"
+
 // Bosses
 // ------
 static const pixel_t BOSS_W = 64;
@@ -16,7 +23,7 @@ static const pixel_t BOSS_HITBOX_DEFAULT_H = ((BOSS_W / 2) - (BOSS_W / 8));
 // Architecturally, that's a step back even compared to TH01.
 extern unsigned char boss_statebyte[16];
 
-typedef struct {
+struct boss_stuff_t {
 	PlayfieldMotion pos;
 	int hp;
 	unsigned char sprite;
@@ -34,7 +41,7 @@ typedef struct {
 		bool defeat_bonus;
 	} phase_state;
 	int phase_end_hp;
-} boss_stuff_t;
+};
 
 extern boss_stuff_t boss;
 extern SPPoint boss_hitbox_radius;
@@ -58,9 +65,11 @@ extern  farfunc_t_near boss_update_func;
 extern nearfunc_t_near boss_bg_render_func;
 extern nearfunc_t_near boss_fg_render_func;
 
+// Does not include the *_bg_render() function, as this one always goes into a
+// fixed, defined segment. With more decompilation progress, this will be true
+// for these two functions as well, making this macro ultimately redundant.
 #define BOSS_DEC(name) \
 	void pascal  far name##_update(void); \
-	void pascal near name##_bg_render(void); \
 	void pascal near name##_fg_render(void);
 
 // Collision detection
@@ -90,22 +99,8 @@ bool near boss_hittest_shots(void);
 void near boss_hittest_shots_invincible(void);
 // ------
 
-/// Explosions
-/// ----------
-#define EXPLOSION_SMALL_COUNT 2
-
-struct explosion_t {
-	char flag;
-	unsigned char age;
-	SPPoint center;
-	SPPoint radius_cur;
-	SPPoint radius_delta;
-	int8_t unused;
-	// Offset to add to the angle for the Y coordinate, turning the circle
-	// into a slanted ellipse. See https://www.desmos.com/calculator/faeefi6w1u
-	// for a plot of the effect.
-	unsigned char angle_offset;
-};
+// Explosions
+// ----------
 
 enum explosion_type_t {
 	ET_NONE = -1,
@@ -117,9 +112,6 @@ enum explosion_type_t {
 
 	_explosion_type_t_FORCE_INT16 = 0x7FFF
 };
-
-extern explosion_t explosions_small[EXPLOSION_SMALL_COUNT];
-extern explosion_t explosions_big;
 
 void pascal near boss_explode_small(explosion_type_t type);
 #if (GAME == 5)
@@ -137,7 +129,7 @@ void near explosions_small_update_and_render(void);
 void near explosions_big_update_and_render(void);
 
 void explosions_small_reset(void);
-/// ----------
+// ----------
 
 void near boss_items_drop();
 
@@ -152,22 +144,19 @@ void pascal near boss_phase_next(
 // Defeat sequence
 // ---------------
 
-#ifdef OVERLAY_FADE_CELS
-	enum boss_defeat_frames_t {
-		// Small explosion phase
-		BDF_SMALL_1 = 1,
-		BDF_SMALL_2 = 16,
-		BDF_BIG = 32,
+enum boss_defeat_frames_t {
+	// Small explosion phase
+	BDF_SMALL_1 = 1,
+	BDF_SMALL_2 = 16,
+	BDF_BIG = 32,
 
-		// Big explosion phase. And yes, the (hardcoded) amount of frames to
-		// spend in this one dependes on the (hardcoded) length of the overlay
-		// fade animation, which in turn depends on its (hardcoded) amount of
-		// gaiji cels.
-		BDF_DIALOG = (GAME == 5),
-		BDF_FADEOUT = 416,
-		BDF_NEXT_STAGE = (BDF_FADEOUT + OVERLAY_FADE_DURATION),
-	};
-#endif
+	// Big explosion phase. And yes, the (hardcoded) amount of frames to spend
+	// in this one depends on the (hardcoded) length of the overlay fade
+	// animation, which in turn depends on its (hardcoded) amount of gaiji cels.
+	BDF_DIALOG = (GAME == 5),
+	BDF_FADEOUT = 416,
+	BDF_NEXT_STAGE = (BDF_FADEOUT + OVERLAY_FADE_DURATION),
+};
 
 // A dumb helper function…
 #if (GAME == 5)
@@ -208,3 +197,5 @@ void pascal near boss_phase_next(
 	void near boss_defeat_update(void);
 #endif
 // ---------------
+
+#endif /* TH04_MAIN_BOSS_BOSS_HPP */

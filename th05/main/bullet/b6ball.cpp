@@ -2,13 +2,9 @@
 
 #include "th01/math/overlap.hpp"
 #include "th04/main/bullet/clearzap.hpp"
-extern "C" {
 #include "th05/main/playperf.hpp"
-}
-#include "th05/main/custom.h"
+#include "th04/main/custom.hpp"
 #include "th05/main/bullet/b6ball.hpp"
-
-inline void optimization_barrier(void) {}
 
 void near b6balls_add(void)
 {

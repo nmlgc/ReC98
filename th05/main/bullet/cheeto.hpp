@@ -1,3 +1,5 @@
+#include "th04/main/playfld.hpp"
+
 #define CHEETO_W 32
 #define CHEETO_H 32
 #define CHEETO_TRAIL_NODE_COUNT 16
@@ -12,17 +14,17 @@ enum cheeto_flag_t {
 };
 
 // Defines the [col] instead of the (automatically calculated) [sprite].
-typedef struct {
+struct cheeto_template_t {
 	/* -------------------- */ int8_t _unused_1;
 	unsigned char angle;
 	PlayfieldPoint origin;
 	/* -------------------- */ int16_t _unused_2[6];
-	int col;
+	vc2 col;
 	/* -------------------- */ int32_t _unused_3;
 	SubpixelLength8 speed;
-} cheeto_template_t;
+};
 
-typedef struct {
+struct cheeto_head_t {
 	cheeto_flag_t flag; // unused here
 	unsigned char angle;
 	PlayfieldMotion pos;
@@ -32,14 +34,14 @@ typedef struct {
 	int32_t unused_2;
 	SubpixelLength8 speed;
 	int8_t padding;
-} cheeto_head_t;
+};
 
-typedef struct {
+struct cheeto_trail_t {
 	cheeto_flag_t flag;
 	char col;
 	PlayfieldPoint node_pos[CHEETO_TRAIL_NODE_COUNT];
 	unsigned char node_sprite[CHEETO_TRAIL_NODE_COUNT];
-} cheeto_trail_t;
+};
 
 #define cheeto_template \
 	(reinterpret_cast<cheeto_template_t &>(custom_entities[0]))
@@ -50,7 +52,7 @@ extern cheeto_trail_t cheeto_trails[CHEETO_COUNT + 1];
 
 // Puts the given cheeto bullet [sprite] (between 0 and BULLET_D_CELS) at the
 // given position. Assumptions:
-// • ES is already be set to the beginning of a VRAM segment
+// • ES is already set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
 // Beware, [top] is actually interpreted as an unsigned screen-space
 // coordinate! [top] must therefore be between 0 and (RES_Y - 1).

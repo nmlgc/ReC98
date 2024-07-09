@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 enum particle_origin_t {
 	PO_TOP = 0,
 	PO_TOP_RIGHT = 1,
@@ -15,4 +17,4 @@ enum particle_origin_t {
 // Runs a frame of the particle system, with new particles spawning from a
 // random position on the [origin] edge(s) and flying into the opposite
 // direction. Must be called with [origin] == PO_INITIALIZE first!
-void particles_unput_update_render(particle_origin_t origin, int col);
+void particles_unput_update_render(particle_origin_t origin, vc2 col);

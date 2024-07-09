@@ -1,6 +1,8 @@
+#include "platform.h"
+
 // First HP point in the respective color section. Assumes
 // [hud_hp_first_redwhite] < [hud_hp_first_white].
-// Also, these should be even, due to a bug in hud_hp_decrement()...
+// Also, these should be even, due to a landmine in hud_hp_decrement()...
 extern unsigned int hud_hp_first_white;
 extern unsigned int hud_hp_first_redwhite;
 

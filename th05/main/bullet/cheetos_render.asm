@@ -1,3 +1,5 @@
+CF_FREE = 0
+
 public CHEETOS_RENDER
 cheetos_render proc near
 
@@ -47,7 +49,7 @@ endm
 ; ---------------------------------------------------------------------------
 
 @@bullet_loop:
-	cmp	[di+cheeto_trail_t.flag], 0
+	cmp	[di+cheeto_trail_t.flag], CF_FREE
 	jz	@@bullet_next
 	mov	ah, [di+cheeto_trail_t.CBT_col]
 	call	@grcg_setcolor_direct_raw$qv

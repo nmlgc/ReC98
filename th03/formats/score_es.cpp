@@ -7,9 +7,9 @@ void pascal near scoredat_encode_and_save(rank_t rank)
 	uint8_t feedback;
 	uint16_t sum = 0;
 
-	hi.score.key1 = rand();
-	hi.score.key2 = rand();
-	hi.score.unknown = rand();
+	hi.score.key1 = irand();
+	hi.score.key2 = irand();
+	hi.score.unknown = irand();
 
 	#if (BINARY == 'L')
 		if(

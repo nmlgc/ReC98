@@ -13,7 +13,7 @@ zunsoft_pyro_new	proc pascal near
 	mov	ax, 16
 	imul	di
 	mov	di, ax
-	mov	si, offset _zunsoft_pyros
+	mov	si, offset _pyros
 	mov	@@i, 0
 	jmp	short loc_B68D
 
@@ -47,7 +47,7 @@ loc_B687:
 	add	si, size zunsoft_pyro_t
 
 loc_B68D:
-	cmp	@@i, ZUNSOFT_PYRO_COUNT
+	cmp	@@i, PYRO_COUNT
 	jl	short loc_B63E
 
 loc_B694:
@@ -63,7 +63,7 @@ zunsoft_update_and_render	proc pascal near
 
 	push	si
 	push	di
-	mov	si, offset _zunsoft_pyros
+	mov	si, offset _pyros
 	xor	di, di
 	jmp	loc_B7B9
 
@@ -121,7 +121,7 @@ loc_B70D:
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -128
 	mov	@@draw_x, ax
 	push	[si+zunsoft_pyro_t.origin.y]
@@ -131,7 +131,7 @@ loc_B70D:
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -128
 	jmp	short loc_B799
 
@@ -147,7 +147,7 @@ loc_B754:
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -256
 	mov	@@draw_x, ax
 	push	[si+zunsoft_pyro_t.origin.y]
@@ -157,7 +157,7 @@ loc_B754:
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	add	ax, -256
 
 loc_B799:
@@ -181,7 +181,7 @@ loc_B7B5:
 	add	si, size zunsoft_pyro_t
 
 loc_B7B9:
-	cmp	di, ZUNSOFT_PYRO_COUNT
+	cmp	di, PYRO_COUNT
 	jl	loc_B6A8
 	pop	di
 	pop	si
@@ -234,8 +234,8 @@ loc_B7F6:
 zunsoft_palette_update_and_show	endp
 
 
-public _zunsoft
-_zunsoft proc near
+public @zunsoft_animate$qv
+@zunsoft_animate$qv proc near
 
 @@frame		= word ptr -8
 @@i		= word ptr -6
@@ -253,11 +253,11 @@ _zunsoft proc near
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	pi_load pascal, 0, ds, offset aZun00_pi
-	call	pi_palette_apply pascal, 0
-	call	pi_put_8 pascal, large 0, 0
+	call	@pi_load$qinxc pascal, 0, ds, offset _zun00_pi
+	call	@pi_palette_apply$qi pascal, 0
+	call	@pi_put_8$qiii pascal, large 0, 0
 if GAME eq 5
-	call	pi_free pascal, 0
+	call	@pi_free$qi pascal, 0
 else
 	freePISlotLarge	0
 endif
@@ -305,9 +305,9 @@ endif
 @@more_colors?:
 	cmp	si, 15
 	jl	short @@next_color
-	call	snd_load pascal, ds, offset aLogo, SND_LOAD_SONG
+	call	snd_load pascal, ds, offset _logo, SND_LOAD_SONG
 	kajacall	KAJA_SONG_PLAY
-	mov	[bp+@@i], offset _zunsoft_pyros
+	mov	[bp+@@i], offset _pyros
 	xor	si, si
 	jmp	short @@more_pyros?
 ; ---------------------------------------------------------------------------
@@ -319,20 +319,20 @@ endif
 	add	[bp+@@i], size zunsoft_pyro_t
 
 @@more_pyros?:
-	cmp	si, ZUNSOFT_PYRO_COUNT
+	cmp	si, PYRO_COUNT
 	jl	short @@next_pyro
-	call	snd_delay_until_measure pascal, (2 shl 16)
+	call	snd_delay_until_measure pascal, (2 shl 16) or 0
 	mov	PaletteTone, 100
 	call	palette_show
-	call	super_entry_bfnt pascal, ds, offset aZun02_bft
-	call	super_entry_bfnt pascal, ds, offset aZun04_bft
-	call	super_entry_bfnt pascal, ds, offset aZun01_bft
-	call	super_entry_bfnt pascal, ds, offset aZun03_bft
+	call	super_entry_bfnt pascal, ds, offset _zun02_bft
+	call	super_entry_bfnt pascal, ds, offset _zun04_bft
+	call	super_entry_bfnt pascal, ds, offset _zun01_bft
+	call	super_entry_bfnt pascal, ds, offset _zun03_bft
 	mov	[bp+@@page], 0
 	graph_accesspage 1
 	graph_showpage 0
 if GAME eq 4
-	call	_input_reset_sense
+	call	@input_reset_sense$qv
 endif
 	xor	di, di
 	jmp	@@more_frames?
@@ -340,9 +340,9 @@ endif
 
 @@next_frame:
 if GAME eq 5
-	call	_input_reset_sense_held
+	call	@input_reset_sense_held$qv
 else
-	call	_input_sense
+	call	@input_sense$qv
 endif
 	cmp	_key_det, INPUT_NONE
 	jz	short @@not_skipping
@@ -423,7 +423,7 @@ frame_68:	; case 68
 	call	_bgimage_put	; default
 	call	zunsoft_update_and_render
 if GAME eq 4
-	call	_input_reset_sense
+	call	@input_reset_sense$qv
 endif
 
 @@2_frame_delay:
@@ -480,7 +480,7 @@ endif
 	pop	si
 	leave
 	retn
-_zunsoft endp
+@zunsoft_animate$qv endp
 
 ; ---------------------------------------------------------------------------
 if GAME eq 4

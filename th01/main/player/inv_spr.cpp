@@ -8,12 +8,11 @@ static const int INVINCIBILITY_SPRITES_DONE = 0xFF;
 void invincibility_sprites_update_and_render(bool16 invincible)
 {
 	int i;
-	extern struct {
+	static struct {
 		int frame[INVINCIBILITY_SPRITE_COUNT];
 		screen_x_t left[INVINCIBILITY_SPRITE_COUNT];
 		vram_y_t top[INVINCIBILITY_SPRITE_COUNT];
-	} invincibility_sprites;
-	#define sprites invincibility_sprites
+	} sprites;
 
 	if(!invincible) {
 		if(sprites.frame[0] == INVINCIBILITY_SPRITES_DONE) {
@@ -40,11 +39,14 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 			if(sprites.frame[i] == (INVINCIBILITY_SPRITE_FRAMES + 1)) {
 				shape8x8_sloppy_unput(sprites.left[i], sprites.top[i]);
 			}
-			sprites.left[i]  = ((rand() % 48) + (player_left - 8));
-			sprites.top[i]   = ((rand() % 48) + (player_top - 16));
-			sprites.frame[i] = ((rand() % 7) + 1);
+			sprites.left[i]  = ((irand() % 48) + (player_left - 8));
+			sprites.top[i]   = ((irand() % 48) + (player_top - 16));
+			sprites.frame[i] = ((irand() % 7) + 1);
 		}
-		// ZUN bug: Did you mean: `sprites.left[i]`?
+		// ZUN bug: Did you mean: `sprites.left[i]`? With Reimu's fixed
+		// position at the bottom of the playfield, this condition is always
+		// true, and these sprites won't be clipped at the left and right edges
+		// of VRAM after all.
 		if(
 			(sprites.top[i] >= 0) &&
 			(sprites.top[i] < (RES_X - sSHAPE8X8[0].w()))
@@ -59,5 +61,4 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 		}
 		sprites.frame[i]++;
 	}
-	#undef sprites
 }

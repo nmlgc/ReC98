@@ -19,8 +19,8 @@ extrn _gather_template:gather_template_t
 	patnum_base:word, angle:byte
 _bullets_add_regular procdesc near
 _bullet_velocity_and_angle_set procdesc near
-_bullet_template_clip procdesc near
-_gather_add_bullets procdesc near
+@bullet_template_clip$qv procdesc near
+@gather_add_bullets$qv procdesc near
 
 ; Own data
 extrn _group_is_special:byte
@@ -69,7 +69,7 @@ _bullets_add_raw proc near
 	mov	_bullet_template.spawn_type, BST_GATHER_NORMAL_SPECIAL_MOVE
 
 @@gather_not_special:
-	call	_gather_add_bullets
+	call	@gather_add_bullets$qv
 	pop	word ptr _bullet_template.spawn_type
 
 @@clipped:
@@ -77,7 +77,7 @@ _bullets_add_raw proc near
 ; ---------------------------------------------------------------------------
 
 @@no_gather:
-	call	_bullet_template_clip
+	call	@bullet_template_clip$qv
 	or	al, al
 	jnz	short  @@clipped
 	push	si
@@ -134,9 +134,9 @@ _bullets_add_raw proc near
 	jmp	short $+2
 
 @@loop:
-	cmp	[si+bullet_t.flag], 0
+	cmp	[si+bullet_t.flag], F_FREE
 	jnz	@@next
-	mov	[si+bullet_t.flag], 1
+	mov	[si+bullet_t.flag], F_ALIVE
 
 	@@spawn_state = byte ptr $+3
 	mov	[si+bullet_t.spawn_state], 123

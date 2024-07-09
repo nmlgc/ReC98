@@ -1,17 +1,7 @@
 #pragma option -zCSHARED
 
-extern "C" {
-#include "platform.h"
 #include "th02/hardware/frmdelay.h"
 #include "th04/hardware/input.h"
-
-// TODO: Remove these macros once those functions are part of the actual
-// SHARED segment (not SHARED_), after graph_putsa_fx() has been turned into
-// its own translation unit.
-#define input_reset_sense() _asm { \
-	nop; push cs; call near ptr input_reset_sense; \
-}
-#define input_sense() _asm { nop; push cs; call near ptr input_sense; }
 
 void pascal input_wait_for_change(int frames_to_wait)
 {
@@ -41,6 +31,4 @@ void pascal input_wait_for_change(int frames_to_wait)
 			frames_waited = 0;
 		}
 	}
-}
-
 }

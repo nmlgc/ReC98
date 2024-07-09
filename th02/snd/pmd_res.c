@@ -1,8 +1,6 @@
 #pragma option -zCSHARED -k-
 
-#include "platform.h"
 #include "x86real.h"
-#include "libs/kaja/kaja.h"
 #include "th02/snd/snd.h"
 
 bool16 snd_pmd_resident(void)

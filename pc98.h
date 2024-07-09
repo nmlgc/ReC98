@@ -2,7 +2,10 @@
 // -----
 // PC-98 hardware constants not covered by master.lib
 
+#ifndef PC98_H
 #define PC98_H
+
+#include "platform.h"
 
 /// Spaces
 /// ------
@@ -12,36 +15,52 @@
 // Display-space widths, heights, and object-space coordinates
 typedef int pixel_t;
 typedef unsigned int upixel_t;
+typedef int8_t pixel_delta_8_t;
+typedef uint8_t pixel_length_8_t;
+
+// A version of master.lib's Point without the constructor, even in C++
+struct point_t {
+	pixel_t x, y;
+};
 
 // VRAM widths and object-space coordinates
 typedef int vram_byte_amount_t;
 typedef int vram_word_amount_t;
 typedef int vram_dword_amount_t;
-typedef int uvram_byte_amount_t;
-typedef int uvram_word_amount_t;
-typedef int uvram_dword_amount_t;
+typedef unsigned int uvram_byte_amount_t;
+typedef unsigned int uvram_word_amount_t;
+typedef unsigned int uvram_dword_amount_t;
 
-// TRAM widths and object-space coordinates
-typedef int tram_ank_amount_t;
-typedef int tram_kanji_amount_t;
-typedef unsigned int utram_kanji_amount_t;
+// VRAM heights. Different from `pixel_t` in 200-line mode.
+typedef int vram_h_t;
+
+// TRAM widths or heights
+typedef int tram_cell_amount_t;
 /// ------
 
 /// Coordinate systems
 /// ------------------
 /// All of these are relative to the top-left corner of the final display.
-/// MODDERS: Remove the unsigned varieties.
+/// MODDERS: Remove the unsigned variants.
 
 // Display-space coordinate, with [0; RES_X[ being the visible area.
 typedef int screen_x_t;
 typedef unsigned int uscreen_x_t;
+
 // Display-space coordinate, with [0; RES_Y[ being the visible area. Does not
 // care about 200- or 400-line graphics modes or vertical scrolling.
 typedef int screen_y_t;
 typedef unsigned int uscreen_y_t;
 
+// Display-space point.
+struct screen_point_t {
+	screen_x_t x;
+	screen_y_t y;
+};
+
 // VRAM X coordinate, ranging from 0 to (RES_X / BYTE_DOTS).
 typedef int vram_x_t;
+
 // VRAM Y coordinate, ranging from 0 to either 400 or 200 depending on the
 // current graphics mode, and with an added vertical scrolling offset.
 typedef int vram_y_t;
@@ -50,6 +69,7 @@ typedef unsigned int uvram_y_t;
 // Text RAM X coordinate, ranging from 0 to (RES_X / GLYPH_HALF_W).
 typedef int tram_x_t;
 typedef unsigned int utram_x_t;
+
 // Text RAM Y coordinate, ranging from 0 to (RES_Y / GLYPH_H).
 typedef int tram_y_t;
 typedef unsigned int utram_y_t;
@@ -62,15 +82,21 @@ typedef unsigned int utram_y_t;
 #define GLYPH_HALF_W 8
 #define GLYPH_FULL_W 16
 #define GLYPH_H 16
+#define GLYPH_HALF_H 8
 
 #define shiftjis_w(literal) \
 	((sizeof(literal) - 1) * GLYPH_HALF_W)
+
+// Text RAM attribute byte. ZUN bloat: Only keep tram_atrb_t.
+typedef uint8_t tram_atrb_t;
+typedef uint16_t tram_atrb2;
 /// ----
 
 /// Graphics
 /// --------
 #define BYTE_DOTS 8
 #define BYTE_MASK (BYTE_DOTS - 1)
+#define BYTE_BITS 3
 #define RES_X 640
 #define RES_Y 400
 #define ROW_SIZE (RES_X / BYTE_DOTS)
@@ -81,11 +107,33 @@ typedef unsigned int utram_y_t;
 typedef bool page_t;
 
 #define COLOR_COUNT 16
+
+#define COMPONENT_R 0
+#define COMPONENT_G 1
+#define COMPONENT_B 2
 #define COMPONENT_COUNT 3
 
+// Colors
+// ------
 // The 16-color mode supports 4 bits per RGB component, for a total of
-// 4,096 colors
-typedef int8_t uint4_t;
+// 4,096 colors.
+
+typedef int8_t int4_t;
+typedef uint8_t uint4_t;
+
+// Video palette indices. ZUN bloat: Only keep vc_t.
+typedef uint4_t vc_t;
+typedef int4_t svc_t;
+typedef uint16_t vc2;
+typedef int16_t svc2; // Mainly needed for loops where ZUN used `int`.
+
+// Intensity of a video color's R, G, or B component.
+// ZUN bloat: Only keep vc_comp_t.
+typedef uint4_t vc_comp_t;
+typedef int4_t svc_comp_t;
+typedef uint16_t vc_comp2;
+typedef int16_t svc_comp2;
+// ------
 
 #ifdef __cplusplus
 	template <class ComponentType, int Range> union RGB {
@@ -117,16 +165,16 @@ typedef int8_t uint4_t;
 			return RGBType::Range;
 		}
 
-		RGBType& operator [](int col) {
+		RGBType& operator [](vc2 col) {
 			return colors[col];
 		}
 
-		const RGBType& operator [](int col) const {
+		const RGBType& operator [](vc2 col) const {
 			return colors[col];
 		}
 	};
 
-	typedef RGB<uint4_t, 16> RGB4;
+	typedef RGB<svc_comp_t, 16> RGB4;
 	typedef Palette<RGB4> Palette4;
 
 	#define palette_foreach(tmp_col, tmp_comp, func) { \
@@ -152,6 +200,7 @@ typedef int8_t uint4_t;
 
 /// Memory segments
 /// ---------------
+
 #define SEG_TRAM_JIS 0xA000
 #define SEG_TRAM_ATRB 0xA200
 
@@ -162,6 +211,19 @@ typedef int8_t uint4_t;
 
 // Segment distance between B↔R↔G
 #define SEG_PLANE_DIST_BRG 0x800
+
 // Segment distance between G↔E
 #define SEG_PLANE_DIST_E 0x2800
 /// ---------------
+
+/// EGC
+/// ---
+/// The PC-98 EGC always operates on 16 dots at a time.
+
+static const int EGC_REGISTER_DOTS = 16;
+static const int EGC_REGISTER_BITS = 4;
+static const int EGC_REGISTER_MASK = (EGC_REGISTER_DOTS - 1);
+static const int EGC_REGISTER_SIZE = (EGC_REGISTER_DOTS / BYTE_DOTS);
+/// ---
+
+#endif /* PC98_H */

@@ -1,20 +1,17 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
-#include "master.hpp"
-extern "C" {
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "platform/x86real/flags.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "th01/hardware/egc.h"
 
-#define graph_accesspage_1() \
-	outportb2(0xA6, 1);
-
-#define graph_accesspage_0()  \
-	_AX ^= _AX; \
-	asm { out 0xA6, al; }
+inline void graph_accesspage_1(void) {
+	_outportb_(0xA6, 1);
+}
+inline void graph_accesspage_0(void) {
+	_outportb_(0xA6, (_AX ^= _AX));
+}
 
 extern vram_word_amount_t egcrect_w;
 
@@ -36,7 +33,9 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 		_asm { cld; }
 	#endif
 	egc_start_copy();
-	egc_setrop(EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0);
+
+	// (EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0)
+	outport(EGC_MODE_ROP_REG, 0x29F0);
 
 	// Using inline assembly rather than register pseudovariables to prevent
 	// parameters from being moved to the SI register
@@ -44,7 +43,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 	asm { mov	dx, top; }
 
 	vo_tmp = _AX;
-	static_cast<vram_offset_t>(vo_tmp) >>= 4;
+	static_cast<vram_offset_t>(vo_tmp) >>= EGC_REGISTER_BITS;
 	asm { shl	bx, 1; }
 	_DX <<= 6;
 	vo_tmp += _DX;
@@ -52,16 +51,16 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 	vo_tmp += _DX;
 
 	_DI = vo_tmp;
-	_AX &= ((BYTE_DOTS * 2) - 1);
+	_AX &= EGC_REGISTER_MASK;
 	first_bit = _AX;
 
-	w_tmp = ((_AX + w) >> 4);
+	w_tmp = ((_AX + w) >> EGC_REGISTER_BITS);
 	if(first_bit) {
 		w_tmp++;
 	}
 	egcrect_w = w_tmp;
 
-	_CX = (ROW_SIZE / 2);
+	_CX = (ROW_SIZE / EGC_REGISTER_SIZE);
 	_CX -= w_tmp;
 	asm { shl	cx, 1; }
 	rows_remaining = h;
@@ -75,7 +74,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 				_DI |= _DI;
 				if((!FLAGS_SIGN) && (_DI < PLANE_SIZE)) {
 					graph_accesspage_1();	dots = peek(_ES, _DI);
-					graph_accesspage_0();	pokew(_ES, _DI, dots);
+					graph_accesspage_0();	_poke_(_ES, _DI, dots);
 				}
 				_DI += 2;
 			#else
@@ -116,7 +115,7 @@ static void near egc_start_copy(void)
 	}
 	graph_egc_on();
 	outport(EGC_ACTIVEPLANEREG, 0xFFF0);
-	egc_selectpat();
+	outport(EGC_READPLANEREG, 0x00FF);
 	outport(EGC_MASKREG, 0xFFFF);
 	_DX = EGC_ADDRRESSREG;
 	outport(_DX, (_AX - _AX)); // :zunpet:
@@ -124,5 +123,3 @@ static void near egc_start_copy(void)
 }
 
 #pragma codestring "\x90"
-
-}

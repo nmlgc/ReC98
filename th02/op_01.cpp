@@ -5,45 +5,41 @@
 
 #include <stddef.h>
 #include <process.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "th02/resident.hpp"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/common.h"
+#include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/core/zunerror.h"
 #include "th02/core/initexit.h"
-#include "th02/formats/cfg.h"
+#include "th02/formats/cfg.hpp"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 #include "th02/gaiji/gaiji.h"
+#include "th02/shiftjis/fns.hpp"
 #include "th02/op/op.h"
+#include "th02/op/menu.hpp"
+#include "th02/op/m_music.hpp"
 
-#pragma option -d -a2
-
-typedef void pascal near putfunc_t(int sel, unsigned int atrb);
+#pragma option -2 -a2
 
 char menu_sel = 0;
 bool in_option = false;
 bool quit = false;
-char unused_1 = 0;
+char unused_1 = 0; // ZUN bloat
 
 static bool main_input_allowed;
 unsigned char snd_bgm_mode;
-static int unused_2;
+static int unused_2; // ZUN bloat
 unsigned int idle_frames;
 unsigned char demo_num;
-resident_t __seg *resident_sgm;
-putfunc_t near *putfunc;
+resident_t __seg *resident_seg;
+menu_put_func_t menu_put;
 
 // Apparently, declaring variables with `extern` before definining them for
 // real within the same compilation unit causes Turbo C++ to emit *everything*
@@ -54,7 +50,6 @@ extern unsigned int score_duration;
 void title_flash(void);
 void pascal score_menu(void);
 void pascal shottype_menu(void);
-void pascal musicroom(void);
 
 int cfg_load(void)
 {
@@ -68,12 +63,12 @@ int cfg_load(void)
 		snd_bgm_mode = cfg.opts.bgm_mode;
 		bombs = cfg.opts.bombs;
 		lives = cfg.opts.lives;
-		resident_sgm = cfg.resident;
-		if(!resident_sgm) {
+		resident_seg = cfg.resident;
+		if(!resident_seg) {
 			return 1;
 		}
-		resident = resident_sgm;
-		resident->perf = cfg.opts.perf;
+		resident = resident_seg;
+		resident->reduce_effects = cfg.opts.reduce_effects;
 		resident->debug = cfg.debug;
 		file_close();
 
@@ -102,11 +97,11 @@ void cfg_save(void)
 	cfg.opts.bgm_mode = snd_bgm_mode;
 	cfg.opts.bombs = bombs;
 	cfg.opts.lives = lives;
-	cfg.opts.perf = resident->perf;
+	cfg.opts.reduce_effects = resident->reduce_effects;
 
 	file_create(cfg_fn);
 	file_write(&cfg, offsetof(cfg_t, resident));
-	file_write(&resident_sgm, sizeof(resident_sgm));
+	file_write(&resident_seg, sizeof(resident_seg));
 	file_write(&cfg.debug, sizeof(cfg.debug));
 	file_close();
 }
@@ -161,10 +156,10 @@ void op_animate(void)
 		if(snd_midi_possible) {
 			door_x = snd_midi_active;
 			snd_midi_active = true;
-			snd_load("op.m", SND_LOAD_SONG);
+			snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 		}
 		snd_midi_active = false;
-		snd_load("op.m", SND_LOAD_SONG);
+		snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 		snd_midi_active = door_x;
 	}
 
@@ -326,8 +321,7 @@ const unsigned char gbcBGM_MODE[3][5] = {
 	gb_M_, gb_I_, gb_D_, gb_I_, 0
 };
 
-const char *PERF_TITLE = "ââèo";
-const char *PERF_OPTIONS[2] = {"Å@í èÌ  ", "àÍïîåyå∏"};
+#include "th02/shiftjis/op_main.hpp"
 
 #pragma option -d
 
@@ -344,7 +338,7 @@ void pascal near main_put_shadow(void)
 	graph_gaiji_puts(308, 372, 16, gbcRANKS[rank], 0);
 }
 
-void pascal near main_put(int sel, unsigned int atrb)
+void pascal near main_put(int sel, tram_atrb2 atrb)
 {
 	if(sel == 0) {
 		gaiji_putsa(35, 16, gbSTART, atrb);
@@ -368,20 +362,20 @@ void pascal near main_put(int sel, unsigned int atrb)
 	gaiji_putsa(38, 23, gbcRANKS[rank], TX_GREEN);
 }
 
-void pascal near menu_sel_move(char sel_count, char direction)
+void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 {
-	putfunc(menu_sel, TX_YELLOW);
+	menu_put(menu_sel, TX_YELLOW);
 	menu_sel += direction;
 	if(!in_option && !extra_unlocked && menu_sel == menu_extra_pos()) {
 		menu_sel += direction;
 	}
 	if(menu_sel < ring_min()) {
-		menu_sel = sel_count;
+		menu_sel = max;
 	}
-	if(menu_sel > sel_count) {
+	if(menu_sel > max) {
 		menu_sel = 0;
 	}
-	putfunc(menu_sel, TX_WHITE);
+	menu_put(menu_sel, TX_WHITE);
 }
 
 void main_update_and_render(void)
@@ -400,18 +394,13 @@ void main_update_and_render(void)
 		for(i = 0; i < 6; i++) {
 			main_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
-		putfunc = main_put;
+		menu_put = main_put;
 	}
 	if(!key_det) {
 		main_input_allowed = true;
 	}
 	if(main_input_allowed) {
-		if(key_det & INPUT_UP) {
-			menu_sel_move(5, -1);
-		}
-		if(key_det & INPUT_DOWN) {
-			menu_sel_move(5, 1);
-		}
+		menu_update_vertical(6);
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {
 			case 0:
@@ -426,7 +415,7 @@ void main_update_and_render(void)
 				score_menu();
 				graph_accesspage(1);
 				graph_showpage(0);
-				pi_load_put_8_free(0, "op2.pi");
+				pi_fullres_load_palette_apply_put_free(0, "op2.pi");
 				palette_entry_rgb_show("op.rgb");
 				graph_copy_page(0);
 				graph_accesspage(0);
@@ -439,7 +428,7 @@ void main_update_and_render(void)
 				break;
 			case 4:
 				text_clear();
-				musicroom();
+				musicroom_menu();
 				initialized = false;
 				break;
 			case 5:
@@ -466,12 +455,12 @@ void pascal near option_put_shadow(void)
 	graph_gaiji_puts(196, 276, 16, gbMUSIC, 0);
 	graph_gaiji_puts(196, 292, 16, gbPLAYER, 0);
 	graph_gaiji_puts(196, 308, 16, gbBOMB, 0);
-	graph_putsa_fx(196, 324, 0, PERF_TITLE);
+	graph_putsa_fx(196, 324, 0, REDUCE_EFFECTS_TITLE);
 	graph_gaiji_puts(284, 340, 16, gbRESET, 0);
 	graph_gaiji_puts(292, 372, 16, gbQUIT, 0);
 }
 
-void pascal near option_put(int sel, unsigned int atrb)
+void pascal near option_put(int sel, tram_atrb2 atrb)
 {
 	if(sel == 0) {
 		gaiji_putsa(24, 16, gbRANK, atrb);
@@ -494,10 +483,14 @@ void pascal near option_put(int sel, unsigned int atrb)
 		graph_copy_rect_1_to_0_16(392, 308, 32, 16);
 		graph_gaiji_putc(396, 308, bombs + gb_0_, 0);
 	} else if(sel == 4) {
-		text_putsa(24, 20, PERF_TITLE, atrb);
-		text_putsa(45, 20, PERF_OPTIONS[resident->perf], atrb);
+		text_putsa(24, 20, REDUCE_EFFECTS_TITLE, atrb);
+		text_putsa(
+			45, 20, REDUCE_EFFECTS_CHOICES[resident->reduce_effects], atrb
+		);
 		graph_copy_rect_1_to_0_16(360, 324, 128, 16);
-		graph_putsa_fx(364, 324, 0, PERF_OPTIONS[resident->perf]);
+		graph_putsa_fx(
+			364, 324, 0, REDUCE_EFFECTS_CHOICES[resident->reduce_effects]
+		);
 	} else if(sel == 5) {
 		gaiji_putsa(35, 21, gbRESET, atrb);
 	} else if(sel == 6) {
@@ -531,7 +524,7 @@ inline void option_quit(bool &initialized) {
 	initialized = false;
 }
 
-// Circumventing 16-bit promition inside comparisons between two 8-bit values
+// Circumventing 16-bit promotion inside comparisons between two 8-bit values
 // in Borland C++'s C++ mode...
 inline char option_rank_max()  { return RANK_LUNATIC; }
 inline char option_bgm_max()   { return SND_BGM_MIDI; }
@@ -560,7 +553,7 @@ void option_update_and_render(void)
 			ring_direction(bombs, option_bombs_max()); \
 			break; \
 		case 4: \
-			resident->perf = 1 - resident->perf; \
+			resident->reduce_effects = (true - resident->reduce_effects); \
 			break; \
 		} \
 		option_put(menu_sel, TX_WHITE);
@@ -577,18 +570,13 @@ void option_update_and_render(void)
 		for(i = 0; i < 7; i++) {
 			option_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
-		putfunc = option_put;
+		menu_put = option_put;
 	}
 	if(!key_det) {
 		input_allowed = 1;
 	}
 	if(input_allowed) {
-		if(key_det & INPUT_UP) {
-			menu_sel_move(6, -1);
-		}
-		if(key_det & INPUT_DOWN) {
-			menu_sel_move(6, 1);
-		}
+		menu_update_vertical(7);
 		if(key_det & INPUT_RIGHT) {
 			option_change(ring_inc);
 		}
@@ -607,7 +595,7 @@ void option_update_and_render(void)
 				lives = CFG_LIVES_DEFAULT;
 				bombs = CFG_BOMBS_DEFAULT;
 				resident->unused_2 = 1;
-				resident->perf = 0;
+				resident->reduce_effects = false;
 				option_put(0, TX_YELLOW);
 				option_put(1, TX_YELLOW);
 				option_put(2, TX_YELLOW);
@@ -678,7 +666,7 @@ int main(void)
 	idle_frames = 0;
 
 	while(!quit) {
-		input_sense();
+		input_reset_sense();
 		if(in_option == false) {
 			main_update_and_render();
 		} else if(in_option == true) {
@@ -690,13 +678,11 @@ int main(void)
 	}
 
 	ret = resident->op_main_retval;
-	resident_sgm = 0;
+	resident_seg = 0;
 	cfg_save();
 	text_clear();
 	graph_clear();
 	game_exit_to_dos();
 	gaiji_restore();
 	return ret;
-}
-
 }

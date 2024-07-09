@@ -1,8 +1,10 @@
+#include "th04/main/playfld.hpp"
+
 #define B4BALL_COUNT 63
 #define B4BALL_W 32
 #define B4BALL_H 32
 
-typedef struct {
+struct b4ball_t {
 	unsigned char flag;
 	unsigned char angle;
 	PlayfieldMotion pos;
@@ -13,7 +15,7 @@ typedef struct {
 	int damaged_this_frame;
 	SubpixelLength8 speed;
 	int8_t padding;
-} b4ball_t;
+};
 
 struct b4ball_template_t {
 	/* -------------------- */ int8_t _unused_1;

@@ -1,11 +1,12 @@
-// The intended palette for a boss, with no effects applied.
+#include "pc98.h"
+
+// The intended palette for a boss, with no effects applied. Used as the
+// reference palette for undoing color flashing in boss_hit_update_and_render().
+// MODDERS: Merge with the [stage_palette].
 extern Palette4 boss_palette;
 
-#define boss_palette_snap_inlined() { \
-	int col; \
-	int comp; \
-	palette_copy(boss_palette, z_Palettes, col, comp); \
-}
+// Palette to fade to after the white boss defeat flash.
+extern Palette4 boss_post_defeat_palette;
 
 // Overwrites [boss_palette] with [z_Palettes].
 void boss_palette_snap(void);

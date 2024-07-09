@@ -1,5 +1,5 @@
-public @bb_txt_put_8_raw
-@bb_txt_put_8_raw	proc near
+public @bb_txt_put_8_raw$quiui
+@bb_txt_put_8_raw$quiui proc near
 
 @@left equ ax
 @@top equ dx
@@ -67,5 +67,5 @@ public @bb_txt_put_8_raw
 	pop	di
 	pop	si
 	retn
-@bb_txt_put_8_raw	endp
+@bb_txt_put_8_raw$quiui endp
 	even

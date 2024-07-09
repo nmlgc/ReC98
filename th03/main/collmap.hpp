@@ -6,6 +6,9 @@
 /// screen resolution: Every bit corresponds to a tile of 2×2 screen pixels,
 // or 2×1 VRAM pixels.
 
+#include "th03/main/playfld.hpp"
+#include <stddef.h>
+
 typedef int collmap_tile_amount_t;
 
 // Constants
@@ -40,7 +43,7 @@ extern PlayfieldPoint collmap_topleft;
 extern collmap_tile_amount_t collmap_stripe_tile_w;
 extern collmap_tile_amount_t collmap_tile_h;
 extern PlayfieldPoint collmap_bottomright;
-extern unsigned char collmap_pid;
+extern pid_t collmap_pid;
 
 // Stored as columns from left to right, not rows from top to bottom.
 extern uint8_t collmap[PLAYER_COUNT][COLLMAP_MEMORY_W][COLLMAP_H];

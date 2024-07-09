@@ -1,4 +1,5 @@
-#define RANK_H
+#ifndef TH01_RANK_H
+#define TH01_RANK_H
 
 // Rank definitions
 typedef enum {
@@ -14,7 +15,25 @@ typedef enum {
 	#endif
 
 	RANK_COUNT,
-	RANK_DEFAULT = -1,
+
+	#if (GAME >= 4)
+		// Triggering the first-launch setup menu via a special rank value...
+		// Definitely unique.
+		RANK_SHOW_SETUP_MENU = 0xFF,
+	#endif
 
 	_rank_t_FORCE_INT16 = 0x7FFF
 } rank_t;
+
+#define RANKS_CAPS { \
+	"EASY", "NORMAL", "HARD", "LUNATIC" \
+}
+
+#define RANKS_CAPS_CENTERED { \
+	" EASY ", \
+	"NORMAL", \
+	" HARD ", \
+	"LUNATIC" \
+}
+
+#endif /* TH01_RANK_H */
