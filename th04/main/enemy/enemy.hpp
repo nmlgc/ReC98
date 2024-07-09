@@ -1,5 +1,6 @@
-#define ENEMY_W 32
-#define ENEMY_H 32
+#include "th04/main/bullet/bullet.hpp"
+#include "th04/main/item/item.hpp"
+#include "th04/sprites/main_pat.h"
 
 enum enemy_flag_t {
 	EF_FREE = 0,
@@ -19,9 +20,9 @@ struct enemy_t {
 	unsigned char age;
 	PlayfieldMotion pos;
 	unsigned char patnum_base;
-	int8_t unused_1;
+	int8_t unused_1; // ZUN bloat
 	int hp;
-	int16_t unused_2;
+	int16_t unused_2; // ZUN bloat
 	int score;
 	unsigned char near *script;
 	int script_ip;
@@ -52,7 +53,7 @@ struct enemy_t {
 	bool clip_x;
 	bool clip_y;
 
-	int8_t unused_3;
+	int8_t unused_3; // ZUN bloat
 	item_type_t item;
 	bool damaged_this_frame;
 
@@ -69,7 +70,7 @@ struct enemy_t {
 	// Not updated to reflect the current playfield half the enemy is in!
 	bool spawned_in_left_half;
 
-	bullet_template_t bullet_template;
+	BulletTemplate bullet_template;
 
 	// If [autofire] is true, the enemy fires bullets, according to its
 	// template, every [autofire_interval] number of frames, with

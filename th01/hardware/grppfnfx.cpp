@@ -1,5 +1,5 @@
-struct hack { const char* NUM[10]; }; // XXX
-extern const hack FULLWIDTH_NUMBERS;
+#include "th01/hardware/grppsafx.h"
+#include "th01/shiftjis/fwnum.hpp"
 
 void graph_putfwnum_fx(
 	screen_x_t left, vram_y_t top, int16_t col_and_fx, int digits,
@@ -11,7 +11,7 @@ void graph_putfwnum_fx(
 	int digit;
 	int digit_prev;
 	unsigned long divisor = 1;
-	const hack FW = FULLWIDTH_NUMBERS;
+	const shiftjis_t* FULLWIDTH_NUMERAL[10] = FULLWIDTH_NUMERALS;
 
 	for(divisor_i = 0; divisor_i < digits; divisor_i++) {
 		divisor *= 10;
@@ -29,7 +29,7 @@ void graph_putfwnum_fx(
 			put = true;
 		}
 		if(put && ((digit != digit_prev) || !num_prev)) {
-			graph_putsa_fx(x, top, col_and_fx, FW.NUM[digit]);
+			graph_putsa_fx(x, top, col_and_fx, FULLWIDTH_NUMERAL[digit]);
 		}
 		x += GLYPH_FULL_W;
 	} while(divisor > 1);

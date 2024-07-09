@@ -1,8 +1,10 @@
+#include "th01/hardware/graph.h"
+
 static const int SHOOTOUT_LASER_COUNT = 10;
 
 /// Q24.8 fixed-point format
 /// ------------------------
-/// This format matches the precision of master.lib's [SinTable8] and
+// This format matches the precision of master.lib's [SinTable8] and
 // [CosTable8] lookup tables, and directly maps its values to the range of
 // [-1.0, +1.0].
 
@@ -23,7 +25,7 @@ public:
 	}
 
 	int32_t to_vram_byte_amount() const {
-		return (v >> 11);
+		return (v >> (8 + BYTE_BITS));
 	}
 };
 /// ------------------------
@@ -45,14 +47,14 @@ public:
 	pixel_t ray_moveout_speed;
 	screen_x_t target_left;	// unused
 	vram_y_t target_y;	// unused
-	int unknown;	// unused
-	int32_t unused_1;
-	LaserPixel velocity_y;	// per frame, unused
+	int unknown;	// ZUN bloat
+	int32_t unused_1;	// ZUN bloat
+	LaserPixel velocity_y;	// per frame, ZUN bloat
 	LaserPixel step_y;	// per ray pixel, [-1.0, +1.0]
-	LaserPixel velocity_x;	// per frame, unused
+	LaserPixel velocity_x;	// per frame, ZUN bloat
 	LaserPixel step_x;	// per ray pixel, [-1.0, +1.0]
 	pixel_t ray_extend_speed;
-	int16_t unused_2;
+	int16_t unused_2;	// ZUN bloat
 	bool16 alive;
 	int age;
 
@@ -63,25 +65,29 @@ public:
 	unsigned char col;
 	unsigned char width_cel;
 	bool damaging;
-	char id;	// unused
+	char id;	// ZUN bloat
+
+	CShootoutLaser() {
+		alive = false;
+	}
 
 protected:
-	// MODDERS: Just turn into a parameter of hittest_and_render().
+	// ZUN bloat: Just turn into a parameter of hittest_and_render().
 	enum { SL_RAY_UNPUT = false, SL_RAY_PUT = true } put_flag;
 
 	void hittest_and_render(void);
 
 public:
-	// Does nothing if this laser is already [alive]. No idea why the speed
-	// has to be passed like that - the function simply divides it by 8,
-	// losing any extended precision. *shrug*
+	// Does nothing if this laser is already [alive], and patterns do rely on
+	// that behavior. No idea why the speed has to be passed like that - the
+	// function simply divides it by 8, losing any extended precision. *shrug*
 	void spawn(
 		screen_x_t origin_left,
 		vram_y_t origin_y,
 		screen_x_t target_left,
 		vram_y_t target_y,
 		int speed_multiplied_by_8,
-		int col,
+		vc2 col,
 		int moveout_at_age,
 		int w
 	);
@@ -89,10 +95,11 @@ public:
 	// Directly sets [done] if the laser collides with the player.
 	void update_hittest_and_render(void);
 
-	// Tries to unblit the entire laser, but fails hilariously.
+	// Tries to unblit the entire laser, but fails hilariously and potentially
+	// even crashes the game.
 	void unput_and_reset(void) {
 		if(alive) {
-			// Two ZUN bugs here:
+			// ZUN bug: And even two of them:
 			//
 			// 1) Surely this should have unblitted from the start to the end
 			//    of the ray instead? Except that this class doesn't explicitly
@@ -101,13 +108,20 @@ public:
 			//    who knows how accurate that actually is?
 			//
 			// 2) graph_r_line_unput() takes screen_x_t and vram_y_t, not
-			//    LaserPixels truncated to 16-bits :zunpet: As a result, this
-			//    call effectively unblit random 32-bit pixel chunks.
+			//    LaserPixels truncated to 16-bits. :zunpet: The function then
+			//    interpolates and clips these values in a rather clumsy
+			//    attempt to find a line segment between those garbage
+			//    coordinates that actually falls within the boundaries of
+			//    VRAM. At best, this search fails, and the function simply
+			//    does nothing. At worst, the resulting line triggers the ZUN
+			//    bugs in graph_r_line_unput(), raising a General Protection
+			//    Fault.
+			//    The latter is exactly the cause behind potential crashes when
+			//    defeating bosses while there are diagonally moving lasers on
+			//    screen, which are most commonly reported for Elis and Mima.
 			//
-			// Not that it matters a lot. This function is only called at the
-			// end of a boss battle, immediately before transitioning to the
-			// tally screen. Still, not doing anything would have been the
-			// better choice.
+			// So yeah, not doing anything would have been the much better
+			// choice.
 			graph_r_line_unput(
 				ray_start_left.v, ray_start_y.v, origin_left.v, origin_y.v
 			);
@@ -126,8 +140,12 @@ extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
 	} \
 }
 
-#define shootout_lasers_unput_and_reset_broken(i) { \
-	for(i = 0; i < SHOOTOUT_LASER_COUNT; i++) { \
+// Quite a roundabout way of preventing buffer overflows, but fine.
+#define shootout_laser_safe(i) \
+	shootout_lasers[(i) % SHOOTOUT_LASER_COUNT]
+
+#define shootout_lasers_unput_and_reset_broken(i, count) { \
+	for(i = 0; i < count; i++) { \
 		shootout_lasers[i].unput_and_reset(); \
 	} \
 }

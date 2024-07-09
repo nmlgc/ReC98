@@ -1,5 +1,5 @@
-public BB_LOAD
-bb_load proc near
+public @BB_LOAD$QNXC
+@bb_load$qnxc proc near
 	push	si
 	call	hmem_allocbyte pascal, BB_SIZE
 	mov	_bb_load_seg, ax
@@ -29,5 +29,5 @@ arg_bx	near, @fn:dword
 	pop	si
 	mov	ax, _bb_load_seg
 	ret_bx
-bb_load endp
+@bb_load$qnxc endp
 	nop

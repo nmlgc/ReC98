@@ -1,6 +1,8 @@
-public _bullet_turn_count_max, _bullet_template_turn_angle
-_bullet_turn_count_max	db ?
-_bullet_template_turn_angle	db ?
+public _bullet_special_motion, _bullet_template_special_angle
+_bullet_special_motion_turns_max	label byte
+_bullet_special_motion_speed_delta	label byte
+_bullet_special_motion	db ?
+_bullet_template_special_angle 	bullet_special_angle_t <?>
 
 public _bullet_zap, _bullet_clear_time
 label _bullet_zap_frames byte

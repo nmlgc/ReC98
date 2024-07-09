@@ -1,5 +1,3 @@
-#include "th01/math/vector.hpp"
-
 void pascal vector2(int &ret_x, int &ret_y, unsigned char angle, int length);
 
 // Constructs a vector from (x1, y1) to (x2, y2), and additionally applies

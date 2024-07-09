@@ -1,18 +1,10 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
-extern "C" {
-#include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "th04/formats/cdg.h"
 #include "th04/formats/cdg_impl.hpp"
-}
 
 void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot)
 {
-	#define cdg	reinterpret_cast<cdg_t near *>(_SI)
+	#define cdg	reinterpret_cast<CDG near *>(_SI)
 	#define tmp	static_cast<upixel_t>(_AX)
 	#define cdg_dword_w	static_cast<vram_byte_amount_t>(_BP)
 	#define dst_offset	static_cast<vram_byte_amount_t>(_BX)

@@ -1,3 +1,6 @@
+#ifndef TH04_PLAYCHAR_H
+#define TH04_PLAYCHAR_H
+
 typedef enum {
 	PLAYCHAR_REIMU = 0,
 	PLAYCHAR_MARISA = 1,
@@ -16,3 +19,5 @@ inline playchar_t playchar_other(playchar_t playchar) {
 }
 
 extern playchar_t playchar;
+
+#endif /* TH04_PLAYCHAR_H */

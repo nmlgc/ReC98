@@ -17,13 +17,23 @@ For starters, simply naming functions or global variables to reflect their
 actual intent will already be helpful. *Any* name is better than
 `sub_<something>`, and can always be fixed or improved later.
 
+## Setup
+
+Before committing anything, enable the Git hooks from the `hooks/` subdirectory
+to automatically catch common mistakes:
+
+```shell
+git config --local core.hooksPath hooks/
+```
+
 # Contribution guidelines
 
 ## Rule #1
 
-**`master` must never introduce code changes that change the decompressed
-program image, or the unordered set of relocations, of any original game
-binary, as compared using [mzdiff].** The only allowed exceptions are:
+**`master` must never introduce code that changes the decompressed program
+image, or the unordered set of relocations, of any original game binary, as
+compared using [mzdiff].** The only allowed exceptions are:
+
 1) different encodings of identical x86 instructions within code segments
 2) padding with `00` bytes at the end of the file.
 
@@ -41,12 +51,21 @@ These cases should gradually be removed as development goes along, though.
 
 * Always use `{ brackets }`, even around single-statement conditional
   branches and single-instruction inline assembly.
+
+* The opening `{` bracket of a function goes into
+  * the next line if the function is non-inlined (Linux style), and
+  * the end of the line with the closing `)` if the function is inlined.
+
 * Add spaces around binary operators. `for(i = 0; i < 12; i++)`
 
 * Variables should be *signed* in the absence of any ASM instruction
   (conditional jump, arithmetic, etc.) or further context (e.g. parameters
   with a common source) that defines their signedness. If a variable is used
   in both signed and unsigned contexts, declare it as the more common one.
+
+* Don't use the C-style `typedef` syntax for declaring `struct`s.
+  Currently, this codebase does not aim for compatibility with C-only
+  compilers, and it only makes forward declarations more annoying.
 
 ## Compatibility
 
@@ -61,7 +80,7 @@ These cases should gradually be removed as development goes along, though.
     which keeps the annoyance from accidentally destroyed files to a minimum.
 
 * Use `_asm` as the keyword for decently sane or temporary inline assembly.
-  This variation has the biggest compiler support, which will ease potential
+  This variant has the biggest compiler support, which will ease potential
   future ports to other x86 systems:
 
    | Compiler support                  | `asm` |  `_asm` | `__asm` |
@@ -72,7 +91,7 @@ These cases should gradually be removed as development goes along, though.
    | Open Watcom 2.0                   |       |    ✔    |    ✔    |
    | Visual Studio 2022                |       |    ✔    |    ✔    |
    | Clang 13 (default)                |       |         |         |
-   | Clang 13 (with `-fms-extensions)` |   ✔   |    ✔    |    ✔    |
+   | Clang 13 (with `-fms-extensions`) |   ✔   |    ✔    |    ✔    |
 
   * Conversely, use `asm` as the keyword for the particularly dumb small
     pieces of inline assembly that refer to or depend on register
@@ -95,10 +114,19 @@ These cases should gradually be removed as development goes along, though.
 
 ## Build system
 
-* Whenever you edit the `Tupfile`, run `tup generate Tupfile.bat` to update
-  the dumb batch fallback script, for systems that can't run Tup.
+* Each non-refactoring edit to `Tupfile.lua` should be accompanied by a
+  corresponding edit to `build_dumb.bat`. The Tup-based build process
+  automatically rewrites the file in this case.
 
 ## Code organization
+
+* Every header file should individually compile as a valid translation unit,
+  and therefore `#include` any other headers it requires.
+
+* Only use include guards if the code structure necessitates it. This keeps
+  `#include` lists small and speeds up compilation, which is especially useful
+  given that we (still) have to emulate Turbo C++ 4.0J on 64-bit systems.
+  Unfortunately, it doesn't support `#pragma once`.
 
 * Try to avoid repeating numeric constants – after all, easy moddability
   should be one of the goals of this project. For local arrays, use `sizeof()`
@@ -276,23 +304,35 @@ These cases should gradually be removed as development goes along, though.
   here" or "this code would read really nicely if this functionality was
   encapsulated in a method". (Sometimes, you will have little choice, in
   fact!) Despite Turbo C++'s notoriously outdated C++ implementation, [there
-  are quite a lot of possibilites for abstractions that inline perfectly][1].
+  are quite a lot of possibilities for abstractions that inline perfectly][1].
   Subpixels, as seen in 9d121c7, are the prime example here. Don't overdo it,
   though – use classes where they meaningfully enhance the original procedural
   code, not to replace it with an overly nested, "enterprise-y" class
   hierarchy.
 
-* Use `#pragma option -zC` and `#pragma option -zP` to rename code segments
-  and their groups, not `#pragma codeseg`. Might look uglier, but has the
+* Prefer `#pragma option -zC` and `#pragma option -zP` for renaming code
+  segments and groups. It might look uglier than `#pragma codeseg`, but has the
   advantage of not generating an empty segment with the default name and the
   default padding. This is particularly relevant [if the `-WX` option is used
   to enforce word-aligned code segments][3]: That empty default segment would
   otherwise also (unnecessarily) enforce word alignment for the segment that
-  ends up following the empty default one.
+  ends up following the empty default one. It also reduces a bit of bloat from
+  linker map files.
 
   * These options can only be used "at the beginning" of a translation unit –
     before the first non-preprocessor and non-comment C language token. Any
     other `#pragma option` settings should also be put there.
+
+  * `#pragma codeseg` will still be necessary if a translation unit emits code
+    into more than one segment. In that case, use `#pragma option -zC` and
+    `#pragma option -zP` for the first segment and group, and `#pragma codeseg`
+    for the second and later ones.
+
+  * When working with `near` functions, `#pragma codeseg` directives might be
+    needed in headers to ensure that other translation units [calculate their
+    references correctly][4]. In that case, these directives should *only*
+    occur there if possible, and not in the `.cpp` file corresponding to such a
+    header.
 
 ## Decompilation
 
@@ -342,10 +382,27 @@ These cases should gradually be removed as development goes along, though.
 * Macros defining the number of distinct sprites in an animation: `*_CELS`
 * Frame variables counting from a frame count to 0: `*_time`
 * Frame variables and other counters starting from 0: `*_frames`
+* Blocking main functions of interactive menus with their own `frame_delay()`
+  calls: `*_menu()`
+* Functions that show multi-frame animations in a blocking way, using their own
+  `frame_delay()` calls: `*_animate`
 * Generic 0-based IDs: `*_id`
 * Generic 1-based IDs, with 0 indicating some sort of absence: `*_num`
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
+* Plain-old-data `struct`s: `struct snake_case_t {}`
+* `struct`s and `class`es with C++ methods: `(struct|class) CamelCase {}`
+  * Multiple consecutive capital letters are allowed.
+* `template` `struct`s and `class`es, as well as their template parameters, are
+  CamelCase regardless of whether they have methods or not.
+* Fallback naming scheme for space-saving `union`s whose members have wildly
+  unrelated semantics: `u1`, `u2`, `u3`, …
+* x86 Real Mode segments and offsets: `seg`/`off`
+  * This collides nicely with Turbo C++'s `__seg` keyword, `#pragma codeseg`,
+    the standard `FP_SEG` and `FP_OFF` macros, and comments about memory
+    segmentation, which limits the strings to grep for. Therefore, `seg` and
+    `off` should *not* be used for anything unrelated to x86 memory
+    segmentation.
 
 ## Identifiers from ZUN's original code
 
@@ -367,7 +424,145 @@ Currently, we know about the following [references]:
   displays a piece of TH04's `MAIN.EXE`, handling demo recording and the setup
   of the game's EMS area.
 
+## Labeling weird or broken code
+
+There's a lot of it in these games, and each such piece of code is relevant to
+a different audience of this codebase. While `master` won't fix anything in the
+original code, it is the right branch to point out all of these issues in
+source code comments. By assigning specific labels based on the code's impact,
+`master` can make it easier for other branches and forks to identify and fix
+only the subset of issues they care about.
+
+When categorizing such issues, first ask whether a fix could be <a
+id="observable" href="#observable">🔗 observed</a>: Would it change any of the
+individual frames rendered by the game, as defined by the original frame delay
+boundaries? Assume that these frames are rendered by an infinitely fast PC-98
+that will never add additional lag frames on top.
+
+### Categories
+
+#### `ZUN bloat`
+
+Code that wastes memory, CPU cycles, or even just the mental capacity of anyone
+trying to read and understand the code. The broadest label, encompassing all
+code that could be significantly simplified without making [observable]
+changes.
+
+Examples:
+
+* Splitting the game into multiple executables for misguided reasons
+* Code without any effect
+* Assembly code at any place above the lowest level of the platform layer
+* Unused code or data
+
+Bloat is removed on the aptly named `debloated` branch. That branch is the
+recommended foundation for nontrivial mods that don't care about being
+byte-for-byte comparable to ZUN's original binaries.
+
+#### `ZUN landmine`
+
+Code that is technically wrong, but does *not* have [observable] effects within
+the following assumptions:
+
+* ZUN's original build of the decompiled game is correctly installed and
+  accessible, together with all its original data files.
+* No files of this installation were modified.
+* All files can be read as intended without I/O errors.
+* The game runs on a clean PC-98 DOS system that matches the official minimum
+  system requirements, with enough free memory.
+* The only active TSRs are the game's intended sound driver, an [expanded
+  memory][5] manager, and the resident part of `COMMAND.COM`.
+* All system-level interfaces (interrupt APIs, I/O ports, and special memory
+  segments) behave as typically expected.
+
+The effects might never be triggered by the original data, or they might be
+mitigated by other parts of the original binary, including Turbo C++ 4.0J
+code generation details.
+
+Examples:
+
+* Out-of-bounds memory accesses with no consequences
+* Every [bug] in unused code
+* Missing error handling for file I/O
+
+Landmines are likely to cause issues as soon as the game is modded or compiled
+with a different compiler, which breaks the above assumptions. Therefore, they
+should be fixed on every branch that breaks the code or data layout of the
+game. Most notably, they are removed from the `debloated` and `anniversary`
+branches.
+
+#### `ZUN bug`
+
+Logic errors or incorrect programming language / interface / system use with
+[observable] negative or unexpected effects in ZUN's original build. The
+surrounding code must provide evidence that ZUN did not intend the bug. Fixing
+these issues must not affect hypothetical replay compatibility, and any
+resulting visual changes must match ZUN's provable intentions. As a result of
+these constraints, bugs are pretty much limited to rendering issues and
+crashes.
+
+Examples:
+
+* All crashes
+* Sprites that were created to be shown in a single place, but are never
+  rendered because of a logic error in their clipping condition
+* Blitting operations that are limited to the PC-98's 8×1-pixel VRAM byte grid,
+  but reflect the position of entities that can move at a finer granularity.
+  This was likely done for performance reasons rather than artistic ones.
+
+Bugs are fixed on the `anniversary` branch. Critical ones may also receive
+individual bugfix branches that preserve the code and data layout of the
+original game by only modifying as few bytes as possible.
+
+#### `ZUN quirk`
+
+Weird code that looks incorrect in context, but either defines game logic or is
+part of a possibly intentional visual effect. Fixing these issues would desync
+a hypothetical replay recorded on the original game, or affect the visuals so
+much that the result is no longer faithful to ZUN's original release. It might
+very well be called a fangame at that point.
+
+Examples:
+
+* Incorrect or inconsistent coordinate calculations of gameplay entities
+* Inconsistencies in visual effects that lack the clear evidence necessary for
+  a [bug]. One example is the missing quarter of the big dotted circle featured
+  in an early pattern of the TH01 Elis fight: There is code that is supposed to
+  render the quarter, but doesn't due to an incorrect angle calculation. In
+  this case, it can be argued that this is either a bug (because the
+  inconsistency exists in the first place) or a feature (because the
+  inconsistency is easily spotted, and ZUN did not fix it).
+
+Fixing quirks is fanfiction territory and thus out of scope for the main ReC98
+project, but forks are welcome to do so.
+
+#### Summary
+
+|                             | Bloat | Landmines | Bugs | Quirks |
+| --------------------------- | ----- | --------- | ---- | ------ |
+| Fix would be [observable]   | No    | No        | Yes  | Yes    |
+| Fix would desync replays    | No    | No        | No   | Yes    |
+| Might have been intentional | No*   | No        | No   | Yes    |
+
+(* The games contain code that explicitly delays execution at microsecond,
+millisecond, and frame granularity. If bloated code does not include explicit
+delays, it makes sense to assume that it was not written to be slow on purpose,
+and the bloat simply came from ZUN's lack of knowledge and experience at the
+time of the respective game's development. [He admitted as much in an
+interview.](https://en.touhougarakuta.com/article/specialtaidan_zun_hiroyuki_2-en))
+
+The comments for each of these issues should be prefixed with a `ZUN
+(bloat|landmine|bug|quirk):` label, and include a description that points out
+the specific issue. This description can be left out for obvious cases of
+bloat, like unused variables or code with no effect.
+
+----
+
 [mzdiff]: https://github.com/nmlgc/mzdiff
 [1]: Research/Borland%20C++%20decompilation.md#c
 [2]: https://github.com/nmlgc/ReC98/invitations
 [3]: Research/Borland%20C++%20decompilation.md#padding-bytes-in-code-segments
+[4]: Research/Borland%20C++%20decompilation.md#memory-segmentation
+[5]: https://en.wikipedia.org/wiki/Expanded_memory
+[bug]: #zun-bug
+[observable]: #observable

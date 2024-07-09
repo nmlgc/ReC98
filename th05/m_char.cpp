@@ -3,25 +3,18 @@
  * TH05 player character selection menu
  */
 
-#pragma option -zCop_01_TEXT
+#pragma option -zPop_01
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/rank.h"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"
-#include "th04/score.h"
-#include "th04/common.h"
-#include "th05/playchar.h"
+#include "th04/op/clear.hpp"
+#include "th04/op/impl.hpp"
+#include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"
-#include "th05/op/op.h"
-#include "th05/sprites/op_cdg.h"
-#include "th05/snd/snd.h"
+#include "th05/op/op.hpp"
 #include "th05/hardware/input.h"
 #include "th05/formats/pi.hpp"
 
@@ -48,9 +41,9 @@ static const screen_x_t YUUKA_LEFT = 400;
 static const vram_y_t YUUKA_TOP = 224;
 
 unsigned char playchar_menu_sel;
-static uint8_t unused_1;
+static uint8_t unused_1; // ZUN bloat
 unsigned char playchar_menu_rank;
-static uint8_t unused_0[4];
+static uint8_t unused_0[4]; // ZUN bloat
 bool extra_playable_with[PLAYCHAR_COUNT];
 bool selectable_with[PLAYCHAR_COUNT];
 
@@ -59,8 +52,6 @@ bool selectable_with[PLAYCHAR_COUNT];
 void pascal near pic_darken(unsigned char playchar)
 {
 	vram_offset_t vram_offset;
-	vram_byte_amount_t x;
-	pixel_t y;
 
 	switch(playchar) {
 	case PLAYCHAR_REIMU:
@@ -76,7 +67,7 @@ void pascal near pic_darken(unsigned char playchar)
 		vram_offset = vram_offset_shift(YUUKA_LEFT, YUUKA_TOP);
 		break;
 	}
-	darken(vram_offset, x, y, PIC_W, PIC_H, 1);
+	darken(vram_offset, PIC_W, PIC_H, 1);
 }
 
 void pascal near pic_put(bool16 darkened)
@@ -86,17 +77,17 @@ void pascal near pic_put(bool16 darkened)
 	screen_x_t cleared_left;
 	vram_y_t cleared_top;
 
-	#define set_coords_for(playchar) \
-		pic_left = playchar##_LEFT; \
-		pic_top = playchar##_TOP; \
-		cleared_left = (playchar##_LEFT + (PIC_W - CLEARED_W)); \
-		cleared_top = (playchar##_TOP + (PIC_H - CLEARED_H));
+	#define set_coords(left, top) \
+		pic_left = left; \
+		pic_top = top; \
+		cleared_left = (left + (PIC_W - CLEARED_W)); \
+		cleared_top = (top + (PIC_H - CLEARED_H));
 
 	switch(playchar_menu_sel) {
-	case PLAYCHAR_REIMU: 	set_coords_for(REIMU); 	break;
-	case PLAYCHAR_MARISA:	set_coords_for(MARISA);	break;
-	case PLAYCHAR_MIMA:  	set_coords_for(MIMA);  	break;
-	case PLAYCHAR_YUUKA: 	set_coords_for(YUUKA); 	break;
+	case PLAYCHAR_REIMU: 	set_coords(REIMU_LEFT, REIMU_TOP);  	break;
+	case PLAYCHAR_MARISA:	set_coords(MARISA_LEFT, MARISA_TOP);	break;
+	case PLAYCHAR_MIMA:  	set_coords(MIMA_LEFT, MIMA_TOP);    	break;
+	case PLAYCHAR_YUUKA: 	set_coords(YUUKA_LEFT, YUUKA_TOP);  	break;
 	}
 
 	#define pic_raised_left (pic_left - RAISE_W)
@@ -138,8 +129,8 @@ void pascal near pic_put(bool16 darkened)
 		}
 	} else {
 		// Raised area of the highlighted pic
-		bgimage_put_rect(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
-		bgimage_put_rect(pic_raised_left, pic_top, RAISE_W, PIC_H);
+		bgimage_put_rect_16(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
+		bgimage_put_rect_16(pic_raised_left, pic_top, RAISE_W, PIC_H);
 
 		// Pic
 		if(selectable_with[playchar_menu_sel]) {
@@ -156,7 +147,7 @@ void pascal near pic_put(bool16 darkened)
 		pic_darken(playchar_menu_sel);
 	}
 
-	#undef set_coords_for
+	#undef set_coords
 	#undef pic_raised_top
 	#undef pic_raised_left
 }
@@ -167,7 +158,7 @@ void near playchar_menu_put_initial(void)
 
 	palette_settone(0);
 	graph_accesspage(1);
-	pi_load_put_8_free(0, "slb1.pi");
+	pi_fullres_load_palette_apply_put_free(0, "slb1.pi");
 	graph_copy_page(0);
 	bgimage_snap();
 
@@ -256,6 +247,4 @@ bool16 near playchar_menu(void)
 		}
 		frame_delay(1);
 	}
-}
-
 }

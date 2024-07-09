@@ -3,15 +3,10 @@
  * Code segment #1 of TH03's OP.EXE
  */
 
-extern "C" {
 #include <stddef.h>
-#include "platform.h"
-#include "master.hpp"
 #include "th03/common.h"
-#include "th03/playchar.hpp"
-#include "th03/score.h"
 #include "th03/resident.hpp"
-#include "th03/formats/cfg.hpp"
+#include "th03/formats/cfg_impl.hpp"
 #include "th03/snd/snd.h"
 
 bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
@@ -21,11 +16,12 @@ bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 
 /// YUME.CFG loading and saving
 /// ---------------------------
+
 // These will be removed once the strings can be defined here
 #undef CFG_FN
 extern const char CFG_FN[];
 
-void near pascal cfg_load(void)
+void near cfg_load(void)
 {
 	cfg_t cfg;
 
@@ -57,13 +53,13 @@ inline void cfg_save_bytes(cfg_t &cfg, size_t bytes) {
 	file_close();
 }
 
-void near pascal cfg_save(void)
+void near cfg_save(void)
 {
 	cfg_t cfg;
 	cfg_save_bytes(cfg, 4); // MODDERS: Should be `sizeof(cfg.opts)`
 }
 
-void near pascal cfg_save_exit(void)
+void near cfg_save_exit(void)
 {
 	cfg_t cfg = { 0 };
 	cfg_save_bytes(cfg, sizeof(cfg));
@@ -71,4 +67,3 @@ void near pascal cfg_save_exit(void)
 /// ---------------------------
 
 void pascal near start_demo();
-}

@@ -1,7 +1,7 @@
 ; First TH05 .PI assembly translation unit.
 
 	.386
-	.model use16 large
+	.model use16 large SHARED
 	locals
 
 include pc98.inc
@@ -12,20 +12,11 @@ include libs/master.lib/master.inc
 	extrn _pi_mask_y:word
 	extrn _pi_put_masked_vram_offset:word
 
-; Apparently necessary to avoid fixup overflows. In this case, the call to
-; pi_masked_egc_setup_copy() would be bizarrely offset otherwise, which TLINK
-; wouldn't even report?! I did very much not enjoy debugging this.
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
+	.code SHARED
+	@pi_mask_setup_egc_and_advance$qv procdesc near
 
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
-
-	_pi_mask_setup_egc_and_advance procdesc near
-
-public PI_PUT_MASKED_8_ROWLOOP
-pi_put_masked_8_rowloop proc near
+public @PI_PUT_MASKED_8_ROWLOOP$QIIIUI
+@pi_put_masked_8_rowloop$qiiiui proc near
 ; Can't use ARG, because the function doesn't `PUSH BP`!
 @@stride_packed	= word ptr [bp+2]
 @@w            	= word ptr [bp+4]
@@ -65,7 +56,7 @@ TEMP_ROW = RES_Y
 	sub	_pi_put_masked_vram_offset, PLANE_SIZE
 
 @@next_row:
-	call	_pi_mask_setup_egc_and_advance
+	call	@pi_mask_setup_egc_and_advance$qv
 	mov	ax, SEG_PLANE_B
 	mov	es, ax
 	assume es:nothing
@@ -93,8 +84,6 @@ TEMP_ROW = RES_Y
 	dec	@@h
 	jnz	short @@put_row
 	retn	8
-pi_put_masked_8_rowloop endp
-
-SHARED_	ends
+@pi_put_masked_8_rowloop$qiiiui endp
 
 	end

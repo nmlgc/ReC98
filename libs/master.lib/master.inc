@@ -5,6 +5,9 @@
 
 include libs/master.lib/macros.inc
 
+extern _SinTable8:word:256
+extern _CosTable8:word:256
+
 EGC_OFF procdesc pascal far
 GAIJI_PUTSA procdesc pascal far \
 	x:word, y:word, strp_seg:word, strp_off:word, atrb:word

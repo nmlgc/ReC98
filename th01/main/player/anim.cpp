@@ -1,15 +1,8 @@
-extern "C" {
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grph1to0.hpp"
 #include "th01/hardware/planar.h"
 #include "th01/formats/pf.hpp"
-#include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/bos.hpp"
-#include "th01/main/playfld.hpp"
-}
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/anim.hpp"
 
@@ -26,11 +19,11 @@ int CPlayerAnim::load(const char fn[PF_FN_LEN])
 		planes.R[i] = new dots8_t[plane_size];
 		planes.G[i] = new dots8_t[plane_size];
 		planes.E[i] = new dots8_t[plane_size];
-		arc_file_get(reinterpret_cast<char *>(alpha[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.B[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.R[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.G[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.E[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(alpha[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.B[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.R[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.G[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.E[i]), plane_size);
 
 		for(bos_p = 0; bos_p < plane_size; bos_p++) {
 			alpha[i][bos_p] = ~alpha[i][bos_p];
@@ -85,7 +78,7 @@ void CPlayerAnim::unput_8(screen_x_t left, vram_y_t top, int image) const
 	graph_accesspage_func(0);
 }
 
-#define put_row(bos_byte_x, vram_offset, bos_p, image) \
+#define put_row(bos_byte_x, vram_offset, intended_y, bos_p, image) \
 	for(bos_byte_x = 0; vram_w > bos_byte_x; bos_byte_x++) { \
 		if( \
 			((vram_offset / ROW_SIZE) == intended_y) && \
@@ -120,7 +113,7 @@ void CPlayerAnim::put_0_8(screen_x_t left, vram_y_t top, int image) const
 	for(bos_y = 0; h > bos_y; bos_y++) {
 		vram_offset = vram_offset_row;
 		vram_y_t intended_y = vram_intended_y_for(vram_offset_row, left);
-		put_row(bos_byte_x, vram_offset, bos_p, image);
+		put_row(bos_byte_x, vram_offset, intended_y, bos_p, image);
 		vram_offset_row += ROW_SIZE;
 		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
 			break;
@@ -153,7 +146,8 @@ void CPlayerAnim::unput_and_put_overlapped_8(
 
 	// Probably supposed to needlessly make sure that both values are positive?
 	vram_distance_from_unput_to_put = (
-		((put_left + PLAYER_W) >> 3) - ((unput_left + PLAYER_W) >> 3)
+		((  put_left + PLAYER_W) >> BYTE_BITS) -
+		((unput_left + PLAYER_W) >> BYTE_BITS)
 	);
 	bos_p = 0;
 
@@ -200,7 +194,7 @@ void CPlayerAnim::unput_and_put_overlapped_8(
 				0, (unput_top + bos_y), (unput_mask + 1), (vram_w - 1)
 			);
 		}
-		put_row(bos_byte_x, vram_offset, bos_p, put_image);
+		put_row(bos_byte_x, vram_offset, intended_y, bos_p, put_image);
 
 		vram_offset_row += ROW_SIZE;
 		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge

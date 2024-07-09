@@ -1,11 +1,5 @@
-#pragma option -zCSHARED -3 -Z
+#pragma option -zCSHARED
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th03/formats/pi.hpp"
 
 void pascal pi_put_interlace_8(screen_x_t left, vram_y_t top, int slot)
@@ -23,6 +17,4 @@ void pascal pi_put_interlace_8(screen_x_t left, vram_y_t top, int slot)
 		row_p += pi_headers[slot].xsize; // = pi_buffer_p_next_row(), twice
 		pi_buffer_p_normalize(row_p);
 	}
-}
-
 }

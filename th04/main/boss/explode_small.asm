@@ -1,5 +1,5 @@
 EXPLOSION_TYPED macro
-	mov	[si+explosion_t.flag], 1
+	mov	[si+explosion_t.EXPLOSION_alive], 1
 	mov	[si+explosion_t.age], 0
 	mov	ax, _boss_pos.cur.x
 	mov	[si+explosion_t.center.x], ax
@@ -50,8 +50,8 @@ EXPLOSION_TYPED macro
 	dw offset @@type4
 endm
 
-public BOSS_EXPLODE_SMALL
-boss_explode_small	proc near
+public @BOSS_EXPLODE_SMALL$Q16EXPLOSION_TYPE_T
+@boss_explode_small$q16explosion_type_t proc near
 
 @@type	= word ptr  4
 
@@ -59,10 +59,10 @@ boss_explode_small	proc near
 	mov	bp, sp
 	push	si
 	mov	si, offset _explosions_small
-	cmp	[si+explosion_t.flag], 0
+	cmp	[si+explosion_t.EXPLOSION_alive], 0
 	jz	short @@set
 	add	si, size explosion_t
 
 @@set:
 	EXPLOSION_TYPED
-boss_explode_small	endp
+@boss_explode_small$q16explosion_type_t endp

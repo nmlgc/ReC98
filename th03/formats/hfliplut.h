@@ -1,3 +1,5 @@
+#include "planar.h"
+
 // Lookup table for horizontally flipping a dots8_t.
 extern dots8_t hflip_lut[256];
 

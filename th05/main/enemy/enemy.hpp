@@ -1,3 +1,6 @@
+#include "th04/main/bullet/bullet.hpp"
+#include "th04/main/item/item.hpp"
+
 #define ENEMY_CLIP_NONE 0x00
 #define ENEMY_CLIP_X 0x01
 #define ENEMY_CLIP_Y 0x10
@@ -32,16 +35,16 @@ struct enemy_t {
 	bool spawned_in_left_half;
 	unsigned char autofire_cur_frame;
 	unsigned char autofire_interval;
-	bullet_template_t bullet_template;
+	BulletTemplate bullet_template;
 
 	// Custom type ID, set in the spawn parameters. Can be used to parametrize
 	// scripts via conditional jumps based on this value.
 	unsigned char subtype;
 
-	int8_t unused_1;
-	int16_t unused_2;
-	int8_t unused_3;
-	int8_t padding[5];
+	int8_t unused_1; // ZUN bloat
+	int16_t unused_2; // ZUN bloat
+	int8_t unused_3; // ZUN bloat
+	int8_t padding[5]; // ZUN bloat
 };
 
 #include "th04/main/enemy/enemy.hpp"

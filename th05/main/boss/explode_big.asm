@@ -1,10 +1,10 @@
-public BOSS_EXPLODE_BIG
-boss_explode_big	proc near
+public @boss_explode_big_circle$qv
+@boss_explode_big_circle$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
 	mov	si, offset _explosions_big
-	mov	[si+explosion_t.flag], 1
+	mov	[si+explosion_t.EXPLOSION_alive], 1
 	mov	[si+explosion_t.age], 0
 	mov	ax, _boss_pos.cur.x
 	mov	[si+explosion_t.center.x], ax
@@ -19,4 +19,4 @@ boss_explode_big	proc near
 	pop	si
 	pop	bp
 	retn
-boss_explode_big	endp
+@boss_explode_big_circle$qv endp

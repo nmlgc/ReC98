@@ -5,30 +5,28 @@
 
 #pragma option -1 -Z-
 
-extern "C" {
-#include "ReC98.h"
-#include "master.hpp"
-#include "th01/formats/grp.h"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/palette.h"
-#include "th01/hardware/vsync.h"
-#include "th01/end/type.h"
+#include "th01/hardware/vsync.hpp"
+#include "th01/formats/grp.h"
+#include "th01/end/type.hpp"
 
 #define TYPE_DELAY 3
-#define TYPE_FX (15 | FX_WEIGHT_NORMAL)
+static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 #define TONE_STEP_PER_FRAME 5
 
 #include "th01/end/pic.cpp"
 
-inline void optimization_barrier() {}
-
-// Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
+// Special FUUIN.EXE version of frame_delay() that resets [z_vsync_Count1]
+// first.
 void frame_delay(unsigned int frames)
 {
-	vsync_frame = 0;
+	z_vsync_Count1 = 0;
 	while(1) {
-		if(vsync_frame >= frames) {
+		if(z_vsync_Count1 >= frames) {
 			break;
 		}
 		optimization_barrier();
@@ -37,9 +35,10 @@ void frame_delay(unsigned int frames)
 
 /// .GRP palette fades
 /// ------------------
+
 void pascal grp_palette_settone(int tone)
 {
-	int col;
+	svc2 col;
 	int comp;
 	int blend;
 
@@ -76,55 +75,50 @@ void pascal grp_palette_settone(int tone)
 		frame_delay(delay); \
 	}
 
-void pascal grp_palette_black_out(unsigned int frames)
+void pascal grp_palette_black_out(unsigned int frame_delay_per_step)
 {
-	fade_loop(100, -=, frames);
+	fade_loop(100, -=, frame_delay_per_step);
 }
 
-void pascal grp_palette_black_in(unsigned int frames)
+void pascal grp_palette_black_in(unsigned int frame_delay_per_step)
 {
-	fade_loop(0, +=, frames);
+	fade_loop(0, +=, frame_delay_per_step);
 }
 
-void pascal grp_palette_white_out(unsigned int frames)
+void pascal grp_palette_white_out(unsigned int frame_delay_per_step)
 {
-	fade_loop(100, +=, frames);
+	fade_loop(100, +=, frame_delay_per_step);
 }
 
-void pascal grp_palette_white_in(unsigned int frames)
+void pascal grp_palette_white_in(unsigned int frame_delay_per_step)
 {
-	fade_loop(200, -=, frames);
+	fade_loop(200, -=, frame_delay_per_step);
 }
 /// ------------------
 
 #pragma option -O-
 
-void pascal graph_type_ank(
-	screen_x_t left, vram_y_t top, int len, const char *str
+void pascal graph_type_ank_n(
+	screen_x_t left, vram_y_t top, int len, const sshiftjis_t *str
 )
 {
-	extern const char graph_type_ank_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
-			left + (i * GLYPH_HALF_W), top, TYPE_FX,
-			graph_type_ank_fmt, str[i]
+			left + (i * GLYPH_HALF_W), top, TYPE_FX, "%c", str[i]
 		);
 		frame_delay(TYPE_DELAY);
 	}
 }
 
-void pascal graph_type_kanji(
-	screen_x_t left, vram_y_t top, int len, const char *str
+void pascal graph_type_kanji_n(
+	screen_x_t left, vram_y_t top, int len, const sshiftjis_kanji_t *str
 )
 {
-	extern const char graph_type_kanji_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
 			left + (i * GLYPH_FULL_W), top, TYPE_FX,
-			graph_type_kanji_fmt, str[(2 * i) + 0], str[(2 * i) + 1]
+			"%c%c", str[(2 * i) + 0], str[(2 * i) + 1]
 		);
 		frame_delay(TYPE_DELAY);
 	}
-}
-
 }

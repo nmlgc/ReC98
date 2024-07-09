@@ -1,20 +1,8 @@
 #pragma option -G
 
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
+#include "decomp.hpp"
 #include "th03/common.h"
-#include "th03/playchar.hpp"
-#include "th03/sprite16.hpp"
-#include "th03/hardware/input.h"
-#include "th03/main/playfld.hpp"
-#include "th03/main/collmap.hpp"
-#include "th03/main/chars/speed.hpp"
-#include "th03/main/player/shot.hpp"
 #include "th03/main/player/player.hpp"
-
-inline void optimization_barrier(void) {
-}
 
 // Enforces signed 8-bit comparisons in one place. MODDERS: Just remove these.
 inline int8_t collmap_byte_x_min(void) { return 0; }

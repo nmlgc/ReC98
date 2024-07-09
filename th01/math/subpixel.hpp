@@ -1,31 +1,36 @@
 // Fixed-point format for expressing world-space coordinates, with 4 bits of
 // fractional resolution.
+// -------------------------------------------------------------------------
 
-#define SUBPIXEL_HPP
+#ifndef TH01_MATH_SUBPIXEL_HPP
+#define TH01_MATH_SUBPIXEL_HPP
+
+#include "pc98.h"
 
 #define PIXEL_NONE (-999)
 
+typedef uint8_t subpixel_length_8_t;
 typedef int subpixel_t;
 
 static const subpixel_t SUBPIXEL_FACTOR = 16;
 static const char SUBPIXEL_BITS = 4;
 
 #define TO_SP(v) \
-	(v << SUBPIXEL_BITS)
+	((v) << SUBPIXEL_BITS)
 
 #define TO_PIXEL(v) \
-	(v >> SUBPIXEL_BITS)
+	((v) >> SUBPIXEL_BITS)
 
 // In-place conversion to a pixel. Ugly, and should not exist.
 #define TO_PIXEL_INPLACE(v) \
-	(v >>= SUBPIXEL_BITS)
+	((v) >>= SUBPIXEL_BITS)
 
 inline subpixel_t to_sp(float pixel_v) {
 	return static_cast<subpixel_t>(pixel_v * SUBPIXEL_FACTOR);
 }
 
-inline unsigned char to_sp8(float pixel_v) {
-	return static_cast<unsigned char>(to_sp(pixel_v));
+inline subpixel_length_8_t to_sp8(float pixel_v) {
+	return static_cast<subpixel_length_8_t>(to_sp(pixel_v));
 }
 
 template <class SubpixelType, class PixelType> class SubpixelBase {
@@ -100,6 +105,28 @@ struct SPPoint : public SPPointBase<Subpixel> {
 };
 
 // 8-bit (Q4.4)
-typedef SubpixelBase<unsigned char, unsigned char> SubpixelLength8;
-typedef SubpixelBase<char, char> Subpixel8;
+typedef SubpixelBase<subpixel_length_8_t, pixel_length_8_t> SubpixelLength8;
+typedef SubpixelBase<char, pixel_delta_8_t> Subpixel8;
 typedef SPPointBase<Subpixel8> SPPoint8;
+// -------------------------------------------------------------------------
+
+// Subpixels with one decimal digit of fractional resolution?! Sure, if you
+// absolutely want those precise multiples of 0.1 in your movement code...
+// -------------------------------------------------------------------------
+
+typedef int decimal_subpixel_t;
+
+struct DecimalSubpixel {
+	decimal_subpixel_t v;
+
+	pixel_t to_pixel() const {
+		return static_cast<pixel_t>(v / 10);
+	}
+};
+
+inline decimal_subpixel_t to_dsp(float pixel_v) {
+	return static_cast<decimal_subpixel_t>(pixel_v * 10);
+}
+
+#endif /* TH01_MATH_SUBPIXEL_HPP */
+// -------------------------------------------------------------------------

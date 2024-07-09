@@ -1,3 +1,6 @@
+#ifndef TH05_PLAYCHAR_H
+#define TH05_PLAYCHAR_H
+
 typedef enum {
 	PLAYCHAR_REIMU = 0,
 	PLAYCHAR_MARISA = 1,
@@ -9,3 +12,11 @@ typedef enum {
 } playchar_t;
 
 extern playchar_t playchar;
+
+// Returns the parameter for the current player character.
+int pascal select_for_playchar(
+	int for_reimu, int for_marisa,
+	int for_mima, int for_yuuka
+);
+
+#endif /* TH05_PLAYCHAR_H */

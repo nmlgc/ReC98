@@ -1,4 +1,5 @@
 	.386
+	.model use16 large SHARED
 	locals
 
 include pc98.inc
@@ -6,15 +7,10 @@ include th03/formats/cdg.inc
 
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
+	.code SHARED
 
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
-
-public CDG_PUT_PLANE_ROLL_8
-cdg_put_plane_roll_8 proc far
+public @CDG_PUT_PLANE_ROLL_8$QIII12VRAM_PLANE_TURUC
+@cdg_put_plane_roll_8$qiii12vram_plane_turuc proc far
 	; (PASCAL calling convention, parameter list needs to be reversed here)
 	arg @@plane_dst:word, @@plane_src_id:word, @@slot:word, @@top:word, @@left:word
 	@@stride_backwards	equ <dx>
@@ -89,8 +85,6 @@ cdg_put_plane_roll_8 proc far
 	pop	si
 	pop	bp
 	retf	0Ah
-cdg_put_plane_roll_8 endp
-
-SHARED_	ends
+@cdg_put_plane_roll_8$qiii12vram_plane_turuc endp
 
 	end

@@ -1,8 +1,3 @@
-extern "C" {
-
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/vector.hpp"
 
@@ -19,6 +14,4 @@ void vector2(int &ret_x, int &ret_y, int length, unsigned char angle)
 {
 	ret_x = polar_x_fast(0, length, angle);
 	ret_y = polar_y_fast(0, length, angle);
-}
-
 }
