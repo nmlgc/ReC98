@@ -187,17 +187,21 @@ On 64-bit x86, the build process uses Tup for minimal parallel rebuilds, but all
 
 * TLINK fails with `Loader error (0000): Unrecognized Error` on 32-bit Windows ≥Vista
 
-  This can be fixed by configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
+  Two known causes:
 
-  ```patch
-  REM Install DPMI support
-  -LH %SystemRoot%\system32\dosx
-  +%SystemRoot%\system32\dosx
-  ```
+  * Try configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
 
-  Requires a reboot after that edit to take effect.
+    ```patch
+    REM Install DPMI support
+    -LH %SystemRoot%\system32\dosx
+    +%SystemRoot%\system32\dosx
+    ```
 
-  ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
+    Requires a reboot after that edit to take effect.
+
+    ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
+
+  * Try building in a regular `cmd.exe` shell instead of PowerShell or Bash.
 
 ## Contribution guidelines
 
