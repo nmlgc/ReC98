@@ -6,9 +6,6 @@ locals
 LDATA = @DataSize
 dPtrSize = (@DataSize + 1) * 2
 
-; ctype character classes
-_IS_CTL = 20h
-
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc
@@ -35,9 +32,11 @@ setfarfp macro farfp, func
 	mov word ptr farfp, offset func
 endm
 
-; See decomp.hpp
-public _address_0
-_address_0 = 0
+ifdef BINARY
+	; See decomp.hpp
+	public _address_0
+	_address_0 = 0
+endif
 
 ; master.lib extensions
 ; ---------------------
@@ -52,4 +51,3 @@ RANK_HARD = 2
 RANK_LUNATIC = 3
 RANK_EXTRA = 4
 RANK_COUNT = 5
-RANK_DEFAULT = -1

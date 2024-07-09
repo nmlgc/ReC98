@@ -2,7 +2,10 @@
 // -----
 // PC-98 hardware constants not covered by master.lib
 
+#ifndef PC98_H
 #define PC98_H
+
+#include "platform.h"
 
 /// Spaces
 /// ------
@@ -28,14 +31,17 @@ typedef unsigned int uvram_byte_amount_t;
 typedef unsigned int uvram_word_amount_t;
 typedef unsigned int uvram_dword_amount_t;
 
-// TRAM widths
+// VRAM heights. Different from `pixel_t` in 200-line mode.
+typedef int vram_h_t;
+
+// TRAM widths or heights
 typedef int tram_cell_amount_t;
 /// ------
 
 /// Coordinate systems
 /// ------------------
 /// All of these are relative to the top-left corner of the final display.
-/// MODDERS: Remove the unsigned varieties.
+/// MODDERS: Remove the unsigned variants.
 
 // Display-space coordinate, with [0; RES_X[ being the visible area.
 typedef int screen_x_t;
@@ -80,6 +86,10 @@ typedef unsigned int utram_y_t;
 
 #define shiftjis_w(literal) \
 	((sizeof(literal) - 1) * GLYPH_HALF_W)
+
+// Text RAM attribute byte. ZUN bloat: Only keep tram_atrb_t.
+typedef uint8_t tram_atrb_t;
+typedef uint16_t tram_atrb2;
 /// ----
 
 /// Graphics
@@ -215,3 +225,5 @@ static const int EGC_REGISTER_BITS = 4;
 static const int EGC_REGISTER_MASK = (EGC_REGISTER_DOTS - 1);
 static const int EGC_REGISTER_SIZE = (EGC_REGISTER_DOTS / BYTE_DOTS);
 /// ---
+
+#endif /* PC98_H */

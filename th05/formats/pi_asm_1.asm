@@ -1,7 +1,7 @@
 ; First TH05 .PI assembly translation unit.
 
 	.386
-	.model use16 large
+	.model use16 large SHARED
 	locals
 
 include pc98.inc
@@ -12,16 +12,7 @@ include libs/master.lib/master.inc
 	extrn _pi_mask_y:word
 	extrn _pi_put_masked_vram_offset:word
 
-; Apparently necessary to avoid fixup overflows. In this case, the call to
-; pi_masked_egc_setup_copy() would be bizarrely offset otherwise, which TLINK
-; wouldn't even report?! I did very much not enjoy debugging this.
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
-
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
-
+	.code SHARED
 	@pi_mask_setup_egc_and_advance$qv procdesc near
 
 public @PI_PUT_MASKED_8_ROWLOOP$QIIIUI
@@ -94,7 +85,5 @@ TEMP_ROW = RES_Y
 	jnz	short @@put_row
 	retn	8
 @pi_put_masked_8_rowloop$qiiiui endp
-
-SHARED_	ends
 
 	end

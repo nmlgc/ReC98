@@ -1,3 +1,6 @@
+#include "th04/hardware/input.h"
+#include "th01/math/subpixel.hpp"
+
 // All values are signed. (Yes, allowing you to invert the controls with
 // negative values!)
 #if (GAME == 5)

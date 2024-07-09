@@ -1,9 +1,8 @@
 #pragma option -zCSHARED
 
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/vplanset.h"
 #include "th02/mem.h"
-extern "C" {
 #include "th02/formats/pf.hpp"
 
 int game_init_main(void)
@@ -17,6 +16,4 @@ int game_init_main(void)
 	graph_400line();
 	game_pfopen();
 	return 0;
-}
-
 }

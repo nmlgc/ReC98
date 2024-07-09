@@ -1,11 +1,7 @@
 #pragma option -zC_TEXT -2
 
-#include "platform.h"
-#include "x86real.h"
 #include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
 #include "th02/hardware/egc.hpp"
 #include "th02/hardware/pages.hpp"
@@ -32,6 +28,8 @@ extern pixel_t tile_copy_lines_h;
 // ZUN bloat: Just a redundant copy of a single tile ring row. Could have been
 // local to tiles_scroll_and_egc_render_both(), or just removed outright.
 extern tile_image_id_t tiles_for_new_row[TILES_X];
+
+extern tile_image_id_t tile_ring[TILES_Y][TILES_X];
 
 extern bool tile_dirty[TILES_X][TILES_Y];
 

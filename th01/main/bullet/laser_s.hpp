@@ -1,3 +1,5 @@
+#include "th01/hardware/graph.h"
+
 static const int SHOOTOUT_LASER_COUNT = 10;
 
 /// Q24.8 fixed-point format

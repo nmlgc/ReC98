@@ -7,10 +7,10 @@
 #define vram_erase(offset, dots, bit_count) \
 	grcg_setcolor_rmw(0); \
 	grcg_put(offset, dots, bit_count); \
-	grcg_off();
+	grcg_off_func();
 
 #define vram_erase_on_0(offset, dots, bit_count) \
 	grcg_setcolor_rmw(0); \
 	page_access(0); \
 	grcg_put(offset, dots, bit_count); \
-	grcg_off();
+	grcg_off_func();

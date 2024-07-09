@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/pc98/palette.hpp"
 #include "th01/formats/grz.h"
 
@@ -37,7 +35,7 @@ const Palette4 boss8_grz_pal = {
 	0x9, 0x9, 0x9,
 };
 
-int main(int argc, const char **argv)
+int __cdecl main(int argc, const char **argv)
 {
 	if((get_machine() & PC9801) == 0) {
 		printf("This program must be run on a PC-98.\n");

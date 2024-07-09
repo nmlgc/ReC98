@@ -1,19 +1,12 @@
 /// Jigoku Stage 10 Boss - Mima
 /// ---------------------------
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
 #include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
@@ -21,15 +14,10 @@
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
-#include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/pillar.hpp"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/shape.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
@@ -674,7 +662,7 @@ void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
 	if(!do_not_initialize) {
 		hop = -1;
 		spreadin_interval = SPREADIN_INTERVAL;
-		direction = static_cast<x_direction_t>(rand() % 2);
+		direction = static_cast<x_direction_t>(irand() % 2);
 		spreadin_speed = ((MIMA_H / 2) / (SPREADIN_FRAMES / SPREADIN_INTERVAL));
 		return;
 	}
@@ -803,7 +791,7 @@ void pillar_put_8(screen_x_t left, vram_y_t bottom, pixel_t h)
 		y++;
 		vo -= ROW_SIZE;
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void pattern_pillars_and_aimed_spreads(void)

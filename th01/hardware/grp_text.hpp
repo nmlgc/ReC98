@@ -2,6 +2,9 @@
 /// -----------------------
 /// TH01-exclusive extensions to the graph_putsa_fx() function.
 
+#ifndef TH01_HARDWARE_GRP_TEXT_HPP
+#define TH01_HARDWARE_GRP_TEXT_HPP
+
 #include "th01/hardware/grppsafx.h"
 
 // TH01-exclusive effects
@@ -39,3 +42,5 @@ void graph_putfwnum_fx(
 	long num, long num_prev, bool16 put_leading_zeroes
 );
 /// -----------------------
+
+#endif /* TH01_HARDWARE_GRP_TEXT_HPP */

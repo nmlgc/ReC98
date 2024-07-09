@@ -5,14 +5,8 @@
 
 #pragma option -zCSHARED
 
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th02/main/playfld.hpp"
-extern "C" {
-#include "th02/main/tile/tile.hpp"
+#include "libs/master.lib/master.hpp"
+#include "th02/formats/tile.hpp"
 #include "th02/formats/mpn.hpp"
 
 int pascal mpn_load(const char *fn)
@@ -32,6 +26,4 @@ void mpn_free(void)
 		HMem<mpn_image_t>::free(mpn_images);
 	}
 	mpn_images = nullptr;
-}
-
 }

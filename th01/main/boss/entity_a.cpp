@@ -1,23 +1,13 @@
 #include <stdlib.h>
-#include "platform.h"
-#include "x86real.h"
 #include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "platform/x86real/pc98/page.hpp"
-#include "master.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/wave.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
-#include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/bos.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
+#include "platform/x86real/pc98/page.hpp"
 
 // Slot structures
 // ---------------
@@ -180,7 +170,7 @@ void CBossEntity::put_1line(
 				for(b = 0; b < sizeof(dots16_t); b++) {
 					grcg_setcolor_rmw(0);
 					vram_byte(B, b) = cur.alpha.ubyte[b];
-					grcg_off();
+					grcg_off_func();
 
 					vram_byte(B, b) |= cur.B.ubyte[b];
 					vram_byte(R, b) |= cur.R.ubyte[b];
@@ -192,7 +182,7 @@ void CBossEntity::put_1line(
 					grcg_setcolor_rmw(0);
 					vram_byte(B, b + 0) = (cur.alpha.ubyte[b] >> first_bit);
 					vram_byte(B, b + 1) = (cur.alpha.ubyte[b] << other_shift);
-					grcg_off();
+					grcg_off_func();
 
 					vram_byte(B, b + 0) |= (cur.B.ubyte[b] >> first_bit);
 					vram_byte(R, b + 0) |= (cur.R.ubyte[b] >> first_bit);

@@ -1,5 +1,3 @@
-#include "platform/x86real/pc98/page.hpp"
-#include "th01/math/polar.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grpinv32.hpp"
 #include "th01/hardware/scrollup.hpp"

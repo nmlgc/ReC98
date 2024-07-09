@@ -1,3 +1,5 @@
+#include "platform.h"
+
 // Returns `true` if the MDRV2 driver is resident.
 bool16 mdrv2_resident(void);
 

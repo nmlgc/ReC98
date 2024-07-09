@@ -1,3 +1,5 @@
+#include "th01/math/subpixel.hpp"
+
 enum particle_origin_t {
 	PO_TOP = 0,
 	PO_TOP_RIGHT = 1,

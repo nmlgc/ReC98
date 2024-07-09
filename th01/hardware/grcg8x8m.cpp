@@ -18,5 +18,5 @@ void grcg_put_8x8_mono(
 			break;
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 }

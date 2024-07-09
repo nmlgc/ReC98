@@ -1,3 +1,5 @@
+#include "platform.h"
+
 static const unsigned char BOMB_CIRCLE_FRAMES = 32;
 
 extern bool bombing;

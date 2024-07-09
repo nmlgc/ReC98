@@ -1,12 +1,7 @@
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/tram_x16.hpp"
 
-void TRAMCursor::putkanji(jis_t jis_kanji, int atrb)
+void TRAMCursor::putkanji(jis_t jis_kanji, tram_atrb2 atrb)
 {
 	// Yes, this is a correct way of writing any fullwidth character to TRAM.
 	// More research and proof forthcoming...
@@ -18,7 +13,7 @@ void TRAMCursor::putkanji(jis_t jis_kanji, int atrb)
 	p++;
 }
 
-void TRAMCursor::putkanji_for_5_rows(jis_t jis_kanji, int atrb)
+void TRAMCursor::putkanji_for_5_rows(jis_t jis_kanji, tram_atrb2 atrb)
 {
 	for(int y = 0; y < 5; y++) {
 		for(int x = 0; x < (RES_X / GLYPH_FULL_W); x++) {

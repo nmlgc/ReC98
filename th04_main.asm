@@ -40,11 +40,9 @@ include th04/main/enemy/enemy.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
-	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, ma_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
-g_SHARED group SHARED, SHARED_
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
@@ -266,11 +264,11 @@ _TEXT		ends
 ; ===========================================================================
 
 SLOWDOWN_TEXT segment word public 'CODE' use16
-	_slowdown_frame_delay procdesc near
+	@slowdown_frame_delay$qv procdesc near
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
-ma_TEXT	segment	word public 'CODE' use16
+DEMO_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -289,11 +287,11 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short loc_AB86
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
-		call	game_init_main pascal, ds, offset aUmx
+		call	@game_init_main$qnxuc pascal, ds, offset aUmx
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
@@ -342,12 +340,11 @@ sub_AB88	proc near
 		mov	bp, sp
 		push	si
 		mov	_slowdown_factor, 1
-		push	1
-		call	frame_delay
-		call	main_01:far ptr	_input_reset_sense
+		call	@frame_delay$qi pascal, 1
+		call	@input_reset_sense$qv
 
 loc_AB9E:
-		call	_input_sense
+		call	@input_sense$qv
 		call	fp_23D90
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_ABBA
@@ -357,7 +354,7 @@ loc_AB9E:
 		mov	_quit, Q_QUIT_TO_OP
 
 loc_ABBA:
-		call	fp_255CA
+		call	_std_update
 		call	@midboss_activate_if_stage_frame_$qv
 		call	_stage_vm
 		cmp	_bombing, 0
@@ -399,7 +396,7 @@ loc_ABBA:
 		call	_overlay1
 		call	_overlay2
 		call	@playfield_shake_update_and_rende$qv
-		call	main_01:far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		mov	ax, vsync_Count1
 		cmp	ax, _slowdown_factor
 		jb	short loc_AC56
@@ -414,7 +411,7 @@ loc_AC58:
 		cwde
 		add	_total_slow_frames, eax
 		inc	_total_frames
-		call	_slowdown_frame_delay
+		call	@slowdown_frame_delay$qv
 		cmp	_palette_changed, 0
 		jz	short loc_AC7A
 		call	far ptr	palette_show
@@ -471,7 +468,7 @@ loc_ACDE:
 		jmp	short $+2
 
 loc_ACF4:
-		call	main_01:score_update_and_render
+		call	@score_update_and_render$qv
 		cmp	_quit, Q_KEEP_RUNNING
 		jz	loc_AB9E
 		pop	si
@@ -684,7 +681,7 @@ loc_AEF9:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_AF4A
-		call	main_01:demo_load
+		call	@demo_load$qv
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.demo_stage]
 		mov	es:[bx+resident_t.stage], al
@@ -857,7 +854,7 @@ loc_B141:
 		call	mpn_load
 
 loc_B144:
-		call	main_01:map_load
+		call	@map_load$qv
 		call	@std_load$qv
 		call	@dialog_load$qv
 		call	tiles_fill_initial
@@ -871,12 +868,12 @@ loc_B156:
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	@overlay_black$qv
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		mov	_page_back, 1
 		mov	_page_front, 0
 		graph_accesspage 1
 		graph_showpage 0
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_B1AE
@@ -884,7 +881,7 @@ loc_B156:
 		kajacall	KAJA_SONG_PLAY
 
 loc_B1AE:
-		nopcall	main_01:sub_CB99
+		nopcall	@tiles_activate$qv
 		mov	_overlay1, offset @overlay_stage_enter_update_and_r$qv
 		mov	_overlay2, offset nullfunc_near
 		pop	si
@@ -934,7 +931,7 @@ sub_B1D0	proc near
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_stage_point_items_collected, 0
 		mov	_dream_items_collected, 0
-		mov	fp_255CA, offset sub_CF44
+		mov	_std_update, offset @std_update_frames_then_animate_d$qv
 		mov	_scroll_active, 1
 		call	main_01:sub_1042A
 		nopcall	main_01:sub_11DE6
@@ -946,7 +943,7 @@ sub_B1D0	proc near
 		call	sub_15D74
 		call	main_01:pointnums_init
 		nopcall	main_01:hud_put
-		mov	_bg_render_bombing_func, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset @tiles_render_all$qv
 		call	main_01:tiles_invalidate_reset
 		pop	bp
 		retn
@@ -964,7 +961,7 @@ sub_B29E	proc near
 		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	@std_free$qv
-		call	main_01:map_free
+		call	@map_free$qv
 		call	super_clean pascal, (128 shl 16) or 256
 		mov	si, CDG_FACESET_BOSS
 		jmp	short loc_B2C7
@@ -983,37 +980,7 @@ loc_B2C7:
 sub_B29E	endp
 
 include th04/main/pause.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public demo_load
-demo_load	proc near
-
-var_4		= dword	ptr -4
-
-		enter	4, 0
-		call	hmem_allocbyte pascal, DEMO_N * 2
-		mov	word ptr _DemoBuf+2, ax
-		mov	word ptr _DemoBuf, 0
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aDemo0_rec
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.demo_num]
-		add	al, '0'
-		les	bx, [bp+var_4]
-		mov	es:[bx+4], al
-		push	word ptr [bp+var_4+2]
-		push	bx
-		call	file_ropen
-		call	file_read pascal, large [_DemoBuf], DEMO_N * 2
-		call	file_close
-		leave
-		retn
-demo_load	endp
-ma_TEXT	ends
-
-DEMO_TEXT	segment	byte public 'CODE' use16
+	@demo_load$qv procdesc near
 	@DemoPlay$qv procdesc near
 DEMO_TEXT	ends
 
@@ -1031,7 +998,7 @@ STD_TEXT	segment	byte public 'CODE' use16
 	@std_load$qv procdesc near
 STD_TEXT	ends
 
-mai_TEXT	segment	word public 'CODE' use16
+TILE_TEXT	segment	word public 'CODE' use16
 include th04/formats/std.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1042,7 +1009,7 @@ public @end_game_good$qv
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	es:[bx+resident_t.end_sequence], ES_1CC
+		mov	es:[bx+resident_t.end_sequence], ES_GOOD
 		mov	es:[bx+resident_t.end_type_ascii], '0'
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
@@ -1063,7 +1030,7 @@ public @end_game_bad$qv
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		mov	es:[bx+resident_t.end_sequence], ES_BAD
 		mov	es:[bx+resident_t.end_type_ascii], '1'
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
@@ -1158,7 +1125,7 @@ loc_B89D:
 		pop	es
 		assume es:_DATA
 		push	ds
-		mov	ax, map_seg
+		mov	ax, _map_seg
 		mov	ds, ax
 		mov	cx, TILES_X
 		rep movsw
@@ -1173,7 +1140,7 @@ loc_B8CE:
 		add	byte_25104, al
 		cmp	_scroll_active, 0
 		jz	short loc_B896
-		call	main_01:egc_start_copy_inlined_noframe
+		call	@egc_start_copy_noframe$qv
 		call	main_01:sub_BAEE
 		mov	byte_25104, 0
 		call	egc_off
@@ -1250,8 +1217,8 @@ mpn_load	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-map_load	proc near
+public @map_load$qv
+@map_load$qv	proc near
 
 @@mh		= map_header_t ptr -(size map_header_t)
 
@@ -1269,10 +1236,10 @@ map_load	proc near
 		push	ax
 		push	size map_header_t
 		call	file_read
-		call	main_01:map_free
+		call	@map_free$qv
 		push	[bp+@@mh.map_size]
 		call	hmem_allocbyte
-		mov	map_seg, ax
+		mov	_map_seg, ax
 		push	ax
 		push	0
 		push	[bp+@@mh.map_size]
@@ -1280,26 +1247,26 @@ map_load	proc near
 		call	file_close
 		leave
 		retn
-map_load	endp
+@map_load$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-map_free	proc near
+public @map_free$qv
+@map_free$qv	proc near
 		push	bp
 		mov	bp, sp
-		cmp	map_seg, 0
+		cmp	_map_seg, 0
 		jz	short loc_B9D4
-		push	map_seg
+		push	_map_seg
 		call	hmem_free
-		mov	map_seg, 0
+		mov	_map_seg, 0
 
 loc_B9D4:
 		pop	bp
 		retn
-map_free	endp
+@map_free$qv	endp
 
 include th04/main/tile/inv.asm
 include th04/main/tile/fill_ini.asm
@@ -1747,8 +1714,8 @@ include th04/main/tile/inv_all.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public TILES_RENDER
-tiles_render	proc near
+public @TILES_RENDER$QV
+@tiles_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	@overlay_titles_invalidate$qv
@@ -1761,63 +1728,15 @@ tiles_render	proc near
 		call	main_01:pointnums_invalidate
 		call	_midboss_invalidate
 		call	_stage_invalidate
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
-tiles_render	endp
+@tiles_render$qv	endp
 
+	extern @tiles_activate$qv:proc
+TILE_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CB80	proc near
-		push	bp
-		mov	bp, sp
-		call	main_01:tiles_render_all
-		dec	byte_255B0
-		cmp	byte_255B0, 0
-		jnz	short loc_CB97
-		mov	_bg_render_not_bombing, offset tiles_render
-
-loc_CB97:
-		pop	bp
-		retn
-sub_CB80	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CB99	proc far
-		push	bp
-		mov	bp, sp
-		mov	_bg_render_not_bombing, offset tiles_render
-		pop	bp
-		retf
-sub_CB99	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CBA4	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+arg_0]
-		mov	byte_255B0, al
-		mov	_bg_render_not_bombing, offset sub_CB80
-		pop	bp
-		retf	2
-sub_CBA4	endp
-
-; ---------------------------------------------------------------------------
-		db    0
+mai_TEXT	segment	word public 'CODE' use16
 include th04/main/tile/render_a.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1954,875 +1873,8 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_load$qv procdesc near
 	extern @dialog_load_yuuka5_defeat_bad$qv:proc
 	@dialog_free$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CF3D	proc near
-		push	bp
-		mov	bp, sp
-		mov	al, 0
-		pop	bp
-		retn
-sub_CF3D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CF44	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_scroll_speed, 0
-		jnz	short loc_CFB6
-		cmp	_page_back, 1
-		jnz	short loc_CFB6
-		cmp	_stage_id, 5
-		jz	short loc_CF63
-		cmp	_stage_id, 6
-		jnz	short loc_CF70
-
-loc_CF63:
-		call	cdg_free pascal, CDG_EYE
-		call	@std_free$qv
-		call	main_01:map_free
-
-loc_CF70:
-		nopcall	@dialog_animate$qv
-		mov	fp_255CA, offset sub_CF3D
-		mov	ax, _boss_bg_render_func
-		mov	_bg_render_not_bombing, ax
-		mov	eax, _boss_update_func
-		mov	_boss_update, eax
-		mov	ax, _boss_fg_render_func
-		mov	_boss_fg_render, ax
-		mov	al, _stage_id
-		add	al, al
-		add	al, 2
-		mov	_bgm_title_id, al
-		cmp	_stage_id, 3
-		jnz	short loc_CFAC
-		cmp	_playchar, PLAYCHAR_REIMU
-		jz	short loc_CFAC
-		mov	_bgm_title_id, 10h
-
-loc_CFAC:
-		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_CFB6:
-		inc	_total_std_frames
-		mov	al, 0
-		pop	bp
-		retn
-sub_CF44	endp
-
-include th04/main/dialog/box_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D016	proc near
-		push	bp
-		mov	bp, sp
-		push	di
-		call	main_01:egc_start_copy_inlined_noframe
-		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
-		mov	dx, 166	; Port 00A6h: Page access register
-		mov	al, _page_front
-
-loc_D02B:
-		mov	cx, 18h
-
-loc_D02E:
-		out	dx, al
-		xor	al, 1
-		mov	bx, es:[di]
-		out	dx, al
-		xor	al, 1
-		mov	es:[di], bx
-		add	di, 2
-		loop	loc_D02E
-		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
-		jge	short loc_D02B
-		out	dx, al
-		call	egc_off
-		pop	di
-		pop	bp
-		retn
-sub_D016	endp
-
-include th04/main/dialog/face_unput_8.asm
-include th04/main/dialog/box_fade_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; A version of str_parse_up_to_3_digits_and_advance().
-_IS_DIG = 02h
-
-; Attributes: bp-based frame
-
-sub_D0CA	proc near
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= dword	ptr  4
-
-		enter	2, 0
-		les	bx, _dialog_p
-		mov	cl, es:[bx]
-		inc	word ptr _dialog_p
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _dialog_p
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_2], al
-		inc	word ptr _dialog_p
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_D114
-		les	bx, [bp+arg_0]
-		mov	ax, word_255D6
-		mov	es:[bx], ax
-		sub	word ptr _dialog_p, 3
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D114:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_D138
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		sub	word ptr _dialog_p, 2
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D138:
-		mov	al, [bp+var_2]
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_D168
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		imul	ax, 0Ah
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		dec	word ptr _dialog_p
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D168:
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		imul	ax, 64h
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, 0FFD0h
-		imul	dx, 0Ah
-		add	ax, dx
-		mov	dl, [bp+var_2]
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		leave
-		retn	4
-sub_D0CA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D193	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		les	bx, _dialog_p
-		cmp	byte ptr es:[bx], 2Ch ;	','
-		jnz	short loc_D1AF
-		inc	word ptr _dialog_p
-		pushd	[bp+arg_0]
-		call	main_01:sub_D0CA
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_D1AF:
-		les	bx, [bp+arg_0]
-		mov	ax, word_255D6
-		mov	es:[bx], ax
-		pop	bp
-		retn	4
-sub_D193	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D1BC	proc near
-
-var_18		= byte ptr -18h
-var_8		= word ptr -8
-@@y		= word ptr -6
-@@x		= word ptr -4
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-
-		enter	18h, 0
-		push	si
-		push	di
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		push	ax		; ch
-		call	_tolower
-		pop	cx
-		mov	[bp+arg_0], al
-		mov	ah, 0
-		mov	[bp+var_8], ax
-		mov	cx, 0Fh		; switch 15 cases
-		mov	bx, offset word_D530
-
-loc_D1DC:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_8]
-		jz	short loc_D1EC
-		add	bx, 2
-		loop	loc_D1DC
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D1EC:
-		jmp	word ptr cs:[bx+1Eh] ; switch jump
-
-loc_D1F0:
-		add	_dialog_cursor.y, GLYPH_H	; jumptable 0000D1EC case 110
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_D201
-		mov	ax, DIALOG_CURSOR_PLAYCHAR_LEFT
-		jmp	short loc_D204
-; ---------------------------------------------------------------------------
-
-loc_D201:
-		mov	ax, DIALOG_CURSOR_BOSS_LEFT
-
-loc_D204:
-		mov	_dialog_cursor.x, ax
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D20A:
-		mov	word_255D6, 64h	; 'd' ; jumptable 0000D1EC case 116
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		push	1
-		call	frame_delay
-		mov	ax, [bp+var_2]
-		mov	PaletteTone, ax
-		call	far ptr	palette_show
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D22D:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 102
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 69h	; 'i'
-		jz	short loc_D245
-		cmp	[bp+arg_0], 6Fh	; 'o'
-		jnz	loc_D528	; default
-
-loc_D245:
-		inc	word ptr _dialog_p
-		mov	word_255D6, 1
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		cmp	[bp+arg_0], 69h	; 'i'
-		jnz	short loc_D268
-		push	[bp+var_2]
-		call	palette_black_in
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D268:
-		push	[bp+var_2]
-		call	palette_black_out
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D273:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 119
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 69h	; 'i'
-		jz	short loc_D28B
-		cmp	[bp+arg_0], 6Fh	; 'o'
-		jnz	loc_D528	; default
-
-loc_D28B:
-		inc	word ptr _dialog_p
-		mov	word_255D6, 1
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		cmp	[bp+arg_0], 69h	; 'i'
-		jnz	short loc_D2AE
-		push	[bp+var_2]
-		call	palette_white_in
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D2AE:
-		push	[bp+var_2]
-		call	palette_white_out
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D2B9:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 103
-		cmp	byte ptr es:[bx], 61h ;	'a'
-		jz	short loc_D2FE
-		mov	word_255D6, 8
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		xor	si, si
-		jmp	short loc_D2EF
-; ---------------------------------------------------------------------------
-
-loc_D2D5:
-		test	si, 1
-		jz	short loc_D2DF
-		push	4
-		jmp	short loc_D2E2
-; ---------------------------------------------------------------------------
-
-loc_D2DF:
-		push	RES_Y - 4
-
-loc_D2E2:
-		call	graph_scrollup
-		push	1
-		call	frame_delay
-		inc	si
-
-loc_D2EF:
-		cmp	si, [bp+var_2]
-		jle	short loc_D2D5
-		call	graph_scrollup pascal, 0
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D2FE:
-		inc	word ptr _dialog_p
-		mov	word_255D6, 0
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		mov	ax, _dialog_cursor.x
-		mov	bx, GLYPH_HALF_W
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, _dialog_cursor.y
-		mov	bx, GLYPH_H
-		cwd
-		idiv	bx
-		push	ax
-		push	[bp+var_2]
-		push	TX_WHITE
-		call	gaiji_putca
-		add	_dialog_cursor.x, GLYPH_FULL_W
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D337:
-		mov	word_255D6, 0	; jumptable 0000D1EC case 107
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		call	input_wait_for_change pascal, [bp+var_2]
-		jmp	loc_D478
-; ---------------------------------------------------------------------------
-
-loc_D350:
-		mov	word_255D6, 1	; jumptable 0000D1EC case 61
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		push	1
-		call	frame_delay
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_D38A
-		call	@dialog_face_unput_8$quiui pascal, (32 shl 16) or 240
-		cmp	[bp+var_2], (-1 and 255)
-		jz	loc_D528	; default
-		add	[bp+var_2], 2
-		push	(32 shl 16) or 240
-		jmp	short loc_D3A6
-; ---------------------------------------------------------------------------
-
-loc_D38A:
-		call	@dialog_face_unput_8$quiui pascal, (288 shl 16) or 112
-		cmp	[bp+var_2], (-1 and 255)
-		jz	loc_D528	; default
-		add	[bp+var_2], 8
-		push	(288 shl 16) or 112
-
-loc_D3A6:
-		push	[bp+var_2]
-		call	cdg_put_8
-		jmp	short loc_D3E3
-; ---------------------------------------------------------------------------
-
-loc_D3B0:
-		mov	word_255D6, 0	; jumptable 0000D1EC case 98
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		call	main_01:sub_D0CA
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		call	main_01:sub_D193
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D193
-		push	1
-		call	frame_delay
-		call	super_roll_put pascal, [bp+@@x], [bp+@@y], [bp+var_2]
-
-loc_D3E3:
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D3E6:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 109
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 24h	; '$'
-		jnz	short loc_D3FF
-		inc	word ptr _dialog_p
-		push	(KAJA_SONG_STOP shl 8)
-		jmp	short loc_D40B
-; ---------------------------------------------------------------------------
-
-loc_D3FF:
-		cmp	[bp+arg_0], 2Ah	; '*'
-		jnz	short loc_D413
-		inc	word ptr _dialog_p
-		push	(KAJA_SONG_PLAY shl 8)
-
-loc_D40B:
-		call	snd_kaja_interrupt
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D413:
-		cmp	[bp+arg_0], 2Ch	; ','
-		jnz	loc_D528	; default
-		inc	word ptr _dialog_p
-		mov	[bp+var_2], 0
-		jmp	short loc_D454
-; ---------------------------------------------------------------------------
-
-loc_D426:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_D45A
-		cmp	[bp+arg_0], 20h	; ' '
-		jz	short loc_D45A
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	al, [bp+arg_0]
-		mov	ss:[bx], al
-		inc	[bp+var_2]
-
-loc_D454:
-		cmp	[bp+var_2], 0Ch
-		jl	short loc_D426
-
-loc_D45A:
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	byte ptr ss:[bx], 0
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		push	SND_LOAD_SONG
-		call	snd_load
-		kajacall	KAJA_SONG_PLAY
-
-loc_D478:
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D47B:
-		push	ss		; jumptable 0000D1EC case 101
-		lea	ax, [bp+var_2]
-		push	ax
-		call	main_01:sub_D0CA
-		call	_snd_se_reset
-		call	snd_se_play pascal, [bp+var_2]
-		call	_snd_se_update
-		jmp	loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D498:
-		call	super_clean pascal, (128 shl 16) or 256	; jumptable 0000D1EC case 99
-		jmp	short loc_D508
-; ---------------------------------------------------------------------------
-
-loc_D4A5:
-		les	bx, _dialog_p	; jumptable 0000D1EC case 108
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 2Ch	; ','
-		jnz	short loc_D528	; default
-		inc	word ptr _dialog_p
-		mov	[bp+var_2], 0
-		jmp	short loc_D4EE
-; ---------------------------------------------------------------------------
-
-loc_D4C0:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+arg_0], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_D4F4
-		cmp	[bp+arg_0], 20h	; ' '
-		jz	short loc_D4F4
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	al, [bp+arg_0]
-		mov	ss:[bx], al
-		inc	[bp+var_2]
-
-loc_D4EE:
-		cmp	[bp+var_2], 0Ch
-		jl	short loc_D4C0
-
-loc_D4F4:
-		lea	bx, [bp+var_18]
-		add	bx, [bp+var_2]
-		mov	byte ptr ss:[bx], 0
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	super_entry_bfnt
-
-loc_D508:
-		jmp	short loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D50A:
-		mov	di, CDG_PER_STAGE		; jumptable 0000D1EC case 100
-		jmp	short loc_D516
-; ---------------------------------------------------------------------------
-
-loc_D50F:
-		call	cdg_free pascal, di
-		inc	di
-
-loc_D516:
-		cmp	di, CDG_COUNT
-		jl	short loc_D50F
-		jmp	short loc_D528	; default
-; ---------------------------------------------------------------------------
-
-loc_D51D:
-		call	input_wait_for_change pascal, 0		; jumptable 0000D1EC case 36
-
-loc_D524:
-		mov	al, -1	; jumptable 0000D1EC case 35
-		jmp	short loc_D52A
-; ---------------------------------------------------------------------------
-
-loc_D528:
-		mov	al, 0		; default
-
-loc_D52A:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_D1BC	endp
-
-; ---------------------------------------------------------------------------
-word_D530	dw    23h,   24h,   3Dh,   62h
-		dw    63h,   64h,   65h,   66h ; value table for switch	statement
-		dw    67h,   6Bh,   6Ch,   6Dh
-		dw    6Eh,   74h,   77h
-		dw offset loc_D524	; jump table for switch	statement
-		dw offset loc_D51D
-		dw offset loc_D350
-		dw offset loc_D3B0
-		dw offset loc_D498
-		dw offset loc_D50A
-		dw offset loc_D47B
-		dw offset loc_D22D
-		dw offset loc_D2B9
-		dw offset loc_D337
-		dw offset loc_D4A5
-		dw offset loc_D3E6
-		dw offset loc_D1F0
-		dw offset loc_D20A
-		dw offset loc_D273
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D56C	proc near
-
-var_6		= dword	ptr -6
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], offset _dialog_kanji_buf
-
-loc_D57A:
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_D57A
-		cmp	[bp+var_1], 20h	; ' '
-		jz	short loc_D57A
-		cmp	[bp+var_1], 5Ch
-		jnz	short loc_D5BA
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _dialog_p
-		push	word ptr [bp+var_1]
-		call	main_01:sub_D1BC
-		cmp	al, -1
-		jnz	short loc_D57A
-		jmp	loc_D6E4
-; ---------------------------------------------------------------------------
-
-loc_D5BA:
-		cmp	[bp+var_1], 30h	; '0'
-		jz	short loc_D5C6
-		cmp	[bp+var_1], 31h	; '1'
-		jnz	short loc_D57A
-
-loc_D5C6:
-		cmp	[bp+var_1], 30h	; '0'
-		jnz	short loc_D5E0
-		mov	_dialog_cursor.x, DIALOG_CURSOR_PLAYCHAR_LEFT
-		mov	_dialog_cursor.y, DIALOG_CURSOR_PLAYCHAR_TOP
-		mov	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jmp	short loc_D5F2
-; ---------------------------------------------------------------------------
-
-loc_D5E0:
-		mov	_dialog_cursor.x, DIALOG_CURSOR_BOSS_LEFT
-		mov	_dialog_cursor.y, DIALOG_CURSOR_BOSS_TOP
-		mov	_dialog_side, DIALOG_SIDE_BOSS
-
-loc_D5F2:
-		mov	ax, _dialog_cursor.y
-		mov	bx, GLYPH_H
-		cwd
-		idiv	bx
-		mov	si, ax
-		jmp	short loc_D62B
-; ---------------------------------------------------------------------------
-
-loc_D5FF:
-		mov	ax, _dialog_cursor.x
-		mov	bx, GLYPH_HALF_W
-		cwd
-		idiv	bx
-		mov	di, ax
-		jmp	short loc_D61A
-; ---------------------------------------------------------------------------
-
-loc_D60C:
-		call	text_putca pascal, di, si, (' ' shl 16) + TX_WHITE
-		inc	di
-
-loc_D61A:
-		mov	ax, _dialog_cursor.x
-		mov	bx, GLYPH_HALF_W
-		cwd
-		idiv	bx
-		add	ax, (DIALOG_LINE_W / GLYPH_HALF_W)
-		cmp	ax, di
-		jg	short loc_D60C
-		inc	si
-
-loc_D62B:
-		mov	ax, _dialog_cursor.y
-		mov	bx, GLYPH_H
-		cwd
-		idiv	bx
-		add	ax, (DIALOG_BOX_H / GLYPH_H)
-		cmp	ax, si
-		jg	short loc_D5FF
-		mov	[bp+var_2], 0
-
-loc_D63F:
-		call	main_01:far ptr	_input_reset_sense
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _dialog_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_D63F
-		cmp	[bp+var_1], 20h	; ' '
-		jz	short loc_D63F
-		cmp	[bp+var_1], 5Ch
-		jnz	short loc_D684
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _dialog_p
-		push	word ptr [bp+var_1]
-		call	main_01:sub_D1BC
-		cmp	al, -1
-		jnz	short loc_D63F
-		jmp	loc_D57A
-; ---------------------------------------------------------------------------
-
-loc_D684:
-		les	bx, [bp+var_6]
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		les	bx, _dialog_p
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		les	bx, [bp+var_6]
-		mov	es:[bx+1], al
-		inc	word ptr _dialog_p
-		mov	ax, _dialog_cursor.x
-		mov	bx, GLYPH_HALF_W
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, _dialog_cursor.y
-		mov	bx, GLYPH_H
-		cwd
-		idiv	bx
-		push	ax
-		pushd	[bp+var_6]
-		push	TX_WHITE
-		call	text_putsa
-		add	_dialog_cursor.x, GLYPH_FULL_W
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_D6D2
-		push	2
-		jmp	short loc_D6DC
-; ---------------------------------------------------------------------------
-
-loc_D6D2:
-		test	[bp+var_2], 1
-		jz	loc_D63F
-		push	1
-
-loc_D6DC:
-		call	frame_delay
-		jmp	loc_D63F
-; ---------------------------------------------------------------------------
-
-loc_D6E4:
-		call	@overlay_wipe$qv
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D56C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @dialog_animate$qv
-@dialog_animate$qv	proc far
-		push	bp
-		mov	bp, sp
-		call	@dialog_init$qv
-		call	@overlay_wipe$qv
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		graph_accesspage _page_front
-		call	main_01:dialog_box_fade_in
-		call	main_01:sub_D016
-		call	main_01:sub_D56C
-		push	2
-		nopcall	main_01:sub_CBA4
-		call	@dialog_exit$qv
-		graph_accesspage _page_back
-		push	1
-		call	frame_delay
-		pop	bp
-		retf
-@dialog_animate$qv	endp
-
-	@dialog_init$qv procdesc near
-	@dialog_exit$qv procdesc near
+	@std_update_frames_then_animate_d$qv procdesc near
+	extern @dialog_animate$qv:proc
 DIALOG_TEXT	ends
 
 BOSS_EXP_TEXT	segment	byte public 'CODE' use16
@@ -4419,8 +3471,7 @@ loc_E556:
 		call	main_01:sub_E4D1
 		or	al, al
 		jnz	short loc_E566
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E556
 ; ---------------------------------------------------------------------------
 
@@ -4432,8 +3483,7 @@ loc_E571:
 		call	main_01:sub_E461
 		or	al, al
 		jnz	short loc_E581
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E571
 ; ---------------------------------------------------------------------------
 
@@ -4444,8 +3494,7 @@ loc_E581:
 
 loc_E588:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_22C3F, TX_WHITE
 		sub	[bp+var_2], 2
 
@@ -4458,8 +3507,7 @@ loc_E5B5:
 
 loc_E5C2:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_22C42, TX_WHITE
 		add	[bp+var_2], 2
 
@@ -4467,7 +3515,7 @@ loc_E5EF:
 		cmp	[bp+var_2], 14h
 		jl	short loc_E5C2
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds, offset gGAMEOVER, TX_WHITE
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		call	@overlay_wipe$qv
 		call	main_01:sub_E67A
 		mov	ah, 0
@@ -4478,8 +3526,7 @@ loc_E61E:
 		call	main_01:sub_E4D1
 		or	al, al
 		jnz	short loc_E62E
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E61E
 ; ---------------------------------------------------------------------------
 
@@ -4493,8 +3540,7 @@ loc_E63F:
 		call	main_01:sub_E461
 		or	al, al
 		jnz	short loc_E64F
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_E63F
 ; ---------------------------------------------------------------------------
 
@@ -4553,10 +3599,10 @@ var_1		= byte ptr -1
 		push	ax
 		push	TX_GREEN
 		call	gaiji_putca
-		call	main_01:far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 
 loc_E703:
-		call	_input_sense
+		call	@input_sense$qv
 		or	si, si
 		jnz	short loc_E783
 		mov	si, _key_det
@@ -4623,9 +3669,8 @@ loc_E783:
 		mov	si, _key_det
 
 loc_E787:
-		call	main_01:far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@input_reset_sense$qv
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_E703
 ; ---------------------------------------------------------------------------
 
@@ -4734,12 +3779,12 @@ loc_E813:
 		call	@dialog_free$qv
 		call	main_01:bb_playchar_free
 		call	@std_free$qv
-		call	main_01:map_free
+		call	@map_free$qv
 		call	super_free
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
@@ -8210,7 +7255,7 @@ PLAYER_M_TEXT	segment	byte public 'CODE' use16
 PLAYER_M_TEXT	ends
 
 PLAYER_P_TEXT	segment	byte public 'CODE' use16
-	_player_pos_update_and_clamp procdesc near
+	@player_pos_update_and_clamp$qv procdesc near
 PLAYER_P_TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
@@ -8405,7 +7450,7 @@ loc_10B58:
 		mov	_player_pos.velocity.y, ax
 
 loc_10B75:
-		call	_player_pos_update_and_clamp
+		call	@player_pos_update_and_clamp$qv
 		cmp	[bp+var_1], 0
 		jz	short loc_10B82
 		mov	word_2598C, si
@@ -8595,7 +7640,7 @@ sub_11647	endp
 main_01_TEXT	ends
 
 	HUD_SCORE_PUT procdesc near
-	SCORE_UPDATE_AND_RENDER procdesc near
+	@score_update_and_render$qv procdesc near
 
 main_012_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_01
@@ -9475,7 +8520,7 @@ sub_11ECB	endp
 main_012_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 main_013_TEXT	segment	word public 'CODE' use16
@@ -9582,7 +8627,7 @@ loc_12199:
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		call	@tiles_bb_invalidate_raw$qi pascal, ax
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9602,13 +8647,13 @@ loc_121D3:
 		jg	short loc_121E6
 
 loc_121E1:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_121E6:
-		call	tiles_render
+		call	@tiles_render$qv
 		pop	bp
 		retn
 @orange_bg_render$qv	endp
@@ -9631,7 +8676,7 @@ loc_121E6:
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		call	@tiles_bb_invalidate_raw$qi pascal, ax
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9651,13 +8696,13 @@ loc_1222F:
 		jg	short loc_12242
 
 loc_1223D:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_12242:
-		call	tiles_render
+		call	@tiles_render$qv
 		pop	bp
 		retn
 @kurumi_bg_render$qv	endp
@@ -9707,7 +8752,7 @@ loc_12285:
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		call	@tiles_bb_invalidate_raw$qi pascal, ax
-		call	main_01:tiles_redraw_invalidated
+		call	@tiles_redraw_invalidated$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9727,13 +8772,13 @@ loc_122BF:
 		jg	short loc_122D2
 
 loc_122CD:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_122D2:
-		call	tiles_render
+		call	@tiles_render$qv
 		pop	bp
 		retn
 @elly_bg_render$qv	endp
@@ -9765,7 +8810,7 @@ loc_122EB:
 		mov	[bp+@@entrance_cel], al
 		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12309
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		jmp	short loc_12327
 ; ---------------------------------------------------------------------------
 
@@ -9802,13 +8847,13 @@ loc_1234C:
 		jg	short loc_1235F
 
 loc_1235A:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_1235F:
-		call	tiles_render
+		call	@tiles_render$qv
 		leave
 		retn
 @reimu_marisa_bg_render$qv	endp
@@ -9840,7 +8885,7 @@ loc_12378:
 		mov	[bp+@@entrance_cel], al
 		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12396
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		jmp	short loc_123B4
 ; ---------------------------------------------------------------------------
 
@@ -9877,13 +8922,13 @@ loc_123D9:
 		jg	short loc_123EC
 
 loc_123E7:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_123EC:
-		call	tiles_render
+		call	@tiles_render$qv
 		leave
 		retn
 @yuuka5_bg_render$qv	endp
@@ -10603,7 +9648,7 @@ public @MUGETSU_GENGETSU_BG_RENDER$QV
 		mov	_stage_render, offset nullfunc_near
 
 loc_12991:
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -10618,7 +9663,7 @@ loc_12996:
 		mov	[bp+@@entrance_cel], al
 		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_129B4
-		call	main_01:tiles_render_all
+		call	@tiles_render_all$qv
 		jmp	short loc_129D2
 ; ---------------------------------------------------------------------------
 
@@ -10655,7 +9700,7 @@ loc_129F7:
 		jle	short loc_12991
 
 loc_12A05:
-		call	tiles_render
+		call	@tiles_render$qv
 		leave
 		retn
 @mugetsu_gengetsu_bg_render$qv	endp
@@ -11402,30 +10447,23 @@ BOSS_BG_TEXT	ends
 
 ; ===========================================================================
 
-SHARED	segment	word public 'CODE' use16
-		assume cs:g_SHARED
-		;org 0Dh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
+SHARED segment byte public 'CODE' use16
+include th02/snd/snd.inc
 	extern VECTOR2:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern MPN_FREE:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern MPN_LOAD_PALETTE_SHOW:proc
 	extern @POLAR$QIII:proc
 	extern VECTOR2_AT:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DETERMINE_MODES:proc
 	extern SND_LOAD:proc
-SHARED	ends
-
-SHARED_	segment	word public 'CODE' use16
-	extern CDG_PUT_8:proc
-	extern _game_exit:proc
-	extern GAME_INIT_MAIN:proc
+	extern @game_exit$qv:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern CDG_PUT_NOALPHA_8:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
@@ -11433,7 +10471,7 @@ SHARED_	segment	word public 'CODE' use16
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE:proc
 	extern CDG_FREE_ALL:proc
-SHARED_	ends
+SHARED ends
 
 ; ===========================================================================
 
@@ -30791,7 +29829,6 @@ aSt06_bft	db 'st06.bft',0
 aBss6_cd2	db 'BSS6.CD2',0
 aSt06_mpn	db 'st06.mpn',0
 include th04/main/pause[data].asm
-aDemo0_rec	db 'DEMO0.REC',0
 include th04/main/demo[data].asm
 public _EMS_NAME
 _EMS_NAME	db 'GENSOEMS',0
@@ -31075,7 +30112,7 @@ aPnpcuyszlB@bCa	db 'è≠èó„Yëzã»Å@Å` Capriccio ',0
 include th04/formats/bb_txt_load[data].asm
 word_231F2	dw 10h
 include th03/main/5_powers_of_10[data].asm
-include th04/scoreupd[data].asm
+include th04/main/scoreupd[data].asm
 include th04/main/hud/gaiji_row[data].asm
 include th04/main/hud/hud[data].asm
 angle_23212	db 0
@@ -31244,9 +30281,6 @@ public _midboss3_patterns_done
 _midboss3_patterns_done	db ?
 		db 5 dup(?)
 include th04/main/tile/inv[bss].asm
-		db 2 dup(?)
-byte_255B0	db ?
-		db ?
 byte_255B2	db ?
 byte_255B3	db ?
 byte_255B4	db ?
@@ -31256,9 +30290,9 @@ byte_255C6	db ?
 byte_255C7	db ?
 byte_255C8	db ?
 		db ?
-fp_255CA	dw ?
 include th04/main/dialog/dialog[bss].asm
-word_255D6	dw ?
+public _script_param_number_default
+_script_param_number_default	dw ?
 include th04/main/boss/explosions[bss].asm
 
 SHOT_LASER_COOLDOWN_FRAMES = 32
@@ -31417,7 +30451,6 @@ byte_25A38	db ?
 		db ?
 word_25A3A	dw ?
 include th02/hardware/pages[bss].asm
-map_seg	dw ?
 include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
 include th04/main/quit[bss].asm

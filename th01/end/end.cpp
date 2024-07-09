@@ -1,14 +1,8 @@
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "platform/x86real/pc98/page.hpp"
-#include "shiftjis.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
-#include "th01/v_colors.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
@@ -20,6 +14,7 @@
 #include "th01/formats/scoredat.hpp"
 #include "th01/hiscore/regist.hpp"
 #include "th01/end/end.hpp"
+#include "th01/end/pic.hpp"
 #include "th01/shiftjis/end.hpp"
 #include "th01/shiftjis/scoredat.hpp"
 #include "th01/shiftjis/title.hpp"
@@ -144,7 +139,7 @@ void graph_type_kanji_n(
 inline void pic_caption_type_n(int line, size_t len, const char str[]) {
 	graph_type_ank_n(
 		(((RES_X / 2) - ((len * GLYPH_HALF_W) / 2) + BYTE_MASK) & ~BYTE_MASK),
-		(PIC_BOTTOM + (((line * 2) + 1) * GLYPH_H)),
+		(CUTSCENE_PIC_TOP + CUTSCENE_PIC_H + (((line * 2) + 1) * GLYPH_H)),
 		len,
 		str
 	);
@@ -180,9 +175,9 @@ void near end_good_jigoku(void);
 // Shows the route-specific boss slideshow.
 void near boss_slides_animate(void);
 
-// Shows the verdict screen, then calls regist() with the score and the cleared
-// route.
-void verdict_animate_and_regist(void);
+// Shows the verdict screen, then calls regist_menu() with the score and the
+// cleared route.
+void verdict_animate_and_regist_menu(void);
 // -----------------------
 
 inline void end_done(void) {
@@ -287,7 +282,7 @@ void end_and_verdict_and_regist_animate(void)
 		end_bad();
 		end_done();
 	}
-	verdict_animate_and_regist();
+	verdict_animate_and_regist_menu();
 }
 
 void near shake_then_boom(int shake_duration, int boom_duration)
@@ -605,7 +600,7 @@ void verdict_title_calculate_and_render(void)
 	else if(credit_lives_extra == 1) { skill +=  5; }
 	else if(credit_lives_extra == 0) { skill += 10; }
 
-	int group = (rand() % VERDICT_GROUPS);
+	int group = (irand() % VERDICT_GROUPS);
 
 	// level = max((min(skill, 80) + 20) / 20), 0);
 	/**/ if(skill >= 80) { level = 5; }
@@ -624,7 +619,7 @@ void verdict_title_calculate_and_render(void)
 	);
 }
 
-void verdict_animate_and_regist(void)
+void verdict_animate_and_regist_menu(void)
 {
 	const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS_CENTERED;
 
@@ -706,9 +701,9 @@ void verdict_animate_and_regist(void)
 	grp_palette_settone(50);
 	regist_colors_set();
 	if(end_flag == ES_MAKAI) {
-		regist(score, SCOREDAT_CLEARED_MAKAI, SCOREDAT_ROUTE_CLEAR);
+		regist_menu(score, SCOREDAT_CLEARED_MAKAI, SCOREDAT_ROUTE_CLEAR);
 	} else {
-		regist(score, SCOREDAT_CLEARED_JIGOKU, SCOREDAT_ROUTE_CLEAR);
+		regist_menu(score, SCOREDAT_CLEARED_JIGOKU, SCOREDAT_ROUTE_CLEAR);
 	}
 	end_resident_clear();
 }

@@ -1,3 +1,5 @@
+#include "planar.h"
+
 #define SPARK_W 8
 #define SPARK_H 8
 #define SPARK_CELS 8

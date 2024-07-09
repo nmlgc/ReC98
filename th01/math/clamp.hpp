@@ -11,6 +11,14 @@
 #define clamp_min_2(v, min) ((v) < min ? min : (v))
 #define clamp_max_2_ge(v, max) ((v) >= max ? max : (v))
 
+#define clamp_minmax(v, min, max) { \
+	if(v < min) { \
+		v = min; \
+	} else if(v > max) { \
+		v = max; \
+	} \
+}
+
 #define clamp_inc(v, max) \
 	(v)++; \
 	if((v) > (max)) { \
@@ -33,17 +41,33 @@
 	#define ring_min() 0
 #endif
 
-#define ring_inc(val, ring_end) \
+#define ring_inc_range(val, ring_min, ring_max) { \
 	(val)++; \
-	if((val) > (ring_end)) { \
-		(val) = 0; \
-	}
+	if((val) > (ring_max)) { \
+		(val) = (ring_min); \
+	} \
+}
+#define ring_inc(val, ring_end) ring_inc_range(val, 0, ring_end)
 
 #define ring_inc_ge(val, ring_end) \
 	(val)++; \
 	if((val) >= (ring_end)) { \
 		(val) = 0; \
 	}
+
+#define ring_inc_ge_range(val, ring_min, ring_max) { \
+	(val)++; \
+	if((val) >= ((ring_max) + 1)) { \
+		(val) = (ring_min); \
+	} \
+}
+
+#define ring_dec_range(val, ring_min, ring_max) { \
+	if(val == (ring_min)) { \
+		(val) = ((ring_max) + 1); \
+	} \
+	(val)--; \
+}
 
 #define ring_dec(val, ring_end) \
 	(val)--; \

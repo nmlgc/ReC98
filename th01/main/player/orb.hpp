@@ -1,4 +1,8 @@
-#define ORB_HPP
+#ifndef TH01_MAIN_PLAYER_ORB_HPP
+#define TH01_MAIN_PLAYER_ORB_HPP
+
+#include "th01/main/playfld.hpp"
+#include "th01/formats/ptn.hpp"
 
 enum orb_velocity_x_t {
 	OVX_0 = 0,
@@ -127,13 +131,11 @@ enum orb_repel_friction_t {
 // the ground.
 void orb_player_hittest(int repel_friction);
 
-#ifdef PTN_HPP
-	// Blits the default Orb sprite to its current position. Used whenever it
-	// was or might have been just unblitted.
-	inline void orb_put_default(void) {
-		ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
-	}
-#endif
+// Blits the default Orb sprite to its current position. Used whenever it was
+// or might have been just unblitted.
+inline void orb_put_default(void) {
+	ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+}
 
 // Unblits, updates, and renders the Orb, handling collisions with the top and
 // bottom of the playfield. Also calls the same unblit/update/render functions
@@ -141,3 +143,5 @@ void orb_player_hittest(int repel_friction);
 // *after*) doing the per-frame VSync wait… yeah, another function that should
 // either have been multiple ones, or not have existed at all.
 void orb_and_pellets_and_stage_unput_update_render__vsync_wait(int stage_id);
+
+#endif /* TH01_MAIN_PLAYER_ORB_HPP */

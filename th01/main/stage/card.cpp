@@ -1,33 +1,21 @@
-#include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
-#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/formats/ptn.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/math/digit.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/sprites/pellet.h"
 #include "th01/main/debug.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/bomb.hpp"
 #include "th01/main/stage/item.hpp"
 #include "th01/main/stage/card.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/stage/stages.hpp"
+#include "platform/x86real/pc98/page.hpp"
 
 uint8_t card_flip_cycle = 0;
 
@@ -55,7 +43,7 @@ void cards_hittest(int stage_id)
 		) || (
 			(bomb_damaging == true) &&
 			((bomb_frames % cards.count) == i) &&
-			((rand() % 4) != 0) &&
+			((irand() % 4) != 0) &&
 			(cards.flag[i] == CARD_ALIVE)
 		)) {
 			cards.flag[i] = CARD_FLIPPING;

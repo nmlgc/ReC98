@@ -2,21 +2,12 @@
 // ---------------
 
 #include <string.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
-#include "th01/score.h"
-#include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grp_text.hpp"
 #include "th01/formats/scoredat.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
@@ -571,7 +562,7 @@ void regist_name_enter(int entered_place, bool cleared)
 
 static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 
-void regist(
+void regist_menu(
 	score_t score,
 	int16_t stage_num_or_scoredat_constant,
 	shiftjis_kanji_t route

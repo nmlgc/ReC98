@@ -1,3 +1,8 @@
+#ifndef TH03_PLAYCHAR_HPP
+#define TH03_PLAYCHAR_HPP
+
+#include "platform.h"
+
 typedef enum {
 	PLAYCHAR_REIMU = 0,
 	PLAYCHAR_MIMA = 1,
@@ -11,18 +16,7 @@ typedef enum {
 	PLAYCHAR_COUNT = 9,
 } playchar_t;
 
-// Encodes a playchar_t together with its alternate palette flag.
-struct PlaycharPaletted {
-	unsigned char v;
-
-	int filename_id() const {
-		return (v - 1);
-	}
-
-	playchar_t char_id() const {
-		return static_cast<playchar_t>(filename_id() / 2);
-	}
-};
+typedef unsigned char playchar_paletted_t;
 
 // Uses 0 to indicate "no character" and shifts all IDs up by 1.
 struct PlaycharOptional {
@@ -37,4 +31,39 @@ struct PlaycharOptional {
 	}
 };
 
-#define TO_PALETTED(playchar) ((playchar << 1) + 1)
+// Encodes a playchar_t together with its alternate palette flag in the lowest
+// bit.
+struct PlaycharPaletted {
+	playchar_paletted_t v;
+
+	playchar_t char_id() const {
+		return static_cast<playchar_t>(v / 2);
+	}
+
+	// ZUN bloat
+	int char_id_16() const {
+		return (v / 2);
+	}
+
+	bool16 palette_id() const {
+		return (v & 1);
+	}
+};
+
+// Like PlaycharPaletted, but with all IDs shifted up by 1 to reserve 0 for "no
+// character".
+struct PlaycharPalettedOptional {
+	unsigned char v;
+
+	int filename_id() const {
+		return (v - 1);
+	}
+
+	playchar_t char_id() const {
+		return static_cast<playchar_t>(filename_id() / 2);
+	}
+};
+
+#define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
+
+#endif /* TH03_PLAYCHAR_HPP */

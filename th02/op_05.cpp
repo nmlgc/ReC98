@@ -1,16 +1,7 @@
-/* ReC98
- * -----
- * Code segment #5 of TH02's OP.EXE
- */
+#pragma option -2 // ZUN bloat
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/v_colors.hpp"
 #include "th02/common.h"
@@ -146,7 +137,7 @@ void pascal shottype_menu_init(void)
 
 	palette_black();
 	graph_accesspage(0);
-	pi_load_put_8_free(3, "TSELECT.pi");
+	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
 	graph_copy_page(1);
 	graph_accesspage(0);
 	if(resident->stage != 5) {
@@ -184,7 +175,7 @@ void pascal shottype_menu(void)
 	shottype_menu_init();
 
 	do {
-		input_sense();
+		input_reset_sense();
 		if(!input_locked) {
 			if(key_det & INPUT_LEFT) {
 				draw_shottype_desc(sel, 7);
@@ -230,6 +221,4 @@ void pascal shottype_menu(void)
 	pi_free(1);
 	pi_free(2);
 	palette_black_out(1);
-}
-
 }

@@ -1,8 +1,5 @@
+#include "th04/main/playfld.hpp"
 #include "th02/main/player/player.hpp"
-
-#define PLAYER_OPTION_W 16
-#define PLAYER_OPTION_H 16
-#define PLAYER_OPTION_DISTANCE ((PLAYER_W / 2) + (PLAYER_OPTION_W / 2))
 
 extern PlayfieldMotion player_pos;
 

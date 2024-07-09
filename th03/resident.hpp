@@ -1,3 +1,6 @@
+#include "th03/playchar.hpp"
+#include "th03/score.hpp"
+
 enum key_mode_t {
 	KM_KEY_KEY,
 	KM_JOY_KEY,
@@ -20,30 +23,34 @@ enum game_mode_t {
 	GM_VS_CPU_CPU = GM_VS + VS_CPU_CPU,
 };
 
+#define STAGE_DECISIVE 6
+#define STAGE_CHIYURI 7
+#define STAGE_YUMEMI 8
+#define STAGE_COUNT 9
+
 // Won't enter [score_last[0]] into YUME.NEM, even if it's high enough for a
 // place. Also used for just showing the high scores from the main menu.
 #define STAGE_NONE -1
 #define STAGE_ALL 99
-#define STAGE_COUNT 9
 
 #define CREDIT_LIVES 2
 
 #define DEMO_COUNT 4
 
 #define RES_ID "YUMEConfig"
-typedef struct {
+struct resident_t {
 	char id[sizeof(RES_ID)];
 	unsigned char rank;
-	PlaycharPaletted playchar_paletted[PLAYER_COUNT];
+	PlaycharPalettedOptional playchar_paletted[PLAYER_COUNT];
 	bool is_cpu[PLAYER_COUNT];
 	long rand;
 	int8_t unused_1;
 	unsigned char bgm_mode;
 	unsigned char key_mode;
-	unsigned char pid_winner;
+	pid_t pid_winner;
 	score_lebcd_t score_last[PLAYER_COUNT];
 	unsigned char game_mode;
-	PlaycharPaletted story_opponents[STAGE_COUNT];
+	PlaycharPalettedOptional story_opponents[STAGE_COUNT];
 	int8_t unused_2;
 	unsigned char story_stage;
 	unsigned char story_lives;
@@ -53,6 +60,6 @@ typedef struct {
 	unsigned char skill;
 	unsigned char demo_num;	// 0 = no demo active
 	int8_t unused_3[198];
-} resident_t;
+};
 
 extern resident_t far *resident;

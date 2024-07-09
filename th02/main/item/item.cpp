@@ -1,8 +1,6 @@
 #pragma option -zPmain_01 -G
 
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/math/subpixel.hpp"
 #include "th02/common.h"
@@ -10,11 +8,10 @@
 #include "th02/math/randring.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/hardware/pages.hpp"
-extern "C" {
 #include "th02/snd/snd.h"
-}
 #include "th02/main/entity.hpp"
 #include "th02/main/playfld.hpp"
+#include "th02/main/playperf.hpp"
 #include "th02/main/score.hpp"
 #include "th02/main/scroll.hpp"
 #include "th02/main/hud/hud.hpp"
@@ -82,7 +79,7 @@ extern union {
 	vram_y_t vram;
 } p_top;
 extern uint8_t semirandom_ring_p;
-extern int32_t item_score_this_frame;
+extern score_t item_score_this_frame;
 // -----
 
 void near items_init_and_reset(void)

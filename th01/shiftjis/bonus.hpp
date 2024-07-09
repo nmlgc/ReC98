@@ -1,3 +1,6 @@
+#include "pc98.h"
+#include "shiftjis.hpp"
+
 #define STAGEBONUS_TITLE_PREFIX "‚r‚s‚`‚f‚d@"
 
 // The fullwidth stage number is directly inserted into the single static copy

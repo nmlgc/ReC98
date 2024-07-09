@@ -1,4 +1,5 @@
 	.386
+	.model use16 large SHARED
 	locals
 
 include pc98.inc
@@ -33,12 +34,7 @@ PIANO_LABEL_FONT_W = 8
 PIANO_LABEL_FONT_H = 8
 ; ----------------
 
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
-
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
+	.code SHARED
 
 ; void __usercall near piano_fm_part_put_raw(
 ; 	void far *vram_at_x0_and_top_of_part<es:di>,
@@ -269,6 +265,5 @@ public @piano_label_put_raw
 @piano_label_put_raw endp
 
 GRCG_SETCOLOR_DIRECT_DEF
-SHARED_	ends
 
 	end

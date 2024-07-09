@@ -1,6 +1,8 @@
 // Subprocess spawning
 // -------------------
 
+#include "platform.h"
+
 // Spawns the given executable at the top of conventional RAM, assuming that it
 // will take up the given number of bytes. Useful to keep TSRs from occupying
 // the memory area directly after the program image, which would block the C

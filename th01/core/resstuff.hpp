@@ -1,3 +1,5 @@
+#include "th01/resident.hpp"
+
 // Allocates the resident structure if it doesn't exist yet, and initializes
 // the given bunch of data with the respective values.
 void resident_create_and_stuff_set(

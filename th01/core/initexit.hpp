@@ -1,3 +1,5 @@
+#include "th01/core/entry.hpp"
+
 // Sets up the 640x400 graphics + text mode, as well as the vsync callback.
 void game_init(void);
 

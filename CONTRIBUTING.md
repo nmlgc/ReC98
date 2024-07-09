@@ -52,7 +52,7 @@ These cases should gradually be removed as development goes along, though.
 * Always use `{ brackets }`, even around single-statement conditional
   branches and single-instruction inline assembly.
 
-* The opening `{ ` bracket of a function goes into
+* The opening `{` bracket of a function goes into
   * the next line if the function is non-inlined (Linux style), and
   * the end of the line with the closing `)` if the function is inlined.
 
@@ -62,6 +62,10 @@ These cases should gradually be removed as development goes along, though.
   (conditional jump, arithmetic, etc.) or further context (e.g. parameters
   with a common source) that defines their signedness. If a variable is used
   in both signed and unsigned contexts, declare it as the more common one.
+
+* Don't use the C-style `typedef` syntax for declaring `struct`s.
+  Currently, this codebase does not aim for compatibility with C-only
+  compilers, and it only makes forward declarations more annoying.
 
 ## Compatibility
 
@@ -87,7 +91,7 @@ These cases should gradually be removed as development goes along, though.
    | Open Watcom 2.0                   |       |    ✔    |    ✔    |
    | Visual Studio 2022                |       |    ✔    |    ✔    |
    | Clang 13 (default)                |       |         |         |
-   | Clang 13 (with `-fms-extensions)` |   ✔   |    ✔    |    ✔    |
+   | Clang 13 (with `-fms-extensions`) |   ✔   |    ✔    |    ✔    |
 
   * Conversely, use `asm` as the keyword for the particularly dumb small
     pieces of inline assembly that refer to or depend on register
@@ -110,10 +114,19 @@ These cases should gradually be removed as development goes along, though.
 
 ## Build system
 
-* Whenever you edit the `Tupfile`, run `tup generate Tupfile.bat` to update
-  the dumb batch fallback script, for systems that can't run Tup.
+* Each non-refactoring edit to `Tupfile.lua` should be accompanied by a
+  corresponding edit to `build_dumb.bat`. The Tup-based build process
+  automatically rewrites the file in this case.
 
 ## Code organization
+
+* Every header file should individually compile as a valid translation unit,
+  and therefore `#include` any other headers it requires.
+
+* Only use include guards if the code structure necessitates it. This keeps
+  `#include` lists small and speeds up compilation, which is especially useful
+  given that we (still) have to emulate Turbo C++ 4.0J on 64-bit systems.
+  Unfortunately, it doesn't support `#pragma once`.
 
 * Try to avoid repeating numeric constants – after all, easy moddability
   should be one of the goals of this project. For local arrays, use `sizeof()`
@@ -369,6 +382,8 @@ These cases should gradually be removed as development goes along, though.
 * Macros defining the number of distinct sprites in an animation: `*_CELS`
 * Frame variables counting from a frame count to 0: `*_time`
 * Frame variables and other counters starting from 0: `*_frames`
+* Blocking main functions of interactive menus with their own `frame_delay()`
+  calls: `*_menu()`
 * Functions that show multi-frame animations in a blocking way, using their own
   `frame_delay()` calls: `*_animate`
 * Generic 0-based IDs: `*_id`
@@ -442,7 +457,7 @@ Examples:
 
 Bloat is removed on the aptly named `debloated` branch. That branch is the
 recommended foundation for nontrivial mods that don't care about being
-byte-for-byte comparable to ZUN's original binary.
+byte-for-byte comparable to ZUN's original binaries.
 
 #### `ZUN landmine`
 

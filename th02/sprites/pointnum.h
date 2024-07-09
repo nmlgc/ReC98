@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 static const pixel_t POINTNUM_W = 8;
 static const pixel_t POINTNUM_H = 8;
 

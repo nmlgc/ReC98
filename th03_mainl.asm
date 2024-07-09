@@ -26,7 +26,7 @@ include th03/formats/scoredat.inc
 	extern __ctype:byte
 	extern _execl:proc
 
-group_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -130,153 +130,19 @@ _TEXT		ends
 ; ===========================================================================
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
+
+MAINL_SC_TEXT segment byte public 'CODE' use16
+	@win_load$qv procdesc pascal near
+	@win_text_put$qv procdesc pascal near
+MAINL_SC_TEXT ends
 
 ; Segment type:	Pure code
 CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9624	proc near
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	ds
-		push	offset aLogo0_rgb ; "logo0.rgb"
-		call	palette_entry_rgb
-		call	far ptr	palette_show
-		call	cdg_load_all_noalpha pascal, 0, ds, offset aLogo_cd2
-		call	cdg_load_single pascal, 5, ds, offset aLogo5_cdg, 0
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_965E
-		mov	al, _playchar_filename_id[0]
-		jmp	short loc_9661
-; ---------------------------------------------------------------------------
-
-loc_965E:
-		mov	al, _playchar_filename_id[1]
-
-loc_9661:
-		mov	[bp+var_1], al
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_969A
-		cmp	es:[bx+resident_t.story_stage], 6
-		jnz	short loc_967C
-		mov	[bp+var_2], 9
-		jmp	short loc_96B7
-; ---------------------------------------------------------------------------
-
-loc_967C:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.story_stage], 7
-		jnz	short loc_968D
-		mov	[bp+var_2], 0Ah
-		jmp	short loc_96B7
-; ---------------------------------------------------------------------------
-
-loc_968D:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_96AA
-		jmp	short loc_96A5
-; ---------------------------------------------------------------------------
-
-loc_969A:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.pid_winner], 0
-		jnz	short loc_96AA
-
-loc_96A5:
-		mov	al, _playchar_filename_id[1]
-		jmp	short loc_96AD
-; ---------------------------------------------------------------------------
-
-loc_96AA:
-		mov	al, _playchar_filename_id[0]
-
-loc_96AD:
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[bp+var_2], al
-
-loc_96B7:
-		push	6
-		push	ds
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		mov	bx, ax
-		sar	bx, 1
-		add	bx, bx
-		push	word ptr [bx+90h]
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		and	ax, 1
-		push	ax
-		call	cdg_load_single_noalpha
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		mov	bx, ax
-		sar	bx, 1
-		shl	bx, 2
-		pushd	dword ptr [bx+0A2h]
-		call	file_ropen
-		mov	al, [bp+var_2]
-		mov	ah, 0
-		imul	ax, 0B4h
-		cwde
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_F72C
-		push	3Ch ; '<'
-		call	file_read
-		mov	byte_F768, 0
-		push	ds
-		push	offset unk_F769
-		push	3Ch ; '<'
-		call	file_read
-		mov	byte_F7A5, 0
-		push	ds
-		push	offset unk_F7A6
-		push	3Ch ; '<'
-		call	file_read
-		mov	byte_F7E2, 0
-		call	file_close
-		leave
-		retn
-sub_9624	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_973E	proc near
-		push	bp
-		mov	bp, sp
-		call	graph_putsa_fx pascal, (80 shl 16) or 272, 2Fh, ds, offset unk_F72C
-		call	graph_putsa_fx pascal, (80 shl 16) or 288, 2Fh, ds, offset unk_F769
-		call	graph_putsa_fx pascal, (80 shl 16) or 304, 2Fh, ds, offset unk_F7A6
-		pop	bp
-		retn
-sub_973E	endp
 
 include th03/formats/cdg_free_all.asm
 
@@ -307,8 +173,7 @@ sub_978D	proc near
 
 loc_97E8:
 		call	cdg_put_noalpha_8 pascal, large (352 shl 16) or 300, si
-		push	6
-		call	frame_delay
+		call	@frame_delay$qi pascal, 6
 		inc	si
 
 loc_97FC:
@@ -327,20 +192,18 @@ loc_97FC:
 		call	snd_delay_until_measure pascal, (11 shl 16) or 4
 		push	1
 		call	palette_white_in
-		push	8
-		call	frame_delay
-		call	sub_973E
+		call	@frame_delay$qi pascal, 8
+		call	@win_text_put$qv
 		call	sub_9887
 		or	ax, ax
 		jnz	short loc_9868
 		call	sub_990C
 
 loc_9868:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_987D
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_9868
 ; ---------------------------------------------------------------------------
 
@@ -439,7 +302,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		graph_showpage 0
 		graph_accesspage 1
-		mov	al, _playchar_filename_id[0]
+		mov	al, _playchar[0]
 		mov	[bp+var_1], al
 		push	0
 		push	ds
@@ -449,7 +312,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		sar	bx, 1
 		add	bx, bx
-		push	word ptr [bx+90h]
+		push	_PIC_FN[bx]
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 1
@@ -467,7 +330,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		sar	bx, 1
 		add	bx, bx
-		push	word ptr [bx+90h]
+		push	_PIC_FN[bx]
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 1
@@ -479,7 +342,7 @@ var_1		= byte ptr -1
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_1], al
-		mov	byte_F7E5, 1
+		mov	_do_not_show_stage_number, 1
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_9997
@@ -530,14 +393,14 @@ loc_99D4:
 		inc	ax
 		push	ax
 		call	cdg_load_single
-		mov	byte_F7E5, 0
+		mov	_do_not_show_stage_number, 0
 
 loc_99F1:
-		call	pi_load pascal, 0, ds, offset aStnx0_pi
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aStnx0_pi
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
-		call	pi_load pascal, 0, ds, word_E504
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, word_E504
+		call	@pi_put_8$qiii pascal, large 0, 0
 		leave
 		retn
 sub_990C	endp
@@ -558,12 +421,12 @@ var_2		= word ptr -2
 		mov	[bp+var_2], 3AAh
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		call	graph_copy_page pascal, 0
 		freePISlotLarge	0
 		call	cdg_put_8 pascal, large (96 shl 16) or 96, 0
 		call	cdg_put_hflip_8 pascal, large (352 shl 16) or 96, 1
-		cmp	byte_F7E5, 0
+		cmp	_do_not_show_stage_number, 0
 		jnz	short loc_9A8E
 		call	cdg_put_8 pascal, large (384 shl 16) or 46, 2
 
@@ -622,8 +485,8 @@ loc_9A8E:
 		call	sub_9D20
 		push	1
 		call	sub_9D20
-		call	pi_load pascal, 0, ds, offset aEn2_pi
-		call	pi_put_interlace_8 pascal, large 280, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aEn2_pi
+		call	@pi_put_interlace_8$qiii pascal, large 280, 0
 		freePISlotLarge	0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
@@ -673,10 +536,10 @@ loc_9BB7:
 		push	offset aEnemy04_pi ; "ENEMY04.pi"
 
 loc_9BBD:
-		call	pi_load
+		call	@pi_load$qinxc
 
 loc_9BC2:
-		call	pi_put_interlace_8 pascal, large 304, 0
+		call	@pi_put_interlace_8$qiii pascal, large 304, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
@@ -729,7 +592,7 @@ loc_9C42:
 ; ---------------------------------------------------------------------------
 
 loc_9C4B:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 
 loc_9C50:
 		cmp	vsync_Count1, 60h
@@ -745,7 +608,7 @@ loc_9C5E:
 		push	1
 		call	palette_white_in
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		freePISlotLarge	0
 		call	respal_set_palettes
 		pop	si
@@ -777,18 +640,18 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_4]
-		call	pi_load pascal, 0, large [bp+arg_0]
+		call	@pi_load$qinxc pascal, 0, large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 320
-		call	pi_put_interlace_8 pascal, ax, (200 shl 16)
+		call	@pi_put_interlace_8$qiii pascal, ax, (200 shl 16)
 		freePISlotLarge	0
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 'e'
 		mov	byte ptr es:[bx+3], 'x'
-		call	pi_load pascal, 0, word ptr [bp+arg_0+2], bx
+		call	@pi_load$qinxc pascal, 0, word ptr [bp+arg_0+2], bx
 		mov	ax, si
 		imul	ax, 320
-		call	pi_put_interlace_8 pascal, ax, (208 shl 16)
+		call	@pi_put_interlace_8$qiii pascal, ax, (208 shl 16)
 		freePISlotLarge	0
 		pop	si
 		pop	bp
@@ -872,10 +735,10 @@ _argv		= dword	ptr  8
 _envp		= dword	ptr  0Ch
 
 		enter	2, 0
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	@@ret
-		call	game_init_main pascal, ds, offset aCOul
+		call	@game_init_main$qnxuc pascal, ds, offset aCOul
 		call	respal_exist
 		mov	_snd_midi_active, 0
 		les	bx, _resident
@@ -897,7 +760,7 @@ loc_9DAD:
 		call	sub_B7D2
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -910,10 +773,10 @@ loc_9E04:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		add	al, -1
-		mov	_playchar_filename_id[0], al
+		mov	_playchar[0], al
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		add	al, -1
-		mov	_playchar_filename_id[1], al
+		mov	_playchar[1], al
 		cmp	es:[bx+resident_t.story_stage], 0
 		jz	loc_9F85
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
@@ -928,7 +791,7 @@ loc_9E04:
 
 loc_9E3F:
 		call	_snd_load c,  offset aWin_m, ds, SND_LOAD_SONG
-		call	sub_9624
+		call	@win_load$qv
 		call	sub_978D
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
@@ -953,7 +816,7 @@ loc_9E7B:
 loc_9E89:
 		call	cdg_free_all
 		freePISlotLarge	0
-		mov	al, _playchar_filename_id[0]
+		mov	al, _playchar[0]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -1002,7 +865,7 @@ loc_9EF1:
 		call	gaiji_restore
 
 loc_9F1E:
-		call	_game_exit_from_mainl_to_main
+		call	@game_exit_from_mainl_to_main$qv
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -1034,7 +897,7 @@ loc_9F58:
 loc_9F69:
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -1103,7 +966,7 @@ loc_9FC8:
 		call	palette_black_in
 
 loc_A00B:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		test	_input_sp.lo, low INPUT_LEFT
 		jnz	short loc_A01E
 		test	_input_sp.lo, low INPUT_RIGHT
@@ -1162,8 +1025,7 @@ loc_A0B0:
 ; ---------------------------------------------------------------------------
 
 loc_A0BB:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_A00B
 ; ---------------------------------------------------------------------------
 
@@ -1175,9 +1037,9 @@ loc_A0C5:
 		graph_showpage al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_load pascal, 0, ds, offset aOver_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOver_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
@@ -1353,7 +1215,7 @@ loc_B835:
 		call	@regist_rows_put$qv
 
 loc_B858:
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rem_credits], 0
 		jz	short loc_B871
@@ -1380,9 +1242,9 @@ loc_B879:
 		jz	short loc_B8F1
 		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
 		jz	short loc_B8F1
-		call	pi_load pascal, 0, ds, offset aConti_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aConti_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	cdg_load_all pascal, 0, ds, offset aConti_cd2
 		pop	bp
@@ -1390,9 +1252,9 @@ loc_B879:
 ; ---------------------------------------------------------------------------
 
 loc_B8F1:
-		call	pi_load pascal, 0, ds, offset aOver_pi_0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOver_pi_0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	_snd_delay_until_volume stdcall, 255
 		pop	cx
@@ -1471,8 +1333,7 @@ loc_B9DD:
 		add	es:[bx+2], al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	60h
-		call	frame_delay
+		call	@frame_delay$qi pascal, 96
 		graph_accesspage 0
 		graph_showpage al
 		call	graph_clear
@@ -1503,7 +1364,7 @@ loc_B9DD:
 loc_BA66:
 		call	text_clear
 		call	gaiji_restore
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset aOp_0	; "op"
@@ -2661,8 +2522,7 @@ loc_C4D8:
 		kajacall	KAJA_SONG_PLAY
 		mov	byte_10BB6, 1
 		mov	byte_10BB5, 1
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	vsync_Count1, 0
 
 loc_C657:
@@ -2743,7 +2603,7 @@ loc_C735:
 		xor	di, di
 
 loc_C781:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		call	sub_BB51
 		call	sub_BCD5
 		inc	word_10BB2
@@ -2792,37 +2652,40 @@ mainl_03_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
+include th02/snd/snd.inc
 	extern _snd_determine_mode:proc
 	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc
 	extern VECTOR2:proc
-	extern _game_exit:proc
+	extern @game_exit$qv:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
-	extern FRAME_DELAY:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
-	extern PI_PUT_INTERLACE_8:proc
+	extern @FRAME_DELAY$QI:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_PUT_INTERLACE_8$QIII:proc
 	extern _snd_se_reset:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern GAME_INIT_MAIN:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE:proc
-	extern _game_exit_from_mainl_to_main:proc
+	extern @game_exit_from_mainl_to_main$qv:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern PI_LOAD:proc
-	extern INPUT_MODE_INTERFACE:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @INPUT_MODE_INTERFACE$QV:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
 SHARED	ends
 
 	.data
 
+public _PIC_FN
+_PIC_FN label word
 		dw offset a00sl_cd2
 		dw offset a02sl_cd2
 		dw offset a04sl_cd2
@@ -2832,6 +2695,9 @@ SHARED	ends
 		dw offset a12sl_cd2
 		dw offset a14sl_cd2
 		dw offset a16sl_cd2
+
+public _WIN_MESSAGE_FN
+_WIN_MESSAGE_FN label word
 		dd a@00tx_txt		; "@00TX.TXT"
 		dd a@01tx_txt		; "@01TX.TXT"
 		dd a@02tx_txt		; "@02TX.TXT"
@@ -2841,6 +2707,7 @@ SHARED	ends
 		dd a@06tx_txt		; "@06TX.TXT"
 		dd a@07tx_txt		; "@07TX.TXT"
 		dd a@08tx_txt		; "@08TX.TXT"
+
 off_E4B6	dd a@00dm0_txt
 					; "@00DM0.TXT"
 CHAR_TITLE		dd TITLE_REIMU		; "   夢と伝統を保守する巫女   "
@@ -2906,9 +2773,10 @@ NAME_CHIYURI	db ' 北白河　ちゆり',0
 TITLE_YUMEMI	db '　  　　　夢幻伝説　　　    ',0
 NAME_YUMEMI	db ' 　岡崎　夢美',0
 include th03/formats/cfg_lres[data].asm
-aLogo0_rgb	db 'logo0.rgb',0
-aLogo_cd2	db 'logo.cd2',0
-aLogo5_cdg	db 'logo5.cdg',0
+public _logo0_rgb, _logo_cd2, _logo5_cdg
+_logo0_rgb	db 'logo0.rgb',0
+_logo_cd2 	db 'logo.cd2',0
+_logo5_cdg	db 'logo5.cdg',0
 aLogo1_rgb	db 'logo1.rgb',0
 aSt_cd2		db 'st.cd2',0
 aStnx1_pi	db 'stnx1.pi',0
@@ -3152,17 +3020,9 @@ aStf12_cdg	db 'stf12.cdg',0
 
 	.data?
 
-unk_F72C	db    ?	;
-		db 59 dup(?)
-byte_F768	db ?
-unk_F769	db    ?	;
-		db 59 dup(?)
-byte_F7A5	db ?
-unk_F7A6	db    ?	;
-		db 59 dup(?)
-byte_F7E2	db ?
-_playchar_filename_id	db PLAYER_COUNT dup (?)
-byte_F7E5	db ?
+	extern _playchar:byte:PLAYCHAR_COUNT
+	extern _do_not_show_stage_number:byte
+
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm

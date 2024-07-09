@@ -1,33 +1,20 @@
-#include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
-#include "platform/x86real/pc98/page.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/formats/ptn.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/grp2xscs.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/snd/mdrv2.h"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/shiftjis/routesel.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/stage/stages.hpp"
+#include "platform/x86real/pc98/page.hpp"
 
 void grcg_whiteline(screen_y_t y)
 {
@@ -37,7 +24,7 @@ void grcg_whiteline(screen_y_t y)
 		grcg_put(vo, 0xFFFF, 16);
 		vo += static_cast<vram_offset_t>(sizeof(dots16_t));
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 #define defeat_animate( \

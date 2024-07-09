@@ -1,5 +1,3 @@
-#include "platform.h"
-#include "pc98.h"
 #include "planar.h"
 
 // TODO: These pre-constructed pointers generate much smaller usage code than

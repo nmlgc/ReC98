@@ -3,25 +3,18 @@
  * TH05 player character selection menu
  */
 
-#pragma option -zCop_01_TEXT
+#pragma option -zPop_01
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/rank.h"
-extern "C" {
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"
-#include "th04/score.h"
-#include "th04/common.h"
-#include "th05/playchar.h"
+#include "th04/op/clear.hpp"
+#include "th04/op/impl.hpp"
+#include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
-#include "th05/sprites/op_cdg.h"
-#include "th05/snd/snd.h"
 #include "th05/hardware/input.h"
 #include "th05/formats/pi.hpp"
 
@@ -136,8 +129,8 @@ void pascal near pic_put(bool16 darkened)
 		}
 	} else {
 		// Raised area of the highlighted pic
-		bgimage_put_rect(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
-		bgimage_put_rect(pic_raised_left, pic_top, RAISE_W, PIC_H);
+		bgimage_put_rect_16(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
+		bgimage_put_rect_16(pic_raised_left, pic_top, RAISE_W, PIC_H);
 
 		// Pic
 		if(selectable_with[playchar_menu_sel]) {
@@ -165,7 +158,7 @@ void near playchar_menu_put_initial(void)
 
 	palette_settone(0);
 	graph_accesspage(1);
-	pi_load_put_8_free(0, "slb1.pi");
+	pi_fullres_load_palette_apply_put_free(0, "slb1.pi");
 	graph_copy_page(0);
 	bgimage_snap();
 
@@ -254,6 +247,4 @@ bool16 near playchar_menu(void)
 		}
 		frame_delay(1);
 	}
-}
-
 }

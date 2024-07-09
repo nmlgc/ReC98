@@ -34,7 +34,7 @@ pixel_t orb_velocity_y_update(void)
 
 #define random_velocity_change(val, new_velocity) \
 	if(orb_force_frame < 17) { \
-		if((rand() % 50) == val) { \
+		if((irand() % 50) == val) { \
 			orb_velocity_x = new_velocity; \
 		} \
 	}

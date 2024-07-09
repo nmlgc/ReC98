@@ -21,5 +21,6 @@ gs_REIGEKI_REI = 0CCh
 gs_REIGEKI_GEKI = 0CDh
 gs_Hi = 0CEh
 gb_SP = 0CFh
+gs_BULLET = 0DAh
 gs_NOTES = 0D8h
 gs_ALL = 0F0h

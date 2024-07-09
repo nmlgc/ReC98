@@ -1,27 +1,22 @@
 #pragma option -zCPTN_GRP_GRZ
 
-#include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "platform/x86real/pc98/page.hpp"
-#include "th01/hardware/egc.h"
-#include "th01/hardware/graph.h"
-#include "th01/hardware/planar.h"
 #include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
+#include "th01/hardware/graph.h"
+#include "th01/hardware/palette.h"
+#include "th01/hardware/planar.h"
 #include "th01/formats/pf.hpp"
+#include "platform/x86real/pc98/page.hpp"
 
 // On-disk .PTN slot file header
 // -----------------------------
 #define PTN_MAGIC "HPTN"
 
-typedef struct {
+struct ptn_header_t {
 	char magic[sizeof(PTN_MAGIC) - 1];
 	int8_t unused_one;
 	int8_t image_count;
-} ptn_header_t;
+};
 // -----------------------------
 
 // State

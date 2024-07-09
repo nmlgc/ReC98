@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // Significant, internal digits. An additional 0 is appended to the on-screen
 // representation.
 static const int POINTNUM_DIGITS = 4;

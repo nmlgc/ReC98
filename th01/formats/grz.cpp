@@ -2,11 +2,8 @@
 
 #include <mem.h>
 #include <stddef.h>
-#include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/formats/grz.h"
 
@@ -82,7 +79,7 @@ void grx_put(unsigned int slot)
 		}
 	}
 	if(grx_col) {
-		grcg_off();
+		grcg_off_func();
 	}
 #undef put
 }

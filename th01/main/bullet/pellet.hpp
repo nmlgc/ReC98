@@ -1,3 +1,5 @@
+#include "th01/math/subpixel.hpp"
+
 /// Constants
 /// ---------
 static const int PELLET_COUNT = 100;

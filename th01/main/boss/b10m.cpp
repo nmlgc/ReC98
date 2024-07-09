@@ -1,33 +1,21 @@
 /// Makai Stage 10 Boss - YuugenMagan
 /// ---------------------------------
 
-#include <stdlib.h>
-#include "platform.h"
 #include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
-#include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/boss/defeat.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/line.hpp"
@@ -644,7 +632,7 @@ inline void missile_pairs_shift_angle_1_clock(
 	) { \
 		if(missile_subphase_variation_is(subphase, 0, MSP_PREPARE, 1)) { \
 			subphase = missile_subphase_variation( \
-				(rand() % variations_max), MSP_AIM_AND_FIRE_AROUND \
+				(irand() % variations_max), MSP_AIM_AND_FIRE_AROUND \
 			); \
 			target_left = (player_left - (MISSILE_W / 2)); \
 			angle_southwest = missile_angle(eye_southwest, target_left); \

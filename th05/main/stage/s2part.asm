@@ -1,5 +1,5 @@
-public STAGE2_INVALIDATE
-stage2_invalidate	proc near
+public @STAGE2_INVALIDATE$QV
+@stage2_invalidate$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -26,4 +26,4 @@ stage2_invalidate	proc near
 	pop	si
 	pop	bp
 	retn
-stage2_invalidate	endp
+@stage2_invalidate$qv endp

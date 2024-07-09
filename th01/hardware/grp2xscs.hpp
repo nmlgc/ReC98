@@ -1,3 +1,5 @@
+#include "th01/hardware/grp_text.hpp"
+
 // Performs a very slow, unoptimized, 2× nearest-neighbor scale of the
 // rectangle from
 //     (⌊left_1/8⌋*8, top_1) - (⌊left_1/8⌋*8 + ⌊w_1/16⌋*16, top_1 + h_1)

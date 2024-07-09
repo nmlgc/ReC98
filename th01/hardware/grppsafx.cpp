@@ -15,6 +15,10 @@
 		codepoint = str[0] + 0x2900; \
 		str += 1; \
 	} else { \
+		/* \
+		 * TH03's win messages rely on control characters being filtered to \
+		 * halfwidth spaces here. \
+		 */ \
 		codepoint = 0x2B21; \
 		str += 1; \
 	} \

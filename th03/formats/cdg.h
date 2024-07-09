@@ -1,6 +1,11 @@
 /// Uncompressed, monochrome / 16-color / 16-color + alpha, 32w×h sprite format
 /// ---------------------------------------------------------------------------
 
+#ifndef TH03_FORMATS_CDG_H
+#define TH03_FORMATS_CDG_H
+
+#include "planar.h"
+
 // Number of planes per image.
 typedef enum {
 	#if (GAME >= 4)
@@ -56,6 +61,8 @@ struct CDG {
 
 extern CDG cdg_slots[CDG_SLOT_COUNT];
 
+extern "C" {
+
 // Loading and freeing
 // -------------------
 
@@ -110,4 +117,7 @@ void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot);
 	);
 #endif
 // --------
+
+}
+#endif /* TH03_FORMATS_CDG_H */
 /// ---------------------------------------------------------------------------

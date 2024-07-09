@@ -1,19 +1,9 @@
-#include <stddef.h>
 #include <dos.h>
-#include "platform.h"
-#include "x86real.h"
-#include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
-#include "platform/x86real/pc98/page.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th01/formats/ptn.hpp"
-#include "th01/hardware/egc.h"
+#include "th01/hardware/egc_impl.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
@@ -25,9 +15,7 @@
 #include "th01/shiftjis/bonus.hpp"
 #include "th01/sprites/bonusbox.hpp"
 #include "th01/sprites/bonusbox.csp"
-#include "th01/main/entity.hpp"
 #include "th01/main/extend.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/bonus.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -35,6 +23,7 @@
 #include "th01/main/player/shot.hpp"
 #include "th01/main/stage/palette.hpp"
 #include "th01/main/stage/stages.hpp"
+#include "platform/x86real/pc98/page.hpp"
 
 /// Coordinates
 /// -----------
@@ -295,7 +284,7 @@ void near stagebonus_box_open_animate(void)
 			frame_delay(1);
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 static const int8_t FULLWIDTH_NUMERAL_SPACE = 10;

@@ -9,9 +9,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
-#include "platform.h"
 #include "platform/x86real/spawn.hpp"
-#include "x86real.h"
 #include "th01/snd/mdrv2.h"
 
 #define MDRV2_FN "MDRV98.COM"

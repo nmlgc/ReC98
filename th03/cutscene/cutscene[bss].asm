@@ -29,9 +29,9 @@ endif
 	evendata
 
 public _cursor, _text_interval, _text_col, _text_fx
-public _script_number_param_default
+public _script_param_number_default
 _cursor                     	Point <?>
 _text_interval              	dw ?
 _text_col                   	db ?
 _text_fx                    	db ?
-_script_number_param_default	dw ?
+_script_param_number_default	dw ?

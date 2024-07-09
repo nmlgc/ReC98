@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include "platform.h"
 #include "shiftjis.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/formats/scoredat.hpp"

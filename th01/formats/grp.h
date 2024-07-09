@@ -16,6 +16,8 @@
 ///
 /// More info on the original format: https://mooncore.eu/bunny/txt/pi-pic.htm
 
+#include "pc98.h"
+
 // Flags
 // -----
 
