@@ -1,4 +1,5 @@
 	.386
+	.model use16 large SHARED
 	locals
 
 include pc98.inc
@@ -7,12 +8,7 @@ include th03/formats/cdg.inc
 
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
-
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
+	.code SHARED
 
 public CDG_PUT_8
 cdg_put_8 proc far
@@ -132,6 +128,5 @@ endif
 	retf	6
 cdg_put_8 endp
 	even
-SHARED_	ends
 
 	end

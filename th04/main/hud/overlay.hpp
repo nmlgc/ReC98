@@ -1,5 +1,10 @@
 /// TRAM text overlaid on top of the playfield
-/// -------------------------------------------
+/// ------------------------------------------
+
+#pragma codeseg HUD_OVRL_TEXT main_01
+
+#include "th04/gaiji/gaiji.h"
+#include "th02/main/hud/overlay.hpp"
 
 extern nearfunc_t_near overlay1; // Rendered first
 extern nearfunc_t_near overlay2; // Rendered second
@@ -14,24 +19,26 @@ void near overlay_black(void);
 // Stage transitions
 // -----------------
 
-#ifdef OVERLAY_FADE_CELS
-	static const int OVERLAY_FADE_INTERVAL = 8;
-	static const int OVERLAY_FADE_DURATION = (
-		(OVERLAY_FADE_CELS + 1) * OVERLAY_FADE_INTERVAL
-	);
-#endif
+static const int OVERLAY_FADE_INTERVAL = 8;
+static const int OVERLAY_FADE_DURATION = (
+	(OVERLAY_FADE_CELS + 1) * OVERLAY_FADE_INTERVAL
+);
 
-#include "decomp.hpp"
+// Needs to be here to get the effect of `#pragma codeseg`.
+void pascal near overlay_stage_enter_update_and_render(void);
+void pascal near overlay_stage_leave_update_and_render(void);
 
 // Shows the fade-in effect, followed by either the stage or BGM title or the
 // blinking DEMO PLAY text.
-#define overlay_stage_enter() \
-	set_nearfunc_ptr_to_farfunc(overlay1, overlay_stage_enter_update_and_render)
+inline void overlay_stage_enter(void) {
+	overlay1 = overlay_stage_enter_update_and_render;
+}
 
 // Shows the fade-out effect. Must be called after a corresponding
 // overlay_stage_enter() transition!
-#define overlay_stage_leave() \
-	set_nearfunc_ptr_to_farfunc(overlay1, overlay_stage_leave_update_and_render)
+inline void overlay_stage_leave(void) {
+	overlay1 = overlay_stage_leave_update_and_render;
+}
 // -----------------
 
 // Popup messages for common gameplay events, shown at the top of the playfield
@@ -52,9 +59,12 @@ enum popup_id_t {
 extern popup_id_t overlay_popup_id_new;
 extern unsigned long overlay_popup_bonus;
 
-#define overlay_popup_show(popup_new)  {\
-	overlay_popup_id_new = popup_new; \
-	set_nearfunc_ptr_to_farfunc(overlay2, overlay_popup_update_and_render); \
+// Needs to be here to get the effect of `#pragma codeseg`.
+void pascal near overlay_popup_update_and_render(void);
+
+inline void overlay_popup_show(popup_id_t popup_new) {
+	overlay_popup_id_new = popup_new;
+	overlay2 = overlay_popup_update_and_render;
 }
 // ----------------------------------------------------------------------------
 
@@ -67,3 +77,5 @@ void near overlay_titles_invalidate(void);
 void pascal near overlay_titles_update_and_render(void);
 void pascal near overlay_boss_bgm_update_and_render(void);
 // --------------------
+
+#pragma codeseg

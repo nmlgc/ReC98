@@ -1,5 +1,8 @@
+#include "th04/score.h"
+#include "th04/common.h"
+
 #define RES_ID "KSOConfig"
-typedef struct {
+struct resident_t {
 	char id[sizeof(RES_ID)];
 	bool zunsoft_shown;
 	int8_t unused_1;
@@ -45,6 +48,6 @@ typedef struct {
 
 	score_lebcd_t stage_score[MAIN_STAGE_COUNT];
 	int32_t unused_3;
-} resident_t;
+};
 
 extern resident_t far *resident;

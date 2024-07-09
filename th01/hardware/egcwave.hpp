@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // Applies a wave function with the given [len], [amp], and [phase] parameters
 // to the starting X coordinate of each row inside a rectangle from
 // 	(⌊left/16⌋*16, top)

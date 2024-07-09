@@ -13,6 +13,7 @@
 #define last_for_quarters(base, quarters) \
 	((base + ((quarters + 3) / 4)) - 1)
 
+static const int ORB_CELS = 4;
 static const int CARDCOMBO_DIGITS = 2;
 static const int PORTAL_ANIM_CELS = 2;
 static const int TIMER_DIGITS = 4;
@@ -23,8 +24,9 @@ static const int DASH_CELS = 2;
 #define HP_POINT_W 8
 #define HP_H 15
 
-// ZUN bug: The actual limit is half of this number, due to another ZUN bug in
-// hud_hp_render().
+// ZUN bug: The actual limit is half of this number, due to another bug in
+// hud_hp_render(). (Not a landmine because this number controls when the
+// observable heap corruption in debug mode occurs.)
 static const int HP_MAX = 96;
 
 typedef enum {
@@ -33,7 +35,7 @@ typedef enum {
 
 	// .PTN slots that can be freely used by bosses. Randomly assigned to the
 	// backgrounds behind animated boss entities, as well as the missile
-	// sprites from boss3_m.ptn and Kikuri's wave sprites from tamayen.ptn.
+	// sprites from boss3_m.ptn and Kikuri's ripple sprites from tamayen.ptn.
 	PTN_SLOT_BOSS_1 = 2,
 	PTN_SLOT_BOSS_2 = 3,
 
@@ -51,10 +53,11 @@ typedef enum {
 	PTN_SHOT,
 	PTN_BLAST, // ???
 	PTN_ORB,
+	PTN_ORB_last = (PTN_ORB + ORB_CELS - 1),
 
 	// stg.ptn exclusives
 	// ------------------
-	PTN_CARD_UNUSED = 7,
+	PTN_CARD_UNUSED,
 	PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE,
 	PTN_CARD_2HP, PTN_CARD_2HP_HALF, PTN_CARD_2HP_EDGE,
 	PTN_CARD_1HP, PTN_CARD_1HP_HALF, PTN_CARD_1HP_EDGE,
@@ -124,6 +127,11 @@ typedef enum {
 	PTN_BG_TIMER,
 	PTN_BG_TIMER_last = last_for_quarters(PTN_BG_TIMER, (TIMER_DIGITS / 2)),
 
+	// Copying the declaration from `ptn.hpp`… Thankfully, even Turbo C++ 4.0J
+	// warns on a mismatch.
+	#define PTN_W 32
+	#define PTN_H 32
+
 	PTN_BG_HP,
 	PTN_BG_HP_last = (PTN_BG_HP + (
 		(HP_MAX / ((PTN_W * PTN_H) / (HP_POINT_W * HP_H)))
@@ -131,4 +139,12 @@ typedef enum {
 
 	PTN_BG_last = PTN_BG_HP_last,
 	// -------------------------
+
+	// Numerals on the TOTLE screen
+	// -----------------------------
+	PTN_TOTLE_NUMERAL_32 = PTN_ID(PTN_SLOT_NUMB, 0),
+	PTN_TOTLE_NUMERAL_32_last = (PTN_TOTLE_NUMERAL_32 + 9),
+	PTN_TOTLE_NUMERAL_16,
+	PTN_TOTLE_NUMERAL_16_last = last_for_quarters(PTN_TOTLE_NUMERAL_16, 10),
+	// -----------------------------
 } main_ptn_id_t;

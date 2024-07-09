@@ -1,13 +1,9 @@
-#pragma option -zCSHARED_ -k-
+#pragma option -zCSHARED -k-
 
 #include <mem.h>
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
-#include "master.hpp"
-extern "C" {
+#include "libs/master.lib/master.hpp"
+#include "platform/x86real/flags.hpp"
 #include "th04/hardware/bgimage.hpp"
 
 inline void memcpy_movsd(
@@ -32,11 +28,11 @@ inline void memcpy_movsd(
 
 void bgimage_snap(void)
 {
-	if(bgimage.B == NULL) {
-		bgimage.B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.R = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.G = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.E = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+	if(bgimage.B == nullptr) {
+		bgimage.B = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.R = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.G = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.E = HMem<dots8_t>::alloc(PLANE_SIZE);
 	}
 
 	_DL = PLANE_COUNT;
@@ -68,13 +64,11 @@ void bgimage_put(void)
 
 void bgimage_free(void)
 {
-	if(bgimage.B != NULL) {
+	if(bgimage.B != nullptr) {
 		HMem<dots8_t>::free(bgimage.B);
 		HMem<dots8_t>::free(bgimage.R);
 		HMem<dots8_t>::free(bgimage.G);
 		HMem<dots8_t>::free(bgimage.E);
-		bgimage.B = NULL;
+		bgimage.B = nullptr;
 	}
-}
-
 }

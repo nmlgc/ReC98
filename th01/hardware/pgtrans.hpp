@@ -1,6 +1,8 @@
 // Animated transitions between VRAM pages 0 and 1
 // -----------------------------------------------
 
+#include "pc98.h"
+
 // Transitions VRAM page 0 to the contents of VRAM page 1, using 8×8 squares
 // that diagonally move from the top-left and bottom-right corners of VRAM,
 // which combine the pixels of both pages. Spends [step_ms] milliseconds on

@@ -2,43 +2,16 @@
 
 #include <mem.h>
 #include <stddef.h>
-#include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-extern "C" {
+#include "libs/master.lib/master.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/formats/grz.h"
 
-extern const char HGRZ_MAGIC[4];
-extern const char HGRX_MAGIC[4];
-
-extern char planar_stream_id;
-extern char grx_col;
+static int8_t planar_stream_id = 0;
+static svc_t grx_col = 0;
 extern uint8_t* rle_streams[GRX_COUNT];
-// Actually a Planar<dots8_t*>, but used like a dots8_t* everywhere.
 extern dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
-extern unsigned char planar_stream_count[GRX_COUNT];
-
-struct grz_header_t {
-	char magic[sizeof(HGRZ_MAGIC)];
-	uint8_t image_count;
-	int8_t padding[3];
-	int32_t offsets[GRZ_IMAGE_COUNT];
-	int32_t total_size; // including this header
-	int8_t unknown[20];
-};
-
-struct grx_header_t {
-	char magic[sizeof(HGRX_MAGIC)];
-	uint8_t planar_stream_count;
-	int8_t unused_1[3];
-	uint16_t rle_stream_size;
-	uint16_t planar_stream_size;
-	int8_t unused_2[4];
-	Palette4 palette;
-};
+extern uint8_t planar_stream_count[GRX_COUNT];
 
 void grx_put_stream(unsigned int slot, int planar_stream)
 {
@@ -49,7 +22,7 @@ void grx_put_stream(unsigned int slot, int planar_stream)
 	}
 }
 
-void grx_put_col(unsigned int slot, uint4_t col)
+void grx_put_col(unsigned int slot, vc_t col)
 {
 	grx_col = (col + 1);
 	grx_put(slot);
@@ -104,7 +77,7 @@ void grx_put(unsigned int slot)
 		}
 	}
 	if(grx_col) {
-		grcg_off();
+		grcg_off_func();
 	}
 #undef put
 }
@@ -119,7 +92,7 @@ void grx_put(unsigned int slot)
 
 #define grx_header_read(grx, slot) \
 	file_read(&grx, sizeof(grx)); \
-	fail_if(memcmp(grx.magic, HGRX_MAGIC, sizeof(HGRX_MAGIC))); \
+	fail_if(memcmp(grx.magic, HGRX_MAGIC, (sizeof(HGRX_MAGIC) - 1))); \
 	fail_if(grx.planar_stream_count < 1); \
 	planar_stream_count[slot] = grx.planar_stream_count; \
 
@@ -127,7 +100,7 @@ void grx_put(unsigned int slot)
 	if(rle_streams[slot]) { \
 		grx_free(slot); \
 	} \
-	fail_if((rle_streams[slot] = new uint8_t[size]) == NULL);
+	fail_if((rle_streams[slot] = new uint8_t[size]) == nullptr);
 
 #define rle_stream_read(slot, size) \
 	file_read(rle_streams[slot], size);
@@ -137,7 +110,7 @@ void grx_put(unsigned int slot)
 		if(planar_streams[slot][i]) { \
 			grx_free(slot); \
 		} \
-		fail_if((planar_streams[slot][i] = new uint8_t[size]) == NULL); \
+		fail_if((planar_streams[slot][i] = new uint8_t[size]) == nullptr); \
 	}
 
 #define planar_streams_read(slot, stream_count, size) \
@@ -198,12 +171,12 @@ void grx_free(unsigned int slot)
 {
 	if(rle_streams[slot]) {
 		delete[] rle_streams[slot];
-		rle_streams[slot] = NULL;
+		rle_streams[slot] = nullptr;
 	}
 	for(int i = 0; i < PLANAR_STREAM_PER_GRX_COUNT; i++) {
 		if(planar_streams[slot][i]) {
 			delete[] planar_streams[slot][i];
-			planar_streams[slot][i] = NULL;
+			planar_streams[slot][i] = nullptr;
 		}
 	}
 }
@@ -220,7 +193,7 @@ int grz_load_single(unsigned int slot, const char *fn, int n)
 	headers_t* h = new headers_t[1];
 
 	file_read(&h->grz, sizeof(h->grz));
-	fail_if(memcmp(h->grz.magic, HGRZ_MAGIC, sizeof(HGRZ_MAGIC)));
+	fail_if(memcmp(h->grz.magic, HGRZ_MAGIC, (sizeof(HGRZ_MAGIC) - 1)));
 
 	uint8_t image_count = h->grz.image_count;
 	if(image_count > n) {
@@ -244,5 +217,3 @@ int grz_load_single(unsigned int slot, const char *fn, int n)
 	return 0;
 }
 /// -------------------
-
-}

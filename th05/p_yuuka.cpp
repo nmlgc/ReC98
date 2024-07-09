@@ -5,7 +5,7 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-#include "th05/i_shot.hpp"
+#include "th05/main/player/shot.hpp"
 #define cycle _AL
 
 extern "C" {
@@ -34,7 +34,7 @@ extern "C" {
 void pascal near shot_yuuka_l2(void)
 {
 	shot_func_init(shot, sai, cycle, 1, SC_3X, SC_1X, i += 2);
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i == 1) {
 			sai.set_random_angle(-0x48, -0x38);
 			shot->damage = 9;
@@ -55,7 +55,7 @@ void pascal near shot_yuuka_l3(void)
 	shot_func_init(shot, sai, cycle, 2, SC_3X, SC_2X, add_secondary(2));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 2) {
 			if(sai.i == 2) { shot->pos.cur.x -= 8.0f; }
 			else/*i == 1*/ { shot->pos.cur.x += 8.0f; }
@@ -85,7 +85,7 @@ void pascal near shot_yuuka_l4(void)
 	shot_func_init(shot, sai, cycle, 3, SC_3X, SC_2X, add_secondary(2));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 3) {
 			if(sai.i == 3) {
 				sai.angle = -0x4C;
@@ -118,7 +118,7 @@ void pascal near shot_yuuka_l5(void)
 	shot_func_init(shot, sai, cycle, 3, SC_3X, SC_2X, add_secondary(4));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 3) {
 			shot->damage = 7;
 			if(sai.i == 3) {
@@ -150,7 +150,7 @@ void pascal near shot_yuuka_l6(void)
 	shot_func_init(shot, sai, cycle, 4, SC_3X, SC_2X, add_secondary(4));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 4) {
 			YUUKA_INNER_L4;
 		} else {
@@ -178,7 +178,7 @@ void pascal near shot_yuuka_l7(void)
 	shot_func_init(shot, sai, cycle, 4, SC_3X, SC_2X, add_secondary(6));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 4) {
 			YUUKA_INNER_L4;
 		} else {
@@ -208,7 +208,7 @@ void pascal near shot_yuuka_l8(void)
 	shot_func_init(shot, sai, cycle, 5, SC_3X, SC_2X, add_secondary(6));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 5) {
 			YUUKA_INNER_L5;
 		} else {
@@ -238,7 +238,7 @@ void pascal near shot_yuuka_l9(void)
 	shot_func_init(shot, sai, cycle, 5, SC_3X, SC_2X, add_secondary(8));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 5) {
 			YUUKA_INNER_L5;
 		} else {

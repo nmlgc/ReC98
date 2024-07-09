@@ -1,18 +1,15 @@
-#pragma option -zCSHARED_ -3
+#pragma option -zCSHARED
 
 #include <errno.h>
-#include "platform.h"
-#include "x86real.h"
-#include "decomp.hpp"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
-extern "C" {
+#include "libs/master.lib/master.hpp"
+#include "platform/x86real/flags.hpp"
+#include "th02/snd/impl.hpp"
 #include "th05/snd/snd.h"
 
-extern char snd_load_fn[SND_FN_LEN];
+extern char snd_load_fn[PF_FN_LEN];
 extern const char SND_LOAD_EXT[4][4];
 
-void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
+void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 {
 	#define _DI	reinterpret_cast<char near *>(_DI)
 	#define func_local	_BP
@@ -74,7 +71,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	}
 	ext = *reinterpret_cast<const int32_t *>(&SND_LOAD_EXT[0][_BX]);
 
-	// ZUN bug: Infinite loop if neither the file for the current
+	// ZUN landmine: Infinite loop if neither the file for the current
 	// [snd_bgm_mode] nor "[fn].m" exist.
 	while(1) {
 		*reinterpret_cast<uint32_t near *>(_DI) = ext;
@@ -116,6 +113,4 @@ ret:
 	#undef func_local
 	#undef ext
 	#undef _DI
-}
-
 }

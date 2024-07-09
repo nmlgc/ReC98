@@ -1,5 +1,5 @@
-public STAGE2_INVALIDATE
-stage2_invalidate	proc near
+public @STAGE2_INVALIDATE$QV
+@stage2_invalidate$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -11,7 +11,7 @@ stage2_invalidate	proc near
 	jmp	short @@more?
 
 @@loop:
-	cmp	[si+s2particle_t.flag], 0
+	cmp	[si+s2particle_t.S2P_alive], 0
 	jz	short @@next
 	call	tiles_invalidate_around pascal, [si+s2particle_t.pos.prev.y], [si+s2particle_t.pos.prev.x]
 
@@ -26,4 +26,4 @@ stage2_invalidate	proc near
 	pop	si
 	pop	bp
 	retn
-stage2_invalidate	endp
+@stage2_invalidate$qv endp

@@ -1,23 +1,16 @@
-extern "C" {
+#include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/hardware/frmdelay.h"
-}
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/scrollup.hpp"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-#include "th01/main/vars.hpp"
-#include "th01/main/player/bomb.hpp"
-}
 #include "th01/math/dir.hpp"
-#include "th01/formats/pf.hpp"
-#include "th01/resident.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/player/anim.hpp"
+#include "th01/main/player/bomb.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/timer.hpp"
 
 /// Durations
@@ -135,7 +128,7 @@ union submode_t {
 	}
 };
 
-struct mode_frame_t {
+struct ModeFrame {
 	int8_t v;
 
 	// Should make sure to actually calculate a result within DASH_CELS...
@@ -154,7 +147,7 @@ struct mode_frame_t {
 
 	player_48x48_cel_t to_swing_cel(int8_t frame_offset) const {
 		#if (SWING_FRAMES >= (SWING_CELS * SWING_FRAMES_PER_CEL))
-			#error Original code assumes a shot combo to take no more than 23 frames
+			#error Original code assumes the swing attack to take no more than 23 frames
 		#endif
 		return static_cast<player_48x48_cel_t>(C_SWING + (
 			((v + frame_offset) >= SWING_FRAMES)
@@ -259,9 +252,6 @@ inline screen_y_t player_48x48_top(void) {
 // Rendering
 // ---------
 
-#define player_put(cel) \
-	ptn_put_8(player_left, player_top, cel)
-
 inline void player_unput(const int8_t& cel) {
 	ptn_unput_8(player_left, player_top, cel);
 }
@@ -318,7 +308,7 @@ inline void player_48x48_put(const player_48x48_cel_t& cel) {
 inline void slide_stop(
 	int8_t& mode,
 	submode_t& submode,
-	mode_frame_t& mode_frame,
+	ModeFrame& mode_frame,
 	player_48x32_cel_t cel_base
 ) {
 	mode = M_REGULAR;
@@ -357,16 +347,7 @@ inline void special_start_shot(
 
 void player_unput_update_render(bool16 do_not_reset_player_state)
 {
-	#define dash_cycle	player_dash_cycle
-	#define mode_frame	player_mode_frame
-	#define mode	player_mode
-	#define dash_direction	player_dash_direction
-	#define bomb_state	player_bomb_state
-	#define bombing	player_bombing
-	#define combo_enabled	player_combo_enabled
 	#define swing_deflection_frames	player_swing_deflection_frames
-	#define submode	player_submode
-	#define ptn_id_prev	player_ptn_id_prev
 
 	enum bomb_state_t {
 		BS_NONE = 0,
@@ -376,7 +357,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		_bomb_state_t_FORCE_INT16 = 0x7FFF
 	};
 
-	extern struct {
+	static struct {
 		int8_t v;
 
 		main_ptn_id_t to_cel(main_ptn_id_t base) const {
@@ -390,19 +371,19 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				((v % DASH_FRAMES) < DASH_FRAMES_PER_CEL) ? base : (base + 1)
 			);
 		}
-	} dash_cycle;
+	} dash_cycle = { 0 };
 
 	// Garbage in M_REGULAR, valid in all other [mode]s.
-	extern mode_frame_t mode_frame;
+	static ModeFrame mode_frame = { 0 };
 
-	extern int8_t mode; // mode_t
-	extern int8_t dash_direction; // x_direction_t
-	extern int8_t bomb_state; // bomb_state_t
-	extern bool bombing; // redundant, already covered by bomb_state_t
-	extern char combo_enabled; // bool
+	static int8_t mode = M_REGULAR; // mode_t
+	static x_direction_t dash_direction = X_LEFT;
+	static int8_t bomb_state = BS_NONE; // ACTUAL TYPE: bomb_state_t
+	static bool bombing = false; // ZUN bloat: Already covered by bomb_state_t
+	static int8_t combo_enabled = false; // ACTUAL TYPE: bool
 	extern int8_t swing_deflection_frames;
-	extern submode_t submode;
-	extern int8_t ptn_id_prev; // main_ptn_id_t
+	static submode_t submode;
+	static int8_t ptn_id_prev; // ACTUAL TYPE: main_ptn_id_t
 
 	int prev;
 	player_48x48_cel_t cel_prev;
@@ -444,14 +425,14 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 	dash_cycle.v++;
 	dash_cycle.v &= (DASH_FRAMES - 1);
-	if(((bombs != 0) || bombing) && (bomb_state >= BS_START)) {
+	if(((rem_bombs != 0) || bombing) && (bomb_state >= BS_START)) {
 		if(bomb_state == BS_START) {
 			bomb_frames = 0;
 			bomb_state = BS_ACTIVE;
 			player_deflecting = true;
 			bombing = true;
-			bombs--;
-			hud_bombs_put(bombs + 1);
+			rem_bombs--;
+			hud_bombs_put(rem_bombs + 1);
 		}
 		orb_player_hittest(1);
 		bomb_done = bomb_update_and_render(bomb_frames);
@@ -472,7 +453,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		}
 	} else if(
 		// Yes, not `< M_SPECIAL_FIRST`.
-		(input_bomb == true) && (mode != M_SPECIAL_FIRST) && (bombs != 0)
+		(input_bomb == true) && (mode != M_SPECIAL_FIRST) && (rem_bombs != 0)
 	) {
 		bomb_state = BS_START;
 		input_bomb = false;
@@ -662,7 +643,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				}
 				input_strike = false;
 				bomb_frames = 0;
-				combo_enabled = false; // redundant, see below
+				combo_enabled = false; // ZUN bloat: Redundant, see below
 				player_invincible_against_orb = false;
 			}
 		} else if(submode.direction == SD_LEFT) {
@@ -872,9 +853,10 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			}
 			player_invincible_against_orb = false;
 			mode = M_REGULAR;
-			// ZUN bug: [submode.direction] should really have been initialized
-			// here as well. Since it's not, the next call to this function
-			// will interpret the current special attack as a direction.
+			// ZUN bug: [submode.direction] should really have been set here as
+			// well. Since it's not, the next call to this function will
+			// interpret the current special attack as a direction, adding an
+			// additional invisibility frame.
 		} else {
 			// Special attack still going on. Check for orb collision
 			switch(submode.special) {
@@ -924,7 +906,7 @@ void orb_player_hittest(int repel_friction)
 			!player_invincible_against_orb &&
 			orb_hits_player((PLAYER_W - (ORB_W / 4)), (PLAYER_H - (ORB_H / 2)))
 		) {
-			done = true;
+			player_is_hit = true;
 		}
 	} else if(repel_friction < OR_3_X_UNCHANGED) {
 		if(!player_in_repel_range()) {
@@ -934,11 +916,11 @@ void orb_player_hittest(int repel_friction)
 			orb_velocity_x = OVX_4_LEFT;
 		} else if((player_left - orb_cur_left) == 0) {
 			orb_velocity_x = OVX_0;
-			if((rand() % 8) == 0) {
+			if((irand() % 8) == 0) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
-			// ZUN bug? Shouldn't this be OVX_4_RIGHT, maybe?
-			if((rand() % 8) == 4) {
+			// ZUN quirk: Shouldn't this be OVX_4_RIGHT, maybe?
+			if((irand() % 8) == 4) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
 		} else {
@@ -955,8 +937,7 @@ void orb_player_hittest(int repel_friction)
 		} else if(repel_friction == OR_3_X_8_LEFT) {
 			orb_velocity_x = OVX_8_LEFT;
 		}
-		extern double ORB_FORCE_REPEL_CONSTANT;
-		orb_force_new(ORB_FORCE_REPEL_CONSTANT, OF_IMMEDIATE);
+		orb_force_new(-10.0, OF_IMMEDIATE);
 	}
 }
 
@@ -973,16 +954,14 @@ void player_miss_animate_and_update(void)
 
 	// Miss sprite and shake
 	// ---------------------
+
 	// ZUN bug: This should have been the 48×48 unblitting call that's done
 	// after the shake. It's easily possible to get hit during an 48×48
 	// animation, which will end up leaving the extra pixels on screen during
 	// the next 16 frames.
 	ptn_sloppy_unput_16(player_left, player_top);
 
-	ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
-	player_put(PTN_MIKO_MISS + (
-		(rand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0
-	));
+	player_miss_put();
 
 	for(frame = 0; frame < 16; frame++) {
 		z_vsync_wait_and_scrollup(RES_Y - ((frame % 2) * 8));
@@ -997,7 +976,7 @@ void player_miss_animate_and_update(void)
 
 	Shots.unput_and_reset();
 	Pellets.decay();
-	player_unput_update_render(false);
+	player_reset();
 
 	// Effect
 	// ------
@@ -1039,7 +1018,7 @@ void player_miss_animate_and_update(void)
 		}
 
 		// We might have accidentally unblitted it earlier, after all.
-		ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+		orb_put_default();
 
 		miss_effect_put(player_left, frame);
 		miss_effect_put(effect_left, frame);
@@ -1050,15 +1029,21 @@ void player_miss_animate_and_update(void)
 	ptn_sloppy_unput_16(effect_left, player_top);
 	// ------
 
-	hud_lives_put(lives + 1);
+	hud_lives_put(rem_lives + 1);
 
-	prev_bombs = bombs;
-	bombs = (credit_bombs + bombs);
-	if(bombs > BOMBS_MAX) {
-		bombs = BOMBS_MAX;
+	prev_bombs = rem_bombs;
+	rem_bombs = (bombs_extra_per_life_lost + rem_bombs);
+	if(rem_bombs > BOMBS_MAX) {
+		rem_bombs = BOMBS_MAX;
 	} else {
 		hud_bombs_put(prev_bombs);
 	}
 	timer_extend_and_put();
 	pellet_speed_lower(0.0f, -0.05f);
 }
+
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+Palette4 boss_post_defeat_palette;
+// -------------------------------------------------

@@ -1,3 +1,5 @@
+#include "th01/math/subpixel.hpp"
+
 typedef union {
 	unsigned char spread_angle;
 	SubpixelLength8 stack_speed;

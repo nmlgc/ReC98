@@ -4,7 +4,7 @@ void grcg_put_8x8_mono(
 	vram_offset_t vram_offset_topleft,
 	char first_bit,
 	const dots8_t sprite[8],
-	int col
+	vc2 col
 )
 {
 	grcg_setcolor_rmw(col);
@@ -18,5 +18,5 @@ void grcg_put_8x8_mono(
 			break;
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 }

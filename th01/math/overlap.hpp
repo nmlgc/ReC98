@@ -1,4 +1,11 @@
-// Generic overlap testing macros for collision detection.
+// Generic overlap testing macros for collision detection
+// ------------------------------------------------------
+
+#define overlap_low_center_lt_gt(low_edge_1, extent_1, center_2, extent_2) ( \
+	(low_edge_1) > ((center_2) - (extent_2 / 2)) && \
+	(low_edge_1) < ((center_2) + (extent_2 / 2) - (extent_1)) \
+)
+
 #define overlap_xywh_xywh_lt_gt(x1, y1, w1, h1, x2, y2, w2, h2) ( \
 	(((x1) - (x2)) < (w2)) && \
 	(((x1) - (x2)) > -(w1)) && \
@@ -53,6 +60,10 @@
 
 #define overlap_xy_xywh_le_ge_2(x1, y1, x2, y2, w2, h2) \
 	overlap_xy_lrbt_le_ge(x1, y1, x2, y2, (x2 + w2), (y2 + h2))
+
+#define overlap_1d_fast(p1, p2, extent) ( \
+	((unsigned int)(p1 + (extent / 2) - p2) < extent) \
+)
 
 // Ugly, and should not exist, but generates one fewer instruction when used
 // with _AX and _DX register pseudovariables...

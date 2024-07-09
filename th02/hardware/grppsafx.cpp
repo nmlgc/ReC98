@@ -1,24 +1,18 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include <mbctype.h>
 #include <mbstring.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
-extern "C" {
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/grppsafx.h"
 
 #include "th01/hardware/grppsafx.cpp"
 
-#undef grcg_off
-
 void DEFCONV graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int16_t col_and_fx, const unsigned char *str
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 )
 {
-	uint16_t codepoint;
+	jis_t codepoint;
 	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
 	int fullwidth;
@@ -49,6 +43,4 @@ void DEFCONV graph_putsa_fx(
 
 	outportb(0x68, 0xA); // CG ROM code access
 	grcg_off();
-}
-
 }

@@ -6,10 +6,7 @@
 #include "th04/sprites/main_cdg.h"
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/boss/backdrop.hpp"
-extern "C" {
 #include "th05/main/stage/stages.hpp"
-}
-#include "th05/main/boss/bosses.hpp"
 #include "th05/sprites/main_pat.h"
 
 void pascal near stage1_setup(void)
@@ -28,11 +25,11 @@ void pascal near stage1_setup(void)
 	boss_bg_render_func = sara_bg_render;
 	boss_update_func = sara_update;
 	boss_fg_render_func = sara_fg_render;
-	boss.sprite = 180;
+	boss.sprite = PAT_SARA_STAY;
 	boss_hitbox_radius.set(24, 24);
-	boss_sprite_left = 186;
-	boss_sprite_right = 184;
-	boss_sprite_stay = 180;
+	boss_sprite_left = PAT_SARA_LEFT;
+	boss_sprite_right = PAT_SARA_RIGHT;
+	boss_sprite_stay = PAT_SARA_STAY;
 	boss_backdrop_colorfill = sara_backdrop_colorfill;
 
 	super_entry_bfnt("st00.bmt");
@@ -173,10 +170,6 @@ void pascal near stage5_setup(void)
 
 void pascal near stage6_setup(void)
 {
-	// TODO: Can't be declared publicly due to the
-	// set_nearfunc_ptr_to_farfunc() workarounds in shinki_update().
-	BOSS_DEC(shinki);
-
 	midboss_update_func = nullfunc_far;
 	midboss_render_func = nullfunc_near;
 	midboss.frames_until = 30000;

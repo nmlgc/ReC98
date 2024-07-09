@@ -150,14 +150,6 @@ EGC_SHIFT_VRAM 	equ 00000h	; cpu write, vram read
 EGC_RL_MEMWRITE	equ 00200h	; RL = pattern Register Load
 EGC_RL_MEMREAD 	equ 00100h	; ^at mem write, <-at mem read
 EGC_RL_NONE    	equ 00000h	; no touch
-
-egc_selectpat	macro
-	outw2	EGC_READPLANEREG, 000FFh
-endm
-
-egc_setrop	macro mode_rop:rest
-	outw2	EGC_MODE_ROP_REG, mode_rop
-endm
 ; ---
 
 ; .PI

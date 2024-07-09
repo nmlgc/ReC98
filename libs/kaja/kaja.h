@@ -5,6 +5,8 @@
  * Only includes functions that are actually used in the games.
  */
 
+#include "platform.h"
+
 typedef enum {
 	KAJA_SONG_PLAY = 0x00,
 	KAJA_SONG_STOP = 0x01,

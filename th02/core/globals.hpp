@@ -1,4 +1,4 @@
+#include "th02/score.h"
+
 extern char rank;
-extern char lives;
-extern char bombs;
-extern long score;
+extern score_t score;

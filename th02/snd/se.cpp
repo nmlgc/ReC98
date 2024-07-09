@@ -1,12 +1,8 @@
-#pragma option -k-
+#pragma option -zCSHARED -k-
 
-#include "platform.h"
-#include "x86real.h"
-#include "libs/kaja/kaja.h"
-#include "th02/snd/se_impl.hpp"
-extern "C" {
+#include "th02/snd/impl.hpp"
 #if (GAME >= 4)
-	#include "master.hpp"
+	#include "libs/master.lib/master.hpp"
 	#include "th04/snd/snd.h"
 
 	// MODDERS: Just replace with [snd_se_playing].
@@ -71,6 +67,4 @@ void snd_se_update(void)
 		snd_se_frame = 0;
 		snd_se_playing = SE_NONE;
 	}
-}
-
 }

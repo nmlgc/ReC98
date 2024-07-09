@@ -1,11 +1,9 @@
 #pragma option -WX -zCSHARED -k-
 
-#include "platform.h"
 #include "x86real.h"
-#include "decomp.hpp"
-#include "pc98kbd.h"
-#include "master.hpp"
-extern "C" {
+#include "libs/master.lib/master.hpp"
+#include "platform/x86real/flags.hpp"
+#include "platform/x86real/pc98/keyboard.hpp"
 #include "th03/hardware/input.h"
 
 void input_reset_sense_key_held(void)
@@ -143,5 +141,3 @@ void input_reset_sense_key_held(void)
 	} while(1);
 }
 #pragma codestring "\x90"
-
-}

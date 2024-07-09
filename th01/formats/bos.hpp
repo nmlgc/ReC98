@@ -1,5 +1,10 @@
 /// Uncompressed, 5-plane, 16-color + alpha, arbitrary-size sprite format
 /// ---------------------------------------------------------------------
+
+#include "th01/formats/sprfmt_h.hpp"
+#include "th01/formats/pf.hpp"
+#include "th01/hardware/graph.h"
+
 #define BOS_MAGIC "BOSS"
 
 // On-disk per-file header. Not the same as for .GRC!
@@ -21,7 +26,7 @@ inline void bos_header_load_palette(Palette4 &pal, bool load) {
 	if(load) {
 		arc_file_get_far(pal);
 	} else {
-		arc_file_seek(sizeof(spriteformat_header_t<bos_header_t>));
+		arc_file_seek(sizeof(SpriteFormatHeader<bos_header_t>));
 	}
 }
 

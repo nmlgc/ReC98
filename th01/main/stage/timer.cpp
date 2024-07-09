@@ -1,35 +1,29 @@
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/common.h"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-extern "C" {
+#include "th01/math/str_val.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"
 #include "th01/formats/ptn.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/snd/mdrv2.h"
-#include "th01/sprites/pellet.h"
-#include "th01/main/vars.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
-}
-#include "th01/core/str_val.hpp"
-#include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/timer.hpp"
 
-extern unsigned int frames_since_harryup;
+unsigned int stage_timer;
+static unsigned int frames_since_harryup;
+
+// Function ordering fails
+// -----------------------
 
 void harryup_animate(void);
 void pattern_harryup(void);
+// -----------------------
 
 /// Constants
 /// ---------
@@ -64,9 +58,20 @@ inline void unput(void) {
 
 void timer_init_for(int stage_id, int route)
 {
-	extern unsigned int STAGE_TIMES[
+	static unsigned int STAGE_TIMES[
 		STAGES_OUTSIDE_ROUTE + (STAGES_ON_ROUTE * ROUTE_COUNT)
-	];
+	] = {
+		1000, 1000, 1000, 1000, 2000,	// Shrine
+		// Makai
+		1200, 1200, 1200, 1200, 3000,	// (06 - 10)
+		1400, 1400, 1400, 1400, 4000,	// (11 - 15)
+		1600, 1600, 1600,  600, 6000,	// (16 - 20)
+		// Jigoku
+		1200, 1200, 1200, 1200, 2000,	// (06 - 10)
+		1400, 1400, 1400, 1400, 4000,	// (11 - 15)
+		1600, 1800, 1800, 1600, 8000,	// (16 - 20)
+	};
+
 	if(stage_id < STAGES_OUTSIDE_ROUTE) {
 		stage_timer = STAGE_TIMES[stage_id];
 	} else {
@@ -130,13 +135,13 @@ void timer_extend_and_put(void)
 // Largely copy-pasted from stage_num_animate()
 void harryup_animate(void)
 {
-	utram_kanji_amount_t x;
+	ushiftjis_kanji_amount_t x;
 	upixel_t glyph_y;
 	TRAMx16Row<dots_t(GLYPH_HALF_W)> row;
 	TRAMCursor tram_cursor;
 	unsigned int i;
 	REGS in;
-	StupidBytewiseWrapperAround<pc98_glyph_ank_8x16_t> glyphs[7];
+	StupidBytewiseWrapperAround<font_glyph_ank_8x16_t> glyphs[7];
 
 	mdrv2_se_play(17);
 
@@ -151,13 +156,13 @@ void harryup_animate(void)
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
 
-	glyph_y = offsetof(pc98_glyph_ank_8x16_t, dots);
-	while(glyph_y <= (sizeof(pc98_glyph_ank_8x16_t) - 1)) {
+	glyph_y = offsetof(font_glyph_ank_8x16_t, dots);
+	while(glyph_y <= (sizeof(font_glyph_ank_8x16_t) - 1)) {
 		for(i = 0; i < 5; i++) {
 			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
 		}
-		// 5 halfwidth glyphs scaled a factor of 16 just happen to exactly fit
-		// into one TRAM row, so we're already at the next one here.
+		// 5 halfwidth glyphs scaled by a factor of 16 just happen to exactly
+		// fit into one TRAM row, so we're already at the next one here.
 		glyph_y++;
 	}
 
@@ -166,8 +171,8 @@ void harryup_animate(void)
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
 
-	glyph_y = offsetof(pc98_glyph_ank_8x16_t, dots);
-	while(glyph_y <= (sizeof(pc98_glyph_ank_8x16_t) - 1)) {
+	glyph_y = offsetof(font_glyph_ank_8x16_t, dots);
+	while(glyph_y <= (sizeof(font_glyph_ank_8x16_t) - 1)) {
 		tram_x16_put_center_margin(tram_cursor, x, TX_BLACK);
 		for(i = 5; i < 7; i++) {
 			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
@@ -182,7 +187,7 @@ void harryup_animate(void)
 
 void pattern_harryup(void)
 {
-	extern unsigned char harryup_cycle;
+	static unsigned char harryup_cycle;
 
 	frames_since_harryup++;
 	harryup_cycle++;

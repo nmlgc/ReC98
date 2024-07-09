@@ -1,11 +1,6 @@
 #pragma option -zCGRAPH_EX_TEXT -2 -O- -Z-
 
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-extern "C" {
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/planar.h"
 #include "th01/hardware/grph1to0.hpp"
 
@@ -18,16 +13,16 @@ void graph_hline_unput_masked_8(
 	for(vram_byte_amount_t x = 0; x < vram_w; x++, p++) {
 		if(mask[x]) {
 			graph_accesspage_func(1);
-			px8.B = mask[x] & VRAM_PLANE_B[p];
-			px8.R = mask[x] & VRAM_PLANE_R[p];
-			px8.G = mask[x] & VRAM_PLANE_G[p];
-			px8.E = mask[x] & VRAM_PLANE_E[p];
+			px8.B = mask[x] & VRAM_CHUNK(B, p, 8);
+			px8.R = mask[x] & VRAM_CHUNK(R, p, 8);
+			px8.G = mask[x] & VRAM_CHUNK(G, p, 8);
+			px8.E = mask[x] & VRAM_CHUNK(E, p, 8);
 			graph_accesspage_func(0);
 			vram_erase(p, mask[x], 8);
-			VRAM_PLANE_B[p] |= px8.B;
-			VRAM_PLANE_R[p] |= px8.R;
-			VRAM_PLANE_G[p] |= px8.G;
-			VRAM_PLANE_E[p] |= px8.E;
+			VRAM_CHUNK(B, p, 8) |= px8.B;
+			VRAM_CHUNK(R, p, 8) |= px8.R;
+			VRAM_CHUNK(G, p, 8) |= px8.G;
+			VRAM_CHUNK(E, p, 8) |= px8.E;
 		}
 	}
 }

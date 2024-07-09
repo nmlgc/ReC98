@@ -1,3 +1,5 @@
+#include "planar.h"
+
 static const int SHAPE8X8_INVINCIBILITY_CELS = 4;
 
 typedef enum {
