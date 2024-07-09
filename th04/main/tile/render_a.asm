@@ -1,8 +1,8 @@
-public TILES_RENDER_ALL
-tiles_render_all	proc near
+public @TILES_RENDER_ALL$QV
+@tiles_render_all$qv proc near
 	push	si
 	push	di
-	call	egc_start_copy_inlined_noframe
+	call	@egc_start_copy_noframe$qv
 	mov	di, ((RES_Y - TILE_H) * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 	mov	bx, offset _tile_ring[TILES_MEMORY_X * (TILES_Y - 1) * 2]
 	mov	ax, GRAM_400
@@ -34,13 +34,12 @@ tiles_render_all	proc near
 	pop	di
 	pop	si
 	retn
-tiles_render_all	endp
+@tiles_render_all$qv endp
 
 
-; void pascal near egc_start_copy_inlined_noframe(void);
-public EGC_START_COPY_INLINED_NOFRAME
-egc_start_copy_inlined_noframe	proc near
+public @egc_start_copy_noframe$qv
+@egc_start_copy_noframe$qv proc near
 		EGC_START_COPY_INLINED
 		retn
-egc_start_copy_inlined_noframe	endp
+@egc_start_copy_noframe$qv endp
 		nop

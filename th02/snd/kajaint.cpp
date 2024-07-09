@@ -1,18 +1,14 @@
-#if (GAME == 5)
-	#pragma option -zCSHARED_ -k-
-#else
 #pragma option -zCSHARED
+#if (GAME == 5)
+	#pragma option -k-
 #endif
 
-#include "platform.h"
-#include "x86real.h"
-#include "libs/kaja/kaja.h"
-extern "C" {
 #if (GAME >= 4)
 	#include "th04/snd/snd.h"
 #else
 	#include "th02/snd/snd.h"
 #endif
+#include "th02/snd/impl.hpp"
 
 int16_t DEFCONV snd_kaja_interrupt(int16_t ax)
 {
@@ -37,5 +33,3 @@ int16_t DEFCONV snd_kaja_interrupt(int16_t ax)
 #if (GAME == 5)
 	#pragma codestring "\x90"
 #endif
-
-}

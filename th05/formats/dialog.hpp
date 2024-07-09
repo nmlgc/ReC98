@@ -1,10 +1,20 @@
 /// TH05 in-game dialog script format
 /// ---------------------------------
 
+#include "th05/playchar.h"
+#include "pc98.h"
+
 struct tx2_header_t {
 	// The dialog script for player character N is stored between
 	// `offset_for[N]` and `offset_for[N + 1]`.
 	uint16_t offset_for[PLAYCHAR_COUNT + 1];
+};
+
+// Parameters for the 0x06 sprite blitting command.
+struct tx2_op_06_params {
+	screen_x_t left;
+	screen_y_t top;
+	uint8_t patnum;
 };
 
 const uint8_t FACE_NONE = 0xFF;

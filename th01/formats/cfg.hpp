@@ -1,19 +1,22 @@
+#include "th01/resident.hpp"
+#include "th01/rank.h"
+
 #define CFG_FN "reiiden.cfg"
 #define CFG_ID "REIIDEN"
 
 struct cfg_options_t {
 	int8_t rank;
-	int8_t bgm_mode;
-	int8_t bombs;
-	int8_t lives_extra;	// Add 2 for the actual number of lives
+	bgm_mode_t bgm_mode;
+	int8_t credit_bombs;
+	int8_t credit_lives_extra;	// Add 2 for the actual number of lives
 };
 
-#define CFG_RANK_DEFAULT (RANK_NORMAL)
-#define CFG_BGM_MODE_DEFAULT (true)
-#define CFG_BOMBS_DEFAULT (1)
-#define CFG_LIVES_EXTRA_DEFAULT (2)
+static const rank_t CFG_RANK_DEFAULT = RANK_NORMAL;
+static const bgm_mode_t CFG_BGM_MODE_DEFAULT = BGM_MODE_MDRV2;
+static const int8_t CFG_CREDIT_BOMBS_DEFAULT = 1;
+static const int8_t CFG_CREDIT_LIVES_EXTRA_DEFAULT = 2;
 
-#define CFG_LIVES_EXTRA_MAX (4)
+static const int8_t CFG_CREDIT_LIVES_EXTRA_MAX = 5;
 
 struct cfg_t {
 	char id[sizeof(CFG_ID) - 1];

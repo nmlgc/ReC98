@@ -1,14 +1,9 @@
 #pragma option -zCGRAPH_EX_TEXT -2 -Z-
 
 #include <dos.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/sprites/ileave_m.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
-}
 #include "th01/hardware/pgtrans.hpp"
 
 // Combines the pixels from both VRAM pages in the 8×8 square starting at
@@ -16,31 +11,33 @@ extern "C" {
 // is blitted to VRAM page 0.
 void graph_interleave_pages_8x8_8(screen_x_t left, vram_y_t top, int mask_id)
 {
-	const interleave_masks_t masks = sINTERLEAVE_MASKS;
+	#include "th01/sprites/ileave_m.csp"
+	#define masks sINTERLEAVE_MASKS
 
-	vram_offset_t vram_offset = vram_offset_divmul(left, top);
-	dots8_t dots;
+	vram_offset_t vo = vram_offset_divmul(left, top);
+	dots_t(INTERLEAVE_W) dots;
 	for(char y = 0; y < INTERLEAVE_H; y++) {
-		#define mask masks.dots[mask_id][y]
+		#define mask masks[mask_id][y]
 
-		#define snap(plane, vram_offset) \
-			VRAM_CHUNK(plane, vram_offset, 8)
+		#define snap(plane, vo) \
+			VRAM_CHUNK(plane, vo, 8)
 
 		#define interleave(plane, vram_offset) \
-			graph_accesspage_func(1); dots = ~mask & snap(plane, vram_offset); \
-			graph_accesspage_func(0); dots |= mask & snap(plane, vram_offset); \
-			graph_accesspage_func(0); VRAM_PUT(plane, vram_offset, dots, 8);
+			graph_accesspage_func(1); dots  = ((~mask) & snap(plane, vo)); \
+			graph_accesspage_func(0); dots |= (  mask  & snap(plane, vo)); \
+			graph_accesspage_func(0); VRAM_PUT(plane, vo, dots, 8);
 
-		interleave(B, vram_offset);
-		interleave(R, vram_offset);
-		interleave(G, vram_offset);
-		interleave(E, vram_offset);
-		vram_offset += ROW_SIZE;
+		interleave(B, vo);
+		interleave(R, vo);
+		interleave(G, vo);
+		interleave(E, vo);
+		vo += ROW_SIZE;
 
 		#undef interleave
 		#undef snap
 		#undef mask
 	}
+	#undef masks
 }
 
 void pagetrans_diagonal_8x8(unsigned int step_ms)
@@ -57,7 +54,7 @@ void pagetrans_diagonal_8x8_with_palette(
 )
 {
 	int comp;
-	int col;
+	svc2 col;
 	screen_x_t from_topleft_left = 0;
 	vram_y_t from_topleft_top = 0;
 	screen_x_t from_bottomright_left = (RES_X - INTERLEAVE_W);
@@ -119,3 +116,5 @@ void pagetrans_diagonal_8x8_with_palette(
 		delay(step_ms);
 	}
 }
+
+static int8_t unused[2] = { 0x00, 0xFF }; // ZUN bloat

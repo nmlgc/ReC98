@@ -18,116 +18,47 @@
 
 include ReC98.inc
 include th03/th03.inc
-include th01/hardware/grppsafx.inc
-include th02/op/music.inc
 include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
 
 	extern _execl:proc
 	extern _getch:proc
 
-group_01 group op_01_TEXT, op_02_TEXT, SCOREDAT_TEXT, op_03_TEXT
+group_01 group op_01_TEXT, OP_MUSIC_TEXT, op_02_TEXT, SCOREDAT_TEXT, op_03_TEXT
 
 ; ===========================================================================
 
-; Segment type:	Pure code
-_TEXT		segment	word public 'CODE' use16
-		assume cs:_TEXT
-		assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include libs/master.lib/bfnt_entry_pat.asm
-include libs/master.lib/bfnt_extend_header_skip.asm
-include libs/master.lib/bfnt_header_read.asm
-include libs/master.lib/bfnt_header_analysis.asm
-include libs/master.lib/bcloser.asm
-include libs/master.lib/bfill.asm
-include libs/master.lib/bfnt_palette_set.asm
-include libs/master.lib/bgetc.asm
-include libs/master.lib/palette_black_out.asm
-include libs/master.lib/bopenr.asm
-include libs/master.lib/bread.asm
-include libs/master.lib/bseek.asm
-include libs/master.lib/bseek_.asm
-include libs/master.lib/dos_axdx.asm
-include libs/master.lib/dos_keyclear.asm
-include libs/master.lib/dos_puts2.asm
-include libs/master.lib/dos_setvect.asm
-include libs/master.lib/egc.asm
-include libs/master.lib/egc_shift_left_all.asm
-include libs/master.lib/file_append.asm
-include libs/master.lib/file_close.asm
-include libs/master.lib/file_create.asm
-include libs/master.lib/file_exist.asm
-include libs/master.lib/file_read.asm
-include libs/master.lib/file_ropen.asm
-include libs/master.lib/file_seek.asm
-include libs/master.lib/file_write.asm
-include libs/master.lib/dos_close.asm
-include libs/master.lib/dos_ropen.asm
-include libs/master.lib/grcg_boxfill.asm
-include libs/master.lib/grcg_byteboxfill_x.asm
-include libs/master.lib/grcg_polygon_c.asm
-include libs/master.lib/grcg_pset.asm
-include libs/master.lib/grcg_setcolor.asm
-include libs/master.lib/gaiji_backup.asm
-include libs/master.lib/gaiji_entry_bfnt.asm
-include libs/master.lib/gaiji_putsa.asm
-include libs/master.lib/gaiji_read.asm
-include libs/master.lib/gaiji_write.asm
-include libs/master.lib/graph_400line.asm
-include libs/master.lib/graph_clear.asm
-include libs/master.lib/graph_copy_page.asm
-include libs/master.lib/graph_extmode.asm
-include libs/master.lib/graph_gaiji_puts.asm
-include libs/master.lib/graph_pi_free.asm
-include libs/master.lib/graph_pi_load_pack.asm
-include libs/master.lib/graph_pack_put_8.asm
-include libs/master.lib/graph_show.asm
-include libs/master.lib/graph_start.asm
-include libs/master.lib/js_end.asm
-include libs/master.lib/keybeep.asm
-include libs/master.lib/make_linework.asm
-include libs/master.lib/palette_init.asm
-include libs/master.lib/palette_show.asm
-include libs/master.lib/pfclose.asm
-include libs/master.lib/pfgetc.asm
-include libs/master.lib/pfread.asm
-include libs/master.lib/pfrewind.asm
-include libs/master.lib/pfseek.asm
-include libs/master.lib/random.asm
-include libs/master.lib/palette_entry_rgb.asm
-include libs/master.lib/rottbl.asm
-include libs/master.lib/smem_release.asm
-include libs/master.lib/smem_wget.asm
-include libs/master.lib/soundio.asm
-include libs/master.lib/text_clear.asm
-include libs/master.lib/txesc.asm
-include libs/master.lib/text_putsa.asm
-include libs/master.lib/vsync.asm
-include libs/master.lib/vsync_wait.asm
-include libs/master.lib/palette_white_in.asm
-include libs/master.lib/hmem_lallocate.asm
-include libs/master.lib/mem_assign_dos.asm
-include libs/master.lib/mem_assign.asm
-include libs/master.lib/memheap.asm
-include libs/master.lib/mem_unassign.asm
-include libs/master.lib/super_free.asm
-include libs/master.lib/super_entry_pat.asm
-include libs/master.lib/super_entry_at.asm
-include libs/master.lib/super_entry_bfnt.asm
-include libs/master.lib/super_cancel_pat.asm
-include libs/master.lib/super_put.asm
-include libs/master.lib/respal_exist.asm
-include libs/master.lib/respal_free.asm
-include libs/master.lib/pfint21.asm
-		db 0
-include libs/master.lib/js_start.asm
-include libs/master.lib/js_sense.asm
-		db 0
-include libs/master.lib/draw_trapezoid.asm
-include th03/formats/pfopen.asm
-include libs/master.lib/pf_str_ieq.asm
-_TEXT		ends
+_TEXT	segment	word public 'CODE' use16
+	extern PALETTE_BLACK_OUT:proc
+	extern DOS_PUTS2:proc
+	extern EGC_SHIFT_LEFT_ALL:proc
+	extern GRCG_BOXFILL:proc
+	extern GRCG_BYTEBOXFILL_X:proc
+	extern GRCG_PSET:proc
+	extern GRCG_SETCOLOR:proc
+	extern GRCG_OFF:proc
+	extern GAIJI_BACKUP:proc
+	extern GAIJI_RESTORE:proc
+	extern GAIJI_ENTRY_BFNT:proc
+	extern GAIJI_PUTSA:proc
+	extern GRAPH_400LINE:proc
+	extern GRAPH_CLEAR:proc
+	extern GRAPH_COPY_PAGE:proc
+	extern GRAPH_GAIJI_PUTS:proc
+	extern GRAPH_PI_FREE:proc
+	extern PALETTE_SHOW:proc
+	extern IRAND:proc
+	extern PALETTE_ENTRY_RGB:proc
+	extern TEXT_CLEAR:proc
+	extern TEXT_PUTSA:proc
+	extern PALETTE_WHITE_IN:proc
+	extern HMEM_FREE:proc
+	extern SUPER_FREE:proc
+	extern SUPER_ENTRY_BFNT:proc
+	extern SUPER_PUT:proc
+	extern RESPAL_CREATE:proc
+	extern RESPAL_FREE:proc
+_TEXT	ends
 
 ; ===========================================================================
 
@@ -137,9 +68,9 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-	CFG_LOAD procdesc pascal near
-	CFG_SAVE procdesc pascal near
-	CFG_SAVE_EXIT procdesc pascal near
+	@cfg_load$qv procdesc near
+	@cfg_save$qv procdesc near
+	@cfg_save_exit$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -286,10 +217,10 @@ loc_9B4E:
 		imul	ax, 25
 		add	al, 70
 		mov	es:[bx+resident_t.skill], al
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -378,7 +309,7 @@ var_2		= word ptr -2
 		call	sub_9B9D
 
 loc_9C1B:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		or	si, si
 		jnz	short loc_9C7E
 		test	_input_sp.lo, low INPUT_UP
@@ -420,8 +351,7 @@ loc_9C70:
 
 loc_9C7E:
 		mov	si, _input_sp
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_9C1B
 ; ---------------------------------------------------------------------------
 
@@ -498,10 +428,10 @@ loc_9D0A:
 loc_9D19:
 		cmp	[bp+var_2], (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9D0A
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -533,7 +463,7 @@ sub_9E16	proc near
 ; ---------------------------------------------------------------------------
 
 loc_9E24:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		les	bx, _resident
 		inc	es:[bx+resident_t.rand]
 		inc	si
@@ -542,8 +472,7 @@ loc_9E24:
 		call	start_demo
 
 loc_9E3C:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_9E43:
 		cmp	_input_sp, INPUT_NONE
@@ -557,7 +486,7 @@ loc_9E5C:
 		push	si
 		call	sub_B10A
 		call	super_put pascal, si, large (256 shl 16) or 2
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		add	si, 8
 
 loc_9E76:
@@ -594,11 +523,11 @@ loc_9E9A:
 loc_9EA6:
 		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9E9A
-		call	cfg_save
+		call	@cfg_save$qv
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	super_free
-		call	_game_exit
+		call	@game_exit$qv
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -987,7 +916,7 @@ loc_A19A:
 ; ---------------------------------------------------------------------------
 
 menu_sel_musicroom:
-		nopcall	musicroom
+		nopcall	@musicroom_menu$qv
 		jmp	short loc_A19A
 ; ---------------------------------------------------------------------------
 
@@ -1301,7 +1230,7 @@ loc_A446:
 ; ---------------------------------------------------------------------------
 
 loc_A452:
-		call	_game_init_op c, offset aCOul, ds
+		call	@game_init_op$qnxuc c, offset aCOul, ds
 		or	ax, ax
 		jz	short loc_A468
 		push	ds
@@ -1314,7 +1243,7 @@ loc_A468:
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		call	cfg_load
+		call	@cfg_load$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_VS
 		jb	short loc_A497
@@ -1350,7 +1279,7 @@ loc_A4BC:
 ; ---------------------------------------------------------------------------
 
 loc_A4D2:
-		call	input_mode_interface
+		call	@input_mode_interface$qv
 		mov	al, _in_option
 		cbw
 		or	ax, ax
@@ -1371,283 +1300,23 @@ loc_A4D2:
 loc_A4EE:
 		les	bx, _resident
 		inc	es:[bx+resident_t.rand]
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_A4FE:
 		cmp	_quit, 0
 		jz	short loc_A4D2
-		call	cfg_save_exit
+		call	@cfg_save_exit$qv
 		call	gaiji_restore
 		call	text_clear
-		call	_game_exit_to_dos
+		call	@game_exit_to_dos$qv
 		call	respal_free
 		pop	bp
 		retf
 _main		endp
+op_01_TEXT ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACK
-draw_track	proc near
-
-var_1  	= byte ptr -1
-@@color	= byte ptr  4
-@@sel  	= byte ptr  6
-
-		enter	2, 0
-		mov	al, 1
-		sub	al, _music_page
-		mov	[bp+var_1], al
-		graph_accesspage al
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 40
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		or	ax, FX_WEIGHT_BOLD
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
-		call	graph_putsa_fx
-		graph_accesspage _music_page
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 40
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		or	ax, FX_WEIGHT_BOLD
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
-		call	graph_putsa_fx
-		leave
-		retn	4
-draw_track	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACKS
-draw_tracks	proc near
-
-@@sel		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_A5AD
-; ---------------------------------------------------------------------------
-
-loc_A598:
-		push	si
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		cmp	ax, si
-		jnz	short loc_A5A6
-		mov	al, 0Fh
-		jmp	short loc_A5A8
-; ---------------------------------------------------------------------------
-
-loc_A5A6:
-		mov	al, 3
-
-loc_A5A8:
-		push	ax
-		call	draw_track
-		inc	si
-
-loc_A5AD:
-		cmp	si, 15h
-		jl	short loc_A598
-		pop	si
-		pop	bp
-		retn	2
-draw_tracks	endp
-
-include th02/op/music.asm
-include th03/op/cmt_back_snap.asm
-include th02/op/music_cmt_load.asm
-include th03/op/cmt_back_free_put.asm
-include th03/op/draw_cmt.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MUSICROOM
-musicroom	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_AC15
-; ---------------------------------------------------------------------------
-
-loc_AC0E:
-		call	cdg_free pascal, si
-		inc	si
-
-loc_AC15:
-		cmp	si, CDG_SLOT_COUNT
-		jl	short loc_AC0E
-		call	super_free
-		call	text_clear
-		mov	_music_page, 1
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp3_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		mov	al, music_track_playing
-		mov	_music_sel, al
-		call	draw_tracks pascal, word ptr _music_sel
-		call	graph_copy_page pascal, 0
-		graph_accesspage 1
-		graph_showpage 0
-		call	screen_back_B_snap
-		call	cmt_back_snap
-		graph_accesspage 1
-		mov	al, music_track_playing
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-		graph_accesspage 0
-		mov	al, music_track_playing
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-
-loc_ACC2:
-		call	input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_ACD3
-		call	music_flip
-		jmp	short loc_ACC2
-; ---------------------------------------------------------------------------
-
-loc_ACD3:
-		call	input_mode_interface
-		test	_input_sp.lo, low INPUT_UP
-		jz	short loc_AD0E
-		call	draw_track pascal, word ptr _music_sel, 3
-		cmp	_music_sel, 0
-		jbe	short loc_ACF5
-		dec	_music_sel
-		jmp	short loc_ACFA
-; ---------------------------------------------------------------------------
-
-loc_ACF5:
-		mov	_music_sel, 14h
-
-loc_ACFA:
-		cmp	_music_sel, 13h
-		jnz	short loc_AD05
-		dec	_music_sel
-
-loc_AD05:
-		call	draw_track pascal, word ptr _music_sel, 15
-
-loc_AD0E:
-		test	_input_sp.lo, low INPUT_DOWN
-		jz	short loc_AD44
-		call	draw_track pascal, word ptr _music_sel, 3
-		cmp	_music_sel, 14h
-		jnb	short loc_AD2B
-		inc	_music_sel
-		jmp	short loc_AD30
-; ---------------------------------------------------------------------------
-
-loc_AD2B:
-		mov	_music_sel, 0
-
-loc_AD30:
-		cmp	_music_sel, 13h
-		jnz	short loc_AD3B
-		inc	_music_sel
-
-loc_AD3B:
-		call	draw_track pascal, word ptr _music_sel, 15
-
-loc_AD44:
-		test	_input_sp.lo, low INPUT_SHOT
-		jnz	short loc_AD52
-		test	_input_sp.hi, high INPUT_OK
-		jz	short loc_AD9A
-
-loc_AD52:
-		cmp	_music_sel, 14h
-		jz	short loc_ADB0
-		kajacall	KAJA_SONG_STOP
-		push	SND_LOAD_SONG
-		mov	al, _music_sel
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_FILES[bx]
-		call	_snd_load
-		add	sp, 6
-		kajacall	KAJA_SONG_PLAY
-		mov	al, _music_sel
-		mov	music_track_playing, al
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-		call	music_flip
-		mov	al, _music_sel
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-
-loc_AD9A:
-		test	_input_sp.hi, high INPUT_CANCEL
-		jnz	short loc_ADB0
-		cmp	_input_sp, INPUT_NONE
-		jnz	loc_ACC2
-		call	music_flip
-		jmp	loc_ACD3
-; ---------------------------------------------------------------------------
-
-loc_ADB0:
-		call	input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_ADC1
-		call	music_flip
-		jmp	short loc_ADB0
-; ---------------------------------------------------------------------------
-
-loc_ADC1:
-		call	screen_back_B_free
-		call	cmt_back_free
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		mov	al, 0
-		out	dx, al
-		pop	si
-		pop	bp
-		retf
-musicroom	endp
-
+OP_MUSIC_TEXT segment byte public 'CODE' use16
+	extern @musicroom_menu$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1665,14 +1334,14 @@ var_2		= word ptr -2
 		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
 		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
-		call	pi_load pascal, 0, ds, offset aTl01_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		call	egc_shift_left_all pascal, 2
 		mov	Palettes[15 * size rgb_t].r, 0
 		mov	Palettes[15 * size rgb_t].g, 0
@@ -1683,15 +1352,14 @@ var_2		= word ptr -2
 		mov	Palettes[11 * size rgb_t].b, 0
 		call	far ptr	palette_show
 		freePISlotLarge	0
-		call	pi_load pascal, 0, ds, offset aTl02_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aTl02_pi
 		graph_showpage 1
 		mov	si, 0A0h
 		jmp	short loc_AF02
 ; ---------------------------------------------------------------------------
 
 loc_AEA0:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	al, byte ptr [bp+var_2]
 		mov	Palettes[15 * size rgb_t].r, al
 		mov	Palettes[15 * size rgb_t].g, al
@@ -1735,8 +1403,7 @@ loc_AF09:
 		mov	Palettes[15 * size rgb_t].b, al
 		call	far ptr	palette_show
 		add	[bp+var_2], 2
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 
 loc_AF25:
 		cmp	[bp+var_2], 255
@@ -1754,12 +1421,10 @@ loc_AF35:
 loc_AF40:
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_AF65:
@@ -1770,14 +1435,12 @@ loc_AF65:
 		kajacall	KAJA_SONG_PLAY
 		graph_showpage 0
 		graph_accesspage al
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		push	1
-		call	frame_delay
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
+		call	@frame_delay$qi pascal, 1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		xor	si, si
 		jmp	short loc_AFD9
 ; ---------------------------------------------------------------------------
@@ -1785,19 +1448,17 @@ loc_AF65:
 loc_AFB4:
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_AFD9:
 		cmp	si, 8
 		jl	short loc_AFB4
 		graph_accesspage 1
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -1820,14 +1481,14 @@ sub_B008	proc near
 		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_load pascal, 0, ds, offset aTl02_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aTl02_pi
 		graph_showpage 0
 		call	sub_B3EF
 		graph_accesspage 1
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -1839,8 +1500,7 @@ sub_B008	proc near
 loc_B094:
 		mov	PaletteTone, si
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		add	si, 4
 
 loc_B0A7:
@@ -1868,7 +1528,7 @@ loc_B0B8:
 		push	si
 		call	sub_B10A
 		call	super_put pascal, si, large (256 shl 16) or 2
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		add	si, 8
 
 loc_B0D2:
@@ -1897,7 +1557,7 @@ loc_B0E4:
 		push	ax
 		call	sub_B10A
 		call	super_put pascal, si, large (256 shl 16) or 2
-		call	frame_delay pascal, 1
+		call	@frame_delay$qi pascal, 1
 		sub	si, 8
 
 loc_B101:
@@ -1967,7 +1627,7 @@ loc_B11F:
 		pop	bp
 		retn	2
 sub_B10A	endp
-op_01_TEXT	ends
+OP_MUSIC_TEXT ends
 
 op_02_TEXT segment byte public 'CODE' use16
 op_02_TEXT ends
@@ -2467,7 +2127,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, (RES_X / 2), si, _CosTable8[bx]
+		call	@polar$qiii c, (RES_X / 2), si, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_6]
 		add	al, [bp+arg_6]
@@ -2481,7 +2141,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, (RES_Y / 2), si, _SinTable8[bx]
+		call	@polar$qiii c, (RES_Y / 2), si, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax
@@ -2919,7 +2579,7 @@ sub_BA88	proc near
 		mov	byte_FC5B, 0
 		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
 		jnz	short loc_BAD4
-		setfarfp	_input_mode, input_mode_key_vs_key
+		setfarfp	_input_mode, @input_mode_key_vs_key$qv
 		jmp	short loc_BAF9
 ; ---------------------------------------------------------------------------
 
@@ -2927,16 +2587,15 @@ loc_BAD4:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.key_mode], KM_JOY_KEY
 		jnz	short loc_BAED
-		setfarfp	_input_mode, input_mode_joy_vs_key
+		setfarfp	_input_mode, @input_mode_joy_vs_key$qv
 		jmp	short loc_BAF9
 ; ---------------------------------------------------------------------------
 
 loc_BAED:
-		setfarfp	_input_mode, input_mode_key_vs_joy
+		setfarfp	_input_mode, @input_mode_key_vs_joy$qv
 
 loc_BAF9:
-		push	10h
-		call	frame_delay
+		call	@frame_delay$qi pascal, 16
 		mov	word_FC62, 0
 
 loc_BB06:
@@ -2948,7 +2607,7 @@ loc_BB06:
 		push	0
 		cmp	byte_FC5A, 0
 		jz	short loc_BB22
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BB24
 ; ---------------------------------------------------------------------------
 
@@ -2961,7 +2620,7 @@ loc_BB24:
 		push	1
 		cmp	byte_FC5B, 0
 		jz	short loc_BB35
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BB37
 ; ---------------------------------------------------------------------------
 
@@ -2971,7 +2630,7 @@ loc_BB35:
 loc_BB37:
 		push	ax
 		call	p_cursor_put
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	_input_mp_p1
 		push	0
@@ -3070,7 +2729,7 @@ sub_BC1F	proc near
 		mov	_playchars[1], al
 		mov	byte_FC5A, 0
 		mov	byte_FC5B, 0
-		setfarfp	_input_mode, input_mode_interface
+		setfarfp	_input_mode, @input_mode_interface$qv
 		xor	si, si
 		jmp	loc_BD8B
 ; ---------------------------------------------------------------------------
@@ -3084,12 +2743,12 @@ loc_BC69:
 		call	sub_B565
 		call	sub_B636
 		call	sub_B670
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	0
 		cmp	byte_FC5A, 0
 		jz	short loc_BC8E
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BC90
 ; ---------------------------------------------------------------------------
 
@@ -3104,7 +2763,7 @@ loc_BC90:
 		push	1
 		cmp	byte_FC5B, 0
 		jz	short loc_BCA8
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BCAA
 ; ---------------------------------------------------------------------------
 
@@ -3210,7 +2869,7 @@ sub_BD9A	proc near
 		mov	_playchars[0], 0
 		mov	byte_FC5A, 0
 		mov	byte_FC5B, 1
-		setfarfp	_input_mode, input_mode_interface
+		setfarfp	_input_mode, @input_mode_interface$qv
 		mov	word_FC62, 0
 
 loc_BDC1:
@@ -3222,7 +2881,7 @@ loc_BDC1:
 		push	0
 		cmp	byte_FC5A, 0
 		jz	short loc_BDDD
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BDDF
 ; ---------------------------------------------------------------------------
 
@@ -3232,7 +2891,7 @@ loc_BDDD:
 loc_BDDF:
 		push	ax
 		call	p_cursor_put
-		call	_input_reset_sense_key_held
+		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	_input_sp
 		push	0
@@ -3305,213 +2964,92 @@ op_03_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
-	extern _game_exit_to_dos:proc
+include th02/snd/snd.inc
+	extern @game_exit_to_dos$qv:proc
 	extern _snd_determine_mode:proc
 	extern _snd_load:proc
-	extern _game_exit:proc
-	extern _vector1_at:proc
+	extern @game_exit$qv:proc
+	extern @polar$qiii:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
-	extern FRAME_DELAY:proc
-	extern _input_reset_sense_key_held:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
+	extern @FRAME_DELAY$QI:proc
+	extern @input_reset_sense_key_held$qv:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern _game_init_op:proc
+	extern @game_init_op$qnxuc:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE:proc
-	extern GRAPH_PUTSA_FX:proc
-	extern PI_LOAD:proc
-	extern INPUT_MODE_INTERFACE:proc
-	extern INPUT_MODE_KEY_VS_KEY:proc
-	extern INPUT_MODE_JOY_VS_KEY:proc
-	extern INPUT_MODE_KEY_VS_JOY:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @INPUT_MODE_INTERFACE$QV:proc
+	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
+	extern @INPUT_MODE_JOY_VS_KEY$QV:proc
+	extern @INPUT_MODE_KEY_VS_JOY$QV:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
-	extern FRAME_DELAY_2:proc
 SHARED	ends
 
 	.data
 
 	extern _snd_sel_disabled:byte
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    2
-		db    0
-		db    3
-		db    5
-		db    4
-		db    6
-gp1P_VS_CPU	db 88h,	89h, 8Ah, 8Bh, 8Ch, 8Dh, 8Eh, 8Fh, 0
-gp1P_VS_2P	db 88h,	89h, 8Ah, 8Bh, 96h, 97h, 98h, 99h, 0
-gpCPU_VS_CPU	db 92h,	93h, 94h, 95h, 8Ch, 8Dh, 8Eh, 8Fh, 0
-include th03/start[data].asm
-gpSTART		db 30h,	31h, 32h, 0
-gpVS_START	db 33h,	34h, 35h, 36h, 37h, 38h, 0
-gpMUSIC_ROOM	db 41h,	42h, 43h, 44h, 45h, 46h, 47h, 0
-gpHISCORE	db 82h,	83h, 84h, 85h, 86h, 0
-gpOPTION	db 3Dh,	3Eh, 3Fh, 40h, 0
-gpQUIT		db 48h,	49h, 4Ah, 0
-gpRANK		db 6Eh,	6Fh, 70h, 0
-gpMUSIC		db 4Bh,	4Ch, 4Dh, 4Eh, 0
-gpKEYCONFIG	db 5Ch,	5Dh, 5Eh, 5Fh, 60h, 61h, 0
-g4SPACES	db 0CFh, 0CFh, 0CFh, 0CFh, 0
-gpEASY		db 71h,	72h, 73h, 0
-gpNORMAL	db 74h,	75h, 76h, 77h, 0
-gpHARD		db 78h,	79h, 7Ah, 0
-gpLUNATIC	db 7Bh,	7Ch, 7Dh, 7Eh, 0
-gpOFF		db 0CFh, 0CFh, 5Ah, 5Bh, 0CFh, 0CFh, 0CFh, 0
-gpFM_86		db 0CFh, 4Fh, 50h, 51h,	52h, 0CFh, 0CFh, 0
-gpMIDI_SC88	db 53h,	54h, 55h, 56h, 57h, 58h, 59h, 0
-gpTYPE1		db 62h,	63h, 64h, 65h, 0
-gpTYPE2		db 62h,	63h, 64h, 66h, 0
-gpTYPE3		db 62h,	63h, 64h, 67h, 0
-gpKEY_VS_KEY	db 68h,	69h, 6Ch, 6Dh, 68h, 69h, 0
-gpJOY_VS_KEY	db 6Ah,	6Bh, 6Ch, 6Dh, 68h, 69h, 0
-gpKEY_VS_JOY	db 68h,	69h, 6Ch, 6Dh, 6Ah, 6Bh, 0
-_menu_sel	db 0
-_quit	db 0
-byte_D953	db 1
-_main_menu_initialized	db 0
-_option_initialized	db 0
-public _CFG_FN
-label _CFG_FN
-aYume_cfg	db 'YUME.CFG',0
-; char path[]
-path		db 'mainl',0
-asc_D965	db '        ',0
-aVfvcvbgngngbgn	db 'ÇfÇcÇbÉNÉçÉbÉNÇ™ÇTÇlÇgÇöÇ…Ç»Ç¡ÇƒÇ¢Ç‹Ç∑ÅB',0Ah,0
-aUmx		db 'ìåï˚ñ≤éûãÛÇÕÇQÅDÇTÇlÇgÇöÇ≈Ç»Ç¢Ç∆ê≥èÌÇ…ÉQÅ[ÉÄÇ™ÉvÉåÉCèoóàÇ‹ÇπÇÒ',0Ah,0
-aViosrfvVVkvqbd	db 0Ah
-		db 'Ç®éËêîÇ≈Ç∑Ç™ÇQÅDÇTÇlÇgÇöÇ…êÿÇËë÷Ç¶ÇƒÅAÇ‡Ç§àÍìxé¿çsÇµÇƒÇÀÅB',0Ah,0
-aCOul		db 'ñ≤éûãÛ1.dat',0
-aGbgvgkxsslvVBb	db 0Ah
-		db 'ÉÅÉÇÉäïsë´Ç≈Ç∑ÅBÉÅÉÇÉäãÛÇ´ÇëùÇ‚ÇµÇƒÇ©ÇÁé¿çsÇµÇƒÇ≠ÇËÇ·ÇÍ',0Ah,0
-aMikoft_bft	db 'MIKOFT.bft',0
-		db 0
-include libs/master.lib/bfnt_id[data].asm
-include libs/master.lib/clip[data].asm
-include libs/master.lib/edges[data].asm
-include libs/master.lib/fil[data].asm
-include libs/master.lib/dos_ropen[data].asm
-include libs/master.lib/gaiji_backup[data].asm
-include libs/master.lib/gaiji_entry_bfnt[data].asm
-include libs/master.lib/grp[data].asm
-include libs/master.lib/js[data].asm
-include libs/master.lib/pal[data].asm
-include libs/master.lib/pf[data].asm
-include libs/master.lib/rand[data].asm
-include libs/master.lib/sin8[data].asm
-include libs/master.lib/tx[data].asm
-include libs/master.lib/vs[data].asm
-include libs/master.lib/wordmask[data].asm
-include libs/master.lib/mem[data].asm
-include libs/master.lib/super_entry_bfnt[data].asm
-include libs/master.lib/superpa[data].asm
-public _snd_active
-_snd_active	db 0
-		db 0
-include libs/master.lib/respal_exist[data].asm
-include libs/master.lib/draw_trapezoid[data].asm
-include th02/formats/pfopen[data].asm
-include th03/formats/cdg[data].asm
-public _MUSIC_TITLES
-_MUSIC_TITLES	label dword
-		dd aNo_1B@cVOul		; "NO.1	    Å@ñ≤ÇÕéûãÛÇâzÇ¶Çƒ	   "
-		dd aNo_2B@B@Select	; "NO.2	   Å@ Å@ Selection	   "
-		dd aNo_3Umx		; "NO.3		 ìåï˚ódóˆík	   "
-		dd aNo_4Reincarnat	; "NO.4	       Reincarnation	   "
-		dd aNo_5Dim_Dream	; "NO.5		 Dim. Dream	   "
-		dd aNo_6TabulaRasa	; "NO.6	  Tabula rasaÅ@Å`ãÛîíè≠èó  "
-		dd aNo_7B@Maniacal	; "NO.7	  Å@  Maniacal Princess	   "
-		dd aNo_8CPOBLostDr	; "NO.8	     ñ≤è¡é∏  Å`Lost Dream  "
-		dd aNo_9CMCvlyBDre	; "NO.9	    ñ≤å∂óVãY  Å`Dream War  "
-		dd aNo_10Cvc@mirab	; "NO.10  ñÇñ@åàêÌÅIÅ`Fight it out!"
-		dd aNo_11B@SailorO	; "NO.11    Å@ Sailor of Time	   "
-		dd aNo_12Strawberr	; "NO.12     Strawberry	Crisis!!   "
-		dd aNo_13F		; "NO.13      îÒìùàÍñÇñ@ê¢äEò_	   "
-		dd aNo_14B@cvc@pri	; "NO.14	Å@ñÇñ@è‡à§	   "
-		dd aNo_15B@lviuvC	; "NO.15	Å@ãvâìÇÃñ≤	   "
-		dd aNo_16Umx		; "NO.16	ìåï˚ÇÃê¬Ç¢ãÛ	   "
-		dd aNo_17IiiuvCumo	; "NO.17	 âiâìÇÃñûåé	   "
-		dd aNo_18MapleDrea	; "NO.18       Maple Dream...	   "
-		dd aNo_19CRlvLxu	; "NO.19	 óÏêlÇÃãxì˙	   "
-		dd aB@b@		; "	      Å@Å@		   "
-		dd aB@b@vpvxvivf	; "	      Å@Å@ÇpÇïÇâÇî	   "
-public _MUSIC_FILES
-_MUSIC_FILES	label dword
-		dd aOp_m_0		; "op.m"
-		dd aSelect_m_0		; "select.m"
-		dd a00mm_m		; "00mm.m"
-		dd a01mm_m		; "01mm.m"
-		dd a02mm_m		; "02mm.m"
-		dd a03mm_m		; "03mm.m"
-		dd a04mm_m		; "04mm.m"
-		dd a05mm_m		; "05mm.m"
-		dd a06mm_m		; "06mm.m"
-		dd aDec_m		; "dec.m"
-		dd a07mm_m		; "07mm.m"
-		dd a08mm_m		; "08mm.m"
-		dd aDemo1_m		; "demo1.m"
-		dd aDemo2_m		; "demo2.m"
-		dd aDemo3_m		; "demo3.m"
-		dd aDemo4_m		; "demo4.m"
-		dd aDemo5_m		; "demo5.m"
-		dd aEd_m		; "ed.m"
-		dd aScore_m		; "score.m"
-include th02/op/polygons[data].asm
-music_track_playing	db 0
-aNo_1B@cVOul	db 'NO.1     Å@ñ≤ÇÕéûãÛÇâzÇ¶Çƒ     ',0
-aNo_2B@B@Select	db 'NO.2    Å@ Å@ Selection         ',0
-aNo_3Umx	db 'NO.3          ìåï˚ódóˆík        ',0
-aNo_4Reincarnat	db 'NO.4        Reincarnation       ',0
-aNo_5Dim_Dream	db 'NO.5          Dim. Dream        ',0
-aNo_6TabulaRasa	db 'NO.6   Tabula rasaÅ@Å`ãÛîíè≠èó  ',0
-aNo_7B@Maniacal	db 'NO.7   Å@  Maniacal Princess    ',0
-aNo_8CPOBLostDr	db 'NO.8      ñ≤è¡é∏  Å`Lost Dream  ',0
-aNo_9CMCvlyBDre	db 'NO.9     ñ≤å∂óVãY  Å`Dream War  ',0
-aNo_10Cvc@mirab	db 'NO.10  ñÇñ@åàêÌÅIÅ`Fight it out!',0
-aNo_11B@SailorO	db 'NO.11    Å@ Sailor of Time      ',0
-aNo_12Strawberr	db 'NO.12     Strawberry Crisis!!   ',0
-aNo_13F		db 'NO.13      îÒìùàÍñÇñ@ê¢äEò_     ',0
-aNo_14B@cvc@pri	db 'NO.14        Å@ñÇñ@è‡à§         ',0
-aNo_15B@lviuvC	db 'NO.15        Å@ãvâìÇÃñ≤         ',0
-aNo_16Umx	db 'NO.16        ìåï˚ÇÃê¬Ç¢ãÛ       ',0
-aNo_17IiiuvCumo	db 'NO.17         âiâìÇÃñûåé        ',0
-aNo_18MapleDrea	db 'NO.18       Maple Dream...      ',0
-aNo_19CRlvLxu	db 'NO.19         óÏêlÇÃãxì˙        ',0
-aB@b@		db '           Å@Å@                 ',0
-aB@b@vpvxvivf	db '           Å@Å@ÇpÇïÇâÇî         ',0
-aOp_m_0		db 'op.m',0
-aSelect_m_0	db 'select.m',0
-a00mm_m		db '00mm.m',0
-a01mm_m		db '01mm.m',0
-a02mm_m		db '02mm.m',0
-a03mm_m		db '03mm.m',0
-a04mm_m		db '04mm.m',0
-a05mm_m		db '05mm.m',0
-a06mm_m		db '06mm.m',0
-aDec_m		db 'dec.m',0
-a07mm_m		db '07mm.m',0
-a08mm_m		db '08mm.m',0
-aDemo1_m	db 'demo1.m',0
-aDemo2_m	db 'demo2.m',0
-aDemo3_m	db 'demo3.m',0
-aDemo4_m	db 'demo4.m',0
-aDemo5_m	db 'demo5.m',0
-aEd_m		db 'ed.m',0
-aScore_m	db 'score.m',0
-include th02/op/music_cmt_load[data].asm
-aOp3_pi		db 'op3.pi',0
+
+	extern gp1P_VS_CPU:byte
+	extern gp1P_VS_2P:byte
+	extern gpCPU_VS_CPU:byte
+	extern _demo_chars:byte
+	extern _demo_rand:dword
+	extern gpSTART:byte
+	extern gpVS_START:byte
+	extern gpMUSIC_ROOM:byte
+	extern gpHISCORE:byte
+	extern gpOPTION:byte
+	extern gpQUIT:byte
+	extern gpRANK:byte
+	extern gpMUSIC:byte
+	extern gpKEYCONFIG:byte
+	extern gpEASY:byte
+	extern gpNORMAL:byte
+	extern gpHARD:byte
+	extern gpLUNATIC:byte
+	extern gpOFF:byte
+	extern gpFM_86:byte
+	extern gpMIDI_SC88:byte
+	extern gpOFF:byte
+	extern gpFM_86:byte
+	extern gpMIDI_SC88:byte
+	extern gpKEY_VS_KEY:byte
+	extern gpJOY_VS_KEY:byte
+	extern gpKEY_VS_JOY:byte
+
+	extern _menu_sel:byte
+	extern _quit:byte
+	extern byte_D953:byte
+	extern _main_menu_initialized:byte
+	extern _option_initialized:byte
+	extern path:byte
+	extern asc_D965:byte
+	extern aVfvcvbgngngbgn:byte
+	extern aUmx:byte
+	extern aViosrfvVVkvqbd:byte
+	extern aCOul:byte
+	extern aGbgvgkxsslvVBb:byte
+	extern aMikoft_bft:byte
+
+	; libs/master.lib/grp[data].asm
+	extern graph_VramZoom:word
+
+	; libs/master.lib/pal[data].asm
+	extern PaletteTone:word
+
+	; libs/master.lib/rand[data].asm
+	extern random_seed:dword
+
+	; libs/master.lib/sin8[data].asm
+	extern _SinTable8:word:256
+	extern _CosTable8:word:256
+
 aOpwin_bft	db 'opwin.bft',0
 aOp_m		db 'op.m',0
 aTl01_pi	db 'TL01.PI',0
@@ -3578,32 +3116,29 @@ aSelect_m	db 'select.m',0
 aChname_bft	db 'chname.bft',0
 aTlsl_rgb	db 'TLSL.RGB',0
 		db 041h, 0C1h, 0E1h, 0
+
 	.data?
 
-_main_input_allowed	db ?
-_option_input_allowed	db ?
-_in_option	db ?
-		db ?
-_putfunc	dw ?
-include libs/master.lib/clip[bss].asm
-include libs/master.lib/fil[bss].asm
-include libs/master.lib/js[bss].asm
-include libs/master.lib/pal[bss].asm
-include libs/master.lib/vs[bss].asm
-include libs/master.lib/vsync[bss].asm
-include libs/master.lib/mem[bss].asm
-include libs/master.lib/superpa[bss].asm
-include th01/hardware/vram_planes[bss].asm
-include th02/snd/snd[bss].asm
-include th02/snd/load[bss].asm
-include libs/master.lib/pfint21[bss].asm
-include th03/hardware/input[bss].asm
-include th03/formats/cdg[bss].asm
-include th02/formats/pi_slots[bss].asm
-include th03/formats/hfliplut[bss].asm
-include th02/op/music[bss].asm
-include th03/op/cmt_back[bss].asm
-include th02/op/music_cmt[bss].asm
+	extern _main_input_allowed:byte
+	extern _option_input_allowed:byte
+	extern _in_option:byte
+	extern _putfunc:word
+
+	; libs/master.lib/pal[bss].asm
+	extern Palettes:byte:48
+
+	; libs/master.lib/vs[bss].asm
+	extern vsync_Count1:word
+
+	extern _snd_active:byte
+
+	extern _input_sp:word
+	extern _input_mp_p1:word
+	extern _input_mp_p2:word
+
+	extern _pi_buffers:dword
+	extern _pi_headers:PiHeader
+
 public _hi
 _hi	scoredat_section_t <?>
 word_FC52	dw ?

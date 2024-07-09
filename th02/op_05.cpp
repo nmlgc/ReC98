@@ -1,16 +1,9 @@
-/* ReC98
- * -----
- * Code segment #5 of TH02's OP.EXE
- */
+#pragma option -2 // ZUN bloat
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
 #include "th01/math/clamp.hpp"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
+#include "th02/v_colors.hpp"
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -25,7 +18,7 @@ inline char sel_ring_end() {
 char sel = 1;
 int8_t sel_padding = 0;
 
-const char *DESC[SHOTTYPE_COUNT][3] = {
+const shiftjis_t *DESC[SHOTTYPE_COUNT][3] = {
 	" ‰A—z‹Ê‚Ì—Í‚ðŽg‚í‚È‚¢ ",
 	" L”ÍˆÍ‚Å‚©‚Â‹@“®—Í‚É ",
 	"@‹­‚¢‚‹@“®—Íƒ^ƒCƒv@",
@@ -38,16 +31,16 @@ const char *DESC[SHOTTYPE_COUNT][3] = {
 	"@UŒ‚—Í‚ª—D‚ê‚Ä‚¢‚é@",
 	"@@UŒ‚dŽ‹ƒ^ƒCƒv@@"
 };
-const char *CHOOSE = "èË–²‚Ìí“¬ƒXƒ^ƒCƒ‹‚ðA‰º‚Ì‚R‚Â‚©‚ç‚¦‚ç‚ñ‚Å‚Ë";
-const char *EXTRA_NOTE[] = {
+const shiftjis_t *CHOOSE = "èË–²‚Ìí“¬ƒXƒ^ƒCƒ‹‚ðA‰º‚Ì‚R‚Â‚©‚ç‚¦‚ç‚ñ‚Å‚Ë";
+const shiftjis_t *EXTRA_NOTE[] = {
 	"’j@ƒGƒLƒXƒgƒ‰ƒXƒe[ƒW‚Å‚ÍA“ïˆÕ“xAƒvƒŒƒCƒ„[Aƒ{ƒ€”‚Í•ÏXo—ˆ‚Ü‚¹‚ñ",
 	"@@@‚»‚ê‚¼‚êA“ïˆÕ“x‚d‚w‚s‚q‚`AƒvƒŒƒCƒ„[‚RlAƒ{ƒ€‚PŒÂ‚Æ‚È‚è‚Ü‚·    "
 };
-const char *CLEARED = "  ™™‚b‚k‚d‚`‚q‚d‚c™™  ";
+const shiftjis_t *CLEARED = "  ™™‚b‚k‚d‚`‚q‚d‚c™™  ";
 
 char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
-long unused[2];
+long unused[2]; // ZUN bloat
 
 void copy_pic_back(int sel, int highlight)
 {
@@ -92,7 +85,7 @@ void darken_pic_at(screen_x_t x, screen_y_t y)
 	grcg_off();
 }
 
-void draw_shottype_desc(int sel, int color)
+void draw_shottype_desc(int sel, vc2 color)
 {
 	screen_x_t x;
 	screen_y_t y;
@@ -124,8 +117,8 @@ void pascal draw_header(void)
 		grcg_setcolor(GC_RMW, 0);  grcg_round_boxfill(16, 48, 624,  96, 8);
 		grcg_off();
 
-		graph_putsa_fx(32, 56, (15 | FX_WEIGHT_BOLD), EXTRA_NOTE[0]);
-		graph_putsa_fx(32, 72, (15 | FX_WEIGHT_BOLD), EXTRA_NOTE[1]);
+		graph_putsa_fx(32, 56, (V_WHITE | FX_WEIGHT_BOLD), EXTRA_NOTE[0]);
+		graph_putsa_fx(32, 72, (V_WHITE | FX_WEIGHT_BOLD), EXTRA_NOTE[1]);
 	}
 }
 
@@ -133,18 +126,18 @@ void pascal shottype_menu_init(void)
 {
 	#define draw_cleared_for(cleared_mode_with) \
 		if(cleared_mode_with[0]) { \
-			graph_putsa_fx(16, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(16, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		} \
 		if(cleared_mode_with[1]) { \
-			graph_putsa_fx(224, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(224, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		} \
 		if(cleared_mode_with[2]) { \
-			graph_putsa_fx(432, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(432, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
 	palette_black();
 	graph_accesspage(0);
-	pi_load_put_8_free(3, "TSELECT.pi");
+	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
 	graph_copy_page(1);
 	graph_accesspage(0);
 	if(resident->stage != 5) {
@@ -182,7 +175,7 @@ void pascal shottype_menu(void)
 	shottype_menu_init();
 
 	do {
-		input_sense();
+		input_reset_sense();
 		if(!input_locked) {
 			if(key_det & INPUT_LEFT) {
 				draw_shottype_desc(sel, 7);
@@ -228,6 +221,4 @@ void pascal shottype_menu(void)
 	pi_free(1);
 	pi_free(2);
 	palette_black_out(1);
-}
-
 }

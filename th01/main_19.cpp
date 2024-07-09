@@ -3,28 +3,19 @@
  * Code segment #19 of TH01's REIIDEN.EXE
  */
 
-#pragma option -d
-
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "decomp.hpp"
-#include "twobyte.h"
-#include "master.hpp"
 #include "th01/rank.h"
-extern "C" {
+#include "th01/resident.hpp"
 #include "th01/formats/grp.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
-}
-#include "th01/hiscore/scoredat.hpp"
-
-extern char rank;
+#include "th01/hardware/grp_text.hpp"
+#include "th01/shiftjis/fns.hpp"
+#include "th01/shiftjis/regist.hpp"
+#include "th01/formats/scoredat.hpp"
 
 #define scoredat_declare()
 #define scoredat_cli()
@@ -40,46 +31,42 @@ extern char rank;
 
 // Returns the high score for the difficulty previously loaded by
 // scoredat_load().
-uint32_t scoredat_hiscore_get()
+score_t scoredat_hiscore_get()
 {
 	return scoredat_score[0];
 }
 
 #include "th01/hiscore/score_nm.cpp"
 
-void pascal near str_from_kanji(char str[3], uint16_t kanji)
+void pascal near str_from_swapped_kanji(
+	shiftjis_t str[3], shiftjis_kanji_swapped_t kanji
+)
 {
-	char tmp;
-	(reinterpret_cast<uint16_t *>(str))[0] = kanji;
+	uint8_t tmp;
+	(reinterpret_cast<shiftjis_kanji_t *>(str))[0] = kanji;
 	tmp = str[1];
 	str[1] = str[0];
 	str[0] = tmp;
 	str[2] = '\0';
 }
 
-#define graph_putkanji_fx_declare() char kanji_str[3];
-#define graph_putkanji_fx(left, top, col_and_fx, fmt_instance, kanji) \
-	str_from_kanji(kanji_str, kanji); \
-	graph_putsa_fx(left, top, col_and_fx, kanji_str);
+#define graph_putkanji_fx_declare() shiftjis_t kanji_str[3];
+#define graph_putkanji_fx(left, top, col_and_fx, kanji) { \
+	str_from_swapped_kanji(kanji_str, kanji); \
+	graph_putsa_fx(left, top, col_and_fx, kanji_str); \
+}
 #define graph_printf_fx graph_putsa_fx
-
-#define graph_printf_s_fx(left, top, col_and_fx, fmt_instance, str) \
-	graph_putsa_fx(left, top, col_and_fx, str);
+#define graph_printf_s_fx graph_putsa_fx
 
 #define regist_route_put(left, top, col_and_fx, char_1, char_2) \
-	unsigned char route[sizeof(twobyte_t) + 1]; \
+	unsigned char route[sizeof(shiftjis_kanji_t) + 1]; \
 	route[2] = '\0'; \
 	route[0] = char_1; \
 	route[1] = char_2; \
 	graph_putsa_fx(left, top, col_and_fx, route); \
 
-#define ALPHABET_SPACE_0 ALPHABET_SPACE
-#define ALPHABET_LEFT_0  ALPHABET_LEFT
-#define ALPHABET_RIGHT_0 ALPHABET_RIGHT
-#define ALPHABET_ENTER_0 ALPHABET_ENTER
-
 // A completely hidden timeout that force-enters a high score name after
-// 1000... *keyboard inputs*? Not frames? Why. Like, how do even you
+// 1000... *keyboard inputs*? Not frames? Why. Like, how do you even
 // realistically get to such a number.
 // (Best guess: It's a hidden easter egg to amuse players who place drinking
 // glasses on cursor keys. Or beer bottles.)
@@ -88,15 +75,13 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 #define regist_input_timeout_inc() timeout++;
 #define regist_input_timeout_if_reached(then) if(timeout > 1000) then
 
-#define regist_bg_put(stage) { \
-	extern const char REGIST_BG_NOT_CLEARED[]; \
-	extern const char REGIST_BG_CLEARED[]; \
+#define regist_bg_put(stage_num_or_scoredat_constant) { \
 	z_graph_clear_0(); \
 	z_palette_black(); \
 	graph_accesspage_func(1); \
 	\
-	if(stage < SCOREDAT_NOT_CLEARED) { \
-		grp_put_palette_show(REGIST_BG_NOT_CLEARED); \
+	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) { \
+		grp_put_palette_show("game_o.grp"); \
 	} else { \
 		grp_put(REGIST_BG_CLEARED); \
 	} \
@@ -104,16 +89,25 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	z_palette_black_in(); \
 }
 
-#define regist_title_put(left, stage, ranks, col_and_fx) { \
-	extern const char REGIST_TITLE_1[]; \
-	extern const char REGIST_TITLE_2[]; \
-	if(stage < SCOREDAT_NOT_CLEARED) { \
-		graph_putsa_fx(left +   0, TITLE_BACK_TOP, col_and_fx, REGIST_TITLE_1); \
-		graph_putsa_fx(left + 192, TITLE_BACK_TOP, col_and_fx, ranks[rank]); \
+#define regist_title_put( \
+	left, stage_num_or_scoredat_constant, ranks, col_and_fx \
+) { \
+	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) { \
+		graph_putsa_fx( \
+			left, TITLE_BACK_TOP, col_and_fx, REGIST_TITLE_WITH_SPACE \
+		); \
+		graph_putsa_fx( \
+			(left + REGIST_TITLE_W), TITLE_BACK_TOP, col_and_fx, ranks[rank] \
+		); \
 	} else { \
-		graph_putsa_fx(left +   0, TITLE_TOP, col_and_fx, REGIST_TITLE_2); \
-		graph_putsa_fx(left + 192, TITLE_TOP, col_and_fx, ranks[rank]); \
+		graph_putsa_fx(left, TITLE_TOP, col_and_fx, REGIST_TITLE); \
+		graph_putsa_fx( \
+			(left + REGIST_TITLE_W), TITLE_TOP, col_and_fx, ranks[rank] \
+		); \
 	} \
 }
 
 #include "th01/hiscore/regist.cpp"
+#include "th01/main/hiscore.cpp"
+
+static int32_t unused; // ZUN bloat

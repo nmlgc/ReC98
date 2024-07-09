@@ -1,0 +1,55 @@
+#include "th04/shiftjis/bgm.hpp"
+#include "th04/shiftjis/fnshared.hpp"
+#include "shiftjis.hpp"
+
+const shiftjis_t* MUSIC_CHOICES[] = {
+	"No.1  " TH04_01,
+	"No.2  " TH04_02,
+	"No.3  " TH04_03,
+	"No.4  " TH04_04,
+	"No.5  " TH04_05,
+	"No.6  " TH04_06,
+	"No.7  " TH04_07,
+	"No.8  " TH04_08,
+	"No.9  " TH04_09,
+	"No.10 " TH04_10,
+	"No.11 " TH04_11,
+	"No.12 " TH04_12,
+	"No.13 " TH04_13,
+	"No.14 " TH04_14,
+	"No.15 " TH04_15,
+	"No.16 " TH04_16,
+	"No.17 " TH04_17,
+	"No.18 " TH04_18,
+	"No.19 " TH04_19,
+	"No.20 " TH04_20,
+	"No.21 " TH04_21,
+	"No.22 " TH04_22,
+	"                                  ", // ZUN bloat
+	"      " TH04_QT,
+};
+
+const char* MUSIC_FILES[] = {
+	BGM_MENU_MAIN_FN,
+	"st00",
+	"st10",
+	"st00b",
+	"st01",
+	"st01b",
+	"st02",
+	"st02b",
+	"st03",
+	"st03c",
+	"st03b",
+	"st04",
+	"st04b",
+	"st05",
+	"st05b",
+	"st06",
+	"st06b",
+	"st06c",
+	"end1",
+	"end2",
+	"staff",
+	"name",
+};

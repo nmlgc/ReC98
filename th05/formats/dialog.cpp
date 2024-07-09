@@ -1,12 +1,8 @@
-#pragma option -zCmain_TEXT
+#pragma option -zCmain_TEXT -zPmain_01
 
 #include <stddef.h>
-#include "platform.h"
-#include "master.hpp"
-#include "th04/common.h"
-#include "th04/score.h"
+#include "libs/master.lib/master.hpp"
 #include "th04/main/stage/stage.hpp"
-#include "th05/playchar.h"
 #include "th05/resident.hpp"
 #include "th05/formats/dialog.hpp"
 
@@ -50,6 +46,6 @@ void near dialog_free(void)
 		// returned. You'll need to introduce a separate "dialog buffer base
 		// pointer" when porting to flat memory models.
 		hmem_free(reinterpret_cast<void __seg *>(dialog_p));
-		dialog_p = NULL;
+		dialog_p = nullptr;
 	}
 }

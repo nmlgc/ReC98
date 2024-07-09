@@ -1,8 +1,6 @@
 #pragma option -zCSHARED
 
-extern "C" {
-#include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/hardware/input.hpp"
 #include "th02/hardware/frmdelay.h"
 
@@ -24,6 +22,4 @@ void key_delay(void)
 {
 	while(key_delay_sense()) {}
 	while(!key_delay_sense()) {}
-}
-
 }

@@ -1,9 +1,6 @@
 #pragma option -zCSHARED
 
-#include "platform.h"
 #include "x86real.h"
-#include "libs/kaja/kaja.h"
-extern "C" {
 #include "th04/snd/snd.h"
 
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode)
@@ -12,7 +9,7 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode)
 	if(req_bgm_mode == SND_BGM_MIDI) {
 		snd_mmd_resident();
 	}
-	// ZUN bug: We should be returning if neither driver is resident!
+	// ZUN landmine: We should be returning if neither driver is resident!
 
 	_AH = PMD_GET_DRIVER_TYPE_AND_VERSION;
 	geninterrupt(PMD);
@@ -43,6 +40,4 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode)
 	}
 
 	return snd_bgm_mode;
-}
-
 }

@@ -1,5 +1,7 @@
 // TH05-specific boss declarations.
 
+#include "th05/main/boss/boss.hpp"
+
 /// Backdrops
 /// ---------
 
@@ -59,12 +61,14 @@ void near shinki_bg_type_d_colorfill(void);
 
 // Same for all bosses in this game.
 static const int ENTRANCE_BB_FRAMES_PER_CEL = 4;
+static const int ENTRANCE_BB_TRANSITION_FRAMES_PER_CEL = 2;
 
 BOSS_DEC(sara);
 BOSS_DEC(louise);
 BOSS_DEC(alice);
 
 BOSS_DEC(mai_yuki);
+
 // Pointing to the same address as [boss2]! Might not be possible anymore once
 // that variable has to be moved to a C++ translation unit...
 extern boss_stuff_t yuki;
@@ -74,9 +78,21 @@ BOSS_DEC(yumeko);
 #define yumeko_interval_phase4 boss_statebyte[0]
 #define yumeko_interval_phase7 boss_statebyte[1]
 
-// TODO: Can't be declared here due to the set_nearfunc_ptr_to_farfunc()
-// workarounds in shinki_update().
-// BOSS_DEC(shinki);
-// void pascal near shinki_custombullets_render();
-
+BOSS_DEC(shinki);
 BOSS_DEC(exalice);
+
+/// Rendering functions
+/// -------------------
+
+#pragma codeseg BOSS_BG_TEXT
+
+void pascal near sara_bg_render(void);
+void pascal near louise_bg_render(void);
+void pascal near alice_bg_render(void);
+void pascal near mai_yuki_bg_render(void);
+void pascal near yumeko_bg_render(void);
+void pascal near shinki_bg_render(void);
+void pascal near exalice_bg_render(void);
+
+#pragma codeseg
+/// -------------------

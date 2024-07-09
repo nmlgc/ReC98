@@ -1,3 +1,5 @@
+#include "planar.h"
+
 #define POINTNUM_W 8
 #define POINTNUM_H 8
 

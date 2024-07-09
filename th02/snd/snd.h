@@ -1,4 +1,10 @@
+#include "libs/kaja/kaja.h"
+#include "game/pf.h"
 #include "defconv.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern char snd_interrupt_if_midi;
 extern bool snd_midi_possible;
@@ -20,11 +26,6 @@ extern bool snd_midi_possible;
 
 	static inline bool snd_se_active() {
 		return snd_fm_possible;
-	}
-
-	// MODDERS: Just use [new_se] directly.
-	static inline int16_t snd_get_param(int16_t &param) {
-		return param;
 	}
 	#endif
 
@@ -56,54 +57,56 @@ int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 void snd_delay_until_volume(uint8_t volume);
 
 #if (GAME == 2)
+	#define SND_FALLBACK_DELAY_FRAMES 100
+
+	// Blocks until the active sound driver has played back the current BGM for
+	// the *total* given number of full measures. Does *not* correspond to a
+	// specific measure of the song; a [measure] within the looping section
+	// would still only be hit once, during the first loop.
+	// If no sound driver is active, the delay is replaced with
+	// frame_delay([SND_FALLBACK_DELAY_FRAMES]).
+	// ZUN landmine: Neither PMD nor MMD reset the internal measure when
+	// stopping playback. If no BGM is playing and the previous one hasn't been
+	// played back for at least the given number of [measures], the function
+	// will deadlock.
 	void snd_delay_until_measure(int measure);
 #endif
 
-#if defined(PMD) /* requires kaja.h */
-	#if defined(__cplusplus)
-		inline int16_t snd_kaja_func(kaja_func_t func, int8_t param) {
-			return snd_kaja_interrupt((func) << 8 | (param));
-		}
-		#endif
-	#if defined(__cplusplus) && (GAME <= 4)
-		static inline uint16_t snd_load_size() {
-			// ZUN bug: Should rather retrieve the maximum data size for song
-			// or sound effect data via PMD_GET_BUFFER_SIZES, instead of
-			// hardcoding a random maximum and risking overflowing PMD's data
-			// buffer.
-			// (Unfortunately, MMD lacks a similar function...)
-			// MODDERS: When implementing this properly, rearrange the call
-			// sites to make sure that AX isn't destroyed.
-			return 0x5000;
-		}
-	#endif
+#define snd_kaja_func(func, param) ( \
+	snd_kaja_interrupt(((func) << 8) + (param)) \
+)
 
-	typedef enum {
-		SND_LOAD_SONG = (KAJA_GET_SONG_ADDRESS << 8),
-		SND_LOAD_SE = (PMD_GET_SE_ADDRESS << 8),
-	} snd_load_func_t;
+typedef enum {
+	SND_LOAD_SONG = (KAJA_GET_SONG_ADDRESS << 8),
+	SND_LOAD_SE = (PMD_GET_SE_ADDRESS << 8),
+} snd_load_func_t;
 
-	#define SND_FN_LEN 13
-
-	#if (GAME <= 3)
-		// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound
-		// effect bank in EFC format ([func] == SND_LOAD_SE) into the
-		// respective work buffer of the sound driver. If MIDI is used, 'md'
-		// is appended to the file name.
-		// [fn] still needs to be null-terminated, despite its fixed length.
-		void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func);
-	#endif
+#if (GAME <= 3)
+	// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound effect
+	// bank in EFC format ([func] == SND_LOAD_SE) into the respective work
+	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
+	// file name.
+	// [fn] still needs to be null-terminated, despite its fixed length.
+	//
+	// ZUN landmine: The function doesn't stop any currently playing song
+	// before loading the a new one. This can cause glitches when loading from
+	// a slow storage device: If it takes longer than a single period of the
+	// OPN timer to write the full new song to the driver's song buffer, the
+	// driver will play back garbage in the meantime.
+	void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 #endif
 
 void snd_se_reset(void);
 void DEFCONV snd_se_play(int new_se);
 void snd_se_update(void);
 
+// Cancels any currently playing sound effect to play the given one.
+#define snd_se_play_force(new_se) { \
+	snd_se_reset(); \
+	snd_se_play(new_se); \
+	snd_se_update(); \
+}
+
 #ifdef __cplusplus
-	// Cancels any currently playing sound effect to play the given one.
-	inline void snd_se_play_force(int new_se) {
-		snd_se_reset();
-		snd_se_play(new_se);
-		snd_se_update();
-	}
+}
 #endif

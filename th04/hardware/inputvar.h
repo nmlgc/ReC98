@@ -1,3 +1,5 @@
+#include "platform.h"
+
 // Changed from their TH03 values.
 typedef uint16_t input_t;
 

@@ -1,7 +1,4 @@
-#include "decomp.hpp"
-extern "C" {
-#include "th01/hardware/egc.h"
-}
+#include "th01/hardware/egc_impl.hpp"
 
 void egc_start_copy(void)
 {

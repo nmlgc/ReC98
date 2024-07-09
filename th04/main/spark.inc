@@ -1,11 +1,8 @@
 ; Everything here needs to be kept in sync with the C++ versions in spark.hpp!
 
 include libs/master.lib/macros.inc
+include th02/main/entity.inc
 include th04/math/motion.inc
-
-; spark_flag_t
-SF_FREE = 0
-SF_ALIVE = 1
 
 spark_t struc
 	flag       	db ?

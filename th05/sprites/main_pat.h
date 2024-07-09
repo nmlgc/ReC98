@@ -1,10 +1,14 @@
 #include "th02/formats/bfnt.h"
 #include "th04/sprites/cels.h"
+#include "pc98.h"
 
 #define PARTICLE_W 16
 #define PARTICLE_H 16
 
 #define PARTICLE_CELS 4
+#define WIND_STAY_CELS 4
+#define WIND_MOVE_CELS 2
+#define SPIN_CELS 4
 #define B4BALL_CELS 4
 #define B4_CELS 16
 
@@ -27,9 +31,12 @@ static const pixel_t SHINKI_WING_H = 96;
 typedef enum {
 	/// Stage-independent
 	/// =================
+	// mikod.bft
+	// ---------
+	PAT_EXPLOSION_BIG = 3,
 	// miko32.bft
 	// ----------
-	PAT_ENEMY_KILL = 4,
+	PAT_ENEMY_KILL,
 	PAT_ENEMY_KILL_last = (PAT_ENEMY_KILL + ENEMY_KILL_CELS - 1),
 	PAT_CLOUD_BULLET16_BLUE,
 	PAT_CLOUD_BULLET16_BLUE_last = (PAT_CLOUD_BULLET16_BLUE + BULLET_CLOUD_CELS - 1),
@@ -42,15 +49,16 @@ typedef enum {
 	// --------------------------------------------------
 	// miko16.bft / st06_16.bft
 	// ------------------------
-	PAT_ITEM = 36,
+	TINY_MIKO16_START = 36,
+	PAT_ITEM = TINY_MIKO16_START,
 
 	// Non-directional bullets
-	PAT_BULLET16_N_BLUE = 44,
+	PAT_BULLET16_N_BLUE = 44, // Should not be used in patterns!
 	PAT_BULLET16_N_BALL_BLUE = PAT_BULLET16_N_BLUE,
 	PAT_BULLET16_N_OUTLINED_BALL_BLUE,
 	PAT_BULLET16_N_SMALL_BALL_BLUE,
 	PAT_BULLET16_N_CROSS_BLUE,	// Green during the EX-Alice battle
-	PAT_BULLET16_N_RED,
+	PAT_BULLET16_N_RED, // Should not be used in patterns!
 	PAT_BULLET16_N_BALL_RED = PAT_BULLET16_N_RED,
 	PAT_BULLET16_N_OUTLINED_BALL_RED,
 	PAT_BULLET16_N_SMALL_BALL_RED,
@@ -79,12 +87,14 @@ typedef enum {
 	PAT_DECAY_BULLET16,
 	PAT_DECAY_BULLET16_last = (PAT_DECAY_BULLET16 + BULLET_DECAY_CELS - 1),
 
+	PAT_EXPLOSION_SMALL,
+
 	PAT_FIREWAVE_LEFT = 168,	// st06_16.bft only
 	PAT_FIREWAVE_RIGHT,     	// st06_16.bft only
 
-	PAT_EXPLOSION_SMALL,
+	TINY_MIKO16_END = 172,
 
-	PAT_PARTICLE = 172,
+	PAT_PARTICLE = TINY_MIKO16_END,
 	PAT_PARTICLE_last = (PAT_PARTICLE + PARTICLE_CELS - 1),
 	PAT_MIKO16_UNUSED_0,
 	PAT_MIKO16_UNUSED_1,
@@ -92,12 +102,25 @@ typedef enum {
 	// ------------------------
 	// bomb0.bft / bomb3.bft
 	// ---------------------
-	PAT_PLAYCHAR_BOMB,
+	PAT_PLAYCHAR_BOMB_SHAPE,
 	// ---------------------
 	/// =================
 
+	PAT_STAGE,
+
 	/// Stage 1
 	/// =======
+	// st01.bb1
+	// --------
+	PAT_SARA_STAY = PAT_STAGE,
+	PAT_SARA_STAY_last = (PAT_SARA_STAY + WIND_STAY_CELS - 1),
+	PAT_SARA_RIGHT,
+	PAT_SARA_RIGHT_last = (PAT_SARA_RIGHT + WIND_MOVE_CELS - 1),
+	PAT_SARA_LEFT,
+	PAT_SARA_LEFT_last = (PAT_SARA_LEFT + WIND_MOVE_CELS - 1),
+	PAT_SARA_SPIN,
+	PAT_SARA_SPIN_last = (PAT_SARA_SPIN + SPIN_CELS - 1),
+	// --------
 	// st01.bft
 	// --------
 	PAT_MIDBOSS1 = 204,
@@ -113,7 +136,7 @@ typedef enum {
 	// They are only differentiated inside the rendering function, by adding
 	// B4_CELS onto the patnum for Yuki. Thus, both files are assumed to have
 	// the same number of sprites.
-	PAT_MAI = 180,
+	PAT_MAI = PAT_STAGE,
 	PAT_B4_STILL = PAT_MAI,
 	PAT_B4_RIGHT,
 	PAT_B4_LEFT,
@@ -149,7 +172,7 @@ typedef enum {
 	/// =======
 	// st05.bb1
 	// --------
-	PAT_SHINKI_STILL = 180,
+	PAT_SHINKI_STILL = PAT_STAGE,
 	PAT_SHINKI_CAST,
 	PAT_SHINKI_RIGHT,
 	PAT_SHINKI_LEFT,
@@ -188,6 +211,9 @@ typedef enum {
 	TINY_B6BALL_END,
 	/// -------
 	/// =======
+
+ 	PAT_STAGE_last = 319,
+	PAT_MAX = 320,
 
 	_main_patnum_t_FORCE_INT16 = 0x7FFF,
 } main_patnum_t;

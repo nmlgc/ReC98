@@ -12,7 +12,7 @@ items_render	proc near
 	jmp	short @@more?
 
 @@loop:
-	cmp	[si.item_t.flag], 1
+	cmp	[si.item_t.flag], F_ALIVE
 	jnz	short @@next
 	cmp	[si+item_t.pos.cur.y], (-(ITEM_H / 2) shl 4)
 	jle	short @@next

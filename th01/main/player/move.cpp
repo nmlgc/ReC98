@@ -1,5 +1,10 @@
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
+
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+bool player_invincible_against_orb = false;
+// -------------------------------------------------
 
 void player_move_and_clamp(pixel_t delta)
 {

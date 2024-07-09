@@ -1,19 +1,26 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// bullet.inc!
 
+#include "th04/main/playfld.hpp"
+#include "th04/main/rank.hpp"
 #include "th04/sprites/cels.h"
+#include "th02/main/entity.hpp"
+
+extern "C" {
 
 /// Game-specific group and spawn types
 /// -----------------------------------
+
 #if GAME == 5
-# include "th05/main/bullet/types.h"
+	#include "th05/main/bullet/types.h"
 #else
-# include "th04/main/bullet/types.h"
+	#include "th04/main/bullet/types.h"
 #endif
 /// -----------------------------------
 
 /// States and modes
 /// ----------------
+
 static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * BMS_DECAY_FRAMES_PER_CEL)
@@ -31,6 +38,7 @@ static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 enum bullet_spawn_state_t {
 	/// Hitbox is active
 	/// ----------------
+
 	BSS_GRAZEABLE = 0,
 	BSS_GRAZED = 1,
 	BSS_ACTIVE = 2,
@@ -38,6 +46,7 @@ enum bullet_spawn_state_t {
 
 	/// Delay "cloud", no hitbox
 	/// ------------------------
+
 	BSS_CLOUD_BACKWARDS = 3,
 	BSS_CLOUD_FORWARDS = 4,
 	BSS_CLOUD_END = (BSS_CLOUD_FORWARDS + BSS_CLOUD_FRAMES),
@@ -49,6 +58,7 @@ enum bullet_spawn_state_t {
 enum bullet_move_state_t {
 	/// Hitbox is active
 	/// ----------------
+
 	// Slows down from BMS_SLOWDOWN_BASE_SPEED to [final_speed]
 	BMS_SLOWDOWN = 0,
 	// Special processing according to [special_motion]
@@ -59,6 +69,7 @@ enum bullet_move_state_t {
 
 	/// Decay, no hitbox
 	/// ----------------
+
 	BMS_DECAY = 4,
 	BMS_DECAY_END = (BMS_DECAY + BMS_DECAY_FRAMES),
 	/// ----------------
@@ -120,11 +131,11 @@ union bullet_special_angle_t {
 /// ----------------
 
 struct bullet_t {
-	unsigned char flag;
+	entity_flag_t flag;
 	char age;
 	PlayfieldMotion pos;
-	unsigned char from_group; // unused
-	int8_t unused;
+	unsigned char from_group; // ZUN bloat: Unused
+	int8_t unused; // ZUN bloat
 	SubpixelLength8 speed_cur;
 	unsigned char angle;
 	bullet_spawn_state_t spawn_state;
@@ -134,13 +145,13 @@ struct bullet_t {
 	union {
 		unsigned char slowdown_time;	// with BMS_SLOWDOWN
 		unsigned char turns_done;   	// with BMS_SPECIAL
-	} ax;
+	} u1;
 	union {
 		// Difference between [speed_final] and the BMS_SLOWDOWN_BASE_SPEED.
 		// Always positive for BMS_SLOWDOWN bullets.
 		SubpixelLength8 slowdown_speed_delta;	// with BMS_SLOWDOWN
 		bullet_special_angle_t angle;        	// with BMS_SPECIAL
-	} dx;
+	} u2;
 	int patnum;
 
 #if GAME == 5
@@ -160,13 +171,11 @@ struct bullet_t {
 static const subpixel_t BULLET_KILLBOX_W = TO_SP(8);
 static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 
-#ifdef BULLET_D_CELS
-	static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
-#endif
+static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
 
 #if GAME == 5
-# define PELLET_COUNT 180
-# define BULLET16_COUNT 220
+	#define PELLET_COUNT 180
+	#define BULLET16_COUNT 220
 
 // Returns the sprite ID of a directional or vector bullet sprite that
 // represents the given [angle], relative to [patnum_base]. While the function
@@ -180,8 +189,8 @@ extern "C++" unsigned char pascal near bullet_patnum_for_angle(
 // Turns every 4th bullet into a point item when zapping bullets.
 extern bool bullet_zap_drop_point_items;
 #else
-# define PELLET_COUNT 240
-# define BULLET16_COUNT 200
+	#define PELLET_COUNT 240
+	#define BULLET16_COUNT 200
 
 // Returns the offset for a directional bullet sprite that shows the given
 // [angle].
@@ -206,7 +215,8 @@ extern union {
 
 /// Template
 /// --------
-struct bullet_template_t {
+
+struct BulletTemplate {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet
 	PlayfieldPoint origin;
@@ -220,33 +230,83 @@ struct bullet_template_t {
 	unsigned char angle;
 	SubpixelLength8 speed;
 
-	void set_spread(unsigned char count, unsigned char angle_delta) {
-		// MODDERS: Just assign the values regularly, and don't rely on the
-		// physical layout of the structure.
-		reinterpret_cast<uint16_t &>(spread) = ((angle_delta << 8) | count);
+private:
+	// MODDERS: Just assign the values regularly, and don't rely on the
+	// physical layout of the structure.
+	void set16(unsigned char& val, uint8_t b0, uint8_t b1) {
+		reinterpret_cast<uint16_t &>(val) = (b0 | (b1 << 8));
 	}
 
-	#ifdef RANK_H
-		void set_stack_for_rank(
-			unsigned char count_for_easy,
-			unsigned char count_for_normal,
-			unsigned char count_for_hard,
-			unsigned char count_for_lunatic,
-			subpixel_length_8_t speed_delta_for_easy,
-			subpixel_length_8_t speed_delta_for_normal,
-			subpixel_length_8_t speed_delta_for_hard,
-			subpixel_length_8_t speed_delta_for_lunatic
-		) {
-			// MODDERS: Just assign the values regularly, and don't rely on the
-			// physical layout of the structure.
-			reinterpret_cast<uint16_t &>(stack) = select_for_rank(
-				((count_for_easy << 8) | speed_delta_for_easy),
-				((count_for_normal << 8) | speed_delta_for_normal),
-				((count_for_hard << 8) | speed_delta_for_hard),
-				((count_for_lunatic << 8) | speed_delta_for_lunatic)
-			);
-		}
-	#endif
+	void set32(
+		unsigned char& val, uint8_t b0, uint8_t b1, uint32_t b2, uint32_t b3
+	) {
+		reinterpret_cast<uint32_t &>(val) = (
+			b0 | (b1 << 8) | (b2 << 16) | (b3 << 24)
+		);
+	}
+
+	void set16_for_rank(
+		unsigned char& val,
+		uint8_t b0_e, uint8_t b1_e,
+		uint8_t b0_n, uint8_t b1_n,
+		uint8_t b0_h, uint8_t b1_h,
+		uint8_t b0_l, uint8_t b1_l
+	) {
+		reinterpret_cast<uint16_t &>(val) = select_for_rank(
+			(b0_e | (b1_e << 8)),
+			(b0_n | (b1_n << 8)),
+			(b0_h | (b1_h << 8)),
+			(b0_l | (b1_l << 8))
+		);
+	}
+
+public:
+	void set_spread(unsigned char count, unsigned char angle_delta) {
+		set16(spread, count, angle_delta);
+	}
+
+	void set_stack(unsigned char count, float speed_delta) {
+		// MODDERS: Just assign the values regularly, and don't rely on the
+		// physical layout of the structure.
+		set16(stack, count, to_sp8(speed_delta));
+	}
+
+	void set_spread_stack(
+		unsigned char spread, unsigned char spread_angle_delta,
+		unsigned char stack, float stack_speed_delta
+	) {
+		set32(this->spread,
+			spread, spread_angle_delta, stack, to_sp8(stack_speed_delta)
+		);
+	}
+
+	void set_stack_for_rank(
+		unsigned char count_easy, float speed_delta_easy,
+		unsigned char count_normal, float speed_delta_normal,
+		unsigned char count_hard, float speed_delta_hard,
+		unsigned char count_lunatic, float speed_delta_lunatic
+	) {
+		set16_for_rank(stack,
+			count_easy, to_sp8(speed_delta_easy),
+			count_normal, to_sp8(speed_delta_normal),
+			count_hard, to_sp8(speed_delta_hard),
+			count_lunatic, to_sp8(speed_delta_lunatic)
+		);
+	}
+
+	void set_spread_for_rank(
+		unsigned char count_easy, unsigned char angle_delta_easy,
+		unsigned char count_normal, unsigned char angle_delta_normal,
+		unsigned char count_hard, unsigned char angle_delta_hard,
+		unsigned char count_lunatic, unsigned char angle_delta_lunatic
+	) {
+		set16_for_rank(spread,
+			count_easy, angle_delta_easy,
+			count_normal, angle_delta_normal,
+			count_hard, angle_delta_hard,
+			count_lunatic, angle_delta_lunatic
+		);
+	}
 #else
 	PlayfieldPoint velocity;
 	bullet_group_t group;
@@ -254,13 +314,14 @@ struct bullet_template_t {
 	SubpixelLength8 speed;
 	unsigned char count;
 	bullet_template_delta_t delta;
-	uint8_t unused_1;
+	uint8_t unused_1; // ZUN bloat
 	bullet_special_motion_t special_motion;
-	uint8_t unused_2;
+	uint8_t unused_2; // ZUN bloat
 #endif
 };
 
-extern bullet_template_t bullet_template;
+extern BulletTemplate bullet_template;
+
 // Separate from the template, for some reason?
 extern bullet_special_angle_t bullet_template_special_angle;
 
@@ -306,3 +367,5 @@ extern nearfunc_t_near bullet_template_tune;
 void near bullets_add_regular_fixedspeed(void);
 void near bullets_add_special_fixedspeed(void);
 /// --------
+
+}
