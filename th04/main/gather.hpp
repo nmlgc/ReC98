@@ -1,6 +1,9 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// gather.inc!
 
+#include "th04/main/bullet/bullet.hpp"
+#include "th02/main/entity.hpp"
+
 // Shrinking gather circles. Can fire bullets according to the included
 // template once their radius reaches GATHER_RADIUS_END, unless
 // [bullet_template.spawn_type] is set to BST_GATHER_ONLY.

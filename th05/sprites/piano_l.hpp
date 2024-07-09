@@ -1,3 +1,5 @@
+#include "planar.h"
+
 // Using the same naming convention as for the gaiji characters...
 typedef enum {
 	pl_F = 0,

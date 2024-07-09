@@ -1,3 +1,8 @@
+#ifndef TH03_PLAYCHAR_HPP
+#define TH03_PLAYCHAR_HPP
+
+#include "platform.h"
+
 typedef enum {
 	PLAYCHAR_REIMU = 0,
 	PLAYCHAR_MIMA = 1,
@@ -60,3 +65,5 @@ struct PlaycharPalettedOptional {
 };
 
 #define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
+
+#endif /* TH03_PLAYCHAR_HPP */

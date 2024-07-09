@@ -1,10 +1,6 @@
 /// Extra Stage Boss #2 - Gengetsu
 /// ------------------------------
 
-#include "platform.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/custom.hpp"
 
 // Coordinates

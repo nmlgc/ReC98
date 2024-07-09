@@ -10,6 +10,7 @@
 #define OVERLAY_FADE_CELS 9
 
 typedef enum {
+	gs_NULL = 0x00, // '\0'
 	gs_YINYANG = 0x02, // ☯
 	gs_BOMB, // ◉? ⦿? 🎯? 🖸? Or simply 💣?
 

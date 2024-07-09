@@ -2,16 +2,11 @@
 /// -------------------------------
 
 #include <stdio.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
@@ -23,21 +18,15 @@
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 #include "th01/formats/grz.h"
-#include "th01/formats/ptn.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/spawnray.hpp"
 #include "th01/main/stage/palette.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -207,7 +196,7 @@ template <int SnakeCount> struct Snakes {
 		(player_center_y() - snakes.top[snake_i][0]), \
 		(snake_target_offset_left(to_left) - snakes.left[snake_i][0]) \
 	); \
-	tmp_angle += ((rand() % 2) == 0) ? +0x28 : -0x28; \
+	tmp_angle += ((irand() % 2) == 0) ? +0x28 : -0x28; \
 	vector2( \
 		(pixel_t far &)snakes.velocity_x[snake_i], \
 		(pixel_t far &)snakes.velocity_y[snake_i], \
@@ -798,7 +787,7 @@ void pattern_two_homing_snakes_and_semicircle_spreads(void)
 			pixel_t velocity_y;
 			Subpixel speed;
 
-			angle = (rand() % (0x80 / SPREAD));
+			angle = (irand() % (0x80 / SPREAD));
 			pellet_left =
 				((boss_phase_frame % 120) ==  0) ? SWORD_CENTER_X :
 				((boss_phase_frame % 120) == 40) ? EYE_CENTER_X :
@@ -1123,8 +1112,8 @@ void pattern_rain_from_edges(void)
 		mdrv2_se_play(6);
 	}
 	if((boss_phase_frame % pattern_state.interval) == 0) {
-		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
-		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
+		pellets_add_single_rain(end_x, end_y, (irand() & 0x7F), 2.0f);
+		pellets_add_single_rain(end_x, end_y, (irand() & 0x7F), 2.0f);
 	}
 }
 
@@ -1193,8 +1182,8 @@ void slash_animate(void)
 	top  -= (SLASH_DISTANCE_5_TO_6_Y / (SLASH_FRAMES_FROM_4_5_TO_6 / steps));
 
 inline void slash_rain_fire(const screen_x_t& left, const screen_y_t& top) {
-	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
-	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
+	pellets_add_single_rain(left, top, (irand() % 0x7F), 0.0f);
+	pellets_add_single_rain(left, top, (irand() % 0x7F), 0.0f);
 }
 
 void pattern_slash_rain(void)
@@ -1334,7 +1323,7 @@ void pattern_lasers_and_3_spread(void)
 		return;
 	}
 	if(boss_phase_frame == 100) {
-		right_to_left = (rand() % 2);
+		right_to_left = (irand() % 2);
 
 		// Divisor = number of lasers that are effectively fired.
 		select_for_rank(pattern_state.delta_x,
@@ -1571,9 +1560,9 @@ void konngara_main(void)
 	) { \
 		if(boss_phase_frame > frame_min) { \
 			boss_phase_frame = 1; \
-			phase.pattern_cur = (rand() % count_on_first_try); \
+			phase.pattern_cur = (irand() % count_on_first_try); \
 			if(phase.pattern_cur == pattern_prev) { \
-				phase.pattern_cur = (rand() % count_on_second_try); \
+				phase.pattern_cur = (irand() % count_on_second_try); \
 			} \
 			pattern_prev = phase.pattern_cur; \
 			phase.patterns_done++; \

@@ -1,6 +1,5 @@
 #include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "platform/x86real/pc98/font.hpp"

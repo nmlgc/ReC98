@@ -1,17 +1,10 @@
 bin/*
+obj/
 .tup/*
+tup.config
+tup-generate.vardict
+!bin/README.md
 !bin/masters.lib
-Research/**/*.exe
-Research/**/*.obj
-RESEARCH/**/*.map
-RESEARCH/**/*.EXE
-RESEARCH/**/*.OBJ
-RESEARCH/**/*.MAP
-
-
-# Borland C++ ILINK32 debug information - can't be deactivated, unfortunately.
-*.tds
-*.TDS
 
 # Converted sprites
 *.[ac]sp

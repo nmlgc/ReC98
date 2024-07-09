@@ -1,8 +1,17 @@
 // Startup code shared between TH04 and TH05
 
-#include <process.h>
-#include "th02/core/initexit.h"
+#if (GAME == 5)
+	#include "th05/resident.hpp"
+#else
+	#include "th04/resident.hpp"
+#endif
+#include "th04/op/op.hpp"
+#include "th04/formats/cfg.hpp"
+#include "th04/snd/snd.h"
 #include "th04/shiftjis/fnshared.hpp"
+#include "th02/core/initexit.h"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include <process.h>
 
 inline void op_exit_into_main(bool fade_out_bgm, bool allow_debug) {
 	main_cdg_free();

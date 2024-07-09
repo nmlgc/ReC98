@@ -1,25 +1,14 @@
 #pragma option -zPgroup_01
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
+#include "libs/master.lib/master.hpp"
 #include "game/input.hpp"
-#include "th01/rank.h"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/hardware/frmdelay.h"
 #include "th03/common.h"
-#include "th03/score.h"
-#include "th03/playchar.hpp"
 #include "th03/resident.hpp"
-#include "th03/sprites/regi.h"
 #include "th03/formats/cdg.h"
 #include "th03/formats/pi.hpp"
 #include "th03/hardware/input.h"
-}
 #include "th03/shiftjis/regist.hpp"
 #include "th03/formats/scoredat.hpp"
 
@@ -101,7 +90,7 @@ void near regist_load_and_put_initial(void)
 	graph_accesspage(0);
 	graph_showpage(0);
 
-	pi_load_put_8_free(0, regib_pi);
+	pi_fullres_load_palette_apply_put_free(0, regib_pi);
 
 	// Kind of assumes that we only show this screen once for the lifetime of
 	// the process.

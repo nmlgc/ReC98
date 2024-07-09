@@ -1,3 +1,4 @@
+#include "th01/hardware/grppsafx.h"
 #include "th01/shiftjis/fwnum.hpp"
 
 void graph_putfwnum_fx(

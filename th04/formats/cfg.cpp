@@ -1,22 +1,11 @@
 #include <stddef.h>
-#include "platform.h"
-#if (GAME == 4)
-	// These are needed for the game startup code, which needs to be part of
-	// the same translation unit in this game...
-	#include "pc98.h"
-	#include "libs/kaja/kaja.h"
-#endif
-#include "master.hpp"
-#include "th04/score.h"
+#include "th03/formats/cfg_impl.hpp"
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 #else
 	#include "th04/resident.hpp"
 #endif
-#include "th04/formats/cfg.hpp"
-extern "C" {
 #include "th04/snd/snd.h"
-}
 
 #if (GAME == 4)
 	bool snd_sel_disabled = false; // ZUN bloat: Unused in this game.

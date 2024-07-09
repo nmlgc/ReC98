@@ -4,6 +4,7 @@
 // • has set ES to the beginning of a VRAM plane (e.g. 0xA800)
 // • and has set the GRCG to RMW mode. Consequently, the GRCG also isn't
 //   turned off before returning from any of these functions.
+extern "C" {
 
 // Displays the alpha plane of the (non-tiny!) 16x16 sprite with the given
 // [patnum] using the current GRCG tile/color.
@@ -27,4 +28,6 @@ void pascal near z_super_roll_put_tiny_16x16_raw(int patnum);
 	_AX = left; \
 	z_super_roll_put_tiny_32x32_raw(patnum);
 void pascal near z_super_roll_put_tiny_32x32_raw(int patnum);
+
+}
 /// ------------------------------------------------------------

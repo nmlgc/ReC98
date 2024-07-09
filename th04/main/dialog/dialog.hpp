@@ -1,3 +1,5 @@
+#include "platform.h"
+
 // ZUN bloat: This really shouldn't have been a distinct function that had to
 // be named. The dialog subsystem has no business being responsible for
 // incrementing .STD frames. Oh, and the return value is useless too.

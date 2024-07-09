@@ -1,18 +1,11 @@
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th02/main/hud/hud.hpp"
 #include "th03/math/polar.hpp"
 #include "th03/hardware/palette.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/hardware/grcg.hpp"
-extern "C" {
 #include "th04/formats/super.h"
-}
-#include "th04/main/phase.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/boss/boss.hpp"
 #if (GAME == 5)
 	#include "th05/sprites/main_pat.h"

@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "pc98.h"
 
 // If `true`, skill_apply_and_graph_percentage_put() will subtract the

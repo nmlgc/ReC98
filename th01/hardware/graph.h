@@ -1,6 +1,8 @@
 /// BIOS
 /// ----
 
+#include "planar.h"
+
 // Enables the graphics layer in 640x400 mode, applies z_Palettes, and clears
 // page 0.
 void z_graph_init(void);
@@ -41,8 +43,6 @@ void grcg_setcolor_rmw(vc2 col);
 void grcg_setcolor_tcr(vc2 col);
 
 void grcg_off_func(void);
-#undef grcg_off
-#define grcg_off grcg_off_func
 
 void z_grcg_boxfill(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
