@@ -1,8 +1,10 @@
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th04/op/zunsoft.h"
 
+// Copy of the palette used during the logo, to allow non-blocking fades in
+// contrast to master.lib's blocking palette_black_in() and palette_black_out()
+// functions. (Then again, master.lib has the PaletteTone global for that...)
 Palette8 zunsoft_palette;
 
 // ZUN Soft logo explosion structure.
@@ -18,6 +20,16 @@ struct pyro_t {
 	unsigned char angle;
 	unsigned char patnum_base; // displayed sprite is incremented every 4 frames
 };
+
+// Spawns [n] new explosions at the given screen-coordinate [origin] position.
+void pascal zunsoft_pyro_new(screen_point_t origin, int n, char patnum_base)
+;
+
+void zunsoft_update_and_render(void)
+;
+
+void zunsoft_palette_update_and_show(int tone)
+;
 
 static const int PYRO_COUNT = 256;
 pyro_t pyros[PYRO_COUNT];

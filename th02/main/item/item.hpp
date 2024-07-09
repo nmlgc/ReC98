@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 enum item_type_t {
 	IT_POWER = 0,
 	IT_POINT = 1,
@@ -14,12 +16,6 @@ enum item_type_t {
 // Turns the next N power or point items spawned via items_add() into big power
 // items. Used for recharging power after using a continue after a Game Over.
 extern unsigned int item_bigpower_override;
-
-// Increases by varying amounts depending on how well items are collected,
-// decrements for every 16 dropped items.
-extern int item_skill;
-
-extern int point_items_collected;
 
 // Spawns the Game Over item set on the next call to items_miss_add().
 // ZUN bloat: Both turning this into a parameter or hardcoding the condition

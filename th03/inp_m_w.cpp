@@ -1,8 +1,6 @@
 #pragma option -zCSHARED
 
-extern "C" {
-#include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/hardware/input.h"
 
@@ -111,6 +109,4 @@ void pascal input_wait_for_change(int frames_to_wait)
 			frames_waited = 0;
 		}
 	}
-}
-
 }

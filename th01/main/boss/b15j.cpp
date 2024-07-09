@@ -4,8 +4,6 @@
 #include "th01/main/boss/palette.cpp"
 
 #include "x86real.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -14,20 +12,13 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grpinv32.hpp"
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/ptn.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/hud/hp.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/stage/palette.hpp"
@@ -685,7 +676,7 @@ inline void fire_random_aimed_eye_laser(
 	fire_aimed_eye_laser(
 		i,
 		origin_left,
-		((rand() % (aim_range_x * 2)) - aim_range_x),
+		((irand() % (aim_range_x * 2)) - aim_range_x),
 		speed_multiplied_by_8,
 		w
 	);
@@ -894,7 +885,7 @@ int near pattern_vertical_lasers_from_top(void)
 	if((boss_phase_frame % INTERVAL) == 0) {
 		int i = ((boss_phase_frame - KEYFRAME_START) / INTERVAL);
 		pixel_t random_offset_x = (
-			(rand() % ((random_range_x_half * 2) + 1)) - random_range_x_half
+			(irand() % ((random_range_x_half * 2) + 1)) - random_range_x_half
 		);
 		shootout_lasers[i].spawn(
 			(PLAYFIELD_LEFT + (i * DISTANCE_X + random_offset_x)),

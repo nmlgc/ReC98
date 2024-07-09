@@ -1,5 +1,3 @@
-#include "th01/main/bullet/pellet_s.hpp"
-
 void pellet_speed_lower(pellet_speed_t max, pellet_speed_t negative_delta)
 {
 	if(resident->pellet_speed > max) {

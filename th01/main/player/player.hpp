@@ -1,3 +1,6 @@
+#include "th01/main/playfld.hpp"
+#include "th01/formats/ptn.hpp"
+
 static const pixel_t PLAYER_W = 32;
 static const pixel_t PLAYER_H = 32;
 
@@ -39,18 +42,16 @@ void invincibility_sprites_update_and_render(bool16 invincible);
 	ptn_put_8(player_left, player_top, cel); \
 }
 
-#ifdef PTN_HPP
-	// Blits the default player sprite to its current position. Used whenever
-	// it was or might have been just unblitted.
-	inline void player_put_default(void) {
-		player_put(PTN_MIKO_L);
-	}
-#endif
+// Blits the default player sprite to its current position. Used whenever it
+// was or might have been just unblitted.
+inline void player_put_default(void) {
+	player_put(PTN_MIKO_L);
+}
 
 #define player_miss_put() { \
 	orb_put_default(); \
 	player_put(PTN_MIKO_MISS + ( \
-		(rand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0 \
+		(irand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0 \
 	)); \
 }
 

@@ -37,7 +37,6 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 
 main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_TEXT, mai_TEXT, CFG_LRES_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, LASER_RH_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, PLAYER_P_TEXT, main_01_TEXT
-g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, B1_UPDATE_TEXT, B4_UPDATE_TEXT, main_035_TEXT, B6_UPDATE_TEXT, BX_UPDATE_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
@@ -311,7 +310,7 @@ _TEXT		ends
 ; ===========================================================================
 
 SLOWDOWN_TEXT segment word public 'CODE' use16
-	_slowdown_frame_delay procdesc near
+	@slowdown_frame_delay$qv procdesc near
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
@@ -334,11 +333,11 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	_cfg_load_resident_ptr
+		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short loc_AEA4
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
-		call	game_init_main pascal, ds, offset aKAIKIDAN2_DAT
+		call	@game_init_main$qnxuc pascal, ds, offset aKAIKIDAN2_DAT
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
@@ -382,12 +381,11 @@ sub_AEA6	proc near
 		push	bp
 		mov	bp, sp
 		mov	_slowdown_factor, 1
-		push	1
-		call	frame_delay
-		call	far ptr	_input_reset_sense
+		call	@frame_delay$qi pascal, 1
+		call	@input_reset_sense$qv
 
 loc_AEBB:
-		call	_input_sense
+		call	@input_sense$qv
 		call	fp_2300E
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_AED7
@@ -445,7 +443,7 @@ loc_AF2D:
 		call	_overlay1
 		call	_overlay2
 		call	@playfield_shake_update_and_rende$qv
-		call	far ptr	_input_reset_sense
+		call	@input_reset_sense$qv
 		mov	al, _slowdown_caused_by_bullets
 		mov	ah, 0
 		push	ax
@@ -498,7 +496,7 @@ loc_AFD1:
 loc_AFDF:
 		cmp	byte_20A70, 0
 		jnz	short loc_AFEB
-		call	_slowdown_frame_delay
+		call	@slowdown_frame_delay$qv
 		jmp	short loc_AFF0
 ; ---------------------------------------------------------------------------
 
@@ -539,7 +537,7 @@ loc_B003:
 		jmp	short $+2
 
 loc_B055:
-		call	score_update_and_render
+		call	@score_update_and_render$qv
 		cmp	_quit, Q_KEEP_RUNNING
 		jz	loc_AEBB
 		pop	bp
@@ -768,7 +766,7 @@ loc_B2A5:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_B2DD
-		call	demo_load
+		call	@demo_load$qv
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.demo_stage]
 		mov	es:[bx+resident_t.stage], al
@@ -1115,49 +1113,7 @@ loc_B630:
 sub_B609	endp
 
 include th04/main/pause.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public demo_load
-demo_load	proc near
-
-var_4		= dword	ptr -4
-
-		enter	4, 0
-		push	si
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 4
-		ja	short @@demo_extra
-		mov	ax, DEMO_N * 2
-		jmp	short loc_B76F
-; ---------------------------------------------------------------------------
-
-@@demo_extra:
-		mov	ax, (DEMO_N * 4) * 2
-
-loc_B76F:
-		mov	si, ax
-		call	hmem_allocbyte pascal, ax
-		mov	word ptr _DemoBuf+2, ax
-		mov	word ptr _DemoBuf, 0
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aDemo0_rec
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.demo_num]
-		add	al, ('0' - 1)
-		les	bx, [bp+var_4]
-		mov	es:[bx+4], al
-		push	word ptr [bp+var_4+2]
-		push	bx
-		call	file_ropen
-		call	file_read pascal, large [_DemoBuf], si
-		call	file_close
-		pop	si
-		leave
-		retn
-demo_load	endp
-
+	@demo_load$qv procdesc near
 	@DemoPlay$qv procdesc near
 DEMO_TEXT	ends
 
@@ -1170,7 +1126,7 @@ EMS_TEXT	segment	byte public 'CODE' use16
 EMS_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
+	@cfg_load_resident_ptr$qv procdesc near
 CFG_LRES_TEXT	ends
 
 TILE_TEXT	segment	word public 'CODE' use16
@@ -1655,7 +1611,7 @@ sub_C52D	endp
 mai_TEXT	ends
 
 MB_INV_TEXT	segment	byte public 'CODE' use16
-	REIMU_STARS_UPDATE_AND_RENDER procdesc pascal near
+	@reimu_stars_update_and_render$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1666,7 +1622,7 @@ sub_C73A	proc near
 		mov	bp, sp
 		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 16, 0
 		call	sub_CEC2
-		call	reimu_stars_update_and_render
+		call	@reimu_stars_update_and_render$qv
 		mov	_circles_color, GC_RG
 		cmp	_bomb_frame, 64
 		ja	short loc_C777
@@ -2783,13 +2739,13 @@ public @end_game$qv
 		jz	short loc_E45D
 		les	bx, _resident
 		assume es:nothing
-		mov	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		mov	es:[bx+resident_t.end_sequence], ES_BAD
 		jmp	short loc_E466
 ; ---------------------------------------------------------------------------
 
 loc_E45D:
 		les	bx, _resident
-		mov	es:[bx+resident_t.end_sequence], ES_1CC
+		mov	es:[bx+resident_t.end_sequence], ES_GOOD
 
 loc_E466:
 		kajacall	KAJA_SONG_FADE, 4
@@ -3528,8 +3484,7 @@ loc_F97F:
 		call	sub_F906
 		or	al, al
 		jnz	short loc_F98F
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_F97F
 ; ---------------------------------------------------------------------------
 
@@ -3541,8 +3496,7 @@ loc_F99A:
 		call	sub_F896
 		or	al, al
 		jnz	short loc_F9AA
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_F99A
 ; ---------------------------------------------------------------------------
 
@@ -3553,8 +3507,7 @@ loc_F9AA:
 
 loc_F9B1:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B3, TX_WHITE
 		sub	[bp+var_2], 2
 
@@ -3567,8 +3520,7 @@ loc_F9DE:
 
 loc_F9EB:
 		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B6, TX_WHITE
 		add	[bp+var_2], 2
 
@@ -3576,7 +3528,7 @@ loc_FA18:
 		cmp	[bp+var_2], 14h
 		jl	short loc_F9EB
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds offset gGAMEOVER, TX_WHITE
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		call	@overlay_wipe$qv
 		call	sub_FAA3
 		mov	ah, 0
@@ -3587,8 +3539,7 @@ loc_FA47:
 		call	sub_F906
 		or	al, al
 		jnz	short loc_FA57
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_FA47
 ; ---------------------------------------------------------------------------
 
@@ -3602,8 +3553,7 @@ loc_FA68:
 		call	sub_F896
 		or	al, al
 		jnz	short loc_FA78
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	short loc_FA68
 ; ---------------------------------------------------------------------------
 
@@ -3664,7 +3614,7 @@ var_1		= byte ptr -1
 		call	gaiji_putca
 
 loc_FB27:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		or	si, si
 		jnz	short loc_FBA7
 		mov	si, _key_det
@@ -3731,8 +3681,7 @@ loc_FBA7:
 		mov	si, _key_det
 
 loc_FBAB:
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		jmp	loc_FB27
 ; ---------------------------------------------------------------------------
 
@@ -5712,8 +5661,8 @@ sub_111B7	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public STAGE2_UPDATE
-stage2_update	proc near
+public @STAGE2_UPDATE$QV
+@stage2_update$qv proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -5985,7 +5934,7 @@ loc_1162C:
 		pop	si
 		leave
 		retn
-stage2_update	endp
+@stage2_update$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6294,7 +6243,7 @@ HUD_OVRL_TEXT	segment	byte public 'CODE' use16
 HUD_OVRL_TEXT	ends
 
 PLAYER_P_TEXT	segment	byte public 'CODE' use16
-	_player_pos_update_and_clamp procdesc near
+	@player_pos_update_and_clamp$qv procdesc near
 PLAYER_P_TEXT	ends
 
 main_01_TEXT	segment	byte public 'CODE' use16
@@ -6482,7 +6431,7 @@ loc_121CA:
 		mov	_player_pos.velocity.y, ax
 
 loc_121E7:
-		call	_player_pos_update_and_clamp
+		call	@player_pos_update_and_clamp$qv
 		cmp	[bp+var_1], 0
 		jz	short loc_121F4
 		mov	word_2CE9E, si
@@ -7229,7 +7178,7 @@ sub_12842	endp
 		input:word
 	HUD_BAR_PUT procdesc near
 	HUD_SCORE_PUT procdesc near
-	SCORE_UPDATE_AND_RENDER procdesc near
+	@score_update_and_render$qv procdesc near
 	@bb_boss_free$qv procdesc near
 	@STAGE1_SETUP$QV procdesc near
 	@STAGE2_SETUP$QV procdesc near
@@ -7238,21 +7187,16 @@ sub_12842	endp
 	@STAGE5_SETUP$QV procdesc near
 	@STAGE6_SETUP$QV procdesc near
 	@STAGEX_SETUP$QV procdesc near
-	extern SCORE_DELTA_COMMIT:proc
 main_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-SHARED	segment	word public 'CODE' use16
-		assume cs:g_SHARED
+SHARED segment byte public 'CODE' use16
+include th02/snd/snd.inc
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
 	extern SND_DETERMINE_MODES:proc
-SHARED	ends
-
-SHARED_	segment	word public 'CODE' use16
-include th02/snd/snd.inc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
@@ -7261,19 +7205,19 @@ include th02/snd/snd.inc
 	extern VECTOR2_AT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern GAME_INIT_MAIN:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
-	extern _input_reset_sense_held:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
-	extern FRAME_DELAY:proc
+	extern @GAME_INIT_MAIN$QNXUC:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
+	extern @input_reset_sense_held$qv:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
+	extern @FRAME_DELAY$QI:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_FREE:proc
 	extern CDG_FREE_ALL:proc
-SHARED_	ends
+SHARED ends
 
 ; ===========================================================================
 
@@ -19728,7 +19672,6 @@ aBss6_cd2	db 'BSS6.CD2',0
 aSt06_bft	db 'st06.bft',0
 aSt06_mpn	db 'st06.mpn',0
 include th04/main/pause[data].asm
-aDemo0_rec	db 'DEMO0.REC',0
 include th04/main/demo[data].asm
 public _EMS_NAME
 _EMS_NAME	db 'KAIKIEMS',0

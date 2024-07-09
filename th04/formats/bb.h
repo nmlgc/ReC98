@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 #define BB_SIZE 2048
 
 // Bitmap format, storing 1-bit values for 8 tiles in one byte.

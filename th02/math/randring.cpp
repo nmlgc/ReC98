@@ -1,3 +1,6 @@
+#include <stddef.h>
+#include "th02/math/randring.hpp"
+
 #pragma option -k-
 
 #ifndef RANDRING_INSTANCE

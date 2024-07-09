@@ -1,20 +1,10 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
-#include "master.hpp"
-extern "C" {
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/grppsafx.h"
-}
 #include "th02/v_colors.hpp"
 #include "th03/common.h"
-#include "th03/playchar.hpp"
-#include "th03/score.h"
 #include "th03/resident.hpp"
-extern "C" {
 #include "th03/formats/cdg.h"
-}
 #include "th03/formats/win.hpp"
 #include "th03/sprites/playchar.hpp"
 

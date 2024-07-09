@@ -1,12 +1,7 @@
 #pragma option -zCGRAPH_EX_TEXT
 
 #include <stdlib.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/grp2xscs.hpp"
 
 void scale_2x(dots32_t &dst32, sdots16_t src16)
@@ -57,7 +52,7 @@ void graph_2xscale_byterect_1_to_0_slow(
 				scale_2x(px32_nonzero, px16_nonzero);
 				grcg_setcolor_rmw(0);
 				grcg_put(p0 + scale_p, px32_nonzero, 32);
-				grcg_off();
+				grcg_off_func();
 
 				scale_2x(dst32, px16.B);
 				VRAM_CHUNK(B, p0 + scale_p, 32) |= dst32;

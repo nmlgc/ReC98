@@ -2,6 +2,8 @@
 // or boss portion. To define such a custom type, declare your own structure,
 // then reinterpret_cast [custom_entities] to that type.
 
+#include "th04/main/playfld.hpp"
+
 #if (GAME == 5)
 	#define CUSTOM_COUNT 64
 

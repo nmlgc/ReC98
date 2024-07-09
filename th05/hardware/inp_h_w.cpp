@@ -1,11 +1,8 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
-#include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
-extern "C" {
 #include "th05/hardware/input.h"
-}
 
 #pragma option -k-
 

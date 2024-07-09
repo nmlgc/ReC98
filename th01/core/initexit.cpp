@@ -1,12 +1,7 @@
 #include <stdarg.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vplanset.h"

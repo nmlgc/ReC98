@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define RANDRING_SIZE 256
 
 extern uint8_t randring[RANDRING_SIZE];

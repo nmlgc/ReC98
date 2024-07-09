@@ -1,7 +1,4 @@
 #include <mem.h>
-#include "platform.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
 #include "th04/main/item/splash.hpp"
 
 #define ITEM_SPLASH_RADIUS_START 2.0f

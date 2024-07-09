@@ -1,9 +1,6 @@
 #pragma option -zCGRAPH_EX_TEXT -2 -Z-
 
 #include <dos.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/sprites/ileave_m.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"

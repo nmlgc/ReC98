@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "pc98.h"
 
 // State

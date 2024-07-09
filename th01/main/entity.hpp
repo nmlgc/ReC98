@@ -1,3 +1,8 @@
+#ifndef TH01_MAIN_ENTITY_HPP
+#define TH01_MAIN_ENTITY_HPP
+
+#include "pc98.h"
+
 // Single entity that is positioned in terms of its top-left coordinate. Does
 // not occur in ZUN's original TH01 code, but should be used to improve the
 // code. Note the semantic difference to a `screen_point_t`.
@@ -15,3 +20,5 @@ template <int Count> struct EntitiesTopleft {
 		return Count;
 	}
 };
+
+#endif /* TH01_MAIN_ENTITY_HPP */

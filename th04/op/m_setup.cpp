@@ -1,15 +1,7 @@
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
-#include "th04/score.h"
 #if (GAME == 5)
 	#include "th05/resident.hpp"
 	#include "th05/formats/pi.hpp"
@@ -21,7 +13,6 @@ extern "C" {
 #include "th04/hardware/input.h"
 #include "th04/snd/snd.h"
 #include "th04/op/op.hpp"
-}
 #include "th04/shiftjis/m_setup.hpp"
 
 // MSWIN.BFT sprites
@@ -322,7 +313,7 @@ void near setup_menu(void)
 	palette_black();
 	super_entry_bfnt("mswin.bft");
 	graph_accesspage(1);
-	pi_load_put_8_free(0, "ms.pi");
+	pi_fullres_load_palette_apply_put_free(0, "ms.pi");
 	graph_copy_page(0);
 	palette_black_in(1);
 

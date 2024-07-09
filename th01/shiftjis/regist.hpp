@@ -1,4 +1,6 @@
 #include "th01/shiftjis/title.hpp"
+#include "shiftjis.hpp"
+#include "pc98.h"
 
 #define REGIST_TITLE             	GAME_TITLE "Å@ã≠é“ÇÃãLò^"
 #define REGIST_TITLE_WITH_SPACE  	REGIST_TITLE "Å@"

@@ -1,7 +1,7 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/planar.h"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 
 bool ptn_sloppy_unput_before_alpha_put = false;
 

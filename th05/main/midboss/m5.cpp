@@ -3,15 +3,10 @@
 
 #pragma option -zCmain_0_TEXT
 
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/v_colors.hpp"
-#include "th04/math/motion.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/scroll.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/midboss/midboss.hpp"
 
 // Constants

@@ -1,13 +1,9 @@
-#pragma option -zCSHARED_ -k-
+#pragma option -zCSHARED -k-
 
 #include <mem.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
-extern "C" {
 #include "th04/hardware/bgimage.hpp"
 
 inline void memcpy_movsd(
@@ -75,6 +71,4 @@ void bgimage_free(void)
 		HMem<dots8_t>::free(bgimage.E);
 		bgimage.B = nullptr;
 	}
-}
-
 }

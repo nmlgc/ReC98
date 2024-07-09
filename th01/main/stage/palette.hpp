@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // The intended palette for a stage, with no effects applied. Used as the
 // reference palette for undoing the palette changes during the bomb animation
 // and the Pause menu.

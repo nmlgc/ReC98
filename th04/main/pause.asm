@@ -18,7 +18,7 @@ _pause	proc near
 	call	gaiji_putsa pascal, (26 shl 16) + 15, ds, offset gsSHUURYOU, TX_YELLOW
 
 @@menu_loop_start:
-	call	input_wait_for_change pascal, 0
+	call	@input_wait_for_change$qi pascal, 0
 	test	_key_det.lo, low INPUT_UP
 	jnz	short @@select
 	test	_key_det.lo, low INPUT_DOWN

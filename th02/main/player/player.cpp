@@ -1,5 +1,3 @@
-#include "platform.h"
-#include "pc98.h"
 #include "th02/main/player/player.hpp"
 #include "th02/sprites/main_pat.h"
 

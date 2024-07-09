@@ -3,17 +3,11 @@
 
 #include <dos.h>
 #include <stdlib.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
 #include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
@@ -22,16 +16,11 @@
 #include "th01/hardware/scrollup.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grc.hpp"
-#include "th01/formats/ptn.hpp"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/palette.hpp"
@@ -288,12 +277,12 @@ static const pixel_t SURROUND_AREA_W = ((PLAYFIELD_W * 3) / 10);
 static const pixel_t SURROUND_AREA_H = ((PLAYFIELD_H * 8) / 21);
 
 #define surround_random_left(relative_to) ( \
-	(relative_to.cur_left + (rand() % SURROUND_AREA_W)) - \
+	(relative_to.cur_left + (irand() % SURROUND_AREA_W)) - \
 	((SURROUND_AREA_W - relative_to.w_static()) / 2) \
 )
 
 #define surround_random_top(relative_to) ( \
-	(relative_to.cur_top + (rand() % SURROUND_AREA_H)) + \
+	(relative_to.cur_top + (irand() % SURROUND_AREA_H)) + \
 	relative_to.surround_area_offset_y(SURROUND_AREA_H) \
 )
 // -------------
@@ -302,7 +291,7 @@ static const pixel_t SURROUND_AREA_H = ((PLAYFIELD_H * 8) / 21);
 // --------------------------------------------
 
 inline screen_x_t elis_playfield_random_left(void) {
-	return (PLAYFIELD_LEFT + (rand() % (PLAYFIELD_W - GIRL_W)));
+	return (PLAYFIELD_LEFT + (irand() % (PLAYFIELD_W - GIRL_W)));
 }
 
 inline screen_y_t elis_playfield_random_top(void) {
@@ -368,7 +357,7 @@ enum elis_grc_cel_t {
 			\
 			/* Render */ \
 			if(boss_phase_frame < end_frame) { \
-				tmp_cel = (rand() % RIFT_CELS); \
+				tmp_cel = (irand() % RIFT_CELS); \
 				elis_grc_put(rifts, i, (C_RIFT + cel), col); \
 			} \
 		} \
@@ -728,7 +717,7 @@ int pattern_11_lasers_across(void)
 	double target_y;
 
 	if(boss_phase_frame == 50) {
-		direction = (rand() % 2);
+		direction = (irand() % 2);
 		ent_unput_and_put_both(ent_still_or_wave, 1, C_HAND, false);
 		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
 			6.25f, 6.875f, 7.5f, 8.125f
@@ -817,9 +806,9 @@ int pattern_random_downwards_missiles(void)
 
 	// That's quite the brave placement for this branch...
 	if((boss_phase_frame > 60) && ((boss_phase_frame % 3) == 0)) {
-		int i = (rand() % rifts.count());
+		int i = (irand() % rifts.count());
 		angle = (
-			(rand() % pattern_state.angle_range) -
+			(irand() % pattern_state.angle_range) -
 			((pattern_state.angle_range - 0x01) / 2) +
 			0x40
 		);
@@ -914,7 +903,7 @@ int phase_1(int id)
 		// Note that this includes `CHOOSE_NEW`. Due to how phase_frame_common()
 		// switches between patterns and teleporting, this adds a 25% chance of
 		// Elis skipping an attack cycle and teleporting again.
-		return (rand() % 4);
+		return (irand() % 4);
 	case 1: return pattern_11_lasers_across();
 	case 2: return pattern_random_downwards_missiles();
 	case 3: return pattern_pellets_along_circle();
@@ -1063,7 +1052,7 @@ int pattern_clusters_from_spheres(void)
 
 		static pixel_t row_h(screen_y_t edge) {
 			return (
-				(((rand() % edge) + edge) - ent_still_or_wave.cur_top) / count()
+				(((irand() % edge) + edge) - ent_still_or_wave.cur_top) / count()
 			);
 		}
 	};
@@ -1127,8 +1116,8 @@ int pattern_clusters_from_spheres(void)
 				subpixel_t speed;
 				unsigned char angle;
 
-				angle = (rand() & 0x7F);
-				speed = ((rand() + to_sp(1.5f)) & (to_sp(4.0f) - 1));
+				angle = (irand() & 0x7F);
+				speed = ((irand() + to_sp(1.5f)) & (to_sp(4.0f) - 1));
 				Pellets.add_single(
 					spheres.left[sphere_i - 1],
 					spheres.top[sphere_i - 1],
@@ -1175,15 +1164,15 @@ int pattern_random_from_rifts(void)
 		((boss_phase_frame % pattern_state.interval) == 0) &&
 		(boss_phase_frame < KEYFRAME_1)
 	) {
-		int i = (rand() % rifts.count());
-		angle = ((rand() % 0x15) + 0x36);
+		int i = (irand() % rifts.count());
+		angle = ((irand() % 0x15) + 0x36);
 		Pellets.add_single(rifts.left[i], rifts.top[i], angle, to_sp(6.0f));
 	} else if(
 		(boss_phase_frame >= KEYFRAME_1) && (boss_phase_frame < KEYFRAME_2)
 	) {
-		int i = (rand() % rifts.count());
-		angle = ((rand() % 0x15) + 0x36);
-		unsigned char angle_offset = ((rand() & 1)
+		int i = (irand() % rifts.count());
+		angle = ((irand() % 0x15) + 0x36);
+		unsigned char angle_offset = ((irand() & 1)
 			? +(boss_phase_frame - KEYFRAME_1)
 			: -(boss_phase_frame - KEYFRAME_1)
 		);
@@ -1224,7 +1213,7 @@ int phase_3(int id)
 		// Note that this includes `CHOOSE_NEW`. Due to how phase_frame_common()
 		// switches between patterns and teleporting, this adds a 25% chance of
 		// Elis skipping an attack cycle and teleporting again.
-		return (rand() % 4);
+		return (irand() % 4);
 	case 1: /* return */ star_of_david_then(pattern_cur, 1,
 		pattern_curved_5_stack_rings
 	);
@@ -1265,7 +1254,7 @@ elis_form_t transform_girl_to_bat(void)
 		ent_still_or_wave,
 		TRANSFORM_START_FRAME,
 		TRANSFORM_END_FRAME,
-		(rand() % COLOR_COUNT),
+		(irand() % COLOR_COUNT),
 		cel
 	);
 	transform_shake(TRANSFORM_START_FRAME);
@@ -1299,7 +1288,7 @@ elis_form_t transform_bat_to_girl(void)
 		ent_bat,
 		TRANSFORM_START_FRAME,
 		TRANSFORM_END_FRAME,
-		(rand() % COLOR_COUNT),
+		(irand() % COLOR_COUNT),
 		cel
 	);
 	transform_shake(TRANSFORM_START_FRAME);
@@ -1374,7 +1363,7 @@ elis_phase_5_subphase_t bat_fly_random(pixel_t &velocity_x, pixel_t &velocity_y)
 	// What is something like "gravity" doing in a bat movement function?
 	// Quite the interesting interpretation as well, even if it wasn't always
 	// zero. MODDERS: Remove.
-	velocity_y += (((rand() % 5) - 2) / 10);
+	velocity_y += (((irand() % 5) - 2) / 10);
 
 	if((boss_phase_frame / BAT_SPEED_DIVISOR) >= frames_until_target) {
 		velocity_x = 0;
@@ -1406,7 +1395,7 @@ void pattern_bat_slow_spreads(void)
 void pattern_bat_alternating_narrow_and_wide_2_spreads(void)
 {
 	if((boss_phase_frame % 4) == 0) {
-		if(rand() & 1) {
+		if(irand() & 1) {
 			form_fire_group(F_BAT, PG_2_SPREAD_NARROW_AIMED, 5.5f);
 		} else {
 			form_fire_group(F_BAT, PG_2_SPREAD_WIDE_AIMED, 5.5f);
@@ -1434,7 +1423,7 @@ void pattern_bat_random_rain(void)
 		pellets_add_single_rain(
 			(form_center_x(F_BAT) - (PELLET_W / 2)),
 			(form_center_y(F_BAT) - (PELLET_H / 2)),
-			rand(),
+			irand(),
 			0.125f
 		);
 	}
@@ -1563,7 +1552,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 		}
 		if((boss_phase_frame % pattern_state.interval) == 0) {
 			Pellets.add_group(
-				(PLAYFIELD_LEFT + (rand() % (PLAYFIELD_W - PELLET_W))),
+				(PLAYFIELD_LEFT + (irand() % (PLAYFIELD_W - PELLET_W))),
 				(PLAYFIELD_TOP),
 				(rank == RANK_LUNATIC) ? PG_1_RANDOM_WIDE : PG_1,
 				to_sp(4.5f)
@@ -1704,7 +1693,7 @@ elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
 	switch(pattern_cur) {
 	case CHOOSE_NEW:
 		// In contrast to phases 1 and 3, no pattern cycle is skipped here.
-		pattern_cur = ((rand() % 3) + 1);
+		pattern_cur = ((irand() % 3) + 1);
 		break;
 	case 1: /* return */ star_of_david_then(subphase, pattern_cur,
 		pattern_three_symmetric_4_stacks_then_symmetric_arc
@@ -1743,7 +1732,7 @@ void phase_5(
 			if(pattern_bat_cur == CHOOSE_NEW) {
 				// In contrast to phases 1 and 3, no pattern cycle is skipped
 				// here.
-				pattern_bat_cur = ((rand() % 4) + 1);
+				pattern_bat_cur = ((irand() % 4) + 1);
 			}
 			switch(pattern_bat_cur) {
 			case 1:
