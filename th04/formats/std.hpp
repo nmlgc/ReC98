@@ -1,6 +1,8 @@
 /// Map tile section order + enemy script format
 /// --------------------------------------------
 
+#include "th01/math/subpixel.hpp"
+
 extern uint8_t __seg* std_seg;
 
 #if (GAME == 5)
@@ -12,9 +14,7 @@ extern uint8_t __seg* std_seg;
 	extern int std_map_section_id; // Within [std_seg]
 #endif
 
-#ifdef SUBPIXEL_HPP
 extern SubpixelLength8 near* std_scroll_speed; // Within [std_seg]
-#endif
 
 #define STD_ENEMY_SCRIPT_COUNT 32
 

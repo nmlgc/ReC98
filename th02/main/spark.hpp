@@ -1,6 +1,9 @@
 /// Spark sprites
 /// -------------
 
+#include "th02/main/entity.hpp"
+#include "th01/math/subpixel.hpp"
+
 enum spark_render_as_t {
 	SRA_DOT = 0, // 1×1-pixel dot
 	SRA_SPRITE = 14, // Hardcoded 8×8-pixel spark sprite

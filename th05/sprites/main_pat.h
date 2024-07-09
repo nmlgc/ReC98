@@ -1,5 +1,6 @@
 #include "th02/formats/bfnt.h"
 #include "th04/sprites/cels.h"
+#include "pc98.h"
 
 #define PARTICLE_W 16
 #define PARTICLE_H 16
@@ -105,11 +106,13 @@ typedef enum {
 	// ---------------------
 	/// =================
 
+	PAT_STAGE,
+
 	/// Stage 1
 	/// =======
 	// st01.bb1
 	// --------
-	PAT_SARA_STAY = 180,
+	PAT_SARA_STAY = PAT_STAGE,
 	PAT_SARA_STAY_last = (PAT_SARA_STAY + WIND_STAY_CELS - 1),
 	PAT_SARA_RIGHT,
 	PAT_SARA_RIGHT_last = (PAT_SARA_RIGHT + WIND_MOVE_CELS - 1),
@@ -133,7 +136,7 @@ typedef enum {
 	// They are only differentiated inside the rendering function, by adding
 	// B4_CELS onto the patnum for Yuki. Thus, both files are assumed to have
 	// the same number of sprites.
-	PAT_MAI = 180,
+	PAT_MAI = PAT_STAGE,
 	PAT_B4_STILL = PAT_MAI,
 	PAT_B4_RIGHT,
 	PAT_B4_LEFT,
@@ -169,7 +172,7 @@ typedef enum {
 	/// =======
 	// st05.bb1
 	// --------
-	PAT_SHINKI_STILL = 180,
+	PAT_SHINKI_STILL = PAT_STAGE,
 	PAT_SHINKI_CAST,
 	PAT_SHINKI_RIGHT,
 	PAT_SHINKI_LEFT,
@@ -209,6 +212,7 @@ typedef enum {
 	/// -------
 	/// =======
 
+ 	PAT_STAGE_last = 319,
 	PAT_MAX = 320,
 
 	_main_patnum_t_FORCE_INT16 = 0x7FFF,

@@ -3,6 +3,8 @@
 /// .CDG was apparently not good enough? Used for gauge attack portraits and
 /// bomb backgrounds.
 
+#include "pc98.h"
+
 static const int MRS_SLOT_COUNT = 8;
 static const pixel_t MRS_W = 288;
 static const pixel_t MRS_H = 184;

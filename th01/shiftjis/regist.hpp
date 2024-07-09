@@ -1,4 +1,6 @@
 #include "th01/shiftjis/title.hpp"
+#include "shiftjis.hpp"
+#include "pc98.h"
 
 static const shiftjis_t* REGIST_TITLE[RANK_COUNT] = {
 	GAME_TITLE "　強者の記録　　イージー　",

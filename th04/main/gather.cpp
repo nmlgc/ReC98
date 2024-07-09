@@ -1,19 +1,10 @@
 #include <stddef.h>
 #include <mem.h>
-#include "platform.h"
-#include "x86real.h"
 #include "decomp.hpp"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
 #include "th04/hardware/grcg.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/vector.hpp"
-extern "C" {
 #include "th04/main/scroll.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
-#include "th04/main/bullet/bullet.hpp"
-}
 #include "th04/main/gather.hpp"
 
 #define gather_init(gather) { \

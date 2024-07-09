@@ -1,3 +1,6 @@
+#include "game/pf.h"
+#include "planar.h"
+
 static const int PLAYER_ANIM_IMAGES_PER_SLOT = 32;
 
 struct PlayerAnimImages {

@@ -39,7 +39,7 @@ void z_palette_settone_but_keep_white(int tone)
 	z_palette_set_all_show(z_Palettes);
 }
 
-inline void pause_cursor_unput(screen_x_t  left) {
+inline void pause_cursor_unput(screen_x_t left) {
 	egc_copy_rect_1_to_0_16(
 		left, pause_top(1), shiftjis_w(PAUSE_CURSOR), GLYPH_H
 	);

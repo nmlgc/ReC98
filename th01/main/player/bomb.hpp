@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define BOMB_DOUBLETAP_WINDOW 20
 static const int BOMBS_EXTRA_PER_LIFE_LOST = 1;
 

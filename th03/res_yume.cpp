@@ -4,14 +4,10 @@
  * required in order to run TH03.
  */
 
-#include <dos.h>
-#include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th02/snd/snd.h"
 #include "th03/common.h"
-#include "th03/score.h"
-#include "th03/playchar.hpp"
 #include "th03/resident.hpp"
 #include "th03/formats/cfg.hpp"
 

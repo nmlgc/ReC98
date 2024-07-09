@@ -1,10 +1,6 @@
 #pragma option -zCGRAPH_EX_TEXT
 
 #include <dos.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
 #include "platform/x86real/pc98/page.hpp"
 #include "th01/sprites/ileave_m.hpp"
 #include "th01/hardware/palette.h"

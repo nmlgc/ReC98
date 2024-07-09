@@ -1,3 +1,5 @@
+#include "planar.h"
+
 // Combines dots from VRAM page 1 (where the mask is 0) with dots from VRAM
 // page 0 (where the mask is 1).
 static const int INTERLEAVE_MASK_COUNT = 10;

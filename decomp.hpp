@@ -3,7 +3,10 @@
  * Declarations to help decompiling the seemingly impossible
  */
 
+#ifndef DECOMP_HPP
 #define DECOMP_HPP
+
+#include "x86real.h"
 
 // Alternate version that sets the value first
 #define outport2(port, val) _asm { \
@@ -89,7 +92,11 @@ template <class T> union StupidBytewiseWrapperAround {
 		*reinterpret_cast<int16_t near *>(reinterpret_cast<uint16_t>(&x))
 
 	// Calling an empty inlined function prevents certain jump optimizations.
-	inline void optimization_barrier(void) {
+	// Returning a value also allows such a barrier to be used for turning
+	// conditional branches with no `else` branch into ternary expressions,
+	// which can lead to different jump optimizations in longer functions.
+	inline bool optimization_barrier(void) {
+		return false;
 	}
 
 #else
@@ -104,3 +111,5 @@ template <class T> union StupidBytewiseWrapperAround {
 // require a 16-bit TASM) just for those.
 #define MOVSD	__emit__(0x66, 0xA5);
 #define REP  	__emit__(0xF3);
+
+#endif /* DECOMP_HPP */

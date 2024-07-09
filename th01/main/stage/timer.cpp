@@ -1,12 +1,5 @@
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
-#include "platform/x86real/pc98/page.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
@@ -15,13 +8,12 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"
 #include "th01/formats/ptn.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/timer.hpp"
+#include "platform/x86real/pc98/page.hpp"
 
 unsigned int stage_timer;
 static unsigned int frames_since_harryup;

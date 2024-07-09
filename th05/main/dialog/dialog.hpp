@@ -1,4 +1,5 @@
 #include "th04/main/dialog/dialog.hpp"
+#include "pc98.h"
 
 // Dialog-related image functions with optional EMS support
 // --------------------------------------------------------

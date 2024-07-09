@@ -1,6 +1,9 @@
 /// Current palette
 /// ---------------
-#if defined(COLOR_COUNT) && defined(__cplusplus)
+
+#include "pc98.h"
+
+#if defined(__cplusplus)
 	extern Palette4 z_Palettes;
 
 	// Calls z_palette_set_show() for all colors in [pal].

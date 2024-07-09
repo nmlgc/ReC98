@@ -1,3 +1,13 @@
+#define BINARY_OP	"op"
+
+// Packfile loaded during most of OP.EXE and MAINE.EXE, except for the Music
+// Room
+#define OP_AND_END_PF_FN	"‰öãY’k1.dat"
+
+#define BGM_EXTRA_BOSS_FN	"st06b"
+
+#define DEMO_EXTRA_PART_2_FN	"DEMO5.REC"
+
 #define EYECATCH_FN	"eye.cdg"
 
 #define FACESET_PLAYCHAR_FORMAT	"KaO0.cD2"

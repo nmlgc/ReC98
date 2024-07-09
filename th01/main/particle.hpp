@@ -1,3 +1,6 @@
+#include "th01/math/subpixel.hpp"
+#include "platform/x86real/pc98/egc.hpp"
+
 enum particle_origin_t {
 	PO_TOP = 0,
 	PO_TOP_RIGHT = 1,

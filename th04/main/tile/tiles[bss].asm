@@ -1,5 +1,8 @@
 TILES_MEMORY_X = 512 / TILE_W
 
+public _map_seg
+_map_seg	dw ?
+
 public _halftiles_dirty, _halftiles_dirty_end
 _halftiles_dirty	db (TILES_MEMORY_X * TILE_FLAGS_Y) dup(?)
 _halftiles_dirty_end	label byte

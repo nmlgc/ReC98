@@ -6,20 +6,11 @@
 #include <mem.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "pc98kbd.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
 #include "bin/fork.h"
 #include "platform/x86real/pc98/page.hpp"
+#include "platform/x86real/pc98/keyboard.hpp"
 #include "game/input.hpp"
-#include "th01/rank.h"
-#include "th01/resident.hpp"
 #include "th01/math/clamp.hpp"
-#include "th01/core/entry.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/core/resstuff.hpp"
 #include "th01/hardware/egc.h"
@@ -60,7 +51,7 @@ void snap_col_4(void)
 		}
 	}
 
-	grcg_off();
+	grcg_off_func();
 	page_access(0);
 }
 
@@ -264,7 +255,7 @@ void whiteline_put(screen_y_t y)
 		x++;
 		vram_offset += static_cast<vram_offset_t>(sizeof(dots32_t));
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void whitelines_animate(void)
@@ -279,12 +270,12 @@ void whitelines_animate(void)
 		egc_copy_rect_1_to_0_16(0, y2, RES_X, 1);
 
 		do {
-			y1 = (rand() % RES_Y);
+			y1 = (irand() % RES_Y);
 		} while(drawn_at[y1]);
 		drawn_at[y1] = true;
 
 		do {
-			y2 = (rand() % RES_Y);
+			y2 = (irand() % RES_Y);
 		} while(drawn_at[y2]);
 		drawn_at[y2] = true;
 
@@ -765,7 +756,7 @@ int main_op(int argc, const char *argv[])
 
 	// Since [frame_rand] is always 0 here, the white line animation always
 	// looks identical.
-	srand(frame_rand);
+	irand_init(frame_rand);
 
 	while(!quit) {
 		if(menu_id == MID_MAIN) {

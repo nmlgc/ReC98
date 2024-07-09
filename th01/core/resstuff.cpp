@@ -3,9 +3,7 @@
  * Random resident structure stuff
  */
 
-#include "platform.h"
-#include "master.hpp"
-#include "th01/resident.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/core/resstuff.hpp"
 
 resident_t far *resident;

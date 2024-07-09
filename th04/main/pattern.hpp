@@ -1,3 +1,5 @@
+#include "platform.h"
+
 // A danmaku pattern function with no fixed maximum time. Fires projectiles in
 // repeating cycles until no longer called.
 typedef void (near *near pattern_loop_func_t)(void);

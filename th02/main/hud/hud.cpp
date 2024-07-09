@@ -1,19 +1,13 @@
 #pragma option -G
 
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
 #include "shiftjis.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
-#include "th02/score.h"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/core/globals.hpp"
 #include "th02/snd/snd.h"
-}
-#include "th02/main/playfld.hpp"
 #include "th02/main/player/player.hpp"
 #include "th02/main/hud/hud.hpp"
 #include "th02/main/hud/overlay.hpp"
@@ -57,7 +51,7 @@ static const uint8_t SHOT_LEVEL_INTERVAL_BITS = 2;
 extern uint8_t POWER_TO_SHOT_LEVEL[POWER_MAX >> SHOT_LEVEL_INTERVAL_BITS];
 
 // Only prints the seven score digits, in contrast to the TH04/TH05 version!
-void pascal near hud_score_put(utram_y_t y, int32_t value)
+void pascal near hud_score_put(utram_y_t y, score_t value)
 {
 	extern int32_t SEVEN_DIGIT_POWERS_OF_10[SCORE_DIGITS - 1];
 

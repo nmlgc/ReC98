@@ -1,12 +1,8 @@
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
-extern "C" {
 #include "th04/main/circle.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/main/player/bomb.hpp"
@@ -80,7 +76,7 @@ extern union {
 		super_plane(col, true) \
 	);
 
-void pascal near reimu_stars_update_and_render(void)
+void near reimu_stars_update_and_render(void)
 {
 	reimu_star_t near *head;
 	reimu_star_t near *trail;
@@ -185,6 +181,4 @@ void pascal near reimu_stars_update_and_render(void)
 			}
 		}
 	}
-}
-
 }

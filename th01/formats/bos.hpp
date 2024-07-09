@@ -1,5 +1,10 @@
 /// Uncompressed, 5-plane, 16-color + alpha, arbitrary-size sprite format
 /// ---------------------------------------------------------------------
+
+#include "th01/formats/sprfmt_h.hpp"
+#include "th01/formats/pf.hpp"
+#include "th01/hardware/graph.h"
+
 #define BOS_MAGIC "BOSS"
 
 // On-disk per-file header. Not the same as for .GRC!

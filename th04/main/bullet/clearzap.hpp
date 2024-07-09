@@ -1,3 +1,6 @@
+#include "th04/sprites/cels.h"
+#include "platform.h"
+
 // Set to `true` to clear all on-screen bullets, giving out a semi-exponential
 // bonus for all bullets that were alive on the first frame of activity.
 // Lasts for BULLET_ZAP_FRAMES and resets to `false` afterwards.
@@ -8,12 +11,10 @@ extern union {
 
 static const int BULLET_ZAP_FRAMES_PER_CEL = 4;
 
-#ifdef BULLET_ZAP_CELS
-	// ZUN quirk: Effectively 1 in TH05, see bullets_update() for the cause.
-	static const int BULLET_ZAP_FRAMES = (
-		BULLET_ZAP_CELS * BULLET_ZAP_FRAMES_PER_CEL
-	);
-#endif
+// ZUN quirk: Effectively 1 in TH05, see bullets_update() for the cause.
+static const int BULLET_ZAP_FRAMES = (
+	BULLET_ZAP_CELS * BULLET_ZAP_FRAMES_PER_CEL
+);
 
 // # of frames left during which all on-screen bullets should decay.
 // Gives a constant point bonus for every bullet decayed during that time.

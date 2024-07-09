@@ -1,12 +1,9 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
 #include <errno.h>
-#include "platform.h"
-#include "x86real.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/flags.hpp"
-extern "C" {
+#include "th02/snd/impl.hpp"
 #include "th05/snd/snd.h"
 
 extern char snd_load_fn[PF_FN_LEN];
@@ -116,6 +113,4 @@ ret:
 	#undef func_local
 	#undef ext
 	#undef _DI
-}
-
 }

@@ -1,7 +1,5 @@
 #pragma option -zCSHARED -3
 
-#include "platform.h"
-#include "pc98.h"
 #include "planar.h"
 #include "th02/hardware/vplanset.h"
 

@@ -1,3 +1,6 @@
+#include "th04/main/bullet/bullet.hpp"
+#include "planar.h"
+
 union pellet_render_t {
 	struct {
 		screen_x_t left;

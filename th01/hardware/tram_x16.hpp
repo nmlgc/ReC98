@@ -10,15 +10,15 @@ public:
 	// Writes the given fullwidth JIS code point with the given attribute to
 	// the left and right cells at the current cursor position, then advances
 	// the cursor. Halfwidth code points will also be written to both cells.
-	void putkanji(jis_t jis_kanji, int atrb);
+	void putkanji(jis_t jis_kanji, tram_atrb2 atrb);
 
 	// Calls putkanji() for the next 5 TRAM rows.
-	void putkanji_for_5_rows(jis_t jis_kanji, int atrb);
+	void putkanji_for_5_rows(jis_t jis_kanji, tram_atrb2 atrb);
 
 	// ZUN landmine: This is always called at the (0-based) line 21, and
 	// therefore always ends up writing into the second TRAM page. Luckily,
 	// that page is unused, and no code cares about it...
-	void putkanji_until_end(jis_t jis_kanji, int atrb) {
+	void putkanji_until_end(jis_t jis_kanji, tram_atrb2 atrb) {
 		putkanji_for_5_rows(jis_kanji, atrb);
 	}
 

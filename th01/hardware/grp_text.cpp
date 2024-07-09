@@ -3,17 +3,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
 #include "platform/x86real/pc98/font.hpp"
 #include "platform/x86real/pc98/grcg.hpp"
-#include "th01/v_colors.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/shiftjis/fwnum.hpp"
+#include "th01/v_colors.hpp"
 
 inline int fx_weight_from(int col_and_fx) {
 	return ((col_and_fx / 0x10) % 4);

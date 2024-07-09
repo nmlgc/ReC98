@@ -3,7 +3,10 @@
  * Declarations for planar 4bpp graphics
  */
 
+#ifndef PLANAR_H
 #define PLANAR_H
+
+#include "pc98.h"
 
 // 1bpp types, describing horizontal lines of 8, 16, or 32 pixels.
 typedef uint8_t dots8_t;
@@ -126,11 +129,7 @@ static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y) {
 	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
 
-static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y) {
-	return (x / BYTE_DOTS) + (y * ROW_SIZE);
-}
-
-static inline vram_offset_t vram_offset_divmul_double(double x, double y) {
+template <class T> inline vram_offset_t vram_offset_divmul(T x, T y) {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
@@ -192,16 +191,17 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 	VRAM_CHUNK(G, offset, bit_count) |= src.G; \
 	VRAM_CHUNK(E, offset, bit_count) |= src.E;
 
+#define vram_or_planar_masked(offset, src, bit_count, mask) \
+	VRAM_CHUNK(B, offset, bit_count) |= (src.B & mask); \
+	VRAM_CHUNK(R, offset, bit_count) |= (src.R & mask); \
+	VRAM_CHUNK(G, offset, bit_count) |= (src.G & mask); \
+	VRAM_CHUNK(E, offset, bit_count) |= (src.E & mask);
+
 #define vram_or_planar_emptyopt(offset, src, bit_count) \
 	vram_or_emptyopt(B, offset, src.B, bit_count); \
 	vram_or_emptyopt(R, offset, src.R, bit_count); \
 	vram_or_emptyopt(G, offset, src.G, bit_count); \
 	vram_or_emptyopt(E, offset, src.E, bit_count);
-
-#define plane_dword_blit(dst, src) \
-	for(int p = 0; p < PLANE_SIZE; p += (int)sizeof(dots32_t)) { \
-		*(dots32_t*)((dst) + p) = *(dots32_t*)((src) + p); \
-	}
 
 // Converts the given ([x], [y]) position to an x86 segment inside the B plane.
 // Only defined for paragraph-aligned values of [x], i.e., multiples of 128
@@ -241,3 +241,5 @@ typedef dots16_t egc_temp_t;
 	/* For code generation reasons, [offset] must NOT be parenthesized here */ \
 	VRAM_CHUNK(B, offset, 16)
 // ----------
+
+#endif /* PLANAR_H */

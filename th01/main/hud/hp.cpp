@@ -1,5 +1,6 @@
 #include "platform/x86real/pc98/page.hpp"
 #include "th01/v_colors.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th01/main/hud/hp.hpp"
 
 /// Constants
@@ -41,7 +42,7 @@ void hp_put(int point)
 		page_access(0);	grcg_put(vo, dots, HP_POINT_W);
 		vo += ROW_SIZE;
 	}
-	grcg_off();
+	grcg_off_func();
 }
 /// ----------
 

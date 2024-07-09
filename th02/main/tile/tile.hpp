@@ -1,14 +1,10 @@
-#define TILE_W 16
-#define TILE_H 16
+#include "th02/formats/tile.hpp"
+#include "planar.h"
+
 #define TILE_VRAM_W (TILE_W / BYTE_DOTS)
-#define TILES_Y (1 + (PLAYFIELD_H / TILE_H) + 1)
-#define TILES_X (PLAYFIELD_W / TILE_W)
 
 #define TILE_FLAG_H (TILE_H / 2)
 #define TILE_FLAGS_Y (TILES_Y * (TILE_H / TILE_FLAG_H))
-
-#define TILE_BITS_W 4
-#define TILE_BITS_H 4
 
 // Tile source area in VRAM
 // ------------------------
@@ -46,10 +42,6 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 #endif
 // ------------------------
 
-// Column-major index of a tile within the tile source area.
-typedef unsigned char tile_image_id_t;
-
-#ifdef PLANAR_H
 // Top-left VRAM offset of the tile with the given ID.
 inline vram_offset_t tile_image_vo(int id) {
 	return (
@@ -57,7 +49,6 @@ inline vram_offset_t tile_image_vo(int id) {
 		(TILE_AREA_TOP + ((id % TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
 	);
 }
-#endif
 
 #if (GAME == 2)
 	enum tile_mode_t {
@@ -75,7 +66,6 @@ inline vram_offset_t tile_image_vo(int id) {
 	};
 
 	extern tile_mode_t tile_mode;
-	extern tile_image_id_t tile_ring[TILES_Y][TILES_X];
 
 	// If `true`, the next call to tiles_egc_render() will unconditionally
 	// redraw all tiles and then reset this flag to `false`.

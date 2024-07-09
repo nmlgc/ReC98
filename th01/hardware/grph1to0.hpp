@@ -1,3 +1,5 @@
+#include "planar.h"
+
 // Recovers the dots set in the given [mask] from (⌊left/8⌋*8, top) to
 // (⌊(left/8) + w⌋*8, top) from VRAM page 1.
 void graph_hline_unput_masked_8(

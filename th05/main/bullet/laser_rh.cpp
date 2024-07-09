@@ -1,27 +1,15 @@
 #pragma option -zPmain_01
 
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
 #include "codegen.hpp"
-#include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "game/coords.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/player/player.hpp"
 #include "th05/main/bullet/laser.hpp"
 
 #pragma option -k-
-
-// Points that change from subpixel screen space to pixel screen space within
-// the same variable...
-union SpaceChangingPoint {
-	SPPoint sp;
-	screen_point_t pixel;
-};
 
 // Register parameters for vector2_at_opt().
 #define v_length_     	_BX
@@ -34,13 +22,13 @@ union SpaceChangingPoint {
 #define v_center_    	_BP
 #define v_center     	reinterpret_cast<SPPoint __ss *>(v_center_)
 #define v_ret_       	_DI
-#define v_ret        	reinterpret_cast<SpaceChangingPoint __ss *>(v_ret_)
+#define v_ret        	reinterpret_cast<space_changing_point_t __ss *>(v_ret_)
 
 // Register parameters for build_line_in_pixels().
 #define p_0_       	_DI
-#define p_0        	reinterpret_cast<SpaceChangingPoint __ss *>(p_0_)
+#define p_0        	reinterpret_cast<space_changing_point_t __ss *>(p_0_)
 #define p_1_       	_BX
-#define p_1        	reinterpret_cast<SpaceChangingPoint __ss *>(p_1_)
+#define p_1        	reinterpret_cast<space_changing_point_t __ss *>(p_1_)
 #define p_distance_	_BP
 #define p_distance 	reinterpret_cast<SPPoint __ss *>(p_distance_)
 
@@ -119,7 +107,7 @@ bool16 pascal near laser_render_ray(const laser_coords_t near& coords)
 	// The /// comments spell out the core algorithm in pseudocode, and are
 	// probably easier to follow than the actual compiled mess of code.
 
-	#define _BP        	reinterpret_cast<SpaceChangingPoint __ss *>(_BP)
+	#define _BP        	reinterpret_cast<space_changing_point_t __ss *>(_BP)
 	#define point_count	static_cast<int>(_AX)
 
 	union {
@@ -153,17 +141,17 @@ bool16 pascal near laser_render_ray(const laser_coords_t near& coords)
 
 		// Screen-space points, converted from [c].
 		struct {
-			SpaceChangingPoint start_ccw;
-			SpaceChangingPoint start_cw;
-			SpaceChangingPoint end_cw;
-			SpaceChangingPoint end_ccw;
+			space_changing_point_t start_ccw;
+			space_changing_point_t start_cw;
+			space_changing_point_t end_cw;
+			space_changing_point_t end_ccw;
 		} p;
 
 		// Final clipped points
 		screen_point_t clipped[8];
 
 		// BP reference points for stack offset calculation
-		SpaceChangingPoint bp[8];
+		space_changing_point_t bp[8];
 	} ps;
 
 	// Same transformation as in lasers_render(), for LF_SHOOTOUT_DECAY.

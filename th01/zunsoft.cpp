@@ -3,13 +3,12 @@
  * ZUN Soft logo used in TH01, TH02 and TH03
  */
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
+#pragma option -2 -d- // ZUN bloat
+
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/page.hpp"
-#include "th01/hardware/egc.h"
+#include "th01/hardware/grcg.hpp"
 #include "th01/math/polar.hpp"
 
 #define CIRCLE_COUNT 4
@@ -106,9 +105,9 @@ void objects_setup(void)
 	wave_amp = 0;
 
 	for(i = 0; i < STAR_COUNT; i++) {
-		star_pos[i].x = rand() % 640;
-		star_pos[i].y = rand() % 400;
-		star_speed[i] = (rand() % 32) + 6;
+		star_pos[i].x = (irand() % RES_X);
+		star_pos[i].y = (irand() % RES_Y);
+		star_speed[i] = ((irand() % 32) + 6);
 	}
 	star_angle = +0x40;
 }

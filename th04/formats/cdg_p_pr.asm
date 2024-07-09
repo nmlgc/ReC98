@@ -1,4 +1,5 @@
 	.386
+	.model use16 large SHARED
 	locals
 
 include pc98.inc
@@ -6,12 +7,7 @@ include th03/formats/cdg.inc
 
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
-
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
+	.code SHARED
 
 public @CDG_PUT_PLANE_ROLL_8$QIII12VRAM_PLANE_TURUC
 @cdg_put_plane_roll_8$qiii12vram_plane_turuc proc far
@@ -90,7 +86,5 @@ public @CDG_PUT_PLANE_ROLL_8$QIII12VRAM_PLANE_TURUC
 	pop	bp
 	retf	0Ah
 @cdg_put_plane_roll_8$qiii12vram_plane_turuc endp
-
-SHARED_	ends
 
 	end

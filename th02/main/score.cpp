@@ -75,7 +75,7 @@ void near score_update_and_render(void)
 			// 	score_delta_transferred_prev,
 			// 	min(max((score_delta / 32), 1), 1111)
 			// );
-			long to_transfer = score_delta;
+			score_t to_transfer = score_delta;
 			if(to_transfer < 32) {
 				to_transfer = 32;
 			}
@@ -94,7 +94,9 @@ void near score_update_and_render(void)
 		// 	score_delta_transferred_prev, score_delta
 		// );
 		// score_delta -= score_delta_transferred_prev;
-		long delta_rem = score_delta;
+		//
+		// (In fact, the original algorithm requires `score_t` to be signed.)
+		score_t delta_rem = score_delta;
 		delta_rem -= score_delta_transferred_prev;
 		if(delta_rem < 0) {
 			score_delta_transferred_prev = score_delta;

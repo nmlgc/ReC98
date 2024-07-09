@@ -1,3 +1,5 @@
+#include "platform.h"
+
 extern bool palette_changed;
 
 // Updates the actual hardware palette at the end of the frame.

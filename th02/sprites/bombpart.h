@@ -1,3 +1,5 @@
+#include "planar.h"
+
 #define BOMB_PARTICLE_W 8
 #define BOMB_PARTICLE_H 8
 static const int BOMB_PARTICLE_CELS = 4;

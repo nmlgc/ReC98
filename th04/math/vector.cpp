@@ -1,9 +1,6 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
+#pragma option -zCSHARED
+
 #include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th03/math/polar.hpp"
 #include "th04/math/vector.hpp"
 
@@ -12,7 +9,7 @@ int pascal polar(int center, int radius, int ratio)
 	return (((static_cast<long>(radius) * ratio) >> 8) + center);
 }
 
-extern "C" void pascal vector2_at(
+void pascal vector2_at(
 	SPPoint near &ret,
 	subpixel_t origin_x,
 	subpixel_t origin_y,

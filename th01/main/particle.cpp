@@ -1,10 +1,7 @@
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "platform/x86real/pc98/egc.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th01/main/particle.hpp"
 
 CParticles Particles;
@@ -45,25 +42,25 @@ void CParticles::update_and_render(particle_origin_t origin, vc_t col)
 		i = (spawn_cycle / spawn_interval);
 		if(alive[i] == false) {
 			alive[i] = true;
-			const pixel_t velocity_base = ((rand() % velocity_base_max) + 1);
+			const pixel_t velocity_base = ((irand() % velocity_base_max) + 1);
 			if((i % 2) == 0) {
 				switch(origin) {
 				case PO_TOP:
 				case PO_TOP_RIGHT:
 				case PO_TOP_LEFT:
-					x[i].v = TO_SP(rand() % RES_X);
+					x[i].v = TO_SP(irand() % RES_X);
 					y[i].set(0.0f);
 					break;
 				case PO_BOTTOM_RIGHT:
 				case PO_BOTTOM:
 				case PO_BOTTOM_LEFT:
-					x[i].v = TO_SP(rand() % RES_X);
+					x[i].v = TO_SP(irand() % RES_X);
 					y[i].set(RES_Y - 1.0f);
 					break;
 				case PO_RIGHT:
 				case PO_LEFT:
 					x[i].v = (origin == PO_RIGHT) ? to_sp(RES_X - 1.0f) : 0;
-					y[i].v = TO_SP(rand() % RES_Y);
+					y[i].v = TO_SP(irand() % RES_Y);
 					break;
 				}
 			} else {
@@ -72,17 +69,17 @@ void CParticles::update_and_render(particle_origin_t origin, vc_t col)
 				case PO_RIGHT:
 				case PO_BOTTOM_RIGHT:
 					x[i].set(RES_X - 1.0f);
-					y[i].v = TO_SP(rand() % RES_Y);
+					y[i].v = TO_SP(irand() % RES_Y);
 					break;
 				case PO_BOTTOM_LEFT:
 				case PO_LEFT:
 				case PO_TOP_LEFT:
 					x[i].set(0.0f);
-					y[i].v = TO_SP(rand() % RES_Y);
+					y[i].v = TO_SP(irand() % RES_Y);
 					break;
 				case PO_TOP:
 				case PO_BOTTOM:
-					x[i].v = TO_SP(rand() % RES_X);
+					x[i].v = TO_SP(irand() % RES_X);
 					y[i].v = (origin == PO_TOP) ? 0 : to_sp(RES_Y - 1.0f);
 					break;
 				}
@@ -148,7 +145,5 @@ void CParticles::update_and_render(particle_origin_t origin, vc_t col)
 		}
 		grcg_pset(x[i].to_pixel(), y[i].to_pixel());
 	}
-	// Same as grcg_off(), but the I/O is inlined here, and grcg_off() points
-	// to grcg_off_func() thanks to the prior inclusion of graph.h...
-	grcg_setmode(0);
+	grcg_off();
 }

@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // Flood-fills the area around a certain backdrop image. Called with the GRCG
 // in TDW mode and the tile register set to the intended color.
 extern nearfunc_t_near boss_backdrop_colorfill;

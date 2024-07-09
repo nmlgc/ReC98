@@ -1,16 +1,9 @@
 // Second TH05 .PI C++ translation unit.
 
-#pragma option -zCSHARED_ -2 -k-
+#pragma option -zCSHARED -2 -k-
 
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-extern "C" {
 #include "th05/formats/pi.hpp"
-}
 #include "th05/formats/pi_impl.hpp"
 
 extern dots16_t near *pi_mask_ptr;

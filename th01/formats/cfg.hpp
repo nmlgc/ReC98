@@ -1,3 +1,6 @@
+#include "th01/resident.hpp"
+#include "th01/rank.h"
+
 #define CFG_FN "reiiden.cfg"
 #define CFG_ID "REIIDEN"
 

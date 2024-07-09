@@ -1,9 +1,5 @@
 #include "th02/main/tile/tile.hpp"
-
-// No idea why ZUN just didn't go with the actually visible space of 384
-// horizontal tiles. That's 8 wasted tiles per row that the game doesn't do
-// anything with?
-#define TILES_MEMORY_X (512 / TILE_W)
+#include "th01/math/subpixel.hpp"
 
 static const int TILE_ROWS_PER_SECTION = 5;
 
@@ -13,11 +9,9 @@ static const int TILE_ROWS_PER_SECTION = 5;
 static const int TILE_SECTION_COUNT_MAX = 32;
 extern const uint16_t TILE_SECTION_OFFSETS[TILE_SECTION_COUNT_MAX];
 
-#ifdef PLANAR_H
 // TH04 starts addressing individual tiles directly via their 16-bit offset
 // in VRAM.
 extern vram_offset_t tile_ring[TILES_Y][TILES_MEMORY_X];
-#endif
 
 extern int8_t tile_row_in_section;
 
@@ -28,7 +22,6 @@ void pascal near tiles_fill_initial(void);
 // Blits all tiles in the ring buffer to the playfield in VRAM.
 void pascal near tiles_render_all(void);
 
-#if (defined(SUBPIXEL_HPP) && defined(PLANAR_H))
 // Sets the [tile_ring] tile at (x, y) to the given VRAM offset.
 void pascal tile_ring_set_vo(
 	subpixel_t x, subpixel_t y, vram_offset_t image_vo
@@ -38,7 +31,6 @@ void pascal tile_ring_set_vo(
 #define tile_ring_set(x, y, id) ( \
 	tile_ring_set_vo(x, y, tile_image_vo(id)) \
 )
-#endif
 
 /// Redraw
 /// ------
@@ -49,7 +41,9 @@ void pascal tile_ring_set_vo(
 extern bool halftiles_dirty[TILE_FLAGS_Y][TILES_MEMORY_X];
 
 void pascal near tiles_invalidate_reset(void);
+extern "C" {
 void pascal near tiles_invalidate_all(void);
+}
 
 // ---------------------------------------------------------------------------
 // tiles_invalidate_around() marks all stage background tiles for redrawing
@@ -89,6 +83,21 @@ void pascal near tiles_redraw_invalidated(void);
 
 // Invalidates all entity types, then redraws the invalidated tiles.
 void pascal near tiles_render(void);
+
+// Sets [bg_render_not_bombing] to [tiles_render].
+void tiles_activate(void);
+
+// Sets [bg_render_not_bombing] to a function that calls [tiles_render_all] for
+// the next [n] frames, and then sets the function pointer back to
+// [tiles_render]. With [n] = 2, this removes the remnants of in-game dialog
+// graphics from both VRAM pages.
+// This is only needed for TH04's post-boss dialog; it's also called for the
+// pre-boss ones, but [bg_render_not_bombing] is immediately overwritten with
+// the boss-specific background render function which does the same job via
+// tiles_render_after_custom(). In TH05, the boss-specific functions remove the
+// graphics of both the pre-boss and post-boss dialogs, and this function is
+// unused.
+void pascal tiles_activate_and_render_all_for_next_N_frames(uint8_t n);
 
 // Used for switching back to a tiled background after rendering anything else,
 // like in-game dialog, or a custom background. Makes sure to first render all

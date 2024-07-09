@@ -5,7 +5,10 @@
 // architectures would remove this file and rewrite any code that then causes
 // compile errors.
 
+#ifndef X86REAL_H
 #define X86REAL_H
+
+#include "platform.h"
 
 // Turbo C++ 4.0J's <conio.h> tries to redefine them otherwise.
 #define _PORT_DEFS
@@ -149,3 +152,5 @@ void segread(struct SREGS *__segp);
 	}
 #endif
 // --------------------------
+
+#endif /* X86REAL_H */

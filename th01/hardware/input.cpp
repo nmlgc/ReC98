@@ -1,11 +1,8 @@
-#include "platform.h"
-#include "pc98.h"
-#include "pc98kbd.h"
-#include "master.hpp"
 #include "th01/resident.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/main/debug.hpp"
 #include "th01/main/player/bomb.hpp"
+#include "platform/x86real/pc98/keyboard.hpp"
 
 // State
 // -----

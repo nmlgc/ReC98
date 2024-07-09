@@ -1,20 +1,12 @@
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/scrollup.hpp"
-#include "th01/formats/ptn.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/math/dir.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/anim.hpp"
@@ -22,7 +14,6 @@
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/timer.hpp"
 
 /// Durations
@@ -152,7 +143,7 @@ struct ModeFrame {
 
 	player_48x48_cel_t to_swing_cel(int8_t frame_offset) const {
 		#if (SWING_FRAMES >= (SWING_CELS * SWING_FRAMES_PER_CEL))
-			#error Original code assumes a shot combo to take no more than 23 frames
+			#error Original code assumes the swing attack to take no more than 23 frames
 		#endif
 		return static_cast<player_48x48_cel_t>(C_SWING + (
 			((v + frame_offset) >= SWING_FRAMES)
@@ -901,11 +892,11 @@ void orb_player_hittest(int repel_friction)
 			orb_velocity_x = OVX_4_LEFT;
 		} else if((player_left - orb_cur_left) == 0) {
 			orb_velocity_x = OVX_0;
-			if((rand() % 8) == 0) {
+			if((irand() % 8) == 0) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
 			// ZUN quirk: Shouldn't this be OVX_4_RIGHT, maybe?
-			if((rand() % 8) == 4) {
+			if((irand() % 8) == 4) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
 		} else {

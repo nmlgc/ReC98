@@ -1,13 +1,10 @@
-#include <stddef.h>
-#include "platform.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/main/execl.hpp"
-#include "th04/score.h"
 #include "th04/hardware/inputvar.h"
 #include "th04/main/frames.h"
 #include "th04/main/demo.hpp"
 #if (GAME == 5)
-	#include "th04/common.h"
 	#include "th05/mem.h"
 	#include "th05/resident.hpp"
 #else
@@ -15,9 +12,32 @@
 	#include "th04/resident.hpp"
 #endif
 
+void near demo_load(void)
+{
+	#if (GAME == 5)
+		size_t size = ((resident->demo_num <= 4)
+			? sizeof(REC<DEMO_N>)
+			: sizeof(REC<DEMO_N_EXTRA>)
+		);
+	#else
+		#define size sizeof(REC<DEMO_N>)
+	#endif
+
+	extern char near demo_fn[];
+	DemoBuf = static_cast<uint8_t *>(hmem_allocbyte(size));
+	char* fn = demo_fn;
+	fn[4] = ('0' - (GAME == 5) + resident->demo_num);
+
+	file_ropen(fn);
+	file_read(DemoBuf, size);
+	file_close();
+}
+
 void near DemoPlay(void)
 {
-	extern const char DEMO_OP[];
+	#undef BINARY_OP
+	#define BINARY_OP DEMOPLAY_BINARY_OP
+	extern const char BINARY_OP[];
 
 	#if (GAME == 5)
 		size_t shift_offset = (resident->demo_num <= 4) ? DEMO_N : DEMO_N_EXTRA;
@@ -40,16 +60,5 @@ void near DemoPlay(void)
 			return;
 		}
 	}
-	HMem<uint8_t>::free(DemoBuf);
-	palette_black_out((GAME == 5) ? 8 : 10);
-	/* TODO: Replace with the decompiled call
-	 * 	GameExecl(DEMO_OP);
-	 * once that function is part of the same segment */
-	_asm {
-		push	ds;
-		push	offset DEMO_OP;
-		nop;
-		push 	cs;
-		call	near ptr GameExecl;
-	}
+	demo_end();
 }

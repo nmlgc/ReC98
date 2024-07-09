@@ -1,3 +1,5 @@
+#include "th01/main/entity.hpp"
+
 static const int SHOT_COUNT = 8;
 static const pixel_t SHOT_W = 16;
 static const pixel_t SHOT_H = 16;

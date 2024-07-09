@@ -1,3 +1,8 @@
+#include "th01/main/boss/boss.hpp"
+#include "th01/main/player/orb.hpp"
+#include "th01/math/area.hpp"
+#include "game/pf.h"
+
 /// Entities
 /// --------
 
