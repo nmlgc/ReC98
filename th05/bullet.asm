@@ -9,18 +9,18 @@ include th05/main/bullet/types.inc
 include th05/sprites/main_pat.inc
 
 extrn _bullet_template:bullet_template_t
-extrn _bullet_template_turn_angle:byte
+extrn _bullet_template_special_angle:bullet_special_angle_t
 extrn _bullet_clear_time:byte
 extrn _pellets:bullet_t:PELLET_COUNT
 extrn _bullets16:bullet_t:PELLET_COUNT
 extrn _gather_template:gather_template_t
 
-BULLET_PATNUM_FOR_ANGLE procdesc pascal near \
+@BULLET_PATNUM_FOR_ANGLE$QUIUC procdesc pascal near \
 	patnum_base:word, angle:byte
 _bullets_add_regular procdesc near
 _bullet_velocity_and_angle_set procdesc near
-_bullet_template_clip procdesc near
-_gather_add_bullets procdesc near
+@bullet_template_clip$qv procdesc near
+@gather_add_bullets$qv procdesc near
 
 ; Own data
 extrn _group_is_special:byte
@@ -31,11 +31,11 @@ extrn _group_i_absolute_angle:byte
 extrn _group_i_speed:byte
 extrn _group_i_velocity:Point
 
-MAIN_03 group MAIN_031_TEXT
+MAIN_03 group BULLET_A_TEXT
 
 ; ----------------------------------------------------------------------------
 
-MAIN_031_TEXT	segment	word public 'CODE' use16
+BULLET_A_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_03
 
 ; Identical to TH04's decompiled version, except for:
@@ -69,7 +69,7 @@ _bullets_add_raw proc near
 	mov	_bullet_template.spawn_type, BST_GATHER_NORMAL_SPECIAL_MOVE
 
 @@gather_not_special:
-	call	_gather_add_bullets
+	call	@gather_add_bullets$qv
 	pop	word ptr _bullet_template.spawn_type
 
 @@clipped:
@@ -77,7 +77,7 @@ _bullets_add_raw proc near
 ; ---------------------------------------------------------------------------
 
 @@no_gather:
-	call	_bullet_template_clip
+	call	@bullet_template_clip$qv
 	or	al, al
 	jnz	short  @@clipped
 	push	si
@@ -134,9 +134,9 @@ _bullets_add_raw proc near
 	jmp	short $+2
 
 @@loop:
-	cmp	[si+bullet_t.flag], 0
+	cmp	[si+bullet_t.flag], F_FREE
 	jnz	@@next
-	mov	[si+bullet_t.flag], 1
+	mov	[si+bullet_t.flag], F_ALIVE
 
 	@@spawn_state = byte ptr $+3
 	mov	[si+bullet_t.spawn_state], 123
@@ -158,9 +158,9 @@ _bullets_add_raw proc near
 	mov	dword ptr [si+bullet_t.BULLET_origin], eax
 	mov	[si+bullet_t.move_state], BMS_SPECIAL
 	mov	[si+bullet_t.distance], 0
-	mov	[si+bullet_t.turn_count], 0
-	mov	al, _bullet_template_turn_angle
-	mov	[si+bullet_t.turn_angle], al
+	mov	[si+bullet_t.BULLET_ax], 0
+	mov	al, _bullet_template_special_angle
+	mov	[si+bullet_t.BULLET_dx], al
 	mov	al, _bullet_template.BT_special_motion
 	mov	[si+bullet_t.special_motion], al
 
@@ -174,7 +174,7 @@ _bullets_add_raw proc near
 	mov	ah, 0
 	cmp	al, PAT_BULLET16_D
 	jb	short @@is_nondirectional
-	call	bullet_patnum_for_angle pascal, ax, word ptr _group_i_absolute_angle
+	call	@bullet_patnum_for_angle$quiuc pascal, ax, word ptr _group_i_absolute_angle
 
 @@is_nondirectional:
 	mov	[si+bullet_t.BULLET_patnum], ax
@@ -401,6 +401,6 @@ TUNE_FOR_LUNATIC	label near
 	dw offset @@lunatic_ring_stack
 	dw offset @@lunatic_random
 tune	endp
-MAIN_031_TEXT	ends
+BULLET_A_TEXT	ends
 
 	end

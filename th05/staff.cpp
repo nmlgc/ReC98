@@ -3,14 +3,12 @@
  * TH05 Staff Roll
  */
 
-#pragma option -zCmaine_01__TEXT
+#pragma option -zCmaine_01_TEXT
 
-extern "C" {
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
 
 /// Pattern numbers for the super_*() functions
@@ -31,16 +29,12 @@ typedef enum {
 
 // Particle structure
 // ------------------
+
 // Below this [phase_value.radius], the orb is rendered as a monochrome filled
 // circle.
 static const pixel_t ORB_RADIUS_FULL = 16;
 static const pixel_t ORB_W = 32;
 static const pixel_t ORB_H = 32;
-
-typedef enum {
-	X_RIGHT = 0,
-	X_LEFT = 1,
-} x_direction_t;
 
 struct orb_particle_t {
 	SPPointBase< SubpixelBase< long, pixel_t > > center;
@@ -120,5 +114,3 @@ void pascal near verdict_bitmap_snap(size_t bitmap_offset)
 // in VRAM.
 void pascal near verdict_bitmap_put(size_t bitmap_offset)
 ;
-
-}

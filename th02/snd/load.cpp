@@ -1,27 +1,24 @@
 #pragma option -zCSHARED
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "libs/kaja/kaja.h"
 #include "th02/snd/snd.h"
+#include "th02/snd/impl.hpp"
 
-extern char snd_load_fn[SND_FN_LEN];
+extern char snd_load_fn[PF_FN_LEN];
 
-void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
+void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 {
 	int i;
-	__asm { push ds; }
+	_asm { push ds; }
 
 	_CX = sizeof(snd_load_fn);
 	i = 0;
 	fn_copy: {
 		snd_load_fn[i] = fn[i];
 		i++;
-		__asm { loop fn_copy; }
+		asm { loop	fn_copy; }
 	}
 
-	__asm { mov ax, func; }
+	asm { mov	ax, func; }
 	if((_AX == SND_LOAD_SONG) && snd_midi_active) {
 		_BX = 0;
 		do {
@@ -37,9 +34,9 @@ void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_AX = 0x3D00;
 	geninterrupt(0x21);
 	_BX = _AX;
-	// ZUN bug: No error handling
+	// ZUN landmine: No error handling
 
-	__asm { mov ax, func; }
+	asm { mov	ax, func; }
 	if((_AX == SND_LOAD_SONG) && snd_midi_active) {
 		geninterrupt(MMD);
 	} else {
@@ -51,11 +48,9 @@ void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_CX = snd_load_size();
 	geninterrupt(0x21);
 
-	__asm { pop ds; }
+	_asm { pop ds; }
 
 	// DOS file close
 	_AH = 0x3E;
 	geninterrupt(0x21);
-}
-
 }

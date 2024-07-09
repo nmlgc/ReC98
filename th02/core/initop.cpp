@@ -1,9 +1,6 @@
 #pragma option -zCSHARED
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th02/shiftjis/fns.hpp"
 #include "th02/mem.h"
@@ -27,6 +24,4 @@ int game_init_op(void)
 	egc_start();
 	game_pfopen();
 	return 0;
-}
-
 }

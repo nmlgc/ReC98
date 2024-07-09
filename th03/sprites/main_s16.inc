@@ -1,0 +1,2 @@
+SO_ATTACK_P1 = ((0 * ROW_SIZE) + (  0 / BYTE_DOTS))
+SO_ATTACK_P2 = ((0 * ROW_SIZE) + (320 / BYTE_DOTS))

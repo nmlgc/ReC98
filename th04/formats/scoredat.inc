@@ -14,7 +14,7 @@ SCOREDAT_NAME_LEN = 8
 
 scoredat_t struc
 	g_name  	db SCOREDAT_PLACES dup ((SCOREDAT_NAME_LEN + 1) dup (?))
-	g_points	db SCOREDAT_PLACES dup (SCORE_DIGITS dup (?))
+	g_score 	db SCOREDAT_PLACES dup (SCORE_DIGITS dup (?))
 
 if GAME eq 5
 	g_stage 	db SCOREDAT_PLACES dup (?)

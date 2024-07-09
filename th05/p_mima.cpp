@@ -5,16 +5,17 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-extern "C" {
-#include "th05/i_shot.hpp"
+#include "th05/main/player/shot.hpp"
 #define cycle _AL
+
+extern "C" {
 
 #pragma option -a2
 
 void pascal near shot_mima_l2(void)
 {
-	SHOT_FUNC_INIT(2, SC_6X, SC_3X, i++);
-	while(( shot = shots_add() ) != NULL) {
+	shot_func_init(shot, sai, cycle, 2, SC_6X, SC_3X, i++);
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 2) {
 			if(sai.i == 2) { shot->from_option_l(); }
 			else/*i == 1*/ { shot->from_option_r(); }
@@ -32,8 +33,8 @@ void pascal near shot_mima_l2(void)
 
 void pascal near shot_mima_l3(void)
 {
-	SHOT_FUNC_INIT(2, SC_6X, SC_3X, i += 2);
-	while(( shot = shots_add() ) != NULL) {
+	shot_func_init(shot, sai, cycle, 2, SC_6X, SC_3X, i += 2);
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 2) {
 			if(sai.i == 2) { shot->from_option_l(); }
 			else/*i == 1*/ { shot->from_option_r(); }
@@ -53,8 +54,8 @@ void pascal near shot_mima_l3(void)
 
 void pascal near shot_mima_l4(void)
 {
-	SHOT_FUNC_INIT(4, SC_6X, SC_3X, i += 2);
-	while(( shot = shots_add() ) != NULL) {
+	shot_func_init(shot, sai, cycle, 4, SC_6X, SC_3X, i += 2);
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 4) {
 			switch(sai.i - 1) {
 			// Beware, non-sequential case order!
@@ -79,9 +80,9 @@ void pascal near shot_mima_l4(void)
 
 void pascal near shot_mima_l5(void)
 {
-	SHOT_FUNC_INIT(4, SC_6X, SC_3X, i += 3);
+	shot_func_init(shot, sai, cycle, 4, SC_6X, SC_3X, i += 3);
 	sai.angle = -0x46;
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 4) {
 			switch(sai.i - 1) {
 			// Beware, non-sequential case order!
@@ -105,9 +106,9 @@ void pascal near shot_mima_l5(void)
 
 void pascal near shot_mima_l6(void)
 {
-	SHOT_FUNC_INIT(4, SC_6X, SC_3X, i += 3);
+	shot_func_init(shot, sai, cycle, 4, SC_6X, SC_3X, i += 3);
 	sai.angle = -0x46;
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 4) {
 			switch(sai.i - 1) {
 			case 0:	VELOCITY_X( 1.0f);	shot->from_option_r();	break;
@@ -130,9 +131,9 @@ void pascal near shot_mima_l6(void)
 
 void pascal near shot_mima_l7(void)
 {
-	SHOT_FUNC_INIT(6, SC_6X, SC_3X, i += 3);
+	shot_func_init(shot, sai, cycle, 6, SC_6X, SC_3X, i += 3);
 	sai.angle = -0x46;
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 6) {
 			switch(sai.i - 1) {
 			// Beware, non-sequential case order!
@@ -158,9 +159,9 @@ void pascal near shot_mima_l7(void)
 
 void pascal near shot_mima_l8(void)
 {
-	SHOT_FUNC_INIT(6, SC_6X, SC_3X, i += 3);
+	shot_func_init(shot, sai, cycle, 6, SC_6X, SC_3X, i += 3);
 	sai.angle = -0x46;
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 6) {
 			shot->pos.velocity.y.set(-20.0f);
 			switch(sai.i - 1) {
@@ -187,8 +188,8 @@ void pascal near shot_mima_l8(void)
 
 void pascal near shot_mima_l9(void)
 {
-	SHOT_FUNC_INIT(6, SC_6X, SC_3X, i += 4);
-	while(( shot = shots_add() ) != NULL) {
+	shot_func_init(shot, sai, cycle, 6, SC_6X, SC_3X, i += 4);
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 6) {
 			shot->pos.velocity.y.set(-20.0f);
 			switch(sai.i - 1) {

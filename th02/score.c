@@ -24,10 +24,3 @@ const unsigned char gALPHABET[ALPHABET_ROWS][ALPHABET_COLS] = {
 const unsigned char gbNAME[] = {gb_N_, gb_A_, gb_M_, gb_E_, 0};
 const unsigned char gbPOINT[] = {gb_P_, gb_O_, gb_I_, gb_N_, gb_T_, 0};
 const unsigned char gbST[] = {gb_S_, gb_T_, 0};
-
-#define ATRB_SET(place) \
-	if((place) == place_to_highlight) { \
-		atrb = TX_GREEN; \
-	} else { \
-		atrb = TX_WHITE; \
-	}

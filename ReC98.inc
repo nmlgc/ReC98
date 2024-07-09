@@ -1,25 +1,10 @@
 ; ReC98
 ; Main include file
 
-; Order segments alphabetically.
-; Rather ugly workaround to prevent the automatically generated code segment
-; for the large model (filename_TEXT) from enforcing its word alignment
-; between _TEXT and the first code segment even though we never emit anything
-; into it.
-; However, this merely pushes filename_TEXT before _TEXTC, and therefore
-; breaks another group of files. In these, we actually have to rename that
-; automatically generated code segment to one that is expected to have word
-; alignment.
-.alpha
-
 locals
 
 LDATA = @DataSize
 dPtrSize = (@DataSize + 1) * 2
-
-; ctype character classes
-_IS_DIG = 02h
-_IS_CTL = 20h
 
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
@@ -47,9 +32,11 @@ setfarfp macro farfp, func
 	mov word ptr farfp, offset func
 endm
 
-; See decomp.hpp
-public _address_0
-_address_0 = 0
+ifdef BINARY
+	; See decomp.hpp
+	public _address_0
+	_address_0 = 0
+endif
 
 ; master.lib extensions
 ; ---------------------
@@ -64,4 +51,3 @@ RANK_HARD = 2
 RANK_LUNATIC = 3
 RANK_EXTRA = 4
 RANK_COUNT = 5
-RANK_DEFAULT = -1

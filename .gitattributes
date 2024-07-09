@@ -1,2 +1,5 @@
 *.asm text eol=crlf
-zuncom/zun*.txt -text
+*.bat text eol=crlf
+*.[ch]* text eol=lf
+*.lua text eol=lf
+zun.txt -text

@@ -1,3 +1,5 @@
+#include "th01/v_colors.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th01/main/hud/hp.hpp"
 
 /// Constants
@@ -5,8 +7,6 @@
 
 static const screen_x_t HP_LEFT = 128;
 static const vram_y_t HP_TOP = 48;
-#define HP_POINT_W 8
-#define HP_H 15
 /// ---------
 
 /// Foreground
@@ -50,7 +50,7 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 		graph_accesspage_func(0);	grcg_put(vo, dots, HP_POINT_W);
 		vo += ROW_SIZE;
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 #define hp_put(point_to_put, point_in_hopefully_same_section) \
@@ -67,8 +67,8 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 /// ----------
 /// Whew, using a 16x16 wrapper around a 32x32 set of graphics functions in
 /// order to handle backgrounds for 8x16 sprites... That's quite the recipe
-// for confusion. *Especially* if you don't write functions to abstract away
-// this needless complexity.
+/// for confusion. *Especially* if you don't write functions to abstract away
+/// this needless complexity.
 
 #if (HP_POINT_W != (PTN_QUARTER_W / 2))
 	#error Original code assumes HP_POINT_W == (PTN_QUARTER_W / 2)
@@ -79,9 +79,9 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 #define hp_bg_left(point_divided_by_2) \
 	(((point_divided_by_2) * HP_2POINT_W) + HP_LEFT)
 
-// As a result, this one ends up always being called twice as much (i.e., for
-// each hit point) as it needs to be (i.e., once for every 2 HP). Not *really*
-// a ZUN "bug", just slightly sloppy.
+// As a result, this one ends up always being called twice as often (i.e., for
+// each hit point) as it needs to be (i.e., once for every 2 HP).
+// ZUN bug: This further limits HP_MAX to half of its value.
 #define hp_bg_snap_nth_doublepoint(point_divided_by_2) \
 	ptn_snap_quarter_8(\
 		hp_bg_left(point_divided_by_2), \
@@ -97,7 +97,7 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 		(((point) / 8) + PTN_BG_HP), \
 		(((point) / 2) % 4) \
 	)
-//// ---------
+/// ---------
 
 bool16 hud_hp_render(int hp_total, int func)
 {
@@ -107,7 +107,7 @@ bool16 hud_hp_render(int hp_total, int func)
 		// Since a .PTN quarter stores the background of two hit points, the
 		// calls above will unblit two hit points if [hp_total] is odd. So...
 		if((hp_total % 2) == 1) {
-			// ZUN bug: Yes, this will use the wrong section pattern when
+			// ZUN landmine: Yes, this will use the wrong section pattern when
 			// the section boundaries are odd. Just use one parameter... sigh.
 			hp_put((hp_total - 1), hp_total);
 		}
@@ -119,8 +119,13 @@ bool16 hud_hp_render(int hp_total, int func)
 	} else { // Increment
 		#define hp_cur func
 
+		// ZUN bug: [hp_cur] should be limited to (HP_MAX / 2) here to prevent
+		// heap corruption.
 		hp_bg_snap_nth_doublepoint(hp_cur);
 		hp_put(hp_cur, hp_cur);
+
+		// ZUN bug: Should be <= to ensure that the incrementing process always
+		// completes.
 		if((hp_total - 1) == hp_cur) {
 			return true;
 		}

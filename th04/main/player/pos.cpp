@@ -1,11 +1,5 @@
 #pragma option -zPmain_01
 
-extern "C" {
-#include "platform.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/player/player.hpp"
 
 static const pixel_t MOVE_MARGIN_LEFT = 8;
@@ -30,6 +24,4 @@ void near player_pos_update_and_clamp(void)
 	_DX = clamp(_DX, (0 + MOVE_MARGIN_TOP), (PLAYFIELD_H - MOVE_MARGIN_BOTTOM));
 	player_pos.cur.x.v = _AX;
 	player_pos.cur.y.v = _DX;
-}
-
 }

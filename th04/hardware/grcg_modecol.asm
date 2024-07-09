@@ -1,10 +1,15 @@
-GRCG_SETMODE_RMW_DEF 1
-
-public GRCG_SETMODE_TDW
-grcg_setmode_tdw	proc near
-	GRCG_SETMODE_VIA_MOV al, GC_TDW
+public @grcg_setmode_rmw$qv
+@grcg_setmode_rmw$qv proc near
+	GRCG_SETMODE_VIA_MOV al, GC_RMW
 	ret
-grcg_setmode_tdw	endp
+@grcg_setmode_rmw$qv endp
 	even
 
-GRCG_SETCOLOR_DIRECT_DEF 1
+public @grcg_setmode_tdw$qv
+@grcg_setmode_tdw$qv proc near
+	GRCG_SETMODE_VIA_MOV al, GC_TDW
+	ret
+@grcg_setmode_tdw$qv endp
+	even
+
+GRCG_SETCOLOR_DIRECT_DEF

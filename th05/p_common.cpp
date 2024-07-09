@@ -5,13 +5,12 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-extern "C" {
-#include "th05/i_shot.hpp"
+#include "th05/main/player/shot.hpp"
 #include "th02/snd/snd.h"
 
 #pragma option -a2
 
-char pascal near shot_cycle_init(void)
+char near shot_cycle_init(void)
 {
 	char cycle_flag = 0;
 	switch(shot_time) {
@@ -49,8 +48,8 @@ void pascal near shot_l0(void)
 	if( (shot_cycle_init() & SC_3X) == 0) {
 		return;
 	}
-	shot_t near *shot;
-	if(( shot = shots_add() ) != NULL) {
+	Shot near *shot;
+	if(( shot = shots_add() ) != nullptr) {
 		shot->damage = 10;
 	}
 }
@@ -60,11 +59,12 @@ void pascal near shot_l1(void)
 	if( (shot_cycle_init() & SC_3X) == 0) {
 		return;
 	}
-	shot_t near *shot;
-	if(( shot = shots_add() ) != NULL) {
-		shot_velocity_set(&shot->pos.velocity, randring_angle(0x07, -0x44));
+	Shot near *shot;
+	if(( shot = shots_add() ) != nullptr) {
+		shot_velocity_set(
+			&shot->pos.velocity, randring1_next8_and_ge_lt(-0x44, -0x3C)
+		);
 		shot->damage = 10;
 	}
 }
 
-}

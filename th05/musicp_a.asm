@@ -1,1 +1,1 @@
-include th05/music/piano_a.asm
+include th05/op/piano_a.asm

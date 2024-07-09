@@ -4,6 +4,12 @@
 /// memory as needed.
 /// (Yes, this is not how you make optimal use of EMS memory.)
 
+#include "th04/main/playfld.hpp"
+#include "th04/sprites/main_cdg.h"
+#include "th03/formats/cdg.h"
+#include "libs/master.lib/master.hpp"
+#include <stddef.h>
+
 #if (GAME == 5)
 	#define EMS_NAME "GENSOEMS"
 #else
@@ -79,7 +85,7 @@ void near eyecatch_animate(void);
 	ems_read(Ems, src_off, dst_seg, size); \
 }
 
-// Assumes [Ems] to be non-NULL.
+// Assumes [Ems] to not be a nullptr.
 inline void playchar_bomb_bg_load_from_ems(void) {
 	size_t size = (cdg_slots[CDG_BG_PLAYCHAR_BOMB].bitplane_size * PLANE_COUNT);
 	allocate_and_load_from_ems(

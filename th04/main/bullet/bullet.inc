@@ -1,6 +1,8 @@
 ; Everything here needs to be kept in sync with the C++ versions in
 ; bullet.hpp!
 
+include th02/main/entity.inc
+
 ; States and modes
 ; ----------------
 BSS_CLOUD_FRAMES = 16
@@ -23,6 +25,28 @@ BMS_SPECIAL = 1
 BMS_REGULAR = 2
 BMS_DECAY = 4
 BMS_DECAY_END = (BMS_DECAY + BMS_DECAY_FRAMES)
+
+; bullet_special_motion_t
+_bullet_special_motion_t_offset = ((GAME - 5) * 81h) and 0FFh
+BSM_SLOWDOWN_THEN_TURN_AIMED = (_bullet_special_motion_t_offset + 1)
+BSM_SLOWDOWN_THEN_TURN = (BSM_SLOWDOWN_THEN_TURN_AIMED + 1)
+BSM_SPEEDUP = (BSM_SLOWDOWN_THEN_TURN + 1)
+BSM_SLOWDOWN_TO_ANGLE = (BSM_SPEEDUP + 1)
+BSM_BOUNCE_LEFT_RIGHT = (BSM_SLOWDOWN_TO_ANGLE + 1)
+BSM_BOUNCE_TOP_BOTTOM = (BSM_BOUNCE_LEFT_RIGHT + 1)
+BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM = (BSM_BOUNCE_TOP_BOTTOM + 1)
+BSM_BOUNCE_LEFT_RIGHT_TOP = (BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM + 1)
+BSM_GRAVITY = (BSM_BOUNCE_LEFT_RIGHT_TOP + 1)
+if (GAME eq 5)
+	BSM_EXACT_LINEAR = (BSM_GRAVITY + 1)
+endif
+BSM_NONE = 0FFh
+
+bullet_special_angle_t union
+	BSA_turn_by	db ?
+	BSA_target	db ?
+	BSA_v	db ?
+bullet_special_angle_t ends
 ; ----------------
 
 bullet_t struc
@@ -39,12 +63,12 @@ bullet_t struc
 	speed_final	db ?
 
 	slowdown_time	label byte
-	turn_count	label byte
-		db ?
+	turns_done	label byte
+	BULLET_ax	db ?
 
 	slowdown_speed_delta	label byte
-	turn_angle	label byte
-		db ?
+	BULLET_SPECIAL_angle	label bullet_special_angle_t
+	BULLET_dx	db ?
 
 	BULLET_patnum	dw ?
 

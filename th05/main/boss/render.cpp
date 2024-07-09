@@ -3,30 +3,24 @@
  * Rendering code for all bosses
  */
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
-#include "master.hpp"
-#include "th01/math/area.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th04/hardware/grcg.h"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th02/v_colors.hpp"
+#include "th04/hardware/grcg.hpp"
 #include "th04/math/vector.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/math/randring.h"
+#include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
-#include "th04/main/phase.h"
-#include "th05/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
-#include "th04/main/tile/bb.hpp"
+#include "th04/main/boss/impl.hpp"
 #include "th04/main/tile/tile.hpp"
+#include "th04/main/tile/bb.hpp"
 #include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
 #include "th05/formats/super.h"
-#include "th05/main/boss/boss.hpp"
+#include "th04/main/boss/backdrop.hpp"
+#include "th05/main/boss/bosses.hpp"
 
 /// Structures
 /// ----------
@@ -62,6 +56,72 @@ extern boss_particle_t boss_particles[BOSS_PARTICLE_COUNT];
 extern lineset_t linesets[LINESET_COUNT];
 /// ----------
 
+void pascal near sara_bg_render(void)
+{
+	boss_bg_render_entrance_bb_transition_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		SARA_BACKDROP_LEFT,
+		SARA_BACKDROP_TOP,
+		0
+	);
+}
+
+void pascal near louise_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		int,
+		ENTRANCE_BB_FRAMES_PER_CEL,
+		LOUISE_BACKDROP_LEFT,
+		LOUISE_BACKDROP_TOP,
+		1,
+		louise_backdrop_colorfill,
+		0
+	);
+}
+
+void pascal near alice_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		int,
+		ENTRANCE_BB_FRAMES_PER_CEL,
+		ALICE_BACKDROP_LEFT,
+		ALICE_BACKDROP_TOP,
+		1,
+		alice_backdrop_colorfill,
+		V_WHITE
+	);
+}
+
+void pascal near mai_yuki_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		unsigned char,
+		ENTRANCE_BB_FRAMES_PER_CEL,
+		MAI_YUKI_BACKDROP_LEFT,
+		MAI_YUKI_BACKDROP_TOP,
+		1,
+		mai_yuki_backdrop_colorfill,
+		9
+	);
+}
+
+void pascal near yumeko_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_all(),
+		unsigned char,
+		ENTRANCE_BB_FRAMES_PER_CEL,
+		YUMEKO_BACKDROP_LEFT,
+		YUMEKO_BACKDROP_TOP,
+		1,
+		yumeko_backdrop_colorfill,
+		V_WHITE
+	);
+}
+
 /// Stage 6 - Shinki
 /// ----------------
 
@@ -69,11 +129,6 @@ extern lineset_t linesets[LINESET_COUNT];
 #define SHINKI_SPINLINE_MOVE_SPEED to_sp(0.25f)
 #define SHINKI_SPINLINE_TOP to_sp(80.0f)
 #define SHINKI_SPINLINE_BOTTOM to_sp(PLAYFIELD_H - 64)
-
-#define SHINKI_STAGE_BG_TOP (PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 80)
-#define SHINKI_TYPE_D_BG_H 128
-#define SHINKI_TYPE_D_BG_TOP (PLAYFIELD_H - SHINKI_TYPE_D_BG_H)
-
 #define SHINKI_SPINLINE_MOVE_DURATION \
 	(SHINKI_SPINLINE_MOVE_W * SHINKI_SPINLINE_MOVE_SPEED)
 
@@ -224,7 +279,7 @@ void near shinki_bg_type_a_update_part1(void)
 			vector2_at(
 				particle->velocity,
 				0.0f, 0.0f,
-				(randring1_next16_and(to_sp(4.0f) - 1) + to_sp(2.0f)),
+				randring1_next16_and_ge_lt_sp(2.0f, 6.0f),
 				particle->angle
 			);
 			shinki_bg_type_a_particles_alive++;
@@ -269,22 +324,21 @@ void pascal near shinki_lineset_forward_copy(lineset_t near &set)
 	}
 }
 
-inline void shinki_bg_render_blue_particles_and_lines(void)
-{
-	grcg_setmode_rmw_seg1();
+inline void shinki_bg_render_blue_particles_and_lines(void) {
+	grcg_setmode_rmw();
 
-	grcg_setcolor_direct_seg1(8);
+	grcg_setcolor_direct(8);
 	shinki_bg_particles_render();
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_4);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_3);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_4);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_3);
 
-	grcg_setcolor_direct_seg1(9);
+	grcg_setcolor_direct(9);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_2);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_2);
 
-	grcg_setcolor_direct_seg1(15);
+	grcg_setcolor_direct(V_WHITE);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_MAIN);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_MAIN);
 
@@ -355,8 +409,8 @@ void near shinki_bg_type_b_update_part1(void)
 			particle->origin.x = particle->pos.x;
 			particle->origin.y.set(-1.0f);
 			particle->velocity.set(0.0f, 0.0f);
-			particle->patnum = (
-				PAT_PARTICLE + randring1_next16_and(PARTICLE_CELS - 1)
+			particle->patnum = randring1_next8_and_ge_lt(
+				PAT_PARTICLE, (PAT_PARTICLE_last + 1)
 			);
 			i++;
 			particle++;
@@ -503,7 +557,9 @@ void near shinki_bg_type_d_update(void)
 		particle = boss_particles;
 		i = 0;
 		while(i < BOSS_PARTICLE_COUNT) {
-			particle->origin.y.v = to_sp(SHINKI_TYPE_D_BG_TOP);
+			particle->origin.y.v = to_sp(
+				SHINKI_TYPE_D_BACKDROP_TOP - PLAYFIELD_TOP
+			);
 			particle->velocity.y.set(-1.0f);
 			i++;
 			particle++;
@@ -526,29 +582,37 @@ void near shinki_bg_type_d_update(void)
 
 void pascal near shinki_bg_render(void)
 {
-	if(boss.phase == 0) {
-		boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BG_TOP, 1);
-	} else if(boss.phase == 1) {
-		unsigned char entrance_cel = (boss.phase_frame / 4);
-		if(entrance_cel < TILES_BB_CELS) {
-			boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BG_TOP, 1);
+	if(boss.phase == PHASE_HP_FILL) {
+		boss_backdrop_render(
+			SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1
+		);
+	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
+		unsigned char entrance_cel = (
+			boss.phase_frame / ENTRANCE_BB_FRAMES_PER_CEL
+		);
+		if(entrance_cel < (TILES_BB_CELS / 2)) {
+			boss_backdrop_render(
+				SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1
+			);
 		} else {
-			playfield_fill_col_0();
+			boss_bg_fill_col_0();
 		}
-		tiles_bb_col = 15;
-		tiles_bb_put(bb_stage_seg, entrance_cel);
+		tiles_bb_col = V_WHITE;
+		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < 4) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		shinki_bg_type_a_update_and_render();
 	} else if(boss.phase < 8) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		shinki_bg_type_b_update_and_render();
 	} else if(boss.phase < 12) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		shinki_bg_type_c_update_and_render();
-	} else {
-		playfield_bg_put(0, SHINKI_TYPE_D_BG_TOP, CDG_BG_2);
-		playfield_fillm_0_0_384_240_col_0();
+	} else /* if(boss.phase == PHASE_NONE) */ { \
+		cdg_put_noalpha_8(
+			SHINKI_BACKDROP_LEFT, SHINKI_TYPE_D_BACKDROP_TOP, CDG_BG_2
+		);
+		shinki_bg_type_d_colorfill();
 		shinki_bg_type_d_update();
 
 		grcg_setcolor(GC_RMW, 6);
@@ -649,30 +713,28 @@ void near exalice_hexagrams_update_and_render(void)
 	grcg_setcolor(GC_RMW, 9);
 	exalice_grcg_hexagram_put(set.radius[9].v, set.angle[9]);
 	if(boss.phase < 9 || boss.phase > 12) {
-		grcg_setcolor(GC_RMW, 15);
+		grcg_setcolor(GC_RMW, V_WHITE);
 	}
 	exalice_grcg_hexagram_put(set.radius[0].v, set.angle[0]);
 	grcg_off();
-
-	#undef state
 }
 
 void pascal near exalice_bg_render(void)
 {
-	if(boss.phase == 0) {
-		tiles_render_after_custom_bg(boss.phase_frame);
-	} else if(boss.phase == 1) {
+	if(boss.phase == PHASE_HP_FILL) {
+		tiles_render_after_custom(boss.phase_frame);
+	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
-		playfield_fill_col_0();
-		tiles_bb_col = 15;
-		tiles_bb_put(bb_stage_seg, entrance_cel);
+		boss_bg_fill_col_0();
+		tiles_bb_col = V_WHITE;
+		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		exalice_hexagrams_update_and_render();
 	} else if(boss.phase == PHASE_BOSS_EXPLODE_BIG) {
 		tiles_render_all();
-	} else {
-		tiles_render_after_custom_bg(boss.phase_frame);
+	} else /* if(boss.phase == PHASE_NONE) */ { \
+		tiles_render_after_custom(boss.phase_frame);
 	}
 }
 /// ----------------------

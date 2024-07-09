@@ -1,3 +1,10 @@
+#include "th03/main/player/shot.hpp"
+#include "th03/main/chars/speed.hpp"
+#include "th03/main/collmap.hpp"
+#include "th03/main/playfld.hpp"
+#include "th03/hardware/input.h"
+#include "th01/math/subpixel.hpp"
+
 #define HALFHEARTS_MAX 10
 
 #define ROUND_START_INVINCIBILITY_FRAMES 50
@@ -11,16 +18,18 @@
 
 // Gauge
 // -----
+
 #define GAUGE_MAX (0xFF << 4)
 
 typedef uint16_t gauge_t;
 typedef uint8_t gauge_perbyte_t;
 
-void pascal near gauge_avail_add(unsigned char pid, unsigned char charge);
+void pascal near gauge_avail_add(pid_t pid, unsigned char charge);
 // -----
 
 // Charge Shots
 // ------------
+
 typedef void (far pascal *near chargeshot_add_func_t)(
 	Subpixel center_x, Subpixel center_y
 );
@@ -29,14 +38,14 @@ extern farfunc_t_near chargeshot_update[PLAYER_COUNT];
 extern farfunc_t_near chargeshot_render[PLAYER_COUNT];
 // ------------
 
-typedef struct {
-	SPPoint center;
+struct player_t {
+	PlayfieldPoint center;
 	bool is_hit;
-	uint8_t unused_1;
+	uint8_t unused_1; // ZUN bloat
 	unsigned char invincibility_time;
 	char halfhearts;
-	playchar_paletted_t playchar_paletted;
-	speed_t speed;
+	PlaycharPalettedOptional playchar_paletted;
+	speed_t speed_base;
 	shot_mode_t shot_mode;
 	unsigned char patnum_movement;
 	unsigned char patnum_glow;
@@ -88,7 +97,29 @@ typedef struct {
 	unsigned char boss_panics_fired;
 
 	uint8_t padding[6];
-} player_t;
+};
 
-extern unsigned char pid_current;
-extern unsigned char pid_other;
+extern pid_t pid_current;
+extern pid_t pid_other;
+
+// ZUN bloat: Doubly redundant: The player ID is already covered by
+// [pid_current], while [so_attack] can be easily calculated from that ID.
+extern union {
+	unsigned char current;
+	unsigned char so_attack; // sprite16_offset_t
+} pid;
+
+// Currently updated instance.
+extern player_t near *player_cur;
+
+// Point of the last detected collision, on the top edge of the player's
+// hitbox. Pretends to be at subpixel resolution, but is only ever set to
+// coordinates on a 16×2-pixel grid. (Yes, 8 times worse than the tile
+// resolution of the collision bitmap!)
+extern PlayfieldPoint player_hittest_collision_top;
+
+// Detects any collision of [player_cur] in a ([hitbox_size]×[hitbox_size])
+// square of collision map tiles around the player's center position. Sets
+// [player_cur->is_hit] and [player_hittest_collision_top] if such a collision
+// was found. Uses [pid.curent].
+void near pascal player_hittest(collmap_tile_amount_t hitbox_size);

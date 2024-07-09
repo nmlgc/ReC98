@@ -1,7 +1,4 @@
-GAME = 3
-
-PLAYER_COUNT = 2
-
+include th03/common.inc
 include th03/mem.inc
 include th03/gaiji/gaiji.inc
 include th03/math/randring.inc
@@ -10,6 +7,11 @@ include th03/chars.inc
 include th03/formats/cfg.inc
 include th03/formats/cdg.inc
 include th02/score.inc
+include th02/v_colors.inc
+
+SND_BGM_OFF = 0
+SND_BGM_FM = 1
+SND_BGM_MIDI = 2
 
 KM_KEY_KEY = 0
 KM_JOY_KEY = 1

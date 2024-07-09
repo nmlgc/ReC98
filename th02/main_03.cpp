@@ -3,12 +3,9 @@
  * Code segment #3 of TH02's MAIN.EXE
  */
 
-extern "C" {
-#include "ReC98.h"
-#include "th02/math/randring.h"
-
 #define RANDRING_INSTANCE 2
 #include "th02/math/randring.cpp"
 
+extern "C" {
 #include "th02/main/bullet/pellet_r.cpp"
 }

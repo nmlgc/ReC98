@@ -1,15 +1,9 @@
-#pragma option -zCmain_031_TEXT -zPmain_03 -k-
+#pragma option -zCBULLET_A_TEXT -zPmain_03 -k-
 
-extern "C" {
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/main/bullet/bullet.hpp"
+#include "th04/main/bullet/clearzap.hpp"
 #include "th05/main/playperf.hpp"
 
 bool near bullet_template_clip(void)
@@ -20,7 +14,7 @@ bool near bullet_template_clip(void)
 		(bullet_clear_time != 0) &&
 		// If a newly spawned bullet wouldn't fully decay during the remaining
 		// time, let's simply not spawn it at all? This way, they don't award
-		// points either.
+		// score points either.
 		(bullet_clear_time < (BMS_DECAY_FRAMES + 1)) // differs from TH04!
 	) {
 clipped:
@@ -50,9 +44,7 @@ clipped:
 	}
 
 	if(!group_fixedspeed) {
-		bullet_template.speed = playperf_speedtune(bullet_template.speed);
+		bullet_template.speed.v = playperf_speedtune(bullet_template.speed.v);
 	}
 	return false;
-}
-
 }

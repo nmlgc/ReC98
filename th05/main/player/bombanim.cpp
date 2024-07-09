@@ -1,8 +1,6 @@
-#include "ReC98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/math/vector.hpp"
-#include "th04/math/randring.h"
+#include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/circle.hpp"
@@ -73,12 +71,12 @@ extern union {
 	super_roll_put_1plane( \
 		star->topleft.screen_x.to_pixel_slow(), \
 		star->topleft.screen_y.to_pixel_slow(), \
-		PAT_PLAYCHAR_BOMB, \
+		PAT_PLAYCHAR_BOMB_SHAPE, \
 		0, \
-		(PLANE_ERASE | ((COLOR_COUNT - 1) - col)) \
+		super_plane(col, true) \
 	);
 
-void pascal near reimu_stars_update_and_render(void)
+void near reimu_stars_update_and_render(void)
 {
 	reimu_star_t near *head;
 	reimu_star_t near *trail;
@@ -93,11 +91,11 @@ void pascal near reimu_stars_update_and_render(void)
 		while(i < REIMU_STAR_TRAILS) {
 			//  head == [0 |  8 | 16 | 24 | 30 | 36]
 			// trail == [7 | 11 | 15 | 19 | 23 | 27]
-			head->topleft.screen_x.v = (
-				randring1_next16_mod(to_sp(320.0f)) + to_sp(PLAYFIELD_LEFT)
+			head->topleft.screen_x.v = randring1_next16_mod_ge_lt_sp(
+				PLAYFIELD_LEFT, (PLAYFIELD_LEFT + 320.0f)
 			);
-			head->topleft.screen_y.v = (
-				randring1_next16_mod(to_sp(RES_Y - (REIMU_STAR_H / 2)))
+			head->topleft.screen_y.v = randring1_next16_mod_ge_lt_sp(
+				0.0f, (RES_Y - (REIMU_STAR_H / 2))
 			);
 
 			// MODDERS: REIMU_STAR_NODE_COUNT times
@@ -108,10 +106,10 @@ void pascal near reimu_stars_update_and_render(void)
 			trail--;	trail->topleft = head->topleft;
 			trail--;	trail->topleft = head->topleft;
 			trail--;	trail->topleft = head->topleft;
-			trail += 10; // ZUN bug
+			trail += 10; // ZUN quirk
 
-			speed.v = (randring1_next16_and(to_sp(8.0f) - 1) + to_sp(10.0f));
-			angle = ((randring1_next16_mod(0x30) - 0x18) + 0x40);
+			speed.v = randring1_next16_and_ge_lt_sp(10.0f, 18.0f);
+			angle = (0x40 + randring1_next8_mod_ge_lt(-0x18, +0x18));
 
 			vector2(head->velocity.x.v, head->velocity.y.v, angle, speed);
 
@@ -152,10 +150,10 @@ void pascal near reimu_stars_update_and_render(void)
 		trail += ((REIMU_STAR_NODE_COUNT - 1) - 2);
 		// trail == [6 | 14 | 22 | 30 | 38 | 46]
 
-		/*    */	reimu_star_put(trail, 6);
+		/*       */	reimu_star_put(trail, 6);
 		trail -= 2;	reimu_star_put(trail, 6);
 		trail -= 2;	reimu_star_put(trail, 6);
-		/*    */	reimu_star_put(head, 7);
+		/*       */	reimu_star_put(head, 7);
 
 		// trail == [2 | 10 | 18 | 26 | 34 | 42]
 
@@ -172,7 +170,7 @@ void pascal near reimu_stars_update_and_render(void)
 			 * 		(head->topleft.screen_y + PLAYFIELD_TOP)
 			 * 	);
 			 * once that function is part of this translation unit */
-			__asm {
+			_asm {
 				db	0xFF, 0x34;
 				db	0x8B, 0x44, 0x02;
 				add 	ax, (PLAYFIELD_TOP * 16);

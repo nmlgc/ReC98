@@ -1,13 +1,8 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
-extern "C" {
 #include <mem.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th02/main/playfld.hpp"
-#include "th02/main/tile/tile.hpp"
+#include "libs/master.lib/master.hpp"
+#include "th02/formats/tile.hpp"
 #include "th02/formats/mpn.hpp"
 
 // TH04 copied this code and adjusted it to work with multiple .MPN slots.
@@ -46,6 +41,4 @@ int pascal mpn_load_palette_show(const char *fn)
 
 	file_close();
 	return 0;
-}
-
 }

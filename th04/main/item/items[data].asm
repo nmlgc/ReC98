@@ -2,8 +2,8 @@ public _item_playperf_raise, _item_playperf_lower
 _item_playperf_raise	db 0
 _item_playperf_lower	db 0
 
-public _ITEM_TYPE_PATNUM
-_ITEM_TYPE_PATNUM label word
+public _ITEM_PATNUM
+_ITEM_PATNUM label word
 	dw	PAT_ITEM + IT_POWER
 	dw	PAT_ITEM + IT_POINT
 	dw	PAT_ITEM + IT_DREAM
@@ -18,8 +18,8 @@ include th02/main/power_overflow[data].asm
 public _DREAM_SCORE_PER_ITEMS
 _DREAM_SCORE_PER_ITEMS	dw 0, 100, 200, 400, 600, 800, 1000, 1280
 
-public _power_overflow_level, _items_spawned, _items_collected
-_power_overflow_level	dw 0
+public _power_overflow, _items_spawned, _items_collected
+_power_overflow	dw 0
 _items_spawned	dw 0
 _items_collected	dw 0
 
@@ -36,7 +36,7 @@ public _items_pull_to_player
 _items_pull_to_player	db 0
 	evendata
 
-MISS_ITEM_COUNT = 5
+ITEM_MISS_COUNT = 5
 MISS_FIELD_LEFT = 0
 MISS_FIELD_CENTER = 1
 MISS_FIELD_RIGHT = 2

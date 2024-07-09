@@ -2,9 +2,10 @@
 ; current GRCG tile.
 ; Assumes that the GRCG is set to TDW mode.
 
-; void pascal playfield_fillm_64_56_256_256();
-public PLAYFIELD_FILLM_64_56_256_256
-playfield_fillm_64_56_256_256	proc near
+public @REIMU_MARISA_BACKDROP_COLORFILL$QV
+public @MAI_YUKI_BACKDROP_COLORFILL$QV
+label @mai_yuki_backdrop_colorfill$qv near
+@reimu_marisa_backdrop_colorfill$qv proc near
 		push	di
 		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
@@ -36,5 +37,5 @@ playfield_fillm_64_56_256_256	proc near
 		jge	short @@cols
 		pop	di
 		retn
-playfield_fillm_64_56_256_256	endp
+@reimu_marisa_backdrop_colorfill$qv endp
 	even

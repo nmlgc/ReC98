@@ -1,8 +1,7 @@
-#pragma option -3
+#pragma option -zCSHARED -3
 
-extern "C" {
-#include <stddef.h>
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th03/core/initexit.h"
 
@@ -31,6 +30,4 @@ int pascal game_init_main(const unsigned char *pf_fn)
 		bgm_init(2048);
 	#endif
 	return 0;
-}
-
 }

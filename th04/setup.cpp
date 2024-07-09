@@ -19,7 +19,7 @@ void pascal near window_rollup_row(screen_x_t left_x, screen_y_t bottom_y)
 {
 }
 
-void pascal near window_dropdown_animate(screen_x_t left_x, screen_y_t top_y)
+void pascal near dropdown(screen_x_t left_x, screen_y_t top_y)
 {
 }
 
@@ -27,7 +27,7 @@ void pascal near window_singleline(screen_x_t left_x, screen_y_t top_y)
 {
 }
 
-void pascal near window_rollup_animate(screen_x_t left_x, screen_y_t top_y)
+void pascal near rollup(screen_x_t left_x, screen_y_t top_y)
 {
 }
 
