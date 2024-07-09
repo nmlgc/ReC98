@@ -1,8 +1,6 @@
 #pragma option -zCGRAPH_EX_TEXT -2 -Z-
 
-#include "platform.h"
 #include "x86real.h"
-#include "pc98.h"
 #include "th01/hardware/scrollup.hpp"
 
 static const int GDC_ROW_SIZE = (ROW_SIZE / 2);

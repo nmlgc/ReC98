@@ -1,39 +1,26 @@
 /// Jigoku Stage 15 Boss - Kikuri
 /// -----------------------------
 
-#include <stddef.h>
 #include "th01/main/boss/palette.cpp"
 
 #include "x86real.h"
-#include "planar.h"
-#include "master.hpp"
+#include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/input.hpp"
-#include "th01/snd/mdrv2.h"
-}
-#include "th01/formats/ptn.hpp"
 #include "th01/hardware/grpinv32.hpp"
-#include "th01/formats/pf.hpp"
-#include "th01/math/area.hpp"
+#include "th01/snd/mdrv2.h"
 #include "th01/math/overlap.hpp"
-#include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
 #include "th01/main/stage/stages.hpp"
 
@@ -52,20 +39,20 @@ static const screen_y_t EYE_BOTTOM = 147;
 static const screen_x_t LIGHTBALL_CENTER_X = 320;
 static const screen_y_t LIGHTBALL_CENTER_Y = 224;
 
-static const pixel_t HITBOX_W = 96;
-static const pixel_t HITBOX_H = 48;
+static const pixel_t HITBOX_W = 128;
+static const pixel_t HITBOX_H = 80;
 
-static const screen_x_t HITBOX_LEFT = (
-	DISC_CENTER_X - (HITBOX_W / 2) - (ORB_W / 2)
-);
-static const screen_x_t HITBOX_RIGHT = (
-	DISC_CENTER_X + (HITBOX_W / 2) - (ORB_W / 2)
-);
+static const screen_x_t HITBOX_LEFT = (DISC_CENTER_X - (HITBOX_W / 2));
+static const screen_x_t HITBOX_RIGHT = (DISC_CENTER_X + (HITBOX_W / 2) - ORB_W);
+static const screen_y_t HITBOX_CENTER_Y = (DISC_CENTER_Y - 8);
 
 // Not the actual Y coordinates of the original hitbox, due to a sign confusion
 // bug in kikuri_hittest_orb()!
-static const screen_y_t HITBOX_TOP = (DISC_CENTER_Y - HITBOX_H);
-static const screen_y_t HITBOX_BOTTOM = DISC_CENTER_Y;
+static const screen_y_t HITBOX_TOP = (HITBOX_CENTER_Y - (HITBOX_H / 2));
+static const screen_y_t HITBOX_BOTTOM = (
+	HITBOX_CENTER_Y + (HITBOX_H / 2) - ORB_H
+);
+
 
 static const pixel_t SOUL_W = 32;
 static const pixel_t SOUL_H = 32;
@@ -92,9 +79,9 @@ enum kikuri_colors_t {
 // Always denotes the last phase that ends with that amount of HP.
 enum kikuri_hp_t {
 	HP_TOTAL = 14,
-	PHASE_2_END_HP = 10,
-	PHASE_5_END_HP = 6,
-	PHASE_6_END_HP = 0,
+	HP_PHASE_2_END = 10,
+	HP_PHASE_5_END = 6,
+	HP_PHASE_6_END = 0,
 };
 
 // Global boss state that is defined here for some reason
@@ -183,7 +170,6 @@ union {
 } pattern_state;
 // --------
 
-#define select_for_rank kikuri_select_for_rank
 #include "th01/main/select_r.cpp"
 
 void kikuri_load(void)
@@ -193,7 +179,7 @@ void kikuri_load(void)
 
 	pellet_interlace = true;
 	Pellets.unknown_seven = 7;
-	palette_copy(boss_palette, z_Palettes, i, j);
+	palette_copy(boss_palette, z_Palettes, i, j); // = boss_palette_snap
 
 	for(i = 0; i < TEAR_COUNT; i++) {
 		tear_anim_frame[i] = 0;
@@ -203,13 +189,13 @@ void kikuri_load(void)
 	void kikuri_setup(void);
 	kikuri_setup();
 
-	// (redundant, no particles are shown in this fight)
+	// ZUN bloat: Redundant, no particles are shown in this fight.
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
 void kikuri_setup(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	boss_phase = 0;
@@ -217,11 +203,11 @@ void kikuri_setup(void)
 
 	// Same HP and phase settings as Elis.
 	boss_hp = HP_TOTAL;
-	hud_hp_first_white = PHASE_2_END_HP;
-	hud_hp_first_redwhite = PHASE_5_END_HP;
+	hud_hp_first_white = HP_PHASE_2_END;
+	hud_hp_first_redwhite = HP_PHASE_5_END;
 
-	// Redundant – already called before the sprites are first rendered, and
-	// (0, 0) isn't used to indicate "soul is not alive".
+	// ZUN bloat: Already called before the sprites are first rendered, and
+	// (0, 0) isn't used to indicate "soul is not alive" either.
 	souls[0].pos_set(0, 0, 50,
 		SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
 	);
@@ -253,7 +239,7 @@ bool16 near kikuri_hittest_orb(void)
 
 void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
 {
-	souls[i].move_lock_unput_and_put_8(0, delta_x, delta_y, 1);
+	souls[i].locked_move_unput_and_put_8(0, delta_x, delta_y, 1);
 	if((boss_phase_frame % 12) == 0) {
 		if(souls[i].image() >= (SOUL_CELS - 1)) {
 			souls[i].set_image(0);
@@ -290,7 +276,7 @@ bool16 pascal near tear_ripple_hittest(screen_x_t left, pixel_t extra_w)
 		// part of the fight, regularly is) anywhere within that byte. This
 		// ends up shifting this otherwise logical hitbox up to 7 pixels to the
 		// right, compared to where you would expect it based on how the
-		// sprites appear on screen.
+		// sprites appear on screen. (Same as Mima's flame pillars.)
 		//
 		// (The ideal fix would be to introduce unaligned rendering for these
 		// sprites, rather than byte-aligning the coordinates here. The latter
@@ -299,7 +285,7 @@ bool16 pascal near tear_ripple_hittest(screen_x_t left, pixel_t extra_w)
 			(player_left >= (left - ((PLAYER_W / 4) + (RIPPLE_W / 2)))) &&
 			(player_left <= (left + extra_w))
 		) {
-			done = true;
+			player_is_hit = true;
 			return true;
 		}
 	}
@@ -311,7 +297,7 @@ void near tears_update_and_render(void)
 	for(int i = 0; i < TEAR_COUNT; i++) {
 		if(tear_anim_frame[i] != 0) {
 			if(tears[i].cur_top <= TEAR_TOP_MAX) {
-				tears[i].move_lock_unput_and_put_8(0, 0, +8, 1);
+				tears[i].locked_move_unput_and_put_8(0, 0, +8, 1);
 			} else {
 				void pascal near ripple_update_and_render(
 					screen_x_t tear_left, screen_y_t tear_top_max, int8_t &frame
@@ -387,7 +373,7 @@ void pascal near ripple_update_and_render(
 	// code below does, by symmetrically moving out from the center to the
 	// left and right edges. But then, unblitting every successive ripple
 	// column by rounding its X coordinate down and up to the nearest word will
-	// also cause half  of the previously drawn column to be unblitted. This is
+	// also cause half of the previously drawn column to be unblitted. This is
 	// exactly why most ripple animations show up with weird empty 8-pixel-wide
 	// stripes on the inside (→ non-word-aligned X positions), while some do
 	// show up fine (→ word-aligned X positions).
@@ -496,13 +482,13 @@ void pascal near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
 	}
 	for(vram_word_amount_t word_x = 0; word_x < (ROW_SIZE / 2); word_x++) {
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_B, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_B, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_B, vo, p1);
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_R, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_R, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_R, vo, p1);
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_G, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_G, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_G, vo, p1);
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_E, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_E, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_E, vo, p1);
 		vo += 2;
 	}
 }
@@ -690,7 +676,7 @@ inline void fire_random_aimed_eye_laser(
 	fire_aimed_eye_laser(
 		i,
 		origin_left,
-		((rand() % (aim_range_x * 2)) - aim_range_x),
+		((irand() % (aim_range_x * 2)) - aim_range_x),
 		speed_multiplied_by_8,
 		w
 	);
@@ -786,7 +772,7 @@ int near pattern_single_lasers_from_left_eye(void)
 		RANGE_X = ((PLAYFIELD_W / 10) - LASER_W),
 	};
 
-	if(boss_phase_frame <= 200) { // (redundant)
+	if(boss_phase_frame <= 200) { // ZUN bloat
 		return 1;
 	}
 	if(boss_phase_frame == 250) {
@@ -899,7 +885,7 @@ int near pattern_vertical_lasers_from_top(void)
 	if((boss_phase_frame % INTERVAL) == 0) {
 		int i = ((boss_phase_frame - KEYFRAME_START) / INTERVAL);
 		pixel_t random_offset_x = (
-			(rand() % ((random_range_x_half * 2) + 1)) - random_range_x_half
+			(irand() % ((random_range_x_half * 2) + 1)) - random_range_x_half
 		);
 		shootout_lasers[i].spawn(
 			(PLAYFIELD_LEFT + (i * DISTANCE_X + random_offset_x)),
@@ -926,13 +912,13 @@ void kikuri_main(void)
 		bool16 invincible;
 		int invincibility_frame;
 
-		void update_and_render(const unsigned char (&flash_colors)[4]) {
+		void update_and_render(const vc_t (&flash_colors)[4]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				7000,
 				boss_nop,
 				kikuri_hittest_orb()
@@ -945,7 +931,7 @@ void kikuri_main(void)
 		union {
 			kikuri_phase_4_subphase_t subphase_4;
 			int phase_6_pattern;
-		} ax;
+		} u1;
 		int patterns_done;
 
 		void frame_common(void) const {
@@ -955,7 +941,7 @@ void kikuri_main(void)
 	} phase = { P4_SOUL_ACTIVATION, 0 };
 
 	int i;
-	const unsigned char flash_colors[] = { 6, 11, 8, 2 };
+	const vc_t flash_colors[] = { 6, 11, 8, 2 };
 
 	// Entrance animation
 	if(boss_phase == 0) {
@@ -1005,8 +991,8 @@ void kikuri_main(void)
 			// Well, if we're blocking and overwriting VRAM page 0...
 			// Not much point in restricting these to the rows that actually
 			// overwrote those sprites.
-			ptn_put_8(player_left, player_top, PTN_MIKO_L);
-			ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+			player_put_default();
+			orb_put_default();
 
 			frame_delay(1);
 		}
@@ -1056,7 +1042,7 @@ entrance_rings_still_active:
 				}
 				z_palette_set_all_show(z_Palettes);
 			}
-			if(frame_half % 2) {  // That's why we've renamed the variable
+			if(frame_half % 2) { // That's why we've renamed the variable
 				frame_delay(1);
 			}
 			#undef frame_half
@@ -1071,7 +1057,7 @@ entrance_rings_still_active:
 			phase.patterns_done++;
 		}
 		if(!hit.invincible && (
-			(boss_hp <= PHASE_2_END_HP) || (phase.patterns_done >= 6)
+			(boss_hp <= HP_PHASE_2_END) || (phase.patterns_done >= 6)
 		)) {
 			boss_phase = 3;
 			boss_phase_frame = 0;
@@ -1098,26 +1084,26 @@ entrance_rings_still_active:
 		if(boss_phase_frame >= (FADE_INTERVAL * FADE_STEPS)) {
 			boss_phase = 4;
 			boss_phase_frame = 0;
-			phase.ax.subphase_4 = P4_SOUL_ACTIVATION;
-			z_palette_set_all_show(stage_palette); // (redundant)
+			phase.u1.subphase_4 = P4_SOUL_ACTIVATION;
+			z_palette_set_all_show(stage_palette);
 			boss_palette_snap();
 		}
 	} else if(boss_phase == 4) {
 		phase.frame_common();
 		pattern_spinning_aimed_rings();
 
-		if(phase.ax.subphase_4 == P4_SOUL_ACTIVATION) {
-			phase.ax.subphase_4 = phase_4_souls_activate();
+		if(phase.u1.subphase_4 == P4_SOUL_ACTIVATION) {
+			phase.u1.subphase_4 = phase_4_souls_activate();
 		} else {
-			phase.ax.subphase_4 = pattern_souls_spreads();
+			phase.u1.subphase_4 = pattern_souls_spreads();
 		}
 
 		hit.update_and_render(flash_colors);
-		if(!hit.invincible && (phase.ax.subphase_4 == P4_DONE)) {
+		if(!hit.invincible && (phase.u1.subphase_4 == P4_DONE)) {
 			boss_phase = 5;
 
 			// Should be done during phase 6 initialization for clarity.
-			phase.ax.phase_6_pattern = 0;
+			phase.u1.phase_6_pattern = 0;
 
 			boss_phase_frame = 0;
 		}
@@ -1127,7 +1113,7 @@ entrance_rings_still_active:
 		pattern_two_crossed_eye_lasers();
 		hit.update_and_render(flash_colors);
 		if(!hit.invincible && (
-			(boss_hp <= PHASE_5_END_HP) || (boss_phase_frame > 1600)
+			(boss_hp <= HP_PHASE_5_END) || (boss_phase_frame > 1600)
 		)) {
 			boss_phase = 6;
 			boss_phase_frame = 0;
@@ -1138,14 +1124,14 @@ entrance_rings_still_active:
 		phase.frame_common();
 		pattern_souls_single_aimed_pellet_and_move_diagonally();
 
-		if(phase.ax.phase_6_pattern == 0) {
-			phase.ax.phase_6_pattern = pattern_4_spiral_along_disc();
-		} else if(phase.ax.phase_6_pattern == 1) {
-			phase.ax.phase_6_pattern = pattern_single_lasers_from_left_eye();
-		} else if(phase.ax.phase_6_pattern == 2) {
-			phase.ax.phase_6_pattern = pattern_souls_symmetric_rain_lines();
-		} else if(phase.ax.phase_6_pattern == 3) {
-			phase.ax.phase_6_pattern = pattern_vertical_lasers_from_top();
+		if(phase.u1.phase_6_pattern == 0) {
+			phase.u1.phase_6_pattern = pattern_4_spiral_along_disc();
+		} else if(phase.u1.phase_6_pattern == 1) {
+			phase.u1.phase_6_pattern = pattern_single_lasers_from_left_eye();
+		} else if(phase.u1.phase_6_pattern == 2) {
+			phase.u1.phase_6_pattern = pattern_souls_symmetric_rain_lines();
+		} else if(phase.u1.phase_6_pattern == 3) {
+			phase.u1.phase_6_pattern = pattern_vertical_lasers_from_top();
 		}
 		if(boss_phase_frame == 0) {
 			phase.patterns_done++;
@@ -1160,9 +1146,13 @@ entrance_rings_still_active:
 		hit.update_and_render(flash_colors);
 		if(boss_hp <= 0) {
 			mdrv2_bgm_fade_out_nonblock();
-			Pellets.unput_and_reset();
+			Pellets.unput_and_reset_nonclouds();
 			shootout_lasers_unput_and_reset_broken(i, 4); // 4? Doubly broken...
 			boss_defeat_animate();
+
+			// ZUN bloat: Already done at the start of REIIDEN.EXE's main().
+			// The REIIDEN.EXE process restarts after the end of a scene
+			// anyway, making this load doubly pointless.
 			scene_init_and_load(6);
 		}
 	}

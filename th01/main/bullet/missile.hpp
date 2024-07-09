@@ -1,3 +1,7 @@
+#include "th01/main/playfld.hpp"
+#include "th01/formats/ptn.hpp"
+#include "th01/math/subpixel.hpp"
+
 /// Constants
 /// ---------
 
@@ -43,8 +47,8 @@ class CMissiles {
 	Subpixel prev_top[MISSILE_COUNT];
 	Subpixel velocity_x[MISSILE_COUNT];
 	Subpixel velocity_y[MISSILE_COUNT];
-	int16_t unused[MISSILE_COUNT];
-	int8_t unknown[MISSILE_COUNT];
+	int16_t unused[MISSILE_COUNT]; // ZUN bloat
+	int8_t unknown[MISSILE_COUNT]; // ZUN bloat
 	uint8_t ptn_id_base; // main_ptn_id_t. Very bold to limit this to 8 bits!
 	missile_flag_t flag[MISSILE_COUNT];
 
@@ -56,7 +60,7 @@ protected:
 public:
 	// Loads the missile sprites into the given .PTN [slot].
 	void load(main_ptn_slot_t slot) {
-		ptn_load(slot, MISSILE_FN);
+		ptn_load(slot, "boss3_m.ptn");
 		ptn_id_base = PTN_ID(slot, 0);
 	}
 

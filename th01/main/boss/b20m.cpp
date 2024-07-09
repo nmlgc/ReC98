@@ -3,55 +3,36 @@
 
 #include <stdlib.h>
 #include <dos.h>
-#include "platform.h"
-#include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/common.h"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/grcg8x8m.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/egcrows.hpp"
 #include "th01/hardware/grpinv32.hpp"
-extern "C" {
 #include "th01/hardware/palette.h"
-}
 #include "th01/hardware/pgtrans.hpp"
 #include "th01/hardware/scrollup.hpp"
-#include "th01/hardware/input.hpp"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/pf.hpp"
-}
 #include "th01/formats/grc.hpp"
 #include "th01/formats/grp.h"
-#include "th01/formats/ptn.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/sprites/leaf.hpp"
+#include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
-#include "th01/main/entity.hpp"
+#include "th01/main/shape.hpp"
 #include "th01/main/spawnray.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
-#include "th01/main/shape.hpp"
 #include "th01/main/stage/stageobj.hpp"
+#include "th01/main/stage/stages.hpp"
 #include "th01/main/player/bomb.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
@@ -60,7 +41,7 @@ extern "C" {
 #include "th01/main/hud/hud.hpp"
 
 static const char* unused_entrance_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
-bool game_cleared = false;
+int8_t game_cleared = false; // ACTUAL TYPE: bool
 
 // Coordinates
 // -----------
@@ -86,9 +67,9 @@ static const screen_y_t WAND_EMIT_TOP = 64;
 // That's… not quite where the face is?
 static const screen_x_t FACE_LEFT = 314;
 static const screen_y_t FACE_TOP = 104;
-static const pixel_t FACE_W = 32;
-static const pixel_t FACE_H = 32;
-static const screen_y_t FACE_CENTER_Y = (FACE_TOP + (FACE_H / 2));
+static const pixel_t FACE_W = 64;
+static const pixel_t FACE_H = 64;
+static const screen_y_t FACE_CENTER_Y = (FACE_TOP + (FACE_H / 4));
 
 // MODDERS: That's 32 more than BOSS6_2.BOS is wide? Reducing it to 96 works
 // fine as well.
@@ -135,7 +116,7 @@ const char* BG_IMAGES[4] = {
 // Entities (and animations)
 // --------
 
-#define ent_shield	boss_entities[0]
+#define ent_shield	boss_entity_0
 #define anm_dress 	boss_anims[0]
 #define anm_wand  	boss_anims[1]
 
@@ -264,7 +245,7 @@ static const int PARTICLE2X2_COUNT = 30;
 static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
 
 #define particle2x2_linear_vram_offset(vo, first_bit, left, top) { \
-	vo = vram_offset_divmul_double(left, top); \
+	vo = vram_offset_divmul(left, top); \
 	first_bit = (static_cast<screen_x_t>(left) % BYTE_DOTS); \
 }
 
@@ -311,7 +292,6 @@ static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
 }
 // -------------
 
-#define select_for_rank sariel_select_for_rank
 #include "th01/main/select_r.cpp"
 
 void sariel_entrance(int8_t)
@@ -326,7 +306,7 @@ void sariel_entrance(int8_t)
 	graph_accesspage_func(0);
 	stageobjs_init_and_render(BOSS_STAGE);
 	mdrv2_bgm_load("TENSI.MDT");
-	mdrv2_se_load(SE_FN);
+	mdrv2_se_load(SE_FN); // ZUN bloat: Already done in main()
 	mdrv2_bgm_play();
 
 	text_fillca(' ', TX_WHITE);
@@ -365,7 +345,7 @@ void sariel_load_and_init(void)
 void sariel_setup(void)
 {
 	ent_shield.pos_set(SHIELD_LEFT, SHIELD_TOP, 48, 0, RES_X, 0, RES_Y);
-	ent_shield.hitbox_set(0, 0, 48, 48);
+	ent_shield.hitbox_orb_set(-16, -16, 64, 64);
 	boss_hp = 18;
 	hud_hp_first_white = 8;
 	hud_hp_first_redwhite = 2;
@@ -419,7 +399,7 @@ void sariel_free(void)
 void pascal near spawnray_unput_and_put(
 	screen_x_t origin_x, vram_y_t origin_y,
 	screen_x_t target_x, vram_y_t target_y,
-	int col
+	vc2 col
 )
 {
 	static screen_x_t target_prev_x = -PIXEL_NONE;
@@ -543,8 +523,7 @@ template <
 		unsigned char &angle, x_direction_t from_dir, subpixel_t speed
 	) const {
 		angle = iatan2(
-			(PLAYFIELD_BOTTOM - target_y),
-			((PLAYFIELD_LEFT + playfield_rand_x()) - target_l_x)
+			(PLAYFIELD_BOTTOM - target_y), (playfield_rand_x() - target_l_x)
 		);
 		if(from_dir == X_LEFT) {
 			Pellets.add_single(inhibit_Z3(target_l_x), target_y, angle, speed);
@@ -641,7 +620,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			pellets_add_single_rain(
 				birds.pellet_left(i),
 				birds.pellet_top(i),
-				((rand() & 0x7F) + 0x80),
+				((irand() & 0x7F) + 0x80),
 				4.0f
 			);
 		}
@@ -707,7 +686,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 				(birds.top[i] > (player_top - (PLAYER_H / 2) - (BIRD_H / 4))) &&
 				(birds.top[i] < (player_top + (PLAYER_H / 2)))
 			) {
-				done = true;
+				player_is_hit = true;
 				delay(100); // ???
 				return;
 			}
@@ -743,8 +722,8 @@ void near shield_render_both(void)
 	ent_shield.set_image(
 		(boss_phase_frame % (FRAMES_PER_CEL * CELS)) / FRAMES_PER_CEL
 	);
-	graph_accesspage_func(1);	ent_shield.move_lock_and_put_8();
-	graph_accesspage_func(0);	ent_shield.move_lock_and_put_8();
+	graph_accesspage_func(1);	ent_shield.unlock_put_lock_8();
+	graph_accesspage_func(0);	ent_shield.unlock_put_lock_8();
 }
 
 // Renders a frame of Sariel's wand raise animation on both VRAM pages, and
@@ -843,8 +822,8 @@ void pascal near vortex_fire_3_spread(
 void near pattern_vortices(void)
 {
 	static bool16 wand_raise_animation_done = false;
-	static CEntities<VORTEX_COUNT> cur;
-	static CEntities<VORTEX_COUNT> prev;
+	static EntitiesTopleft<VORTEX_COUNT> cur;
+	static EntitiesTopleft<VORTEX_COUNT> prev;
 	static bool16 dir_first; // x_direction_t
 	static bool16 dir_second; // x_direction_t
 
@@ -926,7 +905,7 @@ void near pattern_vortices(void)
 		}
 	} else if(boss_phase_frame < 240) {
 		if(boss_phase_frame == 200) {
-			static_cast<int>(dir_first) = (rand() % 2);
+			static_cast<int>(dir_first) = (irand() % 2);
 			if(dir_first == X_LEFT) {
 				wand_lower_both();
 			}
@@ -938,7 +917,7 @@ void near pattern_vortices(void)
 		}
 	} else if(boss_phase_frame < 320) {
 		if(boss_phase_frame == 240) {
-			static_cast<int>(dir_second) = (rand() % 2);
+			static_cast<int>(dir_second) = (irand() % 2);
 			if((dir_second == X_RIGHT) && (dir_second == dir_first)) {
 				wand_lower_both();
 			} else if((dir_second == X_LEFT) && (dir_second == dir_first)) {
@@ -990,12 +969,8 @@ void near pattern_random_purple_lasers(void)
 			8.5f, 9.0f, 9.5f, 10.0f
 		);
 		for(int i = 0; i < LASER_COUNT; i++) {
-			spawner_x[i] = (PLAYFIELD_LEFT +
-				playfield_fraction_x(3 / 16.0f) + playfield_rand_x(10 / 16.0f)
-			);
-			spawner_y[i] = (PLAYFIELD_TOP +
-				playfield_fraction_y(9 / 84.0f) + playfield_rand_y(25 / 84.0f)
-			);
+			spawner_x[i] = playfield_rand_x(0.1875f, 0.8125f);
+			spawner_y[i] = playfield_rand_y((9 / 84.0f), (34 / 84.0f));
 		}
 	}
 	if(boss_phase_frame < KEYFRAME_1) {
@@ -1036,7 +1011,7 @@ void near pattern_birds_on_ellipse_arc(void)
 	static bool wand_raise_animation_done = false;
 	static bird_pellet_group_t pellet_group = BPG_AIMED;
 	static int eggs_alive = 0;
-	static CEntities<BIRD_COUNT> egg;
+	static EntitiesTopleft<BIRD_COUNT> egg;
 	static Subpixel spawner_left;
 	static Subpixel spawner_top;
 	static Subpixel spawner_velocity_y;
@@ -1057,8 +1032,8 @@ void near pattern_birds_on_ellipse_arc(void)
 		eggs_alive = 0;
 		spawner_left.v = to_sp(WAND_EMIT_LEFT);
 		spawner_top.v = to_sp(WAND_EMIT_TOP);
-		spawner_velocity_x.v = TO_SP(4 - ((rand() % 2) * 8));
-		spawner_velocity_y.v = TO_SP(2 - ((rand() % 2) * 4));
+		spawner_velocity_x.v = TO_SP(4 - ((irand() % 2) * 8));
+		spawner_velocity_y.v = TO_SP(2 - ((irand() % 2) * 4));
 		select_for_rank(pattern_state.interval, 20, 15, 10, 8);
 		mdrv2_se_play(8);
 	} else if(boss_phase_frame < 200) {
@@ -1112,12 +1087,12 @@ void near pattern_birds_on_ellipse_arc(void)
 					: to_sp( 0.25f);
 			}
 			for(int i = (eggs_alive - 1); i >= 0; i--) {
-				vector2(velocity.x, velocity.y, 3, ((rand() & 0x7F) + 0x80));
+				vector2(velocity.x, velocity.y, 3, ((irand() & 0x7F) + 0x80));
 				birds_spawn(egg.left[i], egg.top[i], velocity.x, velocity.y);
 			}
 			wand_lower_both();
 			pellet_group = static_cast<bird_pellet_group_t>(
-				rand() % (BPG_6_RING + 1) // excluding random rain here
+				irand() % (BPG_6_RING + 1) // excluding random rain here
 			);
 		}
 
@@ -1181,7 +1156,7 @@ void pascal near bg_transition(int image_id_new)
 	static screen_x_t cell_x;
 	static vram_y_t cell_y;
 	static vram_offset_t cell_vo;
-	static int stripe_col_base;
+	static vc2 stripe_col_base;
 	static int gust_id;
 
 	int row;
@@ -1234,7 +1209,7 @@ void pascal near bg_transition(int image_id_new)
 
 	for(row = 0; row < (RES_Y / ROW_SPACING); row++) {
 		grcg_setcolor_tcr(COL_AIR);
-		cell_offset_right = (rand() % 8);
+		cell_offset_right = (irand() % 8);
 
 		graph_accesspage(1);
 		for(stripe_id = 0; stripe_id < (STRIPES_PER_CELL * 2); stripe_id++) {
@@ -1312,7 +1287,7 @@ void pascal near bg_transition(int image_id_new)
 void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 {
 	// Also indicates whether a particle is alive.
-	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
+	static svc_t col[PARTICLE2X2_COUNT] = { 0 };
 
 	static double left[PARTICLE2X2_COUNT];
 	static double top[PARTICLE2X2_COUNT];
@@ -1328,11 +1303,11 @@ void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 			if(col[i] != 0) {
 				continue;
 			}
-			left[i] = (rand() % RES_X);
+			left[i] = (irand() % RES_X);
 			top[i] = ((from_bottom == false) ? 0 : (RES_Y - 1 - PARTICLE2X2_H));
 			velocity_y[i] = ((from_bottom == false)
-				? (( rand() % 15) + 2)
-				: ((-rand() % 15) - 8)
+				? (( irand() % 15) + 2)
+				: ((-irand() % 15) - 8)
 			);
 			col[i] = COL_PARTICLE2X2;
 			break;
@@ -1367,7 +1342,7 @@ void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 		top[i] += velocity_y[i];
 
 		// Recalculate VRAM offset and clip
-		vo = vram_offset_divmul_double(left[i], top[i]);
+		vo = vram_offset_divmul(left[i], top[i]);
 		if((vo >= (((RES_Y - PARTICLE2X2_H) + 1) * ROW_SIZE) || (vo < 0))) {
 			col[i] = 0;
 			continue;
@@ -1379,7 +1354,7 @@ void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 		grcg_setcolor_rmw(col[i]);
 		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void near pattern_detonating_snowflake(void)
@@ -1476,10 +1451,14 @@ void near pattern_detonating_snowflake(void)
 		radius_outer_1 = RADIUS_MAX;
 		radius_outer_2 = 16;
 		radius_inner = 24;
+
 		// ZUN bug: Assigning a subpixel to a regular pixel. Will affect a
-		// single frame, until the X position is randomized again.
+		// single frame, until we enter P_DETONATION_ACTIVE via the
+		// [detonation_frame] in the condition below, where the X position is
+		// randomized again.
 		star_left = left.v;
-		star_top = (PLAYFIELD_BOTTOM - (rand() % RADIUS_MAX));
+
+		star_top = (PLAYFIELD_BOTTOM - (irand() % RADIUS_MAX));
 		mdrv2_se_play(10);
 	}
 	if(state.phase >= P_DETONATION_START) {
@@ -1497,10 +1476,10 @@ void near pattern_detonating_snowflake(void)
 		radius_outer_1 -= 6;
 		radius_outer_2 += 6;
 		radius_inner += 4;
-		star_left = ((rand() % ((HITBOX_W * 2) / 3)) + left.to_pixel() - (
+		star_left = ((irand() % ((HITBOX_W * 2) / 3)) + left.to_pixel() - (
 			 ((HITBOX_W * 2) / 6) - (FLAKE_W / 2)
 		));
-		star_top = (PLAYFIELD_BOTTOM - (rand() % RADIUS_MAX));
+		star_top = (PLAYFIELD_BOTTOM - (irand() % RADIUS_MAX));
 		if(radius_outer_1 <= 8) {
 			state.phase = P_RESET;
 			return;
@@ -1518,7 +1497,7 @@ void near pattern_detonating_snowflake(void)
 		((left.to_pixel() - ((HITBOX_W / 2) + (PLAYER_W / 2))) < player_left) &&
 		(state.phase >= P_DETONATION_START)
 	) {
-		done = true;
+		player_is_hit = true;
 	}
 
 	#undef ellipse_put
@@ -1566,7 +1545,7 @@ void near pattern_aimed_sling_clusters(void)
 	) {
 		screen_x_t left;
 		vram_y_t top;
-		unsigned char angle = rand();
+		unsigned char angle = irand();
 
 		left = polar_y(PLAYFIELD_CENTER_X, (PLAYFIELD_W / 16), angle);
 		top = polar_x(
@@ -1584,7 +1563,7 @@ void near pattern_aimed_sling_clusters(void)
 void near particles2x2_wavy_unput_update_render()
 {
 	// Also indicates whether a particle is alive.
-	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
+	static svc_t col[PARTICLE2X2_COUNT] = { 0 };
 
 	static screen_x_t left[PARTICLE2X2_COUNT];
 	static vram_y_t top[PARTICLE2X2_COUNT];
@@ -1602,7 +1581,7 @@ void near particles2x2_wavy_unput_update_render()
 			if(col[i] != 0) {
 				continue;
 			}
-			left[i] = (rand() % RES_X);
+			left[i] = (irand() % RES_X);
 			top[i] = RES_Y;
 			velocity_y[i] = -1;
 			age[i] = 0;
@@ -1648,7 +1627,7 @@ void near particles2x2_wavy_unput_update_render()
 		grcg_setcolor_rmw(col[i]);
 		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void near pattern_four_aimed_lasers(void)
@@ -1777,7 +1756,7 @@ void near pattern_rain_from_top(void)
 	if((boss_phase_frame % 8) != 0) {
 		return;
 	}
-	screen_x_t left = (PLAYFIELD_LEFT + playfield_rand_x());
+	screen_x_t left = playfield_rand_x();
 	vram_y_t top = PLAYFIELD_TOP;
 	pellet_group_t group;
 
@@ -1987,8 +1966,8 @@ void near pattern_vertical_stacks_from_bottom_then_random_rain_from_top(void)
 		PLAYFIELD_CENTER_X, FACE_CENTER_Y, (DEBRIS_W / 4)
 	> rays;
 
-	// ZUN bug: Leaving this uninitalized indeed implies vortex sprites for the
-	// first 5 frames, until this actually reaches C_DEBRIS...
+	// ZUN bug: Leaving this uninitialized indeed implies vortex sprites for
+	// the first 5 frames, until this actually reaches C_DEBRIS...
 	static vortex_or_debris_cel_t debris_cel;
 
 	unsigned char angle;
@@ -2065,7 +2044,7 @@ void near pascal dottedcircle_unput_update_render(
 	int frame_1based,
 	int interval,
 	pixel_t radius_step,
-	int col,
+	vc2 col,
 	pixel_t radius_initial,
 	int duration
 )
@@ -2098,7 +2077,7 @@ void near pascal dottedcircle_unput_update_render(
 void pascal near particles2x2_horizontal_unput_update_render(int frame)
 {
 	// Also indicates whether a particle is alive.
-	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
+	static svc_t col[PARTICLE2X2_COUNT] = { 0 };
 
 	static double left[PARTICLE2X2_COUNT];
 	static double top[PARTICLE2X2_COUNT];
@@ -2115,9 +2094,9 @@ void pascal near particles2x2_horizontal_unput_update_render(int frame)
 			if(col[i] != 0) {
 				continue;
 			}
-			left[i] = (rand() % RES_X);
-			top[i] = (rand() % RES_Y);
-			velocity_x[i] = ((rand() % 2) == 0) ? -6 : 6;
+			left[i] = (irand() % RES_X);
+			top[i] = (irand() % RES_Y);
+			velocity_x[i] = ((irand() % 2) == 0) ? -6 : 6;
 			col[i] = COL_PARTICLE2X2;
 			break;
 		}
@@ -2161,7 +2140,7 @@ void pascal near particles2x2_horizontal_unput_update_render(int frame)
 		graph_accesspage_func(0);
 		particle2x2_put_left_right(vo, first_bit, dots_left, dots_right);
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 struct CurvedSpray {
@@ -2271,7 +2250,7 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 		rays.target_y = (PLAYFIELD_BOTTOM - 1);
 		debris_cel_cur = C_DEBRIS;
 		debris_cel_prev = C_DEBRIS;
-		sariel_select_for_rank(pattern_state.pellet_count, 30, 35, 40, 45);
+		select_for_rank(pattern_state.pellet_count, 30, 35, 40, 45);
 	}
 
 	if(rays.target_y > SEAL_CENTER_Y) {
@@ -2296,7 +2275,7 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 		pellets_add_single_rain(
 			(PLAYFIELD_LEFT + ((PLAYFIELD_W / pattern_state.pellet_count) * i)),
 			SEAL_CENTER_Y,
-			rand(),
+			irand(),
 			1.0f
 		);
 	}
@@ -2328,22 +2307,6 @@ void pascal near pattern_curved_spray_leftright_twice(int &frame)
 			}
 		}
 	}
-}
-
-// Subpixels with one decimal digit of fractional resolution?! Sure, if you
-// absolutely want those precise multiples of 0.1 in your movement code...
-typedef int decimal_subpixel_t;
-
-struct DecimalSubpixel {
-	decimal_subpixel_t v;
-
-	pixel_t to_pixel() const {
-		return static_cast<pixel_t>(v / 10);
-	}
-};
-
-inline decimal_subpixel_t to_dsp(float pixel_v) {
-	return static_cast<decimal_subpixel_t>(pixel_v * 10);
 }
 
 void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
@@ -2387,7 +2350,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 				left[i].to_pixel(), top[i].to_pixel() \
 			); \
 			tmp_first_bit = (left[i].to_pixel() % BYTE_DOTS); \
-			grcg_put_8x8_mono(tmp_vo, tmp_first_bit, sprite[0], V_WHITE); \
+			grcg_put_8x8_mono(tmp_vo, tmp_first_bit, sprite[0].row, V_WHITE); \
 		} \
 	}
 
@@ -2412,16 +2375,16 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 				continue;
 			}
 			left[i].v = (
-				to_dsp(PLAYFIELD_LEFT) + (rand() % to_dsp(PLAYFIELD_W))
+				to_dsp(PLAYFIELD_LEFT) + (irand() % to_dsp(PLAYFIELD_W))
 			);
 			top[i].v = (
 				to_dsp(FACE_CENTER_Y) +
-				(rand() % to_dsp((PLAYFIELD_H * 25) / 84))
+				(irand() % to_dsp((PLAYFIELD_H * 25) / 84))
 			);
 			vector2_between(
 				left[i].to_pixel(),
 				top[i].to_pixel(),
-				(PLAYFIELD_LEFT + playfield_rand_x()),
+				playfield_rand_x(),
 				PLAYFIELD_TOP,
 				velocity_x[i].v,
 				velocity_y[i].v,
@@ -2458,7 +2421,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			}
 			if(flag[i] == LF_SPLASH_DONE) {
 				flag[i] = LF_LEAF;
-				velocity_y[i].v = (to_dsp(0.3f) + (rand() % to_dsp(0.2f)));
+				velocity_y[i].v = (to_dsp(0.3f) + (irand() % to_dsp(0.2f)));
 				velocity_x[i].v = to_dsp(0.2f);
 			}
 		} else if(flag[i] == LF_LEAF) {
@@ -2471,7 +2434,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			top[i].v += velocity_y[i].v;
 			velocity_y[i].v--;
 			if(velocity_y[i].v < to_dsp(-0.1f)) {
-				velocity_y[i].v = (to_dsp(3.0f) + (rand() % to_dsp(2.0f)));
+				velocity_y[i].v = (to_dsp(3.0f) + (irand() % to_dsp(2.0f)));
 				velocity_x[i].v = (velocity_x[i].v < to_dsp(0.0f))
 					? to_dsp(+2.0f)
 					: to_dsp(-2.0f);
@@ -2517,7 +2480,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 				(left[i].to_pixel() < (player_left + PLAYER_W - LEAF_W)) &&
 				!player_invincible
 			) {
-				done = true;
+				player_is_hit = true;
 			}
 		}
 	}
@@ -2545,7 +2508,7 @@ void sariel_main(void)
 		union {
 			int patterns_done;
 			int pulse_fade_direction;
-		} ax;
+		} u1;
 		int patterns_until_next;
 
 		void next(int phase) {
@@ -2578,11 +2541,10 @@ void sariel_main(void)
 					? ring_min
 					: (pattern_cur + 1);
 			}
-			// Modifying this variable during the second form also causes the
-			// pulse effect to switch its fade direction. Too inconsequential
-			// to be really called a ZUN bug though, and it might have even
-			// been sort of intended.
-			ax.patterns_done++;
+			// ZUN quirk: Modifying this variable during the second form also
+			// causes the pulse effect to switch its fade direction. Might have
+			// even been sort of intended.
+			u1.patterns_done++;
 		}
 	} phase = { 0, 0, 0 };
 
@@ -2591,10 +2553,10 @@ void sariel_main(void)
 			boss_phase = PHASE_FORM1_DEFEATED; \
 		} \
 		if( \
-			(phase.ax.patterns_done >= phase.patterns_until_next) && \
+			(phase.u1.patterns_done >= phase.patterns_until_next) && \
 			!invincible \
 		) { \
-			phase.ax.patterns_done = 0; \
+			phase.u1.patterns_done = 0; \
 			boss_phase = next_phase; \
 			phase.pattern_cur = 0; \
 			boss_phase_frame = 0; \
@@ -2602,32 +2564,32 @@ void sariel_main(void)
 	}
 
 	unsigned int i;
-	const unsigned char flash_colors[3] = { 3, 4, 5 };
+	const vc_t flash_colors[3] = { 3, 4, 5 };
 
 	struct {
 		bool padding;
 		bool colliding_with_orb;
 
-		void update_and_render(const unsigned char (&flash_colors)[3]) {
+		void update_and_render(const vc_t (&flash_colors)[3]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				10000,
 				boss_nop,
 				colliding_with_orb,
-				FACE_LEFT,
-				FACE_TOP,
-				(FACE_W * 2),
-				FACE_H
+				shot_hitbox_t(
+					FACE_LEFT, FACE_TOP, ((FACE_W * 5) / 4), ((FACE_H * 3) / 4)
+				)
 			);
 		}
 	} hit;
 
 	hit.colliding_with_orb = overlap_xy_xywh_le_ge(
-		orb_cur_left, orb_cur_top, FACE_LEFT, FACE_TOP, FACE_W, FACE_H
+		orb_cur_left, orb_cur_top,
+		FACE_LEFT, FACE_TOP, (FACE_W - ORB_W), (FACE_H - ORB_H)
 	) || ent_shield.hittest_orb();
 
 	if(boss_phase == 0) {
@@ -2649,8 +2611,8 @@ void sariel_main(void)
 			)) {
 				boss_phase = 1;
 				phase.pattern_cur = 0;
-				phase.ax.patterns_done = 0;
-				phase.patterns_until_next = ((rand() % 6) + 1);
+				phase.u1.patterns_done = 0;
+				phase.patterns_until_next = ((irand() % 6) + 1);
 				boss_phase_frame = 0;
 				initial_hp_rendered = 0;
 				boss_palette_show(); // Unnecessary.
@@ -2691,7 +2653,7 @@ entrance_rings_still_active:
 			// Assume that the palette didn't change between background ID 0
 			// and 1...
 			// boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 5) + 1);
+			phase.patterns_until_next = ((irand() % 5) + 1);
 		}
 	} else if(boss_phase == 3) {
 		phase.frame_common(false);
@@ -2717,7 +2679,7 @@ entrance_rings_still_active:
 		if(boss_phase_frame == 0) {
 			phase.next(5);
 			boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 4) + 3);
+			phase.patterns_until_next = ((irand() % 4) + 3);
 		}
 	} else if(boss_phase == 5) {
 		phase.frame_common(false);
@@ -2749,7 +2711,7 @@ entrance_rings_still_active:
 		if(boss_phase_frame == 0) {
 			phase.next(7);
 			boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 5) + 2);
+			phase.patterns_until_next = ((irand() % 5) + 2);
 		}
 	} else if(boss_phase == 7) {
 		phase.frame_common(false);
@@ -2774,7 +2736,7 @@ entrance_rings_still_active:
 		if(boss_phase_frame == 0) {
 			phase.next(1);
 			boss_palette_snap();
-			phase.patterns_until_next = ((rand() % 6) + 1);
+			phase.patterns_until_next = ((irand() % 6) + 1);
 		}
 	} else if(boss_phase == PHASE_FORM1_DEFEATED) {
 		boss_phase_frame = 0;
@@ -2784,7 +2746,7 @@ entrance_rings_still_active:
 		invincibility_frame = 399;
 
 		Shots.unput_and_reset();
-		Pellets.unput_and_reset();
+		Pellets.unput_and_reset_nonclouds();
 		shootout_lasers_unput_and_reset_broken(i, SHOOTOUT_LASER_COUNT);
 
 		// MODDERS: Move this to a common player reset function.
@@ -2793,10 +2755,10 @@ entrance_rings_still_active:
 		player_left = PLAYER_LEFT_START;
 		orb_force = ORB_FORCE_START;
 		orb_force_frame = 0;
-		orb_velocity_x = OVX_4_LEFT;
+		orb_velocity_x = ORB_VELOCITY_X_START;
 		player_deflecting = false;
 		bomb_damaging = false;
-		player_unput_update_render(false);
+		player_reset();
 
 		invincible = false;
 		random_seed = frame_rand;
@@ -2851,7 +2813,7 @@ entrance_rings_still_active:
 				boss_phase_frame = 0;
 				invincibility_frame = 0;
 				phase.pattern_cur = 0;
-				phase.ax.pulse_fade_direction = 0;
+				phase.u1.pulse_fade_direction = 0;
 				boss_phase = PHASE_FORM2;
 				player_invincibility_time = 0;
 				player_invincible = false;
@@ -2920,11 +2882,11 @@ entrance_rings_still_active:
 			// boss palette, modifying the one entry, and then capturing the
 			// palette again...
 			boss_palette_show();
-			if(phase.ax.pulse_fade_direction == 0) {
+			if(phase.u1.pulse_fade_direction == 0) {
 				if(z_Palettes[COL_FORM2_PULSE].c.r < 0xA) {
 					z_Palettes[COL_FORM2_PULSE].c.r++;
 				} else {
-					phase.ax.pulse_fade_direction = 1;
+					phase.u1.pulse_fade_direction = 1;
 				}
 				if(z_Palettes[COL_FORM2_PULSE].c.g < 0xA) {
 					z_Palettes[COL_FORM2_PULSE].c.g++;
@@ -2936,7 +2898,7 @@ entrance_rings_still_active:
 				if(z_Palettes[COL_FORM2_PULSE].c.r > 0x0) {
 					z_Palettes[COL_FORM2_PULSE].c.r--;
 				} else {
-					phase.ax.pulse_fade_direction = 0;
+					phase.u1.pulse_fade_direction = 0;
 				}
 				if(z_Palettes[COL_FORM2_PULSE].c.g > 0x0) {
 					z_Palettes[COL_FORM2_PULSE].c.g--;

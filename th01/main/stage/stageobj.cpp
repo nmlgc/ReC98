@@ -1,40 +1,26 @@
-#include <stddef.h>
 #include <stdlib.h>
 #include <malloc.h>
-#include "platform.h"
-#include "pc98.h"
-#include "decomp.hpp"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/common.h"
-#include "th01/math/subpixel.hpp"
-extern "C" {
+#include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/ztext.h"
-}
-#include "th01/main/playfld.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/formats/ptn.hpp"
-extern "C" {
+#include "th01/hardware/ztext.hpp"
+#include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"
-#include "th01/formats/stagedat.hpp"
-}
 #include "th01/sprites/pellet.h"
 #include "th01/main/debug.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/stageobj.hpp"
 
 // Globals
 // -------
 
-struct stage_t {
-	StupidBytewiseWrapperAround<stagedat_stage_t> dat;
-	int8_t padding[5];
-};
+// ZUN bloat: The scene data is immediately converted to an internal
+// representation anyway. This could have easily been a local variable… then
+// again, storing it in global data is what gives negative "glitch stages"
+// their deterministic appearance.
 extern stage_t scene_stage[STAGES_PER_SCENE];
 
 char default_grp_fn[15] = "ST .GRP";
@@ -76,7 +62,7 @@ ptn_t *stageobj_bgs;
 unsigned long stageobj_bgs_size;
 CCards cards;
 CObstacles obstacles;
-unsigned long *cards_score;
+uscore_t *cards_score;
 // -------
 
 // Byte-wise iterators for STAGE?.DAT arrays
@@ -269,7 +255,7 @@ void stageobj_bgs_snap_from_1_8(screen_x_t left, vram_y_t top, int slot)
 	graph_accesspage_func(0);
 }
 
-void scene_init_and_load(unsigned char id)
+void scene_init_and_load(uint8_t id)
 {
 	stagedat_header_t header;
 	char scene_fn[15] = "stage .dat";
@@ -389,11 +375,12 @@ void stageobjs_init_and_render(int stage_id)
 	cards.new_counted();
 	obstacles.new_counted();
 
-	// No, not the ID of the one card that might remain unflipped after a bomb.
-	// That's down to a per-frame rand(), see cards_hittest() for the actual
-	// algorithm.
+	// ZUN bloat: No, not the ID of the one card that might remain unflipped
+	// after a bomb. That's down to a per-frame irand(), see cards_hittest()
+	// for the actual algorithm. (It also happens to divide by 0 if cards.count
+	// is 0.)
 	static int a_random_unused_card_id;
-	a_random_unused_card_id = (rand() % cards.count);
+	a_random_unused_card_id = (irand() % cards.count);
 
 	for(i = 0; i < obstacles.count; i++) {
 		obstacles.frames[i].v = 0;
@@ -968,7 +955,8 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		portals_blocked = false;
 		if(orb_in_portal) {
 			// ZUN bug: Missing an unblitting call. This just blits the regular
-			// portal sprite on top of an animated one.
+			// portal sprite on top of an animated one. Very noticeable when
+			// losing a life while a PTN_PORTAL_ANIM sprite is in VRAM.
 			ptn_put_8(dst_left, dst_top, PTN_PORTAL);
 
 			orb_in_portal = false;
@@ -1017,7 +1005,7 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		while(1) {
 			if(
 				(static_cast<int>(obstacles.type[dst_slot]) == OT_PORTAL) &&
-				((rand() % 4) == 0) &&
+				((irand() % 4) == 0) &&
 				(dst_slot != obstacle_slot)
 			 ) {
 				break;
@@ -1043,8 +1031,8 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		ptn_sloppy_unput_16(dst_left, dst_top);
 		ptn_put_8(dst_left, dst_top, PTN_PORTAL);
 
-		orb_velocity_x = static_cast<orb_velocity_x_t>(rand() % OVX_COUNT);
-		orb_force_new(((rand() % 19) - 9), OF_IMMEDIATE);
+		orb_velocity_x = static_cast<orb_velocity_x_t>(irand() % OVX_COUNT);
+		orb_force_new(((irand() % 19) - 9), OF_IMMEDIATE);
 		orb_cur_left = dst_left;
 		orb_cur_top = dst_top;
 		orb_in_portal = false;
@@ -1054,4 +1042,4 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 	}
 }
 
-static int8_t unused[4];
+static int8_t unused[4]; // ZUN bloat

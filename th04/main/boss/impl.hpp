@@ -1,5 +1,7 @@
 // Shared boss implementation macros.
 
+#include "th01/hardware/grcg.hpp"
+
 // Common implementation of [boss_bg_render]:
 // 1) Stage tiles before and after the fight
 // 2) A static backdrop image during the fight
@@ -55,7 +57,10 @@
 		on_hp_fill; \
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) { \
 		boss_backdrop_render(backdrop_left, backdrop_top, backdrop_col); \
-		tiles_bb_invalidate(bb_boss_seg, (boss.phase_frame / 2)); \
+		tiles_bb_invalidate( \
+			bb_boss_seg, \
+			(boss.phase_frame / ENTRANCE_BB_TRANSITION_FRAMES_PER_CEL) \
+		); \
 		tiles_redraw_invalidated(); \
 	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) { \
 		boss_backdrop_render(backdrop_left, backdrop_top, backdrop_col); \

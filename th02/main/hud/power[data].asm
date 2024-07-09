@@ -1,6 +1,6 @@
-; Colors for the power bars. Indexed with the SHOT_LEVELS values.
+; Colors for the power bars. Indexed with [shot_level].
 public _HUD_POWER_COLORS
-_HUD_POWER_COLORS	label byte
+_HUD_POWER_COLORS label byte
 	db TX_RED
 	db TX_RED
 	db TX_RED
@@ -10,4 +10,6 @@ _HUD_POWER_COLORS	label byte
 	db TX_GREEN
 	db TX_CYAN
 	db TX_YELLOW
-HUD_POWER_COLOR_COUNT = ($ - _HUD_POWER_COLORS)
+if (GAME ge 4)
+	db TX_WHITE
+endif

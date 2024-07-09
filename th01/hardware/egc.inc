@@ -19,8 +19,8 @@ endm
 
 EGC_SETUP_COPY macro
 	outw2	EGC_ACTIVEPLANEREG, 0FFF0h
-	egc_selectpat
-	egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
+	outw2	EGC_READPLANEREG, 000FFh
+	outw2	EGC_MODE_ROP_REG, (EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD)
 	outw2	EGC_MASKREG, 0FFFFh
 	outw2	EGC_ADDRRESSREG, 0
 	outw2	EGC_BITLENGTHREG, 0Fh
@@ -29,15 +29,15 @@ endm
 ; Varieties of egc_on() + EGC_SETUP_COPY.
 EGC_START_COPY_DEF macro instance, distance
 	; void egc_start_copy();
-	public egc_start_copy_&instance
-	egc_start_copy_&instance	proc distance
+	public @egc_start_copy_&instance&$qv
+	@egc_start_copy_&instance&$qv	proc distance
 		push	bp
 		mov	bp, sp
 		call	egc_on
 		EGC_SETUP_COPY
 		pop	bp
 		ret
-	egc_start_copy_&instance	endp
+	@egc_start_copy_&instance&$qv	endp
 endm
 
 EGC_START_COPY_INLINED macro

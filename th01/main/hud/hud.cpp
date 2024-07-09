@@ -1,19 +1,13 @@
-#include <stddef.h>
-#include "x86real.h"
-#include "master.hpp"
-#include "th01/common.h"
+#include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
-}
-#include "th01/main/vars.hpp"
-#include "th01/formats/ptn.hpp"
+#include "th01/hardware/grp_text.hpp"
 #include "th01/formats/grf.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/hud/hud.hpp"
+#include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/timer.hpp"
 
 /// Constants
@@ -63,18 +57,20 @@ static const pixel_t SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 
 /// Globals
 /// -------
+
 // Forces re-rendering of all full-width numbers on the HUD, even if they
 // haven't changed since the last render call.
-extern bool fwnum_force_rerender;
+bool fwnum_force_rerender = false;
 
-// extern uint8_t *hud_bg;
-extern uint8_t hud_bg_rle_run_byte;
-extern unsigned char hud_cardcombo_max; // Why a separate variable???
-// size_t hud_bg_size;
+uint8_t *hud_bg;
+uint8_t hud_bg_rle_run_byte;
+unsigned char hud_cardcombo_max; // Why a separate variable???
+size_t hud_bg_size;
 /// -------
 
 /// Functions
 /// ---------
+
 inline screen_x_t col_left(screen_x_t first_left, int col) {
 	return (first_left + (col * COL_W));
 }
@@ -99,6 +95,8 @@ inline screen_x_t col_left(screen_x_t first_left, int col) {
 // VRAM page 0 to VRAM page 1.
 void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w);
 /// ---------
+
+#include "th01/hardware/grppfnfx.cpp"
 
 template <class T1, class T2> inline void fwnum_put(
 	screen_x_t left,
@@ -136,9 +134,7 @@ inline void cardcombo_put(screen_y_t top, int fx, const int &prev) {
 
 void hiscore_update_and_render(void)
 {
-	// TODO: Should just be `static` once the variable can be declared here
-	#define prev score_prev
-	extern long prev;
+	static long prev = 0;
 	long divisor = 1000000; // Must match SCORE_DIGITS!
 	unsigned long hiscore = resident->hiscore;
 
@@ -157,14 +153,11 @@ void hiscore_update_and_render(void)
 
 	prev = score;
 	resident->hiscore = score;
-	#undef prev
 }
 
 void cardcombo_max_render(void)
 {
-	// TODO: Should just be `static` once the variable can be declared here
-	#define prev cardcombo_max_prev
-	extern int prev;
+	static int prev;
 	int divisor = 10; // Must match CARDCOMBO_DIGITS!
 
 	for(int i = 0; i < CARDCOMBO_DIGITS; i++) {
@@ -178,21 +171,17 @@ void cardcombo_max_render(void)
 	graph_accesspage_func(0);	cardcombo_put(MAX_TOP, MAX_FX, prev);
 
 	prev = cardcombo_cur;
-	#undef prev
 }
 
 void hud_score_and_cardcombo_render(void)
 {
-	// TODO: Should just be `static` once the variable can be declared here
-	#define score_prev score_cur_prev
-	#define cardcombo_prev cardcombo_cur_prev
-	extern long score_prev;
-	extern int cardcombo_prev;
+	static score_t score_prev;
+	static int cardcombo_prev;
 
 	int digit;
 	int page;
 	int cardcombo_divisor;
-	long score_divisor;
+	score_t score_divisor;
 
 	score_divisor = 1000000; // Must match SCORE_DIGITS!
 	cardcombo_divisor = 10; // Must match CARDCOMBO_DIGITS!
@@ -314,7 +303,7 @@ void hud_bg_put(void)
 			grcg_put(vram_offset, byte, 8);
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 	enable();
 }
 
@@ -413,22 +402,22 @@ inline screen_y_t lives_top(int i) {
 
 void lives_bg_snap_and_put(void)
 {
-	bg_snap_and_put(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, lives);
+	bg_snap_and_put(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, rem_lives);
 }
 
 void hud_lives_put(int prev)
 {
-	put_change(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, prev, lives);
+	put_change(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, prev, rem_lives);
 }
 
 void bombs_bg_snap_and_put(void)
 {
-	bg_snap_and_put(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, bombs);
+	bg_snap_and_put(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, rem_bombs);
 }
 
 void hud_bombs_put(int prev)
 {
-	put_change(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, prev, bombs);
+	put_change(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, prev, rem_bombs);
 }
 
 #undef bg_snap_and_put
@@ -460,7 +449,7 @@ void stage_bg_snap_and_put(void)
 }
 
 inline void rank_put(void) {
-	extern const char* RANKS[RANK_COUNT];
+	extern const shiftjis_t* RANKS[RANK_COUNT];
 	graph_putsa_fx(
 		(RANK_CENTER_X - (text_extent_fx(V_WHITE, RANKS[rank]) / 2)),
 		RANK_TOP,

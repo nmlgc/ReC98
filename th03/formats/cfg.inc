@@ -7,6 +7,6 @@ cfg_options_t ends
 
 cfg_t	struc
 	opts	cfg_options_t <?>
-	resident_sgm	dw ?
+	resident_seg	dw ?
 	CFG_debug	db ?
 cfg_t	ends

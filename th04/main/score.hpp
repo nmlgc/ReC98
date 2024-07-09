@@ -11,7 +11,7 @@ extern unsigned int stage_graze;	// Reset to 0 when moving to a new stage.
 extern unsigned char extends_gained;
 extern unsigned long score_delta;
 
-void pascal near score_update_and_render(void);
+void near score_update_and_render(void);
 
-// Adds the entire score delta at once to the current score.
+// Adds the entire [score_delta] at once to the current score.
 void pascal score_delta_commit(void);

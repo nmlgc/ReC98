@@ -1,20 +1,17 @@
-#pragma option -zCSHARED -3 -Z-
+#pragma option -zCSHARED -Z-
 
-#include "platform.h"
-#include "x86real.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
-extern "C" {
+#include "libs/master.lib/master.hpp"
+#include "th02/snd/impl.hpp"
 #include "th04/snd/snd.h"
 
-extern char snd_load_fn[SND_FN_LEN];
+extern char snd_load_fn[PF_FN_LEN];
 extern const char *SND_LOAD_EXT[4];
 
-void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
+void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 {
 	int i;
 
-	for(i = 0; i < SND_FN_LEN; i++) {
+	for(i = 0; i < PF_FN_LEN; i++) {
 		snd_load_fn[i] = fn[i];
 	}
 
@@ -55,7 +52,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_AX = 0x3D00;
 	geninterrupt(0x21);
 	_BX = _AX;
-	// ZUN bug: No error handling
+	// ZUN landmine: No error handling
 
 	// Using inline assembly rather than _AX to prevent parameters from being
 	// moved to the DI register
@@ -76,6 +73,4 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	// DOS file close
 	_AH = 0x3E;
 	geninterrupt(0x21);
-}
-
 }

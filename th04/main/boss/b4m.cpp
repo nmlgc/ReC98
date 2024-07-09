@@ -1,19 +1,68 @@
 /// Stage 4 Boss - Marisa
 /// ---------------------
 
-#include "platform.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
-#include "th04/main/phase.hpp"
+#pragma option -zCB4M_UPDATE_TEXT -zPmain_03
+
+#include "th04/sprites/main_pat.h"
+#include "th04/main/custom.hpp"
 #include "th04/main/boss/boss.hpp"
 
-/// State
-/// -----
+// Constants
+// ---------
+
+static const pixel_t BIT_W = 32;
+static const pixel_t BIT_H = 32;
+static const int BIT_KILL_FRAMES_PER_CEL = 4;
+// ---------
+
+// Structures
+// ----------
+
+#define BIT_COUNT 4
+
+enum bit_flag_t {
+	BF_FREE = 0,
+	BF_MOVEOUT_SPIN = 1,
+	BF_SPIN = 2,
+	BF_KILL_ANIM = 0x80,
+	BF_KILL_ANIM_last = (
+		BF_KILL_ANIM + (ENEMY_KILL_CELS * BIT_KILL_FRAMES_PER_CEL) - 1
+	),
+
+	_bit_flag_t_FORCE_UINT8 = 0xFF
+};
+
+struct bit_t {
+	bit_flag_t flag;
+	unsigned char angle;	// input for [center]
+	PlayfieldPoint center;
+	main_patnum_t patnum;
+	/* ------------------------- */ int8_t unused_1[8];
+	Subpixel distance;	// input for [center]
+	Subpixel moveout_speed;
+	int hp;
+	int damage_this_frame;
+	/* ------------------------- */ int8_t unused_2;
+	char angle_speed;	// ACTUAL TYPE: unsigned char
+};
+
+#define bits (reinterpret_cast<bit_t *>(custom_entities))
+// ----------
+
+// State
+// -----
 
 #define flystep_pointreflected_frame boss_statebyte[13]
-/// -----
+
+extern uint8_t bits_alive;
+
+extern void (near pascal *near bit_fire)(bit_t near& bit);
+extern screen_x_t bit_center_x[BIT_COUNT];
+extern screen_x_t bit_center_y[BIT_COUNT];
+// -----
+
+// Game logic
+// ----------
 
 // On [flystep_pointreflected_frame] 0, this function sets up [boss] movement
 // towards the point reflection of Marisa's position across a fixed position
@@ -55,3 +104,4 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 	boss.pos.update_seg3();
 	return false;
 }
+// ----------

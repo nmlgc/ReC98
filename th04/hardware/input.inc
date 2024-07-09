@@ -19,9 +19,9 @@ INPUT_MOVEMENT   = \
 	INPUT_UP_LEFT or INPUT_UP_RIGHT or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
 
 if GAME eq 5
-input_reset_sense_interface	equ <_input_reset_sense_held>
+input_reset_sense_interface	equ <@input_reset_sense_held$qv>
 else
-input_reset_sense_interface	equ <_input_reset_sense>
+input_reset_sense_interface	equ <@input_reset_sense$qv>
 endif
 
 ; move_ret_t

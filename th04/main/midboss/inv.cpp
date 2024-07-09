@@ -1,17 +1,9 @@
-#pragma option -3
-
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/enemy/size.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/tile/tile.hpp"
 
-// See tile.hpp for the reason this declaration is necessary
+// See tile.hpp for the reason why this declaration is necessary
 extern "C" void pascal near tiles_invalidate_around(const SPPoint center);
 
 void pascal near midboss_invalidate_func(void)

@@ -1,13 +1,10 @@
-extern "C" {
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/graph.h"
-}
 #include "th01/main/bullet/pellet_c.hpp"
 #include "th01/sprites/pellet_c.hpp"
 
-void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
+#include "th01/sprites/pellet_c.csp"
+
+void pellet_cloud_put_8(screen_x_t left, vram_y_t top, vc2 col, int cel)
 {
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
 
@@ -21,7 +18,7 @@ void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
 		y++;
 		vram_offset += ROW_SIZE;
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 void pellet_cloud_unput_8(screen_x_t left, vram_y_t top, int cel)

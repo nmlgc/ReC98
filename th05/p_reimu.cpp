@@ -5,7 +5,7 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-#include "th05/i_shot.hpp"
+#include "th05/main/player/shot.hpp"
 #define cycle _AL
 
 extern "C" {
@@ -147,7 +147,7 @@ void pascal near shot_reimu_l7(void)
 
 void pascal near shot_reimu_l8(void)
 {
-	shot_t near *shot;
+	Shot near *shot;
 	ShotAddIterator sai(7);
 	if( (shot_cycle_init() & SC_3X) == 0) {
 		return;

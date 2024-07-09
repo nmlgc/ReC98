@@ -1,9 +1,9 @@
-extern "C" {
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/egc.h"
 #include "th01/hardware/planar.h"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
+
+bool ptn_sloppy_unput_before_alpha_put = false;
 
 static inline ptn_t* ptn_with_id_shift(int id) {
 	// Before we bother with doing compile-time integer logarithms...
@@ -162,9 +162,9 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 		}
 	};
 
-	extern Planar<dots8_t *> ptnpq_vram;
-	extern dots16_unaligned_t ptnpq_mask_unaligned_zero;
-	extern dots16_unaligned_t ptnpq_dots_unaligned_zero;
+	static dots16_unaligned_t ptnpq_mask_unaligned_zero = { 0x000000 };
+	static dots16_unaligned_t ptnpq_dots_unaligned_zero = { 0x000000 };
+	static Planar<dots8_t *> ptnpq_vram = { nullptr };
 
 	unsigned int plane;
 	upixel_t y;

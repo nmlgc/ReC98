@@ -1,12 +1,8 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
-}
 #include "th01/formats/grc.hpp"
+
+grc_t grc_images[GRC_SLOT_COUNT];
 
 int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 {
@@ -46,7 +42,7 @@ int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 }
 
 void grc_put_8(
-	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, int col
+	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, vc2 col
 )
 {
 	vram_offset_t vram_offset_row = vram_offset_shift(left, top);
@@ -90,7 +86,7 @@ void grc_put_8(
 			break;
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 
 	#undef grc_slot
 }

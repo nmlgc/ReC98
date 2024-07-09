@@ -1,63 +1,40 @@
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
+#include "decomp.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
-}
 #include "th03/hardware/palette.hpp"
 #include "th04/common.h"
-#include "th04/gaiji/gaiji.h"
-#include "th04/math/motion.hpp"
-extern "C" {
-#include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
-}
-#if (GAME == 5)
-	#include "th05/sprites/main_pat.h"
-#else
+#include "th04/sprites/main_cdg.h"
+#if (GAME == 4)
 	#include "th04/sprites/main_pat.h"
 #endif
 #include "th04/main/bg.hpp"
 #include "th04/main/end.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/homing.hpp"
-extern "C" {
 #include "th04/main/null.hpp"
-#include "th04/main/phase.hpp"
-#include "th04/main/playfld.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/quit.hpp"
 #include "th04/main/score.hpp"
-}
 #include "th04/main/slowdown.hpp"
-#include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
-extern "C" {
+#include "th04/main/stage/bonus.hpp"
 #include "th04/main/tile/tile.hpp"
-}
 #include "th04/main/dialog/dialog.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/item/item.hpp"
-#include "th04/main/player/player.hpp"
 #include "th04/main/player/bomb.hpp"
 #include "th04/main/player/shot.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #if (GAME == 5)
-	#include "th01/math/area.hpp"
 	#include "th05/resident.hpp"
 	#include "th05/main/boss/boss.hpp"
 #else
-	extern "C" {
 	#include "th03/formats/cdg.h"
-	}
 	#include "th04/resident.hpp"
 	#include "th04/formats/bb.h"
 	#include "th04/formats/dialog.hpp"
-	#include "th04/sprites/main_cdg.h"
 	#include "th04/main/boss/boss.hpp"
 	#include "th04/main/boss/bosses.hpp"
 	#include "th04/shiftjis/fns.hpp"
@@ -293,7 +270,12 @@ void pascal near boss_phase_next(
 						boss_statebyte[0] \
 					)
 
+					// Lol, *now* ZUN hardcoded what's effectively a call to
+					// the dialog script 'c' command?
+					// ZUN bloat: Should have been part of dialog_animate() all
+					// along.
 					super_clean(PAT_STAGE, (PAT_STAGE_last + 1));
+
 					dialog_animate();
 
 					if(!gengetsu_started) {
@@ -340,7 +322,7 @@ void pascal near boss_phase_next(
 		}
 	} else if(boss.phase_frame == BDF_FADEOUT) {
 		#if (GAME == 5)
-			// ZUN bug: TH04 doesn't do this. It's not a problem in stages 1
+			// ZUN quirk: TH04 doesn't do this. It's not a problem in stages 1
 			// to 5 because the remaining score delta will carry over into the
 			// next stage and be added to the score there. During the final and
 			// Extra Stage though, the lack of this call causes the Clear Bonus

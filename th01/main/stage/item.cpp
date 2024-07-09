@@ -1,24 +1,11 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/math/digit.hpp"
 #include "th01/math/str_val.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
-#include "th01/hardware/graph.h"
-}
-#include "th01/main/playfld.hpp"
-#include "th01/formats/ptn.hpp"
-#include "th01/formats/stagedat.hpp"
-extern "C" {
+#include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
-}
-#include "th01/main/vars.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/hud/hud.hpp"
@@ -35,20 +22,9 @@ static const pixel_t ITEM_H = PTN_H;
 static const unsigned int POINT_CAP = 65530;
 static const unsigned int POINT_CAP_DIGITS = digit_count(POINT_CAP);
 
-// Assumes that [BOMB_COLLECT_1] and [BOMB_COLLECT_CAP] have the same length
-// in bytes!
 static const pixel_t BOMB_COLLECT_1_W = shiftjis_w(BOMB_COLLECT_1);
-
 static const pixel_t BOMB_COLLECT_2_W = shiftjis_w(BOMB_COLLECT_2);
 static const pixel_t POINT_COLLECT_W = (POINT_CAP_DIGITS * GLYPH_HALF_W);
-
-// TODO: Remove, once data can be emitted here
-#undef BOMB_COLLECT_1
-#undef BOMB_COLLECT_2
-#undef BOMB_COLLECT_CAP
-extern const unsigned char BOMB_COLLECT_1[];
-extern const unsigned char BOMB_COLLECT_2[];
-extern const unsigned char BOMB_COLLECT_CAP[];
 /// ---------
 
 /// Structures
@@ -84,8 +60,8 @@ struct item_t {
 static const int ITEM_BOMB_COUNT = 4;
 static const int ITEM_POINT_COUNT = 10;
 
-extern item_t items_bomb[ITEM_BOMB_COUNT];
-extern item_t items_point[ITEM_POINT_COUNT];
+item_t items_bomb[ITEM_BOMB_COUNT];
+item_t items_point[ITEM_POINT_COUNT];
 /// ----------
 
 /// Function types
@@ -145,6 +121,8 @@ inline screen_x_t bomb_collect_2_left(item_t* slots, const int i) {
 	enum {
 		X_OFFSET = ((BOMB_COLLECT_2_W - BOMB_COLLECT_1_W) / 2)
 	};
+	static_assert(sizeof(BOMB_COLLECT_1) == sizeof(BOMB_COLLECT_CAP));
+
 	return clamp_max_2(
 		clamp_min_2((slots[i].left - X_OFFSET), PLAYFIELD_LEFT),
 		(PLAYFIELD_RIGHT - BOMB_COLLECT_2_W)
@@ -171,9 +149,9 @@ void bomb_hittest(int slot)
 
 	item_collect_init(items_bomb[slot]);
 
-	if(bombs < BOMBS_MAX) {
-		bombs++;
-		hud_bombs_put(bombs - 1);
+	if(rem_bombs < BOMBS_MAX) {
+		rem_bombs++;
+		hud_bombs_put(rem_bombs - 1);
 		items_bomb[slot].flag = IF_COLLECTED;
 	} else {
 		score += 10000;
@@ -210,6 +188,7 @@ void items_bomb_reset(void)
 	items_bomb[3].flag = IF_FREE;
 }
 
+// ZUN bloat: Just pass an item_t structure?
 void item_unput_update_render(
 	int slot,
 	char &flag,
@@ -269,6 +248,7 @@ void bomb_collect_update_and_render(int slot)
 {
 	#define item items_bomb[slot]
 
+	static_assert(sizeof(BOMB_COLLECT_1) == sizeof(BOMB_COLLECT_CAP));
 	egc_copy_rect_1_to_0_16(item.left, item.top, BOMB_COLLECT_1_W, GLYPH_H);
 	if(item.flag == IF_COLLECTED) {
 		egc_copy_rect_1_to_0_16(

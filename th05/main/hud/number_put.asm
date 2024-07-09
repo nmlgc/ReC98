@@ -1,6 +1,8 @@
 ; Prints [val] using the bold gaiji font, right-aligned at ([left+5], [y]),
 ; with the given attribute.
-; void pascal far hud_int_put(utram_x_t left, utram_y_t y, unsigned int val, unsigned int atrb);
+; void pascal far hud_int_put(
+; 	utram_x_t left, utram_y_t y, unsigned int val, tram_atrb2 atrb
+; );
 public HUD_INT_PUT
 hud_int_put	proc far
 

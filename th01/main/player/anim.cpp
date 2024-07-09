@@ -1,18 +1,8 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-extern "C" {
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/grph1to0.hpp"
 #include "th01/hardware/planar.h"
-extern "C" {
 #include "th01/formats/pf.hpp"
-#include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/bos.hpp"
-}
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/anim.hpp"
 
@@ -29,11 +19,11 @@ int CPlayerAnim::load(const char fn[PF_FN_LEN])
 		planes.R[i] = new dots8_t[plane_size];
 		planes.G[i] = new dots8_t[plane_size];
 		planes.E[i] = new dots8_t[plane_size];
-		arc_file_get(reinterpret_cast<char *>(alpha[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.B[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.R[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.G[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.E[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(alpha[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.B[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.R[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.G[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.E[i]), plane_size);
 
 		for(bos_p = 0; bos_p < plane_size; bos_p++) {
 			alpha[i][bos_p] = ~alpha[i][bos_p];
@@ -156,7 +146,8 @@ void CPlayerAnim::unput_and_put_overlapped_8(
 
 	// Probably supposed to needlessly make sure that both values are positive?
 	vram_distance_from_unput_to_put = (
-		((put_left + PLAYER_W) >> 3) - ((unput_left + PLAYER_W) >> 3)
+		((  put_left + PLAYER_W) >> BYTE_BITS) -
+		((unput_left + PLAYER_W) >> BYTE_BITS)
 	);
 	bos_p = 0;
 

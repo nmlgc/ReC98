@@ -2,22 +2,21 @@
 #include <mem.h>
 #include <mbctype.h>
 #include <mbstring.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
-#include "th01/hardware/vsync.h"
+#include "th01/hardware/grcg.hpp"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/vsync.hpp"
 #include "th01/hardware/palette.h"
 
-#undef grcg_off
-#define grcg_off() outportb(0x7C, 0);
+// Never read from, so it's supposedly only there for debugging purposes?
+static screen_point_t graph_r_last_line_end;
 
-extern page_t page_accessed;
+static int8_t unused; // ZUN bloat
+static page_t page_accessed;
 
 /// VRAM plane "structures"
 /// -----------------------
@@ -54,6 +53,7 @@ extern page_t page_accessed;
 
 /// Clipping
 /// --------
+
 #define fix_order(tmp, low, high) \
 	if(low > high) { \
 		tmp = low; \
@@ -88,6 +88,7 @@ extern page_t page_accessed;
 
 /// BIOS
 /// ----
+
 inline void graph_access_and_show_0() {
 	graph_accesspage_func(0);
 	graph_showpage_func(0);
@@ -160,6 +161,7 @@ void z_graph_hide()
 
 /// Page flipping
 /// -------------
+
 void graph_showpage_func(page_t page)
 {
 	outportb(0xA4, page);
@@ -174,7 +176,8 @@ void graph_accesspage_func(int page)
 
 /// Hardware
 /// --------
-void z_palette_show_single(int col, int r, int g, int b)
+
+void z_palette_show_single(vc2 col, svc_comp2 r, svc_comp2 g, svc_comp2 b)
 {
 	outportb(0xA8, col);
 	outportb(0xAA, g);
@@ -189,12 +192,12 @@ void z_palette_show_single(int col, int r, int g, int b)
 	outportb(0x7E, (col & 4) ? 0xFF : 0x00); \
 	outportb(0x7E, (col & 8) ? 0xFF : 0x00);
 
-void grcg_setcolor_rmw(int col)
+void grcg_setcolor_rmw(vc2 col)
 {
 	grcg_setcolor(0xC0, col);
 }
 
-void grcg_setcolor_tcr(int col)
+void grcg_setcolor_tcr(vc2 col)
 {
 	grcg_setcolor(0x80, col);
 }
@@ -207,6 +210,28 @@ void grcg_off_func(void)
 
 /// Palette
 /// -------
+
+Palette4 z_Palettes = {
+	// These match the Z_ATRB_* bits, interestingly?
+	0x0, 0x0, 0x0, //  0: Black
+	0x0, 0x0, 0xF, //  1: Blue
+	0x0, 0xF, 0x0, //  2: Green
+	0x0, 0xF, 0xF, //  3: Cyan
+	0xF, 0x0, 0x0, //  4: Red
+	0xF, 0x0, 0xF, //  5: Magenta
+	0xF, 0xF, 0x0, //  6: Yellow
+	0xF, 0xF, 0xF, //  7: White
+
+	0x8, 0x8, 0x8, //  8: Gray
+	0x0, 0x0, 0xA, //  9: Dark blue
+	0x0, 0xA, 0x0, // 10: Dark green
+	0x0, 0xA, 0xA, // 11: Dark cyan
+	0xA, 0x0, 0x0, // 12: Dark red
+	0xA, 0x0, 0xA, // 13: Purple
+	0xA, 0xA, 0x0, // 14: Gold
+	0xC, 0xC, 0xC, // 15: Silver
+};
+
 void z_palette_set_all_show(const Palette4& pal)
 {
 	for(int i = 0; i < COLOR_COUNT; i++) {
@@ -214,11 +239,11 @@ void z_palette_set_all_show(const Palette4& pal)
 	}
 }
 
-void z_palette_set_show(int col, int r, int g, int b)
+void z_palette_set_show(vc2 col, svc_comp2 r, svc_comp2 g, svc_comp2 b)
 {
-	r = clamp_min(clamp_max(r, RGB4::max()), 0);
-	g = clamp_min(clamp_max(g, RGB4::max()), 0);
-	b = clamp_min(clamp_max(b, RGB4::max()), 0);
+	r = clamp_min(clamp_max(r, RGB4::max()), RGB4::min());
+	g = clamp_min(clamp_max(g, RGB4::max()), RGB4::min());
+	b = clamp_min(clamp_max(b, RGB4::max()), RGB4::min());
 
 	z_Palettes[col].c.r = r;
 	z_Palettes[col].c.g = g;
@@ -246,7 +271,7 @@ void z_graph_clear_0(void)
 	graph_accesspage_func(2);	z_graph_clear();
 }
 
-void z_graph_clear_col(uint4_t col)
+void z_graph_clear_col(svc_t col)
 {
 	dots8_t far *plane = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B);
 
@@ -273,11 +298,12 @@ void graph_copy_accessed_page_to_other(void)
 
 /// Palette fades
 /// -------------
+
 #define FADE_DELAY 10
 #define fade_loop(pal, per_comp) \
 	for(int i = 0; i < pal.range(); i++) { \
 		z_vsync_wait(); \
-		for(int col = 0; col < COLOR_COUNT; col++) { \
+		for(svc2 col = 0; col < COLOR_COUNT; col++) { \
 			for(int comp = 0; comp < COMPONENT_COUNT; comp++) { \
 				per_comp; \
 			} \
@@ -288,7 +314,7 @@ void graph_copy_accessed_page_to_other(void)
 
 void z_palette_black(void)
 {
-	for(int col = 0; col < COLOR_COUNT; col++) {
+	for(svc2 col = 0; col < COLOR_COUNT; col++) {
 		z_palette_show_single(col, 0, 0, 0);
 	}
 }
@@ -318,7 +344,7 @@ void z_palette_black_out(void)
 
 void z_palette_white(void)
 {
-	for(int col = 0; col < COLOR_COUNT; col++) {
+	for(svc2 col = 0; col < COLOR_COUNT; col++) {
 		z_palette_show_single(col, RGB4::max(), RGB4::max(), RGB4::max());
 	}
 }
@@ -360,7 +386,7 @@ void z_palette_show(void)
 #define VRAM_SBYTE(plane, offset) \
 	*reinterpret_cast<sdots8_t *>(MK_FP(SEG_PLANE_##plane, offset))
 
-void z_grcg_pset(screen_x_t x, vram_y_t y, int col)
+void z_grcg_pset(screen_x_t x, vram_y_t y, vc2 col)
 {
 	grcg_setcolor_rmw(col);
 	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & BYTE_MASK));
@@ -391,16 +417,16 @@ int z_graph_readdot(screen_x_t x, vram_y_t y)
 
 /// Restorable line drawing
 /// -----------------------
-// Never read from, so it's supposedly only there for debugging purposes?
-extern screen_point_t graph_r_last_line_end;
+
 // `true` copies the pixels to be drawn from the same position on page 1, thus
 // restoring them with the background image. `false` (the default) draws them
 // regularly in the given [col].
-extern bool graph_r_unput;
-// Not used for purely horizontal lines.
-extern dots16_t graph_r_pattern;
+static bool graph_r_unput = false;
 
-void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
+// Not used for purely horizontal lines.
+static dots16_t graph_r_pattern = 0x80; // 1 pixel (*       )
+
+void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, vc2 col)
 {
 	vram_byte_amount_t x;
 	vram_byte_amount_t full_bytes_to_put;
@@ -441,7 +467,7 @@ void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 	}
 }
 
-void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
+void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, vc2 col)
 {
 	vram_y_t y;
 	int order_tmp;
@@ -486,7 +512,7 @@ void graph_r_line_patterned(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col,
+	vc2 col,
 	dots16_t pattern
 )
 {
@@ -500,7 +526,7 @@ void graph_r_line(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col
+	vc2 col
 )
 {
 	register vram_offset_t vram_offset;
@@ -553,19 +579,19 @@ void graph_r_line(
 				grcg_put(vram_offset, pixels, 16); \
 				pixels = 0; \
 			} else { \
-				/* ZUN bug: Getting here with a [vram_offset] of 0x0000 will
-				 * cause a 4-byte write starting at 0xFFFF. On the 80286 and
-				 * later CPUs, offset overflows within an instruction are
-				 * illegal even in Real Mode, and will raise a General
-				 * Protection Fault.
-				 * As of May 2022, Anex86 is the only PC-98 emulator to
-				 * correctly replicate this behavior of real hardware,
+				/* ZUN bug: Getting here with a [vram_offset] of 0x0000 will \
+				 * cause a 4-byte write starting at 0xFFFF. On the 80286 and \
+				 * later CPUs, offset overflows within an instruction are \
+				 * illegal even in Real Mode, and will raise a General \
+				 * Protection Fault. \
+				 * As of May 2022, Anex86 is the only PC-98 emulator to \
+				 * correctly replicate this behavior of real hardware, \
 				 * though. */ \
 				vram_offset--; \
 				unput32_at(vram_offset); \
 			} \
 			y_vram = y_cur; \
-			x_vram = (x_cur >> 3); \
+			x_vram = (x_cur >> BYTE_BITS); \
 		} \
 		pixels |= (graph_r_pattern >> (x_cur & BYTE_MASK)); \
 		pixels |= (graph_r_pattern << (16 - (x_cur & BYTE_MASK))); \
@@ -622,7 +648,7 @@ void graph_r_line(
 	w = right - left;
 	h = (bottom - top) * y_direction;
 	pixels = 0;
-	x_vram = (x_cur >> 3);
+	x_vram = (x_cur >> BYTE_BITS);
 	y_vram = y_cur;
 
 	if(!graph_r_unput) {
@@ -664,7 +690,7 @@ void z_grcg_boxfill(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col
+	vc2 col
 )
 {
 	vram_byte_amount_t x;
@@ -683,7 +709,7 @@ void z_grcg_boxfill(
 	grcg_setcolor_rmw(col);
 	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_mulshift(left, top)));
 	for(y = top; y <= bottom; y++) {
-		full_bytes_to_put = (right >> 3) - (left >> 3);
+		full_bytes_to_put = ((right >> BYTE_BITS) - (left >> BYTE_BITS));
 		left_pixels = 0xFF >> (left & BYTE_MASK);
 		right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
 
@@ -706,7 +732,7 @@ void graph_r_box(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col
+	vc2 col
 )
 {
 	graph_r_hline(left, right, top, col);
@@ -723,13 +749,13 @@ inline pixel_t fx_spacing_from(int col_and_fx) {
 	return ((col_and_fx / 0x40) % 8);
 }
 
-pixel_t text_extent_fx(int col_and_fx, const unsigned char *str)
+pixel_t text_extent_fx(int col_and_fx, const shiftjis_t *str)
 {
 	register pixel_t ret = 0;
 	register pixel_t spacing = fx_spacing_from(col_and_fx);
 	while(*str) {
 		if(_ismbblead(str[0])) {
-			uint16_t codepoint = ((char)str[0] << 8) + str[0];
+			shiftjis_kanji_t codepoint = ((char)str[0] << 8) + str[0];
 			str++;
 			str++;
 			if(codepoint < 0x8540) {
@@ -751,20 +777,20 @@ pixel_t text_extent_fx(int col_and_fx, const unsigned char *str)
 #include "th01/hardware/grppsafx.cpp"
 
 void graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int16_t col_and_fx, const unsigned char *str
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 )
 {
 	register screen_x_t x = left;
-	uint16_t codepoint;
+	jis_t codepoint;
 	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
-	int fullwidth;
+	bool16 fullwidth;
 	int first_bit;
 	int weight = fx_weight_from(col_and_fx);
 	pixel_t spacing = fx_spacing_from(col_and_fx);
-	int clear_bg = (col_and_fx & FX_CLEAR_BG);
-	int underline = (col_and_fx & FX_UNDERLINE);
-	int reverse = (col_and_fx & FX_REVERSE);
+	bool16 clear_bg = (col_and_fx & FX_CLEAR_BG);
+	bool16 underline = (col_and_fx & FX_UNDERLINE);
+	bool16 reverse = (col_and_fx & FX_REVERSE);
 	pixel_t w;
 	pixel_t line;
 	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
@@ -860,14 +886,14 @@ void graph_move_byterect_interpage(
 }
 
 void z_palette_fade_from(
-	uint4_t from_r, uint4_t from_g, uint4_t from_b,
-	int keep[COLOR_COUNT],
+	svc_comp_t from_r, svc_comp_t from_g, svc_comp_t from_b,
+	vc2 keep[COLOR_COUNT],
 	unsigned int step_ms
 )
 {
 	Palette4 fadepal;
 	int i;
-	int col;
+	svc2 col;
 	int comp;
 
 	memset(&fadepal, 0x0, sizeof(fadepal));
@@ -901,15 +927,14 @@ void z_palette_fade_from(
 
 // Resident palette
 // ----------------
-#define RESPAL_ID "pal98 grb"
-struct hack { char x[sizeof(RESPAL_ID)]; }; // XXX
-extern const hack PAL98_GRB;
 
-// MASTER.MAN suggests that GBR ordering is some sort of standard on PC-98.
+#define RESPAL_ID "pal98 grb"
+
+// MASTER.MAN suggests that GRB ordering is some sort of standard on PC-98.
 // It does match the order of the hardware's palette register ports, after
 // all. (0AAh = green, 0ACh = red, 0AEh = blue)
 struct grb_t {
-	uint4_t g, r, b;
+	svc_comp_t g, r, b;
 };
 
 struct respal_t {
@@ -923,6 +948,7 @@ struct respal_t {
 // Memory Control Block
 // Adapted from FreeDOS' kernel/hdr/mcb.h
 // --------------------
+
 #define MCB_NORMAL 0x4d
 #define MCB_LAST   0x5a
 
@@ -939,7 +965,7 @@ respal_t __seg* z_respal_exist(void)
 {
 	union REGS regs;
 	struct SREGS sregs;
-	const hack ID = PAL98_GRB;
+	const char ID[] = RESPAL_ID;
 	seg_t mcb;
 	int i;
 
@@ -954,7 +980,7 @@ respal_t __seg* z_respal_exist(void)
 	while(1) {
 		if(MCB->m_psp != 0) {
 			for(i = 0; i < sizeof(ID); i++) {
-				if(reinterpret_cast<respal_t *>(MCB + 1)->id[i] != ID.x[i]) {
+				if(reinterpret_cast<respal_t *>(MCB + 1)->id[i] != ID[i]) {
 					break;
 				}
 			}
@@ -1001,6 +1027,4 @@ int z_respal_set(void)
 		return 0;
 	}
 	return 1;
-}
-
 }

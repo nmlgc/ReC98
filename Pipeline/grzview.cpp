@@ -1,48 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
-extern "C" {
-	#include "th01/formats/grz.h"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "platform/x86real/pc98/palette.hpp"
+#include "th01/formats/grz.h"
 
-	void grcg_setcolor_rmw(int col)
-	{
-		grcg_setcolor(GC_RMW, col);
-	}
+// Copied from th01/formats/img_data.cpp. Unfortunate, but better than linking
+// in or separately compiling this translation unit.
+uint8_t* rle_streams[GRX_COUNT];
+dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
+uint8_t planar_stream_count[GRX_COUNT];
 
-	void grcg_off_func(void)
-	{
-		grcg_off();
-	}
-
-	// Temporary declarations for local GRZ data
-	// -----------------------------------------
-	// TODO: These will cause duplicate symbol errors once those are defined
-	// in th01/formats/grz.cpp; remove this section once that is the case.
-
-	// `const` would prevent them from being exported?!
-	char HGRZ_MAGIC[4] = "HGRZ";
-	char HGRX_MAGIC[4] = "HGRX";
-
-	char planar_stream_id;
-	char grx_col;
-	uint8_t* rle_streams[GRX_COUNT];
-	dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
-	unsigned char planar_stream_count[GRX_COUNT];
-	// -----------------------------------------
+void grcg_setcolor_rmw(vc2 col)
+{
+	grcg_setcolor(GC_RMW, col);
 }
 
-void z_palette_set_all_show(const Palette4& pal)
+void grcg_off_func(void)
 {
-	for(int i = 0; i < COLOR_COUNT; i++) {
-		outportb(0xA8, i);
-		outportb(0xAA, pal[i].c.g);
-		outportb(0xAC, pal[i].c.r);
-		outportb(0xAE, pal[i].c.b);
-	}
+	grcg_off();
 }
 
 const Palette4 boss8_grz_pal = {
@@ -64,7 +41,7 @@ const Palette4 boss8_grz_pal = {
 	0x9, 0x9, 0x9,
 };
 
-int main(int argc, const char **argv)
+int __cdecl main(int argc, const char **argv)
 {
 	if((get_machine() & PC9801) == 0) {
 		printf("This program must be run on a PC-98.\n");
@@ -89,7 +66,7 @@ int main(int argc, const char **argv)
 	}
 	text_hide();
 	graph_start();
-	z_palette_set_all_show(boss8_grz_pal);
+	palette_show(boss8_grz_pal);
 
 	grx_put(0);
 	dos_getch();

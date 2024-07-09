@@ -1,14 +1,6 @@
-#include "planar.h"
-#include "master.hpp"
-#include "th01/math/overlap.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
-#include "th01/hardware/input.hpp"
-#include "th01/snd/mdrv2.h"
-}
-#include "th01/formats/ptn.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/bullet/missile.hpp"
+#include "th01/main/player/player.hpp"
 
 CMissiles Missiles;
 
@@ -39,7 +31,7 @@ void CMissiles::ptn_cel_for(int i, main_ptn_id_t& ptn_id, int& quarter) const
 		ANGLE_PER_CEL = (0x100 / MISSILE_CELS),
 	};
 
-	// I have no words. Every further line in this function is bad.
+	// ZUN bloat: I have no words. Every further line in this function is bad.
 	// A sane version:
 	//
 	// 	unsigned char angle = iatan2(velocity_y[i], velocity_x[i]);
@@ -201,7 +193,7 @@ void CMissiles::unput_update_render(void)
 			(cur_top[i].to_pixel() < (player_top + HITBOX_OFFSET_BOTTOM)) &&
 			(cur_top[i].to_pixel() > (player_top + HITBOX_OFFSET_TOP))
 		) {
-			done = true;
+			player_is_hit = true;
 			return;
 		}
 	}

@@ -2,55 +2,38 @@
 /// -------------------------------
 
 #include <stdio.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/common.h"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/egc.h"
+#include "th01/hardware/egcrows.hpp"
 #include "th01/hardware/scrollup.hpp"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/text.h"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/formats/grp.h"
-extern "C" {
 #include "th01/formats/grz.h"
-#include "th01/formats/pf.hpp"
-}
-#include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/main/spawnray.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/stage/palette.hpp"
-#include "th01/hardware/egcrows.hpp"
 #include "th01/main/stage/stageobj.hpp"
+#include "th01/main/stage/stages.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/boss/boss.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/hud/hp.hpp"
 
-static const char* unused_entrace_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
+static const char* unused_entrance_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
 
 // Coordinates
 // -----------
@@ -68,8 +51,20 @@ static const screen_y_t EYE_BOTTOM = 140;
 
 static const screen_x_t HITBOX_LEFT = 288;
 static const screen_y_t HITBOX_TOP = 120;
-static const pixel_t HITBOX_W = 96;
-static const pixel_t HITBOX_H = 40;
+
+// Including the respective sprites:
+//
+// 	               [w]
+// 	    ┌───────────────────────┐
+// 	    │                       │
+// 	[h] │                       │
+// 	    │             sprite → ┌┤
+// 	    └──────────────────────┴┘
+//
+static const pixel_t HITBOX_SHOT_W = 112;
+static const pixel_t HITBOX_SHOT_H = 56;
+static const pixel_t HITBOX_ORB_W = 96;
+static const pixel_t HITBOX_ORB_H = 72;
 
 // Slash pattern spawners are moved on a triangle along these points.
 static const screen_x_t SWORD_CENTER_X = 410;
@@ -142,9 +137,9 @@ static face_direction_t face_direction = FD_UNINITIALIZED;
 static face_expression_t face_expression = FE_NEUTRAL;
 static bool16 face_direction_can_change = true;
 
-#define ent_head                	boss_entities[0]
-#define ent_face_closed_or_glare	boss_entities[1]
-#define ent_face_aim            	boss_entities[2]
+#define ent_head                	boss_entity_0
+#define ent_face_closed_or_glare	boss_entity_1
+#define ent_face_aim            	boss_entity_2
 
 inline void konngara_ent_load(void) {
 	ent_head.load("boss8_1.bos", 0);
@@ -179,8 +174,9 @@ inline screen_x_t snake_target_offset_left(const screen_x_t &to_left) {
 	return (to_left + (PLAYER_W / 2) - (DIAMOND_W / 2));
 }
 
-#define SNAKE_HOMING_THRESHOLD \
-	(PLAYFIELD_TOP + playfield_fraction_y(5, 7) - (DIAMOND_H / 2))
+#define SNAKE_HOMING_THRESHOLD ( \
+	PLAYFIELD_TOP + playfield_fraction_y(5 / 7.0f) - (DIAMOND_H / 2) \
+)
 
 template <int SnakeCount> struct Snakes {
 	screen_x_t left[SnakeCount][SNAKE_TRAIL_COUNT];
@@ -200,7 +196,7 @@ template <int SnakeCount> struct Snakes {
 		(player_center_y() - snakes.top[snake_i][0]), \
 		(snake_target_offset_left(to_left) - snakes.left[snake_i][0]) \
 	); \
-	tmp_angle += ((rand() % 2) == 0) ? +0x28 : -0x28; \
+	tmp_angle += ((irand() % 2) == 0) ? +0x28 : -0x28; \
 	vector2( \
 		(pixel_t far &)snakes.velocity_x[snake_i], \
 		(pixel_t far &)snakes.velocity_y[snake_i], \
@@ -271,7 +267,7 @@ template <int SnakeCount> struct Snakes {
 			(player_bottom() - DIAMOND_H) \
 		)) { \
 			if(!player_invincible) { \
-				done = true; \
+				player_is_hit = true; \
 			} \
 		} \
 	}
@@ -292,14 +288,13 @@ template <int SnakeCount> struct Snakes {
 #define GRZ_FN "boss8.grz"
 // ----------
 
-#define select_for_rank konngara_select_for_rank
 #include "th01/main/select_r.cpp"
 
 // Almost identical to Sariel's version. This one is better.
 static void spawnray_unput_and_put(
 	screen_x_t origin_x, vram_y_t origin_y,
 	screen_x_t target_x, vram_y_t target_y,
-	int col
+	vc2 col
 )
 {
 	static screen_x_t target_prev_x = -PIXEL_NONE;
@@ -337,7 +332,7 @@ void konngara_load_and_entrance(int8_t)
 	int i;
 	int j;
 	int in_quarter;
-	int ramp_col;
+	svc2 ramp_col;
 	int ramp_comp;
 	int scroll_frame;
 
@@ -347,15 +342,27 @@ void konngara_load_and_entrance(int8_t)
 
 	// graph_accesspage_func(0);
 	grp_put_palette_show(SCROLL_BG_FN);
+
+	// ZUN bug: On its own, this call at this position in the code would just
+	// be redundant as the stage palette is never used here. After all, you
+	// can't enter the Pause menu or bomb during a blocking animation function.
+	// However, it's also the only call to stage_palette_set() in all of
+	// Konngara's code, and ends up setting a palette that doesn't exactly
+	// match the one used for the rest of the fight. Most notably, this is why
+	// entering the Pause menu or bombing changes color #10 from red to green,
+	// which is only corrected by boss_hit_update_and_render()'s periodic reset
+	// of the hardware palette to the [boss_palette].
 	stage_palette_set(z_Palettes);
+
 	stageobjs_init_and_render(BOSS_STAGE);
 
 	graph_accesspage_func(1);
 	grp_put_palette_show("boss8_a1.grp");
+	// The stage_palette_set() call should have been here.
 
 	graph_accesspage_func(0);
 	mdrv2_bgm_load("ALICE.MDT");
-	mdrv2_se_load(SE_FN);
+	mdrv2_se_load(SE_FN); // ZUN bloat: Already done in main()
 	mdrv2_bgm_play();
 
 	z_palette_set_black(j, i);
@@ -495,7 +502,7 @@ void konngara_setup(void)
 	face_direction = FD_CENTER;
 }
 
-// Happens to be entirely protected to double frees. Yes, this matters.
+// Happens to be entirely protected from double frees. Yes, this matters.
 void konngara_free(void)
 {
 	konngara_ent_free();
@@ -554,7 +561,7 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 	static pixel_t velocity_bottomleft_x, velocity_topleft_x;
 	static pixel_t velocity_bottomleft_y, velocity_topleft_y;
-	static CEntities<4> diamonds;
+	static EntitiesTopleft<4> diamonds;
 	static int frames_with_diamonds_at_edges;
 
 	#define diamonds_unput(i) \
@@ -648,39 +655,35 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 			unsigned char angle;
 
 			from_left = PLAYFIELD_LEFT;
-			from_top = (PLAYFIELD_TOP + playfield_rand_y(25 / 42.0f));
-			// Should actually be
-			// 	to_left = (PLAYFIELD_RIGHT - playfield_rand_x(5 / 8.0f));
-			to_left = (PLAYFIELD_LEFT +
-				playfield_rand_x(5 / 8.0f) + playfield_fraction_x(3 / 8.0f)
-			);
+			from_top = playfield_rand_y(0.0f, (25 / 42.0f));
+			to_left = playfield_rand_x(0.375f, 1.0f);
 			to_top = PLAYFIELD_BOTTOM;
 			angle = iatan2((to_top - from_top), (to_left - from_left));
 			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_left = (PLAYFIELD_RIGHT - PELLET_W);
-			from_top = (PLAYFIELD_TOP + playfield_rand_y(25 / 42.0f));
-			to_left = (PLAYFIELD_LEFT + playfield_rand_x( 5 /  8.0f));
+			from_top = playfield_rand_y(0.0f, (25 / 42.0f));
+			to_left  = playfield_rand_x(0.0f, 0.625f);
 			to_top = PLAYFIELD_BOTTOM;
 			angle = iatan2((to_top - from_top), (to_left - from_left));
 			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_top = PLAYFIELD_TOP;
-			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			from_left = playfield_rand_x();
 			to_top = PLAYFIELD_BOTTOM;
-			to_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			to_left = playfield_rand_x();
 			angle = iatan2((to_top - from_top), (to_left - from_left));
 			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_top = PLAYFIELD_TOP;
-			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			from_left = playfield_rand_x();
 			to_top = PLAYFIELD_BOTTOM;
-			to_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			to_left = playfield_rand_x();
 			angle = iatan2((to_top - from_top), (to_left - from_left));
 			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_top = PLAYFIELD_TOP;
-			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			from_left = playfield_rand_x();
 			Pellets.add_group(from_left, from_top, PG_1_AIMED, speed);
 
 			#undef speed
@@ -707,7 +710,7 @@ void pattern_symmetrical_from_cup_fire(unsigned char angle)
 void pattern_symmetrical_from_cup(void)
 {
 	static unsigned char angle;
-	static int16_t unused;
+	static int16_t unused; // ZUN bloat
 
 	if(boss_phase_frame == 10) {
 		face_expression_set_and_put(FE_CLOSED);
@@ -784,7 +787,7 @@ void pattern_two_homing_snakes_and_semicircle_spreads(void)
 			pixel_t velocity_y;
 			Subpixel speed;
 
-			angle = (rand() % (0x80 / SPREAD));
+			angle = (irand() % (0x80 / SPREAD));
 			pellet_left =
 				((boss_phase_frame % 120) ==  0) ? SWORD_CENTER_X :
 				((boss_phase_frame % 120) == 40) ? EYE_CENTER_X :
@@ -1109,8 +1112,8 @@ void pattern_rain_from_edges(void)
 		mdrv2_se_play(6);
 	}
 	if((boss_phase_frame % pattern_state.interval) == 0) {
-		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
-		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
+		pellets_add_single_rain(end_x, end_y, (irand() & 0x7F), 2.0f);
+		pellets_add_single_rain(end_x, end_y, (irand() & 0x7F), 2.0f);
 	}
 }
 
@@ -1179,8 +1182,8 @@ void slash_animate(void)
 	top  -= (SLASH_DISTANCE_5_TO_6_Y / (SLASH_FRAMES_FROM_4_5_TO_6 / steps));
 
 inline void slash_rain_fire(const screen_x_t& left, const screen_y_t& top) {
-	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
-	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
+	pellets_add_single_rain(left, top, (irand() % 0x7F), 0.0f);
+	pellets_add_single_rain(left, top, (irand() % 0x7F), 0.0f);
 }
 
 void pattern_slash_rain(void)
@@ -1320,7 +1323,7 @@ void pattern_lasers_and_3_spread(void)
 		return;
 	}
 	if(boss_phase_frame == 100) {
-		right_to_left = (rand() % 2);
+		right_to_left = (irand() % 2);
 
 		// Divisor = number of lasers that are effectively fired.
 		select_for_rank(pattern_state.delta_x,
@@ -1441,7 +1444,7 @@ void pattern_semicircle_rain_from_sleeve(void)
 		for(i = 0, angle = 0x00; i < SPREAD; i++, angle -= (0x80 / SPREAD)) {
 			Pellets.add_single(
 				LEFT_SLEEVE_LEFT, LEFT_SLEEVE_TOP, angle, to_sp(2.0f),
-				PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL, to_sp(3.0f)
+				PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR, to_sp(3.0f)
 			);
 		}
 		mdrv2_se_play(7);
@@ -1486,20 +1489,26 @@ void konngara_main(void)
 		bool16 invincible;
 		int invincibility_frame;
 
-		void update_and_render(const unsigned char (&flash_colors)[3]) {
+		void update_and_render(const vc_t (&flash_colors)[3]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])), \
 				10000,
 				boss_nop,
 				overlap_xy_xywh_le_ge_2(
-					orb_cur_left, orb_cur_top,
-					HITBOX_LEFT, HITBOX_TOP, (HITBOX_W - ORB_W), HITBOX_H // ???
+					orb_cur_left,
+					orb_cur_top,
+					HITBOX_LEFT,
+					HITBOX_TOP,
+					(HITBOX_ORB_W - ORB_W),
+					(HITBOX_ORB_H - ORB_H)
 				),
-				HITBOX_LEFT, HITBOX_TOP, HITBOX_W, HITBOX_H
+				shot_hitbox_t(
+					HITBOX_LEFT, HITBOX_TOP, HITBOX_SHOT_W, HITBOX_SHOT_H
+				)
 			);
 		}
 	} hit;
@@ -1540,20 +1549,20 @@ void konngara_main(void)
 
 	int i;
 	int j;
-	int col;
+	svc2 col;
 	int comp;
 	int scroll_frame;
 	face_direction_t fd_track;
-	const unsigned char flash_colors[3] = { 3, 4, 5 };
+	const vc_t flash_colors[3] = { 3, 4, 5 };
 
 	#define pattern_choose( \
 		phase, frame_min, count_on_first_try, count_on_second_try \
 	) { \
 		if(boss_phase_frame > frame_min) { \
 			boss_phase_frame = 1; \
-			phase.pattern_cur = (rand() % count_on_first_try); \
+			phase.pattern_cur = (irand() % count_on_first_try); \
 			if(phase.pattern_cur == pattern_prev) { \
-				phase.pattern_cur = (rand() % count_on_second_try); \
+				phase.pattern_cur = (irand() % count_on_second_try); \
 			} \
 			pattern_prev = phase.pattern_cur; \
 			phase.patterns_done++; \
@@ -1768,7 +1777,7 @@ void konngara_main(void)
 		// --------------------------------------------------------------------
 
 		printf("\x1B)3"); // Enter graph mode
-		text_fill_black("\x1B[16;40m", "\x1B[0;0H", " ", j, i);
+		text_fill_black(j, i);
 
 		grp_put_palette_show(SCROLL_BG_FN);
 		z_palette_set_black(j, i);

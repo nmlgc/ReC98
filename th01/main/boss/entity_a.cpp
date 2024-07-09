@@ -1,22 +1,11 @@
 #include <stdlib.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "twobyte.h"
-#include "th01/math/area.hpp"
+#include "decomp.hpp"
 #include "th01/math/wave.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
-#include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/bos.hpp"
-}
-#include "th01/main/playfld.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 
 // Slot structures
@@ -61,8 +50,9 @@ struct bos_t {
 
 /// Entities
 /// --------
-extern bos_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
-extern bool bos_header_only;
+
+bos_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
+bool bos_header_only = false;
 
 void bos_reset_all_broken(void)
 {
@@ -85,14 +75,14 @@ int CBossEntity::load_inner(const char fn[PF_FN_LEN], int slot)
 	if(!bos_header_only) {
 		bos_entity_free(slot);
 		for(int i = 0; bos_image_count > i; i++) {
-			#define image bos_entity_images[slot].image[i]
-			bos_image_new(image, plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.alpha), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.B), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.R), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.G), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.E), plane_size);
-			#undef image
+			#define img bos_entity_images[slot].image[i]
+			bos_image_new(img, plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.alpha), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.B), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.R), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.G), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.E), plane_size);
+			#undef img
 		}
 	}
 
@@ -116,6 +106,7 @@ void CBossEntity::metadata_get(
 
 /// Blitting
 /// --------
+
 void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 {
 	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
@@ -175,44 +166,44 @@ void CBossEntity::put_1line(
 	for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
 		if((vram_offset / ROW_SIZE) == intended_y) {
 			struct {
-				twobyte_t alpha, B, R, G, E;
+				StupidBytewiseWrapperAround<dots16_t> alpha, B, R, G, E;
 			} cur;
 
-			cur.alpha.v = ~bos.alpha[bos_p];
-			cur.B.v = bos.planes.B[bos_p];
-			cur.R.v = bos.planes.R[bos_p];
-			cur.G.v = bos.planes.G[bos_p];
-			cur.E.v = bos.planes.E[bos_p];
+			cur.alpha.t = ~bos.alpha[bos_p];
+			cur.B.t = bos.planes.B[bos_p];
+			cur.R.t = bos.planes.R[bos_p];
+			cur.G.t = bos.planes.G[bos_p];
+			cur.E.t = bos.planes.E[bos_p];
 
 			#define vram_byte(plane, byte) \
 				(VRAM_PLANE_##plane + vram_offset)[byte]
-			register vram_byte_amount_t byte;
+			register vram_byte_amount_t b;
 			if(first_bit == 0) {
-				for(byte = 0; byte < sizeof(dots16_t); byte++) {
+				for(b = 0; b < sizeof(dots16_t); b++) {
 					grcg_setcolor_rmw(0);
-					vram_byte(B, byte) = cur.alpha.u[byte];
-					grcg_off();
+					vram_byte(B, b) = cur.alpha.ubyte[b];
+					grcg_off_func();
 
-					vram_byte(B, byte) |= cur.B.u[byte];
-					vram_byte(R, byte) |= cur.R.u[byte];
-					vram_byte(G, byte) |= cur.G.u[byte];
-					vram_byte(E, byte) |= cur.E.u[byte];
+					vram_byte(B, b) |= cur.B.ubyte[b];
+					vram_byte(R, b) |= cur.R.ubyte[b];
+					vram_byte(G, b) |= cur.G.ubyte[b];
+					vram_byte(E, b) |= cur.E.ubyte[b];
 				}
 			} else {
-				for(byte = 0; byte < sizeof(dots16_t); byte++) {
+				for(b = 0; b < sizeof(dots16_t); b++) {
 					grcg_setcolor_rmw(0);
-					vram_byte(B, byte + 0) = (cur.alpha.u[byte] >> first_bit);
-					vram_byte(B, byte + 1) = (cur.alpha.u[byte] << other_shift);
-					grcg_off();
+					vram_byte(B, b + 0) = (cur.alpha.ubyte[b] >> first_bit);
+					vram_byte(B, b + 1) = (cur.alpha.ubyte[b] << other_shift);
+					grcg_off_func();
 
-					vram_byte(B, byte + 0) |= (cur.B.u[byte] >> first_bit);
-					vram_byte(R, byte + 0) |= (cur.R.u[byte] >> first_bit);
-					vram_byte(G, byte + 0) |= (cur.G.u[byte] >> first_bit);
-					vram_byte(E, byte + 0) |= (cur.E.u[byte] >> first_bit);
-					vram_byte(B, byte + 1) |= (cur.B.u[byte] << other_shift);
-					vram_byte(R, byte + 1) |= (cur.R.u[byte] << other_shift);
-					vram_byte(G, byte + 1) |= (cur.G.u[byte] << other_shift);
-					vram_byte(E, byte + 1) |= (cur.E.u[byte] << other_shift);
+					vram_byte(B, b + 0) |= (cur.B.ubyte[b] >> first_bit);
+					vram_byte(R, b + 0) |= (cur.R.ubyte[b] >> first_bit);
+					vram_byte(G, b + 0) |= (cur.G.ubyte[b] >> first_bit);
+					vram_byte(E, b + 0) |= (cur.E.ubyte[b] >> first_bit);
+					vram_byte(B, b + 1) |= (cur.B.ubyte[b] << other_shift);
+					vram_byte(R, b + 1) |= (cur.R.ubyte[b] << other_shift);
+					vram_byte(G, b + 1) |= (cur.G.ubyte[b] << other_shift);
+					vram_byte(E, b + 1) |= (cur.E.ubyte[b] << other_shift);
 				}
 			}
 			#undef vram_byte
@@ -239,7 +230,7 @@ void pascal near vram_put_unaligned_bg_fg(
 	sdots16_t fg,
 	dots8_t plane[],
 	vram_offset_t vram_offset,
-	uint16_t bg_masked,
+	dots16_t bg_masked,
 	char first_bit
 )
 {
@@ -453,7 +444,7 @@ void CBossEntity::egc_sloppy_wave_unput_double_broken(
 		x_2 = wave_x(amp_2, t_2) + left_2;
 		t_1 += (0x100 / len_1);
 		t_2 += (0x100 / len_2);
-		// ZUN bug: Shouldn't the [h] parameter be 1?
+		// ZUN landmine: Shouldn't the [h] parameter be 1?
 		if(x_1 > x_2) {
 			egc_copy_rect_1_to_0_16_word_w(
 				x_2, (top + bos_y), (x_1 - x_2), bos_y
@@ -535,11 +526,11 @@ void CBossEntity::sloppy_unput() const
 	egc_copy_rect_1_to_0_16(cur_left, cur_top, (vram_w * BYTE_DOTS), h);
 }
 
-void CBossEntity::move_lock_unput_and_put_8(
+void CBossEntity::locked_move_unput_and_put_8(
 	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
-	if(move_lock_frame == 0) {
+	if(lock_frame == 0) {
 		move(delta_x, delta_y);
 
 		screen_x_t unput_left = (prev_delta_x > 0)
@@ -556,26 +547,26 @@ void CBossEntity::move_lock_unput_and_put_8(
 
 		unput_and_put_8(cur_left, cur_top, bos_image);
 
-		move_lock_frame = 1;
-	} else if(move_lock_frame >= lock_frames) {
-		move_lock_frame = 0;
+		lock_frame = 1;
+	} else if(lock_frame >= lock_frames) {
+		lock_frame = 0;
 	} else {
-		move_lock_frame++;
+		lock_frame++;
 	}
 }
 
-void CBossEntity::move_lock_and_put_8(
+void CBossEntity::locked_move_and_put_8(
 	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
-	if(move_lock_frame == 0) {
+	if(lock_frame == 0) {
 		move(delta_x, delta_y);
 		put_8(cur_left, cur_top, bos_image);
-		move_lock_frame = 1;
-	} else if(move_lock_frame >= lock_frames) {
-		move_lock_frame = 0;
+		lock_frame = 1;
+	} else if(lock_frame >= lock_frames) {
+		lock_frame = 0;
 	} else {
-		move_lock_frame++;
+		lock_frame++;
 	}
 }
 
@@ -609,7 +600,8 @@ void bos_entity_free(int slot)
 
 /// Non-entity animations
 /// ---------------------
-extern bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
+
+bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
 
 int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 {
@@ -619,17 +611,17 @@ int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 	if(!bos_header_only) {
 		bos_anim_free(slot);
 		for(int i = 0; bos_image_count > i; i++) {
-			#define image bos_anim_images[slot].image[i]
-			bos_image_new(image, plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.alpha), plane_size);
+			#define img bos_anim_images[slot].image[i]
+			bos_image_new(img, plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.alpha), plane_size);
 			for(int bos_p = 0; bos_p < (plane_size / 2); bos_p++) {
-				image.alpha[bos_p] = ~image.alpha[bos_p];
+				img.alpha[bos_p] = ~img.alpha[bos_p];
 			}
-			arc_file_get(reinterpret_cast<char *>(image.planes.B), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.R), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.G), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.E), plane_size);
-			#undef image
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.B), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.R), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.G), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.E), plane_size);
+			#undef img
 		}
 	}
 
@@ -693,3 +685,15 @@ void bos_anim_free(int slot)
 	}
 }
 /// ---------------------
+
+// Slots
+// -----
+
+CBossEntity boss_entity_0;
+CBossEntity boss_entity_1;
+CBossEntity boss_entity_2;
+CBossEntity boss_entity_3;
+CBossEntity boss_entity_4;
+CBossEntity boss_entities_unused[5];
+CBossAnim boss_anims[2];
+// -----

@@ -1,22 +1,18 @@
-/* ReC98
- * -----
- * Code segment #4 of TH02's OP.EXE
- */
+#pragma option -2 -d- // ZUN bloat
 
-extern "C" {
 #include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/rank.h"
+#include "shiftjis.hpp"
+#include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/common.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
-#include "th02/formats/scoredat.h"
+#include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
+#include "th02/gaiji/score_p.hpp"
 #include "th02/op/op.h"
 
 #include "th02/score.c"
@@ -28,7 +24,7 @@ const unsigned char gbcRANKS[4][8] = {
 	gb_L_, gb_U_, gb_N_, gb_A_, gb_T_, gb_I_, gb_C_, 0,
 };
 
-const char *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
+const shiftjis_t *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
 int logo_step = 0;
 char need_op_h_bft = 1;
 int8_t need_op_h_bft_padding = 0;
@@ -40,28 +36,16 @@ unsigned int score_duration;
 
 #include "th02/scorelod.c"
 
-// Slightly differs from the same function in MAINE.EXE!
-void pascal near score_put(unsigned y, long score, unsigned atrb)
+void pascal near score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
-	unsigned digit = gb_0_;
-	long divisor = 10000000;
-	long result;
-	char putting = 0;
-	int i;
-	for(i = 0; i < 8; i++) {
-		result = divisor ? ((score / divisor) % 10) : (score % 10);
-		divisor /= 10;
-		digit = result + gb_0_;
-		if(result) {
-			putting = 1;
-		}
-		if(putting) {
-			gaiji_putca((i * 2) + 26, y, digit, atrb);
-		}
+	#define on_digit(i, gaiji) { \
+		gaiji_putca((26 + (i * GAIJI_TRAM_W)), y, gaiji, atrb); \
 	}
+	gaiji_score_put(score, on_digit, true);
+	#undef on_digit
 }
 
-void pascal near shottype_put(tram_y_t y, int type, int atrb)
+void pascal near shottype_put(tram_y_t y, int type, tram_atrb2 atrb)
 {
 	text_putsa(48, y, SHOTTYPES[type], atrb);
 }
@@ -84,7 +68,7 @@ void int_to_string(char *str, int val, int chars)
 	str[c] = 0;
 }
 
-void pascal near scoredat_date_put(tram_y_t y, int place, int atrb)
+void pascal near scoredat_date_put(tram_y_t y, int place, tram_atrb2 atrb)
 {
 	char str[6];
 	int_to_string(str, hi.score.date[place].da_year, 4);
@@ -99,7 +83,7 @@ void pascal near scoredat_date_put(tram_y_t y, int place, int atrb)
 
 void pascal near scores_put(int place_to_highlight)
 {
-	unsigned atrb = TX_WHITE;
+	tram_atrb2 atrb = TX_WHITE;
 	int i;
 	gaiji_putsa(22, 2, gbHI_SCORE, TX_GREEN);
 	gaiji_putsa(40, 2, gbcRANKS[rank], TX_GREEN);
@@ -182,7 +166,7 @@ void pascal score_menu(void)
 	graph_showpage(1);
 
 	do {
-		input_sense();
+		input_reset_sense();
 		if(!input_allowed && !key_det) {
 			input_allowed = 1;
 		} else if(input_allowed == 1 && key_det) {
@@ -229,6 +213,4 @@ int cleardata_load(void)
 		}
 	}
 	return extra_unlocked;
-}
-
 }

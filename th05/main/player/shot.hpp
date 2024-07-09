@@ -53,7 +53,7 @@ struct ShotAddIterator {
 	secondary_cycle, \
 	secondary_offset_expr \
 ) \
-	shot_t near *shot; \
+	Shot near *shot; \
 	ShotAddIterator sai(count); \
 	\
 	cycle = shot_cycle_init(); \
@@ -63,7 +63,6 @@ struct ShotAddIterator {
 	if(cycle & secondary_cycle) { \
 		sai.secondary_offset_expr; \
 	}
-// -----
 
 // We *really* want to fit those on a line...
 #define OPT_L shot->from_option_l()

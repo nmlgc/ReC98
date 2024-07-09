@@ -1,16 +1,12 @@
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/sprites/laser_s.h"
+#include "th01/sprites/laser_s.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/graph.h"
-}
-#include "th01/hardware/input.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
+
+#include "th01/sprites/laser_s.csp"
+
+CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
 
 void CShootoutLaser::spawn(
 	screen_x_t _origin_left,
@@ -18,7 +14,7 @@ void CShootoutLaser::spawn(
 	screen_x_t _target_left,
 	vram_y_t _target_y,
 	int speed_multiplied_by_8,
-	int _col,
+	vc2 _col,
 	int _moveout_at_age,
 	int w
 )
@@ -73,7 +69,7 @@ void CShootoutLaser::hittest_and_render(void)
 
 	for(i = 0; i < pixel_count; i++) {
 		if(
-			((left >> 3) != ray_i_left.to_vram_byte_amount()) ||
+			((left >> BYTE_BITS) != ray_i_left.to_vram_byte_amount()) ||
 			(y != ray_i_y.to_pixel())
 		) {
 			if(put_flag) {
@@ -87,7 +83,7 @@ void CShootoutLaser::hittest_and_render(void)
 						((player_left + ((PLAYER_W / 8) * 1)) <= left) &&
 						((player_left + ((PLAYER_W / 8) * 6)) >  left)
 					) {
-						done = true;
+						player_is_hit = true;
 					}
 				}
 			}

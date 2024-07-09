@@ -1,36 +1,25 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
+#include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/formats/ptn.hpp"
 #include "th01/math/digit.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/input.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/sprites/pellet.h"
-#include "th01/main/playfld.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/main/debug.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/bomb.hpp"
 #include "th01/main/stage/item.hpp"
 #include "th01/main/stage/card.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/stage/stages.hpp"
 
-unsigned char card_flip_cycle = 0;
+uint8_t card_flip_cycle = 0;
 
-void cards_hittest(int stage_num)
+void cards_hittest(int stage_id)
 {
 	for(unsigned int i = 0; i < cards.count; i++) {
 		struct {
@@ -54,11 +43,11 @@ void cards_hittest(int stage_num)
 		) || (
 			(bomb_damaging == true) &&
 			((bomb_frames % cards.count) == i) &&
-			((rand() % 4) != 0) &&
+			((irand() % 4) != 0) &&
 			(cards.flag[i] == CARD_ALIVE)
 		)) {
 			cards.flag[i] = CARD_FLIPPING;
-			cards_score[i] = ((((stage_num / 5) * 100) + 100) + (
+			cards_score[i] = ((((stage_id / 5) * 100) + 100) + (
 				static_cast<unsigned long>(cardcombo_cur * cardcombo_cur) *
 				(((rank == RANK_LUNATIC) * 15) + 20)
 			));
@@ -73,7 +62,7 @@ void cards_hittest(int stage_num)
 			hud_score_and_cardcombo_render();
 
 			if(((card_flip_cycle++) % 10) == 0) {
-				if(card_flip_cycle >= 140) {
+				if(card_flip_cycle >= CARD_FLIP_CYCLE_MAX) {
 					card_flip_cycle = 1;
 					if(bomb_damaging) {
 add_point_item:
@@ -123,7 +112,8 @@ void cards_score_render(void)
 			}
 
 			// cards_hittest() ensures that 100 is the minimum value.
-			// ZUN bug: Should be >=.
+			// ZUN bug: Should be >=. Can in fact be observed on stages 96-99
+			// on non-Lunatic, and stages 321-324 on Lunatic.
 			if(cards_score[i] > 10000) {
 				offset_left = -GLYPH_HALF_W;
 			} else if(cards_score[i] > 1000) {
@@ -194,7 +184,7 @@ void cards_update_and_render(void)
 				if(rank == RANK_LUNATIC) {
 					pellet_group_t group;
 
-					if(stage_num < 10) {
+					if(stage_num < (STAGES_PER_SCENE * 2)) {
 						group = PG_1_AIMED;
 					} else {
 						group = PG_1_RANDOM_NARROW_AIMED;
@@ -227,6 +217,6 @@ void cards_update_and_render(void)
 	}
 	if(cards_removed == cards.count) {
 		stage_cleared = true;
-		done = true;
+		player_is_hit = true;
 	}
 }

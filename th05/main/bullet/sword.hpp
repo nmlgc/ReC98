@@ -1,9 +1,12 @@
+#include "th04/main/playfld.hpp"
+#include "th02/main/entity.hpp"
+
 #define SWORD_COUNT 63
 #define SWORD_W 32
 #define SWORD_H 32
 
-typedef struct {
-	unsigned char flag;
+struct sword_t {
+	entity_flag_t flag;
 	unsigned char angle;
 	PlayfieldMotion pos;
 	unsigned int twirl_time;
@@ -13,7 +16,7 @@ typedef struct {
 	int16_t unused_2;
 	SubpixelLength8 speed;
 	int8_t padding;
-} sword_t;
+};
 
 struct sword_template_t {
 	/* -------------------- */ int8_t unused_1;

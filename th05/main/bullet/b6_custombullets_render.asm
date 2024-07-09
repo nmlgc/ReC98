@@ -1,3 +1,6 @@
+B6BF_FREE = 0
+B6BF_CLOUD = 1
+
 public @SHINKI_CUSTOMBULLETS_RENDER$QV
 @shinki_custombullets_render$qv proc near
 	push	bp
@@ -10,11 +13,11 @@ public @SHINKI_CUSTOMBULLETS_RENDER$QV
 ; ---------------------------------------------------------------------------
 
 @@loop:
-	cmp	[si+b6ball_t.flag], 0
+	cmp	[si+b6ball_t.flag], B6BF_FREE
 	jz	short @@next
-	cmp	[si+b6ball_t.flag], 1
+	cmp	[si+b6ball_t.flag], B6BF_CLOUD
 	jnz	short @@no_cloud
-	mov	ah, 0Fh
+	mov	ah, V_WHITE
 	call	@grcg_setcolor_direct_raw$qv
 	mov	ax, [si+b6ball_t.pos.cur.x]
 	sar	ax, 4

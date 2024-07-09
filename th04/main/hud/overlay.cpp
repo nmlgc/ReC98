@@ -1,23 +1,16 @@
 #pragma option -zPmain_01
 
 #include <string.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th04/common.h"
-#include "th04/score.h"
-#include "th01/math/subpixel.hpp"
+#include "shiftjis.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/hardware/grcg.hpp"
+#include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
-#include "th04/gaiji/gaiji.h"
-extern "C" {
 #include "th04/formats/bb.h"
-#include "th04/math/motion.hpp"
 #include "th04/main/null.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/main/scroll.hpp"
-}
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
@@ -29,7 +22,7 @@ extern "C" {
 	#include "th04/resident.hpp"
 #endif
 
-// See tile.hpp for the reason this declaration is necessary
+// See tile.hpp for the reason why this declaration is necessary
 extern "C" void pascal near tiles_invalidate_around(
 	subpixel_t center_y, subpixel_t center_x
 );
@@ -59,11 +52,10 @@ extern const gaiji_th04_t gpFULL_POWERUP[];
 #endif
 
 // MODDERS: Keep this up-to-date!
-static const utram_kanji_amount_t POPUP_STRING_MAX_LEN = 8;
+static const ushiftjis_kanji_amount_t POPUP_STRING_MAX_LEN = 8;
 extern const gaiji_th04_t* POPUP_STRINGS[];
 
 extern unsigned char dissolve_sprite; // = 0
-extern const char* PLAYFIELD_BLANK_ROW;
 
 extern int stage_title_len;
 extern int stage_bgm_title_len;
@@ -75,12 +67,12 @@ extern int stage_bgm_title_len;
 // still need to preserve the original order
 extern unsigned char titles_frame;
 #if (GAME == 5)
-	extern char *stage_title;
-	extern char *stage_bgm_title;
-	extern char *boss_bgm_title;
+	extern shiftjis_t *stage_title;
+	extern shiftjis_t *stage_bgm_title;
+	extern shiftjis_t *boss_bgm_title;
 #else
-	extern const char* BGM_TITLES[];
-	extern const char* STAGE_TITLES[];
+	extern const shiftjis_t* BGM_TITLES[];
+	extern const shiftjis_t* STAGE_TITLES[];
 	#define stage_title (STAGE_TITLES[stage_title_id])
 	#define stage_bgm_title (BGM_TITLES[bgm_title_id])
 	#define boss_bgm_title stage_bgm_title
@@ -99,8 +91,10 @@ const int POPUP_FRAMES_UNTIL_OUT_DISSOLVE = 192;
 
 #define vram_y_to_tram(y) (PLAYFIELD_TRAM_TOP + (TO_PIXEL(y) / GLYPH_H))
 
-const tram_ank_amount_t STAGE_NUM_W = ((sizeof(gStage_1) - 1) * GAIJI_TRAM_W);
-const tram_ank_amount_t STAGE_NUM_FE_W = (
+const shiftjis_kanji_amount_t STAGE_NUM_W = (
+	(sizeof(gStage_1) - 1) * GAIJI_TRAM_W
+);
+const shiftjis_kanji_amount_t STAGE_NUM_FE_W = (
 	(sizeof(gFINAL_STAGE) - 1) * GAIJI_TRAM_W
 );
 const tram_x_t STAGE_NUM_TRAM_LEFT = (
@@ -115,6 +109,20 @@ const tram_y_t STAGE_TITLE_TRAM_CENTER_Y = vram_y_to_tram(STAGE_TITLE_CENTER_Y);
 const tram_y_t BGM_TRAM_Y = vram_y_to_tram(BGM_CENTER_Y);
 const tram_x_t BGM_TRAM_RIGHT = (PLAYFIELD_TRAM_RIGHT - 1);
 // -----------
+
+// Overlay fills
+// -------------
+
+void near overlay_wipe(void)
+{
+	overlay_fill(TX_WHITE);
+}
+
+void near overlay_black(void)
+{
+	overlay_fill(TX_BLACK | TX_REVERSE);
+}
+// -------------
 
 // Stage transitions
 // -----------------
@@ -192,7 +200,7 @@ inline tram_x_t bgm_title_tram_left(int title_len) {
 // and playfield-space Y position.
 // Assumes that the GRCG is active, and set to the intended color.
 void pascal near dissolve_put(
-	tram_x_t tram_left, subpixel_t top, tram_ank_amount_t ank_len
+	tram_x_t tram_left, subpixel_t top, shiftjis_ank_amount_t ank_len
 )
 {
 	vram_x_t vram_left = tram_left;
@@ -253,7 +261,7 @@ inline void titles_dissolve_put(const int& bgm_len) {
 	}
 	bgm_note_dissolve_put(bgm_len);
 
-	grcg_setcolor_direct(15); // White
+	grcg_setcolor_direct(V_WHITE);
 	bgm_title_dissolve_put(bgm_len);
 	dissolve_put(
 		(PLAYFIELD_TRAM_CENTER_X - (stage_title_len / 2)),
@@ -298,7 +306,7 @@ inline void boss_bgm_dissolve_put(const int& bgm_len) {
 	grcg_setcolor_direct(11);	// Yellow
 	bgm_note_dissolve_put(bgm_len);
 
-	grcg_setcolor_direct(15);	// White
+	grcg_setcolor_direct(V_WHITE);
 	bgm_title_dissolve_put(bgm_len);
 
 	grcg_off();
@@ -405,7 +413,7 @@ void pascal near overlay_boss_bgm_update_and_render(void)
 const unsigned char POPUP_DURATION = 128;
 
 inline void line_wipe(tram_y_t y) {
-	text_putsa(PLAYFIELD_TRAM_LEFT, y, PLAYFIELD_BLANK_ROW, TX_WHITE);
+	overlay_line_fill(y, TX_WHITE);
 }
 
 inline void near popup_put_points(const unsigned long &points) {
@@ -568,7 +576,7 @@ extern nearfunc_t_near overlay2;
 extern unsigned char titles_frame;
 extern unsigned long overlay_popup_bonus;
 #if (GAME == 5)
-	extern char *stage_title;
-	extern char *stage_bgm_title;
-	extern char *boss_bgm_title;
+	extern shiftjis_t *stage_title;
+	extern shiftjis_t *stage_bgm_title;
+	extern shiftjis_t *boss_bgm_title;
 #endif

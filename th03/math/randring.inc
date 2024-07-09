@@ -1,18 +1,18 @@
 RANDRING_NEXT_DEF_NOMOD macro instance, dist
-	public RANDRING&instance&_NEXT16
-	randring&instance&_next16	proc dist
+	public @randring&instance&_next16$qv
+	@randring&instance&_next16$qv proc dist
 		xor	bh, bh
 		mov	bl, _randring_p
 		add	bx, offset _randring
 		inc	_randring_p
 		mov	ax, [bx]
 		ret
-	randring&instance&_next16	endp
+	@randring&instance&_next16$qv endp
 		nop
 
-	public RANDRING&instance&_NEXT16_AND
-	randring&instance&_next16_and	proc dist
-	arg @@mask:word
+	public @RANDRING&instance&_NEXT16_AND$QUI
+	@randring&instance&_next16_and$qui proc dist
+		arg @@mask:word
 
 		push	bp
 		mov	bp, sp
@@ -24,16 +24,15 @@ RANDRING_NEXT_DEF_NOMOD macro instance, dist
 		and	ax, @@mask
 		pop	bp
 		ret	2
-	randring&instance&_next16_and	endp
+	@randring&instance&_next16_and$qui endp
 endm
 
 RANDRING_NEXT_DEF macro instance, dist
 	RANDRING_NEXT_DEF_NOMOD instance, dist
 
-	; void randring_next16_mod(unsigned short n)
-	public RANDRING&instance&_NEXT16_MOD
-	randring&instance&_next16_mod	proc dist
-	arg @@n:word
+	public @RANDRING&INSTANCE&_NEXT16_MOD$QUI
+	@randring&instance&_next16_mod$qui proc dist
+		arg @@n:word
 
 		push	bp
 		mov	bp, sp
@@ -47,5 +46,5 @@ RANDRING_NEXT_DEF macro instance, dist
 		mov	ax, dx
 		pop	bp
 		ret	2
-	randring&instance&_next16_mod	endp
+	@randring&instance&_next16_mod$qui endp
 endm

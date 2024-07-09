@@ -1,17 +1,19 @@
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
-}
 #include "th01/hardware/grp2xscs.hpp"
-#include "th01/v_colors.hpp"
-#include "th01/score.h"
 #include "th01/hiscore/regist.hpp"
 
 // Null-terminated version of scoredat_name_t, used internally.
-typedef StupidBytewiseWrapperAround<struct {
-	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
-}> scoredat_name_z_t;
+typedef ShiftJISKanjiBuffer<SCOREDAT_NAME_KANJI + 1> scoredat_name_z_t;
+
+// Byte-wise access to [scoredat_routes].
+inline int8_t& scoredat_route_byte(int place, int byte) {
+	if(byte == 0) {
+		return scoredat_routes[place * SCOREDAT_ROUTE_LEN];
+	}
+	return scoredat_routes[(place * SCOREDAT_ROUTE_LEN) + byte];
+}
 
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
@@ -24,6 +26,7 @@ static const screen_y_t TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 
 /// Table
 /// -----
+
 #define TABLE_TOP 48
 #define TABLE_ROW_H GLYPH_H
 #define TABLE_BODY_TOP (TABLE_TOP + TABLE_ROW_H)
@@ -56,19 +59,20 @@ inline screen_x_t table_stage_left(int x_kanji) {
 }
 
 // Code generation actually prohibits this from being a Point!
-extern screen_x_t entered_name_left;
-extern screen_y_t entered_name_top;
+static screen_x_t entered_name_left;
+static screen_y_t entered_name_top;
 /// -----
 
 /// Alphabet
 /// --------
-#define ALPHABET_TOP 240
-#define MARGIN_W 32
-#define KANJI_PADDING_X 16
-#define KANJI_PADDING_Y 8
 
-#define KANJI_PADDED_W (GLYPH_FULL_W + KANJI_PADDING_X)
-#define KANJI_PADDED_H (GLYPH_H + KANJI_PADDING_Y)
+static const screen_y_t ALPHABET_TOP = 240;
+static const pixel_t MARGIN_W = 32;
+static const pixel_t KANJI_PADDING_X = 16;
+static const pixel_t KANJI_PADDING_Y = 8;
+
+static const pixel_t KANJI_PADDED_W = (GLYPH_FULL_W + KANJI_PADDING_X);
+static const pixel_t KANJI_PADDED_H = (GLYPH_H + KANJI_PADDING_Y);
 
 #define KANJI_PER_ROW \
 	((RES_X - (MARGIN_W * 2)) / KANJI_PADDED_W)
@@ -80,54 +84,53 @@ inline pixel_t relative_top_for(int kanji_id) {
 	return relative_top(kanji_id / KANJI_PER_ROW);
 }
 
-inline int row_ceil(int count) {
-	return ((count + (KANJI_PER_ROW - 1)) / KANJI_PER_ROW);
-}
+#define row_ceil(count) \
+	((count + (KANJI_PER_ROW - 1)) / KANJI_PER_ROW)
 
-inline pixel_t left_for(int kanji_id) {
-	return (((kanji_id % KANJI_PER_ROW) * KANJI_PADDED_W) + MARGIN_W);
-}
+#define left_for(kanji_id) \
+	((((kanji_id) % KANJI_PER_ROW) * KANJI_PADDED_W) + MARGIN_W)
 
-#define alphabet_putca_fx(top_for_0, i, fx, fmt_instance, kanji) \
+#define alphabet_putca_fx(top_for_0, i, fx, kanji) { \
 	graph_putkanji_fx( \
-		left_for(i), (top_for_0 + relative_top_for(i)), fx, fmt_instance, kanji \
-	);
+		left_for(i), (top_for_0 + relative_top_for(i)), fx, kanji \
+	); \
+}
 
-#define alphabet_putsa_fx(top_for_0, i, fx, str) \
-	extern const char str[]; \
-	graph_printf_fx(left_for(i), (top_for_0 + relative_top_for(i)), fx, str);
+#define alphabet_putsa_fx(top_for_0, i, fx, str) { \
+	graph_printf_fx(left_for(i), (top_for_0 + relative_top_for(i)), fx, str); \
+}
 
 #define A_TO_Z_COUNT 26
 #define NUM_COUNT 10
-// TODO: Should be derived via `sizeof()` once the array is declared here.
-#define SYM_COUNT 18
-extern const uint16_t ALPHABET_SYMS[];
+static const int SYM_COUNT = (sizeof(ALPHABET_SYMS) / sizeof(shiftjis_kanji_t));
 
 // Rows
-#define LOWER_TOP (ALPHABET_TOP)
-#define LOWER2_TOP (LOWER_TOP + relative_top(1))
-#define UPPER_TOP (LOWER_TOP + relative_top(row_ceil(A_TO_Z_COUNT)))
-#define UPPER2_TOP (UPPER_TOP + relative_top(1))
-#define SYM_TOP (UPPER_TOP + relative_top(row_ceil(A_TO_Z_COUNT)))
-#define NUM_TOP (SYM_TOP + relative_top(row_ceil(SYM_COUNT)))
+static const screen_y_t LOWER_TOP = ALPHABET_TOP;
+static const screen_y_t LOWER2_TOP = (LOWER_TOP + relative_top(1));
+static const screen_y_t UPPER_TOP = (
+	LOWER_TOP + relative_top(row_ceil(A_TO_Z_COUNT))
+);
+static const screen_y_t UPPER2_TOP = (UPPER_TOP + relative_top(1));
+static const screen_y_t SYM_TOP = (
+	UPPER_TOP + relative_top(row_ceil(A_TO_Z_COUNT))
+);
+static const screen_y_t NUM_TOP = (SYM_TOP + relative_top(row_ceil(SYM_COUNT)));
 
 // Columns
-#define A_TO_Z_2_END_LEFT left_for(A_TO_Z_COUNT - KANJI_PER_ROW)
-#define SPACE_LEFT left_for(NUM_COUNT)
-#define LEFT_COLUMN (KANJI_PER_ROW - 3)
-#define LEFT_LEFT  left_for(LEFT_COLUMN + 0)
-#define RIGHT_LEFT left_for(LEFT_COLUMN + 1)
-#define ENTER_LEFT left_for(LEFT_COLUMN + 2)
+static const screen_x_t A_TO_Z_2_END_LEFT = left_for(
+	A_TO_Z_COUNT - KANJI_PER_ROW
+);
+static const screen_x_t SPACE_LEFT = left_for(NUM_COUNT);
+static const screen_x_t LEFT_COLUMN = (KANJI_PER_ROW - 3);
+static const screen_x_t LEFT_LEFT =  left_for(LEFT_COLUMN + 0);
+static const screen_x_t RIGHT_LEFT = left_for(LEFT_COLUMN + 1);
+static const screen_x_t ENTER_LEFT = left_for(LEFT_COLUMN + 2);
 
-inline uint16_t kanji_swap(uint16_t kanji) {
-	return (kanji << 8) | (kanji >> 8);
-}
-
-inline unsigned char kanji_hi(int16_t kanji) {
+inline uint8_t kanji_hi(sshiftjis_kanji_swapped_t kanji) {
 	return (kanji >> 8);
 }
 
-inline unsigned char kanji_lo(int16_t kanji) {
+inline uint8_t kanji_lo(sshiftjis_kanji_swapped_t kanji) {
 	return (kanji & 0xFF);
 }
 /// --------
@@ -135,16 +138,15 @@ inline unsigned char kanji_lo(int16_t kanji) {
 void alphabet_put_initial()
 {
 	int16_t col_and_fx = (COL_REGIST_REGULAR | FX_WEIGHT_BOLD);
-	uint16_t kanji;
+	shiftjis_kanji_swapped_t kanji;
 	int i;
 	graph_putkanji_fx_declare();
 
-	kanji = kanji_swap('‚‚');
+	kanji = KANJI_b;
 	for(i = 1; i < A_TO_Z_COUNT; i++) {
-		alphabet_putca_fx(LOWER_TOP, i, col_and_fx, 0, kanji);
+		alphabet_putca_fx(LOWER_TOP, i, col_and_fx, kanji);
 		kanji++;
 	}
-	extern const char ALPHABET_A[];
 	graph_putsa_fx(
 		MARGIN_W,
 		LOWER_TOP,
@@ -152,20 +154,20 @@ void alphabet_put_initial()
 		ALPHABET_A
 	);
 
-	kanji = kanji_swap('‚`');
+	kanji = KANJI_A;
 	for(i = 0; i < A_TO_Z_COUNT; i++) {
-		alphabet_putca_fx(UPPER_TOP, i, col_and_fx, 1, kanji);
+		alphabet_putca_fx(UPPER_TOP, i, col_and_fx, kanji);
 		kanji++;
 	}
 
 	for(i = 0; i < SYM_COUNT; i++) {
 		kanji = ALPHABET_SYMS[i];
-		alphabet_putca_fx(SYM_TOP, i, col_and_fx, 2, kanji);
+		alphabet_putca_fx(SYM_TOP, i, col_and_fx, kanji);
 	}
 
-	kanji = kanji_swap('‚O');
+	kanji = KANJI_0;
 	for(i = 0; i < NUM_COUNT; i++) {
-		alphabet_putca_fx(NUM_TOP, i, col_and_fx, 3, kanji);
+		alphabet_putca_fx(NUM_TOP, i, col_and_fx, kanji);
 		kanji++;
 	}
 	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_SPACE);	i = LEFT_COLUMN;
@@ -185,35 +187,13 @@ inline void header_cell_put(screen_x_t left, const char str[]) {
 
 void regist_put_initial(
 	int entered_place,
-	long entered_score,
+	score_t entered_score,
 	int entered_stage,
-	const char entered_route[SCOREDAT_ROUTE_LEN + 1],
+	const sshiftjis_t entered_route[SCOREDAT_ROUTE_LEN + 1],
 	const scoredat_name_z_t names_z[SCOREDAT_PLACES]
 )
 {
-	struct hack {
-		unsigned char byte[SCOREDAT_NAME_BYTES + 1];
-	};
-	extern const hack REGIST_NAME_BLANK;
-	extern const char REGIST_HEADER_PLACE[];
-	extern const char REGIST_HEADER_NAME[];
-	extern const char REGIST_HEADER_SCORE[];
-	extern const char REGIST_HEADER_STAGE_ROUTE[];
-	extern const char REGIST_PLACE_0[];
-	extern const char REGIST_PLACE_1[];
-	extern const char REGIST_PLACE_2[];
-	extern const char REGIST_PLACE_3[];
-	extern const char REGIST_PLACE_4[];
-	extern const char REGIST_PLACE_5[];
-	extern const char REGIST_PLACE_6[];
-	extern const char REGIST_PLACE_7[];
-	extern const char REGIST_PLACE_8[];
-	extern const char REGIST_PLACE_9[];
-	extern const char REGIST_STAGE_MAKAI[];
-	extern const char REGIST_STAGE_JIGOKU[];
-	extern const char REGIST_STAGE_ROUTE_DASH[];
-
-	hack name = REGIST_NAME_BLANK;
+	const unsigned char name_blank[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_BLANK;
 
 	graph_accesspage_func(0);
 
@@ -236,7 +216,7 @@ void regist_put_initial(
 			)
 			#define top table_row_top(i)
 		#else
-			int place_col = (
+			vc2 place_col = (
 				(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
 			);
 			vram_y_t top = table_row_top(i);
@@ -258,7 +238,7 @@ void regist_put_initial(
 			table_name_left(0),
 			top,
 			col_and_fx_text,
-			(i == entered_place) ? name.byte : names_z[i].byte
+			(i == entered_place) ? name_blank : names_z[i].byte
 		);
 		graph_putfwnum_fx(
 			table_score_left(0),
@@ -312,22 +292,19 @@ void regist_put_initial(
 #define alphabet_left_to_column(left) \
 	((left - left_for(0)) / KANJI_PADDED_W)
 
-#define alphabet_left_to_kanji(left, kanji_at_0) \
-	(alphabet_left_to_column(left) + kanji_swap(kanji_at_0))
-
 #define alphabet_if(kanji, left, top, on_space, on_left, on_right, on_enter) \
 	if(top == LOWER_TOP) { \
-		kanji = alphabet_left_to_kanji(left, '‚'); \
+		kanji = (KANJI_a + alphabet_left_to_column(left)); \
 	} else if(top == LOWER2_TOP) { \
-		kanji = alphabet_left_to_kanji(left, '‚') + KANJI_PER_ROW; \
+		kanji = (KANJI_a + alphabet_left_to_column(left)) + KANJI_PER_ROW; \
 	} else if(top == UPPER_TOP) { \
-		kanji = alphabet_left_to_kanji(left, '‚`'); \
+		kanji = (KANJI_A + alphabet_left_to_column(left)); \
 	} else if(top == UPPER2_TOP) { \
-		kanji = alphabet_left_to_kanji(left, '‚`') + KANJI_PER_ROW; \
+		kanji = (KANJI_A + alphabet_left_to_column(left)) + KANJI_PER_ROW; \
 	} else if(top == SYM_TOP) { \
 		kanji = ALPHABET_SYMS[alphabet_left_to_column(left)]; \
 	} else if(top == NUM_TOP && left < SPACE_LEFT) { \
-		kanji = alphabet_left_to_kanji(left, '‚O'); \
+		kanji = (KANJI_0 + alphabet_left_to_column(left)); \
 	} else if((top == NUM_TOP) && (left == SPACE_LEFT)) { \
 		on_space \
 	} else if((top == NUM_TOP) && (left == LEFT_LEFT)) { \
@@ -340,13 +317,7 @@ void regist_put_initial(
 
 void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 {
-	// Placement matters with -O-!
-	extern const char ALPHABET_SPACE_0[];
-	extern const char ALPHABET_LEFT_0[];
-	extern const char ALPHABET_RIGHT_0[];
-	extern const char ALPHABET_ENTER_0[];
-
-	int16_t kanji = '\0';
+	sshiftjis_kanji_swapped_t kanji = '\0';
 
 	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
@@ -355,24 +326,25 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 	));
 
 	alphabet_if(kanji, left, top,
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_SPACE_0); },
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_LEFT_0); },
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_RIGHT_0); },
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_ENTER_0); }
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_SPACE); },
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_LEFT); },
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_RIGHT); },
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_ENTER); }
 	);
 	if(kanji != '\0') {
 		graph_putkanji_fx_declare();
-		graph_putkanji_fx(left, top, col_and_fx, 4, kanji);
+		graph_putkanji_fx(left, top, col_and_fx, kanji);
 	}
 }
 
 #if (BINARY == 'M')
-	extern bool regist_jump_to_enter;
+	bool regist_jump_to_enter = false;
 #endif
 
-#define set_kanji_at(name, pos, kanji) \
-	name.byte[(pos * 2) + 0] = kanji_hi(kanji); \
-	name.byte[(pos * 2) + 1] = kanji_lo(kanji);
+#define set_kanji_at(name, pos, kanji) { \
+	name[(pos * 2) + 0] = kanji_hi(kanji); \
+	name[(pos * 2) + 1] = kanji_lo(kanji); \
+}
 
 int regist_on_shot(
 	screen_x_t left,
@@ -381,22 +353,18 @@ int regist_on_shot(
 	int &entered_name_cursor
 )
 {
-	int16_t kanji = '\0';
-	struct hack {
-		unsigned char byte[SCOREDAT_NAME_BYTES + 1];
-	};
-	extern const hack REGIST_NAME_SPACES;
-	hack cursor_str = REGIST_NAME_SPACES;
+	shiftjis_kanji_swapped_t kanji = '\0';
+	shiftjis_t cursor_str[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_SPACES;
 
 	alphabet_if(kanji, left, top,
-		{ kanji = kanji_swap('@'); },
+		{ kanji = KANJI_SP; },
 		{ clamp_dec(entered_name_cursor, 0); },
 		{ clamp_inc(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1)); },
 		{ return 1; }
 	);
 
 	if(kanji != '\0') {
-		set_kanji_at(entered_name, entered_name_cursor, kanji);
+		set_kanji_at(entered_name.ubyte, entered_name_cursor, kanji);
 		#if (BINARY == 'M')
 			if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
 				regist_jump_to_enter = true;
@@ -417,17 +385,12 @@ int regist_on_shot(
 		entered_name_left,
 		entered_name_top,
 		(COL_REGIST_SELECTED | FX_WEIGHT_BOLD),
-		0,
-		entered_name.byte
+		entered_name.ubyte
 	);
 
-	set_kanji_at(cursor_str, entered_name_cursor, kanji_swap('Q'));
+	set_kanji_at(cursor_str, entered_name_cursor, KANJI_UNDERSCORE);
 	graph_printf_s_fx(
-		entered_name_left,
-		entered_name_top,
-		COL_REGIST_SELECTED,
-		1,
-		cursor_str.byte
+		entered_name_left, entered_name_top, COL_REGIST_SELECTED, cursor_str
 	);
 	return 0;
 }
@@ -560,34 +523,26 @@ regist_input_ret_t regist_on_input(
 
 void scoredat_save(void)
 {
-	extern const char SCOREDAT_FN_EASY_2[];
-	extern const char SCOREDAT_FN_NORMAL_2[];
-	extern const char SCOREDAT_FN_HARD_2[];
-	extern const char SCOREDAT_FN_LUNATIC_2[];
-	extern const char SCOREDAT_FOPEN_WB[];
-
-	struct hack {
-		char x[sizeof(SCOREDAT_MAGIC)];
-	};
-	#undef SCOREDAT_MAGIC
-	extern const hack SCOREDAT_MAGIC;
-
 	FILE* fp;
-	const hack magic = SCOREDAT_MAGIC;
+	const char magic[sizeof(SCOREDAT_MAGIC)] = SCOREDAT_MAGIC; // ZUN bloat
 	char fn[16];
-	scoredat_fn(fn, 2);
+	scoredat_fn(fn);
 
-	if( (fp = fopen(fn, SCOREDAT_FOPEN_WB)) == nullptr) {
+	if( (fp = fopen(fn, "wb")) == nullptr) {
 		return;
 	}
-	write(fileno(fp), magic.x, sizeof(SCOREDAT_MAGIC) - 1);
+	write(fileno(fp), magic, sizeof(SCOREDAT_MAGIC) - 1);
 	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {
 		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
 	}
 	write(fileno(fp), scoredat_names, SCOREDAT_NAMES_SIZE);
-	write(fileno(fp), scoredat_score, sizeof(uint32_t) * SCOREDAT_PLACES);
-	write(fileno(fp), scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
-	write(fileno(fp), scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
+	write(fileno(fp), scoredat_score, (sizeof(score_t) * SCOREDAT_PLACES));
+	write(fileno(fp), scoredat_stages, (sizeof(int16_t) * SCOREDAT_PLACES));
+	write(
+		fileno(fp),
+		scoredat_routes,
+		(sizeof(shiftjis_kanji_t) * SCOREDAT_PLACES)
+	);
 	fclose(fp);
 }
 
@@ -606,9 +561,9 @@ void regist_name_enter(int entered_place)
 	top = LOWER_TOP;
 
 	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
-		entered_name.byte[i] = ' ';
+		entered_name.ubyte[i] = ' ';
 	}
-	entered_name.byte[SCOREDAT_NAME_BYTES] = '\0';
+	entered_name.ubyte[SCOREDAT_NAME_BYTES] = '\0';
 
 	input_reset_sense();
 	while(1) {
@@ -635,7 +590,7 @@ void regist_name_enter(int entered_place)
 	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
 		scoredat_names[
 			(entered_place * SCOREDAT_NAME_BYTES) + i
-		] = entered_name.byte[i];
+		] = entered_name.ubyte[i];
 	}
 	scoredat_save();
 }
@@ -643,34 +598,31 @@ void regist_name_enter(int entered_place)
 static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
-void regist(
-	int32_t score, int16_t stage, const char route[SCOREDAT_ROUTE_LEN + 1]
+void regist_menu(
+	score_t score,
+	int16_t stage_num_or_scoredat_constant,
+	sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
 )
 {
-	struct hack {
-		const char *r[4];
-	};
-	extern const hack REGIST_TITLE_RANKS;
-
 	scoredat_name_z_t names[SCOREDAT_PLACES];
-	const hack RANKS = REGIST_TITLE_RANKS;
+	const shiftjis_t* RANKS[RANK_COUNT] = REGIST_TITLE_RANKS;
 	long place;
 
-	regist_bg_put(stage);
+	regist_bg_put(stage_num_or_scoredat_constant);
 
 	graph_accesspage_func(1);
 
 	regist_title_put(
 		TITLE_BACK_LEFT,
-		stage,
-		RANKS.r,
+		stage_num_or_scoredat_constant,
+		RANKS,
 		(COL_REGIST_REGULAR | FX_WEIGHT_BOLD | FX_CLEAR_BG)
 	);
 	// On page 1, the title should now at (TITLE_BACK_LEFT, TITLE_BACK_TOP) if
 	// not cleared, or at (TITLE_BACK_LEFT, TITLE_TOP) if cleared.
 
 	graph_accesspage_func(0);
-	if(stage < SCOREDAT_NOT_CLEARED) {
+	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) {
 		graph_2xscale_byterect_1_to_0_slow(
 			TITLE_LEFT, TITLE_TOP,
 			TITLE_BACK_LEFT, TITLE_BACK_TOP, TITLE_BACK_W, TITLE_BACK_H
@@ -692,7 +644,7 @@ void regist(
 		return;
 	}
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
-		scoredat_name_get(place, names[place].byte);
+		scoredat_name_get(place, names[place].ubyte);
 	}
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
 		if(score >= scoredat_score[place]) {
@@ -715,11 +667,13 @@ void regist(
 			scoredat_names[p] = scoredat_names[p - SCOREDAT_NAME_BYTES];
 			p--;
 		}
-		regist_put_initial(place, score, stage, route, names);
+		regist_put_initial(
+			place, score, stage_num_or_scoredat_constant, route, names
+		);
 		alphabet_put_initial();
 
 		scoredat_score[place] = score;
-		scoredat_stages[place] = stage;
+		scoredat_stages[place] = stage_num_or_scoredat_constant;
 		scoredat_route_byte(place, 0) = route[0];
 		scoredat_route_byte(place, 1) = route[1];
 
@@ -730,7 +684,9 @@ void regist(
 		scoredat_free();
 		return;
 	}
-	regist_put_initial(PLACE_NONE, score, stage, route, names);
+	regist_put_initial(
+		PLACE_NONE, score, stage_num_or_scoredat_constant, route, names
+	);
 	input_ok = true;
 	input_shot = true;
 	while(1) {
@@ -742,3 +698,9 @@ void regist(
 	_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
 	scoredat_free();
 }
+
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+score_t* scoredat_score;
+// -------------------------------------------------

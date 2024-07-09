@@ -1,37 +1,25 @@
 /// Stage 5 Boss - SinGyoku
 /// -----------------------
 
-#include <stddef.h>
-#include "platform.h"
 #include "decomp.hpp"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/common.h"
+#include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/math/area.hpp"
 #include "th01/math/clamp.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/formats/grp.h"
-#include "th01/formats/pf.hpp"
+#include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
-#include "th01/main/boss/boss.hpp"
+#include "th01/main/player/player.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
-#include "th01/main/player/player.hpp"
-#include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/palette.hpp"
 
@@ -54,14 +42,14 @@ static const screen_y_t BASE_TOP  = (BASE_CENTER_Y - (SINGYOKU_H / 2));
 // Always denotes the last phase that ends with that amount of HP.
 enum singyoku_hp_t {
 	HP_TOTAL = 8,
-	PHASE_1_END_HP = 6,
-	PHASE_2_END_HP = 0,
+	HP_PHASE_1_END = 6,
+	HP_PHASE_2_END = 0,
 };
 
 // Global state that is defined here for some reason
 // -------------------------------------------------
 
-route_t route;
+int8_t route; // ACTUAL TYPE: route_t
 // -------------------------------------------------
 
 // State that's suddenly no longer shared with other bosses
@@ -115,12 +103,10 @@ enum singyoku_person_cel_t {
 };
 
 #define ent_sphere \
-	reinterpret_cast<CBossEntitySized<SINGYOKU_W, SINGYOKU_H> &>( \
-		boss_entities[0] \
-	)
+	reinterpret_cast<CBossEntitySized<SINGYOKU_W, SINGYOKU_H> &>(boss_entity_0)
 
-#define ent_flash 	boss_entities[1]
-#define ent_person	boss_entities[2]
+#define ent_flash 	boss_entity_1
+#define ent_person	boss_entity_2
 
 inline void singyoku_ent_load(void) {
 	ent_sphere.load("boss1.bos", 0);
@@ -156,7 +142,7 @@ static union {
 
 void singyoku_load(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	singyoku_ent_load();
@@ -175,19 +161,19 @@ void singyoku_setup(void)
 	z_palette_set_all_show(z_Palettes);
 
 	ent.pos_set(PLAYFIELD_RIGHT, PLAYFIELD_TOP, 32);
-	ent.hitbox_set(
-		((SINGYOKU_W / 4) * 1), ((SINGYOKU_H / 4) * 1),
-		((SINGYOKU_W / 4) * 3), ((SINGYOKU_H / 4) * 3)
+	ent.hitbox_orb_set(
+		((SINGYOKU_W / 12) *  1), ((SINGYOKU_H / 12) *  1),
+		((SINGYOKU_W / 12) * 11), ((SINGYOKU_H / 12) * 11)
 	);
 	ent.hitbox_orb_inactive = false;
 	ent_sphere.set_image(0);
 
 	boss_hp = HP_TOTAL;
-	hud_hp_first_white = PHASE_1_END_HP;
+	hud_hp_first_white = HP_PHASE_1_END;
 	hud_hp_first_redwhite = 2; // fully arbitrary, doesn't indicate anything
 	boss_phase = 0;
 
-	// (redundant, no particles are shown in this fight)
+	// ZUN bloat: Redundant, no particles are shown in this fight.
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
@@ -218,7 +204,6 @@ void sphere_rotate_and_render(int interval, int cel_delta)
 	ent_unput_and_put(ent_sphere, image_new);
 }
 
-#define select_for_rank singyoku_select_for_rank
 #include "th01/main/select_r.cpp"
 
 // Renders a frame of the sphere rotation, starting from a rotational speed of
@@ -269,7 +254,7 @@ void sphere_move_rotate_and_render(
 		egc_copy_rect_1_to_0_16(ent.cur_left, ent.cur_top, SINGYOKU_W, delta_y);
 	}
 
-	// ZUN bug: Why implicitly limit [delta_x] to 8? (Which is actually at
+	// ZUN landmine: Why implicitly limit [delta_x] to 8? (Which is actually at
 	// least 16, due to egc_copy_rect_1_to_0_16() rounding up to the next
 	// word.) The actual maximum value for [delta_x] that doesn't permanently
 	// leave sphere parts in VRAM is 23 – at 24, a byte-aligned sphere moves at
@@ -327,7 +312,7 @@ void pattern_halfcircle_spray_downwards(void)
 	static int8_t direction;
 
 	if(boss_phase_frame == 10) {
-		direction = ((rand() % 2) == 1) ? 1 : -1;
+		direction = ((irand() % 2) == 1) ? 1 : -1;
 	}
 	if(boss_phase_frame < KEYFRAME_FIRE) {
 		sphere_accelerate_rotation_and_render(direction);
@@ -410,7 +395,7 @@ void pattern_slam_into_player_and_back_up(void)
 		((ent.cur_left + (SINGYOKU_W - PLAYER_W)) >= player_left) &&
 		(ent.cur_top >= (player_top - SINGYOKU_H))
 	) {
-		done = true;
+		player_is_hit = true;
 	}
 }
 
@@ -570,7 +555,7 @@ void pascal fire_random_downwards_pellets(void)
 	);
 
 	for(int i = 0; i < 10; i++) {
-		unsigned char angle = (rand() & (0x80 - 1));
+		unsigned char angle = (irand() & (0x80 - 1));
 		Pellets.add_single(
 			(ent.cur_center_x() - (PELLET_W / 2)),
 			(ent.cur_center_y() - (PELLET_H / 2)),
@@ -588,8 +573,8 @@ void pascal fire_random_sling_pellets(void)
 	);
 
 	for(int i = 0; i < 10; i++) {
-		pixel_t offset_x = (rand() % SINGYOKU_W);
-		pixel_t offset_y = (rand() % SINGYOKU_H);
+		pixel_t offset_x = (irand() % SINGYOKU_W);
+		pixel_t offset_y = (irand() % SINGYOKU_H);
 		Pellets.add_single(
 			(ent.cur_left + offset_x),
 			(ent.cur_top + offset_y),
@@ -623,11 +608,11 @@ void pattern_random_sling_pellets(void)
 
 void singyoku_main(void)
 {
-	const unsigned char flash_colors[1] = { 13 };
+	const vc_t flash_colors[1] = { 13 };
 
 	static struct {
 		int pattern_cur;
-		int16_t unused;
+		int16_t unused; // ZUN bloat
 
 		void frame_common(void) {
 			boss_phase_frame++;
@@ -637,23 +622,24 @@ void singyoku_main(void)
 	static struct {
 		bool16 invincible;
 
-		void update_and_render(const unsigned char (&flash_colors)[1]) {
+		void update_and_render(const vc_t (&flash_colors)[1]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				3000,
 				boss_nop,
 				ent.hittest_orb(),
-
-				// A hitbox stretching the entire width of SinGyoku, but that's
-				// still shifted 16 pixels to the right?
-				(ent.cur_left + (SINGYOKU_W / 6)),
-				(ent.cur_top + (SINGYOKU_H / 3)),
-				SINGYOKU_W,
-				(SINGYOKU_H - (SINGYOKU_H / 3) - SHOT_H)
+				// A hitbox shifted 16 pixels to the right *and* with an
+				// additional 16 pixels on the right edge?
+				shot_hitbox_t(
+					(ent.cur_left + (SINGYOKU_W / 6)),
+					(ent.cur_top + (SINGYOKU_H / 3)),
+					(SINGYOKU_W + (SINGYOKU_W / 6)),
+					(SINGYOKU_H - (SINGYOKU_H / 3))
+				)
 			);
 		}
 	} hit = { false };
@@ -675,8 +661,8 @@ void singyoku_main(void)
 
 		boss_phase_frame = 0;
 		while(boss_phase_frame < 200) {
-			// Different function for a change? Move locking has no effect here.
-			ent_sphere.move_lock_unput_and_put_8(0, 0, 0, 3);
+			// Different function for a change?
+			ent_sphere.locked_unput_and_put_8();
 
 			boss_phase_frame++;
 			if((boss_phase_frame % rotation_interval) == 0) {
@@ -713,7 +699,7 @@ void singyoku_main(void)
 		stage_palette_set(z_Palettes);
 		boss_palette_snap();
 		ent.hitbox_orb_inactive = false;
-		invincibility_frame = 0; // (redundant)
+		invincibility_frame = 0;
 
 		// Huh?
 		pattern_state.unknown = (
@@ -747,7 +733,7 @@ void singyoku_main(void)
 
 		hit.update_and_render(flash_colors);
 
-		if((boss_hp <= PHASE_1_END_HP) && !hit.invincible) {
+		if((boss_hp <= HP_PHASE_1_END) && !hit.invincible) {
 			// Good catch – we don't want to stop the slam movement in the
 			// middle of it, and leave SinGyoku somewhere below BASE_TOP.
 			// (Conditionally setting [phase.pattern_cur] to 4 would have made
@@ -757,7 +743,7 @@ void singyoku_main(void)
 				phase.unused = 0;
 				phase.pattern_cur = 0;
 				boss_phase_frame = 0;
-				invincibility_frame = 0; // (redundant)
+				invincibility_frame = 0; // ZUN bloat: Already 0 here
 			}
 		}
 	} else if(boss_phase == 2) {
@@ -776,14 +762,14 @@ void singyoku_main(void)
 
 		if(boss_phase_frame == 0) {
 			// Cycle between pattern 4 and any non-4 pattern
-			phase.pattern_cur = (phase.pattern_cur == 4) ? (rand() % 4) : 4;
+			phase.pattern_cur = (phase.pattern_cur == 4) ? (irand() % 4) : 4;
 		}
 
 		hit.update_and_render(flash_colors);
-		if(boss_hp <= PHASE_2_END_HP) {
+		if(boss_hp <= HP_PHASE_2_END) {
 			boss_phase = 8;
 			mdrv2_se_play(5);
-			boss_phase_frame = 0; // (redundant)
+			boss_phase_frame = 0; // ZUN bloat: The fight is over
 		}
 	} else if(boss_phase == 8) {
 		// This has no effect if SinGyoku was defeated in its sphere form, and
@@ -793,7 +779,7 @@ void singyoku_main(void)
 		ent_sphere.put_8();
 
 		mdrv2_bgm_fade_out_nonblock();
-		Pellets.unput_and_reset();
+		Pellets.unput_and_reset_nonclouds();
 		singyoku_defeat_animate_and_select_route();
 	}
 }

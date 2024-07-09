@@ -1,32 +1,24 @@
-#pragma option -O- -1 -Z-
+#pragma option -O- -1 -Z- -d-
 
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "twobyte.h"
-#include "master.hpp"
-#include "th01/common.h"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
-#include "th01/v_colors.hpp"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grppsafx.h"
+#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/formats/grp.h"
-#include "th01/hiscore/scoredat.hpp"
+#include "th01/formats/scoredat.hpp"
 #include "th01/hiscore/regist.hpp"
 #include "th01/end/end.hpp"
 #include "th01/end/pic.hpp"
 #include "th01/end/type.hpp"
-#include "th01/end/vars.hpp"
 #include "th01/shiftjis/end.hpp"
-#include "th01/shiftjis/regist.hpp"
+#include "th01/shiftjis/fns.hpp"
+#include "th01/shiftjis/scoredat.hpp"
 #include "th01/shiftjis/title.hpp"
 
 // > rendering text to VRAM, where it wouldn't be limited to the byte grid
@@ -34,7 +26,7 @@ extern "C" {
 inline void pic_caption_type_n(int line, size_t len, const char str[]) {
 	graph_type_ank_n(
 		(((RES_X / 2) - ((len * GLYPH_HALF_W) / 2) + BYTE_MASK) & ~BYTE_MASK),
-		(PIC_BOTTOM + (((line * 2) + 1) * GLYPH_H)),
+		(CUTSCENE_PIC_TOP + CUTSCENE_PIC_H + (((line * 2) + 1) * GLYPH_H)),
 		len,
 		str
 	);
@@ -42,9 +34,9 @@ inline void pic_caption_type_n(int line, size_t len, const char str[]) {
 
 // MODDERS: Remove the [incorrect_extra_w] parameter.
 #define pic_caption_type_2(line_1, line_2, incorrect_extra_w) { \
-	/* ZUN bug: This accesses one extra byte for the "STAGE 5 BOSS" string. \
-	 * Which, luckily, happens to be the null terminator, and doesn't have \
-	 * any visible effect. */ \
+	/* ZUN landmine: This accesses one extra byte for the "STAGE 5 BOSS" \
+	 * string. Which, luckily, happens to be the null terminator, and doesn't \
+	 * have any visible effect. */ \
 	pic_caption_type_n(0, (sizeof(line_1) - 1 + incorrect_extra_w), line_1); \
 	\
 	pic_caption_type_n(1, (sizeof(line_2) - 1 + incorrect_extra_w), line_2); \
@@ -58,8 +50,20 @@ static const int FINAL_DELAY_FRAMES = 300;
 // Function ordering fails
 // -----------------------
 
+// Resets all end-related data in the resident structure. Always returns true.
+bool16 end_resident_clear(void);
+
+void near end_good(void);
+void near end_bad(void);
 void near end_good_makai(void);
 void near end_good_jigoku(void);
+
+// Shows the route-specific boss slideshow.
+void near boss_slides_animate(void);
+
+// Shows the verdict screen, then calls regist_menu() with the score and the
+// cleared route.
+void verdict_animate_and_regist_menu(void);
 // -----------------------
 
 #define end_pic_show_and_delay(quarter, delay_frames) { \
@@ -71,6 +75,111 @@ void near end_good_jigoku(void);
 	end_pic_show(quarter); \
 	grp_palette_white_in(white_in_speed); \
 	frame_delay(delay_frames); \
+}
+
+inline void end_done(void) {
+	mdrv2_bgm_fade_out_nonblock();
+	grp_palette_black_out(10);
+
+	z_graph_clear();
+	mdrv2_bgm_stop();
+	mdrv2_bgm_load("st1.mdt");
+	mdrv2_bgm_play();
+}
+
+void end_and_verdict_and_regist_animate(void)
+{
+	enum {
+		WHITE_OUT_STEP = 5,
+		WHITE_OUT_INTERVAL = 16,
+	};
+
+	int i;
+
+	mdrv2_bgm_load("iris.mdt");
+	mdrv2_bgm_play();
+	grp_palette_settone(0);
+	end_pics_load_palette_show("ED1A.grp");
+
+	end_pic_show(0);
+	grp_palette_black_in(6);
+	frame_delay(100);
+
+	grp_palette_white_out(5);
+	frame_delay(100);
+
+	// Closing barn door
+	end_pic_show(1);
+	grp_palette_settone(100);
+	frame_delay(13);
+	end_pic_show_and_delay(2, 13);
+	end_pic_show_and_delay(3, 50);
+
+	// Seal
+	end_pics_load_palette_show("ED1B.grp");
+	end_pic_show_and_delay(0, 10);
+	end_pic_show_and_delay(1, 10);
+	end_pic_show_and_delay(2, 100);
+	grp_palette_black_out(6);
+
+	graph_accesspage_func(0);
+	z_graph_clear(); // ZUN bloat
+	grp_palette_settone(100);
+
+	// Reimu sweeping
+	end_pics_load_palette_show("ED1C.GRP");
+	for(i = 0; i < 6; i++) {
+		end_pic_show_and_delay(0, 20);
+		end_pic_show_and_delay(1, 20);
+	}
+	end_pic_show_and_delay(0, 40);
+	end_pic_show_and_delay(2, 40);
+
+	// Reimu looking at the Orb
+	end_pics_load_palette_show("ED1D.GRP");
+	end_pic_show_and_delay(3, 70);
+	for(i = 0; i < 100; i++) {
+		#define blink_at(first_frame, frame) { \
+			if(frame == (first_frame + 0)) { end_pic_show(1); } \
+			if(frame == (first_frame + 4)) { end_pic_show(2); } \
+			if(frame == (first_frame + 8)) { end_pic_show(0); } \
+		}
+
+		if(i == 0) { end_pic_show(0); }
+		blink_at(20, i);
+		blink_at(50, i);
+		blink_at(90, i);
+
+		frame_delay(2);
+
+		#undef blink_at
+	}
+	end_pic_show_and_delay(3, 60);
+	end_pic_show_and_delay(0, 20);
+	end_pic_show(3);
+	grp_palette_settone(105);
+
+	// Orb hovering and sparkling
+	end_pics_load_palette_show("ED1E.GRP");
+	end_pic_show(0);
+	for(i = 0; i < ((130 - 110) / WHITE_OUT_STEP); i++) {
+		grp_palette_settone(110 + (i * WHITE_OUT_STEP));
+		frame_delay(WHITE_OUT_INTERVAL);
+	}
+	for(i = 0; i < ((205 - 130) / WHITE_OUT_STEP); i++) {
+		end_pic_show_and_delay(1, (WHITE_OUT_INTERVAL / 2));
+		end_pic_show_and_delay(2, (WHITE_OUT_INTERVAL / 2));
+		grp_palette_settone(130 + (i * WHITE_OUT_STEP));
+	}
+
+	if(continues_total == 0) {
+		end_good();
+		boss_slides_animate();
+	} else {
+		end_bad();
+		end_done();
+	}
+	verdict_animate_and_regist_menu();
 }
 
 void pascal near shake_then_boom(int shake_duration, int boom_duration)
@@ -108,6 +217,13 @@ void pascal near shake_then_boom(int shake_duration, int boom_duration)
 			// usual slowness of PC-98 VRAM, you'll still end up seeing at
 			// least parts of the "boom"/"ドカーン" image even on faster PC-98
 			// systems before it's fully overwritten on the next iteration.
+			//
+			// Technically this could be considered a quirk, as the resulting
+			// frame drops affect the length of the ending. On the other hand,
+			// we explicitly judge observability in terms of an infinitely fast
+			// PC-98. Such a system would consequently never show this image
+			// that ZUN clearly intended to show, thus turning this into the
+			// exact definition of a bug.
 			end_pic_show(2);
 		} else {
 			// And why are we re-showing the same pic here? Redundant,
@@ -248,13 +364,8 @@ void near pascal boss_slide_next(int quarter)
 
 void near boss_slides_animate(void)
 {
-	mdrv2_bgm_fade_out_nonblock();
-	grp_palette_black_out(10);
-
-	z_graph_clear();
-	mdrv2_bgm_stop();
-	mdrv2_bgm_load("st1.mdt");
-	mdrv2_bgm_play();
+	// MODDERS: Move to end_and_verdict_and_regist_animate() for cleanliness.
+	end_done();
 
 	if(end_flag == ES_MAKAI) {
 		end_pics_load_palette_show("endb_a.grp");
@@ -265,7 +376,7 @@ void near boss_slides_animate(void)
 	grp_palette_settone(100);
 	frame_delay(BOSS_TEXT_DELAY);
 
-	// ZUN calculated with one extra character? Was this character originally
+	// ZUN calculated with one extra romaji? Was this character originally
 	// called "ShinGyoku" after all?!
 	pic_caption_type_2(SLIDES_TITLE_5, SLIDES_BOSS_5, 1);
 
@@ -336,21 +447,26 @@ void verdict_title_calculate_and_render(void)
 	int skill = 0;
 	int level;
 
+	// ZUN bug: [score] and [score_highest] are declared as signed in the
+	// original FUUIN.EXE, turning these into signed comparisons even without
+	// the casts. (These are just here to allow a single unsigned declaration
+	// on the `debloated` branch.)
+
 	// skill += ((min(max(score, 0), 2500000) / 500000) * 2);
-	/**/ if(score >= 2500000) { skill += 10; }
-	else if(score >= 2000000) { skill +=  8; }
-	else if(score >= 1500000) { skill +=  6; }
-	else if(score >= 1000000) { skill +=  4; }
-	else if(score >=  500000) { skill +=  2; }
+	/**/ if(static_cast<score_t>(score) >= 2500000) { skill += 10; }
+	else if(static_cast<score_t>(score) >= 2000000) { skill +=  8; }
+	else if(static_cast<score_t>(score) >= 1500000) { skill +=  6; }
+	else if(static_cast<score_t>(score) >= 1000000) { skill +=  4; }
+	else if(static_cast<score_t>(score) >=  500000) { skill +=  2; }
 
 	// skill += (
 	// 	((min(max(score_highest, 0), 3000000) - 1000000) / 400000) * 2
 	// );
-	/**/ if(score_highest >= 3000000) { skill += 10; }
-	else if(score_highest >= 2600000) { skill +=  8; }
-	else if(score_highest >= 2200000) { skill +=  6; }
-	else if(score_highest >= 1800000) { skill +=  4; }
-	else if(score_highest >= 1400000) { skill +=  2; }
+	/**/ if(static_cast<score_t>(score_highest) >= 3000000) { skill += 10; }
+	else if(static_cast<score_t>(score_highest) >= 2600000) { skill +=  8; }
+	else if(static_cast<score_t>(score_highest) >= 2200000) { skill +=  6; }
+	else if(static_cast<score_t>(score_highest) >= 1800000) { skill +=  4; }
+	else if(static_cast<score_t>(score_highest) >= 1400000) { skill +=  2; }
 
 	// skill += ((continues_total == 0) * 18 + (
 	// 	(12 - min(max(continues_total, 0), 22)) / 2) * 2)
@@ -375,13 +491,13 @@ void verdict_title_calculate_and_render(void)
 
 	/**/ if(end_flag == ES_JIGOKU) { skill += 5; }
 
-	// skill += ((-5 * min(max(start_lives_extra, 0), 4)) + 10);
-	/**/ if(start_lives_extra == 4) { skill -= 10; }
-	else if(start_lives_extra == 3) { skill -=  5; }
-	else if(start_lives_extra == 1) { skill +=  5; }
-	else if(start_lives_extra == 0) { skill += 10; }
+	// skill += ((-5 * min(max(credit_lives_extra, 0), 4)) + 10);
+	/**/ if(credit_lives_extra == 4) { skill -= 10; }
+	else if(credit_lives_extra == 3) { skill -=  5; }
+	else if(credit_lives_extra == 1) { skill +=  5; }
+	else if(credit_lives_extra == 0) { skill += 10; }
 
-	int group = (rand() % VERDICT_GROUPS);
+	int group = (irand() % VERDICT_GROUPS);
 
 	// level = max((min(skill, 80) + 20) / 20), 0);
 	/**/ if(skill >= 80) { level = 5; }
@@ -389,28 +505,25 @@ void verdict_title_calculate_and_render(void)
 	else if(skill >= 40) { level = 3; }
 	else if(skill >= 20) { level = 2; }
 	else if(skill >=  0) { level = 1; }
-	else /*          */ { level = 0; }
+	else /*           */ { level = 0; }
 
 	graph_printf_fx(
 		(VERDICT_LEFT - VERDICT_TITLE_LEFT_OFFSET + VERDICT_TITLE_PADDED_W),
 		verdict_line_top(12),
 		FX_TITLE,
-		"%s\0 EASY \0NORMAL\0 HARD \0LUNATIC",
+		"%s",
 		VERDICT_TITLES[group][level]
 	);
 }
 
-void verdict_animate_and_regist(void)
+void verdict_animate_and_regist_menu(void)
 {
-	struct hack { const char *str[RANK_COUNT]; }; // XXX
-	extern const hack ranks;
-
-	struct hack RANKS = ranks;
+	const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS_CENTERED;
 
 	grp_palette_black_out(10);
 
 	graph_accesspage_func(1);
-	grp_put_palette_show("endm_a.grp");
+	grp_put_palette_show(REGIST_BG_CLEARED);
 	graph_copy_accessed_page_to_other();
 
 	graph_accesspage_func(0);
@@ -423,9 +536,9 @@ void verdict_animate_and_regist(void)
 	);
 	frame_delay(30);
 
-	verdict_line_render1(2, VERDICT_RANK"%s", RANKS.str[rank]);
+	verdict_line_render1(2, VERDICT_RANK"%s", RANKS[rank]);
 
-	// Should really all be %10lu (with the superflous right-padding removed
+	// Should really all be %10lu (with the superfluous right-padding removed
 	// from the strings) if you're already using `long`s here. Scoreplayers
 	// can definitely reach 8 digits.
 	verdict_line_render1(3, VERDICT_SCORE_HIGHEST"%7lu", score_highest);
@@ -486,9 +599,9 @@ void verdict_animate_and_regist(void)
 	grp_palette_settone(50);
 	regist_colors_set();
 	if(end_flag == ES_MAKAI) {
-		regist(score, SCOREDAT_CLEARED_MAKAI, REGIST_ROUTE_CLEAR);
+		regist_menu(score, SCOREDAT_CLEARED_MAKAI, SCOREDAT_ROUTE_CLEAR);
 	} else {
-		regist(score, SCOREDAT_CLEARED_JIGOKU, REGIST_ROUTE_CLEAR);
+		regist_menu(score, SCOREDAT_CLEARED_JIGOKU, SCOREDAT_ROUTE_CLEAR);
 	}
 	end_resident_clear();
 }

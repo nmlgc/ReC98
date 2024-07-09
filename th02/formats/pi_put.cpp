@@ -1,11 +1,6 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include <mem.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
-extern "C" {
 #include "th02/formats/pi.h"
 
 void DEFCONV pi_palette_apply(int slot)
@@ -29,6 +24,4 @@ void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot)
 		pi_buffer_p_next_row(row_p, slot);
 		pi_buffer_p_normalize(row_p);
 	}
-}
-
 }

@@ -1,5 +1,5 @@
-public POINTNUM_PUT
-pointnum_put	proc near
+public @POINTNUM_PUT$QIII
+@pointnum_put$qiii proc near
 
 @@num 	= word ptr  4
 @@top 	= word ptr  6
@@ -69,4 +69,4 @@ pointnum_put	proc near
 	pop	si
 	leave
 	retn	6
-pointnum_put	endp
+@pointnum_put$qiii endp

@@ -3,24 +3,15 @@
  * Rendering code for all bosses
  */
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
-#include "master.hpp"
-#include "th01/math/area.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
-extern "C" {
 #include "th04/math/vector.hpp"
-#include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
-#include "th04/main/playfld.hpp"
-#include "th04/main/phase.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/boss/impl.hpp"
 #include "th04/main/tile/tile.hpp"
@@ -28,9 +19,7 @@ extern "C" {
 #include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
 #include "th05/formats/super.h"
-}
 #include "th04/main/boss/backdrop.hpp"
-#include "th05/main/boss/boss.hpp"
 #include "th05/main/boss/bosses.hpp"
 
 /// Structures
@@ -101,7 +90,7 @@ void pascal near alice_bg_render(void)
 		ALICE_BACKDROP_TOP,
 		1,
 		alice_backdrop_colorfill,
-		15
+		V_WHITE
 	);
 }
 
@@ -129,7 +118,7 @@ void pascal near yumeko_bg_render(void)
 		YUMEKO_BACKDROP_TOP,
 		1,
 		yumeko_backdrop_colorfill,
-		15
+		V_WHITE
 	);
 }
 
@@ -349,7 +338,7 @@ inline void shinki_bg_render_blue_particles_and_lines(void) {
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_2);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_2);
 
-	grcg_setcolor_direct(15);
+	grcg_setcolor_direct(V_WHITE);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_MAIN);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_MAIN);
 
@@ -608,7 +597,7 @@ void pascal near shinki_bg_render(void)
 		} else {
 			boss_bg_fill_col_0();
 		}
-		tiles_bb_col = 15;
+		tiles_bb_col = V_WHITE;
 		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < 4) {
 		boss_bg_fill_col_0();
@@ -724,12 +713,10 @@ void near exalice_hexagrams_update_and_render(void)
 	grcg_setcolor(GC_RMW, 9);
 	exalice_grcg_hexagram_put(set.radius[9].v, set.angle[9]);
 	if(boss.phase < 9 || boss.phase > 12) {
-		grcg_setcolor(GC_RMW, 15);
+		grcg_setcolor(GC_RMW, V_WHITE);
 	}
 	exalice_grcg_hexagram_put(set.radius[0].v, set.angle[0]);
 	grcg_off();
-
-	#undef state
 }
 
 void pascal near exalice_bg_render(void)
@@ -739,7 +726,7 @@ void pascal near exalice_bg_render(void)
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
 		boss_bg_fill_col_0();
-		tiles_bb_col = 15;
+		tiles_bb_col = V_WHITE;
 		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) {
 		boss_bg_fill_col_0();

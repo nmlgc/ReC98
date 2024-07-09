@@ -1,14 +1,11 @@
-enum item_splash_flag_t {
-	ISF_FREE = 0,
-	ISF_ALIVE = 1,
-	ISF_DONE = 2,
-};
+#include "th04/main/playfld.hpp"
+#include "th02/main/entity.hpp"
 
 // An expanding dotted circle, shown when spawning items. Note the slight
 // semantic differences to the circle_t structure.
 struct item_splash_t {
-	item_splash_flag_t flag;
-	char time;	// unused
+	entity_flag_t flag;
+	char time;	// ZUN bloat: Expressed via the radius.
 	SPPoint center;
 	Subpixel radius_cur;
 	Subpixel radius_prev;

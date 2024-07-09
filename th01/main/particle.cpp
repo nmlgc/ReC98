@@ -1,9 +1,6 @@
-#include "x86real.h"
-#include "th01/math/overlap.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/main/particle.hpp"
 
-void particles_unput_update_render(particle_origin_t origin, int col)
+void particles_unput_update_render(particle_origin_t origin, vc2 col)
 {
 	enum {
 		PARTICLE_COUNT = 40,
@@ -53,30 +50,30 @@ void particles_unput_update_render(particle_origin_t origin, int col)
 		i = (spawn_cycle / spawn_interval);
 
 		// Luckily, [alive[PARTICLE_COUNT]] corresponds to
-		// [velocity_base_max[0]]. Due to the first ZUN bug in this function,
-		// this value is 0 only during the first cycle, which causes actual
+		// [velocity_base[0]]. Due to the first ZUN bug in this function, this
+		// value is 0 only during the first cycle, which causes actual
 		// out-of-bounds accesses to only happen on one single frame.
 		if(alive[i] == false) {
 			alive[i] = true;
-			velocity_base[i] = ((rand() % velocity_base_max) + 1);
+			velocity_base[i] = ((irand() % velocity_base_max) + 1);
 			if((i % 2) == 0) {
 				switch(origin) {
 				case PO_TOP:
 				case PO_TOP_RIGHT:
 				case PO_TOP_LEFT:
-					x[i].v = TO_SP(rand() % RES_X);
+					x[i].v = TO_SP(irand() % RES_X);
 					y[i].set(0.0f);
 					break;
 				case PO_BOTTOM_RIGHT:
 				case PO_BOTTOM:
 				case PO_BOTTOM_LEFT:
-					x[i].v = TO_SP(rand() % RES_X);
+					x[i].v = TO_SP(irand() % RES_X);
 					y[i].set(RES_Y - 1.0f);
 					break;
 				case PO_RIGHT:
 				case PO_LEFT:
 					x[i].v = (origin == PO_RIGHT) ? to_sp(RES_X - 1.0f) : 0;
-					y[i].v = TO_SP(rand() % RES_Y);
+					y[i].v = TO_SP(irand() % RES_Y);
 					break;
 				}
 			} else {
@@ -85,17 +82,17 @@ void particles_unput_update_render(particle_origin_t origin, int col)
 				case PO_RIGHT:
 				case PO_BOTTOM_RIGHT:
 					x[i].set(RES_X - 1.0f);
-					y[i].v = TO_SP(rand() % RES_Y);
+					y[i].v = TO_SP(irand() % RES_Y);
 					break;
 				case PO_BOTTOM_LEFT:
 				case PO_LEFT:
 				case PO_TOP_LEFT:
 					x[i].set(0.0f);
-					y[i].v = TO_SP(rand() % RES_Y);
+					y[i].v = TO_SP(irand() % RES_Y);
 					break;
 				case PO_TOP:
 				case PO_BOTTOM:
-					x[i].v = TO_SP(rand() % RES_X);
+					x[i].v = TO_SP(irand() % RES_X);
 					y[i].v = (origin == PO_TOP) ? 0 : to_sp(RES_Y - 1.0f);
 					break;
 				}
@@ -169,5 +166,7 @@ void particles_unput_update_render(particle_origin_t origin, int col)
 		}
 		grcg_pset(x[i].to_pixel(), y[i].to_pixel());
 	}
-	grcg_off();
+	// Same as grcg_off(), but the I/O is inlined here, and grcg_off() points
+	// to grcg_off_func() thanks to the prior inclusion of graph.h...
+	grcg_setmode(0);
 }

@@ -1,5 +1,7 @@
-extern char stage_id;
+extern enum stage_progression_t {
+	SP_STAGE = 0, // The scrolling part with stage enemies.
+	SP_BOSS = 1, // The boss fight.
+	SP_CLEAR = 2, // Calls [boss_end] once returned from [boss_update].
+} stage_progression;
 
-// Grants the stage clear bonus, renders its tally to text RAM, and waits for
-// a key_delay() key to be pressed.
-void near stage_clear_bonus_animate(void);
+extern char stage_id;

@@ -5,6 +5,7 @@
 
 /// <stdint.h>
 /// ----------
+
 // __TURBOC__ is #define'd on both "Borland" and "Turbo" editions, unlike
 // __BORLANDC__, which is only #define'd on the former.
 #if defined(__TURBOC__) && defined(__MSDOS__)
@@ -32,7 +33,11 @@
 /// ----------
 
 #if (__cplusplus < 201103L)
-	#define nullptr 0
+	#ifdef __LARGE__
+		#define nullptr 0UL
+	#else
+		#define nullptr 0U
+	#endif
 #endif
 
 // Message-less static_assert() wasn't available until C++17

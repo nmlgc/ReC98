@@ -3,13 +3,11 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// spark.inc!
 
-enum spark_flag_t {
-	SF_FREE = 0,
-	SF_ALIVE = 1,
-};
+#include "th04/main/playfld.hpp"
+#include "th02/main/entity.hpp"
 
 struct spark_t {
-	spark_flag_t flag;
+	entity_flag_t flag;
 	unsigned char age;
 	PlayfieldMotion center;
 	// Set during sparks_init() and never again, and only involved in

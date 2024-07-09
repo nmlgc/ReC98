@@ -1,3 +1,6 @@
+#include "th04/main/playfld.hpp"
+#include "th02/main/entity.hpp"
+
 enum item_type_t {
 #if GAME == 5
 	IT_NONE = -2,
@@ -14,8 +17,8 @@ enum item_type_t {
 };
 
 struct item_t {
-	char flag;
-	char unused;
+	entity_flag_t flag;
+	char unused; // ZUN bloat
 	PlayfieldMotion pos;
 	unsigned char type;
 	char unknown;
@@ -35,7 +38,7 @@ struct item_t {
 
 extern item_t items[ITEM_COUNT];
 
-extern const int ITEM_TYPE_PATNUM[IT_COUNT];
+extern const int ITEM_PATNUM[IT_COUNT];
 
 void pascal near items_add(subpixel_t x, subpixel_t y, item_type_t type);
 
@@ -49,7 +52,7 @@ extern unsigned char item_playperf_lower;
 
 // Items dropped when losing a life
 // --------------------------------
-#define MISS_ITEM_COUNT 5
+#define ITEM_MISS_COUNT 5
 typedef enum {
 	MISS_FIELD_LEFT = 0,
 	MISS_FIELD_CENTER = 1,
@@ -57,13 +60,14 @@ typedef enum {
 	MISS_FIELD_COUNT,
 };
 // Yes, these have Y first and X second.
-extern const Subpixel ITEM_MISS_VELOCITIES[MISS_FIELD_COUNT][2][MISS_ITEM_COUNT];
+extern const Subpixel ITEM_MISS_VELOCITIES[MISS_FIELD_COUNT][2][ITEM_MISS_COUNT];
 
 void pascal near items_miss_add(void);
 // --------------------------------
 
 // Collection counters
 // -------------------
+
 // Reset to 0 when moving to a new stage.
 extern unsigned int stage_point_items_collected;
 
@@ -77,6 +81,7 @@ extern unsigned int items_collected;
 #endif
 
 extern unsigned int total_point_items_collected;
+
 // TH04 includes items collected above the PoC during a bomb, TH05 doesn't.
 extern unsigned int total_max_valued_point_items_collected;
 // -------------------

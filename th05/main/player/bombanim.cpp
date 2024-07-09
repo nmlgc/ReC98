@@ -1,7 +1,4 @@
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
@@ -74,12 +71,12 @@ extern union {
 	super_roll_put_1plane( \
 		star->topleft.screen_x.to_pixel_slow(), \
 		star->topleft.screen_y.to_pixel_slow(), \
-		PAT_PLAYCHAR_BOMB, \
+		PAT_PLAYCHAR_BOMB_SHAPE, \
 		0, \
-		(PLANE_ERASE | ((COLOR_COUNT - 1) - col)) \
+		super_plane(col, true) \
 	);
 
-void pascal near reimu_stars_update_and_render(void)
+void near reimu_stars_update_and_render(void)
 {
 	reimu_star_t near *head;
 	reimu_star_t near *trail;
@@ -109,7 +106,7 @@ void pascal near reimu_stars_update_and_render(void)
 			trail--;	trail->topleft = head->topleft;
 			trail--;	trail->topleft = head->topleft;
 			trail--;	trail->topleft = head->topleft;
-			trail += 10; // ZUN bug
+			trail += 10; // ZUN quirk
 
 			speed.v = randring1_next16_and_ge_lt_sp(10.0f, 18.0f);
 			angle = (0x40 + randring1_next8_mod_ge_lt(-0x18, +0x18));
@@ -153,10 +150,10 @@ void pascal near reimu_stars_update_and_render(void)
 		trail += ((REIMU_STAR_NODE_COUNT - 1) - 2);
 		// trail == [6 | 14 | 22 | 30 | 38 | 46]
 
-		/*    */	reimu_star_put(trail, 6);
+		/*       */	reimu_star_put(trail, 6);
 		trail -= 2;	reimu_star_put(trail, 6);
 		trail -= 2;	reimu_star_put(trail, 6);
-		/*    */	reimu_star_put(head, 7);
+		/*       */	reimu_star_put(head, 7);
 
 		// trail == [2 | 10 | 18 | 26 | 34 | 42]
 

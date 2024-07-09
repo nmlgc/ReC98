@@ -1,8 +1,5 @@
 #pragma option -zCGRAPH_EX_TEXT -2 -O- -Z-
 
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
 #include "th01/math/wave.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/egcwave.hpp"
