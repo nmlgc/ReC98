@@ -6,51 +6,32 @@
 #include <float.h>
 #include <new.h>
 #include <process.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
-#include "platform.h"
-#include "x86real.h"
-#include "decomp.hpp"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "pc98kbd.h"
-#include "shiftjis.hpp"
-#include "th01/rank.h"
-#include "th01/resident.hpp"
-#include "th01/v_colors.hpp"
+#include "platform/x86real/pc98/keyboard.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/core/resstuff.hpp"
-#include "th01/math/area.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/text.h"
-#include "th01/hardware/tram_x16.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th01/hardware/ztext.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/cfg.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 #include "th01/formats/scoredat.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/hiscore/regist.hpp"
 #include "th01/main/bonus.hpp"
 #include "th01/main/debug.hpp"
-#include "th01/main/entity.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
-#include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/shot.hpp"
-#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -507,7 +488,7 @@ int main(void)
 
 	score = resident->score;
 	extend_next = ((resident->score / SCORE_PER_EXTEND) + 1);
-	srand(frame_rand);
+	irand_init(frame_rand);
 	game_init();
 	key_start();
 
@@ -601,7 +582,7 @@ int main(void)
 	z_graph_init();
 	graph_accesspage_func(0);
 	z_graph_clear();
-	card_flip_cycle = (rand() % CARD_FLIP_CYCLE_INITIAL_MAX);
+	card_flip_cycle = (irand() % CARD_FLIP_CYCLE_INITIAL_MAX);
 	first_stage_in_scene = true;
 	stage_wait_for_shot_to_begin = true;
 	bgm_reload_and_play_if_0 = (!resident->snd_need_init ? 1 : 0);
@@ -813,7 +794,7 @@ int main(void)
 			stage_wait_for_shot_to_begin = false;
 			input_shot = false;
 			timer_initialized = true;
-			srand(frame_rand);
+			irand_init(frame_rand);
 			bomb_doubletap_frames = BOMB_DOUBLETAP_WINDOW;
 			first_stage_in_scene = false;
 			pellet_speed_raise_cycle = 3000; // ZUN bloat: Reassigned below
@@ -1006,8 +987,7 @@ int main(void)
 	}
 	resident->score = score;
 
-	// ZUN bloat: Unnecessary cast.
-	regist(score, (stage_id + 1), reinterpret_cast<const sshiftjis_t *>(
+	regist_menu(score, (stage_id + 1), (
 		!stage_on_route(stage_id) ? SCOREDAT_ROUTE_SHRINE :
 		(route == ROUTE_MAKAI) ? SCOREDAT_ROUTE_MAKAI : SCOREDAT_ROUTE_JIGOKU
 	));

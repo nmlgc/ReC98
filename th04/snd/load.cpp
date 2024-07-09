@@ -1,10 +1,7 @@
 #pragma option -zCSHARED -Z-
 
-#include "platform.h"
-#include "x86real.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
-extern "C" {
+#include "libs/master.lib/master.hpp"
+#include "th02/snd/impl.hpp"
 #include "th04/snd/snd.h"
 
 extern char snd_load_fn[PF_FN_LEN];
@@ -76,6 +73,4 @@ void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 	// DOS file close
 	_AH = 0x3E;
 	geninterrupt(0x21);
-}
-
 }

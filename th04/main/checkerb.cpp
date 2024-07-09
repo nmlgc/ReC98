@@ -1,8 +1,5 @@
 #pragma option -k-
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
 #include "platform/x86real/flags.hpp"
 #include "th04/hardware/grcg.hpp"

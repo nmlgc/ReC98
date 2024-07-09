@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 #if (GAME == 2)
 	// Prints the rightmost [digits] of [val] using the bold gaiji font onto
 	// TRAM, right-aligned at

@@ -1,3 +1,5 @@
+#include "platform.h"
+
 extern bool mode_debug;
 extern bool16 mode_test;
 

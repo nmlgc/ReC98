@@ -1,3 +1,6 @@
+#ifndef TH04_SPRITES_MAIN_CDG_H
+#define TH04_SPRITES_MAIN_CDG_H
+
 #define FACESET_PLAYCHAR_COUNT 6
 #if (GAME == 5)
 	#define FACESET_BOSS_COUNT 6
@@ -51,3 +54,5 @@ typedef enum {
 	CDG_EYECATCH,
 	CDG_COUNT
 } main_cdg_slot_t;
+
+#endif /* TH04_SPRITES_MAIN_CDG_H */

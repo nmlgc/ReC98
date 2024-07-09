@@ -1,4 +1,5 @@
 #include "th04/main/boss/boss.hpp"
+#include "th01/math/area.hpp"
 
 // Callbacks
 extern nearfunc_t_near boss_custombullets_render;

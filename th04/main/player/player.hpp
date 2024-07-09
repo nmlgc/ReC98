@@ -1,3 +1,4 @@
+#include "th04/main/playfld.hpp"
 #include "th02/main/player/player.hpp"
 
 extern PlayfieldMotion player_pos;

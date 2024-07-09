@@ -1,3 +1,5 @@
+#include "th01/hardware/graph.h"
+
 static const int SPAWNRAY_RESET = 99;
 
 #define spawnray_unput_and_put_func( \

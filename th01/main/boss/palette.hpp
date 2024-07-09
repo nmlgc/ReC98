@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // The intended palette for a boss, with no effects applied. Used as the
 // reference palette for undoing color flashing in boss_hit_update_and_render().
 // MODDERS: Merge with the [stage_palette].

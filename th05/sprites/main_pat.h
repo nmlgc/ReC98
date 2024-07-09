@@ -1,5 +1,6 @@
 #include "th02/formats/bfnt.h"
 #include "th04/sprites/cels.h"
+#include "pc98.h"
 
 #define PARTICLE_W 16
 #define PARTICLE_H 16

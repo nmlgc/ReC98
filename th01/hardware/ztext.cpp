@@ -9,12 +9,7 @@
 #include <mbctype.h>
 #include <mbstring.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/ztext.hpp"
 
 static int8_t unused[256]; // ZUN bloat

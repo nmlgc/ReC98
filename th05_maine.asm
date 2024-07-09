@@ -23,290 +23,55 @@ include th05/th05.inc
 include th01/math/subpixel.inc
 include th04/hardware/grppsafx.inc
 
-	extern _execl:proc
 	extern _tolower:proc
 	extern __ctype:byte
 
-group_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT
-g_SHARED group SHARED, SHARED_
+group_01 group maine_01_TEXT, maine_01__TEXT
 
 ; ===========================================================================
 
-; Segment type:	Pure code
-_TEXT		segment	word public 'CODE' use16
-		assume cs:_TEXT
-		assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include libs/master.lib/bfnt_entry_pat.asm
-include libs/master.lib/bfnt_header_read.asm
-include libs/master.lib/bfnt_header_analysis.asm
-include libs/master.lib/atrtcmod.asm
-include libs/master.lib/bcloser.asm
-include libs/master.lib/bfill.asm
-include libs/master.lib/bfnt_palette_set.asm
-include libs/master.lib/bgetc.asm
-include libs/master.lib/palette_black_in.asm
-include libs/master.lib/palette_black_out.asm
-include libs/master.lib/bopenr.asm
-include libs/master.lib/bread.asm
-include libs/master.lib/bseek.asm
-include libs/master.lib/bseek_.asm
-include libs/master.lib/dos_axdx.asm
-include libs/master.lib/dos_filesize.asm
-include libs/master.lib/dos_keyclear.asm
-include libs/master.lib/dos_read.asm
-include libs/master.lib/dos_seek.asm
-include libs/master.lib/dos_setvect.asm
-include libs/master.lib/egc.asm
-include libs/master.lib/file_append.asm
-include libs/master.lib/file_close.asm
-include libs/master.lib/file_create.asm
-include libs/master.lib/file_exist.asm
-include libs/master.lib/file_read.asm
-include libs/master.lib/file_ropen.asm
-include libs/master.lib/file_seek.asm
-include libs/master.lib/file_size.asm
-include libs/master.lib/file_write.asm
-include libs/master.lib/dos_close.asm
-include libs/master.lib/dos_ropen.asm
-include libs/master.lib/grcg_boxfill.asm
-include libs/master.lib/grcg_byteboxfill_x.asm
-include libs/master.lib/grcg_circlefill.asm
-include libs/master.lib/grc_setclip.asm
-include libs/master.lib/grcg_hline.asm
-include libs/master.lib/grcg_pset.asm
-include libs/master.lib/grcg_setcolor.asm
-include libs/master.lib/grcg_vline.asm
-include libs/master.lib/gdc_outpw.asm
-include libs/master.lib/get_machine_98.asm
-include libs/master.lib/get_machine_at.asm
-include libs/master.lib/get_machine_dosbox.asm
-include libs/master.lib/check_machine_fmr.asm
-include libs/master.lib/get_machine.asm
-include libs/master.lib/gaiji_putca.asm
-include libs/master.lib/gaiji_putsa.asm
-include libs/master.lib/graph_400line.asm
-include libs/master.lib/graph_clear.asm
-include libs/master.lib/graph_copy_page.asm
-include libs/master.lib/graph_extmode.asm
-include libs/master.lib/graph_hide.asm
-include libs/master.lib/graph_pi_free.asm
-include libs/master.lib/graph_pi_load_pack.asm
-include libs/master.lib/graph_scrollup.asm
-include libs/master.lib/graph_show.asm
-include libs/master.lib/iatan2.asm
-include libs/master.lib/isqrt.asm
-include libs/master.lib/js_end.asm
-include libs/master.lib/palette_show.asm
-include libs/master.lib/pfclose.asm
-include libs/master.lib/pfgetc.asm
-include libs/master.lib/pfread.asm
-include libs/master.lib/pfrewind.asm
-include libs/master.lib/pfseek.asm
-include libs/master.lib/random.asm
-include libs/master.lib/rottbl.asm
-include libs/master.lib/smem_release.asm
-include libs/master.lib/smem_wget.asm
-include libs/master.lib/soundio.asm
-include libs/master.lib/text_clear.asm
-include libs/master.lib/text_putsa.asm
-include libs/master.lib/vsync.asm
-include libs/master.lib/vsync_wait.asm
-include libs/master.lib/palette_white_in.asm
-include libs/master.lib/palette_white_out.asm
-include libs/master.lib/hmem_lallocate.asm
-include libs/master.lib/mem_assign_dos.asm
-include libs/master.lib/mem_assign.asm
-include libs/master.lib/memheap.asm
-include libs/master.lib/mem_unassign.asm
-include libs/master.lib/super_free.asm
-include libs/master.lib/super_entry_pat.asm
-include libs/master.lib/super_entry_at.asm
-include libs/master.lib/super_entry_bfnt.asm
-include libs/master.lib/super_cancel_pat.asm
-include libs/master.lib/super_put_rect.asm
-include libs/master.lib/super_put.asm
-include libs/master.lib/super_convert_tiny.asm
-include libs/master.lib/super_put_tiny_small.asm
-include libs/master.lib/js_start.asm
-include libs/master.lib/js_sense.asm
-include libs/master.lib/bgm_bell_org.asm
-include libs/master.lib/bgm_mget.asm
-include libs/master.lib/bgm_read_sdata.asm
-include libs/master.lib/bgm_timer.asm
-include libs/master.lib/bgm_pinit.asm
-include libs/master.lib/bgm_timerhook.asm
-include libs/master.lib/bgm_play.asm
-include libs/master.lib/bgm_sound.asm
-include libs/master.lib/bgm_effect_sound.asm
-include libs/master.lib/bgm_stop_play.asm
-include libs/master.lib/bgm_set_tempo.asm
-include libs/master.lib/bgm_init_finish.asm
-include libs/master.lib/bgm_stop_sound.asm
-include libs/master.lib/graph_pack_put_8_noclip.asm
-include libs/master.lib/graph_gaiji_puts.asm
-include libs/master.lib/graph_gaiji_putc.asm
-include libs/master.lib/pfint21.asm
-		db 0
-include th03/formats/pfopen.asm
-include libs/master.lib/pf_str_ieq.asm
-_TEXT		ends
+_TEXT segment word public 'CODE' use16
+	extern PALETTE_BLACK_IN:proc
+	extern PALETTE_BLACK_OUT:proc
+	extern FILE_APPEND:proc
+	extern FILE_CLOSE:proc
+	extern FILE_CREATE:proc
+	extern FILE_EXIST:proc
+	extern FILE_READ:proc
+	extern FILE_ROPEN:proc
+	extern FILE_SEEK:proc
+	extern FILE_WRITE:proc
+	extern GRCG_BOXFILL:proc
+	extern GRCG_BYTEBOXFILL_X:proc
+	extern GRCG_CIRCLEFILL:proc
+	extern GRC_SETCLIP:proc
+	extern GRCG_HLINE:proc
+	extern GRCG_SETCOLOR:proc
+	extern GRCG_VLINE:proc
+	extern GAIJI_PUTCA:proc
+	extern GAIJI_PUTSA:proc
+	extern GRAPH_COPY_PAGE:proc
+	extern IATAN2:proc
+	extern IHYPOT:proc
+	extern PALETTE_SHOW:proc
+	extern IRAND:proc
+	extern TEXT_CLEAR:proc
+	extern TEXT_PUTSA:proc
+	extern SUPER_FREE:proc
+	extern SUPER_ENTRY_BFNT:proc
+	extern SUPER_PUT_RECT:proc
+	extern SUPER_PUT:proc
+	extern SUPER_CONVERT_TINY:proc
+	extern SUPER_PUT_TINY_SMALL:proc
+	extern GRAPH_GAIJI_PUTS:proc
+	extern GRAPH_GAIJI_PUTC:proc
+_TEXT ends
 
 ; ===========================================================================
-
-CFG_LRES_TEXT	segment	byte public 'CODE' use16
-	_cfg_load_resident_ptr procdesc near
-CFG_LRES_TEXT	ends
-
-; Segment type:	Pure code
-CUTSCENE_TEXT segment byte public 'CODE' use16
-		assume cs:group_01
-		;org 5
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_A576(char *arg0)
-sub_A576	proc near
-
-_arg0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		call	cdg_free_all
-		call	graph_hide
-		call	text_clear
-		call	@game_exit$qv
-		pushd	0
-		pushd	[bp+_arg0]	; arg0
-		pushd	[bp+_arg0]	; path
-		call	_execl
-		add	sp, 0Ch
-		pop	bp
-		retn	4
-sub_A576	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A5A4	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
-		jnz	short loc_A5BD
-		les	bx, off_10190
-		mov	byte ptr es:[bx+3], '0'
-		jmp	short loc_A5DC
-; ---------------------------------------------------------------------------
-
-loc_A5BD:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
-		jnz	short loc_A5D3
-		les	bx, off_10190
-		mov	byte ptr es:[bx+3], '2'
-		jmp	short loc_A5DC
-; ---------------------------------------------------------------------------
-
-loc_A5D3:
-		les	bx, off_10190
-		mov	byte ptr es:[bx+3], '1'
-
-loc_A5DC:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.playchar]
-		add	al, '0'
-		les	bx, off_10190
-		mov	es:[bx+4], al
-		push	word ptr off_10190+2
-		push	bx
-		call	@cutscene_script_load$qnxc
-		call	@cutscene_animate$qv
-		pop	bp
-		retn
-sub_A5A4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		call	_cfg_load_resident_ptr
-		or	ax, ax
-		jz	loc_A693
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
-		call	game_init_main pascal, ds, offset aKaikidan1_dat
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
-		call	graph_show
-		les	bx, _resident
-		mov	eax, es:[bx+resident_t.rand]
-		mov	random_seed, eax
-		call	frame_delay pascal, 100
-		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
-		jb	short loc_A665
-		call	sub_A5A4
-		call	sub_E41D
-		jmp	short loc_A679
-; ---------------------------------------------------------------------------
-
-loc_A665:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
-		jnz	short loc_A67E
-		call	sub_A5A4
-		call	sub_B3CB
-		call	sub_D1B1
-
-loc_A679:
-		call	sub_C1DD
-		jmp	short loc_A684
-; ---------------------------------------------------------------------------
-
-loc_A67E:
-		call	sub_C1DD
-		call	sub_D1B1
-
-loc_A684:
-		kajacall	KAJA_SONG_FADE, 4
-		push	ds
-		push	offset arg0	; "op"
-		call	sub_A576
-
-loc_A693:
-		pop	bp
-		retf
-_main		endp
-
-	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
-		fn:dword
-	@cutscene_animate$qv procdesc pascal near
-CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
+		assume cs:group_01
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -414,7 +179,7 @@ arg_2		= word ptr  6
 		GRCG_OFF_CLOBBERING dx
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		xor	si, si
 		jmp	short loc_B309
 ; ---------------------------------------------------------------------------
@@ -429,16 +194,16 @@ loc_B2EE:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_put_quarter_masked_8
+		call	@pi_put_quarter_masked_8$qiiiii
 		call	sub_B37C
 		inc	si
 
 loc_B309:
 		cmp	si, 8
 		jl	short loc_B2EE
-		call	pi_put_quarter_8 pascal, di, [bp+arg_0], 0, [bp+@@quarter]
+		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		call	sub_B37C
-		call	pi_put_quarter_8 pascal, di, [bp+arg_0], 0, [bp+@@quarter]
+		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		inc	allcast_screen_plus_one
 		cmp	allcast_screen_plus_one, 8
 		jge	short loc_B357
@@ -451,7 +216,7 @@ loc_B309:
 		add	ax, dx
 		mov	bx, ax
 		pushd	_ALLCAST_BG_FN[bx]
-		call	pi_load
+		call	@pi_load$qinxc
 
 loc_B357:
 		add	word_15012, 2
@@ -483,8 +248,7 @@ sub_B273	endp
 sub_B37C	proc near
 		push	bp
 		mov	bp, sp
-		push	2
-		call	frame_delay
+		call	@frame_delay$qi pascal, 2
 		graph_accesspage byte_1085E
 		mov	al, 1
 		sub	al, byte_1085E
@@ -521,8 +285,8 @@ sub_B37C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B3CB	proc near
+public @allcast_animate$qv
+@allcast_animate$qv	proc near
 		push	bp
 		mov	bp, sp
 		mov	allcast_step, 0
@@ -544,8 +308,8 @@ sub_B3CB	proc near
 		shl	ax, 5
 		mov	bx, ax
 		pushd	_ALLCAST_BG_FN[bx]
-		call	pi_load
-		call	pi_palette_apply pascal, 0
+		call	@pi_load$qinxc
+		call	@pi_palette_apply$qi pascal, 0
 		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_15012, 2
@@ -578,12 +342,12 @@ loc_B4B5:
 		jz	short loc_B4B5
 		push	4
 		call	palette_black_out
-		call	pi_free pascal, 0
+		call	@pi_free$qi pascal, 0
 		graph_accesspage 0
 		graph_showpage al
 		pop	bp
 		retn
-sub_B3CB	endp
+@allcast_animate$qv	endp
 
 include th04/formats/scoredat_decode.asm
 include th04/formats/scoredat_encode.asm
@@ -1226,7 +990,7 @@ loc_BAFE:
 		mov	di, ax
 
 loc_BB00:
-		call	bgimage_put_rect pascal, si, di, (130 shl 16) or 18
+		call	bgimage_put_rect_16 pascal, si, di, (130 shl 16) or 18
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
@@ -1536,8 +1300,7 @@ sub_BD1E	proc near
 		mov	bp, sp
 		call	_snd_se_update
 		call	sub_BE76
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		graph_accesspage byte_11621
 		mov	al, 1
 		sub	al, byte_11621
@@ -1789,7 +1552,7 @@ loc_BEA6:
 		add	ax, -(GLYPHBALL_CLOUD_SPLASH_H / 2)
 		push	ax
 		push	(GLYPHBALL_CLOUD_SPLASH_W shl 16) or GLYPHBALL_CLOUD_SPLASH_H
-		call	bgimage_put_rect
+		call	bgimage_put_rect_16
 
 loc_BEC8:
 		inc	di
@@ -2178,7 +1941,8 @@ sub_C16C	endp
 
 include th02/hiscore/regist.inc
 
-sub_C1DD	proc near
+public @regist_menu$qv
+@regist_menu$qv proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
@@ -2195,10 +1959,10 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aHi01_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
+		call	@pi_free$qi pascal, 0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt pascal, ds, offset aSctm0_bft ; "sctm0.bft"
@@ -2344,7 +2108,7 @@ loc_C3AA:
 		mov	[bp+var_2], 1
 
 loc_C3CD:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		cmp	[bp+var_2], 0
 		jnz	loc_C58A
 		test	_key_det.lo, low INPUT_MOVEMENT
@@ -2577,7 +2341,7 @@ loc_C5BE:
 
 loc_C5C3:
 		call	sub_B6A3
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 
 loc_C5CD:
 		call	_bgimage_free
@@ -2589,7 +2353,7 @@ loc_C5CD:
 		pop	si
 		leave
 		retn
-sub_C1DD	endp
+@regist_menu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3068,7 +2832,7 @@ sub_CA02	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_1CC
+		cmp	es:[bx+resident_t.end_sequence], ES_GOOD
 		jz	short loc_CA17
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnz	short loc_CA57
@@ -3117,7 +2881,7 @@ loc_CA53:
 
 loc_CA57:
 		les	bx, _resident
-		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		cmp	es:[bx+resident_t.end_sequence], ES_BAD
 		jnz	short loc_CA66
 		mov	al, 2
 		pop	bp
@@ -3342,7 +3106,7 @@ loc_CBE3:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jz	short loc_CCC6
-		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
+		cmp	es:[bx+resident_t.end_sequence], ES_BAD
 		jb	short loc_CCB3
 		mov	es:[bx+resident_t.std_frames], 46000
 
@@ -3814,32 +3578,31 @@ sub_D16F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D1B1	proc near
+public @verdict_animate$qv
+@verdict_animate$qv proc near
 		push	bp
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aUde_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		call	pi_free pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aUde_pi
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
+		call	@pi_free$qi pascal, 0
 		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
 		graph_accesspage 0
 		graph_showpage al
 		call	sub_CA9B
-		push	40h
-		call	frame_delay
+		call	@frame_delay$qi pascal, 64
 		call	sub_D16F
-		call	input_wait_for_change pascal, 0
+		call	@input_wait_for_change$qi pascal, 0
 		push	2
 		call	palette_black_out
 		pop	bp
 		retn
-sub_D1B1	endp
+@verdict_animate$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3953,7 +3716,7 @@ sub_D21D	endp
 maine_01_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
-	SPACE_WINDOW_SET procdesc pascal near \
+	@SPACE_WINDOW_SET$QIIII procdesc pascal near \
 		center_x:word, center_y:word, w:word, h:word
 
 ORB_PARTICLE_CELS = 6
@@ -4005,7 +3768,7 @@ sub_D387	proc near
 		mov	[bp+@@star_center], offset _stars_center
 		push	((RES_X / 2) shl 16) or (RES_Y / 2)	; (center_x shl 16) or center_y
 		push	(384 shl 16) or 320               	; (w shl 16) or h
-		call	space_window_set
+		call	@space_window_set$qiiii
 		mov	word_151DE, 0
 		xor	di, di
 		jmp	short loc_D41B
@@ -4798,7 +4561,7 @@ loc_D9D9:
 		idiv	bx
 		add	ax, 320
 		push	ax	; h
-		call	space_window_set
+		call	@space_window_set$qiiii
 		jmp	short loc_DA31
 ; ---------------------------------------------------------------------------
 
@@ -4951,7 +4714,7 @@ loc_DB1F:
 		jge	short loc_DB45
 		mov	ax, _space_window_center.x
 		add	ax, 4
-		call	space_window_set pascal, ax, (RES_Y / 2), _space_window_w, _space_window_h
+		call	@space_window_set$qiiii pascal, ax, (RES_Y / 2), _space_window_w, _space_window_h
 
 loc_DB45:
 		mov	word_151DE, 0
@@ -5932,8 +5695,7 @@ sub_E349	proc near
 		mov	bp, sp
 		call	sub_D5E1
 		call	sub_DFEC
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		graph_accesspage byte_1183A
 		mov	al, 1
 		sub	al, byte_1183A
@@ -5966,8 +5728,8 @@ include th05/end/verdict_bitmap.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E41D	proc near
+public @staffroll_animate$qv
+@staffroll_animate$qv proc near
 
 var_4		= word ptr -4
 @@verdict_bitmap_offset		= word ptr -2
@@ -6178,7 +5940,7 @@ loc_E6B4:
 		mov	[bp+var_4], 0
 
 loc_E6DB:
-		call	_input_reset_sense_held
+		call	@input_reset_sense_held$qv
 		cmp	si, 256
 		jz	short loc_E6EC
 		cmp	si, 257
@@ -6303,7 +6065,7 @@ loc_E7CC:
 		pop	si
 		leave
 		retn
-sub_E41D	endp
+@staffroll_animate$qv endp
 
 maine_01__TEXT	ends
 
@@ -6311,80 +6073,43 @@ maine_01__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-SHARED	segment	word public 'CODE' use16
-	extern SND_DETERMINE_MODES:proc
-SHARED	ends
-
-SHARED_	segment	word public 'CODE' use16
-		assume cs:g_SHARED
-		;org 0Ch
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
+SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
-
-include th04/hardware/grppsafx.asm
+	extern GRAPH_PUTSA_FX:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_free:proc
-	extern @game_exit$qv:proc
 	extern VECTOR2_AT:proc
-	extern BGIMAGE_PUT_RECT:proc
+	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern PI_PUT_QUARTER_MASKED_8:proc
-	extern PI_LOAD:proc
-	extern PI_PUT_8:proc
-	extern PI_PUT_QUARTER_8:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_FREE:proc
-	extern GAME_INIT_MAIN:proc
-	extern _input_reset_sense_held:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern @PI_PUT_QUARTER_MASKED_8$QIIIII:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_PUT_QUARTER_8$QIIII:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_FREE$QI:proc
+	extern @input_reset_sense_held$qv:proc
+	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern _snd_bgm_measure:proc
-	extern FRAME_DELAY:proc
+	extern @FRAME_DELAY$QI:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE_ALL:proc
-SHARED_	ends
+SHARED ends
 
 	.data
 
-off_10190	dd a_ed00_txt
-					; "_ED00.TXT"
-include th04/formats/cfg_lres[data].asm
-a_ed00_txt	db '_ED00.TXT',0
-aKaikidan1_dat	db '‰öãY’k1.dat',0
-aMiko		db 'miko',0
-; char arg0[]
-arg0		db 'op',0
-		db    0
-include libs/master.lib/atan8[data].asm
-include libs/master.lib/atrtcmod[data].asm
-include libs/master.lib/bfnt_id[data].asm
-include libs/master.lib/clip[data].asm
-include libs/master.lib/edges[data].asm
-include libs/master.lib/fil[data].asm
-include libs/master.lib/dos_ropen[data].asm
-include libs/master.lib/get_machine_98[data].asm
-include libs/master.lib/get_machine_at[data].asm
-include libs/master.lib/grp[data].asm
-include libs/master.lib/js[data].asm
-include libs/master.lib/machine[data].asm
-include libs/master.lib/pal[data].asm
-include libs/master.lib/pf[data].asm
-include libs/master.lib/rand[data].asm
-include libs/master.lib/sin8[data].asm
-include libs/master.lib/tx[data].asm
-include libs/master.lib/vs[data].asm
-include libs/master.lib/wordmask[data].asm
-include libs/master.lib/mem[data].asm
-include libs/master.lib/super_entry_bfnt[data].asm
-include libs/master.lib/superpa[data].asm
-include libs/master.lib/bgm_timerhook[data].asm
-include libs/master.lib/bgm[data].asm
-include th04/snd/se_priority[data].asm
-include th04/hardware/grppsafx[data].asm
+	; libs/master/pal[data].mas
+	extern PaletteTone:word
+
+	; libs/master/rand[data].mas
+	extern random_seed:dword
+
+	; th04/hardware/grppsafx.asm
+	extern _graph_putsa_fx_func:word
+
 include th03/snd/se_state[data].asm
 include th04/hardware/bgimage[data].asm
 include th05/mem[data].asm
@@ -6651,26 +6376,17 @@ aStf00_bft	db 'stf00.bft',0
 
 	.data?
 
-public _resident
-_resident	dd ?
-include libs/master.lib/clip[bss].asm
-include libs/master.lib/fil[bss].asm
-include libs/master.lib/js[bss].asm
-include libs/master.lib/pal[bss].asm
-include libs/master.lib/vs[bss].asm
-include libs/master.lib/vsync[bss].asm
-include libs/master.lib/mem[bss].asm
-include libs/master.lib/superpa[bss].asm
-include libs/master.lib/super_put_rect[bss].asm
-include th03/formats/hfliplut[bss].asm
-include th04/snd/interrupt[bss].asm
-include libs/master.lib/bgm[bss].asm
-include th02/snd/load[bss].asm
-include th05/formats/pi_put_masked[bss].asm
-include th05/formats/pi_headers[bss].asm
-include th04/hardware/input[bss].asm
-include th04/formats/cdg[bss].asm
-include libs/master.lib/pfint21[bss].asm
+	extern _resident:dword
+
+	; libs/master.lib/pal[bss].asm
+	extern Palettes:byte:48
+
+	; th04/hardware/input[bss].asm
+	extern _key_det:word
+
+	; th03/formats/cdg[bss].asm
+	extern _cdg_slots:cdg_t:CDG_SLOT_COUNT
+
 include th04/hardware/egcrect[bss].asm
 include th03/cutscene/cutscene[bss].asm
 measure_1500E	dw ?

@@ -1,19 +1,10 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "x86real.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
-#include "th01/formats/ptn.hpp"
 #include "th01/formats/grf.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/stage/stages.hpp"
@@ -312,7 +303,7 @@ void hud_bg_put(void)
 			grcg_put(vram_offset, byte, 8);
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 	enable();
 }
 

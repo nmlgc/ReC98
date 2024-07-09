@@ -1,4 +1,8 @@
-void pascal near scoredat_load(void)
+#include "libs/master.lib/master.hpp"
+
+extern const char* SCOREDAT_FN;
+
+void near scoredat_load(void)
 {
 	int byte;
 	file_ropen(SCOREDAT_FN);

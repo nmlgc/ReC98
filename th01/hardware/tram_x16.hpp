@@ -2,6 +2,7 @@
 // ------------------------
 
 #include "platform/x86real/pc98/font.hpp"
+#include "x86real.h"
 
 void int18h_14h(REGS& in, font_glyph_header_t& glyph, jis_t jis);
 

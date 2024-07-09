@@ -5,35 +5,28 @@
 
 #include <stddef.h>
 #include <process.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "shiftjis.hpp"
-#include "libs/kaja/kaja.h"
+#include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
-extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
-}
 #include "th02/core/globals.hpp"
 #include "th02/core/zunerror.h"
 #include "th02/core/initexit.h"
-#include "th02/formats/cfg.h"
-extern "C" {
+#include "th02/formats/cfg.hpp"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
-}
 #include "th02/gaiji/gaiji.h"
+#include "th02/shiftjis/fns.hpp"
 #include "th02/op/op.h"
 #include "th02/op/menu.hpp"
+#include "th02/op/m_music.hpp"
 
-#pragma option -d -a2
+#pragma option -2 -a2
 
 char menu_sel = 0;
 bool in_option = false;
@@ -57,7 +50,6 @@ extern unsigned int score_duration;
 void title_flash(void);
 void pascal score_menu(void);
 void pascal shottype_menu(void);
-void pascal musicroom(void);
 
 int cfg_load(void)
 {
@@ -164,10 +156,10 @@ void op_animate(void)
 		if(snd_midi_possible) {
 			door_x = snd_midi_active;
 			snd_midi_active = true;
-			snd_load("op.m", SND_LOAD_SONG);
+			snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 		}
 		snd_midi_active = false;
-		snd_load("op.m", SND_LOAD_SONG);
+		snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 		snd_midi_active = door_x;
 	}
 
@@ -423,7 +415,7 @@ void main_update_and_render(void)
 				score_menu();
 				graph_accesspage(1);
 				graph_showpage(0);
-				pi_load_put_8_free(0, "op2.pi");
+				pi_fullres_load_palette_apply_put_free(0, "op2.pi");
 				palette_entry_rgb_show("op.rgb");
 				graph_copy_page(0);
 				graph_accesspage(0);
@@ -436,7 +428,7 @@ void main_update_and_render(void)
 				break;
 			case 4:
 				text_clear();
-				musicroom();
+				musicroom_menu();
 				initialized = false;
 				break;
 			case 5:
@@ -674,7 +666,7 @@ int main(void)
 	idle_frames = 0;
 
 	while(!quit) {
-		input_sense();
+		input_reset_sense();
 		if(in_option == false) {
 			main_update_and_render();
 		} else if(in_option == true) {

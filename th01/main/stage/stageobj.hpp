@@ -1,3 +1,7 @@
+#include "th01/main/player/orb.hpp"
+#include "th01/formats/stagedat.hpp"
+#include "decomp.hpp"
+
 // Coordinates
 // -----------
 // These are only really correct for bumper sprites, which have a visual width
@@ -6,14 +10,12 @@
 static const int STAGEOBJ_W = PTN_W;
 static const int STAGEOBJ_H = PTN_H;
 
-#ifdef ORB_HPP
-	static const pixel_t STAGEOBJ_ORB_DISTANCE_X = (
-		((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_W / 2)
-	);
-	static const pixel_t STAGEOBJ_ORB_DISTANCE_Y = (
-		((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_H / 2)
-	);
-#endif
+static const pixel_t STAGEOBJ_ORB_DISTANCE_X = (
+	((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_W / 2)
+);
+static const pixel_t STAGEOBJ_ORB_DISTANCE_Y = (
+	((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_H / 2)
+);
 // -----------
 
 #define stageobj_safe_delete(ptr) { \
@@ -166,12 +168,10 @@ void obstacles_update_and_render(bool16 reset);
 // Initialization
 // --------------
 
-#ifdef DECOMP_HPP
-	struct stage_t {
-		StupidBytewiseWrapperAround<stagedat_stage_t> dat;
-		int8_t padding[5];
-	};
-#endif
+struct stage_t {
+	StupidBytewiseWrapperAround<stagedat_stage_t> dat;
+	int8_t padding[5];
+};
 
 // Copies all stage objects from VRAM page 0 to VRAM page 1.
 void stageobjs_copy_0_to_1(int stage_id);
@@ -188,6 +188,8 @@ void stageobjs_init_and_render(int stage_id);
 
 // Blitting
 // --------
+
+struct ptn_t;
 
 // Stationary stage objects are blitted to both VRAM pages, which makes it
 // possible to efficiently unblit the other entities moving on top of them, by

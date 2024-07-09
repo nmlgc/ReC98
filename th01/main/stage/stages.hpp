@@ -1,3 +1,5 @@
+#include "platform.h"
+
 extern int8_t stage_num;
 extern bool first_stage_in_scene;
 

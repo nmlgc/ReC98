@@ -1,8 +1,5 @@
 #pragma option -zCGRAPH_EX_TEXT -2 -O- -Z-
 
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
 #include "th01/hardware/grph1to0.hpp"

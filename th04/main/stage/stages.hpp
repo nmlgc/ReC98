@@ -1,6 +1,8 @@
 /// TH04-specific stage functions
 /// -----------------------------
 
+#include "th01/math/subpixel.hpp"
+
 // Stage 4
 // -------
 

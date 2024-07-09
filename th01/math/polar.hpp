@@ -1,3 +1,6 @@
+#include "libs/master.lib/master.hpp"
+#include "pc98.h"
+
 template <class P, class T> inline P polar_x(
 	const P center, const P radius, T angle
 ) {

@@ -1,11 +1,7 @@
 #pragma option -zCSHARED
 
-#include "platform.h"
-#include "x86real.h"
-#include "master.hpp"
-#include "libs/kaja/kaja.h"
-extern "C" {
 #include "th02/snd/snd.h"
+#include "th02/snd/impl.hpp"
 
 extern char snd_load_fn[PF_FN_LEN];
 
@@ -57,6 +53,4 @@ void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 	// DOS file close
 	_AH = 0x3E;
 	geninterrupt(0x21);
-}
-
 }

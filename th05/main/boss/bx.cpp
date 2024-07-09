@@ -3,12 +3,6 @@
 
 #pragma option -zCBX_UPDATE_TEXT -zPmain_03
 
-#include "platform.h"
-#include "pc98.h"
-#include "th01/math/subpixel.hpp"
-#include "th01/math/area.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
 #include "th05/main/boss/boss.hpp"
 
 // Structures
