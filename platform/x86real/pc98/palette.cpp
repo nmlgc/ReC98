@@ -1,5 +1,3 @@
-#include "platform.h"
-#include "pc98.h"
 #include "x86real.h"
 #include "platform/x86real/pc98/palette.hpp"
 

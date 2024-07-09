@@ -39,9 +39,9 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 			if(sprites.frame[i] == (INVINCIBILITY_SPRITE_FRAMES + 1)) {
 				shape8x8_sloppy_unput(sprites.left[i], sprites.top[i]);
 			}
-			sprites.left[i]  = ((rand() % 48) + (player_left - 8));
-			sprites.top[i]   = ((rand() % 48) + (player_top - 16));
-			sprites.frame[i] = ((rand() % 7) + 1);
+			sprites.left[i]  = ((irand() % 48) + (player_left - 8));
+			sprites.top[i]   = ((irand() % 48) + (player_top - 16));
+			sprites.frame[i] = ((irand() % 7) + 1);
 		}
 		// ZUN bug: Did you mean: `sprites.left[i]`? With Reimu's fixed
 		// position at the bottom of the playfield, this condition is always

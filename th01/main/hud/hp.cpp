@@ -1,4 +1,5 @@
 #include "th01/v_colors.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th01/main/hud/hp.hpp"
 
 /// Constants
@@ -49,7 +50,7 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 		graph_accesspage_func(0);	grcg_put(vo, dots, HP_POINT_W);
 		vo += ROW_SIZE;
 	}
-	grcg_off();
+	grcg_off_func();
 }
 
 #define hp_put(point_to_put, point_in_hopefully_same_section) \

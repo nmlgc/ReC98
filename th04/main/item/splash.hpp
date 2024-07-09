@@ -1,3 +1,4 @@
+#include "th04/main/playfld.hpp"
 #include "th02/main/entity.hpp"
 
 // An expanding dotted circle, shown when spawning items. Note the slight

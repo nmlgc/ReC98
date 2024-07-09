@@ -1,3 +1,5 @@
+#include "pc98.h"
+#include "shiftjis.hpp"
 #include "defconv.h"
 
 // Font weights
@@ -26,11 +28,17 @@
 	#define FX_WEIGHT_BOLD   (WEIGHT_BOLD << 4)
 	#define FX_WEIGHT_BLACK  (WEIGHT_BLACK << 4)
 
+	// Not used in any of the three games that support the feature.
 	#define FX_SPACING(spacing) \
-		(spacing & 7) << 6)
+		((spacing & 7) << 6)
 
 	// Puts the given [str] onto the graphics RAM at the given position,
 	// with the given graphics color and effect.
+	#if (GAME != 1)
+		// Needed to provide an implicit overload for a non-`const` [str]
+		// parameter for a single call in TH02's verdict screen.
+		extern "C"
+	#endif
 	void DEFCONV graph_putsa_fx(
 		screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 	);

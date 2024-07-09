@@ -1,8 +1,5 @@
 #pragma option -zCSHARED
 
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
 #include "th01/math/polar.hpp"
 #include "th02/math/vector.hpp"
 

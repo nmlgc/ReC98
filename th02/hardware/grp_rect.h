@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // Blits the rectangle from
 // 	(⌊left/8⌋*8, top)
 // to

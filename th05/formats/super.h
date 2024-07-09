@@ -6,4 +6,6 @@
 	_AX = top; \
 	_CX = left; \
 	z_super_roll_put_16x16_mono_raw(patnum);
+extern "C" {
 void pascal near z_super_roll_put_16x16_mono_raw(int patnum);
+}

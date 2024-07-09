@@ -1,11 +1,7 @@
-#include "platform.h"
-#include "pc98.h"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
-extern "C" {
 #include "th04/main/tile/tile.hpp"
-}
 #if (GAME == 5)
 	#include "th02/main/scroll.hpp"
 #endif

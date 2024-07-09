@@ -1,7 +1,3 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"
@@ -90,7 +86,7 @@ void grc_put_8(
 			break;
 		}
 	}
-	grcg_off();
+	grcg_off_func();
 
 	#undef grc_slot
 }

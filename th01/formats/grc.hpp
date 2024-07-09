@@ -1,7 +1,10 @@
 /// Uncompressed monochrome 8w×h sprite format
 /// ------------------------------------------
+
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/sprites/main_grc.h"
+#include "game/pf.h"
+#include "planar.h"
 
 #define GRC_MAGIC "GRCG"
 

@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 #define SCROLL_HPP
 
 // Current line at the top of VRAM.

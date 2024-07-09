@@ -1,9 +1,6 @@
 #pragma option -zCSHARED
 
-#include "platform.h"
 #include "x86real.h"
-#include "libs/kaja/kaja.h"
-extern "C" {
 #include "th04/snd/snd.h"
 
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode)
@@ -43,6 +40,4 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode)
 	}
 
 	return snd_bgm_mode;
-}
-
 }

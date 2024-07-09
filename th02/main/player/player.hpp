@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 #define PLAYER_W 32
 #define PLAYER_H 48
 
@@ -15,6 +17,8 @@ static const pixel_t PLAYER_OPTION_TO_OPTION_DISTANCE = (
 );
 
 #if (GAME == 2)
+	#include "th02/main/playfld.hpp"
+
 	// Coordinates
 	// -----------
 

@@ -1,13 +1,7 @@
 #pragma option -zCSHARED
 
-extern "C" {
-#include <io.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th03/formats/cdg.h"
-}
 
 // Won't load the alpha plane of the next CDG file if nonzero.
 extern bool cdg_noalpha;

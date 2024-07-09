@@ -1,18 +1,14 @@
 	.386
+	.model use16 large SHARED
 
 include pc98.inc
 
 	extrn _bgimage:word:PLANE_COUNT
 
-g_SHARED group SHARED, SHARED_
-SHARED	segment byte public 'CODE' use16
-SHARED	ends
+	.code SHARED
 
-SHARED_	segment word public 'CODE' use16
-	assume cs:g_SHARED
-
-public BGIMAGE_PUT_RECT
-bgimage_put_rect proc far
+public BGIMAGE_PUT_RECT_16
+bgimage_put_rect_16 proc far
 	; (PASCAL calling convention, parameter list needs to be reversed here)
 	arg @@h:word, @@w:word, @@top:word, @@left:word
 	@@planes_left	equ <dl>
@@ -87,8 +83,7 @@ endif
 	pop	di
 	pop	bp
 	retf	8
-bgimage_put_rect endp
+bgimage_put_rect_16 endp
 	even
-SHARED_	ends
 
 	end

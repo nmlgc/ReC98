@@ -1,20 +1,13 @@
 #pragma option -G
 
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "master.hpp"
-#include "th01/math/subpixel.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/v_colors.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/hardware/grcg.hpp"
-extern "C" {
 #include "th04/snd/snd.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/drawp.hpp"
 #include "th05/main/playperf.hpp"
-}
 #include "th05/main/bullet/laser.hpp"
 
 // Segment 1 (as allocated in the header)

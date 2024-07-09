@@ -3,6 +3,9 @@
 // the comments here only provide additional context.
 // Only includes functions that are actually used in TH03.
 
+#include "planar.h"
+#include "x86real.h"
+
 #define SPRITE16 0x42
 
 typedef enum {
@@ -39,3 +42,22 @@ static const vram_byte_amount_t SPRITE16_PLANE_SIZE = (
 	SPRITE16_RES_Y * ROW_SIZE
 );
 static const vram_offset_t SPRITE16_OFFSET = SPRITE16_PLANE_SIZE;
+
+inline void sprite16_mono(bool enable) {
+	_AH = SPRITE16_SET_MONO;
+	_DX = enable;
+	geninterrupt(SPRITE16);
+}
+
+// ZUN bloat: Remove.
+inline void sprite16_mono_(bool enable) {
+	_DX = enable;
+	_AH = SPRITE16_SET_MONO;
+	geninterrupt(SPRITE16);
+}
+
+#define sprite16_mono_color(col) { \
+	_AH = SPRITE16_SET_COLOR; \
+	_DX = col; \
+	geninterrupt(SPRITE16); \
+}

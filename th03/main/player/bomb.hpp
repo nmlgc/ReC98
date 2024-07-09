@@ -1,3 +1,6 @@
+#include "th03/main/playfld.hpp"
+struct player_t;
+
 static const unsigned char BOMB_FRAMES = 180;
 
 enum bomb_state_t {

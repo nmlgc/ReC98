@@ -6,10 +6,7 @@
 #include "th04/sprites/main_cdg.h"
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/boss/backdrop.hpp"
-extern "C" {
 #include "th05/main/stage/stages.hpp"
-}
-#include "th05/main/boss/bosses.hpp"
 #include "th05/sprites/main_pat.h"
 
 void pascal near stage1_setup(void)

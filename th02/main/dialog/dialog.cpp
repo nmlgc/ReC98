@@ -1,20 +1,12 @@
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "shiftjis.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
 #include "platform/array.hpp"
-#include "libs/kaja/kaja.h"
 #include "th02/common.h"
 #include "th02/resident.hpp"
-extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/hardware/pages.hpp"
 #include "th02/snd/snd.h"
-}
 #include "th02/formats/dialog.hpp"
 #include "th02/formats/tile.hpp"
 #include "th02/formats/mpn.hpp"
@@ -26,7 +18,6 @@ extern "C" {
 #include "th02/main/stage/stage.hpp"
 #include "th02/main/player/player.hpp"
 #include "th02/main/tile/tile.hpp"
-#include "th02/sprites/main_pat.h"
 #include "th02/sprites/face.hpp"
 
 // Coordinates
@@ -76,6 +67,7 @@ void dialog_load_and_init(void)
 	file_ropen(fn);
 
 	// ZUN landmine: No check to ensure that the size is ≤ sizeof(dialog_text).
+	// Dynamic allocation would have made more sense...
 	size_t size = file_size();
 	file_read(dialog_text, size);
 
@@ -365,7 +357,7 @@ void pascal near dialog_box_animate_and_advance(
 	int delay_per_kanji;
 	int box = dialog_box_cur;
 	while(box_cursor <= ((DIALOG_BOX_LINES * DIALOG_LINE_LENGTH) + 8)) {
-		input_sense();
+		input_reset_sense();
 		dialog_face_put(face_topleft_id); // ZUN bloat: Every frame?
 
 		static_assert(DIALOG_BOX_LINES == 2);

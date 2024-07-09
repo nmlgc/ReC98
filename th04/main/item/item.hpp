@@ -1,3 +1,4 @@
+#include "th04/main/playfld.hpp"
 #include "th02/main/entity.hpp"
 
 enum item_type_t {

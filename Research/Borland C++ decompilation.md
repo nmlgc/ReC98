@@ -362,8 +362,14 @@ certain local variables as `word`s when they aren't.
 
 ### Pushing pointers
 
-When passing a `near` pointer to a function that takes a `far` one, the
-segment argument is sometimes `PUSH`ed immediately, before evaluating the
+Passing `far` pointers to subscripted array elements requires code to calculate
+the offset. Turbo C++ emits this calculation (and not the `PUSH` itself) either
+before or after the segment is `PUSH`ed. If either
+
+1. the pointer is `near`, or
+2. the parameter is a near or far `const *`,
+
+the segment argument is always pushed immediately, before evaluating the
 offset:
 
 ```c++
@@ -375,11 +381,14 @@ struct s100 {
 
 extern s100 structs[5];
 
-void __cdecl process(s100 *element);
+void __cdecl process_mut(s100 *element);
+void __cdecl process_const(const s100 *element);
 
 void foo(int i) {
-  process((s100 near *)(&structs[i])); // PUSH DS; (AX = offset); PUSH AX;
-  process((s100 far *)(&structs[i]));  // (AX = offset); PUSH DS; PUSH AX;
+  process_mut((s100 near *)(&structs[i]));   // PUSH DS; (AX = offset); PUSH AX;
+  process_mut((s100 far *)(&structs[i]));    // (AX = offset); PUSH DS; PUSH AX;
+  process_const((s100 near *)(&structs[i])); // PUSH DS; (AX = offset); PUSH AX;
+  process_const((s100 far *)(&structs[i]));  // PUSH DS; (AX = offset); PUSH AX;
 }
 ```
 

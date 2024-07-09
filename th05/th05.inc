@@ -1,4 +1,3 @@
-GAME = 5
 include th05/chars.inc
 include th05/mem.inc
 include th04/shared.inc

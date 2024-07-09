@@ -20,11 +20,9 @@ BINARY = 'O'
 
 include ReC98.inc
 include th04/th04.inc
-include th04/hardware/grppsafx.inc
-include th04/op/music.inc
 include th04/sprites/op_cdg.inc
 
-op_01 group OP_SETUP_TEXT
+op_01 group OP_SETUP_TEXT, op_01_TEXT
 
 ; ===========================================================================
 
@@ -39,16 +37,12 @@ _TEXT	segment	word public 'CODE' use16
 	extern FILE_SEEK:proc
 	extern FILE_WRITE:proc
 	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_POLYGON_C:proc
 	extern GRCG_SETCOLOR:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
 	extern GRAPH_PI_FREE:proc
 	extern PALETTE_SHOW:proc
 	extern IRAND:proc
-	extern TEXT_CLEAR:proc
-	extern HMEM_ALLOCBYTE:proc
-	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT_RECT:proc
@@ -66,368 +60,9 @@ OP_SETUP_TEXT segment byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th04/zunsoft.asm
+OP_SETUP_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACK
-draw_track	proc near
-
-var_1		= byte ptr -1
-@@color		= byte ptr  4
-@@sel		= byte ptr  6
-
-		enter	2, 0
-		mov	al, 1
-		sub	al, _music_page
-		mov	[bp+var_1], al
-		graph_accesspage al
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 8
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
-		call	graph_putsa_fx
-		graph_accesspage _music_page
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 8
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
-		call	graph_putsa_fx
-		leave
-		retn	4
-draw_track	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACKS
-draw_tracks	proc near
-
-@@sel		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BF5E
-; ---------------------------------------------------------------------------
-
-loc_BF49:
-		push	si
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		cmp	ax, si
-		jnz	short loc_BF57
-		mov	al, 3
-		jmp	short loc_BF59
-; ---------------------------------------------------------------------------
-
-loc_BF57:
-		mov	al, 5
-
-loc_BF59:
-		push	ax
-		call	draw_track
-		inc	si
-
-loc_BF5E:
-		cmp	si, 18h
-		jl	short loc_BF49
-		pop	si
-		pop	bp
-		retn	2
-draw_tracks	endp
-
-include th02/op/music.asm
-include th02/op/music_cmt_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT_LINES
-draw_cmt_lines	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	graph_putsa_fx pascal, (320 shl 16) or 64, 7, ds, offset _music_cmt
-		mov	si, 1
-		jmp	short loc_C306
-; ---------------------------------------------------------------------------
-
-loc_C2DE:
-		mov	bx, si
-		imul	bx, MUSIC_CMT_LINE_LEN
-		cmp	_music_cmt[bx], ';'
-		jz	short loc_C305
-		push	320
-		lea	ax, [si+4]
-		shl	ax, 4
-		push	ax
-		push	7
-		push	ds
-		mov	ax, si
-		imul	ax, MUSIC_CMT_LINE_LEN
-		add	ax, offset _music_cmt
-		push	ax
-		call	graph_putsa_fx
-
-loc_C305:
-		inc	si
-
-loc_C306:
-		cmp	si, MUSIC_CMT_LINE_COUNT
-		jl	short loc_C2DE
-		pop	si
-		pop	bp
-		retn
-draw_cmt_lines	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C30E	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, FX_MASK
-		jmp	short loc_C328
-; ---------------------------------------------------------------------------
-
-loc_C317:
-		mov	_graph_putsa_fx_func, si
-		call	draw_cmt_lines
-		call	music_flip
-		call	draw_cmt_lines
-		call	music_flip
-		inc	si
-
-loc_C328:
-		cmp	si, FX_MASK_END
-		jl	short loc_C317
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	draw_cmt_lines
-		call	music_flip
-		call	draw_cmt_lines
-		pop	si
-		pop	bp
-		retn
-sub_C30E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C33F	proc near
-		push	bp
-		mov	bp, sp
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		call	music_flip
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		pop	bp
-		retn
-sub_C33F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT
-draw_cmt	proc near
-
-@@track		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		cmp	byte_12DBE, 0
-		jz	short loc_C37C
-		call	sub_C33F
-
-loc_C37C:
-		call	music_cmt_load pascal, [bp+@@track]
-		call	screen_back_B_put
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		cmp	byte_12DBE, 0
-		jz	short loc_C3A2
-		call	sub_C30E
-		jmp	short loc_C3B0
-; ---------------------------------------------------------------------------
-
-loc_C3A2:
-		mov	byte_12DBE, 1
-		call	draw_cmt_lines
-		call	music_flip
-		call	draw_cmt_lines
-
-loc_C3B0:
-		call	screen_back_B_put
-		pop	bp
-		retn	2
-draw_cmt	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _musicroom
-_musicroom	proc near
-		push	bp
-		mov	bp, sp
-		mov	byte_12DBE, 0
-		call	cdg_free_all
-		call	text_clear
-		mov	_music_page, 1
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aMusic_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		mov	al, music_track_playing
-		mov	_music_sel, al
-		call	draw_tracks pascal, word ptr _music_sel
-		call	graph_copy_page pascal, 0
-		call	_bgimage_snap
-		graph_accesspage 1
-		graph_showpage 0
-		call	screen_back_B_snap
-		mov	al, music_track_playing
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-
-loc_C454:
-		call	far ptr	_input_reset_sense
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C465
-		call	music_flip
-		jmp	short loc_C454
-; ---------------------------------------------------------------------------
-
-loc_C465:
-		call	far ptr	_input_reset_sense
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_C4A0
-		call	draw_track pascal, word ptr _music_sel, 5
-		cmp	_music_sel, 0
-		jbe	short loc_C487
-		dec	_music_sel
-		jmp	short loc_C48C
-; ---------------------------------------------------------------------------
-
-loc_C487:
-		mov	_music_sel, 17h
-
-loc_C48C:
-		cmp	_music_sel, 16h
-		jnz	short loc_C497
-		dec	_music_sel
-
-loc_C497:
-		call	draw_track pascal, word ptr _music_sel, 3
-
-loc_C4A0:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_C4D6
-		call	draw_track pascal, word ptr _music_sel, 5
-		cmp	_music_sel, 17h
-		jnb	short loc_C4BD
-		inc	_music_sel
-		jmp	short loc_C4C2
-; ---------------------------------------------------------------------------
-
-loc_C4BD:
-		mov	_music_sel, 0
-
-loc_C4C2:
-		cmp	_music_sel, 16h
-		jnz	short loc_C4CD
-		inc	_music_sel
-
-loc_C4CD:
-		call	draw_track pascal, word ptr _music_sel, 3
-
-loc_C4D6:
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_C4E4
-		test	_key_det.hi, high INPUT_OK
-		jz	short loc_C51D
-
-loc_C4E4:
-		cmp	_music_sel, 17h
-		jz	short loc_C533
-		kajacall	KAJA_SONG_FADE, 32
-		mov	al, _music_sel
-		mov	music_track_playing, al
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-		mov	al, _music_sel
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-
-loc_C51D:
-		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_C533
-		cmp	_key_det, INPUT_NONE
-		jnz	loc_C454
-		call	music_flip
-		jmp	loc_C465
-; ---------------------------------------------------------------------------
-
-loc_C533:
-		call	far ptr	_input_reset_sense
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C544
-		call	music_flip
-		jmp	short loc_C533
-; ---------------------------------------------------------------------------
-
-loc_C544:
-		kajacall	KAJA_SONG_FADE, 16
-		call	screen_back_B_free
-		graph_showpage 0
-		graph_accesspage al
-		push	1
-		call	palette_black_out
-		call	_bgimage_free
-		call	snd_load pascal, ds, offset aOp_2, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		pop	bp
-		retn
-_musicroom	endp
-
+op_01_TEXT segment byte public 'CODE' use16
 include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
@@ -705,11 +340,11 @@ _score_render proc near
 		mov	bp, sp
 		push	si
 		graph_accesspage 1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		push	0
 		call	sub_C8F5
 		mov	si, 1
@@ -749,8 +384,8 @@ _score_render endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _regist_view_menu
-_regist_view_menu proc near
+public @regist_view_menu$qv
+@regist_view_menu$qv proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
@@ -764,7 +399,7 @@ _regist_view_menu proc near
 		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
 		call	_scoredat_load_both
-		call	pi_load pascal, 0, ds, offset aHi01_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
 		call	_score_render
@@ -772,9 +407,8 @@ loc_CADA:
 		call	palette_black_in
 
 loc_CAE4:
-		call	far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@input_reset_sense$qv
+		call	@frame_delay$qi pascal, 1
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CB58
 		test	_key_det.lo, low INPUT_SHOT
@@ -813,18 +447,17 @@ loc_CB58:
 		call	palette_black_out
 		freePISlotLarge	0
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi_0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
 
 loc_CBB3:
-		call	far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@input_reset_sense$qv
+		call	@frame_delay$qi pascal, 1
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CBB3
 		kajacall	KAJA_SONG_STOP
@@ -832,14 +465,14 @@ loc_CBB3:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-_regist_view_menu endp
+@regist_view_menu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _cleardata_and_regist_view_sprite
-_cleardata_and_regist_view_sprite	proc near
+public @cleardata_and_regist_view_sprite$qv
+@cleardata_and_regist_view_sprite$qv	proc near
 		push	bp
 		mov	bp, sp
 		mov	_rank, RANK_EASY
@@ -909,14 +542,14 @@ loc_CC78:
 		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
 		pop	bp
 		retn
-_cleardata_and_regist_view_sprite	endp
+@cleardata_and_regist_view_sprite$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _main_cdg_load
-_main_cdg_load	proc near
+public @main_cdg_load$qv
+@main_cdg_load$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_load_all pascal, CDG_NUMERAL, ds, offset aSft1_cd2
@@ -925,27 +558,27 @@ _main_cdg_load	proc near
 		call	cdg_load_all_noalpha pascal, 40, ds, offset aSl_cd2
 		pop	bp
 		retn
-_main_cdg_load	endp
+@main_cdg_load$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _main_cdg_free
-_main_cdg_free	proc near
+public @main_cdg_free$qv
+@main_cdg_free$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_free_all
 		pop	bp
 		retn
-_main_cdg_free	endp
+@main_cdg_free$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _op_animate
-_op_animate	proc near
+public @op_animate$qv
+@op_animate$qv	proc near
 
 @@page		= byte ptr -4
 var_3		= byte ptr -3
@@ -961,13 +594,13 @@ var_3		= byte ptr -3
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	graph_copy_page pascal, 0
-		call	pi_load pascal, 0, ds, offset aOp5b_pi
-		call	pi_load pascal, 1, ds, offset aOp4b_pi
-		call	pi_load pascal, 2, ds, offset aOp3b_pi
-		call	pi_load pascal, 3, ds, offset aOp2b_pi
-		call	pi_load pascal, 4, ds, offset aOp1b_pi
-		call	pi_load pascal, 5, ds, offset aOp0b_pi
-		call	pi_palette_apply pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp5b_pi
+		call	@pi_load$qinxc pascal, 1, ds, offset aOp4b_pi
+		call	@pi_load$qinxc pascal, 2, ds, offset aOp3b_pi
+		call	@pi_load$qinxc pascal, 3, ds, offset aOp2b_pi
+		call	@pi_load$qinxc pascal, 4, ds, offset aOp1b_pi
+		call	@pi_load$qinxc pascal, 5, ds, offset aOp0b_pi
+		call	@pi_palette_apply$qi pascal, 0
 		push	4
 		call	palette_black_in
 		graph_showpage 0
@@ -992,7 +625,7 @@ loc_CD7A:
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	pi_put_8
+		call	@pi_put_8$qiii
 		inc	[bp+var_3]
 		graph_accesspage [bp+@@page]
 		mov	al, 1
@@ -1004,8 +637,7 @@ loc_CDB0:
 		mov	PaletteTone, di
 		call	far ptr	palette_show
 		add	di, 2
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_CDC4:
@@ -1029,9 +661,9 @@ loc_CDC4:
 
 loc_CE50:
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi_1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_1
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		xor	si, si
@@ -1067,8 +699,7 @@ loc_CEC7:
 		mov	Palettes[0 * size rgb_t].g, al
 		mov	Palettes[0 * size rgb_t].b, al
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, -16
@@ -1120,8 +751,7 @@ loc_CF34:
 		cmp	di, COLOR_COUNT
 		jl	short loc_CEFA
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, -4
@@ -1130,41 +760,38 @@ loc_CF34:
 loc_CF4E:
 		cmp	si, 63
 		jl	short loc_CEF5
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		pop	di
 		pop	si
 		leave
 		retn
-_op_animate	endp
+@op_animate$qv	endp
 
 	_playchar_menu procdesc near
-OP_SETUP_TEXT ends
+op_01_TEXT ends
 
 ; ===========================================================================
 
-SHARED	segment	word public 'CODE' use16
+SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
-	extern FRAME_DELAY:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
-	extern PI_LOAD:proc
+	extern @FRAME_DELAY$QI:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_LOAD$QINXC:proc
 	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern SND_LOAD:proc
-	extern GRAPH_PUTSA_FX:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
-	extern BGIMAGE_PUT_RECT:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
-	extern FRAME_DELAY_2:proc
 SHARED	ends
 
 	.data
@@ -1176,110 +803,8 @@ SHARED	ends
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
 
-	; th04/hardware/grppsafx[data].asm
-	extern _graph_putsa_fx_func:word
-
 include th04/zunsoft[data].asm
-public _MUSIC_TITLES
-_MUSIC_TITLES	label dword
-		dd aNo_1MSzlBLotus	; "No.1	  å∂ëzãΩ  Å` Lotus Land	Story"
-		dd aNo_2WitchingDr	; "No.2		Witching Dream	     "
-		dd aNo_3SeleneSLig	; "No.3		Selene's light       "
-		dd aNo_4Sxp		; "No.4	 ëïè¸êÌÅ@Å` Decoration Battle"
-		dd aNo_5BreakTheSa	; "No.5	       Break the Sabbath     "
-		dd aNo_6NglLBScarl	; "No.6	  çgãøã»  Å` Scarlet Phoneme "
-		dd aNo_7BadApple	; "No.7		  Bad Apple!!	     "
-		dd aNo_8CRab@bPerd	; "No.8	   óÏêÌÅ@Å` Perdition crisis "
-		dd aNo_9GagkgxgGgg	; "No.9	       ÉAÉäÉXÉ}ÉGÉXÉeÉâ	     "
-		dd aNo_10Pnpcuyszl	; "No.10   è≠èó„Yëzã»Å@Å` Capriccio  "
-		dd aNo_11RpvKab@bC	; "No.11  êØÇÃäÌÅ@Å` Casket of Star  "
-		dd aNo_12LotusLove	; "No.12	  Lotus	Love	     "
-		dd aNo_13CVVslXBSl	; "No.13 ñ∞ÇÍÇÈã∞ï| Å`Sleeping Terror"
-		dd aNo_14DreamLand	; "No.14	  Dream	Land	     "
-		dd aNo_15ChcB@bIna	; "No.15   óHñ≤Å@Å` Inanimate Dream  "
-		dd aNo_16LVVVsv		; "No.16     ã÷Ç∂Ç¥ÇÈÇÇ¶Ç»Ç¢óVãY    "
-		dd aNo_17GbgcghmSz	; "No.17 ÉÅÉCÉhå∂ëzÅ@Å`	Icemilk	Magic"
-		dd aNo_18Vivavvvvi	; "No.18  Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence "
-		dd aNo_19Days		; "No.19	     Days	     "
-		dd aNo_20Peaceful	; "No.20	   Peaceful	     "
-		dd aNo_21ArcadianD	; "No.21	Arcadian Dream	     "
-		dd aNo_22MSzvPzrl	; "No.22	  å∂ëzÇÃèZêl	     "
-		dd asc_105B2		; "				     "
-		dd aB@b@vpvxvivf	; "	       Å@Å@ÇpÇïÇâÇî	     "
-public _MUSIC_FILES
-_MUSIC_FILES	label dword
-		dd aOp_2		; "op"
-		dd aSt00		; "st00"
-		dd aSt10		; "st10"
-		dd aSt00b		; "st00b"
-		dd aSt01		; "st01"
-		dd aSt01b		; "st01b"
-		dd aSt02		; "st02"
-		dd aSt02b		; "st02b"
-		dd aSt03		; "st03"
-		dd aSt03c		; "st03c"
-		dd aSt03b		; "st03b"
-		dd aSt04		; "st04"
-		dd aSt04b		; "st04b"
-		dd aSt05		; "st05"
-		dd aSt05b		; "st05b"
-		dd aSt06		; "st06"
-		dd aSt06b		; "st06b"
-		dd aSt06c		; "st06c"
-		dd aEnd1		; "end1"
-		dd aEnd2		; "end2"
-		dd aStaff		; "staff"
-		dd aName_0		; "name"
-include th02/op/polygons[data].asm
-music_track_playing	db 0
-aNo_1MSzlBLotus	db 'No.1   å∂ëzãΩ  Å` Lotus Land Story',0
-aNo_2WitchingDr	db 'No.2         Witching Dream       ',0
-aNo_3SeleneSLig	db 'No.3         Selene',27h,'s light       ',0
-aNo_4Sxp	db 'No.4  ëïè¸êÌÅ@Å` Decoration Battle',0
-aNo_5BreakTheSa	db 'No.5        Break the Sabbath     ',0
-aNo_6NglLBScarl	db 'No.6   çgãøã»  Å` Scarlet Phoneme ',0
-aNo_7BadApple	db 'No.7           Bad Apple!!        ',0
-aNo_8CRab@bPerd	db 'No.8    óÏêÌÅ@Å` Perdition crisis ',0
-aNo_9GagkgxgGgg	db 'No.9        ÉAÉäÉXÉ}ÉGÉXÉeÉâ      ',0
-aNo_10Pnpcuyszl	db 'No.10   è≠èó„Yëzã»Å@Å` Capriccio  ',0
-aNo_11RpvKab@bC	db 'No.11  êØÇÃäÌÅ@Å` Casket of Star  ',0
-aNo_12LotusLove	db 'No.12          Lotus Love         ',0
-aNo_13CVVslXBSl	db 'No.13 ñ∞ÇÍÇÈã∞ï| Å`Sleeping Terror',0
-aNo_14DreamLand	db 'No.14          Dream Land         ',0
-aNo_15ChcB@bIna	db 'No.15   óHñ≤Å@Å` Inanimate Dream  ',0
-aNo_16LVVVsv	db 'No.16     ã÷Ç∂Ç¥ÇÈÇÇ¶Ç»Ç¢óVãY    ',0
-aNo_17GbgcghmSz	db 'No.17 ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic',0
-aNo_18Vivavvvvi	db 'No.18  Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence ',0
-aNo_19Days	db 'No.19             Days            ',0
-aNo_20Peaceful	db 'No.20           Peaceful          ',0
-aNo_21ArcadianD	db 'No.21        Arcadian Dream       ',0
-aNo_22MSzvPzrl	db 'No.22          å∂ëzÇÃèZêl         ',0
-asc_105B2	db '                                  ',0
-aB@b@vpvxvivf	db '            Å@Å@ÇpÇïÇâÇî          ',0
-aOp_2		db 'op',0
-aSt00		db 'st00',0
-aSt10		db 'st10',0
-aSt00b		db 'st00b',0
-aSt01		db 'st01',0
-aSt01b		db 'st01b',0
-aSt02		db 'st02',0
-aSt02b		db 'st02b',0
-aSt03		db 'st03',0
-aSt03c		db 'st03c',0
-aSt03b		db 'st03b',0
-aSt04		db 'st04',0
-aSt04b		db 'st04b',0
-aSt05		db 'st05',0
-aSt05b		db 'st05b',0
-aSt06		db 'st06',0
-aSt06b		db 'st06b',0
-aSt06c		db 'st06c',0
-aEnd1		db 'end1',0
-aEnd2		db 'end2',0
-aStaff		db 'staff',0
-aName_0		db 'name',0
-include th04/op/music_cmt_load[data].asm
-aMusic_pi	db 'music.pi',0
+
 aGensou_scr	db 'GENSOU.SCR',0
 aName		db 'name',0
 aHi01_pi	db 'hi01.pi',0
@@ -1311,9 +836,6 @@ aOp1_pi_1	db 'op1.pi',0
 	; libs/master.lib/vs[bss].asm
 	extern vsync_Count1:word
 
-	; th01/hardware/vram_planes[bss].asm
-	extern _VRAM_PLANE_B:dword
-
 	; th02/formats/pi_slots[bss].asm
 	extern _pi_buffers:dword
 	extern _pi_headers:PiHeader
@@ -1322,12 +844,6 @@ aOp1_pi_1	db 'op1.pi',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-		db 56 dup(?)
-include th02/op/music[bss].asm
-byte_12DBE	db ?
-		db    ?	;
-include th03/op/cmt_back[bss].asm
-include th02/op/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm
 _rank	db ?
 public _cleared_with, _extra_unlocked
