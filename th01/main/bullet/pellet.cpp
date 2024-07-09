@@ -1,5 +1,8 @@
+#include "th01/main/bullet/pellet.hpp"
+
 /// Constants
 /// ---------
+
 // Can't declare these as `static const` variables, because that would break
 // compile-time Subpixel arithmetic
 #define PELLET_LEFT_MIN (PLAYFIELD_LEFT)
@@ -14,11 +17,16 @@
 static const unsigned int PELLET_DESTROY_SCORE = 10;
 static const int PELLET_DECAY_FRAMES = 20;
 static const int PELLET_DECAY_CELS = 2;
+
+inline int decay_frames_for_cel(int cel) {
+	return ((PELLET_DECAY_FRAMES / PELLET_DECAY_CELS) * cel);
+}
 /// ---------
 
 /// Globals
 /// -------
-pellet_t near *p;
+
+Pellet near *p;
 bool pellet_interlace = false;
 unsigned int pellet_destroy_score_delta = 0;
 #include "th01/sprites/pellet.csp"
@@ -34,7 +42,7 @@ CPellets::CPellets(void)
 		p->not_rendered = false;
 	}
 
-	alive_count = 0;
+	alive_count_excluding_cloud_pellets_after_reset = 0;
 	for(i = 0; i < sizeof(unknown_zero) / sizeof(unknown_zero[0]); i++) {
 		unknown_zero[i] = 0;
 	}
@@ -144,12 +152,12 @@ bool16 group_velocity_set(
 		to_aim_or_not_to_aim();
 
 	case PG_1_RANDOM_NARROW_AIMED:
-		angle = ((rand() & 0x0F) - 0x07);
+		angle = ((irand() & 0x0F) - 0x07);
 		done = true;
 		goto aim;
 
 	case PG_1_RANDOM_WIDE:
-		angle = ((rand() & 0x3F) + 0x20);
+		angle = ((irand() & 0x3F) + 0x20);
 		done = true;
 		goto no_aim;
 
@@ -167,8 +175,7 @@ bool16 group_velocity_set(
 	return done;
 }
 
-inline subpixel_t base_speed_for_rank(void)
-{
+inline subpixel_t base_speed_for_rank(void) {
 	return
 		(rank == RANK_EASY) ? to_sp(0.0f) :
 		(rank == RANK_NORMAL) ? to_sp(0.375f) :
@@ -185,7 +192,7 @@ inline subpixel_t base_speed_for_rank(void)
 		speed = to_sp(1.0f); \
 	}
 
-#define pellet_init(pellet, left, top, group) \
+#define pellet_init(pellet, left, top, group, spawn_with_cloud) \
 	pellet->decay_frame = 0; \
 	pellet->cur_left.v = TO_SP(left); \
 	pellet->cur_top.v = TO_SP(top); \
@@ -209,7 +216,7 @@ void CPellets::add_group(
 	Subpixel vel_y;
 
 	// Should be >=, but yeah, it's just an inconsequential oversight.
-	if(alive_count > PELLET_COUNT) {
+	if(alive_count_excluding_cloud_pellets_after_reset > PELLET_COUNT) {
 		return;
 	}
 	if(
@@ -230,10 +237,10 @@ void CPellets::add_group(
 		if(p->cloud_frame) {
 			continue;
 		}
-		pellet_init(p, left, top, group);
+		pellet_init(p, left, top, group, spawn_with_cloud);
 		p->prev_left.v = -1;
 		p->age = 0;
-		alive_count++;
+		alive_count_excluding_cloud_pellets_after_reset++;
 		group_done = group_velocity_set(
 			vel_x, vel_y, group, speed, group_i, left, top
 		);
@@ -261,7 +268,7 @@ void CPellets::add_single(
 	Subpixel vel_y;
 
 	// Should be >=, but yeah, it's just an inconsequential oversight.
-	if(alive_count > PELLET_COUNT) {
+	if(alive_count_excluding_cloud_pellets_after_reset > PELLET_COUNT) {
 		return;
 	}
 	speed_set(speed_base);
@@ -274,11 +281,11 @@ void CPellets::add_single(
 		if(p->cloud_frame) {
 			continue;
 		}
-		pellet_init(p, left, top, PG_NONE);
+		pellet_init(p, left, top, PG_NONE, spawn_with_cloud);
 		p->motion_type = motion_type;
 		p->prev_left.v = -1;
 		p->age = 0;
-		alive_count++;
+		alive_count_excluding_cloud_pellets_after_reset++;
 		p->spin_center.x.v = TO_SP(spin_center_x);
 		p->spin_center.y.v = TO_SP(spin_center_y);
 		if(motion_type == PM_SPIN) {
@@ -310,7 +317,7 @@ void CPellets::motion_type_apply_for_cur(void)
 	case PM_SLING_AIMED:
 		if(p->sling_direction == PSD_NONE) {
 			p->sling_direction = static_cast<pellet_sling_direction_t>(
-				(rand() & 1) + PSD_CLOCKWISE
+				(irand() & 1) + PSD_CLOCKWISE
 			);
 		}
 		if(p->sling_direction == PSD_CLOCKWISE) {
@@ -334,7 +341,7 @@ void CPellets::motion_type_apply_for_cur(void)
 		}
 		break;
 	case PM_BOUNCE_FROM_TOP_THEN_GRAVITY:
-		// Wow... Three ZUN bugs in one single if() expression.
+		// ZUN landmine: Wow... Three of them in one single if() expression.
 		// 1)
 		// 2) Pellets are clipped at both the left (1) and the right (2)
 		//    edge of the playfield at those exact same coordinates,
@@ -362,11 +369,11 @@ void CPellets::motion_type_apply_for_cur(void)
 			}
 		}
 		break;
-	case PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL:
+	case PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR:
 		if(p->cur_top.to_pixel() <= PELLET_BOUNCE_TOP_MIN) {
 			p->velocity.x.set(0.0f);
 			p->velocity.y.v = p->speed.v;
-			p->motion_type = PM_NORMAL;
+			p->motion_type = PM_REGULAR;
 			if(p->cur_top.to_pixel() <= PLAYFIELD_TOP) {
 				p->cur_top.set(PLAYFIELD_TOP + 1.0f);
 			}
@@ -409,56 +416,48 @@ void CPellets::motion_type_apply_for_cur(void)
 
 void pellet_put(screen_x_t left, vram_y_t top, int cel)
 {
-	// Some `__asm` statements here look like they could be expressed using
+	// Some `asm` statements here look like they could be expressed using
 	// register pseudovariables. However, TCC would then use a different
 	// instruction than the one in ZUN's original binary.
 	_ES = SEG_PLANE_B;
 
-	_AX = (left >> 3);
-	_DX = top;
-	_DX <<= 6;
-	__asm add	ax, dx;
-	_DX >>= 2;
-	__asm add	ax, dx;
-	__asm mov	di, ax;
+	vram_offset_shift_fast_asm(di, left, top);
 
 	_AX = (left & 7) << 4;
 	_BX = cel;
 	_BX <<= 7;
-	__asm add	ax, bx;
+	asm { add	ax, bx; }
 	_AX += reinterpret_cast<uint16_t>(sPELLET);
 
-	__asm mov	si, ax;
+	asm { mov	si, ax; }
 	_CX = PELLET_H;
 	put_loop: {
-		__asm movsw
+		asm { movsw; }
 		_DI += (ROW_SIZE - sizeof(dots16_t));
 		if(static_cast<int16_t>(_DI) >= PLANE_SIZE) {
 			return;
 		}
 	}
-	__asm loop	put_loop;
+	asm { loop	put_loop; }
 }
 
 void pellet_render(screen_x_t left, screen_y_t top, int cel)
 {
 	grcg_setcolor_rmw(V_WHITE);
 	pellet_put(left, top, cel);
-	grcg_off();
+	grcg_off_func();
 }
 
 inline bool16 overlaps_shot(
 	screen_x_t pellet_left, screen_y_t pellet_top, int i
-)
-{
+) {
 	return overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
 		Shots.left[i], Shots.top[i], SHOT_W, SHOT_H
 	);
 }
 
-inline bool16 overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top)
-{
+inline bool16 overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top) {
 	return overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
 		orb_cur_left, orb_cur_top, ORB_W, ORB_H
@@ -541,7 +540,7 @@ bool16 CPellets::visible_after_hittests_for_cur(
 		}
 		vector2(p->velocity.x.v, p->velocity.y.v, to_sp(8.0f), deflect_angle);
 		if(!p->from_group) {
-			p->motion_type = PM_NORMAL;
+			p->motion_type = PM_REGULAR;
 		}
 		// Yes, deflected pellets aren't rendered on the frames they're
 		// deflected on!
@@ -556,8 +555,21 @@ void CPellets::decay_tick_for_cur(void)
 	if(p->decay_frame > (PELLET_DECAY_FRAMES + 1)) {
 		p->decay_frame = 0;
 		p->moving = false;
-		alive_count--;
+		alive_count_excluding_cloud_pellets_after_reset--;
 	}
+}
+
+// Why, I don't even?!?
+inline void p_sloppy_wide_unput() {
+	egc_copy_rect_1_to_0_16_word_w(
+		p->prev_left.to_pixel(), p->prev_top.to_pixel(), PELLET_W, PELLET_H
+	);
+}
+
+inline void p_sloppy_wide_unput_at_cur_pos() {
+	egc_copy_rect_1_to_0_16_word_w(
+		p->cur_left.to_pixel(), p->cur_top.to_pixel(), PELLET_W, PELLET_H
+	);
 }
 
 void CPellets::unput_update_render(void)
@@ -575,7 +587,7 @@ void CPellets::unput_update_render(void)
 		}
 		if(!pellet_interlace || (interlace_field == (i % 2))) {
 			if(p->not_rendered == false && (p->prev_left.v != -1)) {
-				p->sloppy_wide_unput();
+				p_sloppy_wide_unput();
 			}
 		}
 		if(p->from_group == PG_NONE && p->motion_type) {
@@ -597,8 +609,8 @@ void CPellets::unput_update_render(void)
 			)) {
 				p->decay_frame = 0;
 				p->moving = false;
-				alive_count--;
-				p->sloppy_wide_unput();
+				alive_count_excluding_cloud_pellets_after_reset--;
+				p_sloppy_wide_unput();
 			}
 		}
 		// Clipping
@@ -609,9 +621,9 @@ void CPellets::unput_update_render(void)
 			p->cur_left.v <= to_sp(PELLET_LEFT_MIN)
 		) {
 			p->moving = false;
-			alive_count--;
+			alive_count_excluding_cloud_pellets_after_reset--;
 			p->decay_frame = 0;
-			p->sloppy_wide_unput();
+			p_sloppy_wide_unput();
 		}
 	}
 
@@ -630,8 +642,6 @@ void CPellets::unput_update_render(void)
 					p->not_rendered = false;
 				}
 				#define render pellet_render
-				#define decay_frames_for_cel(cel) \
-					((PELLET_DECAY_FRAMES / PELLET_DECAY_CELS) * cel)
 				if(p->decay_frame == 0) {
 					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 0);
 				} else if(p->decay_frame <= decay_frames_for_cel(1)) {
@@ -639,7 +649,6 @@ void CPellets::unput_update_render(void)
 				}  else if(p->decay_frame < decay_frames_for_cel(2)) {
 					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 2);
 				}
-				#undef decay_frames_for_cel
 				#undef render
 			} else {
 				p->not_rendered = true;
@@ -652,30 +661,45 @@ void CPellets::unput_update_render(void)
 			decay_tick_for_cur();
 		} else if(hittest_player_for_cur()) {
 			if(p->not_rendered == false) {
-				p->sloppy_wide_unput();
+				p_sloppy_wide_unput();
 			}
 			p->moving = false;
-			alive_count--;
+			alive_count_excluding_cloud_pellets_after_reset--;
 			p->decay_frame = 0;
 		}
 	}
 }
 
-void CPellets::unput_and_reset(void)
+void CPellets::unput_and_reset_nonclouds(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		// ZUN quirk: This condition skips the reset for active delay clouds,
+		// i.e., pellets where (([moving] == false) && ([cloud_frame] > 0)).
+		// These continue their delay animation after this function and
+		// eventually turn into regular pellets. However, since the aptly named
+		// [alive_count_excluding_cloud_pellets_after_reset] is unconditionally
+		// reset to 0 below (rather than being decremented for each non-moving
+		// pellet), these (then living and moving) pellets aren't reflected in
+		// the count. In most cases, that doesn't matter because this is the
+		// final pellet-related method to be called before the process
+		// restarts, but it does make a difference in exactly two places:
+		//
+		// • The "TAMA DEL" command on the debug screen
+		// • Sariel's second form, being the exact reason why that form can
+		//   start with pellets out of seemingly nowhere
 		if(p->moving == false) {
 			continue;
 		}
+
 		if(p->not_rendered == false) {
-			p->sloppy_wide_unput_at_cur_pos();
+			p_sloppy_wide_unput_at_cur_pos();
 		}
 		p->decay_frame = 0;
 		p->moving = false;
 		p->cloud_frame = 0;
 	}
-	alive_count = 0;
+	alive_count_excluding_cloud_pellets_after_reset = 0;
 }
 
 void CPellets::decay(void)
@@ -695,18 +719,20 @@ void CPellets::decay(void)
 	}
 }
 
-void CPellets::reset(void)
+void CPellets::reset_nonclouds(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		// ZUN quirk: Same as in unput_and_reset_nonclouds().
 		if(p->moving == false) {
 			continue;
 		}
+
 		p->moving = false;
 		p->decay_frame = 0;
 		p->cloud_frame = 0;
 	}
-	alive_count = 0;
+	alive_count_excluding_cloud_pellets_after_reset = 0;
 }
 
 bool16 CPellets::hittest_player_for_cur(void)
@@ -721,7 +747,7 @@ bool16 CPellets::hittest_player_for_cur(void)
 		// Yup, <, not <= as in the overlap_point_le_ge() macro.
 		(p->cur_top.to_pixel() < (player_top + PLAYER_H - PELLET_H))
 	) {
-		done = true;
+		player_is_hit = true;
 		return true;
 	}
 	return false;

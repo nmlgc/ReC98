@@ -1,5 +1,5 @@
-public SHOT_VELOCITY_SET
-shot_velocity_set proc near
+public @SHOT_VELOCITY_SET$QP7SPPOINTUC
+@shot_velocity_set$qp7sppointuc proc near
 arg_bx	near, @angle:byte, @velocity:word
 
 	push	si
@@ -16,4 +16,4 @@ endif
 	mov	[si], eax
 	pop	si
 	ret_bx
-shot_velocity_set endp
+@shot_velocity_set$qp7sppointuc endp

@@ -5,36 +5,30 @@
 
 #pragma option -zCop_01_TEXT
 
-extern "C" {
 #include <stddef.h>
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th01/rank.h"
+#include "th01/hardware/grcg.hpp"
+#include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
-#include "th04/chars.h"
-#include "th04/formats/scoredat.h"
+#include "th04/formats/scoredat.hpp"
 #include "th04/resident.hpp"
 #include "th04/hardware/input.h"
 #include "th04/hardware/grppsafx.h"
-#include "th04/formats/cdg.h"
-#include "th04/snd/snd.h"
-#include "th04/sprites/op_cdg.h"
-#include "th04/op/op.h"
+#include "th04/op/clear.hpp"
+#include "th04/op/op.hpp"
+#include "th04/op/impl.hpp"
+#include "th04/sprites/op_cdg.hpp"
 
 #include "th04/shiftjis/m_char.cpp"
 
 static const pixel_t PIC_W = 256;
 static const pixel_t PIC_H = 244;
 
-static const int COL_SELECTED = 15;
-static const int COL_NOT_SELECTED = 3;
-static const int COL_BOX = 2;
-static const int COL_SHADOW = 1;
+static const vc2 COL_SELECTED = V_WHITE;
+static const vc2 COL_NOT_SELECTED = 3;
+static const vc2 COL_BOX = 2;
+static const vc2 COL_SHADOW = 1;
 
 // Raised edge
 // -----------
@@ -169,8 +163,8 @@ void near raise_bg_allocate_and_snap(void)
 	vram_offset_t vo_marisa_row;
 	vram_offset_t vo_marisa;
 
-	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
-	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
+	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
+	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
 
 	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  REIMU_TOP));
 	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));
@@ -205,7 +199,7 @@ void near raise_bg_allocate_and_snap(void)
 	}
 }
 
-void near pascal raise_bg_put(playchars_t playchar_lowered)
+void near pascal raise_bg_put(playchar_t playchar_lowered)
 {
 	vram_byte_amount_t x;
 	pixel_t y;
@@ -246,18 +240,16 @@ void near raise_bg_free(void)
 
 #include "th04/op/darken.cpp"
 
-void near pascal pic_darken(playchars_t playchar)
+void near pascal pic_darken(playchar_t playchar)
 {
 	vram_offset_t vo;
-	vram_byte_amount_t x;
-	pixel_t y;
 
 	if(playchar == PLAYCHAR_REIMU) {
 		vo = vram_offset_shift(REIMU_LEFT, REIMU_TOP);
 	} else {
 		vo = vram_offset_shift(MARISA_LEFT, MARISA_TOP);
 	}
-	darken(vo, x, y, PIC_W, PIC_H, 1);
+	darken(vo, PIC_W, PIC_H, 1);
 }
 
 #define playchar_title_left_for(left, playchar) \
@@ -315,7 +307,7 @@ void near pascal playchar_title_box_put(int playchar)
 }
 
 inline void pic_put_for(
-	playchars_t playchar_sel,
+	playchar_t playchar_sel,
 	screen_x_t sel_left,
 	vram_y_t sel_top,
 	screen_x_t other_left,
@@ -368,7 +360,7 @@ void near pascal shottype_title_put(int shottype_sel)
 
 	rank = (resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank;
 
-	#define put(top, clearflag, rank, col) \
+	#define put(left, top, clearflag, rank, col) \
 		if(cleared_with[playchar_menu_sel][rank] & clearflag) { \
 			graph_putsa_fx_func = FX_WEIGHT_NORMAL; \
 			graph_putsa_fx( \
@@ -389,12 +381,12 @@ void near pascal shottype_title_put(int shottype_sel)
 	// Selected shot type
 	shottype_title_top_and_clearflag_for(top, clearflag, shottype);
 	left = SHOTTYPE_TITLE_LEFT;
-	put(top, clearflag, rank, COL_SELECTED);
+	put(left, top, clearflag, rank, COL_SELECTED);
 
 	// Other shot type
 	shottype = (SHOTTYPE_B - shottype);
 	shottype_title_top_and_clearflag_for(top, clearflag, shottype);
-	put(top, clearflag, rank, COL_NOT_SELECTED);
+	put(left, top, clearflag, rank, COL_NOT_SELECTED);
 
 	#undef put
 }
@@ -486,7 +478,7 @@ bool16 near playchar_menu(void)
 				for(rank = RANK_NORMAL; rank < RANK_EXTRA; rank++) { \
 					extra_unlocked |= cleared_with[playchar][rank] & flag; \
 				} \
-				selectable_with[playchar][shottype] = (extra_unlocked) != false;
+				selectable_with[playchar][shottype] = (extra_unlocked != false);
 
 			set_selectable_with(playchar, SHOTTYPE_A, SCOREDAT_CLEARED_A);
 			set_selectable_with(playchar, SHOTTYPE_B, SCOREDAT_CLEARED_B);
@@ -589,6 +581,4 @@ bool16 near playchar_menu(void)
 			frame_delay(1);
 		}
 	}
-}
-
 }

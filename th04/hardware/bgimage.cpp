@@ -1,13 +1,9 @@
-#pragma option -zCSHARED_ -k-
+#pragma option -zCSHARED -k-
 
-extern "C" {
 #include <mem.h>
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "decomp.hpp"
-#include "master.hpp"
+#include "libs/master.lib/master.hpp"
+#include "platform/x86real/flags.hpp"
 #include "th04/hardware/bgimage.hpp"
 
 inline void memcpy_movsd(
@@ -19,7 +15,7 @@ inline void memcpy_movsd(
 	REP MOVSD;
 }
 
-#define bgimage_push() __asm { \
+#define bgimage_push() _asm { \
 	push	SEG_PLANE_E; \
 	push	word ptr [bgimage.E]; \
 	push	SEG_PLANE_G; \
@@ -32,49 +28,47 @@ inline void memcpy_movsd(
 
 void bgimage_snap(void)
 {
-	if(bgimage.B == NULL) {
-		bgimage.B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.R = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.G = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.E = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+	if(bgimage.B == nullptr) {
+		bgimage.B = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.R = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.G = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.E = HMem<dots8_t>::alloc(PLANE_SIZE);
 	}
 
 	_DL = PLANE_COUNT;
-	__asm {	push	ds; }
+	_asm { push	ds; }
 	bgimage_push();
 	do {
-		__asm { pop 	es; }
-		__asm { pop 	ds; }
+		_asm { pop 	es; }
+		_asm { pop 	ds; }
 		memcpy_movsd(_ES, 0, _DS, 0, PLANE_SIZE);
 		_DL--;
 	} while(!FLAGS_ZERO);
-	__asm { pop 	ds; }
+	_asm { pop 	ds; }
 }
 
 void bgimage_put(void)
 {
 	_DL = PLANE_COUNT;
-	__asm {	push	ds; }
+	_asm { push	ds; }
 	bgimage_push();
 	do {
-		__asm { pop 	ds; }
-		__asm { pop 	es; }
+		_asm { pop 	ds; }
+		_asm { pop 	es; }
 		memcpy_movsd(_ES, 0, _DS, 0, PLANE_SIZE);
 		_DL--;
 	} while(!FLAGS_ZERO);
-	__asm { pop 	ds; }
+	_asm { pop 	ds; }
 }
 #pragma codestring "\x90"
 
 void bgimage_free(void)
 {
-	if(bgimage.B != NULL) {
+	if(bgimage.B != nullptr) {
 		HMem<dots8_t>::free(bgimage.B);
 		HMem<dots8_t>::free(bgimage.R);
 		HMem<dots8_t>::free(bgimage.G);
 		HMem<dots8_t>::free(bgimage.E);
-		bgimage.B = NULL;
+		bgimage.B = nullptr;
 	}
-}
-
 }

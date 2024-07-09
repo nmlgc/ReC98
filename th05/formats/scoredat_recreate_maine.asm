@@ -20,7 +20,7 @@ scoredat_recreate_maine	proc near
 @@digit_zero_loop:
 	mov	bx, [bp+@@i]
 	shl	bx, 3
-	mov	_hi.score.g_points[bx+si], gb_0_
+	mov	_hi.score.g_score[bx+si], gb_0_
 	inc	si
 
 @@digit_zero_more?:
@@ -30,7 +30,7 @@ scoredat_recreate_maine	proc near
 	jnz	short @@not_first_place
 	mov	bx, [bp+@@i]
 	shl	bx, 3
-	mov	_hi.score.g_points[bx][6], gb_1_
+	mov	_hi.score.g_score[bx][6], gb_1_
 	jmp	short @@set_stage
 ; ---------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ scoredat_recreate_maine	proc near
 	mov	bx, [bp+@@i]
 	shl	bx, 3
 	mov	al, [bp+@@digit]
-	mov	_hi.score.g_points[bx][5], al
+	mov	_hi.score.g_score[bx][5], al
 	add	al, -2
 	mov	[bp+@@digit], al
 

@@ -98,11 +98,16 @@ func GRAPH_GAIJI_PUTS	; graph_gaiji_puts() {
 	or	AL,AL
 	jz	short @@RETURN
 	mov	AH,0
+
+	; master.lib bug: This calculation should not add the carry flag – if it's
+	; set, the resulting JIS code point will correspond to ([@@ank] + 1). ADD
+	; is the correct instruction here.
 if GAME ge 4
 	add	AX,5680h	;from gjwrite.asm
 else
 	adc	AX,5680h	;from gjwrite.asm
 endif
+
 	and	AX,0ff7fh
 
 	mov	BX,CX

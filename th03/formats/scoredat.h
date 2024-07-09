@@ -1,1 +1,0 @@
-#define SCOREDAT_PLACES 10

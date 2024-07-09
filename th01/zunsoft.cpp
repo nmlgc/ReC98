@@ -3,16 +3,13 @@
  * ZUN Soft logo used in TH01, TH02 and TH03
  */
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
-#include "decomp.hpp"
-#include "master.hpp"
-#include "th01/hardware/egc.h"
+#pragma option -2 -d- // ZUN bloat
+
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "platform/x86real/pc98/egc.hpp"
+#include "platform/x86real/pc98/page.hpp"
+#include "th01/hardware/grcg.hpp"
 #include "th01/math/polar.hpp"
-#include "th01/math/vector.hpp"
-}
 
 #define CIRCLE_COUNT 4
 #define STAR_COUNT 50
@@ -20,8 +17,8 @@ extern "C" {
 const char LOGO_FILENAME[] = "touhou.dat";
 static char CIRCLE_COLORS[] = {4, 3, 2, 1};
 
-char page_write;
-char page_show;
+page_t page_back;
+page_t page_front;
 char tone;
 char logo_patnum;
 char wave_len;
@@ -55,8 +52,8 @@ void zunsoft_init(void)
 	egc_start();
 	graph_clear_both();
 	text_clear();
-	page_write = 0;
-	page_show = 1;
+	page_back = 0;
+	page_front = 1;
 	grc_setclip(96, 100, 543, 299);
 	graph_hide();
 	super_entry_bfnt(LOGO_FILENAME);
@@ -108,9 +105,9 @@ void objects_setup(void)
 	wave_amp = 0;
 
 	for(i = 0; i < STAR_COUNT; i++) {
-		star_pos[i].x = rand() % 640;
-		star_pos[i].y = rand() % 400;
-		star_speed[i] = (rand() % 32) + 6;
+		star_pos[i].x = (irand() % RES_X);
+		star_pos[i].y = (irand() % RES_Y);
+		star_speed[i] = ((irand() % 32) + 6);
 	}
 	star_angle = +0x40;
 }
@@ -164,13 +161,13 @@ void stars_render_and_update(void)
 
 void wait(void)
 {
-	do __asm {
-		out 0x5F, al;
-		in  al, 0xA0;
+	do {
+		_outportb_(0x5F, _AL);
+		_AL = _inportb_(0xA0);
 	} while((_AL & 0x20) != 0);
-	do __asm {
-		out 0x5F, al;
-		in  al, 0xA0;
+	do {
+		_outportb_(0x5F, _AL);
+		_AL = _inportb_(0xA0);
 	} while((_AL & 0x20) == 0);
 }
 
@@ -212,23 +209,20 @@ void logo_render_and_update(void)
 void main(void)
 {
 	int keygroup, quit;
+
 	// Do some setup if we are running on a PC-9821
-	__asm {
-		xor  ax, ax
-		mov  es, ax
-		test byte ptr es:0x45C, 0x40
-		jz   hw_setup_done
-	}
-		graph_mode_change(true); __asm {
-			mov  al, 0x20
-			out  0x6a, al
-		}
+
+	// Generates a different instruction encoding compared to pseudoregisters.
+	asm { xor	ax, ax; }
+	_ES = _AX;
+	if(peekb(_ES, 0x45C) & 0x40) {
+		graph_mode_change(true);
+		_outportb_(0x6A, 0x20); // Disable 256-color mode
 		graph_mode_change(false);
 
 		// Activate all graphics hardware in 16-color mode
-		__asm { and  byte ptr es:0x54d, 0x7f }
-
-hw_setup_done:
+		*reinterpret_cast<uint8_t far *>(MK_FP(_ES, 0x54D)) &= 0x7F;
+	}
 	zunsoft_init();
 	objects_setup();
 	while(1) {
@@ -248,14 +242,13 @@ hw_setup_done:
 		logo_render_and_update();
 		wait();
 		wait();
-		__asm {
-			mov al, page_write
-			mov page_show, al
-			out 0xa4, al
-			xor page_write, 1
-			mov al, page_write
-			out 0xa6, al
-		}
+
+		_AL = page_back;
+		page_front = _AL;
+		page_show(_AL);
+		page_back ^= 1;
+		page_access(page_back);
+
 		quit = 0;
 		for(keygroup = 0; keygroup < 8; keygroup++) {
 			quit |= key_sense(keygroup);

@@ -3,27 +3,17 @@
 
 #pragma option -zPmain_01
 
-extern "C" {
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
-#include "th03/formats/cdg.h"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th04/common.h"
-#include "th04/score.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
-#include "th04/sprites/main_cdg.h"
-}
 #if (GAME == 5)
 	#include "th05/resident.hpp"
-	#include "th05/chars.h"
+	#include "th05/playchar.h"
 	#include "th05/shiftjis/fns.hpp"
 #else
 	#include "th04/resident.hpp"
-	#include "th04/chars.h"
+	#include "th04/playchar.h"
 	#include "th04/shiftjis/fns.hpp"
 #endif
 #include "th04/main/ems.hpp"
@@ -42,8 +32,8 @@ inline void ems_write_cdg_color_planes(
 	);
 }
 
-// ZUN bug: Should clamp the amount of images to the maximum amount allocated
-// in the EMS cache area.
+// ZUN landmine: Should clamp the amount of images to the maximum amount
+// allocated in the EMS cache area.
 #define ems_transfer_cdgs_until_freed_slot(offset_first, slot_first) { \
 	int slot = slot_first; \
 	uint32_t offset = offset_first; \
@@ -82,7 +72,7 @@ void near ems_allocate_and_preload_eyecatch(void)
 		eyename[3] = ('0' + rank);
 	#endif
 
-	Ems = NULL;
+	Ems = nullptr;
 	if(!ems_exist() || (ems_space() < EMSSIZE)) {
 		return;
 	}

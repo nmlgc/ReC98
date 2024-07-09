@@ -1,20 +1,17 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
-extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
-#include "master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "platform/x86real/flags.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "th01/hardware/egc.h"
 
-#define graph_accesspage_1() \
-	outportb2(0xA6, 1);
-
-#define graph_accesspage_0()  \
-	_AX ^= _AX; \
-	__asm	out 0xA6, al;
+inline void graph_accesspage_1(void) {
+	_outportb_(0xA6, 1);
+}
+inline void graph_accesspage_0(void) {
+	_outportb_(0xA6, (_AX ^= _AX));
+}
 
 extern vram_word_amount_t egcrect_w;
 
@@ -33,37 +30,39 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 
 	#if (GAME == 4)
 		// TH04 wants to blit using a forward STOSW (DF = 0)
-		__asm { cld; }
+		_asm { cld; }
 	#endif
 	egc_start_copy();
-	egc_setrop(EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0);
+
+	// (EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0)
+	outport(EGC_MODE_ROP_REG, 0x29F0);
 
 	// Using inline assembly rather than register pseudovariables to prevent
 	// parameters from being moved to the SI register
-	__asm	mov	ax, left;
-	__asm	mov	dx, top;
+	asm { mov	ax, left; }
+	asm { mov	dx, top; }
 
 	vo_tmp = _AX;
-	static_cast<vram_offset_t>(vo_tmp) >>= 4;
-	__asm	shl	bx, 1;
+	static_cast<vram_offset_t>(vo_tmp) >>= EGC_REGISTER_BITS;
+	asm { shl	bx, 1; }
 	_DX <<= 6;
 	vo_tmp += _DX;
 	_DX >>= 2;
 	vo_tmp += _DX;
 
 	_DI = vo_tmp;
-	_AX &= ((BYTE_DOTS * 2) - 1);
+	_AX &= EGC_REGISTER_MASK;
 	first_bit = _AX;
 
-	w_tmp = ((_AX + w) >> 4);
+	w_tmp = ((_AX + w) >> EGC_REGISTER_BITS);
 	if(first_bit) {
 		w_tmp++;
 	}
 	egcrect_w = w_tmp;
 
-	_CX = (ROW_SIZE / 2);
+	_CX = (ROW_SIZE / EGC_REGISTER_SIZE);
 	_CX -= w_tmp;
-	__asm	shl	cx, 1;
+	asm { shl	cx, 1; }
 	rows_remaining = h;
 	stride = _CX;
 	_ES = SEG_PLANE_B;
@@ -75,14 +74,14 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 				_DI |= _DI;
 				if((!FLAGS_SIGN) && (_DI < PLANE_SIZE)) {
 					graph_accesspage_1();	dots = peek(_ES, _DI);
-					graph_accesspage_0();	pokew(_ES, _DI, dots);
+					graph_accesspage_0();	_poke_(_ES, _DI, dots);
 				}
 				_DI += 2;
 			#else
 				graph_accesspage_1();  	dots = peek(_ES, _DI);
-				graph_accesspage_0();	_AX = dots; __asm { stosw; }
+				graph_accesspage_0();	_AX = dots; asm { stosw; }
 			#endif
-			__asm { loop put_loop; }
+			asm { loop put_loop; }
 		}
 		_DI += stride;
 		rows_remaining--;
@@ -95,7 +94,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 
 static void near egc_start_copy(void)
 {
-	__asm {
+	_asm {
 		push 	es
 		push 	0
 		pop  	es
@@ -116,7 +115,7 @@ static void near egc_start_copy(void)
 	}
 	graph_egc_on();
 	outport(EGC_ACTIVEPLANEREG, 0xFFF0);
-	egc_selectpat();
+	outport(EGC_READPLANEREG, 0x00FF);
 	outport(EGC_MASKREG, 0xFFFF);
 	_DX = EGC_ADDRRESSREG;
 	outport(_DX, (_AX - _AX)); // :zunpet:
@@ -124,5 +123,3 @@ static void near egc_start_copy(void)
 }
 
 #pragma codestring "\x90"
-
-}

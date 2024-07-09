@@ -1,13 +1,8 @@
 // First TH05 .PI C++ translation unit.
 
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 
-extern "C" {
 #include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
-#include "master.hpp"
 #include "th05/formats/pi.hpp"
 #include "th05/formats/pi_impl.hpp"
 
@@ -23,7 +18,7 @@ void pascal pi_put_masked_8(
 	screen_x_t left, vram_y_t top, int slot, int mask_id
 )
 {
-	#define rowloop_func __asm { \
+	#define rowloop_func _asm { \
 		push	left;	/* left */ \
 		push	top; 	/* top */ \
 		mov 	ax, word ptr pi_headers[di].xsize; \
@@ -34,7 +29,7 @@ void pascal pi_put_masked_8(
 		mov 	ax, mask_id; \
 		call	near ptr pi_put_masked_8_rowloop; \
 	}
-	pi_put_impl(left, top, slot, rowloop_func);
+	pi_put_impl(slot, rowloop_func);
 	#undef rowloop_func
 }
 
@@ -42,7 +37,7 @@ void pascal pi_put_quarter_masked_8(
 	screen_x_t left, vram_y_t top, int slot, int quarter, int mask_id
 )
 {
-	#define rowloop_func __asm { \
+	#define rowloop_func _asm { \
 		mov 	di, PI_QUARTER_H; \
 		push	left; \
 		push	top; \
@@ -51,10 +46,8 @@ void pascal pi_put_quarter_masked_8(
 		mov 	ax, mask_id; \
 		call	near ptr pi_put_masked_8_rowloop; \
 	}
-	pi_put_quarter_impl(left, top, slot, quarter, rowloop_func);
+	pi_put_quarter_impl(slot, quarter, rowloop_func);
 	#undef rowloop_func
 }
 
 #pragma codestring "\x90"
-
-}

@@ -55,10 +55,10 @@ start_demo	proc near
 	cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
 	jl	short @@score_loop
 	call	palette_black_out pascal, 1
-	call	cfg_save
+	call	@cfg_save$qv
 	call	gaiji_restore
 	kajacall	KAJA_SONG_STOP
-	call	_game_exit
+	call	@game_exit$qv
 	call	_execl c, offset path, ds, offset path, ds, large 0
 	pop	si
 	pop	bp

@@ -1,0 +1,3 @@
+public _shots_hittest_against_boss
+_shots_hittest_against_boss db 0
+	evendata

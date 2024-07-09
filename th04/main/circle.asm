@@ -11,9 +11,9 @@ circles_add_growing	proc far
 	jmp	short @@more?
 
 @@loop:
-	cmp	[si+circle_t.flag], 0
+	cmp	[si+circle_t.flag], F_FREE
 	jnz	short @@next
-	mov	[si+circle_t.flag], 1
+	mov	[si+circle_t.flag], F_ALIVE
 	mov	[si+circle_t.age], 0
 	mov	ax, [bp+@@center_x]
 	mov	bx, 16
@@ -58,9 +58,9 @@ circles_add_shrinking	proc far
 	jmp	short @@more?
 
 @@loop:
-	cmp	[si+circle_t.flag], 0
+	cmp	[si+circle_t.flag], F_FREE
 	jnz	short @@next
-	mov	[si+circle_t.flag], 1
+	mov	[si+circle_t.flag], F_ALIVE
 	mov	[si+circle_t.age], 0
 	mov	ax, [bp+@@center_x]
 	mov	bx, 10h
@@ -102,19 +102,19 @@ circles_update	proc near
 	jmp	short @@more?
 
 @@loop:
-	cmp	[si+circle_t.flag], 2
+	cmp	[si+circle_t.flag], F_REMOVE
 	jnz	short @@alive?
-	mov	[si+circle_t.flag], 0
+	mov	[si+circle_t.flag], F_FREE
 
 @@alive?:
-	cmp	[si+circle_t.flag], 1
+	cmp	[si+circle_t.flag], F_ALIVE
 	jnz	short @@next
 	mov	ax, [si+circle_t.radius_delta]
 	add	[si+circle_t.radius_cur], ax
 	inc	[si+circle_t.age]
 	cmp	[si+circle_t.age], 16
 	jbe	short @@next
-	mov	[si+circle_t.flag], 2
+	mov	[si+circle_t.flag], F_REMOVE
 
 @@next:
 	inc	dx
@@ -136,13 +136,13 @@ circles_render	proc near
 	push	si
 	push	di
 	mov	ah, _circles_color
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	mov	si, offset _circles
 	xor	di, di
 	jmp	short @@more?
 
 @@loop?:
-	cmp	[si+circle_t.flag], 1
+	cmp	[si+circle_t.flag], F_ALIVE
 	jnz	short @@next
 	push	[si+circle_t.center.x]
 	push	[si+circle_t.center.y]

@@ -79,6 +79,8 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
                     tsk->output_type = REC98_OUT_BMP;
                 else if (!strcmp(a,"c"))
                     tsk->output_type = REC98_OUT_C;
+                else if (!strcmp(a,"cpp"))
+                    tsk->output_type = REC98_OUT_CPP;
                 else
                     return bmp2arr_error_set(tsk, INVALID_OUTPUT_TYPE);
             }
@@ -88,8 +90,6 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
                     return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "sw");
 
                 tsk->sprite_width = atoi(a);
-                if (!(tsk->sprite_width == 8 || tsk->sprite_width == 16))
-                    return bmp2arr_error_set(tsk, INVALID_SPRITE_WIDTH);
             }
             else if (!strcmp(a,"sh")) {
                 a = argv[i++];
@@ -149,7 +149,7 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
     return bmp2arr_error_set(tsk, SUCCESS);
 }
 
-int main(int argc,char **argv) {
+int __cdecl main(int argc,char **argv) {
     struct rec98_bmp2arr_task tsk;
 
     if (rec98_bmp2arr_task_init(&tsk))

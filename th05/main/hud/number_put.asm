@@ -1,6 +1,8 @@
 ; Prints [val] using the bold gaiji font, right-aligned at ([left+5], [y]),
 ; with the given attribute.
-; void pascal far hud_int_put(utram_x_t left, utram_y_t y, unsigned int val, unsigned int atrb);
+; void pascal far hud_int_put(
+; 	utram_x_t left, utram_y_t y, unsigned int val, tram_atrb2 atrb
+; );
 public HUD_INT_PUT
 hud_int_put	proc far
 
@@ -24,8 +26,8 @@ hud_int_put	endp
 	nop
 
 
-public HUD_POINTS_PUT
-hud_points_put	proc far
+public @HUD_POINTS_PUT$QUIUIUL
+@hud_points_put$quiuiul proc far
 
 @@points	= dword	ptr  6
 @@y     	= word ptr  0Ah
@@ -74,4 +76,4 @@ hud_digits_put:
 	pop	di
 	pop	bp
 	retf	8
-hud_points_put	endp
+@hud_points_put$quiuiul endp

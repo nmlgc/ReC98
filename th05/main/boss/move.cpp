@@ -1,3 +1,5 @@
+#include "th05/main/boss/impl.hpp"
+
 extern y_direction_t boss_flystep_random_next_y_direction;
 
 bool pascal near boss_flystep_random(int frame)

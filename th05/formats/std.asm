@@ -3,13 +3,12 @@
 ; lookup array – see tiles_fill_initial() for details. The rest of the format
 ; is identical to TH04.
 
-; void pascal near std_load(void);
-public STD_LOAD
-std_load	proc near
+public @std_load$qv
+@std_load$qv proc near
 	push	si
 	push	di
 	push	ds
-	call	std_free
+	call	@std_free$qv
 	mov	al, _stage_id
 	add	al, '0'
 	mov	byte ptr _std_fn+3, al
@@ -57,20 +56,20 @@ std_load	proc near
 	mov	word ptr _boss_bgm_title, di
 	repne scasb
 	lea	ax, [di+5]
-	mov	_tile_section_ptr, ax
+	mov	_std_map_section_p, ax
 	mov	_tile_row_in_section, 0
 	movzx	ax, byte ptr es:[di]
 	inc	ax
 	add	di, ax
 	lea	ax, [di+5]
-	mov	_tile_scrollspeed_ptr, ax
+	mov	_std_scroll_speed, ax
 	movzx	ax, byte ptr es:[di]
 	mov	_scroll_speed, al
 	inc	ax
 	add	di, ax
 	mov	dl, es:[di]
 	inc	di
-	mov	bx, offset _enemy_script_ptrs
+	mov	bx, offset _std_enemy_scripts
 
 @@enemy_script_loop:
 	movzx	ax, byte ptr es:[di]
@@ -83,16 +82,15 @@ std_load	proc near
 	inc	di
 	mov	word ptr _std_ip+2, es
 	mov	word ptr _std_ip, di
-	setfarfp	_stage_vm, std_run
+	setfarfp	_stage_vm, @std_run$qv
 	pop	di
 	pop	si
 	retn
-std_load	endp
+@std_load$qv endp
 
 
-; void pascal near std_free(void);
-public STD_FREE
-std_free	proc near
+public @std_free$qv
+@std_free$qv proc near
 	cmp	_std_seg, 0
 	jz	short @@ret
 	call	hmem_free pascal, _std_seg
@@ -100,5 +98,5 @@ std_free	proc near
 
 @@ret:
 	retn
-std_free	endp
+@std_free$qv endp
 	even

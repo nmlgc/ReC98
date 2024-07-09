@@ -1,4 +1,5 @@
 #include "th02/core/initexit.h"
+#include <stddef.h>
 
 int game_init_op(const unsigned char *pf_fn);
 int pascal game_init_main(const unsigned char *pf_fn);

@@ -14,1918 +14,55 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large SHARED
+		.model use16 large _TEXT
 
 BINARY = 'O'
 
 include ReC98.inc
 include th04/th04.inc
-include th04/hardware/grppsafx.inc
-include th04/music/music.inc
+include th04/sprites/op_cdg.inc
 
-	extern SCOPY@:proc
-	extern _execl:proc
-	extern _getch:proc
-	extern _strlen:proc
+op_01 group OP_SETUP_TEXT, op_01_TEXT
 
-g_SHARED group SHARED, SHARED_
+; ===========================================================================
+
+_TEXT	segment	word public 'CODE' use16
+	extern PALETTE_BLACK_IN:proc
+	extern PALETTE_BLACK_OUT:proc
+	extern FILE_CLOSE:proc
+	extern FILE_CREATE:proc
+	extern FILE_EXIST:proc
+	extern FILE_READ:proc
+	extern FILE_ROPEN:proc
+	extern FILE_SEEK:proc
+	extern FILE_WRITE:proc
+	extern GRCG_BYTEBOXFILL_X:proc
+	extern GRCG_SETCOLOR:proc
+	extern GRAPH_CLEAR:proc
+	extern GRAPH_COPY_PAGE:proc
+	extern GRAPH_PI_FREE:proc
+	extern PALETTE_SHOW:proc
+	extern IRAND:proc
+	extern SUPER_FREE:proc
+	extern SUPER_ENTRY_BFNT:proc
+	extern SUPER_PUT_RECT:proc
+	extern SUPER_PUT:proc
+	extern GRAPH_GAIJI_PUTS:proc
+	extern GRAPH_GAIJI_PUTC:proc
+_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-_TEXT		segment	word public 'CODE' use16
-		assume cs:_TEXT
-		assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include libs/master.lib/bfnt_entry_pat.asm
-include libs/master.lib/bfnt_extend_header_skip.asm
-include libs/master.lib/bfnt_header_read.asm
-include libs/master.lib/bfnt_header_analysis.asm
-include libs/master.lib/atrtcmod.asm
-include libs/master.lib/bcloser.asm
-include libs/master.lib/bfill.asm
-include libs/master.lib/bfnt_palette_set.asm
-include libs/master.lib/bgetc.asm
-include libs/master.lib/palette_black_in.asm
-include libs/master.lib/palette_black_out.asm
-include libs/master.lib/bopenr.asm
-include libs/master.lib/bread.asm
-include libs/master.lib/bseek.asm
-include libs/master.lib/bseek_.asm
-include libs/master.lib/dos_axdx.asm
-include libs/master.lib/dos_keyclear.asm
-include libs/master.lib/dos_puts2.asm
-include libs/master.lib/dos_read.asm
-include libs/master.lib/dos_seek.asm
-include libs/master.lib/dos_setvect.asm
-include libs/master.lib/egc.asm
-include libs/master.lib/file_append.asm
-include libs/master.lib/file_close.asm
-include libs/master.lib/file_create.asm
-include libs/master.lib/file_exist.asm
-include libs/master.lib/file_read.asm
-include libs/master.lib/file_ropen.asm
-include libs/master.lib/file_seek.asm
-include libs/master.lib/file_write.asm
-include libs/master.lib/dos_close.asm
-include libs/master.lib/dos_ropen.asm
-include libs/master.lib/grcg_boxfill.asm
-include libs/master.lib/grcg_byteboxfill_x.asm
-include libs/master.lib/grcg_hline.asm
-include libs/master.lib/grcg_polygon_c.asm
-include libs/master.lib/grcg_round_boxfill.asm
-include libs/master.lib/grcg_setcolor.asm
-include libs/master.lib/get_machine_98.asm
-include libs/master.lib/get_machine_at.asm
-include libs/master.lib/get_machine_dosbox.asm
-include libs/master.lib/check_machine_fmr.asm
-include libs/master.lib/get_machine.asm
-include libs/master.lib/gaiji_backup.asm
-include libs/master.lib/gaiji_entry_bfnt.asm
-include libs/master.lib/gaiji_read.asm
-include libs/master.lib/gaiji_write.asm
-include libs/master.lib/graph_400line.asm
-include libs/master.lib/graph_clear.asm
-include libs/master.lib/graph_copy_page.asm
-include libs/master.lib/graph_extmode.asm
-include libs/master.lib/graph_pi_free.asm
-include libs/master.lib/graph_pi_load_pack.asm
-include libs/master.lib/graph_pack_put_8.asm
-include libs/master.lib/graph_show.asm
-include libs/master.lib/graph_start.asm
-include libs/master.lib/js_end.asm
-include libs/master.lib/keybeep.asm
-include libs/master.lib/make_linework.asm
-include libs/master.lib/palette_init.asm
-include libs/master.lib/palette_show.asm
-include libs/master.lib/pfclose.asm
-include libs/master.lib/pfgetc.asm
-include libs/master.lib/pfread.asm
-include libs/master.lib/pfrewind.asm
-include libs/master.lib/pfseek.asm
-include libs/master.lib/random.asm
-include libs/master.lib/rottbl.asm
-include libs/master.lib/smem_release.asm
-include libs/master.lib/smem_wget.asm
-include libs/master.lib/soundio.asm
-include libs/master.lib/text_clear.asm
-include libs/master.lib/txesc.asm
-include libs/master.lib/vsync.asm
-include libs/master.lib/vsync_wait.asm
-include libs/master.lib/palette_white_in.asm
-include libs/master.lib/hmem_lallocate.asm
-include libs/master.lib/mem_assign_dos.asm
-include libs/master.lib/mem_assign.asm
-include libs/master.lib/memheap.asm
-include libs/master.lib/mem_unassign.asm
-include libs/master.lib/super_free.asm
-include libs/master.lib/super_entry_pat.asm
-include libs/master.lib/super_entry_at.asm
-include libs/master.lib/super_entry_bfnt.asm
-include libs/master.lib/super_cancel_pat.asm
-include libs/master.lib/super_put_rect.asm
-include libs/master.lib/super_put.asm
-include libs/master.lib/respal_exist.asm
-include libs/master.lib/respal_free.asm
-include libs/master.lib/pfint21.asm
-		db 0
-include libs/master.lib/js_start.asm
-include libs/master.lib/draw_trapezoid.asm
-include th03/formats/pfopen.asm
-include libs/master.lib/pf_str_ieq.asm
-include libs/master.lib/js_sense.asm
-include libs/master.lib/bgm_bell_org.asm
-include libs/master.lib/bgm_mget.asm
-include libs/master.lib/bgm_read_sdata.asm
-include libs/master.lib/bgm_timer.asm
-include libs/master.lib/bgm_pinit.asm
-include libs/master.lib/bgm_timerhook.asm
-include libs/master.lib/bgm_play.asm
-include libs/master.lib/bgm_sound.asm
-include libs/master.lib/bgm_effect_sound.asm
-include libs/master.lib/bgm_stop_play.asm
-include libs/master.lib/bgm_set_tempo.asm
-include libs/master.lib/bgm_init_finish.asm
-include libs/master.lib/bgm_stop_sound.asm
-include libs/master.lib/graph_gaiji_puts.asm
-include libs/master.lib/graph_gaiji_putc.asm
-_TEXT		ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-op_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_01_TEXT
+OP_SETUP_TEXT segment byte public 'CODE' use16
+		assume cs:op_01
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/formats/cfg.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _start_game
-_start_game	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	es:[bx+resident_t.stage], 0
-		mov	al, es:[bx+resident_t.cfg_lives]
-		mov	es:[bx+resident_t.credit_lives], al
-		mov	al, es:[bx+resident_t.cfg_bombs]
-		mov	es:[bx+resident_t.credit_bombs], al
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '0'
-		call	_playchar_menu
-		or	ax, ax
-		jnz	short loc_A96A
-		les	bx, _resident
-		mov	es:[bx+resident_t.demo_num], 0
-		call	_main_cdg_free
-		call	cfg_save
-		call	gaiji_restore
-		kajacall	KAJA_SONG_FADE, 10
-		call	_game_exit
-		les	bx, _resident
-		cmp	es:[bx+resident_t.debug_mode], 0
-		jnz	short loc_A957
-		pushd	0
-		push	ds
-		push	offset aMain	; "main"
-		push	ds
-		push	offset aMain	; "main"
-		jmp	short loc_A962
-; ---------------------------------------------------------------------------
-
-loc_A957:
-		pushd	0
-		push	ds
-		push	offset path	; "deb"
-		push	ds
-		push	offset path	; "deb"
-
-loc_A962:
-		call	_execl
-		add	sp, 0Ch
-
-loc_A96A:
-		pop	bp
-		retn
-_start_game	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _start_extra
-_start_extra	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	es:[bx+resident_t.stage], STAGE_EXTRA
-		mov	es:[bx+resident_t.credit_lives], 3
-		mov	es:[bx+resident_t.credit_bombs], 2
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '6'
-		call	_playchar_menu
-		or	ax, ax
-		jnz	short loc_A9C7
-		les	bx, _resident
-		mov	es:[bx+resident_t.demo_num], 0
-		call	_main_cdg_free
-		call	cfg_save
-		call	gaiji_restore
-		kajacall	KAJA_SONG_FADE, 10
-		call	_game_exit
-		pushd	0
-		push	ds
-		push	offset aMain	; "main"
-		push	ds
-		push	offset aMain	; "main"
-		call	_execl
-		add	sp, 0Ch
-
-loc_A9C7:
-		pop	bp
-		retn
-_start_extra	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _start_demo
-_start_demo	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	es:[bx+resident_t.stage], 0
-		mov	es:[bx+resident_t.credit_lives], 3
-		mov	es:[bx+resident_t.credit_bombs], 3
-		inc	es:[bx+resident_t.demo_num]
-		cmp	es:[bx+resident_t.demo_num], 4
-		jbe	short loc_A9EF
-		mov	es:[bx+resident_t.demo_num], 1
-
-loc_A9EF:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.demo_num]
-		mov	ah, 0
-		dec	ax
-		mov	bx, ax
-		cmp	bx, 3
-		ja	short loc_AA6E
-		add	bx, bx
-		jmp	cs:off_AAAD[bx]
-
-loc_AA08:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '3'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_A
-		mov	es:[bx+resident_t.demo_stage], 3
-		jmp	short loc_AA6E
-; ---------------------------------------------------------------------------
-
-loc_AA22:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
-		mov	es:[bx+resident_t.stage_ascii], '0'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_A
-		mov	es:[bx+resident_t.demo_stage], 0
-		jmp	short loc_AA6E
-; ---------------------------------------------------------------------------
-
-loc_AA3C:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
-		mov	es:[bx+resident_t.stage_ascii], '2'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_B
-		mov	es:[bx+resident_t.demo_stage], 2
-		jmp	short loc_AA6E
-; ---------------------------------------------------------------------------
-
-loc_AA56:
-		les	bx, _resident
-		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
-		mov	es:[bx+resident_t.stage_ascii], '1'
-		mov	es:[bx+resident_t.shottype], SHOTTYPE_B
-		mov	es:[bx+resident_t.demo_stage], 1
-
-loc_AA6E:
-		push	1
-		call	palette_black_out
-		call	super_free
-		freePISlotLarge	0
-		call	_main_cdg_free
-		call	cfg_save
-		call	gaiji_restore
-		call	_game_exit
-		pushd	0
-		push	ds
-		push	offset aMain	; "main"
-		push	ds
-		push	offset aMain	; "main"
-		call	_execl
-		add	sp, 0Ch
-		pop	bp
-		retn
-_start_demo	endp
-
-; ---------------------------------------------------------------------------
-off_AAAD	dw offset loc_AA08
-		dw offset loc_AA22
-		dw offset loc_AA3C
-		dw offset loc_AA56
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MAIN_PUT
-main_put	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	ax, si
-		imul	ax, 20
-		add	ax, 224
-		mov	di, ax
-		call	egc_copy_rect_1_to_0_16 pascal, 256, ax, (128 shl 16) or 16
-		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
-		mov	[bp+var_2], si
-		mov	bx, si
-		cmp	bx, 5
-		ja	short loc_AB59
-		add	bx, bx
-		jmp	cs:off_ABCB[bx]
-
-loc_AAF3:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 224, 10
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		add	ax, 16h
-		mov	[bp+var_2], ax
-		jmp	short loc_AB59
-; ---------------------------------------------------------------------------
-
-loc_AB12:
-		cmp	_extra_unlocked, 0
-		jnz	short loc_AB24
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 12
-
-loc_AB24:
-		push	(272 shl 16) or 244
-		push	11
-		jmp	short loc_AB54
-; ---------------------------------------------------------------------------
-
-loc_AB2E:
-		push	(272 shl 16) or 264
-		push	12
-		jmp	short loc_AB54
-; ---------------------------------------------------------------------------
-
-loc_AB38:
-		push	(272 shl 16) or 284
-		push	13
-		jmp	short loc_AB54
-; ---------------------------------------------------------------------------
-
-loc_AB42:
-		push	(272 shl 16) or 304
-		push	14
-		jmp	short loc_AB54
-; ---------------------------------------------------------------------------
-
-loc_AB4C:
-		push	(272 shl 16) or 324
-		push	15
-
-loc_AB54:
-		call	cdg_put_nocolors_8
-
-loc_AB59:
-		GRCG_OFF_CLOBBERING dx
-		cmp	[bp+arg_0], 8
-		jnz	short loc_ABC4
-		call	cdg_put_8 pascal, 256, di, 35
-		call	cdg_put_8 pascal, 352, di, 36
-		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	_strlen
-		add	sp, 4
-		shl	ax, 3
-		mov	dx, 624
-		sub	dx, ax
-		push	dx
-		push	(384 shl 16) or 15
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	graph_putsa_fx
-
-loc_ABC4:
-		pop	di
-		pop	si
-		leave
-		retn	4
-main_put	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_ABCB	dw offset loc_AAF3
-		dw offset loc_AB12
-		dw offset loc_AB2E
-		dw offset loc_AB38
-		dw offset loc_AB42
-		dw offset loc_AB4C
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public OPTION_PUT
-option_put	proc near
-
-@@y		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, 224
-		mov	ax, [bp+arg_2]
-		shl	ax, 4
-		add	ax, 224
-		mov	[bp+@@y], ax
-		cmp	[bp+arg_2], 7
-		jnz	short loc_ABF7
-		mov	[bp+@@y], 340
-
-loc_ABF7:
-		call	egc_copy_rect_1_to_0_16 pascal, 224, [bp+@@y], (192 shl 16) or 16
-
-loc_AC08:
-		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
-		mov	bx, [bp+arg_2]
-		cmp	bx, 7
-		ja	loc_AD9A
-		add	bx, bx
-		jmp	cs:off_AE18[bx]
-
-loc_AC24:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 224, 16
-		push	(320 shl 16) or 224
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		add	ax, 21
-		push	ax
-		call	cdg_put_nocolors_8
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		add	ax, 6
-
-loc_AC57:
-		mov	si, ax
-		jmp	loc_AD9A
-; ---------------------------------------------------------------------------
-
-loc_AC5C:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 240, 17
-		push	(320 shl 16) or 240
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.cfg_lives]
-		mov	ah, 0
-		push	ax
-		call	cdg_put_nocolors_8
-		mov	si, 0Ah
-		jmp	loc_AD9A
-; ---------------------------------------------------------------------------
-
-loc_AC85:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 256, 18
-		push	(320 shl 16) or 256
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.cfg_bombs]
-		mov	ah, 0
-		push	ax
-		call	cdg_put_nocolors_8
-		mov	si, 0Bh
-		jmp	loc_AD9A
-; ---------------------------------------------------------------------------
-
-loc_ACAE:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 272, 19
-		les	bx, _resident
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		jnz	short loc_ACCB
-		mov	ax, 1Ch
-		jmp	short loc_ACD8
-; ---------------------------------------------------------------------------
-
-loc_ACCB:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		add	ax, 18h
-
-loc_ACD8:
-		mov	[bp+var_2], ax
-		call	cdg_put_nocolors_8 pascal, large (320 shl 16) or 272, ax
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		add	ax, 0Ch
-		jmp	loc_AC57
-; ---------------------------------------------------------------------------
-
-loc_ACF7:
-		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 288, 20
-		les	bx, _resident
-		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
-		jnz	short loc_AD14
-		mov	ax, 1Ch
-		jmp	short loc_AD25
-; ---------------------------------------------------------------------------
-
-loc_AD14:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		mov	ax, 1Fh
-		pop	dx
-		sub	ax, dx
-
-loc_AD25:
-		mov	[bp+var_2], ax
-		call	cdg_put_nocolors_8 pascal, large (320 shl 16) or 288, ax
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		add	ax, 0Fh
-		jmp	loc_AC57
-; ---------------------------------------------------------------------------
-
-loc_AD44:
-		push	(272 shl 16) or 304
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.turbo_mode]
-		mov	ah, 0
-		mov	dx, 33
-		sub	dx, ax
-		push	dx
-		call	cdg_put_nocolors_8
-		mov	di, 256
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.turbo_mode]
-		mov	ah, 0
-		add	ax, 12h
-		jmp	loc_AC57
-; ---------------------------------------------------------------------------
-
-loc_AD72:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 320, 31
-		mov	di, 256
-		mov	si, 14h
-		jmp	short loc_AD9A
-; ---------------------------------------------------------------------------
-
-loc_AD87:
-		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 340, 15
-		mov	di, 256
-		mov	si, 15h
-
-loc_AD9A:
-		GRCG_OFF_CLOBBERING dx
-		cmp	[bp+arg_0], 8
-		jnz	short loc_AE11
-		call	cdg_put_8 pascal, di, [bp+@@y], 35
-		cmp	di, 256
-		jnz	short loc_ADBD
-		lea	ax, [di+96]
-		push	ax
-		jmp	short loc_ADC0
-; ---------------------------------------------------------------------------
-
-loc_ADBD:
-		push	384
-
-loc_ADC0:
-		push	[bp+@@y]
-		push	36
-		call	cdg_put_8
-		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		mov	bx, si
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	_strlen
-		add	sp, 4
-		shl	ax, 3
-		mov	dx, 624
-		sub	dx, ax
-		push	dx
-		push	(384 shl 16) or 15
-		mov	bx, si
-		shl	bx, 2
-		pushd	_MENU_DESC[bx]
-		call	graph_putsa_fx
-
-loc_AE11:
-		pop	di
-		pop	si
-		leave
-		retn	4
-option_put	endp
-
-; ---------------------------------------------------------------------------
-		db    0
-off_AE18	dw offset loc_AC24
-		dw offset loc_AC5C
-		dw offset loc_AC85
-		dw offset loc_ACAE
-		dw offset loc_ACF7
-		dw offset loc_AD44
-		dw offset loc_AD72
-		dw offset loc_AD87
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MENU_SEL_MOVE
-menu_sel_move	proc near
-
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	1
-		call	_putfunc
-		mov	al, [bp+arg_0]
-		add	_menu_sel, al
-		mov	al, _menu_sel
-		cbw
-		or	ax, ax
-		jge	short loc_AE4B
-		mov	al, [bp+arg_2]
-		mov	_menu_sel, al
-
-loc_AE4B:
-		mov	al, _menu_sel
-		cmp	al, [bp+arg_2]
-		jle	short loc_AE58
-		mov	_menu_sel, 0
-
-loc_AE58:
-		cmp	_extra_unlocked, 0
-		jnz	short loc_AE76
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 1
-		jnz	short loc_AE76
-		cmp	_in_option, 0
-		jnz	short loc_AE76
-		mov	al, [bp+arg_0]
-		add	_menu_sel, al
-
-loc_AE76:
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	8
-		call	_putfunc
-		call	_snd_se_reset
-		call	snd_se_play pascal, 1
-		call	_snd_se_update
-		pop	bp
-		retn	4
-menu_sel_move	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MAIN_UPDATE_AND_RENDER
-main_update_and_render	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_main_menu_initialized, 0
-		jnz	short loc_AEEB
-		mov	_main_menu_unused_1, 0
-		mov	_main_input_allowed, 0
-		call	egc_copy_rect_1_to_0_16 pascal, (192 shl 16) or 224, (288 shl 16) or 160
-		xor	si, si
-		jmp	short loc_AED6
-; ---------------------------------------------------------------------------
-
-loc_AEC0:
-		push	si
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, si
-		jnz	short loc_AECE
-		mov	ax, 8
-		jmp	short loc_AED1
-; ---------------------------------------------------------------------------
-
-loc_AECE:
-		mov	ax, 1
-
-loc_AED1:
-		push	ax
-		call	main_put
-		inc	si
-
-loc_AED6:
-		cmp	si, 6
-		jl	short loc_AEC0
-		mov	_putfunc, offset main_put
-		mov	_main_menu_initialized, 1
-		mov	_main_input_allowed, 0
-
-loc_AEEB:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_AEF7
-		mov	_main_input_allowed, 1
-
-loc_AEF7:
-		cmp	_main_input_allowed, 0
-		jz	loc_B043
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_AF0E
-		call	menu_sel_move pascal, 5, -1
-
-loc_AF0E:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_AF1C
-		call	menu_sel_move pascal, 5, 1
-
-loc_AF1C:
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_AF2C
-		test	_key_det.lo, low INPUT_SHOT
-		jz	loc_B02B
-
-loc_AF2C:
-		call	_snd_se_reset
-		call	snd_se_play pascal, 11
-		call	_snd_se_update
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	loc_B02B
-		add	bx, bx
-		jmp	cs:off_B046[bx]
-
-loc_AF51:
-		call	_start_game
-		jmp	short loc_AFBD
-; ---------------------------------------------------------------------------
-
-loc_AF56:
-		call	_start_extra
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 0
-		mov	_menu_sel, 1
-		jmp	loc_B043
-; ---------------------------------------------------------------------------
-
-loc_AFAD:
-		call	_regist_view_menu
-		mov	_main_menu_initialized, 0
-		jmp	short loc_B02B
-; ---------------------------------------------------------------------------
-
-loc_AFB7:
-		call	_musicroom
-		call	_main_cdg_load
-
-loc_AFBD:
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 0
-		mov	_menu_sel, 0
-		jmp	short loc_B043
-; ---------------------------------------------------------------------------
-
-loc_B010:
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 1
-		mov	_menu_sel, 0
-		jmp	short loc_B02B
-; ---------------------------------------------------------------------------
-
-loc_B021:
-		mov	_main_menu_initialized, 0
-		mov	_quit, 1
-
-loc_B02B:
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_B037
-		mov	_quit, 1
-
-loc_B037:
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_B043
-		mov	_main_input_allowed, 0
-
-loc_B043:
-		pop	si
-		pop	bp
-		retn
-main_update_and_render	endp
-
-; ---------------------------------------------------------------------------
-off_B046	dw offset loc_AF51
-		dw offset loc_AF56
-		dw offset loc_AFAD
-		dw offset loc_AFB7
-		dw offset loc_B010
-		dw offset loc_B021
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public OPTION_UPDATE_AND_RENDER
-option_update_and_render	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_option_initialized, 0
-		jnz	short loc_B0A2
-		mov	_option_input_allowed, 0
-		call	egc_copy_rect_1_to_0_16 pascal, (272 shl 16) or 224, (160 shl 16) or 144
-		xor	si, si
-		jmp	short loc_B08D
-; ---------------------------------------------------------------------------
-
-loc_B077:
-		push	si
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, si
-		jnz	short loc_B085
-		mov	ax, 8
-		jmp	short loc_B088
-; ---------------------------------------------------------------------------
-
-loc_B085:
-		mov	ax, 1
-
-loc_B088:
-		push	ax
-		call	option_put
-		inc	si
-
-loc_B08D:
-		cmp	si, 8
-		jl	short loc_B077
-		mov	_putfunc, offset option_put
-		mov	_option_initialized, 1
-		mov	_option_input_allowed, 0
-
-loc_B0A2:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_B0AE
-		mov	_option_input_allowed, 1
-
-loc_B0AE:
-		cmp	_option_input_allowed, 0
-		jz	loc_B35B
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B0C5
-		call	menu_sel_move pascal, 7, -1
-
-loc_B0C5:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B0D3
-		call	menu_sel_move pascal, 7, 1
-
-loc_B0D3:
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B0E3
-		test	_key_det.lo, low INPUT_SHOT
-		jz	loc_B16F
-
-loc_B0E3:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 6
-		jz	short loc_B0F4
-		cmp	ax, 7
-		jz	short loc_B14F
-		jmp	loc_B178
-; ---------------------------------------------------------------------------
-
-loc_B0F4:
-		les	bx, _resident
-		mov	es:[bx+resident_t.rank], RANK_NORMAL
-		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
-		mov	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_DEFAULT
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
-		mov	es:[bx+resident_t.se_mode], SND_SE_FM
-		mov	es:[bx+resident_t.turbo_mode], 1
-		kajacall	KAJA_SONG_STOP
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		mov	_option_initialized, 0
-		jmp	short loc_B16F
-; ---------------------------------------------------------------------------
-
-loc_B14F:
-		call	_snd_se_reset
-		call	snd_se_play pascal, 11
-		call	_snd_se_update
-		mov	_option_initialized, 0
-		mov	_menu_sel, 4
-		mov	_in_option, 0
-
-loc_B16F:
-		test	_key_det.lo, low INPUT_RIGHT
-		jz	loc_B250
-
-loc_B178:
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	loc_B246
-		add	bx, bx
-		jmp	cs:off_B36B[bx]
-
-loc_B18C:
-		les	bx, _resident
-		inc	es:[bx+resident_t.rank]
-		cmp	es:[bx+resident_t.rank], RANK_LUNATIC
-		jbe	loc_B246
-		mov	es:[bx+resident_t.rank], RANK_EASY
-		jmp	loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B1A5:
-		les	bx, _resident
-		inc	es:[bx+resident_t.cfg_lives]
-		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
-		jbe	loc_B246
-		mov	es:[bx+resident_t.cfg_lives], 1
-		jmp	loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B1BE:
-		les	bx, _resident
-		inc	es:[bx+resident_t.cfg_bombs]
-		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
-		jbe	short loc_B246
-		mov	es:[bx+resident_t.cfg_bombs], 0
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B1D4:
-		les	bx, _resident
-		inc	es:[bx+resident_t.bgm_mode]
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_MODE_COUNT
-		jb	short loc_B1E8
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-
-loc_B1E8:
-		kajacall	KAJA_SONG_STOP
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B21C:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
-		jnz	short loc_B22E
-		mov	es:[bx+resident_t.se_mode], SND_SE_BEEP
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B22E:
-		les	bx, _resident
-		dec	es:[bx+resident_t.se_mode]
-		jmp	short loc_B246
-; ---------------------------------------------------------------------------
-
-loc_B238:
-		les	bx, _resident
-		mov	al, 1
-		sub	al, es:[bx+resident_t.turbo_mode]
-		mov	es:[bx+resident_t.turbo_mode], al
-
-loc_B246:
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	8
-		call	option_put
-
-loc_B250:
-		test	_key_det.lo, low INPUT_LEFT
-		jz	loc_B339
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	loc_B32F
-		add	bx, bx
-		jmp	cs:off_B35F[bx]
-
-loc_B26D:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rank], RANK_EASY
-		jnz	short loc_B27D
-		mov	es:[bx+resident_t.rank], RANK_EXTRA
-
-loc_B27D:
-		les	bx, _resident
-		dec	es:[bx+resident_t.rank]
-		jmp	loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B288:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_lives], 1
-		jnz	short loc_B298
-		mov	es:[bx+resident_t.cfg_lives], (CFG_LIVES_MAX + 1)
-
-loc_B298:
-		les	bx, _resident
-		dec	es:[bx+resident_t.cfg_lives]
-		jmp	loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B2A3:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_bombs], 0
-		jnz	short loc_B2B3
-		mov	es:[bx+resident_t.cfg_bombs], (CFG_BOMBS_MAX + 1)
-
-loc_B2B3:
-		les	bx, _resident
-		dec	es:[bx+resident_t.cfg_bombs]
-		jmp	short loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B2BD:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		jnz	short loc_B2CF
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
-		jmp	short loc_B2D7
-; ---------------------------------------------------------------------------
-
-loc_B2CF:
-		les	bx, _resident
-		dec	es:[bx+resident_t.bgm_mode]
-
-loc_B2D7:
-		kajacall	KAJA_SONG_STOP
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		jmp	short loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B30B:
-		les	bx, _resident
-		inc	es:[bx+resident_t.se_mode]
-		cmp	es:[bx+resident_t.se_mode], SND_SE_MODE_COUNT
-		jb	short loc_B32F
-		mov	es:[bx+resident_t.se_mode], SND_SE_OFF
-		jmp	short loc_B32F
-; ---------------------------------------------------------------------------
-
-loc_B321:
-		les	bx, _resident
-		mov	al, 1
-		sub	al, es:[bx+resident_t.turbo_mode]
-		mov	es:[bx+resident_t.turbo_mode], al
-
-loc_B32F:
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	8
-		call	option_put
-
-loc_B339:
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_B34F
-		mov	_option_initialized, 0
-		mov	_menu_sel, 4
-		mov	_in_option, 0
-
-loc_B34F:
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_B35B
-		mov	_option_input_allowed, 0
-
-loc_B35B:
-		pop	si
-		pop	bp
-		retn
-option_update_and_render	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_B35F	dw offset loc_B26D
-		dw offset loc_B288
-		dw offset loc_B2A3
-		dw offset loc_B2BD
-		dw offset loc_B30B
-		dw offset loc_B321
-off_B36B	dw offset loc_B18C
-		dw offset loc_B1A5
-		dw offset loc_B1BE
-		dw offset loc_B1D4
-		dw offset loc_B21C
-		dw offset loc_B238
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		call	text_clear
-		call	respal_create
-		nop
-		nop
-		nop
-		nop
-		nop
-		nop
-		call	_game_init_op c, offset aMSzlEd_dat, ds
-		or	ax, ax
-		jz	short loc_B3AB
-		push	ds
-		push	offset asc_F7F7	; "\n空きメモリ不足です。メモリ空きを増やし"...
-		call	dos_puts2
-		call	_getch
-
-loc_B3AB:
-		call	gaiji_backup
-		push	ds
-		push	offset aGameft_bft ; "GAMEFT.bft"
-		call	gaiji_entry_bfnt
-		call	cfg_load
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rank], RANK_DEFAULT
-		jnz	short loc_B3D3
-		call	_setup_menu
-		les	bx, _resident
-		mov	es:[bx+resident_t.rank], RANK_NORMAL
-
-loc_B3D3:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		push	ax
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	ah, 0
-		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
-		les	bx, _resident
-		cmp	es:[bx+resident_t.zunsoft_shown], 0
-		jnz	short loc_B40D
-		call	_zunsoft
-		les	bx, _resident
-		mov	es:[bx+resident_t.zunsoft_shown], 1
-
-loc_B40D:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 0
-		jnz	short loc_B420
-		kajacall	KAJA_SONG_STOP
-
-loc_B420:
-		call	_op_animate
-		call	_cleardata_and_regist_view_sprite
-		call	_main_cdg_load
-		mov	_in_option, 0
-		mov	_quit, 0
-		mov	_menu_sel, 0
-		jmp	short loc_B47B
-; ---------------------------------------------------------------------------
-
-loc_B43A:
-		call	far ptr	_input_reset_sense
-		mov	al, _in_option
-		cbw
-		or	ax, ax
-		jz	short loc_B44E
-		cmp	ax, 1
-		jz	short loc_B45C
-		jmp	short loc_B45F
-; ---------------------------------------------------------------------------
-
-loc_B44E:
-		call	main_update_and_render
-		cmp	si, 640
-		jl	short loc_B45F
-		call	_start_demo
-		jmp	short loc_B45F
-; ---------------------------------------------------------------------------
-
-loc_B45C:
-		call	option_update_and_render
-
-loc_B45F:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_B469
-		inc	si
-		jmp	short loc_B46B
-; ---------------------------------------------------------------------------
-
-loc_B469:
-		xor	si, si
-
-loc_B46B:
-		les	bx, _resident
-		inc	es:[bx+resident_t.rand]
-		push	1
-		call	frame_delay
-
-loc_B47B:
-		cmp	_quit, 0
-		jz	short loc_B43A
-		call	_main_cdg_free
-		call	cfg_save_exit
-		call	gaiji_restore
-		call	text_clear
-		call	_game_exit_to_dos
-		call	respal_free
-		pop	si
-		pop	bp
-		retf
-_main		endp
-
-include th04/setup.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B794	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	window_singleline pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_BGM_HEAD
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
-		mov	[bp+var_2], 0
-		jmp	short loc_B7EB
-; ---------------------------------------------------------------------------
-
-loc_B7D4:
-		push	[bp+var_2]
-		cmp	[bp+var_2], 2
-		jnz	short loc_B7E2
-		mov	ax, 15
-		jmp	short loc_B7E4
-; ---------------------------------------------------------------------------
-
-loc_B7E2:
-		xor	ax, ax
-
-loc_B7E4:
-		push	ax
-		call	setup_bgm_choice_put
-		inc	[bp+var_2]
-
-loc_B7EB:
-		cmp	[bp+var_2], 3
-		jl	short loc_B7D4
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	window_dropdown_animate pascal, (192 shl 16) or 128
-		call	setup_bgm_help_put
-		mov	[bp+var_2], 2
-
-loc_B80E:
-		call	input_wait_for_change pascal, 0
-		push	1
-		call	frame_delay
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B87A
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_B87A
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B851
-		call	setup_bgm_choice_put pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 2
-		jnz	short loc_B846
-		mov	[bp+var_2], 0
-		jmp	short loc_B849
-; ---------------------------------------------------------------------------
-
-loc_B846:
-		inc	[bp+var_2]
-
-loc_B849:
-		call	setup_bgm_choice_put pascal, [bp+var_2], 15
-
-loc_B851:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B80E
-		call	setup_bgm_choice_put pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 0
-		jnz	short loc_B86D
-		mov	[bp+var_2], 2
-		jmp	short loc_B870
-; ---------------------------------------------------------------------------
-
-loc_B86D:
-		dec	[bp+var_2]
-
-loc_B870:
-		call	setup_bgm_choice_put pascal, [bp+var_2], 15
-		jmp	short loc_B80E
-; ---------------------------------------------------------------------------
-
-loc_B87A:
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	window_rollup_animate pascal, (192 shl 16) or 128
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	window_rollup_animate pascal, ( 32 shl 16) or 128
-		les	bx, _resident
-		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+resident_t.bgm_mode], al
-		leave
-		retn
-sub_B794	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B8B1	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
-		call	window_singleline pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_SE_HEAD
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
-		mov	[bp+var_2], 0
-		jmp	short loc_B908
-; ---------------------------------------------------------------------------
-
-loc_B8F1:
-		push	[bp+var_2]
-		cmp	[bp+var_2], 1
-		jnz	short loc_B8FF
-		mov	ax, 15
-		jmp	short loc_B901
-; ---------------------------------------------------------------------------
-
-loc_B8FF:
-		xor	ax, ax
-
-loc_B901:
-		push	ax
-		call	setup_se_choice_put
-		inc	[bp+var_2]
-
-loc_B908:
-		cmp	[bp+var_2], 3
-		jl	short loc_B8F1
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	window_dropdown_animate pascal, (192 shl 16) or 128
-		call	setup_se_help_put
-		mov	[bp+var_2], 1
-
-loc_B92B:
-		call	input_wait_for_change pascal, 0
-		push	1
-		call	frame_delay
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_B997
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_B997
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B96E
-		call	setup_se_choice_put pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 2
-		jnz	short loc_B963
-		mov	[bp+var_2], 0
-		jmp	short loc_B966
-; ---------------------------------------------------------------------------
-
-loc_B963:
-		inc	[bp+var_2]
-
-loc_B966:
-		call	setup_se_choice_put pascal, [bp+var_2], 15
-
-loc_B96E:
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_B92B
-		call	setup_se_choice_put pascal, [bp+var_2], 0
-		cmp	[bp+var_2], 0
-		jnz	short loc_B98A
-		mov	[bp+var_2], 2
-		jmp	short loc_B98D
-; ---------------------------------------------------------------------------
-
-loc_B98A:
-		dec	[bp+var_2]
-
-loc_B98D:
-		call	setup_se_choice_put pascal, [bp+var_2], 15
-		jmp	short loc_B92B
-; ---------------------------------------------------------------------------
-
-loc_B997:
-		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 9
-		call	window_rollup_animate pascal, (192 shl 16) or 128
-		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
-		mov	_window_tiles.y, 1 + 3
-		call	window_rollup_animate pascal, ( 32 shl 16) or 128
-		les	bx, _resident
-		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+resident_t.se_mode], al
-		leave
-		retn
-sub_B8B1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _setup_menu
-_setup_menu proc near
-		push	bp
-		mov	bp, sp
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	super_entry_bfnt pascal, ds, offset aMswin_bft ; "mswin.bft"
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aMs_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		call	graph_copy_page pascal, 0
-		push	1
-		call	palette_black_in
-		call	sub_B794
-		push	1
-		call	frame_delay
-		call	graph_copy_page pascal, 0
-		call	sub_B8B1
-		push	1
-		call	palette_black_out
-		call	super_free
-		pop	bp
-		retn
-_setup_menu endp
-
 include th04/zunsoft.asm
+OP_SETUP_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACK
-draw_track	proc near
-
-var_1		= byte ptr -1
-@@color		= byte ptr  4
-@@sel		= byte ptr  6
-
-		enter	2, 0
-		mov	al, 1
-		sub	al, _music_page
-		mov	[bp+var_1], al
-		graph_accesspage al
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 8
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
-		call	graph_putsa_fx
-		graph_accesspage _music_page
-		push	16
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 8
-		push	ax
-		mov	al, [bp+@@color]
-		mov	ah, 0
-		push	ax
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	_MUSIC_TITLES[bx]
-		call	graph_putsa_fx
-		leave
-		retn	4
-draw_track	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_TRACKS
-draw_tracks	proc near
-
-@@sel		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BF5E
-; ---------------------------------------------------------------------------
-
-loc_BF49:
-		push	si
-		mov	al, [bp+@@sel]
-		mov	ah, 0
-		cmp	ax, si
-		jnz	short loc_BF57
-		mov	al, 3
-		jmp	short loc_BF59
-; ---------------------------------------------------------------------------
-
-loc_BF57:
-		mov	al, 5
-
-loc_BF59:
-		push	ax
-		call	draw_track
-		inc	si
-
-loc_BF5E:
-		cmp	si, 18h
-		jl	short loc_BF49
-		pop	si
-		pop	bp
-		retn	2
-draw_tracks	endp
-
-include th02/music/music.asm
-include th02/music/music_cmt_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT_LINES
-draw_cmt_lines	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	graph_putsa_fx pascal, (320 shl 16) or 64, 7, ds, offset _music_cmt
-		mov	si, 1
-		jmp	short loc_C306
-; ---------------------------------------------------------------------------
-
-loc_C2DE:
-		mov	bx, si
-		imul	bx, MUSIC_CMT_LINE_LEN
-		cmp	_music_cmt[bx], ';'
-		jz	short loc_C305
-		push	320
-		lea	ax, [si+4]
-		shl	ax, 4
-		push	ax
-		push	7
-		push	ds
-		mov	ax, si
-		imul	ax, MUSIC_CMT_LINE_LEN
-		add	ax, offset _music_cmt
-		push	ax
-		call	graph_putsa_fx
-
-loc_C305:
-		inc	si
-
-loc_C306:
-		cmp	si, MUSIC_CMT_LINE_COUNT
-		jl	short loc_C2DE
-		pop	si
-		pop	bp
-		retn
-draw_cmt_lines	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C30E	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, FX_MASK
-		jmp	short loc_C328
-; ---------------------------------------------------------------------------
-
-loc_C317:
-		mov	_graph_putsa_fx_func, si
-		call	draw_cmt_lines
-		call	music_flip
-		call	draw_cmt_lines
-		call	music_flip
-		inc	si
-
-loc_C328:
-		cmp	si, FX_MASK_END
-		jl	short loc_C317
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	draw_cmt_lines
-		call	music_flip
-		call	draw_cmt_lines
-		pop	si
-		pop	bp
-		retn
-sub_C30E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C33F	proc near
-		push	bp
-		mov	bp, sp
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		call	music_flip
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		pop	bp
-		retn
-sub_C33F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DRAW_CMT
-draw_cmt	proc near
-
-@@track		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		cmp	byte_12DBE, 0
-		jz	short loc_C37C
-		call	sub_C33F
-
-loc_C37C:
-		call	music_cmt_load pascal, [bp+@@track]
-		call	screen_back_B_put
-		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
-		cmp	byte_12DBE, 0
-		jz	short loc_C3A2
-		call	sub_C30E
-		jmp	short loc_C3B0
-; ---------------------------------------------------------------------------
-
-loc_C3A2:
-		mov	byte_12DBE, 1
-		call	draw_cmt_lines
-		call	music_flip
-		call	draw_cmt_lines
-
-loc_C3B0:
-		call	screen_back_B_put
-		pop	bp
-		retn	2
-draw_cmt	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _musicroom
-_musicroom	proc near
-		push	bp
-		mov	bp, sp
-		mov	byte_12DBE, 0
-		call	cdg_free_all
-		call	text_clear
-		mov	_music_page, 1
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_showpage 0
-		graph_accesspage al
-		call	graph_clear
-		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aMusic_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		mov	al, music_track_playing
-		mov	_music_sel, al
-		call	draw_tracks pascal, word ptr _music_sel
-		call	graph_copy_page pascal, 0
-		call	_bgimage_snap
-		graph_accesspage 1
-		graph_showpage 0
-		call	screen_back_B_snap
-		mov	al, music_track_playing
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-
-loc_C454:
-		call	far ptr	_input_reset_sense
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C465
-		call	music_flip
-		jmp	short loc_C454
-; ---------------------------------------------------------------------------
-
-loc_C465:
-		call	far ptr	_input_reset_sense
-		test	_key_det.lo, low INPUT_UP
-		jz	short loc_C4A0
-		call	draw_track pascal, word ptr _music_sel, 5
-		cmp	_music_sel, 0
-		jbe	short loc_C487
-		dec	_music_sel
-		jmp	short loc_C48C
-; ---------------------------------------------------------------------------
-
-loc_C487:
-		mov	_music_sel, 17h
-
-loc_C48C:
-		cmp	_music_sel, 16h
-		jnz	short loc_C497
-		dec	_music_sel
-
-loc_C497:
-		call	draw_track pascal, word ptr _music_sel, 3
-
-loc_C4A0:
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_C4D6
-		call	draw_track pascal, word ptr _music_sel, 5
-		cmp	_music_sel, 17h
-		jnb	short loc_C4BD
-		inc	_music_sel
-		jmp	short loc_C4C2
-; ---------------------------------------------------------------------------
-
-loc_C4BD:
-		mov	_music_sel, 0
-
-loc_C4C2:
-		cmp	_music_sel, 16h
-		jnz	short loc_C4CD
-		inc	_music_sel
-
-loc_C4CD:
-		call	draw_track pascal, word ptr _music_sel, 3
-
-loc_C4D6:
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_C4E4
-		test	_key_det.hi, high INPUT_OK
-		jz	short loc_C51D
-
-loc_C4E4:
-		cmp	_music_sel, 17h
-		jz	short loc_C533
-		kajacall	KAJA_SONG_FADE, 32
-		mov	al, _music_sel
-		mov	music_track_playing, al
-		mov	ah, 0
-		call	draw_cmt pascal, ax
-		mov	al, _music_sel
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-
-loc_C51D:
-		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_C533
-		cmp	_key_det, INPUT_NONE
-		jnz	loc_C454
-		call	music_flip
-		jmp	loc_C465
-; ---------------------------------------------------------------------------
-
-loc_C533:
-		call	far ptr	_input_reset_sense
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_C544
-		call	music_flip
-		jmp	short loc_C533
-; ---------------------------------------------------------------------------
-
-loc_C544:
-		kajacall	KAJA_SONG_FADE, 16
-		call	screen_back_B_free
-		graph_showpage 0
-		graph_accesspage al
-		push	1
-		call	palette_black_out
-		call	_bgimage_free
-		call	snd_load pascal, ds, offset aOp_2, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		pop	bp
-		retn
-_musicroom	endp
-
+op_01_TEXT segment byte public 'CODE' use16
 include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
@@ -1950,7 +87,7 @@ arg_2		= word ptr  6
 		mov	[bp+var_4], 16
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_reimu.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		cmp	ax, 10
@@ -1959,7 +96,7 @@ arg_2		= word ptr  6
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_reimu.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -1971,7 +108,7 @@ arg_2		= word ptr  6
 loc_C7E0:
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_marisa.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		cmp	ax, 10
@@ -1980,7 +117,7 @@ loc_C7E0:
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_marisa.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -1994,7 +131,7 @@ loc_C811:
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_reimu.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -2006,7 +143,7 @@ loc_C811:
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_marisa.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -2026,7 +163,7 @@ loc_C854:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, _hi_reimu.score.g_points[bx]
+		mov	al, _hi_reimu.score.g_score[bx]
 		mov	ah, 0
 		add	ax, -gb_0_
 		push	ax
@@ -2038,7 +175,7 @@ loc_C854:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, _hi_marisa.score.g_points[bx]
+		mov	al, _hi_marisa.score.g_score[bx]
 		mov	ah, 0
 		add	ax, -gb_0_
 		push	ax
@@ -2116,7 +253,11 @@ arg_0		= word ptr  4
 		push	ax
 		call	hiscore_stage_put
 		push	(600 shl 16) or 96
-		jmp	loc_CA0A
+
+		; Hack (jmp	loc_CA0A)
+		; No idea why TASM can't assemble this properly after
+		; dropdown() was decompiled.
+		db	0E9h, 81h, 00h
 ; ---------------------------------------------------------------------------
 
 loc_C989:
@@ -2199,11 +340,11 @@ _score_render proc near
 		mov	bp, sp
 		push	si
 		graph_accesspage 1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		push	0
 		call	sub_C8F5
 		mov	si, 1
@@ -2243,8 +384,8 @@ _score_render endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _regist_view_menu
-_regist_view_menu proc near
+public @regist_view_menu$qv
+@regist_view_menu$qv proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
@@ -2258,7 +399,7 @@ _regist_view_menu proc near
 		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
 		call	_scoredat_load_both
-		call	pi_load pascal, 0, ds, offset aHi01_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
 		call	_score_render
@@ -2266,9 +407,8 @@ loc_CADA:
 		call	palette_black_in
 
 loc_CAE4:
-		call	far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@input_reset_sense$qv
+		call	@frame_delay$qi pascal, 1
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CB58
 		test	_key_det.lo, low INPUT_SHOT
@@ -2307,18 +447,17 @@ loc_CB58:
 		call	palette_black_out
 		freePISlotLarge	0
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi_0
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_0
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
 
 loc_CBB3:
-		call	far ptr	_input_reset_sense
-		push	1
-		call	frame_delay
+		call	@input_reset_sense$qv
+		call	@frame_delay$qi pascal, 1
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CBB3
 		kajacall	KAJA_SONG_STOP
@@ -2326,14 +465,14 @@ loc_CBB3:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-_regist_view_menu endp
+@regist_view_menu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _cleardata_and_regist_view_sprite
-_cleardata_and_regist_view_sprite	proc near
+public @cleardata_and_regist_view_sprite$qv
+@cleardata_and_regist_view_sprite$qv	proc near
 		push	bp
 		mov	bp, sp
 		mov	_rank, RANK_EASY
@@ -2403,43 +542,43 @@ loc_CC78:
 		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
 		pop	bp
 		retn
-_cleardata_and_regist_view_sprite	endp
+@cleardata_and_regist_view_sprite$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _main_cdg_load
-_main_cdg_load	proc near
+public @main_cdg_load$qv
+@main_cdg_load$qv	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_load_all pascal,  0, ds, offset aSft1_cd2
-		call	cdg_load_all pascal, 10, ds, offset aSft2_cd2
-		call	cdg_load_all pascal, 35, ds, offset aCar_cd2
+		call	cdg_load_all pascal, CDG_NUMERAL, ds, offset aSft1_cd2
+		call	cdg_load_all pascal, CDG_MAIN, ds, offset aSft2_cd2
+		call	cdg_load_all pascal, CDG_CURSOR, ds, offset aCar_cd2
 		call	cdg_load_all_noalpha pascal, 40, ds, offset aSl_cd2
 		pop	bp
 		retn
-_main_cdg_load	endp
+@main_cdg_load$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _main_cdg_free
-_main_cdg_free	proc near
+public @main_cdg_free$qv
+@main_cdg_free$qv	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_free_all
 		pop	bp
 		retn
-_main_cdg_free	endp
+@main_cdg_free$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _op_animate
-_op_animate	proc near
+public @op_animate$qv
+@op_animate$qv	proc near
 
 @@page		= byte ptr -4
 var_3		= byte ptr -3
@@ -2451,17 +590,17 @@ var_3		= byte ptr -3
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	graph_copy_page pascal, 0
-		call	pi_load pascal, 0, ds, offset aOp5b_pi
-		call	pi_load pascal, 1, ds, offset aOp4b_pi
-		call	pi_load pascal, 2, ds, offset aOp3b_pi
-		call	pi_load pascal, 3, ds, offset aOp2b_pi
-		call	pi_load pascal, 4, ds, offset aOp1b_pi
-		call	pi_load pascal, 5, ds, offset aOp0b_pi
-		call	pi_palette_apply pascal, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp5b_pi
+		call	@pi_load$qinxc pascal, 1, ds, offset aOp4b_pi
+		call	@pi_load$qinxc pascal, 2, ds, offset aOp3b_pi
+		call	@pi_load$qinxc pascal, 3, ds, offset aOp2b_pi
+		call	@pi_load$qinxc pascal, 4, ds, offset aOp1b_pi
+		call	@pi_load$qinxc pascal, 5, ds, offset aOp0b_pi
+		call	@pi_palette_apply$qi pascal, 0
 		push	4
 		call	palette_black_in
 		graph_showpage 0
@@ -2486,7 +625,7 @@ loc_CD7A:
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	pi_put_8
+		call	@pi_put_8$qiii
 		inc	[bp+var_3]
 		graph_accesspage [bp+@@page]
 		mov	al, 1
@@ -2498,8 +637,7 @@ loc_CDB0:
 		mov	PaletteTone, di
 		call	far ptr	palette_show
 		add	di, 2
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 
 loc_CDC4:
@@ -2523,9 +661,9 @@ loc_CDC4:
 
 loc_CE50:
 		graph_accesspage 1
-		call	pi_load pascal, 0, ds, offset aOp1_pi_1
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
+		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_1
+		call	@pi_palette_apply$qi pascal, 0
+		call	@pi_put_8$qiii pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		xor	si, si
@@ -2561,8 +699,7 @@ loc_CEC7:
 		mov	Palettes[0 * size rgb_t].g, al
 		mov	Palettes[0 * size rgb_t].b, al
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, -16
@@ -2614,8 +751,7 @@ loc_CF34:
 		cmp	di, COLOR_COUNT
 		jl	short loc_CEFA
 		call	far ptr	palette_show
-		push	1
-		call	frame_delay
+		call	@frame_delay$qi pascal, 1
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, -4
@@ -2624,270 +760,51 @@ loc_CF34:
 loc_CF4E:
 		cmp	si, 63
 		jl	short loc_CEF5
-		call	pi_palette_apply pascal, 0
+		call	@pi_palette_apply$qi pascal, 0
 		pop	di
 		pop	si
 		leave
 		retn
-_op_animate	endp
+@op_animate$qv	endp
 
 	_playchar_menu procdesc near
-op_01_TEXT	ends
+op_01_TEXT ends
 
 ; ===========================================================================
 
-SHARED	segment	word public 'CODE' use16
-	extern FRAME_DELAY:proc
-	extern PI_PALETTE_APPLY:proc
-	extern PI_PUT_8:proc
-	extern PI_LOAD:proc
-	extern INPUT_WAIT_FOR_CHANGE:proc
-	extern VECTOR1_AT:proc
+SHARED segment byte public 'CODE' use16
+include th02/snd/snd.inc
+	extern @FRAME_DELAY$QI:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern CDG_PUT_NOCOLORS_8:proc
-	extern SND_DETERMINE_MODES:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern _game_exit_to_dos:proc
 	extern SND_LOAD:proc
-SHARED	ends
-
-SHARED_	segment	word public 'CODE' use16
-		assume cs:g_SHARED
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th04/hardware/grppsafx.asm
-	extern CDG_PUT_8:proc
-	extern _game_exit:proc
-	extern _game_init_op:proc
-	extern _input_reset_sense:proc
-	extern _input_sense:proc
-	extern _snd_se_reset:proc
+	extern @input_reset_sense$qv:proc
+	extern @input_sense$qv:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
-	extern EGC_COPY_RECT_1_TO_0_16:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
-	extern BGIMAGE_PUT_RECT:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
-	extern FRAME_DELAY_2:proc
-SHARED_	ends
+SHARED	ends
 
 	.data
 
-include th03/formats/cfg[data].asm
-_menu_sel	db 0
-_quit	db 0
-_main_menu_unused_1	db 1
-public _MENU_DESC
-_MENU_DESC label dword
-		dd aGqbGav		; "ゲームを開始します"
-		dd aGgglgxgggigxge	; "エキストラステージを開始します"
-		dd aMNVGngcgxgrgav	; "現在のハイスコアを表\示します"
-		dd aIKyoVU		; "音楽室に入ります"
-		dd aKeoarTsv		; "各種設定を変更出来ます"
-		dd aVcvnvrvCVsvV	; "ＤＯＳに戻ります"
-		dd aUqiUxv		; "難易度をやさしくします　（初心者向け、・...
-		dd aUqiUxv_1		; "難易度を標準にします　　　（一般向け、・...
-		dd aUqiUxv_0		; "難易度を難しくします　　　（アーケーダ・...
-		dd aUqiUxv_2		; "難易度を非常に難しくします　（シュータ・...
-		dd aGqbGagxgBGgouv	; "ゲームスタート時の人数を変更出来ます（・...
-		dd aGGavOgcpi		; "ボムの使用回数を変更出来ます（除くエキ・...
-		dd aVavfvlvCmvVVV	; "ＢＧＭは流れません"
-		dd aVavfvlvVqvuvji	; "ＢＧＭに２６Ｋ音源互換を使用します"
-		dd aVavfvlvVwvuiMM	; "ＢＧＭに８６音源互換を使用します"
-		dd aM_0			; "効果音は流れません"
-		dd aM_2			; "効果音にＦＭ音源を使用します"
-		dd aM_1			; "効果音にＢｅｅｐ音源を使用します"
-		dd aUgtevSVvpPkvBa	; "敵弾の多い場所で、わざと処理落ち（スロ・...
-		dd aPicacovV		; "処理落ちをマシンのスピードに任せます（・...
-		dd aVVGigvgvgzguv	; "このオプションを全て標準に戻します"
-		dd aGigvgvgzguv		; "オプションを終了します"
-		dd aGqbGav_0		; "ゲームを開始します（イージー）"
-		dd aGqbGav_1		; "ゲームを開始します（ノーマル）"
-		dd aGqbGav_2		; "ゲームを開始します（ハード）"
-		dd aGqbGav_3		; "ゲームを開始します（ルナティック）"
-_main_menu_initialized	db 0
-_option_initialized	db 0
-public _cfg_fn
-_cfg_fn	db 'MIKO.CFG',0
-; char aMain[]
-aMain		db 'main',0
-; char path[]
-path		db 'deb',0
-aGqbGav		db 'ゲームを開始します',0
-aGgglgxgggigxge	db 'エキストラステージを開始します',0
-aMNVGngcgxgrgav	db '現在のハイスコアを表示します',0
-aIKyoVU		db '音楽室に入ります',0
-aKeoarTsv	db '各種設定を変更出来ます',0
-aVcvnvrvCVsvV	db 'ＤＯＳに戻ります',0
-aUqiUxv		db '難易度をやさしくします　（初心者向け、５面エンド）',0
-aUqiUxv_1	db '難易度を標準にします　　　（一般向け、全６面）　　',0
-aUqiUxv_0	db '難易度を難しくします　　　（アーケーダー向け）　　',0
-aUqiUxv_2	db '難易度を非常に難しくします　（シューター向け）　　',0
-aGqbGagxgBGgouv	db 'ゲームスタート時の人数を変更出来ます（除くエキストラ）',0
-aGGavOgcpi	db 'ボムの使用回数を変更出来ます（除くエキストラ）',0
-aVavfvlvCmvVVV	db 'ＢＧＭは流れません',0
-aVavfvlvVqvuvji	db 'ＢＧＭに２６Ｋ音源互換を使用します',0
-aVavfvlvVwvuiMM	db 'ＢＧＭに８６音源互換を使用します',0
-aM_0		db '効果音は流れません',0
-aM_2		db '効果音にＦＭ音源を使用します',0
-aM_1		db '効果音にＢｅｅｐ音源を使用します',0
-aUgtevSVvpPkvBa	db '敵弾の多い場所で、わざと処理落ち（スロー）させます（初心者用）',0
-aPicacovV	db '処理落ちをマシンのスピードに任せます（標準）',0
-aVVGigvgvgzguv	db 'このオプションを全て標準に戻します',0
-aGigvgvgzguv	db 'オプションを終了します',0
-aGqbGav_0	db 'ゲームを開始します（イージー）',0
-aGqbGav_1	db 'ゲームを開始します（ノーマル）',0
-aGqbGav_2	db 'ゲームを開始します（ハード）',0
-aGqbGav_3	db 'ゲームを開始します（ルナティック）',0
-aOp1_pi		db 'op1.pi',0
-aOp		db 'op',0
-aMSzlEd_dat	db '幻想郷ed.dat',0
-asc_F7F7	db 0Ah
-		db '空きメモリ不足です。メモリ空きを増やしてから実行してね',0Ah,0
-aGameft_bft	db 'GAMEFT.bft',0
-aMiko		db 'miko',0
-include libs/master.lib/atrtcmod[data].asm
-include libs/master.lib/bfnt_id[data].asm
-include libs/master.lib/clip[data].asm
-include libs/master.lib/edges[data].asm
-include libs/master.lib/fil[data].asm
-include libs/master.lib/dos_ropen[data].asm
-include libs/master.lib/get_machine_98[data].asm
-include libs/master.lib/get_machine_at[data].asm
-include libs/master.lib/gaiji_backup[data].asm
-include libs/master.lib/gaiji_entry_bfnt[data].asm
-include libs/master.lib/grp[data].asm
-include libs/master.lib/js[data].asm
-include libs/master.lib/machine[data].asm
-include libs/master.lib/pal[data].asm
-include libs/master.lib/pf[data].asm
-include libs/master.lib/rand[data].asm
-include libs/master.lib/sin8[data].asm
-include libs/master.lib/tx[data].asm
-include libs/master.lib/vs[data].asm
-include libs/master.lib/wordmask[data].asm
-include libs/master.lib/mem[data].asm
-include libs/master.lib/super_entry_bfnt[data].asm
-include libs/master.lib/superpa[data].asm
-include libs/master.lib/respal_exist[data].asm
-include libs/master.lib/draw_trapezoid[data].asm
-include th02/formats/pfopen[data].asm
-include libs/master.lib/bgm_timerhook[data].asm
-include libs/master.lib/bgm[data].asm
-include th04/snd/se_priority[data].asm
-include th04/snd/snd[data].asm
-		db    0
-include th04/snd/load[data].asm
-include th04/hardware/grppsafx[data].asm
-include th03/snd/se_state[data].asm
-include th04/hardware/bgimage[data].asm
-include th03/formats/cdg[data].asm
-include th04/setup[data].asm
+	; libs/master.lib/pal[data].asm
+	extern PaletteTone:word
+
+	; libs/master.lib/sin8[data].asm
+	extern _SinTable8:word:256
+	extern _CosTable8:word:256
+
 include th04/zunsoft[data].asm
-public _MUSIC_TITLES
-_MUSIC_TITLES	label dword
-		dd aNo_1MSzlBLotus	; "No.1	  幻想郷  ～ Lotus Land	Story"
-		dd aNo_2WitchingDr	; "No.2		Witching Dream	     "
-		dd aNo_3SeleneSLig	; "No.3		Selene's light       "
-		dd aNo_4Sxp		; "No.4	 装飾戦　～ Decoration Battle"
-		dd aNo_5BreakTheSa	; "No.5	       Break the Sabbath     "
-		dd aNo_6NglLBScarl	; "No.6	  紅響曲  ～ Scarlet Phoneme "
-		dd aNo_7BadApple	; "No.7		  Bad Apple!!	     "
-		dd aNo_8CRab@bPerd	; "No.8	   霊戦　～ Perdition crisis "
-		dd aNo_9GagkgxgGgg	; "No.9	       アリスマエステラ	     "
-		dd aNo_10Pnpcuyszl	; "No.10   少女綺想曲　～ Capriccio  "
-		dd aNo_11RpvKab@bC	; "No.11  星の器　～ Casket of Star  "
-		dd aNo_12LotusLove	; "No.12	  Lotus	Love	     "
-		dd aNo_13CVVslXBSl	; "No.13 眠れる恐怖 ～Sleeping Terror"
-		dd aNo_14DreamLand	; "No.14	  Dream	Land	     "
-		dd aNo_15ChcB@bIna	; "No.15   幽夢　～ Inanimate Dream  "
-		dd aNo_16LVVVsv		; "No.16     禁じざるをえない遊戯    "
-		dd aNo_17GbgcghmSz	; "No.17 メイド幻想　～	Icemilk	Magic"
-		dd aNo_18Vivavvvvi	; "No.18  かわいい悪魔　～ Innocence "
-		dd aNo_19Days		; "No.19	     Days	     "
-		dd aNo_20Peaceful	; "No.20	   Peaceful	     "
-		dd aNo_21ArcadianD	; "No.21	Arcadian Dream	     "
-		dd aNo_22MSzvPzrl	; "No.22	  幻想の住人	     "
-		dd asc_105B2		; "				     "
-		dd aB@b@vpvxvivf	; "	       　　Ｑｕｉｔ	     "
-public _MUSIC_FILES
-_MUSIC_FILES	label dword
-		dd aOp_2		; "op"
-		dd aSt00		; "st00"
-		dd aSt10		; "st10"
-		dd aSt00b		; "st00b"
-		dd aSt01		; "st01"
-		dd aSt01b		; "st01b"
-		dd aSt02		; "st02"
-		dd aSt02b		; "st02b"
-		dd aSt03		; "st03"
-		dd aSt03c		; "st03c"
-		dd aSt03b		; "st03b"
-		dd aSt04		; "st04"
-		dd aSt04b		; "st04b"
-		dd aSt05		; "st05"
-		dd aSt05b		; "st05b"
-		dd aSt06		; "st06"
-		dd aSt06b		; "st06b"
-		dd aSt06c		; "st06c"
-		dd aEnd1		; "end1"
-		dd aEnd2		; "end2"
-		dd aStaff		; "staff"
-		dd aName_0		; "name"
-include th02/music/polygons[data].asm
-music_track_playing	db 0
-aNo_1MSzlBLotus	db 'No.1   幻想郷  ～ Lotus Land Story',0
-aNo_2WitchingDr	db 'No.2         Witching Dream       ',0
-aNo_3SeleneSLig	db 'No.3         Selene',27h,'s light       ',0
-aNo_4Sxp	db 'No.4  装飾戦　～ Decoration Battle',0
-aNo_5BreakTheSa	db 'No.5        Break the Sabbath     ',0
-aNo_6NglLBScarl	db 'No.6   紅響曲  ～ Scarlet Phoneme ',0
-aNo_7BadApple	db 'No.7           Bad Apple!!        ',0
-aNo_8CRab@bPerd	db 'No.8    霊戦　～ Perdition crisis ',0
-aNo_9GagkgxgGgg	db 'No.9        アリスマエステラ      ',0
-aNo_10Pnpcuyszl	db 'No.10   少女綺想曲　～ Capriccio  ',0
-aNo_11RpvKab@bC	db 'No.11  星の器　～ Casket of Star  ',0
-aNo_12LotusLove	db 'No.12          Lotus Love         ',0
-aNo_13CVVslXBSl	db 'No.13 眠れる恐怖 ～Sleeping Terror',0
-aNo_14DreamLand	db 'No.14          Dream Land         ',0
-aNo_15ChcB@bIna	db 'No.15   幽夢　～ Inanimate Dream  ',0
-aNo_16LVVVsv	db 'No.16     禁じざるをえない遊戯    ',0
-aNo_17GbgcghmSz	db 'No.17 メイド幻想　～ Icemilk Magic',0
-aNo_18Vivavvvvi	db 'No.18  かわいい悪魔　～ Innocence ',0
-aNo_19Days	db 'No.19             Days            ',0
-aNo_20Peaceful	db 'No.20           Peaceful          ',0
-aNo_21ArcadianD	db 'No.21        Arcadian Dream       ',0
-aNo_22MSzvPzrl	db 'No.22          幻想の住人         ',0
-asc_105B2	db '                                  ',0
-aB@b@vpvxvivf	db '            　　Ｑｕｉｔ          ',0
-aOp_2		db 'op',0
-aSt00		db 'st00',0
-aSt10		db 'st10',0
-aSt00b		db 'st00b',0
-aSt01		db 'st01',0
-aSt01b		db 'st01b',0
-aSt02		db 'st02',0
-aSt02b		db 'st02b',0
-aSt03		db 'st03',0
-aSt03c		db 'st03c',0
-aSt03b		db 'st03b',0
-aSt04		db 'st04',0
-aSt04b		db 'st04b',0
-aSt05		db 'st05',0
-aSt05b		db 'st05b',0
-aSt06		db 'st06',0
-aSt06b		db 'st06b',0
-aSt06c		db 'st06c',0
-aEnd1		db 'end1',0
-aEnd2		db 'end2',0
-aStaff		db 'staff',0
-aName_0		db 'name',0
-include th04/music/music_cmt_load[data].asm
-aMusic_pi	db 'music.pi',0
+
 aGensou_scr	db 'GENSOU.SCR',0
 aName		db 'name',0
 aHi01_pi	db 'hi01.pi',0
@@ -2911,44 +828,25 @@ aOp1_pi_1	db 'op1.pi',0
 
 	.data?
 
-public _resident
-_resident	dd ?
-_in_option	db ?
-		db ?
-_putfunc	dw ?
-_main_input_allowed	db ?
-_option_input_allowed	db ?
-include libs/master.lib/clip[bss].asm
-include libs/master.lib/fil[bss].asm
-include libs/master.lib/js[bss].asm
-include libs/master.lib/pal[bss].asm
-include libs/master.lib/vs[bss].asm
-include libs/master.lib/vsync[bss].asm
-include libs/master.lib/mem[bss].asm
-include libs/master.lib/superpa[bss].asm
-include libs/master.lib/super_put_rect[bss].asm
-include th01/hardware/vram_planes[bss].asm
-include libs/master.lib/pfint21[bss].asm
-include th02/formats/pi_slots[bss].asm
-include th03/formats/hfliplut[bss].asm
-include th04/snd/interrupt[bss].asm
-include libs/master.lib/bgm[bss].asm
-include th02/snd/load[bss].asm
-include th04/mem[bss].asm
-include th04/hardware/input[bss].asm
-include th04/hardware/egcrect[bss].asm
-include th04/formats/cdg[bss].asm
-include th04/setup[bss].asm
+	extern _resident:dword
+
+	; libs/master.lib/pal[bss].asm
+	extern Palettes:byte:48
+
+	; libs/master.lib/vs[bss].asm
+	extern vsync_Count1:word
+
+	; th02/formats/pi_slots[bss].asm
+	extern _pi_buffers:dword
+	extern _pi_headers:PiHeader
+
+	; th02/hardware/input_sense[bss].asm
+	extern _key_det:word
+
 include th04/zunsoft[bss].asm
-		db 56 dup(?)
-include th02/music/music[bss].asm
-byte_12DBE	db ?
-		db    ?	;
-include th03/music/cmt_back[bss].asm
-include th02/music/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm
 _rank	db ?
-public _cleared_with
+public _cleared_with, _extra_unlocked
 _cleared_with label byte
 _cleared_with_reimu 	db RANK_COUNT dup (?)
 _cleared_with_marisa	db RANK_COUNT dup (?)

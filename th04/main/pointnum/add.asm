@@ -1,11 +1,11 @@
-public POINTNUMS_ADD_YELLOW, POINTNUMS_ADD_WHITE
-pointnums_add	proc near
+public @POINTNUMS_ADD_YELLOW$QIIUI, @POINTNUMS_ADD_WHITE$QIIUI
+pointnums_add proc near
 
 @@number  	= word ptr  4
 @@center_y	= word ptr  6
 @@center_x	= word ptr  8
 
-pointnums_add_yellow:
+@pointnums_add_yellow$qiiui:
 	mov	bl, _pointnum_yellow_p
 	inc	_pointnum_yellow_p
 	cmp	bl, (POINTNUM_YELLOW_COUNT - 1)
@@ -17,7 +17,7 @@ pointnums_add_yellow:
 	add	bx, POINTNUM_WHITE_COUNT
 	jmp	short @@add
 
-pointnums_add_white:
+@pointnums_add_white$qiiui:
 	mov	bl, _pointnum_white_p
 	mov	bh, 0
 	inc	_pointnum_white_p
@@ -28,7 +28,7 @@ pointnums_add_white:
 @@add:
 	shl	bx, 4
 	add	bx, offset _pointnums
-	mov	word ptr [bx+pointnum_t.flag], 1	; flag = 1, age = 0
+	mov	word ptr [bx+pointnum_t.flag], F_ALIVE	; flag = F_ALIVE, age = 0
 	push	bp
 	mov	bp, sp
 	mov	ax, [bp+@@center_x]
@@ -53,5 +53,5 @@ pointnums_add_white:
 	endif
 	pop	bp
 	retn	6
-pointnums_add	endp
+pointnums_add endp
 	nop

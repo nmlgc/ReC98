@@ -1,8 +1,8 @@
+#include "th01/math/subpixel.hpp"
+
 typedef union {
 	unsigned char spread_angle;
-	// In subpixels, obviously, but pre-C++11 doesn't let us use any of the
-	// Subpixel classes with their custom assignment operators in a union...
-	unsigned char stack_speed;
+	SubpixelLength8 stack_speed;
 } bullet_template_delta_t;
 
 // All _AIMED groups define the 0° [angle] as the current player position,
@@ -22,6 +22,9 @@ typedef enum {
 	BG_RANDOM_CONSTRAINED_ANGLE_AIMED = 0x1D,
 
 	// Ring out of [count] bullets, ignoring [delta].
+	// ZUN bug: Must be ≥1 going into the bullets_add_*() functions to prevent
+	// divisions by zero ("Divide error"). This is exactly what causes the
+	// crash during Kurumi when playing on Easy and with minimum rank.
 	BG_RING = 0x26,
 	BG_RING_AIMED = 0x2C,
 

@@ -1,18 +1,16 @@
-extern "C" {
-#include "th01/formats/ptn.hpp"
+#include "th01/formats/ptn_data.hpp"
 
 void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
 	for(pixel_t y = 0; y < PTN_H; y++) {
-		vram_snap_ptn_planar(ptn, vram_offset);
+		vram_snap_ptn_planar(ptn, y, vram_offset);
 		vram_offset += ROW_SIZE;
 	}
 }
 
-static inline ptn_plane_t::row_dots_t dot_mask(pixel_t x, pixel_t w)
-{
+static inline ptn_plane_t::row_dots_t dot_mask(pixel_t x, pixel_t w) {
 	return static_cast<ptn_plane_t::row_dots_t>((1u << w) - 1u) << (w - x);
 }
 
@@ -50,6 +48,4 @@ void ptn_snap_quarter_8(
 		#undef snap_quarter_plane
 		vram_offset += ROW_SIZE;
 	}
-}
-
 }

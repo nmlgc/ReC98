@@ -1,3 +1,5 @@
+#include "pc98.h"
+
 // Waits until VSync, then sets the GDC's hardware scroll registers so that
 // the given line will appear at the top of the screen for all subsequent
 // frames.

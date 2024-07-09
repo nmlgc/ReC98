@@ -1,5 +1,3 @@
-#define SHOT_COUNT 64
-
 #include "th04/main/player/shot.hpp"
 
 // Shot types
@@ -17,7 +15,7 @@
 
 // Returns the current shot cycle, and prepares everything for more shots
 // being added.
-char pascal near shot_cycle_init(void);
+char near shot_cycle_init(void);
 
 // Common per-iteration data for shot type control functions.
 // (Yeah, code generation mandated additions to [i] to be wrapped into
@@ -35,8 +33,10 @@ struct ShotAddIterator {
 		i += n;
 	}
 
-	void set_random_angle(char range = 0x0F, char offset = -0x48) {
-		angle = randring_angle(range, offset);
+	void set_random_angle(
+		unsigned char min = -0x48, unsigned char max = -0x38
+	) {
+		angle = randring1_next8_and_ge_lt(min, max);
 	}
 
 	unsigned char next(void) {
@@ -44,10 +44,16 @@ struct ShotAddIterator {
 	}
 };
 
-// Requires [cycle] to be defined in some way. (It's _AL in the original game,
-// and I didn't want to pollute the namespace)
-#define SHOT_FUNC_INIT(count, primary_cycle, secondary_cycle, secondary_offset_expr) \
-	shot_t near *shot; \
+#define shot_func_init( \
+	shot, \
+	sai, \
+	cycle, \
+	count, \
+	primary_cycle, \
+	secondary_cycle, \
+	secondary_offset_expr \
+) \
+	Shot near *shot; \
 	ShotAddIterator sai(count); \
 	\
 	cycle = shot_cycle_init(); \
@@ -57,7 +63,6 @@ struct ShotAddIterator {
 	if(cycle & secondary_cycle) { \
 		sai.secondary_offset_expr; \
 	}
-// -----
 
 // We *really* want to fit those on a line...
 #define OPT_L shot->from_option_l()
