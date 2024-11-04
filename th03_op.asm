@@ -1636,6 +1636,15 @@ SCOREDAT_TEXT segment byte public 'CODE' use16
 SCOREDAT_TEXT ends
 
 op_03_TEXT segment byte public 'CODE' use16
+
+CDG_PIC_SELECTED_P1 = 0
+CDG_PIC_SELECTED_P2 = 1
+CDG_PIC = 2
+CDG_STATS_BG = 11
+CDG_EXTRA_BG = 12
+CDG_EXTRA_FOR_PLAYCHAR = 13
+CDG_SELECT_COUNT = 22
+
 	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
 		rank:word
 
@@ -1696,11 +1705,11 @@ sub_B38D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B39A:
-		lea	ax, [si+2]
+		lea	ax, [si+CDG_PIC]
 		push	ax
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+0A0Eh]
+		pushd	_PLAYCHAR_PIC_FN[bx]
 		push	0
 		call	cdg_load_single
 		inc	si
@@ -1708,7 +1717,7 @@ loc_B39A:
 loc_B3B0:
 		cmp	si, 3
 		jl	short loc_B39A
-		call	cdg_load_all_noalpha pascal, 13, ds, offset aSlex_cd2
+		call	cdg_load_all_noalpha pascal, CDG_EXTRA_FOR_PLAYCHAR, ds, offset _SELECT_EXTRA_FOR_PLAYCHAR_FN
 		pop	si
 		pop	bp
 		retn
@@ -1722,9 +1731,9 @@ sub_B38D	endp
 sub_B3C3	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_load_single pascal, 1, ds, offset a99sl_cdg, 0
-		call	cdg_load_single_noalpha pascal, 11, ds, offset aSlwin_cdg , 0
-		call	cdg_load_single_noalpha pascal, 12, ds, offset aSlex_cdg, 0
+		call	cdg_load_single pascal, CDG_PIC_SELECTED_P2, ds, offset _PLAYCHAR_PIC_UNKNOWN_FN, 0
+		call	cdg_load_single_noalpha pascal, CDG_STATS_BG, ds, offset _SELECT_STATS_BG_FN, 0
+		call	cdg_load_single_noalpha pascal, CDG_EXTRA_BG, ds, offset _SELECT_EXTRA_BG_FN, 0
 		pop	bp
 		retn
 sub_B3C3	endp
@@ -1738,17 +1747,17 @@ sub_B3EF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	cdg_load_single pascal, 0, [off_E1FE], 0
+		call	cdg_load_single pascal, CDG_PIC_SELECTED_P1, [_PLAYCHAR_PIC_FN + (0 * dword)], 0
 		mov	si, 3
 		jmp	short loc_B41C
 ; ---------------------------------------------------------------------------
 
 loc_B406:
-		lea	ax, [si+2]
+		lea	ax, [si+CDG_PIC]
 		push	ax
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+0A0Eh]
+		pushd	_PLAYCHAR_PIC_FN[bx]
 		push	0
 		call	cdg_load_single
 		inc	si
@@ -1797,11 +1806,11 @@ sub_B424	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B4A6:
-		lea	ax, [si+2]
+		lea	ax, [si+CDG_PIC]
 		push	ax
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+0A0Eh]
+		pushd	_PLAYCHAR_PIC_FN[bx]
 		push	0
 		call	cdg_load_single
 		inc	si
@@ -1839,7 +1848,7 @@ loc_B4DF:
 		inc	si
 
 loc_B4E6:
-		cmp	si, 22
+		cmp	si, CDG_SELECT_COUNT
 		jl	short loc_B4DF
 		call	super_free
 		pop	si
@@ -1860,7 +1869,7 @@ sub_B4F3	proc near
 		jnz	short loc_B50C
 		mov	al, _playchars[0]
 		cbw
-		add	ax, 2
+		add	ax, CDG_PIC
 		jmp	short loc_B50E
 ; ---------------------------------------------------------------------------
 
@@ -1875,12 +1884,12 @@ loc_B50E:
 		jnz	short loc_B52A
 		mov	al, _playchars[1]
 		cbw
-		add	ax, 2
+		add	ax, CDG_PIC
 		jmp	short loc_B52D
 ; ---------------------------------------------------------------------------
 
 loc_B52A:
-		mov	ax, 1
+		mov	ax, CDG_PIC_SELECTED_P2
 
 loc_B52D:
 		push	ax
@@ -1902,7 +1911,7 @@ sub_B535	proc near
 		jnz	short loc_B54E
 		mov	al, _playchars[0]
 		cbw
-		add	ax, 2
+		add	ax, CDG_PIC
 		jmp	short loc_B550
 ; ---------------------------------------------------------------------------
 
@@ -1912,7 +1921,7 @@ loc_B54E:
 loc_B550:
 		push	ax
 		call	cdg_put_8
-		call	cdg_put_8 pascal, large (416 shl 16) or 96, 1
+		call	cdg_put_8 pascal, large (416 shl 16) or 96, CDG_PIC_SELECTED_P2
 		pop	bp
 		retn
 sub_B535	endp
@@ -1930,11 +1939,11 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 304, 11
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 304, CDG_STATS_BG
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B590
-		call	cdg_put_noalpha_8 pascal, large (416 shl 16) or 304, 11
+		call	cdg_put_noalpha_8 pascal, large (416 shl 16) or 304, CDG_STATS_BG
 
 loc_B590:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -2067,21 +2076,21 @@ sub_B636	endp
 sub_B670	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_put_noalpha_8 pascal, large (160 shl 16) or 304, 12
+		call	cdg_put_noalpha_8 pascal, large (160 shl 16) or 304, CDG_EXTRA_BG
 		push	(176 shl 16) or 316
 		mov	al, _playchars[0]
 		cbw
-		add	ax, 13
+		add	ax, CDG_EXTRA_FOR_PLAYCHAR
 		push	ax
 		call	cdg_put_noalpha_8
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B6BE
-		call	cdg_put_noalpha_8 pascal, large (544 shl 16) or 304, 12
+		call	cdg_put_noalpha_8 pascal, large (544 shl 16) or 304, CDG_EXTRA_BG
 		push	(560 shl 16) or 316
 		mov	al, _playchars[1]
 		cbw
-		add	ax, 13
+		add	ax, CDG_EXTRA_FOR_PLAYCHAR
 		push	ax
 		call	cdg_put_noalpha_8
 
@@ -2464,7 +2473,7 @@ loc_B974:
 		push	si
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr [bx+0A0Eh]
+		pushd	_PLAYCHAR_PIC_FN[bx]
 		push	1
 		jmp	short loc_B9DA
 ; ---------------------------------------------------------------------------
@@ -2473,7 +2482,7 @@ loc_B9CC:
 		push	si
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr [bx+0A0Eh]
+		pushd	_PLAYCHAR_PIC_FN[bx]
 		push	0
 
 loc_B9DA:
@@ -2519,7 +2528,7 @@ loc_B9FB:
 		push	si
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr [bx+0A0Eh]
+		pushd	_PLAYCHAR_PIC_FN[bx]
 		push	0
 		jmp	short loc_BA61
 ; ---------------------------------------------------------------------------
@@ -2528,7 +2537,7 @@ loc_BA53:
 		push	si
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr [bx+0A0Eh]
+		pushd	_PLAYCHAR_PIC_FN[bx]
 		push	1
 
 loc_BA61:
@@ -3059,16 +3068,18 @@ public _SCOREDAT_FN
 _SCOREDAT_FN	dw offset aYume_nem
 aYume_nem	db 'YUME.NEM',0
 	evendata
-off_E1FE	dd a00sl_cd2
-					; "00SL.CD2"
-		dd a02sl_cd2		; "02SL.CD2"
-		dd a04sl_cd2		; "04SL.CD2"
-		dd a06sl_cd2		; "06SL.CD2"
-		dd a08sl_cd2		; "08SL.CD2"
-		dd a10sl_cd2		; "10SL.CD2"
-		dd a12sl_cd2		; "12SL.CD2"
-		dd a14sl_cd2		; "14SL.CD2"
-		dd a16sl_cd2		; "16SL.CD2"
+public _PLAYCHAR_PIC_FN
+_PLAYCHAR_PIC_FN label dword
+	dd a00sl_cd2
+	dd a02sl_cd2
+	dd a04sl_cd2
+	dd a06sl_cd2
+	dd a08sl_cd2
+	dd a10sl_cd2
+	dd a12sl_cd2
+	dd a14sl_cd2
+	dd a16sl_cd2
+
 		db    3
 		db    1
 		db    5
@@ -3108,10 +3119,14 @@ a10sl_cd2	db '10SL.CD2',0
 a12sl_cd2	db '12SL.CD2',0
 a14sl_cd2	db '14SL.CD2',0
 a16sl_cd2	db '16SL.CD2',0
-aSlex_cd2	db 'slex.cd2',0
-a99sl_cdg	db '99sl.cdg',0
-aSlwin_cdg	db 'slwin.cdg',0
-aSlex_cdg	db 'slex.cdg',0
+
+public _SELECT_EXTRA_FOR_PLAYCHAR_FN, _PLAYCHAR_PIC_UNKNOWN_FN
+public _SELECT_STATS_BG_FN, _SELECT_EXTRA_BG_FN
+_SELECT_EXTRA_FOR_PLAYCHAR_FN	db 'slex.cd2',0
+_PLAYCHAR_PIC_UNKNOWN_FN	db '99sl.cdg',0
+_SELECT_STATS_BG_FN	db 'slwin.cdg',0
+_SELECT_EXTRA_BG_FN	db 'slex.cdg',0
+
 aSelect_m	db 'select.m',0
 aChname_bft	db 'chname.bft',0
 aTlsl_rgb	db 'TLSL.RGB',0
