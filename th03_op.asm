@@ -69,11 +69,9 @@ OPWIN_RIGHT = 2
 OPWIN_W = 16
 OPWIN_STEP_W = (OPWIN_W / 2)
 MAIN_W = 136
-SUBMENU_W = 240
 BOX_LEFT = 160
 BOX_TOP = 256
 BOX_MAIN_RIGHT = (BOX_LEFT + MAIN_W)
-BOX_SUBMENU_RIGHT = (BOX_LEFT + SUBMENU_W)
 
 	@cfg_load$qv procdesc near
 	@cfg_save$qv procdesc near
@@ -306,7 +304,7 @@ var_2		= word ptr -2
 		cmp	es:[bx+resident_t.game_mode], GM_VS
 		jnb	loc_9C8B
 		call	text_clear
-		call	sub_B0AF
+		call	@box_main_to_submenu_animate$qv
 		mov	[bp+var_2], 0
 		pushd	0E1h
 		call	sub_9B9D
@@ -834,7 +832,7 @@ main_update_and_render	proc near
 		call	text_clear
 		cmp	byte_D953, 0
 		jnz	short loc_A0FA
-		call	sub_B0DB
+		call	@box_submenu_to_main_animate$qv
 
 loc_A0FA:
 		mov	byte_D953, 0
@@ -978,7 +976,7 @@ option_update_and_render	proc near
 		cmp	_option_initialized, 0
 		jnz	short loc_A24A
 		call	text_clear
-		call	sub_B0AF
+		call	@box_main_to_submenu_animate$qv
 		mov	_option_input_allowed, 0
 		xor	si, si
 		jmp	short loc_A235
@@ -1517,61 +1515,8 @@ loc_B0A7:
 		retn
 sub_B008	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B0AF	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, (BOX_MAIN_RIGHT - OPWIN_STEP_W)
-		jmp	short loc_B0D2
-; ---------------------------------------------------------------------------
-
-loc_B0B8:
-		call	@box_column16_unput$qui pascal, si
-		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
-		call	@frame_delay$qi pascal, 1
-		add	si, OPWIN_STEP_W
-
-loc_B0D2:
-		cmp	si, (BOX_SUBMENU_RIGHT - OPWIN_STEP_W)
-		jl	short loc_B0B8
-		pop	si
-		pop	bp
-		retn
-sub_B0AF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B0DB	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, (BOX_SUBMENU_RIGHT - OPWIN_W)
-		jmp	short loc_B101
-; ---------------------------------------------------------------------------
-
-loc_B0E4:
-		lea	ax, [si+OPWIN_STEP_W]
-		call	@box_column16_unput$qui pascal, ax
-		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
-		call	@frame_delay$qi pascal, 1
-		sub	si, OPWIN_STEP_W
-
-loc_B101:
-		cmp	si, (BOX_MAIN_RIGHT - OPWIN_W)
-		jge	short loc_B0E4
-		pop	si
-		pop	bp
-		retn
-sub_B0DB	endp
-
+	@box_main_to_submenu_animate$qv procdesc near
+	@box_submenu_to_main_animate$qv procdesc near
 	@BOX_COLUMN16_UNPUT$QUI procdesc pascal near \
 		left:word
 OP_MUSIC_TEXT ends
