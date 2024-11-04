@@ -14,6 +14,8 @@ typedef enum {
 	PLAYCHAR_CHIYURI = 7,
 	PLAYCHAR_YUMEMI = 8,
 	PLAYCHAR_COUNT = 9,
+
+	PLAYCHAR_COUNT_LOCKED = (PLAYCHAR_COUNT - 2),
 } playchar_t;
 
 typedef unsigned char playchar_paletted_t;

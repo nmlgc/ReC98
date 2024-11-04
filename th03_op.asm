@@ -24,7 +24,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _getch:proc
 
-group_01 group op_01_TEXT, OP_MUSIC_TEXT, op_02_TEXT, SCOREDAT_TEXT, op_03_TEXT
+group_01 group op_01_TEXT, OP_MUSIC_TEXT, OP_SEL_TEXT
 
 ; ===========================================================================
 
@@ -1629,13 +1629,7 @@ loc_B11F:
 sub_B10A	endp
 OP_MUSIC_TEXT ends
 
-op_02_TEXT segment byte public 'CODE' use16
-op_02_TEXT ends
-
-SCOREDAT_TEXT segment byte public 'CODE' use16
-SCOREDAT_TEXT ends
-
-op_03_TEXT segment byte public 'CODE' use16
+OP_SEL_TEXT segment byte public 'CODE' use16
 
 CDG_PIC_SELECTED_P1 = 0
 CDG_PIC_SELECTED_P2 = 1
@@ -1645,51 +1639,7 @@ CDG_EXTRA_BG = 12
 CDG_EXTRA_FOR_PLAYCHAR = 13
 CDG_SELECT_COUNT = 22
 
-	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
-		rank:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B35D	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	[bp+var_1], 7
-		xor	si, si
-		jmp	short loc_B382
-; ---------------------------------------------------------------------------
-
-loc_B36A:
-		call	@scoredat_load_and_decode$q6rank_t pascal, si
-		or	ax, ax
-		jz	short loc_B376
-		mov	al, 7
-		jmp	short loc_B38A
-; ---------------------------------------------------------------------------
-
-loc_B376:
-		cmp	_hi.SDS_score.SD_cleared, SCOREDAT_CLEARED
-		jnz	short loc_B381
-		mov	[bp+var_1], 9
-
-loc_B381:
-		inc	si
-
-loc_B382:
-		cmp	si, (RANK_LUNATIC + 1)
-		jl	short loc_B36A
-		mov	al, [bp+var_1]
-
-loc_B38A:
-		pop	si
-		leave
-		retn
-sub_B35D	endp
-
+	@playchars_available_load$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1823,8 +1773,8 @@ loc_B4C1:
 		cmp	vsync_Count1, 1Eh
 		jb	short loc_B4C1
 		mov	word_FC66, 8
-		call	sub_B35D
-		mov	byte_FC68, al
+		call	@playchars_available_load$qv
+		mov	_playchars_available, al
 		pop	si
 		pop	bp
 		retn
@@ -2058,7 +2008,7 @@ loc_B642:
 		add	di, 20
 
 loc_B663:
-		mov	al, byte_FC68
+		mov	al, _playchars_available
 		mov	ah, 0
 		cmp	ax, si
 		jg	short loc_B642
@@ -2420,7 +2370,7 @@ loc_B932:
 		dec	_sel[si]
 		cmp	_sel[si], 0
 		jge	short loc_B94C
-		mov	al, byte_FC68
+		mov	al, _playchars_available
 		dec	al
 		mov	_sel[si], al
 
@@ -2433,7 +2383,7 @@ loc_B951:
 		inc	_sel[si]
 		mov	al, _sel[si]
 		cbw
-		mov	dl, byte_FC68
+		mov	dl, _playchars_available
 		mov	dh, 0
 		cmp	ax, dx
 		jl	short loc_B96F
@@ -2968,7 +2918,7 @@ loc_BEB0:
 sub_BD9A	endp
 		db 0
 
-op_03_TEXT	ends
+OP_SEL_TEXT	ends
 
 ; ===========================================================================
 
@@ -3171,7 +3121,6 @@ public _fadeout_frames
 _fadeout_frames	dw ?
 word_FC64	dw ?
 word_FC66	dw ?
-byte_FC68	db ?
-		db    ?	;
+_playchars_available	db ?
 
 		end

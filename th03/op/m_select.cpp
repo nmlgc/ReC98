@@ -20,3 +20,17 @@ extern unsigned int fadeout_frames;
 /// -----
 
 #include "th03/formats/score_ld.cpp"
+
+unsigned char near playchars_available_load(void)
+{
+	unsigned char ret = PLAYCHAR_COUNT_LOCKED;
+	for(int i = RANK_EASY; i < (RANK_LUNATIC + 1); i++) {
+		if(scoredat_load_and_decode(static_cast<rank_t>(i))) {
+			return PLAYCHAR_COUNT_LOCKED;
+		}
+		if(hi.score.cleared == SCOREDAT_CLEARED) {
+			ret = PLAYCHAR_COUNT;
+		}
+	}
+	return ret;
+}
