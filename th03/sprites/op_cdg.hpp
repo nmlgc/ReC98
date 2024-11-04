@@ -13,7 +13,7 @@ typedef enum {
 	CDG_PIC,
 	CDG_PIC_last = (CDG_PIC + PLAYCHAR_COUNT - 1),
 
-	CDG_STATS_BG,
+	CDG_STATS, // Has the full 5 stars on all 3 rows.
 	CDG_EXTRA_BG,
 	CDG_EXTRA_FOR_PLAYCHAR,
 	CDG_EXTRA_FOR_PLAYCHAR_last = (CDG_EXTRA_FOR_PLAYCHAR + PLAYCHAR_COUNT - 1),

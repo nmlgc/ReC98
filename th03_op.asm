@@ -908,7 +908,7 @@ menu_sel_vs_start:
 loc_A19A:
 		call	sub_B008
 		call	sub_9E16
-		call	sub_B3C3
+		call	@select_cdg_load_part2_of_4$qv
 		mov	_main_menu_initialized, 0
 		mov	_main_input_allowed, 0
 		mov	byte_D953, 1
@@ -1249,9 +1249,9 @@ loc_A468:
 		jb	short loc_A497
 		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_A497
-		call	sub_B38D
-		call	sub_B3EF
-		call	sub_B3C3
+		call	@select_cdg_load_part1_of_4$qv
+		call	@select_cdg_load_part3_of_4$qv
+		call	@select_cdg_load_part2_of_4$qv
 		call	start_vs
 
 loc_A497:
@@ -1274,7 +1274,7 @@ loc_A4BC:
 		mov	_in_option, 0
 		mov	_input_sp, INPUT_NONE
 		call	main_update_and_render
-		call	sub_B3C3
+		call	@select_cdg_load_part2_of_4$qv
 		jmp	short loc_A4FE
 ; ---------------------------------------------------------------------------
 
@@ -1409,7 +1409,7 @@ loc_AF25:
 		cmp	[bp+var_2], 255
 		jl	short loc_AF09
 		mov	vsync_Count1, 0
-		call	sub_B3EF
+		call	@select_cdg_load_part3_of_4$qv
 
 loc_AF35:
 		cmp	vsync_Count1, 10h
@@ -1461,7 +1461,7 @@ loc_AFD9:
 		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
-		call	sub_B38D
+		call	@select_cdg_load_part1_of_4$qv
 		pop	si
 		leave
 		retn
@@ -1483,7 +1483,7 @@ sub_B008	proc near
 		call	far ptr	palette_show
 		call	@pi_load$qinxc pascal, 0, ds, offset aTl02_pi
 		graph_showpage 0
-		call	sub_B3EF
+		call	@select_cdg_load_part3_of_4$qv
 		graph_accesspage 1
 		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
@@ -1491,7 +1491,7 @@ sub_B008	proc near
 		call	@pi_put_8$qiii pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
-		call	sub_B38D
+		call	@select_cdg_load_part1_of_4$qv
 		kajacall	KAJA_SONG_PLAY
 		xor	si, si
 		jmp	short loc_B0A7
@@ -1634,92 +1634,15 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 CDG_PIC_SELECTED_P1 = 0
 CDG_PIC_SELECTED_P2 = 1
 CDG_PIC = 2
-CDG_STATS_BG = 11
+CDG_STATS = 11
 CDG_EXTRA_BG = 12
 CDG_EXTRA_FOR_PLAYCHAR = 13
 CDG_SELECT_COUNT = 22
 
 	@playchars_available_load$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B38D	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	_hflip_lut_generate
-		xor	si, si
-		jmp	short loc_B3B0
-; ---------------------------------------------------------------------------
-
-loc_B39A:
-		lea	ax, [si+CDG_PIC]
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		pushd	_PLAYCHAR_PIC_FN[bx]
-		push	0
-		call	cdg_load_single
-		inc	si
-
-loc_B3B0:
-		cmp	si, 3
-		jl	short loc_B39A
-		call	cdg_load_all_noalpha pascal, CDG_EXTRA_FOR_PLAYCHAR, ds, offset _SELECT_EXTRA_FOR_PLAYCHAR_FN
-		pop	si
-		pop	bp
-		retn
-sub_B38D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B3C3	proc near
-		push	bp
-		mov	bp, sp
-		call	cdg_load_single pascal, CDG_PIC_SELECTED_P2, ds, offset _PLAYCHAR_PIC_UNKNOWN_FN, 0
-		call	cdg_load_single_noalpha pascal, CDG_STATS_BG, ds, offset _SELECT_STATS_BG_FN, 0
-		call	cdg_load_single_noalpha pascal, CDG_EXTRA_BG, ds, offset _SELECT_EXTRA_BG_FN, 0
-		pop	bp
-		retn
-sub_B3C3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B3EF	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	cdg_load_single pascal, CDG_PIC_SELECTED_P1, [_PLAYCHAR_PIC_FN + (0 * dword)], 0
-		mov	si, 3
-		jmp	short loc_B41C
-; ---------------------------------------------------------------------------
-
-loc_B406:
-		lea	ax, [si+CDG_PIC]
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		pushd	_PLAYCHAR_PIC_FN[bx]
-		push	0
-		call	cdg_load_single
-		inc	si
-
-loc_B41C:
-		cmp	si, 6
-		jl	short loc_B406
-		pop	si
-		pop	bp
-		retn
-sub_B3EF	endp
-
+	@select_cdg_load_part1_of_4$qv procdesc near
+	@select_cdg_load_part2_of_4$qv procdesc near
+	@select_cdg_load_part3_of_4$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1889,11 +1812,11 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 304, CDG_STATS_BG
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 304, CDG_STATS
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B590
-		call	cdg_put_noalpha_8 pascal, large (416 shl 16) or 304, CDG_STATS_BG
+		call	cdg_put_noalpha_8 pascal, large (416 shl 16) or 304, CDG_STATS
 
 loc_B590:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -2938,8 +2861,6 @@ include th02/snd/snd.inc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @game_init_op$qnxuc:proc
 	extern CDG_LOAD_SINGLE:proc
-	extern CDG_LOAD_SINGLE_NOALPHA:proc
-	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
@@ -2947,7 +2868,6 @@ include th02/snd/snd.inc
 	extern @INPUT_MODE_JOY_VS_KEY$QV:proc
 	extern @INPUT_MODE_KEY_VS_JOY$QV:proc
 	extern CDG_PUT_NOALPHA_8:proc
-	extern _hflip_lut_generate:proc
 SHARED	ends
 
 	.data
@@ -3072,10 +2992,10 @@ a14sl_cd2	db '14SL.CD2',0
 a16sl_cd2	db '16SL.CD2',0
 
 public _SELECT_EXTRA_FOR_PLAYCHAR_FN, _PLAYCHAR_PIC_UNKNOWN_FN
-public _SELECT_STATS_BG_FN, _SELECT_EXTRA_BG_FN
+public _SELECT_STATS_FN, _SELECT_EXTRA_BG_FN
 _SELECT_EXTRA_FOR_PLAYCHAR_FN	db 'slex.cd2',0
 _PLAYCHAR_PIC_UNKNOWN_FN	db '99sl.cdg',0
-_SELECT_STATS_BG_FN	db 'slwin.cdg',0
+_SELECT_STATS_FN	db 'slwin.cdg',0
 _SELECT_EXTRA_BG_FN	db 'slex.cdg',0
 
 aSelect_m	db 'select.m',0
