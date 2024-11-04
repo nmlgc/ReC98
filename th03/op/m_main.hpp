@@ -17,3 +17,6 @@ static const screen_x_t BOX_SUBMENU_CENTER_X = (BOX_LEFT + (SUBMENU_W / 2));
 static const screen_x_t BOX_SUBMENU_RIGHT = (BOX_LEFT + SUBMENU_W);
 // -----------
 
+// Restores the 16×[BOX_H]-pixel column starting at ([left], BOX_TOP) from
+// VRAM page 1. Returns with page 0 as the accessed page.
+void pascal near box_column16_unput(uscreen_x_t left);

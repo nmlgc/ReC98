@@ -490,8 +490,7 @@ loc_9E43:
 ; ---------------------------------------------------------------------------
 
 loc_9E5C:
-		push	si
-		call	sub_B10A
+		call	@box_column16_unput$qui pascal, si
 		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
 		add	si, OPWIN_STEP_W
@@ -1532,8 +1531,7 @@ sub_B0AF	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B0B8:
-		push	si
-		call	sub_B10A
+		call	@box_column16_unput$qui pascal, si
 		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
 		add	si, OPWIN_STEP_W
@@ -1561,8 +1559,7 @@ sub_B0DB	proc near
 
 loc_B0E4:
 		lea	ax, [si+OPWIN_STEP_W]
-		push	ax
-		call	sub_B10A
+		call	@box_column16_unput$qui pascal, ax
 		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
 		sub	si, OPWIN_STEP_W
@@ -1575,65 +1572,8 @@ loc_B101:
 		retn
 sub_B0DB	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B10A	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		shr	ax, 3
-		mov	di, 77B0h
-		add	di, ax
-		mov	ax, 0AD00h
-		mov	es, ax
-		assume es:nothing
-
-loc_B11F:
-		mov	al, 1
-		out	0A6h, al
-		mov	dx, es:[di]
-		mov	ax, 0B500h
-		mov	es, ax
-		assume es:nothing
-		mov	cx, es:[di]
-		mov	ax, 0BD00h
-		mov	es, ax
-		assume es:nothing
-		mov	bx, es:[di]
-		mov	ax, 0E500h
-		mov	es, ax
-		assume es:nothing
-		mov	si, es:[di]
-		xor	al, al
-		out	0A6h, al
-		mov	es:[di], si
-		mov	ax, 0BD00h
-		mov	es, ax
-		assume es:nothing
-		mov	es:[di], bx
-		mov	ax, 0B500h
-		mov	es, ax
-		assume es:nothing
-		mov	es:[di], cx
-		mov	ax, 0AD00h
-		mov	es, ax
-		assume es:nothing
-		mov	es:[di], dx
-		sub	di, 50h	; 'P'
-		jnb	short loc_B11F
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_B10A	endp
+	@BOX_COLUMN16_UNPUT$QUI procdesc pascal near \
+		left:word
 OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16

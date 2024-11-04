@@ -146,6 +146,14 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 }
 #endif
 
+// Converts the given ([x], [y]) position to an x86 segment inside the given
+// plane. Only defined for paragraph-aligned values of [x], i.e., multiples of
+// 128 pixels.
+#define vram_segment(plane, x, y) ( \
+	static_assert((((y * ROW_SIZE) + (x / BYTE_DOTS)) % 16) == 0), \
+	(SEG_PLANE_##plane + (((y * ROW_SIZE) + (x / BYTE_DOTS)) / 16)) \
+)
+
 #define VRAM_CHUNK(plane, offset, bit_count) \
 	*(dots##bit_count##_t *)(VRAM_PLANE_##plane + offset)
 
