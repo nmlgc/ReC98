@@ -17,6 +17,13 @@ extern "C" {
 #include "th03/snd/snd.h"
 #include "th03/sprites/op_cdg.hpp"
 
+/// Constants
+/// ---------
+
+static const int STAT_COUNT = 3;
+extern const uint8_t PLAYCHAR_STATS[PLAYCHAR_COUNT][STAT_COUNT];
+/// ---------
+
 /// Coordinates
 /// -----------
 
@@ -24,9 +31,17 @@ static const pixel_t PIC_W = 192;
 static const pixel_t PIC_H = 192;
 static const pixel_t PIC_MARGIN_X = 32;
 
+static const pixel_t STATS_W = 128;
+
+static const pixel_t STAT_STAR_W = 9;
+static const pixel_t STAT_STAR_PADDED_W = (STAT_STAR_W + 2);
+static const pixel_t STAT_STAR_H = 16;
+
 static const screen_x_t P1_LEFT = PIC_MARGIN_X;
 static const screen_x_t P2_LEFT = (RES_X - PIC_MARGIN_X - PIC_W);
 static const screen_y_t PIC_TOP = 96;
+
+static const screen_y_t STATS_TOP = (PIC_TOP + PIC_H + 16);
 /// -----------
 
 /// State
@@ -179,4 +194,45 @@ void near story_sel_pics_put(void)
 {
 	sel_p1_pic_put();
 	cdg_put_8(P2_LEFT, PIC_TOP, (CDG_PIC_SELECTED + 1));
+}
+
+#define stat_star_row_put(pid, row_top, star_i, star_left) { \
+	star_i = 5; \
+	star_left = (((pid == 0) ? P1_LEFT : P2_LEFT) + STATS_W - 20); \
+	while(PLAYCHAR_STATS[sel[pid]][stat_i] < star_i) { \
+		grcg_boxfill( \
+			star_left, \
+			row_top, \
+			(star_left + STAT_STAR_W - 1), \
+			(row_top + STAT_STAR_H -1) \
+		); \
+		star_i--; \
+		star_left -= STAT_STAR_PADDED_W; \
+	} \
+}
+
+void near stats_put(void)
+{
+	int stat_i;
+	int star_i;
+	screen_x_t star_left;
+
+	cdg_put_noalpha_8(P1_LEFT, STATS_TOP, CDG_STATS);
+	if(resident->game_mode != GM_STORY) {
+		cdg_put_noalpha_8(P2_LEFT, STATS_TOP, CDG_STATS);
+	}
+
+	grcg_setcolor(GC_RMW, 14);
+	stat_i = 0;
+	screen_y_t row_top = (STATS_TOP + 11);
+	while(stat_i < STAT_COUNT) {
+		stat_star_row_put(0, row_top, star_i, star_left);
+		if(resident->game_mode != GM_STORY) {
+			stat_star_row_put(1, row_top, star_i, star_left);
+		}
+		stat_i++;
+		row_top += STAT_STAR_H;
+	}
+
+	grcg_off();
 }

@@ -32,7 +32,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_BLACK_OUT:proc
 	extern DOS_PUTS2:proc
 	extern EGC_SHIFT_LEFT_ALL:proc
-	extern GRCG_BOXFILL:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRCG_PSET:proc
 	extern GRCG_SETCOLOR:proc
@@ -1630,7 +1629,6 @@ OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
 
-CDG_STATS = 11
 CDG_EXTRA_BG = 12
 CDG_EXTRA_FOR_PLAYCHAR = 13
 
@@ -1641,105 +1639,7 @@ CDG_EXTRA_FOR_PLAYCHAR = 13
 	@select_free$qv procdesc near
 	@vs_sel_pics_put$qv procdesc near
 	@story_sel_pics_put$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B565	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 304, CDG_STATS
-		les	bx, _resident
-		cmp	es:[bx+resident_t.game_mode], GM_STORY
-		jz	short loc_B590
-		call	cdg_put_noalpha_8 pascal, large (416 shl 16) or 304, CDG_STATS
-
-loc_B590:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
-		mov	[bp+var_2], 0
-		mov	[bp+var_4], 13Bh
-		jmp	short loc_B625
-; ---------------------------------------------------------------------------
-
-loc_B5A7:
-		mov	di, 5
-		mov	si, 8Ch	; 'ÅE
-		jmp	short loc_B5C7
-; ---------------------------------------------------------------------------
-
-loc_B5AF:
-		push	si
-		push	[bp+var_4]
-		lea	ax, [si+8]
-		push	ax
-		mov	ax, [bp+var_4]
-		add	ax, 15
-		push	ax
-		call	grcg_boxfill
-		dec	di
-		sub	si, 0Bh
-
-loc_B5C7:
-		mov	al, _sel[0]
-		cbw
-		imul	ax, 3
-		add	ax, [bp+var_2]
-		mov	bx, ax
-		mov	al, [bx+0A32h]
-		mov	ah, 0
-		cmp	ax, di
-		jl	short loc_B5AF
-		les	bx, _resident
-		cmp	es:[bx+resident_t.game_mode], GM_STORY
-		jz	short loc_B61E
-		mov	di, 5
-		mov	si, 20Ch
-		jmp	short loc_B608
-; ---------------------------------------------------------------------------
-
-loc_B5F0:
-		push	si
-		push	[bp+var_4]
-		lea	ax, [si+8]
-		push	ax
-		mov	ax, [bp+var_4]
-		add	ax, 15
-		push	ax
-		call	grcg_boxfill
-		dec	di
-		sub	si, 0Bh
-
-loc_B608:
-		mov	al, _sel[1]
-		cbw
-		imul	ax, 3
-		add	ax, [bp+var_2]
-		mov	bx, ax
-		mov	al, [bx+0A32h]
-		mov	ah, 0
-		cmp	ax, di
-		jl	short loc_B5F0
-
-loc_B61E:
-		inc	[bp+var_2]
-		add	[bp+var_4], 10h
-
-loc_B625:
-		cmp	[bp+var_2], 3
-		jl	loc_B5A7
-		call	grcg_off
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B565	endp
-
+	@stats_put$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2325,7 +2225,7 @@ loc_BAF9:
 loc_BB06:
 		call	sub_B747
 		call	@vs_sel_pics_put$qv
-		call	sub_B565
+		call	@stats_put$qv
 		call	sub_B636
 		call	sub_B670
 		push	0
@@ -2464,7 +2364,7 @@ loc_BC63:
 loc_BC69:
 		call	sub_B747
 		call	@vs_sel_pics_put$qv
-		call	sub_B565
+		call	@stats_put$qv
 		call	sub_B636
 		call	sub_B670
 		call	@input_reset_sense_key_held$qv
@@ -2599,7 +2499,7 @@ sub_BD9A	proc near
 loc_BDC1:
 		call	sub_B747
 		call	@story_sel_pics_put$qv
-		call	sub_B565
+		call	@stats_put$qv
 		call	sub_B636
 		call	sub_B670
 		push	0
@@ -2789,33 +2689,17 @@ _PLAYCHAR_PIC_FN label dword
 	dd a14sl_cd2
 	dd a16sl_cd2
 
-		db    3
-		db    1
-		db    5
-		db    4
-		db    4
-		db    2
-		db    3
-		db    4
-		db    3
-		db    2
-		db    3
-		db    1
-		db    4
-		db    1
-		db    4
-		db    2
-		db    2
-		db    5
-		db    4
-		db    5
-		db    1
-		db    5
-		db    2
-		db    4
-		db    5
-		db    5
-		db    3
+public _PLAYCHAR_STATS
+_PLAYCHAR_STATS label byte
+		db 3, 1, 5
+		db 4, 4, 2
+		db 3, 4, 3
+		db 2, 3, 1
+		db 4, 1, 4
+		db 2, 2, 5
+		db 4, 5, 1
+		db 5, 2, 4
+		db 5, 5, 3
 include th03/gaiji/p_cursor[data].asm
 public _input_locked
 _input_locked label byte
