@@ -1630,8 +1630,6 @@ OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
 
-CDG_PIC_SELECTED_P2 = 1
-CDG_PIC = 2
 CDG_STATS = 11
 CDG_EXTRA_BG = 12
 CDG_EXTRA_FOR_PLAYCHAR = 13
@@ -1641,76 +1639,8 @@ CDG_EXTRA_FOR_PLAYCHAR = 13
 	@select_cdg_load_part3_of_4$qv procdesc near
 	@select_init_and_load$qv procdesc near
 	@select_free$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B4F3	proc near
-		push	bp
-		mov	bp, sp
-		push	(32 shl 16) or 96
-		cmp	_sel_confirmed_p1, 0
-		jnz	short loc_B50C
-		mov	al, _sel[0]
-		cbw
-		add	ax, CDG_PIC
-		jmp	short loc_B50E
-; ---------------------------------------------------------------------------
-
-loc_B50C:
-		xor	ax, ax
-
-loc_B50E:
-		push	ax
-		call	cdg_put_8
-		push	(416 shl 16) or 96
-		cmp	_sel_confirmed_p2, 0
-		jnz	short loc_B52A
-		mov	al, _sel[1]
-		cbw
-		add	ax, CDG_PIC
-		jmp	short loc_B52D
-; ---------------------------------------------------------------------------
-
-loc_B52A:
-		mov	ax, CDG_PIC_SELECTED_P2
-
-loc_B52D:
-		push	ax
-		call	cdg_put_hflip_8
-		pop	bp
-		retn
-sub_B4F3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B535	proc near
-		push	bp
-		mov	bp, sp
-		push	(32 shl 16) or 96
-		cmp	_sel_confirmed_p1, 0
-		jnz	short loc_B54E
-		mov	al, _sel[0]
-		cbw
-		add	ax, CDG_PIC
-		jmp	short loc_B550
-; ---------------------------------------------------------------------------
-
-loc_B54E:
-		xor	ax, ax
-
-loc_B550:
-		push	ax
-		call	cdg_put_8
-		call	cdg_put_8 pascal, large (416 shl 16) or 96, CDG_PIC_SELECTED_P2
-		pop	bp
-		retn
-sub_B535	endp
-
+	@vs_sel_pics_put$qv procdesc near
+	@story_sel_pics_put$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2394,7 +2324,7 @@ loc_BAF9:
 
 loc_BB06:
 		call	sub_B747
-		call	sub_B4F3
+		call	@vs_sel_pics_put$qv
 		call	sub_B565
 		call	sub_B636
 		call	sub_B670
@@ -2533,7 +2463,7 @@ loc_BC63:
 
 loc_BC69:
 		call	sub_B747
-		call	sub_B4F3
+		call	@vs_sel_pics_put$qv
 		call	sub_B565
 		call	sub_B636
 		call	sub_B670
@@ -2668,7 +2598,7 @@ sub_BD9A	proc near
 
 loc_BDC1:
 		call	sub_B747
-		call	sub_B535
+		call	@story_sel_pics_put$qv
 		call	sub_B565
 		call	sub_B636
 		call	sub_B670
@@ -2764,8 +2694,6 @@ include th02/snd/snd.inc
 	extern _snd_load:proc
 	extern @game_exit$qv:proc
 	extern @polar$qiii:proc
-	extern CDG_PUT_8:proc
-	extern CDG_PUT_HFLIP_8:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @input_reset_sense_key_held$qv:proc
 	extern @PI_PALETTE_APPLY$QI:proc

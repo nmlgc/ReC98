@@ -17,6 +17,18 @@ extern "C" {
 #include "th03/snd/snd.h"
 #include "th03/sprites/op_cdg.hpp"
 
+/// Coordinates
+/// -----------
+
+static const pixel_t PIC_W = 192;
+static const pixel_t PIC_H = 192;
+static const pixel_t PIC_MARGIN_X = 32;
+
+static const screen_x_t P1_LEFT = PIC_MARGIN_X;
+static const screen_x_t P2_LEFT = (RES_X - PIC_MARGIN_X - PIC_W);
+static const screen_y_t PIC_TOP = 96;
+/// -----------
+
 /// State
 /// -----
 
@@ -143,4 +155,28 @@ void near select_free(void)
 		cdg_free(i);
 	}
 	super_free();
+}
+
+inline void sel_p1_pic_put(void) {
+	cdg_put_8(
+		P1_LEFT,
+		PIC_TOP,
+		(!sel_confirmed[0] ? (CDG_PIC + sel[0]) : (CDG_PIC_SELECTED + 0))
+	);
+}
+
+void near vs_sel_pics_put(void)
+{
+	sel_p1_pic_put();
+	cdg_put_hflip_8(
+		P2_LEFT,
+		PIC_TOP,
+		(!sel_confirmed[1] ? (CDG_PIC + sel[1]) : (CDG_PIC_SELECTED + 1))
+	);
+}
+
+void near story_sel_pics_put(void)
+{
+	sel_p1_pic_put();
+	cdg_put_8(P2_LEFT, PIC_TOP, (CDG_PIC_SELECTED + 1));
 }
