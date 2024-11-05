@@ -1796,7 +1796,7 @@ sub_B424	proc near
 		graph_accesspage 1
 		call	graph_clear
 		graph_showpage 0
-		mov	byte_FC5C, 0
+		mov	_page_shown, 0
 		push	ds
 		push	offset aTlsl_rgb ; "TLSL.RGB"
 		call	palette_entry_rgb
@@ -1865,9 +1865,9 @@ sub_B4F3	proc near
 		push	bp
 		mov	bp, sp
 		push	(32 shl 16) or 96
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jnz	short loc_B50C
-		mov	al, _playchars[0]
+		mov	al, _sel[0]
 		cbw
 		add	ax, CDG_PIC
 		jmp	short loc_B50E
@@ -1880,9 +1880,9 @@ loc_B50E:
 		push	ax
 		call	cdg_put_8
 		push	(416 shl 16) or 96
-		cmp	byte_FC5B, 0
+		cmp	_sel_confirmed_p2, 0
 		jnz	short loc_B52A
-		mov	al, _playchars[1]
+		mov	al, _sel[1]
 		cbw
 		add	ax, CDG_PIC
 		jmp	short loc_B52D
@@ -1907,9 +1907,9 @@ sub_B535	proc near
 		push	bp
 		mov	bp, sp
 		push	(32 shl 16) or 96
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jnz	short loc_B54E
-		mov	al, _playchars[0]
+		mov	al, _sel[0]
 		cbw
 		add	ax, CDG_PIC
 		jmp	short loc_B550
@@ -1971,7 +1971,7 @@ loc_B5AF:
 		sub	si, 0Bh
 
 loc_B5C7:
-		mov	al, _playchars[0]
+		mov	al, _sel[0]
 		cbw
 		imul	ax, 3
 		add	ax, [bp+var_2]
@@ -2001,7 +2001,7 @@ loc_B5F0:
 		sub	si, 0Bh
 
 loc_B608:
-		mov	al, _playchars[1]
+		mov	al, _sel[1]
 		cbw
 		imul	ax, 3
 		add	ax, [bp+var_2]
@@ -2078,7 +2078,7 @@ sub_B670	proc near
 		mov	bp, sp
 		call	cdg_put_noalpha_8 pascal, large (160 shl 16) or 304, CDG_EXTRA_BG
 		push	(176 shl 16) or 316
-		mov	al, _playchars[0]
+		mov	al, _sel[0]
 		cbw
 		add	ax, CDG_EXTRA_FOR_PLAYCHAR
 		push	ax
@@ -2088,7 +2088,7 @@ sub_B670	proc near
 		jz	short loc_B6BE
 		call	cdg_put_noalpha_8 pascal, large (544 shl 16) or 304, CDG_EXTRA_BG
 		push	(560 shl 16) or 316
-		mov	al, _playchars[1]
+		mov	al, _sel[1]
 		cbw
 		add	ax, CDG_EXTRA_FOR_PLAYCHAR
 		push	ax
@@ -2351,7 +2351,7 @@ arg_2		= word ptr  6
 		shl	ax, 3
 		add	ax, 240
 		mov	di, ax
-		mov	al, [si+2468h]
+		mov	al, _sel[si]
 		cbw
 		imul	ax, 20
 		add	ax, 128
@@ -2404,43 +2404,43 @@ arg_2		= word ptr  6
 		push	di
 		mov	di, [bp+arg_2]
 		mov	si, [bp+arg_0]
-		cmp	byte ptr [si+246Ah], 0
+		cmp	_sel_confirmed[si], 0
 		jnz	loc_BA82
-		cmp	byte ptr [si+0A59h], 0
+		cmp	_input_locked[si], 0
 		jz	short loc_B932
 		or	di, di
 		jnz	loc_BA82
-		mov	byte ptr [si+0A59h], 0
+		mov	_input_locked[si], 0
 		jmp	loc_BA82
 ; ---------------------------------------------------------------------------
 
 loc_B932:
 		test	di, 1
 		jz	short loc_B951
-		dec	byte ptr [si+2468h]
-		cmp	byte ptr [si+2468h], 0
+		dec	_sel[si]
+		cmp	_sel[si], 0
 		jge	short loc_B94C
 		mov	al, byte_FC68
 		dec	al
-		mov	[si+2468h], al
+		mov	_sel[si], al
 
 loc_B94C:
-		mov	byte ptr [si+0A59h], 1
+		mov	_input_locked[si], 1
 
 loc_B951:
 		test	di, 2
 		jz	short loc_B974
-		inc	byte ptr [si+2468h]
-		mov	al, [si+2468h]
+		inc	_sel[si]
+		mov	al, _sel[si]
 		cbw
 		mov	dl, byte_FC68
 		mov	dh, 0
 		cmp	ax, dx
 		jl	short loc_B96F
-		mov	byte ptr [si+2468h], 0
+		mov	_sel[si], 0
 
 loc_B96F:
-		mov	byte ptr [si+0A59h], 1
+		mov	_input_locked[si], 1
 
 loc_B974:
 		test	di, 20h
@@ -2449,7 +2449,7 @@ loc_B974:
 		db 084h
 		db 07fh
 		db 000h
-		mov	al, [si+2468h]
+		mov	al, _sel[si]
 		cbw
 		mov	[bp+var_2], ax
 		les	bx, _resident
@@ -2462,7 +2462,7 @@ loc_B974:
 		call	palette_white_in
 		mov	bx, 1
 		sub	bx, si
-		cmp	byte ptr [bx+246Ah], 0
+		cmp	_sel_confirmed[bx], 0
 		jz	short loc_B9CC
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
@@ -2489,13 +2489,13 @@ loc_B9DA:
 		call	cdg_load_single
 		mov	bx, 1
 		sub	bx, si
-		cmp	byte ptr [bx+246Ah], 0
+		cmp	_sel_confirmed[bx], 0
 		jz	short loc_B9F1
-		mov	word_FC62, 0
+		mov	_fadeout_frames, 0
 
 loc_B9F1:
-		mov	byte ptr [si+246Ah], 1
-		mov	byte ptr [si+0A59h], 1
+		mov	_sel_confirmed[si], 1
+		mov	_input_locked[si], 1
 
 loc_B9FB:
 		test	di, 10h
@@ -2504,7 +2504,7 @@ loc_B9FB:
 		db 084h
 		db 07fh
 		db 000h
-		mov	al, [si+2468h]
+		mov	al, _sel[si]
 		cbw
 		mov	[bp+var_2], ax
 		les	bx, _resident
@@ -2517,7 +2517,7 @@ loc_B9FB:
 		call	palette_white_in
 		mov	bx, 1
 		sub	bx, si
-		cmp	byte ptr [bx+246Ah], 0
+		cmp	_sel_confirmed[bx], 0
 		jz	short loc_BA53
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
@@ -2544,13 +2544,13 @@ loc_BA61:
 		call	cdg_load_single
 		mov	bx, 1
 		sub	bx, si
-		cmp	byte ptr [bx+246Ah], 0
+		cmp	_sel_confirmed[bx], 0
 		jz	short loc_BA78
-		mov	word_FC62, 0
+		mov	_fadeout_frames, 0
 
 loc_BA78:
-		mov	byte ptr [si+246Ah], 1
-		mov	byte ptr [si+0A59h], 1
+		mov	_sel_confirmed[si], 1
+		mov	_input_locked[si], 1
 
 loc_BA82:
 		pop	di
@@ -2576,16 +2576,16 @@ sub_BA88	proc near
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	_playchars[0], al
+		mov	_sel[0], al
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	_playchars[1], al
-		mov	byte_FC5A, 0
-		mov	byte_FC5B, 0
+		mov	_sel[1], al
+		mov	_sel_confirmed_p1, 0
+		mov	_sel_confirmed_p2, 0
 		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
 		jnz	short loc_BAD4
 		setfarfp	_input_mode, @input_mode_key_vs_key$qv
@@ -2605,7 +2605,7 @@ loc_BAED:
 
 loc_BAF9:
 		call	@frame_delay$qi pascal, 16
-		mov	word_FC62, 0
+		mov	_fadeout_frames, 0
 
 loc_BB06:
 		call	sub_B747
@@ -2614,7 +2614,7 @@ loc_BB06:
 		call	sub_B636
 		call	sub_B670
 		push	0
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BB22
 		mov	al, V_WHITE
 		jmp	short loc_BB24
@@ -2627,7 +2627,7 @@ loc_BB24:
 		push	ax
 		call	p_cursor_put
 		push	1
-		cmp	byte_FC5B, 0
+		cmp	_sel_confirmed_p2, 0
 		jz	short loc_BB35
 		mov	al, V_WHITE
 		jmp	short loc_BB37
@@ -2661,14 +2661,14 @@ loc_BB37:
 ; ---------------------------------------------------------------------------
 
 loc_BB82:
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BBB7
-		cmp	byte_FC5B, 0
+		cmp	_sel_confirmed_p2, 0
 		jz	short loc_BBB7
 		call	text_clear
-		cmp	word_FC62, 10h
+		cmp	_fadeout_frames, 16
 		jb	short loc_BBB0
-		mov	ax, word_FC62
+		mov	ax, _fadeout_frames
 		imul	ax, 6
 		mov	dx, 200
 		sub	dx, ax
@@ -2676,7 +2676,7 @@ loc_BB82:
 		call	far ptr	palette_show
 
 loc_BBB0:
-		cmp	word_FC62, 20h ; ' '
+		cmp	_fadeout_frames, 32
 		ja	short loc_BC18
 
 loc_BBB7:
@@ -2690,15 +2690,15 @@ loc_BBB7:
 
 loc_BBD0:
 		mov	vsync_Count1, 0
-		graph_accesspage byte_FC5C
+		graph_accesspage _page_shown
 		mov	al, 1
-		sub	al, byte_FC5C
-		mov	byte_FC5C, al
+		sub	al, _page_shown
+		mov	_page_shown, al
 		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	grcg_off
-		inc	word_FC62
+		inc	_fadeout_frames
 		les	bx, _resident
 		inc	es:[bx+resident_t.rand]
 		jmp	loc_BB06
@@ -2728,23 +2728,23 @@ sub_BC1F	proc near
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	_playchars[0], al
+		mov	_sel[0], al
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	_playchars[1], al
-		mov	byte_FC5A, 0
-		mov	byte_FC5B, 0
+		mov	_sel[1], al
+		mov	_sel_confirmed_p1, 0
+		mov	_sel_confirmed_p2, 0
 		setfarfp	_input_mode, @input_mode_interface$qv
 		xor	si, si
 		jmp	loc_BD8B
 ; ---------------------------------------------------------------------------
 
 loc_BC63:
-		mov	word_FC62, 0
+		mov	_fadeout_frames, 0
 
 loc_BC69:
 		call	sub_B747
@@ -2755,7 +2755,7 @@ loc_BC69:
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	0
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BC8E
 		mov	al, V_WHITE
 		jmp	short loc_BC90
@@ -2767,10 +2767,10 @@ loc_BC8E:
 loc_BC90:
 		push	ax
 		call	p_cursor_put
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BCAE
 		push	1
-		cmp	byte_FC5B, 0
+		cmp	_sel_confirmed_p2, 0
 		jz	short loc_BCA8
 		mov	al, V_WHITE
 		jmp	short loc_BCAA
@@ -2802,20 +2802,20 @@ loc_BCAE:
 loc_BCE3:
 		or	si, si
 		jnz	short loc_BCF7
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BCF7
-		cmp	word_FC62, 0Ch
+		cmp	_fadeout_frames, 12
 		ja	loc_BD8A
 
 loc_BCF7:
 		or	si, si
 		jz	short loc_BD29
-		cmp	byte_FC5B, 0
+		cmp	_sel_confirmed_p2, 0
 		jz	short loc_BD29
 		call	text_clear
-		cmp	word_FC62, 10h
+		cmp	_fadeout_frames, 16
 		jb	short loc_BD22
-		mov	ax, word_FC62
+		mov	ax, _fadeout_frames
 		imul	ax, 6
 		mov	dx, 200
 		sub	dx, ax
@@ -2823,7 +2823,7 @@ loc_BCF7:
 		call	far ptr	palette_show
 
 loc_BD22:
-		cmp	word_FC62, 20h ; ' '
+		cmp	_fadeout_frames, 32
 		ja	short loc_BD8A
 
 loc_BD29:
@@ -2837,15 +2837,15 @@ loc_BD29:
 
 loc_BD42:
 		mov	vsync_Count1, 0
-		graph_accesspage byte_FC5C
+		graph_accesspage _page_shown
 		mov	al, 1
-		sub	al, byte_FC5C
-		mov	byte_FC5C, al
+		sub	al, _page_shown
+		mov	_page_shown, al
 		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	grcg_off
-		inc	word_FC62
+		inc	_fadeout_frames
 		les	bx, _resident
 		inc	es:[bx+resident_t.rand]
 		jmp	loc_BC69
@@ -2875,11 +2875,11 @@ sub_BD9A	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_B424
-		mov	_playchars[0], 0
-		mov	byte_FC5A, 0
-		mov	byte_FC5B, 1
+		mov	_sel[0], 0
+		mov	_sel_confirmed_p1, 0
+		mov	_sel_confirmed_p2, 1
 		setfarfp	_input_mode, @input_mode_interface$qv
-		mov	word_FC62, 0
+		mov	_fadeout_frames, 0
 
 loc_BDC1:
 		call	sub_B747
@@ -2888,7 +2888,7 @@ loc_BDC1:
 		call	sub_B636
 		call	sub_B670
 		push	0
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BDDD
 		mov	al, V_WHITE
 		jmp	short loc_BDDF
@@ -2919,12 +2919,12 @@ loc_BDDF:
 ; ---------------------------------------------------------------------------
 
 loc_BE21:
-		cmp	byte_FC5A, 0
+		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BE4F
 		call	text_clear
-		cmp	word_FC62, 10h
+		cmp	_fadeout_frames, 16
 		jb	short loc_BE48
-		mov	ax, word_FC62
+		mov	ax, _fadeout_frames
 		imul	ax, 6
 		mov	dx, 200
 		sub	dx, ax
@@ -2932,7 +2932,7 @@ loc_BE21:
 		call	far ptr	palette_show
 
 loc_BE48:
-		cmp	word_FC62, 20h ; ' '
+		cmp	_fadeout_frames, 32
 		ja	short loc_BEB0
 
 loc_BE4F:
@@ -2946,15 +2946,15 @@ loc_BE4F:
 
 loc_BE68:
 		mov	vsync_Count1, 0
-		graph_accesspage byte_FC5C
+		graph_accesspage _page_shown
 		mov	al, 1
-		sub	al, byte_FC5C
-		mov	byte_FC5C, al
+		sub	al, _page_shown
+		mov	_page_shown, al
 		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	grcg_off
-		inc	word_FC62
+		inc	_fadeout_frames
 		les	bx, _resident
 		inc	es:[bx+resident_t.rand]
 		jmp	loc_BDC1
@@ -3108,8 +3108,9 @@ _PLAYCHAR_PIC_FN label dword
 		db    5
 		db    3
 include th03/gaiji/p_cursor[data].asm
-		db    0
-		db    0
+public _input_locked
+_input_locked label byte
+	db PLAYER_COUNT dup (0)
 a00sl_cd2	db '00SL.CD2',0
 a02sl_cd2	db '02SL.CD2',0
 a04sl_cd2	db '04SL.CD2',0
@@ -3157,16 +3158,17 @@ aTlsl_rgb	db 'TLSL.RGB',0
 public _hi
 _hi	scoredat_section_t <?>
 word_FC52	dw ?
-public _resident
+public _resident, _sel, _sel_confirmed, _page_shown
 _resident	dd ?
-public _playchars
-_playchars	db PLAYER_COUNT dup (?)
-byte_FC5A	db ?
-byte_FC5B	db ?
-byte_FC5C	db ?
-		db ?
+_sel	db PLAYER_COUNT dup (?)
+_sel_confirmed label byte
+_sel_confirmed_p1	db ?
+_sel_confirmed_p2	db ?
+_page_shown	db ?
+	evendata
 include th03/hardware/input_modes[bss].asm
-word_FC62	dw ?
+public _fadeout_frames
+_fadeout_frames	dw ?
 word_FC64	dw ?
 word_FC66	dw ?
 byte_FC68	db ?
