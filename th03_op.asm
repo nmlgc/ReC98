@@ -1640,49 +1640,7 @@ CDG_EXTRA_FOR_PLAYCHAR = 13
 	@vs_sel_pics_put$qv procdesc near
 	@story_sel_pics_put$qv procdesc near
 	@stats_put$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B636	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 136
-		xor	si, si
-		jmp	short loc_B663
-; ---------------------------------------------------------------------------
-
-loc_B642:
-		push	256
-		push	di
-		mov	ax, si
-		add	ax, ax
-		push	ax
-		call	super_put
-		push	320
-		push	di
-		mov	ax, si
-		add	ax, ax
-		inc	ax
-		push	ax
-		call	super_put
-		inc	si
-		add	di, 20
-
-loc_B663:
-		mov	al, _playchars_available
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_B642
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_B636	endp
-
+	@names_put$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2226,7 +2184,7 @@ loc_BB06:
 		call	sub_B747
 		call	@vs_sel_pics_put$qv
 		call	@stats_put$qv
-		call	sub_B636
+		call	@names_put$qv
 		call	sub_B670
 		push	0
 		cmp	_sel_confirmed_p1, 0
@@ -2365,7 +2323,7 @@ loc_BC69:
 		call	sub_B747
 		call	@vs_sel_pics_put$qv
 		call	@stats_put$qv
-		call	sub_B636
+		call	@names_put$qv
 		call	sub_B670
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
@@ -2500,7 +2458,7 @@ loc_BDC1:
 		call	sub_B747
 		call	@story_sel_pics_put$qv
 		call	@stats_put$qv
-		call	sub_B636
+		call	@names_put$qv
 		call	sub_B670
 		push	0
 		cmp	_sel_confirmed_p1, 0

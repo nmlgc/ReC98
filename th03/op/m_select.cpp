@@ -6,6 +6,7 @@
 #include "th03/op/m_select.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "th02/formats/bfnt.h"
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/formats/cdg.h"
@@ -31,6 +32,11 @@ static const pixel_t PIC_W = 192;
 static const pixel_t PIC_H = 192;
 static const pixel_t PIC_MARGIN_X = 32;
 
+static const pixel_t NAME_W = 128;
+static const pixel_t NAME_H = 16;
+static const pixel_t NAME_PADDING_Y = 4;
+static const pixel_t NAME_PADDED_H = (NAME_H + NAME_PADDING_Y);
+
 static const pixel_t STATS_W = 128;
 
 static const pixel_t STAT_STAR_W = 9;
@@ -40,6 +46,9 @@ static const pixel_t STAT_STAR_H = 16;
 static const screen_x_t P1_LEFT = PIC_MARGIN_X;
 static const screen_x_t P2_LEFT = (RES_X - PIC_MARGIN_X - PIC_W);
 static const screen_y_t PIC_TOP = 96;
+
+static const screen_x_t NAMES_LEFT = ((RES_X / 2) - (NAME_W / 2));
+static const screen_y_t NAMES_TOP = 136;
 
 static const screen_y_t STATS_TOP = (PIC_TOP + PIC_H + 16);
 /// -----------
@@ -235,4 +244,17 @@ void near stats_put(void)
 	}
 
 	grcg_off();
+}
+
+void near names_put(void)
+{
+	screen_y_t top = NAMES_TOP;
+	int playchar = 0;
+	while(playchar < playchars_available) {
+		static_assert(NAME_W == (2 * BFNT_ASSUMED_MAX_W));
+		super_put((NAMES_LEFT + (0 * (NAME_W / 2))), top, ((playchar * 2) + 0));
+		super_put((NAMES_LEFT + (1 * (NAME_W / 2))), top, ((playchar * 2) + 1));
+		playchar++;
+		top += NAME_PADDED_H;
+	}
 }
