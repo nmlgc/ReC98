@@ -4,9 +4,11 @@
 #include "th03/playchar.hpp"
 
 typedef enum {
+	CDG_SELECT_FIRST,
+
 	// Portrait of each player's selected character. Each of these can use the
 	// alternate palette.
-	CDG_PIC_SELECTED,
+	CDG_PIC_SELECTED = CDG_SELECT_FIRST,
 	CDG_PIC_SELECTED_last = (CDG_PIC_SELECTED + PLAYER_COUNT - 1),
 
 	// Portraits of all characters using the regular palette.

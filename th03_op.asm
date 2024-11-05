@@ -48,7 +48,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern GRAPH_PI_FREE:proc
 	extern PALETTE_SHOW:proc
 	extern IRAND:proc
-	extern PALETTE_ENTRY_RGB:proc
 	extern TEXT_CLEAR:proc
 	extern TEXT_PUTSA:proc
 	extern PALETTE_WHITE_IN:proc
@@ -1631,104 +1630,17 @@ OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
 
-CDG_PIC_SELECTED_P1 = 0
 CDG_PIC_SELECTED_P2 = 1
 CDG_PIC = 2
 CDG_STATS = 11
 CDG_EXTRA_BG = 12
 CDG_EXTRA_FOR_PLAYCHAR = 13
-CDG_SELECT_COUNT = 22
 
-	@playchars_available_load$qv procdesc near
 	@select_cdg_load_part1_of_4$qv procdesc near
 	@select_cdg_load_part2_of_4$qv procdesc near
 	@select_cdg_load_part3_of_4$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B424	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	vsync_Count1, 0
-		kajacall	KAJA_SONG_STOP
-		call	_snd_load c, offset aSelect_m, ds, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		mov	word_FC64, 0C8h	; 'È'
-		les	bx, _resident
-		assume es:nothing
-		mov	eax, es:[bx+resident_t.rand]
-		mov	random_seed, eax
-		call	text_clear
-		call	super_free
-		call	super_entry_bfnt pascal, ds, offset aChname_bft ; "chname.bft"
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 1
-		call	graph_clear
-		graph_showpage 0
-		mov	_page_shown, 0
-		push	ds
-		push	offset aTlsl_rgb ; "TLSL.RGB"
-		call	palette_entry_rgb
-		call	far ptr	palette_show
-		mov	si, 6
-		jmp	short loc_B4BC
-; ---------------------------------------------------------------------------
-
-loc_B4A6:
-		lea	ax, [si+CDG_PIC]
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		pushd	_PLAYCHAR_PIC_FN[bx]
-		push	0
-		call	cdg_load_single
-		inc	si
-
-loc_B4BC:
-		cmp	si, 9
-		jl	short loc_B4A6
-
-loc_B4C1:
-		cmp	vsync_Count1, 1Eh
-		jb	short loc_B4C1
-		mov	word_FC66, 8
-		call	@playchars_available_load$qv
-		mov	_playchars_available, al
-		pop	si
-		pop	bp
-		retn
-sub_B424	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B4D7	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_B4E6
-; ---------------------------------------------------------------------------
-
-loc_B4DF:
-		call	cdg_free pascal, si
-		inc	si
-
-loc_B4E6:
-		cmp	si, CDG_SELECT_COUNT
-		jl	short loc_B4DF
-		call	super_free
-		pop	si
-		pop	bp
-		retn
-sub_B4D7	endp
-
+	@select_init_and_load$qv procdesc near
+	@select_free$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2093,12 +2005,12 @@ loc_B761:
 		push	si
 		call	sub_B6C0
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 5
-		mov	ax, word_FC66
+		mov	ax, _curve_trail_count
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		mov	di, ax
-		test	byte ptr word_FC66, 1
+		test	byte ptr _curve_trail_count, 1
 		jz	short loc_B7CD
 		inc	di
 
@@ -2192,7 +2104,7 @@ loc_B83C:
 
 loc_B88C:
 		mov	ax, [bp+var_6]
-		cmp	ax, word_FC66
+		cmp	ax, _curve_trail_count
 		jle	short loc_B83C
 		call	grcg_off
 		mov	al, byte ptr word_FC52
@@ -2440,7 +2352,7 @@ sub_B908	endp
 sub_BA88	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_B424
+		call	@select_init_and_load$qv
 		call	text_clear
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
@@ -2526,7 +2438,7 @@ loc_BB37:
 		call	graph_clear
 		graph_showpage 0
 		call	text_clear
-		call	sub_B4D7
+		call	@select_free$qv
 		kajacall	KAJA_SONG_STOP
 		mov	al, 1
 		pop	bp
@@ -2557,9 +2469,9 @@ loc_BBB7:
 		jb	short loc_BBB7
 		cmp	vsync_Count1, 4
 		jbe	short loc_BBD0
-		cmp	word_FC66, 1
+		cmp	_curve_trail_count, 1
 		jle	short loc_BBD0
-		dec	word_FC66
+		dec	_curve_trail_count
 
 loc_BBD0:
 		mov	vsync_Count1, 0
@@ -2578,7 +2490,7 @@ loc_BBD0:
 ; ---------------------------------------------------------------------------
 
 loc_BC18:
-		call	sub_B4D7
+		call	@select_free$qv
 		mov	al, 0
 		pop	bp
 		retn
@@ -2593,7 +2505,7 @@ sub_BC1F	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_B424
+		call	@select_init_and_load$qv
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		mov	ah, 0
@@ -2666,7 +2578,7 @@ loc_BCAE:
 		call	graph_clear
 		graph_showpage 0
 		call	text_clear
-		call	sub_B4D7
+		call	@select_free$qv
 		kajacall	KAJA_SONG_STOP
 		mov	al, 1
 		jmp	loc_BD97
@@ -2704,9 +2616,9 @@ loc_BD29:
 		jb	short loc_BD29
 		cmp	vsync_Count1, 4
 		jbe	short loc_BD42
-		cmp	word_FC66, 1
+		cmp	_curve_trail_count, 1
 		jle	short loc_BD42
-		dec	word_FC66
+		dec	_curve_trail_count
 
 loc_BD42:
 		mov	vsync_Count1, 0
@@ -2730,7 +2642,7 @@ loc_BD8A:
 loc_BD8B:
 		cmp	si, 2
 		jl	loc_BC63
-		call	sub_B4D7
+		call	@select_free$qv
 		mov	al, 0
 
 loc_BD97:
@@ -2747,7 +2659,7 @@ sub_BC1F	endp
 sub_BD9A	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_B424
+		call	@select_init_and_load$qv
 		mov	_sel[0], 0
 		mov	_sel_confirmed_p1, 0
 		mov	_sel_confirmed_p2, 1
@@ -2784,7 +2696,7 @@ loc_BDDF:
 		call	graph_clear
 		graph_showpage 0
 		call	text_clear
-		call	sub_B4D7
+		call	@select_free$qv
 		kajacall	KAJA_SONG_STOP
 		mov	al, 1
 		pop	bp
@@ -2813,9 +2725,9 @@ loc_BE4F:
 		jb	short loc_BE4F
 		cmp	vsync_Count1, 4
 		jbe	short loc_BE68
-		cmp	word_FC66, 1
+		cmp	_curve_trail_count, 1
 		jle	short loc_BE68
-		dec	word_FC66
+		dec	_curve_trail_count
 
 loc_BE68:
 		mov	vsync_Count1, 0
@@ -2834,7 +2746,7 @@ loc_BE68:
 ; ---------------------------------------------------------------------------
 
 loc_BEB0:
-		call	sub_B4D7
+		call	@select_free$qv
 		mov	al, 0
 		pop	bp
 		retn
@@ -2861,7 +2773,6 @@ include th02/snd/snd.inc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @game_init_op$qnxuc:proc
 	extern CDG_LOAD_SINGLE:proc
-	extern CDG_FREE:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
 	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
@@ -2998,9 +2909,10 @@ _PLAYCHAR_PIC_UNKNOWN_FN	db '99sl.cdg',0
 _SELECT_STATS_FN	db 'slwin.cdg',0
 _SELECT_EXTRA_BG_FN	db 'slex.cdg',0
 
-aSelect_m	db 'select.m',0
-aChname_bft	db 'chname.bft',0
-aTlsl_rgb	db 'TLSL.RGB',0
+public _BGM_SELECT_FN, _PLAYCHAR_NAME_FN, _SELECT_PALETTE_FN
+_BGM_SELECT_FN	db 'select.m',0
+_PLAYCHAR_NAME_FN	db 'chname.bft',0
+_SELECT_PALETTE_FN	db 'TLSL.RGB',0
 		db 041h, 0C1h, 0E1h, 0
 
 	.data?
@@ -3037,10 +2949,11 @@ _sel_confirmed_p2	db ?
 _page_shown	db ?
 	evendata
 include th03/hardware/input_modes[bss].asm
-public _fadeout_frames
+
+public _fadeout_frames, _curve_unused, _curve_trail_count, _playchars_available
 _fadeout_frames	dw ?
-word_FC64	dw ?
-word_FC66	dw ?
+_curve_unused	dw ?
+_curve_trail_count	dw ?
 _playchars_available	db ?
 
 		end
