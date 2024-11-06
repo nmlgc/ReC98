@@ -1628,10 +1628,6 @@ sub_B10A	endp
 OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
-
-CDG_EXTRA_BG = 12
-CDG_EXTRA_FOR_PLAYCHAR = 13
-
 	@select_cdg_load_part1_of_4$qv procdesc near
 	@select_cdg_load_part2_of_4$qv procdesc near
 	@select_cdg_load_part3_of_4$qv procdesc near
@@ -1641,37 +1637,7 @@ CDG_EXTRA_FOR_PLAYCHAR = 13
 	@story_sel_pics_put$qv procdesc near
 	@stats_put$qv procdesc near
 	@names_put$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B670	proc near
-		push	bp
-		mov	bp, sp
-		call	cdg_put_noalpha_8 pascal, large (160 shl 16) or 304, CDG_EXTRA_BG
-		push	(176 shl 16) or 316
-		mov	al, _sel[0]
-		cbw
-		add	ax, CDG_EXTRA_FOR_PLAYCHAR
-		push	ax
-		call	cdg_put_noalpha_8
-		les	bx, _resident
-		cmp	es:[bx+resident_t.game_mode], GM_STORY
-		jz	short loc_B6BE
-		call	cdg_put_noalpha_8 pascal, large (544 shl 16) or 304, CDG_EXTRA_BG
-		push	(560 shl 16) or 316
-		mov	al, _sel[1]
-		cbw
-		add	ax, CDG_EXTRA_FOR_PLAYCHAR
-		push	ax
-		call	cdg_put_noalpha_8
-
-loc_B6BE:
-		pop	bp
-		retn
-sub_B670	endp
-
+	@extras_put$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2185,7 +2151,7 @@ loc_BB06:
 		call	@vs_sel_pics_put$qv
 		call	@stats_put$qv
 		call	@names_put$qv
-		call	sub_B670
+		call	@extras_put$qv
 		push	0
 		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BB22
@@ -2324,7 +2290,7 @@ loc_BC69:
 		call	@vs_sel_pics_put$qv
 		call	@stats_put$qv
 		call	@names_put$qv
-		call	sub_B670
+		call	@extras_put$qv
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	0
@@ -2459,7 +2425,7 @@ loc_BDC1:
 		call	@story_sel_pics_put$qv
 		call	@stats_put$qv
 		call	@names_put$qv
-		call	sub_B670
+		call	@extras_put$qv
 		push	0
 		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BDDD
@@ -2564,7 +2530,6 @@ include th02/snd/snd.inc
 	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
 	extern @INPUT_MODE_JOY_VS_KEY$QV:proc
 	extern @INPUT_MODE_KEY_VS_JOY$QV:proc
-	extern CDG_PUT_NOALPHA_8:proc
 SHARED	ends
 
 	.data

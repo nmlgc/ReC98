@@ -38,6 +38,8 @@ static const pixel_t NAME_PADDING_Y = 4;
 static const pixel_t NAME_PADDED_H = (NAME_H + NAME_PADDING_Y);
 
 static const pixel_t STATS_W = 128;
+static const pixel_t EXTRA_W = 64;
+static const pixel_t EXTRA_FOR_PLAYCHAR_W = 32;
 
 static const pixel_t STAT_STAR_W = 9;
 static const pixel_t STAT_STAR_PADDED_W = (STAT_STAR_W + 2);
@@ -256,5 +258,22 @@ void near names_put(void)
 		super_put((NAMES_LEFT + (1 * (NAME_W / 2))), top, ((playchar * 2) + 1));
 		playchar++;
 		top += NAME_PADDED_H;
+	}
+}
+
+inline void extra_put(pid_t pid, screen_x_t box_left) {
+	cdg_put_noalpha_8(box_left, STATS_TOP, CDG_EXTRA_BG);
+	cdg_put_noalpha_8(
+		(box_left + (EXTRA_W / 2) - (EXTRA_FOR_PLAYCHAR_W / 2)),
+		(STATS_TOP + 12),
+		(CDG_EXTRA_FOR_PLAYCHAR + sel[pid])
+	);
+}
+
+void near extras_put(void)
+{
+	extra_put(0, (P1_LEFT + STATS_W));
+	if(resident->game_mode != GM_STORY) {
+		extra_put(1, (P2_LEFT + STATS_W));
 	}
 }
