@@ -1637,174 +1637,7 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 	@stats_put$qv procdesc near
 	@names_put$qv procdesc near
 	@extras_put$qv procdesc near
-	@CURVE_PUT$QUCUCIII procdesc pascal near \
-		angle_offset_x:byte, angle_offset_y:byte, radius:word, freq_x:word, freq_y:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B747	proc near
-
-var_6		= word ptr -6
-@@freq_y	= word ptr -4
-@@freq_x	= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	al, byte ptr word_FC52
-		mov	ah, 0
-		mov	si, ax
-		cmp	si, 80h
-		jl	short loc_B761
-		mov	ax, 100h
-		sub	ax, si
-		mov	si, ax
-
-loc_B761:
-		mov	ax, si
-		add	ax, si
-		add	ax, 100h
-		mov	[bp+@@freq_y], ax
-		add	si, 100h
-		mov	ax, si
-		add	ax, si
-		mov	[bp+@@freq_x], ax
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
-		push	word_FC52	; angle_offset_x
-		mov	al, byte ptr word_FC52
-		add	al, al
-		push	ax	; angle_offset_y
-		push	220	; radius
-		push	si	; freq_y
-		push	[bp+@@freq_x]	; freq_x
-		call	@curve_put$qucuciii
-		mov	al, 0
-		sub	al, byte ptr word_FC52
-		push	ax	; angle_offset_x
-		mov	al, byte ptr word_FC52
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		push	ax	; angle_offset_y
-		push	120	; radius
-		push	[bp+@@freq_y]	; freq_y
-		push	si	; freq_x
-		call	@curve_put$qucuciii
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 5
-		mov	ax, _curve_trail_count
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	di, ax
-		test	byte ptr _curve_trail_count, 1
-		jz	short loc_B7CD
-		inc	di
-
-loc_B7CD:
-		mov	[bp+var_6], 1
-		jmp	short loc_B824
-; ---------------------------------------------------------------------------
-
-loc_B7D4:
-		mov	al, byte ptr [bp+var_6]
-		add	al, al
-		mov	dl, byte ptr word_FC52
-		sub	dl, al
-		push	dx	; angle_offset_x
-		mov	al, byte ptr word_FC52
-		add	al, al
-		mov	dl, byte ptr [bp+var_6]
-		shl	dl, 2
-		sub	al, dl
-		push	ax	; angle_offset_y
-		push	220	; radius
-		push	si	; freq_y
-		push	[bp+@@freq_x]	; freq_x
-		call	@curve_put$qucuciii
-		mov	al, 0
-		sub	al, byte ptr word_FC52
-		mov	dl, byte ptr [bp+var_6]
-		add	dl, dl
-		add	al, dl
-		push	ax	; angle_offset_x
-		mov	al, byte ptr word_FC52
-		mov	ah, 0
-		mov	dx, [bp+var_6]
-		add	dx, dx
-		sub	ax, dx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		push	ax	; angle_offset_y
-		push	120	; radius
-		push	[bp+@@freq_y]	; freq_y
-		push	si	; freq_x
-		call	@curve_put$qucuciii
-		inc	[bp+var_6]
-
-loc_B824:
-		cmp	[bp+var_6], di
-		jle	short loc_B7D4
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		lea	ax, [di+1]
-		mov	[bp+var_6], ax
-		jmp	short loc_B88C
-; ---------------------------------------------------------------------------
-
-loc_B83C:
-		mov	al, byte ptr [bp+var_6]
-		add	al, al
-		mov	dl, byte ptr word_FC52
-		sub	dl, al
-		push	dx	; angle_offset_x
-		mov	al, byte ptr word_FC52
-		add	al, al
-		mov	dl, byte ptr [bp+var_6]
-		shl	dl, 2
-		sub	al, dl
-		push	ax	; angle_offset_y
-		push	220	; radius
-		push	si	; freq_y
-		push	[bp+@@freq_x]	; freq_x
-		call	@curve_put$qucuciii
-		mov	al, 0
-		sub	al, byte ptr word_FC52
-		mov	dl, byte ptr [bp+var_6]
-		add	dl, dl
-		add	al, dl
-		push	ax	; angle_offset_x
-		mov	al, byte ptr word_FC52
-		mov	ah, 0
-		mov	dx, [bp+var_6]
-		add	dx, dx
-		sub	ax, dx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		push	ax	; angle_offset_y
-		push	120	; radius
-		push	[bp+@@freq_y]	; freq_y
-		push	si	; freq_x
-		call	@curve_put$qucuciii
-		inc	[bp+var_6]
-
-loc_B88C:
-		mov	ax, [bp+var_6]
-		cmp	ax, _curve_trail_count
-		jle	short loc_B83C
-		call	grcg_off
-		mov	al, byte ptr word_FC52
-		add	al, 2
-		mov	byte ptr word_FC52, al
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B747	endp
-
+	@select_curves_update_and_render$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2082,7 +1915,7 @@ loc_BAF9:
 		mov	_fadeout_frames, 0
 
 loc_BB06:
-		call	sub_B747
+		call	@select_curves_update_and_render$qv
 		call	@vs_sel_pics_put$qv
 		call	@stats_put$qv
 		call	@names_put$qv
@@ -2221,7 +2054,7 @@ loc_BC63:
 		mov	_fadeout_frames, 0
 
 loc_BC69:
-		call	sub_B747
+		call	@select_curves_update_and_render$qv
 		call	@vs_sel_pics_put$qv
 		call	@stats_put$qv
 		call	@names_put$qv
@@ -2356,7 +2189,7 @@ sub_BD9A	proc near
 		mov	_fadeout_frames, 0
 
 loc_BDC1:
-		call	sub_B747
+		call	@select_curves_update_and_render$qv
 		call	@story_sel_pics_put$qv
 		call	@stats_put$qv
 		call	@names_put$qv
@@ -2606,9 +2439,9 @@ _SELECT_PALETTE_FN	db 'TLSL.RGB',0
 	extern _pi_buffers:dword
 	extern _pi_headers:PiHeader
 
-public _hi
+public _hi, _curve_cycle
 _hi	scoredat_section_t <?>
-word_FC52	dw ?
+_curve_cycle	dw ?
 public _resident, _sel, _sel_confirmed, _page_shown
 _resident	dd ?
 _sel	db PLAYER_COUNT dup (?)

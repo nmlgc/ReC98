@@ -59,6 +59,8 @@ static const screen_y_t STATS_TOP = (PIC_TOP + PIC_H + 16);
 /// State
 /// -----
 
+extern unsigned char curve_cycle;
+
 extern bool input_locked[PLAYER_COUNT];
 extern playchar_t sel[PLAYER_COUNT];
 extern bool sel_confirmed[PLAYER_COUNT];
@@ -326,4 +328,97 @@ void pascal near curve_put(
 
 		grcg_pset(x, y);
 	}
+}
+
+#define select_curves_put(offset, freq_x, freq_y, freq_other) { \
+	/** \
+	 * ZUN quirk: A diameter of (220 × 2) = 440 pixels is larger than the \
+	 * vertical resolution, thus cutting off several pixels. \
+	 */ \
+	curve_put( \
+		(curve_cycle - (offset * 2)), \
+		((curve_cycle * 2) - (offset * 4)), \
+		220, \
+		freq_other, \
+		freq_y \
+	); \
+	/** \
+	 * ZUN quirk: Halving the Y angle offset restricts this smaller curve to \
+	 * only the first half of the sine oscillation. This is fine as long as we \
+	 * don't subtract the trail [offset]. But once we do, the resulting Y \
+	 * offset wraps around into the other half of the oscillation at \
+	 * \
+	 * 	([curve_cycle] ≤ ([curve_trail_count] * 2)) \
+	 * \
+	 * This causes the discontinuity between the start and end of the cycle \
+	 * as the trailing curves during the first [curve_trail_count] frames \
+	 * appear flipped compared to their counterparts at the end of the cycle. \
+	 * Removing the division would be the easiest fix here; the second-easiest \
+	 * fix would be to restrict the subtraction to the first half of the \
+	 * oscillation: \
+	 * \
+	 * 	(((curve_cycle / 2) - offset) & 0x7F) \
+	 */ \
+	curve_put( \
+		((0x00 - curve_cycle) + (offset * 2)), \
+		((curve_cycle - (offset * 2)) / 2), /* ZUN bloat: Multiply out */ \
+		120, \
+		freq_x, \
+		freq_other \
+	); \
+}
+
+// Desmos plot of the full effect:
+//
+// 	https://www.desmos.com/calculator/sstcw9ru5x?invertedColors=true
+void near select_curves_update_and_render(void)
+{
+	freq_t freq_other;
+	int trail_count_half;
+	freq_t freq_y;
+	freq_t freq_x;
+	int i;
+
+	// ZUN bloat: Should be a dedicated variable.
+	#define cycle_triangle freq_other
+
+	cycle_triangle = curve_cycle;
+	if(cycle_triangle >= 0x80) {
+		cycle_triangle = (0x100 - cycle_triangle);
+	}
+
+	// ZUN bloat: {
+	// 	freq_other = (FREQ_FACTOR + (1 * cycle_triangle));
+	// 	freq_x = (FREQ_FACTOR + (2 * cycle_triangle));
+	// 	freq_y = ((2 * FREQ_FACTOR) + (2 * cycle_triangle));
+	// }
+	freq_other = cycle_triangle;
+	freq_x = (FREQ_FACTOR + freq_other + freq_other);
+	freq_other += FREQ_FACTOR;
+	freq_y = (freq_other + freq_other);
+
+	// ZUN quirk: Maybe these should be blitted in the opposite order? Due to
+	// the different colors, this causes the trailing curves appear on top of
+	// the main one.
+	grcg_setcolor(GC_RMW, 6);
+	select_curves_put(0, freq_x, freq_y, freq_other);
+
+	grcg_setcolor(GC_RMW, 5);
+	trail_count_half = (curve_trail_count / 2);
+	if(curve_trail_count & 1) {
+		trail_count_half++;
+	}
+	for(i = 1; i <= trail_count_half; i++) {
+		select_curves_put(i, freq_x, freq_y, freq_other);
+	}
+
+	grcg_setcolor(GC_RMW, 1);
+	for(i = (trail_count_half + 1); i <= curve_trail_count; i++) {
+		select_curves_put(i, freq_x, freq_y, freq_other);
+	}
+
+	grcg_off();
+	curve_cycle += 0x02;
+
+	#undef cycle_triangle
 }
