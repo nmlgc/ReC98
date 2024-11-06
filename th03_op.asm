@@ -33,7 +33,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern DOS_PUTS2:proc
 	extern EGC_SHIFT_LEFT_ALL:proc
 	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_PSET:proc
 	extern GRCG_SETCOLOR:proc
 	extern GRCG_OFF:proc
 	extern GAIJI_BACKUP:proc
@@ -1638,72 +1637,8 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 	@stats_put$qv procdesc near
 	@names_put$qv procdesc near
 	@extras_put$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B6C0	proc near
-
-@@angle		= byte ptr -7
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= byte ptr  0Ah
-arg_8		= byte ptr  0Ch
-
-		enter	8, 0
-		push	si
-		mov	si, [bp+arg_4]
-		mov	[bp+var_6], 0
-		jmp	short loc_B73B
-; ---------------------------------------------------------------------------
-
-loc_B6CF:
-		mov	al, byte ptr [bp+var_6]
-		add	al, [bp+arg_8]
-		mov	[bp+@@angle], al
-		mov	ah, 0
-		imul	[bp+arg_2]
-		mov	bx, 256
-		cwd
-		idiv	bx
-		mov	[bp+@@angle], al
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		call	@polar$qiii c, (RES_X / 2), si, _CosTable8[bx]
-		mov	[bp+var_2], ax
-		mov	al, byte ptr [bp+var_6]
-		add	al, [bp+arg_6]
-		mov	[bp+@@angle], al
-		mov	ah, 0
-		imul	[bp+arg_0]
-		mov	bx, 256
-		cwd
-		idiv	bx
-		mov	[bp+@@angle], al
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		call	@polar$qiii c, (RES_Y / 2), si, _SinTable8[bx]
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		call	grcg_pset
-		inc	[bp+var_6]
-
-loc_B73B:
-		cmp	[bp+var_6], 100h
-		jb	short loc_B6CF
-		pop	si
-		leave
-		retn	0Ah
-sub_B6C0	endp
-
+	@CURVE_PUT$QUCUCIII procdesc pascal near \
+		angle_offset_x:byte, angle_offset_y:byte, radius:word, freq_x:word, freq_y:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1712,8 +1647,8 @@ sub_B6C0	endp
 sub_B747	proc near
 
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@freq_y	= word ptr -4
+@@freq_x	= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -1731,33 +1666,33 @@ loc_B761:
 		mov	ax, si
 		add	ax, si
 		add	ax, 100h
-		mov	[bp+var_4], ax
+		mov	[bp+@@freq_y], ax
 		add	si, 100h
 		mov	ax, si
 		add	ax, si
-		mov	[bp+var_2], ax
+		mov	[bp+@@freq_x], ax
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
-		push	word_FC52
+		push	word_FC52	; angle_offset_x
 		mov	al, byte ptr word_FC52
 		add	al, al
-		push	ax
-		push	0DCh ; 'Ü'
-		push	si
-		push	[bp+var_2]
-		call	sub_B6C0
+		push	ax	; angle_offset_y
+		push	220	; radius
+		push	si	; freq_y
+		push	[bp+@@freq_x]	; freq_x
+		call	@curve_put$qucuciii
 		mov	al, 0
 		sub	al, byte ptr word_FC52
-		push	ax
+		push	ax	; angle_offset_x
 		mov	al, byte ptr word_FC52
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		push	ax
-		push	78h ; 'x'
-		push	[bp+var_4]
-		push	si
-		call	sub_B6C0
+		push	ax	; angle_offset_y
+		push	120	; radius
+		push	[bp+@@freq_y]	; freq_y
+		push	si	; freq_x
+		call	@curve_put$qucuciii
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 5
 		mov	ax, _curve_trail_count
 		cwd
@@ -1778,23 +1713,23 @@ loc_B7D4:
 		add	al, al
 		mov	dl, byte ptr word_FC52
 		sub	dl, al
-		push	dx
+		push	dx	; angle_offset_x
 		mov	al, byte ptr word_FC52
 		add	al, al
 		mov	dl, byte ptr [bp+var_6]
 		shl	dl, 2
 		sub	al, dl
-		push	ax
-		push	0DCh ; 'Ü'
-		push	si
-		push	[bp+var_2]
-		call	sub_B6C0
+		push	ax	; angle_offset_y
+		push	220	; radius
+		push	si	; freq_y
+		push	[bp+@@freq_x]	; freq_x
+		call	@curve_put$qucuciii
 		mov	al, 0
 		sub	al, byte ptr word_FC52
 		mov	dl, byte ptr [bp+var_6]
 		add	dl, dl
 		add	al, dl
-		push	ax
+		push	ax	; angle_offset_x
 		mov	al, byte ptr word_FC52
 		mov	ah, 0
 		mov	dx, [bp+var_6]
@@ -1803,11 +1738,11 @@ loc_B7D4:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		push	ax
-		push	78h ; 'x'
-		push	[bp+var_4]
-		push	si
-		call	sub_B6C0
+		push	ax	; angle_offset_y
+		push	120	; radius
+		push	[bp+@@freq_y]	; freq_y
+		push	si	; freq_x
+		call	@curve_put$qucuciii
 		inc	[bp+var_6]
 
 loc_B824:
@@ -1824,23 +1759,23 @@ loc_B83C:
 		add	al, al
 		mov	dl, byte ptr word_FC52
 		sub	dl, al
-		push	dx
+		push	dx	; angle_offset_x
 		mov	al, byte ptr word_FC52
 		add	al, al
 		mov	dl, byte ptr [bp+var_6]
 		shl	dl, 2
 		sub	al, dl
-		push	ax
-		push	0DCh ; 'Ü'
-		push	si
-		push	[bp+var_2]
-		call	sub_B6C0
+		push	ax	; angle_offset_y
+		push	220	; radius
+		push	si	; freq_y
+		push	[bp+@@freq_x]	; freq_x
+		call	@curve_put$qucuciii
 		mov	al, 0
 		sub	al, byte ptr word_FC52
 		mov	dl, byte ptr [bp+var_6]
 		add	dl, dl
 		add	al, dl
-		push	ax
+		push	ax	; angle_offset_x
 		mov	al, byte ptr word_FC52
 		mov	ah, 0
 		mov	dx, [bp+var_6]
@@ -1849,11 +1784,11 @@ loc_B83C:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		push	ax
-		push	78h ; 'x'
-		push	[bp+var_4]
-		push	si
-		call	sub_B6C0
+		push	ax	; angle_offset_y
+		push	120	; radius
+		push	[bp+@@freq_y]	; freq_y
+		push	si	; freq_x
+		call	@curve_put$qucuciii
 		inc	[bp+var_6]
 
 loc_B88C:
@@ -2517,7 +2452,6 @@ include th02/snd/snd.inc
 	extern _snd_determine_mode:proc
 	extern _snd_load:proc
 	extern @game_exit$qv:proc
-	extern @polar$qiii:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @input_reset_sense_key_held$qv:proc
 	extern @PI_PALETTE_APPLY$QI:proc

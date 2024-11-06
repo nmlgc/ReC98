@@ -14,6 +14,7 @@ extern "C" {
 #include "th03/formats/hfliplut.h"
 }
 #include "th03/formats/scoredat.hpp"
+#include "th03/math/polar.hpp"
 #include "th03/shiftjis/fns.hpp"
 #include "th03/snd/snd.h"
 #include "th03/sprites/op_cdg.hpp"
@@ -275,5 +276,54 @@ void near extras_put(void)
 	extra_put(0, (P1_LEFT + STATS_W));
 	if(resident->game_mode != GM_STORY) {
 		extra_put(1, (P2_LEFT + STATS_W));
+	}
+}
+
+// Q8.8 fixed-point
+typedef int freq_t;
+static const freq_t FREQ_FACTOR = (1 << 8);
+
+// Plots a variant of a Lissajous curve, but with angles calculated as
+//
+// 	([freq] × ([angle_base]) + [angle_offset]))
+//
+// instead of the standard
+//
+// 	(([freq] × [angle_base]) + [angle_offset])
+//
+// allowing the natural overflow of 8-bit angles to create interesting splits
+// along the curve.
+void pascal near curve_put(
+	unsigned char angle_offset_x,
+	unsigned char angle_offset_y,
+	pixel_t radius,
+	freq_t freq_x,
+	freq_t freq_y
+)
+{
+	screen_y_t x;
+	screen_y_t y;
+	unsigned int angle_base;
+	for(angle_base = 0x00; angle_base < 0x100; angle_base++) {
+		// ZUN bloat: The game original game runs this loop body 4,096 times
+		// per rendered frame, magnifying every suboptimal implementation
+		// choice. On an i486/Pentium, ZUN wastes:
+		//
+		// • ≥42 / 64 cycles by dividing by [FREQ_FACTOR] instead of
+		//   right-shifting,
+		// • ≥42 / 16 cycles by not inlining grcg_pset(), and
+		// • ≥100 / 40 cycles by not inlining polar().
+		//
+		// Total waste for all points: ≥753,664 / 491,520 cycles.
+		unsigned char angle;
+		angle = (angle_base + angle_offset_x);
+		angle = ((angle * freq_x) / FREQ_FACTOR);
+		x = polar_x((RES_X / 2), radius, angle);
+
+		angle = (angle_base + angle_offset_y);
+		angle = ((angle * freq_y) / FREQ_FACTOR);
+		y = polar_y((RES_Y / 2), radius, angle);
+
+		grcg_pset(x, y);
 	}
 }
