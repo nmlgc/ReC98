@@ -14,6 +14,7 @@ extern "C" {
 #include "th03/formats/hfliplut.h"
 }
 #include "th03/formats/scoredat.hpp"
+#include "th03/gaiji/gaiji.h"
 #include "th03/math/polar.hpp"
 #include "th03/shiftjis/fns.hpp"
 #include "th03/snd/snd.h"
@@ -24,6 +25,8 @@ extern "C" {
 
 static const int STAT_COUNT = 3;
 extern const uint8_t PLAYCHAR_STATS[PLAYCHAR_COUNT][STAT_COUNT];
+extern const unsigned char g_CURSOR_TOP[PLAYER_COUNT][gc_GAIJI_W + 1];
+extern const unsigned char g_CURSOR_BOTTOM[PLAYER_COUNT][gc_GAIJI_W + 1];
 /// ---------
 
 /// Coordinates
@@ -421,4 +424,17 @@ void near select_curves_update_and_render(void)
 	curve_cycle += 0x02;
 
 	#undef cycle_triangle
+}
+
+void pascal near cursor_put(pid2 pid, vc_t col)
+{
+	// ZUN bloat: `* NAME_W` would have done the job.
+	static_assert(((NAME_W / 8) * (NAME_W / 16)) == NAME_W);
+	screen_x_t left = (
+		(NAMES_LEFT - GAIJI_W) + (pid * (NAME_W / 8) * (NAME_W / 16))
+	);
+
+	screen_y_t top = ((NAMES_TOP - (GLYPH_H / 2)) + (sel[pid] * NAME_PADDED_H));
+	graph_gaiji_puts(left, (top +       0), GAIJI_W, g_CURSOR_TOP[pid], col);
+	graph_gaiji_puts(left, (top + GLYPH_H), GAIJI_W, g_CURSOR_BOTTOM[pid], col);
 }

@@ -42,7 +42,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern GRAPH_400LINE:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
-	extern GRAPH_GAIJI_PUTS:proc
 	extern GRAPH_PI_FREE:proc
 	extern PALETTE_SHOW:proc
 	extern IRAND:proc
@@ -1638,63 +1637,8 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 	@names_put$qv procdesc near
 	@extras_put$qv procdesc near
 	@select_curves_update_and_render$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public P_CURSOR_PUT
-p_cursor_put	proc near
-
-@@y		= word ptr -2
-@@col		= byte ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	ax, si
-		shl	ax, 4
-		shl	ax, 3
-		add	ax, 240
-		mov	di, ax
-		mov	al, _sel[si]
-		cbw
-		imul	ax, 20
-		add	ax, 128
-		mov	[bp+@@y], ax
-		push	di
-		push	ax
-		push	GAIJI_W
-		push	ds
-		mov	ax, si
-		imul	ax, (gc_GAIJI_W + 1)
-		add	ax, offset _P_CURSOR_TOP
-		push	ax
-		mov	al, [bp+@@col]
-		mov	ah, 0
-		push	ax
-		call	graph_gaiji_puts
-		push	di
-		mov	ax, [bp+@@y]
-		add	ax, GLYPH_H
-		push	ax
-		push	GAIJI_W
-		push	ds
-		mov	ax, si
-		imul	ax, (gc_GAIJI_W + 1)
-		add	ax, offset _P_CURSOR_BOTTOM
-		push	ax
-		mov	al, [bp+@@col]
-		mov	ah, 0
-		push	ax
-		call	graph_gaiji_puts
-		pop	di
-		pop	si
-		leave
-		retn	4
-p_cursor_put	endp
-
+	@CURSOR_PUT$QIUC procdesc pascal near \
+		pid:word, col:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1920,7 +1864,7 @@ loc_BB06:
 		call	@stats_put$qv
 		call	@names_put$qv
 		call	@extras_put$qv
-		push	0
+		push	0	; pid
 		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BB22
 		mov	al, V_WHITE
@@ -1931,9 +1875,9 @@ loc_BB22:
 		mov	al, 8
 
 loc_BB24:
-		push	ax
-		call	p_cursor_put
-		push	1
+		push	ax	; col
+		call	@cursor_put$qiuc
+		push	1	; pid
 		cmp	_sel_confirmed_p2, 0
 		jz	short loc_BB35
 		mov	al, V_WHITE
@@ -1941,11 +1885,11 @@ loc_BB24:
 ; ---------------------------------------------------------------------------
 
 loc_BB35:
-		mov	al, 0Ah
+		mov	al, 10
 
 loc_BB37:
-		push	ax
-		call	p_cursor_put
+		push	ax	; col
+		call	@cursor_put$qiuc
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	_input_mp_p1
@@ -2061,7 +2005,7 @@ loc_BC69:
 		call	@extras_put$qv
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
-		push	0
+		push	0	; pid
 		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BC8E
 		mov	al, V_WHITE
@@ -2072,11 +2016,11 @@ loc_BC8E:
 		mov	al, 8
 
 loc_BC90:
-		push	ax
-		call	p_cursor_put
+		push	ax	; col
+		call	@cursor_put$qiuc
 		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BCAE
-		push	1
+		push	1	; pid
 		cmp	_sel_confirmed_p2, 0
 		jz	short loc_BCA8
 		mov	al, V_WHITE
@@ -2084,11 +2028,11 @@ loc_BC90:
 ; ---------------------------------------------------------------------------
 
 loc_BCA8:
-		mov	al, 0Ah
+		mov	al, 10
 
 loc_BCAA:
-		push	ax
-		call	p_cursor_put
+		push	ax	; col
+		call	@cursor_put$qiuc
 
 loc_BCAE:
 		push	_input_sp
@@ -2194,7 +2138,7 @@ loc_BDC1:
 		call	@stats_put$qv
 		call	@names_put$qv
 		call	@extras_put$qv
-		push	0
+		push	0	; pid
 		cmp	_sel_confirmed_p1, 0
 		jz	short loc_BDDD
 		mov	al, V_WHITE
@@ -2205,8 +2149,8 @@ loc_BDDD:
 		mov	al, 8
 
 loc_BDDF:
-		push	ax
-		call	p_cursor_put
+		push	ax	; col
+		call	@cursor_put$qiuc
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
 		push	_input_sp
