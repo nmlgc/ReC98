@@ -6,6 +6,7 @@
 #include "th03/op/m_select.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/math/clamp.hpp"
 #include "th02/formats/bfnt.h"
 #include "th03/common.h"
 #include "th03/resident.hpp"
@@ -15,6 +16,7 @@ extern "C" {
 }
 #include "th03/formats/scoredat.hpp"
 #include "th03/gaiji/gaiji.h"
+#include "th03/hardware/input.h"
 #include "th03/math/polar.hpp"
 #include "th03/shiftjis/fns.hpp"
 #include "th03/snd/snd.h"
@@ -437,4 +439,61 @@ void pascal near cursor_put(pid2 pid, vc_t col)
 	screen_y_t top = ((NAMES_TOP - (GLYPH_H / 2)) + (sel[pid] * NAME_PADDED_H));
 	graph_gaiji_puts(left, (top +       0), GAIJI_W, g_CURSOR_TOP[pid], col);
 	graph_gaiji_puts(left, (top + GLYPH_H), GAIJI_W, g_CURSOR_BOTTOM[pid], col);
+}
+
+#define select_confirm(pid, palette_id, swap_func) { \
+	int playchar = sel[pid]; \
+	resident->playchar_paletted[pid].v = ( \
+		TO_OPTIONAL_PALETTED(playchar) + palette_id \
+	); \
+	palette_white_in(1); \
+	\
+	static_assert(PLAYER_COUNT == 2); \
+	if(sel_confirmed[1 - pid] && ( \
+		resident->playchar_paletted[0].v == resident->playchar_paletted[1].v \
+	)) { \
+		swap_func; \
+		cdg_load_single( \
+			(CDG_PIC_SELECTED + pid), PLAYCHAR_PIC_FN[playchar], !palette_id \
+		); \
+	} else { \
+		cdg_load_single( \
+			(CDG_PIC_SELECTED + pid), PLAYCHAR_PIC_FN[playchar], palette_id \
+		); \
+	} \
+	\
+	static_assert(PLAYER_COUNT == 2); \
+	if(sel_confirmed[1 - pid]) { \
+		fadeout_frames = 0; \
+	} \
+	sel_confirmed[pid] = true; \
+	input_locked[pid] = true; \
+}
+
+void pascal near select_update_player(input_t input, pid2 pid)
+{
+	if(sel_confirmed[pid]) {
+		return;
+	}
+	if(input_locked[pid]) {
+		if(input == INPUT_NONE) {
+			input_locked[pid] = false;
+		}
+		return;
+	}
+
+	if(input & INPUT_UP) {
+		ring_dec(static_cast<char>(sel[pid]), (playchars_available - 1));
+		input_locked[pid] = true;
+	}
+	if(input & INPUT_DOWN) {
+		ring_inc_ge(static_cast<char>(sel[pid]), playchars_available);
+		input_locked[pid] = true;
+	}
+	if(input & INPUT_SHOT) {
+		select_confirm(pid, 0, resident->playchar_paletted[pid].v++);
+	}
+	if(input & INPUT_BOMB) {
+		select_confirm(pid, 1, resident->playchar_paletted[pid].v--);
+	}
 }

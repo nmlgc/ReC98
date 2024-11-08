@@ -47,7 +47,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern IRAND:proc
 	extern TEXT_CLEAR:proc
 	extern TEXT_PUTSA:proc
-	extern PALETTE_WHITE_IN:proc
 	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
@@ -1639,177 +1638,8 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 	@select_curves_update_and_render$qv procdesc near
 	@CURSOR_PUT$QIUC procdesc pascal near \
 		pid:word, col:byte
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B908	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		cmp	_sel_confirmed[si], 0
-		jnz	loc_BA82
-		cmp	_input_locked[si], 0
-		jz	short loc_B932
-		or	di, di
-		jnz	loc_BA82
-		mov	_input_locked[si], 0
-		jmp	loc_BA82
-; ---------------------------------------------------------------------------
-
-loc_B932:
-		test	di, 1
-		jz	short loc_B951
-		dec	_sel[si]
-		cmp	_sel[si], 0
-		jge	short loc_B94C
-		mov	al, _playchars_available
-		dec	al
-		mov	_sel[si], al
-
-loc_B94C:
-		mov	_input_locked[si], 1
-
-loc_B951:
-		test	di, 2
-		jz	short loc_B974
-		inc	_sel[si]
-		mov	al, _sel[si]
-		cbw
-		mov	dl, _playchars_available
-		mov	dh, 0
-		cmp	ax, dx
-		jl	short loc_B96F
-		mov	_sel[si], 0
-
-loc_B96F:
-		mov	_input_locked[si], 1
-
-loc_B974:
-		test	di, 20h
-		; Hack
-		db 00fh
-		db 084h
-		db 07fh
-		db 000h
-		mov	al, _sel[si]
-		cbw
-		mov	[bp+var_2], ax
-		les	bx, _resident
-		add	bx, si
-		mov	al, byte ptr [bp+var_2]
-		add	al, al
-		inc	al
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted], al
-		push	1
-		call	palette_white_in
-		mov	bx, 1
-		sub	bx, si
-		cmp	_sel_confirmed[bx], 0
-		jz	short loc_B9CC
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		cmp	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
-		jnz	short loc_B9CC
-		add	bx, si
-		inc	es:[bx+resident_t.RESIDENT_playchar_paletted]
-		push	si
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_PLAYCHAR_PIC_FN[bx]
-		push	1
-		jmp	short loc_B9DA
-; ---------------------------------------------------------------------------
-
-loc_B9CC:
-		push	si
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_PLAYCHAR_PIC_FN[bx]
-		push	0
-
-loc_B9DA:
-		call	cdg_load_single
-		mov	bx, 1
-		sub	bx, si
-		cmp	_sel_confirmed[bx], 0
-		jz	short loc_B9F1
-		mov	_fadeout_frames, 0
-
-loc_B9F1:
-		mov	_sel_confirmed[si], 1
-		mov	_input_locked[si], 1
-
-loc_B9FB:
-		test	di, 10h
-		; Hack
-		db 00fh
-		db 084h
-		db 07fh
-		db 000h
-		mov	al, _sel[si]
-		cbw
-		mov	[bp+var_2], ax
-		les	bx, _resident
-		add	bx, si
-		mov	al, byte ptr [bp+var_2]
-		add	al, al
-		add	al, 2
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted], al
-		push	1
-		call	palette_white_in
-		mov	bx, 1
-		sub	bx, si
-		cmp	_sel_confirmed[bx], 0
-		jz	short loc_BA53
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		cmp	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
-		jnz	short loc_BA53
-		add	bx, si
-		dec	es:[bx+resident_t.RESIDENT_playchar_paletted]
-		push	si
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_PLAYCHAR_PIC_FN[bx]
-		push	0
-		jmp	short loc_BA61
-; ---------------------------------------------------------------------------
-
-loc_BA53:
-		push	si
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		pushd	_PLAYCHAR_PIC_FN[bx]
-		push	1
-
-loc_BA61:
-		call	cdg_load_single
-		mov	bx, 1
-		sub	bx, si
-		cmp	_sel_confirmed[bx], 0
-		jz	short loc_BA78
-		mov	_fadeout_frames, 0
-
-loc_BA78:
-		mov	_sel_confirmed[si], 1
-		mov	_input_locked[si], 1
-
-loc_BA82:
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B908	endp
-
+	@SELECT_UPDATE_PLAYER$QUII procdesc pascal near \
+		input:word, pid:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1892,12 +1722,8 @@ loc_BB37:
 		call	@cursor_put$qiuc
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
-		push	_input_mp_p1
-		push	0
-		call	sub_B908
-		push	_input_mp_p2
-		push	1
-		call	sub_B908
+		call	@select_update_player$quii pascal, _input_mp_p1, 0
+		call	@select_update_player$quii pascal, _input_mp_p2, 1
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_BB82
 		graph_accesspage 0
@@ -2035,9 +1861,7 @@ loc_BCAA:
 		call	@cursor_put$qiuc
 
 loc_BCAE:
-		push	_input_sp
-		push	si
-		call	sub_B908
+		call	@select_update_player$quii pascal, _input_sp, si
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_BCE3
 		graph_accesspage 0
@@ -2153,9 +1977,7 @@ loc_BDDF:
 		call	@cursor_put$qiuc
 		call	@input_reset_sense_key_held$qv
 		call	_input_mode
-		push	_input_sp
-		push	0
-		call	sub_B908
+		call	@select_update_player$quii pascal, _input_sp, 0
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_BE21
 		graph_accesspage 0
@@ -2235,7 +2057,6 @@ include th02/snd/snd.inc
 	extern @PI_PUT_8$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @game_init_op$qnxuc:proc
-	extern CDG_LOAD_SINGLE:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
 	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
