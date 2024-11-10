@@ -4,9 +4,12 @@
 #pragma option -zPgroup_01
 
 #include "th03/op/m_select.hpp"
+#include "decomp.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
+#include "th02/v_colors.hpp"
+#include "th02/hardware/frmdelay.h"
 #include "th02/formats/bfnt.h"
 #include "th03/common.h"
 #include "th03/resident.hpp"
@@ -179,7 +182,13 @@ void near select_init_and_load(void)
 	while(vsync_Count1 < 30) {
 	}
 
+	// ZUN bug: [vsync_Count1] is not reset after the loop above. This causes
+	// the menu functions to only actually render 8 trailing curves on their
+	// first iteration: The first call to select_wait_flip_and_clear_vram()
+	// will then think that the frame took longer than 30 VSync interrupts to
+	// render and will consequently always decrement the count to 7.
 	curve_trail_count = 8;
+
 	playchars_available = playchars_available_load();
 }
 
@@ -428,6 +437,14 @@ void near select_curves_update_and_render(void)
 	#undef cycle_triangle
 }
 
+inline void select_base_render(void near (*pics_put)()) {
+	select_curves_update_and_render();
+	pics_put();
+	stats_put();
+	names_put();
+	extras_put();
+}
+
 void pascal near cursor_put(pid2 pid, vc_t col)
 {
 	// ZUN bloat: `* NAME_W` would have done the job.
@@ -439,6 +456,13 @@ void pascal near cursor_put(pid2 pid, vc_t col)
 	screen_y_t top = ((NAMES_TOP - (GLYPH_H / 2)) + (sel[pid] * NAME_PADDED_H));
 	graph_gaiji_puts(left, (top +       0), GAIJI_W, g_CURSOR_TOP[pid], col);
 	graph_gaiji_puts(left, (top + GLYPH_H), GAIJI_W, g_CURSOR_BOTTOM[pid], col);
+}
+
+inline void cursor_put_p1(void) {
+	cursor_put(0, (sel_confirmed[0] ? V_WHITE :  8));
+}
+inline void cursor_put_p2(void) {
+	cursor_put(1, (sel_confirmed[1] ? V_WHITE : 10));
 }
 
 #define select_confirm(pid, palette_id, swap_func) { \
@@ -464,6 +488,10 @@ void pascal near cursor_put(pid2 pid, vc_t col)
 	\
 	static_assert(PLAYER_COUNT == 2); \
 	if(sel_confirmed[1 - pid]) { \
+		/**
+		 * ZUN bloat: Should only be done in the main function, see the \
+		 * comment there. \
+		 */ \
 		fadeout_frames = 0; \
 	} \
 	sel_confirmed[pid] = true; \
@@ -496,4 +524,192 @@ void pascal near select_update_player(input_t input, pid2 pid)
 	if(input & INPUT_BOMB) {
 		select_confirm(pid, 1, resident->playchar_paletted[pid].v--);
 	}
+}
+
+inline void sel_init_vs(void) {
+	static_assert(PLAYER_COUNT == 2);
+	sel[0] = resident->playchar_paletted[0].char_id();
+	sel[1] = resident->playchar_paletted[1].char_id();
+	sel_confirmed[0] = false;
+	sel_confirmed[1] = false;
+}
+
+inline void select_input_sense(void) {
+	// ZUN bloat: Already part of all four possible [input_mode]s.
+	input_reset_sense_key_held();
+
+	input_mode();
+}
+
+inline bool select_cancel(void) {
+	// ZUN bloat: palette_black() is a more performant way to achieve the same
+	// without raising any questions about whether this targets the correct
+	// VRAM page.
+	graph_accesspage(0);
+	graph_clear();
+	graph_showpage(0);
+
+	// Redundant in the released game, but makes sense for clearing potential
+	// debug output.
+	text_clear();
+
+	select_free();
+	snd_kaja_func(KAJA_SONG_STOP, 0);
+	return true;
+}
+
+// ZUN landmine: Should be done at the beginning of select_base_render() to
+// ensure that the palette applies to the entire frame. Plotting the curves
+// takes a while, and doing this afterward all but ensures palette tearing.
+#define select_fadeout_render(quit_label) { \
+	text_clear(); /* ZUN bloat: No point to this one. */ \
+	\
+	/** \
+	 * ZUN quirk: Should have maybe been `>` rather than `>=`. Since \
+	 * [fadeout_frames] is technically off-by-one (frame 0 is the last frame \
+	 * of palette_white_in()), this sets the palette tone to 104 on frame #15. \
+	 */ \
+	if(fadeout_frames >= 16) { \
+		palette_settone(200 - (fadeout_frames * 6)); \
+	} \
+	if(fadeout_frames > 32) { \
+		goto quit_label; \
+	} \
+	optimization_barrier(); \
+}
+
+#define select_wait_flip_and_clear_vram() { \
+	while(vsync_Count1 < 3) { \
+	} \
+	/** \
+	 * ZUN landmine: We're not waiting for VSync if the code took longer than \
+	 * 3 VSync events, ensuring screen tearing in this case. \
+	 */ \
+	\
+	if((vsync_Count1 > 4) && (curve_trail_count > 1)) { \
+		curve_trail_count--; \
+	} \
+	vsync_Count1 = 0; \
+	graph_accesspage(page_shown); \
+	page_shown = (1 - page_shown); \
+	graph_showpage(page_shown); \
+	\
+	/**
+	 * ZUN bloat: Slower than graph_clear(), which uses the GRCG's TDW \
+	 * mode and a single REP STOS instruction. \
+	 */ \
+	grcg_setcolor(GC_RMW, 0); \
+	grcg_boxfill_8(0, 0, (RES_X - 1), (RES_Y - 1)); \
+	grcg_off(); \
+	\
+	/** \
+	 * ZUN bloat: Doing this in the fade-out branch would have avoided the \
+	 * need to reset it for the beginning of the animation. \
+	 */ \
+	fadeout_frames++; \
+	\
+	resident->rand++; \
+}
+
+// ZUN bloat: These three could have been merged into a single function.
+bool near select_1p_vs_2p_menu(void)
+{
+	select_init_and_load();
+
+	// ZUN bloat: Redundant, already done in select_init_and_load().
+	text_clear();
+
+	sel_init_vs();
+
+	if(resident->key_mode == KM_KEY_KEY) {
+		input_mode = input_mode_key_vs_key;
+	} else if(resident->key_mode == KM_JOY_KEY) {
+		input_mode = input_mode_joy_vs_key;
+	} else {
+		input_mode = input_mode_key_vs_joy;
+	}
+
+	// ZUN quirk: Not used in the other modes, and completely unnecessary.
+	frame_delay(16);
+
+	fadeout_frames = 0;
+	while(1) {
+		select_base_render(vs_sel_pics_put);
+		cursor_put_p1();
+		cursor_put_p2();
+		select_input_sense();
+		select_update_player(input_mp_p1, 0);
+		select_update_player(input_mp_p2, 1);
+
+		if(input_sp & INPUT_CANCEL) {
+			return select_cancel();
+		}
+		if(sel_confirmed[0] && sel_confirmed[1]) {
+			select_fadeout_render(done);
+		}
+		select_wait_flip_and_clear_vram();
+	}
+done:
+	select_free();
+	return false;
+}
+
+bool near select_vs_cpu_menu(void)
+{
+	select_init_and_load();
+	sel_init_vs();
+	input_mode = input_mode_interface;
+	for(int pid_cur = 0; pid_cur < PLAYER_COUNT; pid_cur++) {
+		fadeout_frames = 0;
+		while(1) {
+			select_base_render(vs_sel_pics_put);
+			select_input_sense();
+			cursor_put_p1();
+			if(sel_confirmed[0]) {
+				cursor_put_p2();
+			}
+			select_update_player(input_sp, pid_cur);
+
+			if(input_sp & INPUT_CANCEL) {
+				return select_cancel();
+			}
+			if((pid_cur == 0) && sel_confirmed[0] && (fadeout_frames > 12)) {
+				break;
+			}
+			if((pid_cur != 0) && sel_confirmed[1]) {
+				select_fadeout_render(done);
+			}
+			select_wait_flip_and_clear_vram();
+		}
+done:
+	}
+	select_free();
+	return false;
+}
+
+bool near select_story_menu(void)
+{
+	select_init_and_load();
+	sel[0] = PLAYCHAR_REIMU;
+	sel_confirmed[0] = false;
+	sel_confirmed[1] = true;
+	input_mode = input_mode_interface;
+	fadeout_frames = 0;
+	while(1) {
+		select_base_render(story_sel_pics_put);
+		cursor_put_p1();
+		select_input_sense();
+		select_update_player(input_sp, 0);
+
+		if(input_sp & INPUT_CANCEL) {
+			return select_cancel();
+		}
+		if(sel_confirmed[0]) {
+			select_fadeout_render(done);
+		}
+		select_wait_flip_and_clear_vram();
+	}
+done:
+	select_free();
+	return false;
 }

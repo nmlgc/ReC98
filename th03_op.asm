@@ -88,7 +88,7 @@ var_2		= word ptr -2
 		mov	es:[bx+resident_t.story_lives], CREDIT_LIVES
 		mov	es:[bx+resident_t.show_score_menu], 0
 		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], -1
-		call	sub_BD9A
+		call	@select_story_menu$qv
 		or	al, al
 		jz	short loc_9A59
 		mov	al, 1
@@ -391,14 +391,14 @@ loc_9CBB:
 		mov	es:[bx+resident_t.show_score_menu], 0
 		cmp	[bp+var_2], 1
 		jnz	short loc_9CEF
-		call	sub_BA88
+		call	@select_1p_vs_2p_menu$qv
 		or	al, al
 		jz	short loc_9D03
 		jmp	short loc_9CF6
 ; ---------------------------------------------------------------------------
 
 loc_9CEF:
-		call	sub_BC1F
+		call	@select_vs_cpu_menu$qv
 		or	al, al
 		jz	short loc_9D03
 
@@ -1628,419 +1628,9 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 	@select_cdg_load_part1_of_4$qv procdesc near
 	@select_cdg_load_part2_of_4$qv procdesc near
 	@select_cdg_load_part3_of_4$qv procdesc near
-	@select_init_and_load$qv procdesc near
-	@select_free$qv procdesc near
-	@vs_sel_pics_put$qv procdesc near
-	@story_sel_pics_put$qv procdesc near
-	@stats_put$qv procdesc near
-	@names_put$qv procdesc near
-	@extras_put$qv procdesc near
-	@select_curves_update_and_render$qv procdesc near
-	@CURSOR_PUT$QIUC procdesc pascal near \
-		pid:word, col:byte
-	@SELECT_UPDATE_PLAYER$QUII procdesc pascal near \
-		input:word, pid:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA88	proc near
-		push	bp
-		mov	bp, sp
-		call	@select_init_and_load$qv
-		call	text_clear
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sel[0], al
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sel[1], al
-		mov	_sel_confirmed_p1, 0
-		mov	_sel_confirmed_p2, 0
-		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
-		jnz	short loc_BAD4
-		setfarfp	_input_mode, @input_mode_key_vs_key$qv
-		jmp	short loc_BAF9
-; ---------------------------------------------------------------------------
-
-loc_BAD4:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.key_mode], KM_JOY_KEY
-		jnz	short loc_BAED
-		setfarfp	_input_mode, @input_mode_joy_vs_key$qv
-		jmp	short loc_BAF9
-; ---------------------------------------------------------------------------
-
-loc_BAED:
-		setfarfp	_input_mode, @input_mode_key_vs_joy$qv
-
-loc_BAF9:
-		call	@frame_delay$qi pascal, 16
-		mov	_fadeout_frames, 0
-
-loc_BB06:
-		call	@select_curves_update_and_render$qv
-		call	@vs_sel_pics_put$qv
-		call	@stats_put$qv
-		call	@names_put$qv
-		call	@extras_put$qv
-		push	0	; pid
-		cmp	_sel_confirmed_p1, 0
-		jz	short loc_BB22
-		mov	al, V_WHITE
-		jmp	short loc_BB24
-; ---------------------------------------------------------------------------
-
-loc_BB22:
-		mov	al, 8
-
-loc_BB24:
-		push	ax	; col
-		call	@cursor_put$qiuc
-		push	1	; pid
-		cmp	_sel_confirmed_p2, 0
-		jz	short loc_BB35
-		mov	al, V_WHITE
-		jmp	short loc_BB37
-; ---------------------------------------------------------------------------
-
-loc_BB35:
-		mov	al, 10
-
-loc_BB37:
-		push	ax	; col
-		call	@cursor_put$qiuc
-		call	@input_reset_sense_key_held$qv
-		call	_input_mode
-		call	@select_update_player$quii pascal, _input_mp_p1, 0
-		call	@select_update_player$quii pascal, _input_mp_p2, 1
-		test	_input_sp.hi, high INPUT_CANCEL
-		jz	short loc_BB82
-		graph_accesspage 0
-		call	graph_clear
-		graph_showpage 0
-		call	text_clear
-		call	@select_free$qv
-		kajacall	KAJA_SONG_STOP
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_BB82:
-		cmp	_sel_confirmed_p1, 0
-		jz	short loc_BBB7
-		cmp	_sel_confirmed_p2, 0
-		jz	short loc_BBB7
-		call	text_clear
-		cmp	_fadeout_frames, 16
-		jb	short loc_BBB0
-		mov	ax, _fadeout_frames
-		imul	ax, 6
-		mov	dx, 200
-		sub	dx, ax
-		mov	PaletteTone, dx
-		call	far ptr	palette_show
-
-loc_BBB0:
-		cmp	_fadeout_frames, 32
-		ja	short loc_BC18
-
-loc_BBB7:
-		cmp	vsync_Count1, 3
-		jb	short loc_BBB7
-		cmp	vsync_Count1, 4
-		jbe	short loc_BBD0
-		cmp	_curve_trail_count, 1
-		jle	short loc_BBD0
-		dec	_curve_trail_count
-
-loc_BBD0:
-		mov	vsync_Count1, 0
-		graph_accesspage _page_shown
-		mov	al, 1
-		sub	al, _page_shown
-		mov	_page_shown, al
-		graph_showpage al
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		call	grcg_off
-		inc	_fadeout_frames
-		les	bx, _resident
-		inc	es:[bx+resident_t.rand]
-		jmp	loc_BB06
-; ---------------------------------------------------------------------------
-
-loc_BC18:
-		call	@select_free$qv
-		mov	al, 0
-		pop	bp
-		retn
-sub_BA88	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BC1F	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@select_init_and_load$qv
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sel[0], al
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sel[1], al
-		mov	_sel_confirmed_p1, 0
-		mov	_sel_confirmed_p2, 0
-		setfarfp	_input_mode, @input_mode_interface$qv
-		xor	si, si
-		jmp	loc_BD8B
-; ---------------------------------------------------------------------------
-
-loc_BC63:
-		mov	_fadeout_frames, 0
-
-loc_BC69:
-		call	@select_curves_update_and_render$qv
-		call	@vs_sel_pics_put$qv
-		call	@stats_put$qv
-		call	@names_put$qv
-		call	@extras_put$qv
-		call	@input_reset_sense_key_held$qv
-		call	_input_mode
-		push	0	; pid
-		cmp	_sel_confirmed_p1, 0
-		jz	short loc_BC8E
-		mov	al, V_WHITE
-		jmp	short loc_BC90
-; ---------------------------------------------------------------------------
-
-loc_BC8E:
-		mov	al, 8
-
-loc_BC90:
-		push	ax	; col
-		call	@cursor_put$qiuc
-		cmp	_sel_confirmed_p1, 0
-		jz	short loc_BCAE
-		push	1	; pid
-		cmp	_sel_confirmed_p2, 0
-		jz	short loc_BCA8
-		mov	al, V_WHITE
-		jmp	short loc_BCAA
-; ---------------------------------------------------------------------------
-
-loc_BCA8:
-		mov	al, 10
-
-loc_BCAA:
-		push	ax	; col
-		call	@cursor_put$qiuc
-
-loc_BCAE:
-		call	@select_update_player$quii pascal, _input_sp, si
-		test	_input_sp.hi, high INPUT_CANCEL
-		jz	short loc_BCE3
-		graph_accesspage 0
-		call	graph_clear
-		graph_showpage 0
-		call	text_clear
-		call	@select_free$qv
-		kajacall	KAJA_SONG_STOP
-		mov	al, 1
-		jmp	loc_BD97
-; ---------------------------------------------------------------------------
-
-loc_BCE3:
-		or	si, si
-		jnz	short loc_BCF7
-		cmp	_sel_confirmed_p1, 0
-		jz	short loc_BCF7
-		cmp	_fadeout_frames, 12
-		ja	loc_BD8A
-
-loc_BCF7:
-		or	si, si
-		jz	short loc_BD29
-		cmp	_sel_confirmed_p2, 0
-		jz	short loc_BD29
-		call	text_clear
-		cmp	_fadeout_frames, 16
-		jb	short loc_BD22
-		mov	ax, _fadeout_frames
-		imul	ax, 6
-		mov	dx, 200
-		sub	dx, ax
-		mov	PaletteTone, dx
-		call	far ptr	palette_show
-
-loc_BD22:
-		cmp	_fadeout_frames, 32
-		ja	short loc_BD8A
-
-loc_BD29:
-		cmp	vsync_Count1, 3
-		jb	short loc_BD29
-		cmp	vsync_Count1, 4
-		jbe	short loc_BD42
-		cmp	_curve_trail_count, 1
-		jle	short loc_BD42
-		dec	_curve_trail_count
-
-loc_BD42:
-		mov	vsync_Count1, 0
-		graph_accesspage _page_shown
-		mov	al, 1
-		sub	al, _page_shown
-		mov	_page_shown, al
-		graph_showpage al
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		call	grcg_off
-		inc	_fadeout_frames
-		les	bx, _resident
-		inc	es:[bx+resident_t.rand]
-		jmp	loc_BC69
-; ---------------------------------------------------------------------------
-
-loc_BD8A:
-		inc	si
-
-loc_BD8B:
-		cmp	si, 2
-		jl	loc_BC63
-		call	@select_free$qv
-		mov	al, 0
-
-loc_BD97:
-		pop	si
-		pop	bp
-		retn
-sub_BC1F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BD9A	proc near
-		push	bp
-		mov	bp, sp
-		call	@select_init_and_load$qv
-		mov	_sel[0], 0
-		mov	_sel_confirmed_p1, 0
-		mov	_sel_confirmed_p2, 1
-		setfarfp	_input_mode, @input_mode_interface$qv
-		mov	_fadeout_frames, 0
-
-loc_BDC1:
-		call	@select_curves_update_and_render$qv
-		call	@story_sel_pics_put$qv
-		call	@stats_put$qv
-		call	@names_put$qv
-		call	@extras_put$qv
-		push	0	; pid
-		cmp	_sel_confirmed_p1, 0
-		jz	short loc_BDDD
-		mov	al, V_WHITE
-		jmp	short loc_BDDF
-; ---------------------------------------------------------------------------
-
-loc_BDDD:
-		mov	al, 8
-
-loc_BDDF:
-		push	ax	; col
-		call	@cursor_put$qiuc
-		call	@input_reset_sense_key_held$qv
-		call	_input_mode
-		call	@select_update_player$quii pascal, _input_sp, 0
-		test	_input_sp.hi, high INPUT_CANCEL
-		jz	short loc_BE21
-		graph_accesspage 0
-		call	graph_clear
-		graph_showpage 0
-		call	text_clear
-		call	@select_free$qv
-		kajacall	KAJA_SONG_STOP
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_BE21:
-		cmp	_sel_confirmed_p1, 0
-		jz	short loc_BE4F
-		call	text_clear
-		cmp	_fadeout_frames, 16
-		jb	short loc_BE48
-		mov	ax, _fadeout_frames
-		imul	ax, 6
-		mov	dx, 200
-		sub	dx, ax
-		mov	PaletteTone, dx
-		call	far ptr	palette_show
-
-loc_BE48:
-		cmp	_fadeout_frames, 32
-		ja	short loc_BEB0
-
-loc_BE4F:
-		cmp	vsync_Count1, 3
-		jb	short loc_BE4F
-		cmp	vsync_Count1, 4
-		jbe	short loc_BE68
-		cmp	_curve_trail_count, 1
-		jle	short loc_BE68
-		dec	_curve_trail_count
-
-loc_BE68:
-		mov	vsync_Count1, 0
-		graph_accesspage _page_shown
-		mov	al, 1
-		sub	al, _page_shown
-		mov	_page_shown, al
-		graph_showpage al
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		call	grcg_off
-		inc	_fadeout_frames
-		les	bx, _resident
-		inc	es:[bx+resident_t.rand]
-		jmp	loc_BDC1
-; ---------------------------------------------------------------------------
-
-loc_BEB0:
-		call	@select_free$qv
-		mov	al, 0
-		pop	bp
-		retn
-sub_BD9A	endp
-		db 0
-
+	@select_1p_vs_2p_menu$qv procdesc near
+	@select_vs_cpu_menu$qv procdesc near
+	@select_story_menu$qv procdesc near
 OP_SEL_TEXT	ends
 
 ; ===========================================================================
@@ -2059,9 +1649,6 @@ include th02/snd/snd.inc
 	extern @game_init_op$qnxuc:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
-	extern @INPUT_MODE_KEY_VS_KEY$QV:proc
-	extern @INPUT_MODE_JOY_VS_KEY$QV:proc
-	extern @INPUT_MODE_KEY_VS_JOY$QV:proc
 SHARED	ends
 
 	.data
@@ -2198,8 +1785,6 @@ _SELECT_PALETTE_FN	db 'TLSL.RGB',0
 	extern _snd_active:byte
 
 	extern _input_sp:word
-	extern _input_mp_p1:word
-	extern _input_mp_p2:word
 
 	extern _pi_buffers:dword
 	extern _pi_headers:PiHeader
