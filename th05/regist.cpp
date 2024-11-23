@@ -1,7 +1,7 @@
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/gaiji/gaiji.h"
-#include "th04/formats/scoredat.hpp"
+#include "th04/formats/scoredat/scoredat.hpp"
 
 /// Pattern numbers for the super_*() functions
 /// -------------------------------------------

@@ -1,5 +1,5 @@
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "th04/formats/scoredat.hpp"
+#include "th04/formats/scoredat/scoredat.hpp"
 #include "th04/op/clear.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"

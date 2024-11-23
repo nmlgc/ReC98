@@ -11,7 +11,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
-#include "th04/formats/scoredat.hpp"
+#include "th04/formats/scoredat/scoredat.hpp"
 #include "th04/resident.hpp"
 #include "th04/hardware/input.h"
 #include "th04/hardware/grppsafx.h"
