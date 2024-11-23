@@ -26,7 +26,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-group_01 group maine_01_TEXT, maine_01__TEXT
+group_01 group maine_01_TEXT, SCORE_TEXT, maine_01__TEXT
 
 ; ===========================================================================
 
@@ -348,7 +348,9 @@ loc_B4B5:
 		pop	bp
 		retn
 @allcast_animate$qv	endp
+maine_01_TEXT ends
 
+SCORE_TEXT segment byte public 'CODE' use16
 include th04/formats/scoredat_decode.asm
 include th04/formats/scoredat_encode.asm
 include th05/formats/scoredat_recreate_maine.asm
@@ -3713,7 +3715,7 @@ loc_D2FE:
 		leave
 		retn
 sub_D21D	endp
-maine_01_TEXT	ends
+SCORE_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
 	@SPACE_WINDOW_SET$QIIII procdesc pascal near \

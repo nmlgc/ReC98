@@ -22,7 +22,7 @@ include ReC98.inc
 include th05/th05.inc
 include th04/sprites/op_cdg.inc
 
-op_01 group OP_SETUP_TEXT, op_01_TEXT, HI_VIEW_TEXT
+op_01 group OP_SETUP_TEXT, SCORE_TEXT, op_01_TEXT, HI_VIEW_TEXT
 
 ; ===========================================================================
 
@@ -59,6 +59,9 @@ OP_SETUP_TEXT segment byte public 'CODE' use16
 
 include th04/zunsoft.asm
 OP_SETUP_TEXT ends
+
+SCORE_TEXT segment byte public 'CODE' use16
+SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
 include th04/formats/scoredat_decode_both.asm

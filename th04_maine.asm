@@ -25,7 +25,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-group_01 group maine_01_TEXT
+group_01 group maine_01_TEXT, SCORE_TEXT
 
 ; ===========================================================================
 
@@ -1678,7 +1678,9 @@ public @verdict_animate$qv
 		pop	bp
 		retn
 @verdict_animate$qv endp
+maine_01_TEXT ends
 
+SCORE_TEXT segment byte public 'CODE' use16
 include th04/formats/scoredat_decode.asm
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
@@ -2906,7 +2908,7 @@ loc_CC66:
 sub_CBF3	endp
 		db    0
 
-maine_01_TEXT	ends
+SCORE_TEXT	ends
 
 ; ===========================================================================
 
