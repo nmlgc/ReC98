@@ -36,11 +36,9 @@ scoredat_section_t struc
 scoredat_section_t ends
 
 ifdef BINARY
-	scoredat_decode_func equ <scoredat_decode>
+	scoredat_decode_func equ <@scoredat_decode$qv>
 	scoredat_encode_func equ <scoredat_encode>
-	if BINARY eq 'O'
-		scoredat_decode_func equ <scoredat_decode_both>
-	elseif (BINARY eq 'M') and (GAME eq 4)
+	if (BINARY eq 'M') and (GAME eq 4)
 		scoredat_decode_func equ <scoredat_decode pascal, offset _hi>
 		scoredat_encode_func equ <scoredat_encode pascal, offset _hi>
 	endif

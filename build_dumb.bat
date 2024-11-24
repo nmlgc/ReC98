@@ -147,9 +147,7 @@ tlink @obj\th04\memchk.@l
 echo 4 -O -I -S -M libs/kaja/ongchk.com bin/th04/zuninit.com bin/th04/res_huma.com bin/th04/memchk.com>obj\th04\zuncom.@z
 bin\Pipeline\zungen.com obj/Pipeline/zun_stub.bin obj\th04\zuncom.@z obj/th04/zuncom.bin
 bin\Pipeline\comcstm.com th04/zun.txt obj/th04/zuncom.bin obj/Pipeline/cstmstub.bin 621381155 bin/th04/zun.com
-echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=4  -ml  -nobj/th04/  th04/op_main.cpp  th04/input_w.cpp  th04/vector.cpp  th04/snd_pmdr.c  th04/snd_mmdr.c  th04/snd_kaja.cpp  th04/snd_mode.cpp  th04/snd_dlym.cpp  th04/snd_load.cpp  th04/exit.cpp  th04/initop.cpp  th04/cdg_p_na.cpp  th04/snd_se.cpp  th04/egcrect.cpp  th04/bgimage.cpp  th04/op_setup.cpp  th04/zunsoft.cpp  th04/op_music.cpp  th04/m_char.cpp  th04/slowdown.cpp  th04/demo.cpp  th04/ems.cpp  th04/tile_set.cpp  th04/std.cpp  th04/tile.cpp>obj\batch014.@c
-echo th04/playfld.cpp  th04/midboss4.cpp  th04/f_dialog.cpp  th04/dialog.cpp  th04/boss_exp.cpp  th04/stages.cpp  th04/player_m.cpp  th04/player_p.cpp  th04/hud_ovrl.cpp  th04/cfg_lres.cpp  th04/checkerb.cpp  th04/mb_inv.cpp  th04/boss_bd.cpp  th04/mpn_free.cpp  th04/mpn_l_i.cpp  th04/initmain.cpp  th04/gather.cpp  th04/scrolly3.cpp  th04/midboss.cpp  th04/hud_hp.cpp  th04/mb_dft.cpp  th04/grcg_3.cpp  th04/it_spl_u.cpp  th04/boss_4m.cpp  th04/bullet_u.cpp  th04/bullet_a.cpp  th04/boss.cpp  th04/boss_4r.cpp  th04/boss_x2.cpp  th04/maine_e.cpp  th04/cutscene.cpp>>obj\batch014.@c
-echo th04/staff.cpp>>obj\batch014.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=4  -ml  -DBINARY='O'  -nobj/th04/  th04/op_main.cpp  th04/input_w.cpp  th04/vector.cpp  th04/snd_pmdr.c  th04/snd_mmdr.c  th04/snd_kaja.cpp  th04/snd_mode.cpp  th04/snd_dlym.cpp  th04/snd_load.cpp  th04/exit.cpp  th04/initop.cpp  th04/cdg_p_na.cpp  th04/snd_se.cpp  th04/egcrect.cpp  th04/bgimage.cpp  th04/op_setup.cpp  th04/zunsoft.cpp  th04/op_music.cpp  th04/score_db.cpp  th04/m_char.cpp>obj\batch014.@c
 tcc @obj/batch014.@c
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_op_master.asm obj\th04\opm.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_p_nc.asm obj\th04\cdg_p_nc.obj
@@ -160,9 +158,12 @@ tasm32 /m /mx /kh32768 /t /dGAME=4 th04\input_s.asm obj\th04\input_s.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\bgimager.asm obj\th04\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_load.asm obj\th04\cdg_load.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_op.asm obj\th04\op.obj
-echo -c -s -E c0l.obj obj\th04\op_main.obj obj\th04\opm.obj obj\th01\vplanset.obj obj\th02\frmdely1.obj obj\th03\pi_put.obj obj\th03\pi_load.obj obj\th03\hfliplut.obj obj\th04\input_w.obj obj\th04\vector.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_kaja.obj obj\th04\cdg_p_nc.obj obj\th04\snd_mode.obj obj\th04\snd_dlym.obj obj\th02\exit_dos.obj obj\th04\snd_load.obj obj\th04\grppsafx.obj obj\th04\op2.obj obj\th04\cdg_put.obj obj\th04\exit.obj obj\th04\initop.obj obj\th04\cdg_p_na.obj obj\th04\input_s.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\egcrect.obj obj\th04\bgimage.obj obj\th04\bgimager.obj obj\th04\cdg_load.obj obj\th02\frmdely2.obj obj\th04\op_setup.obj obj\th04\zunsoft.obj obj\th04\op_music.obj obj\th04\op.obj obj\th04\m_char.obj, bin\th04\op.exe, obj\th04\op.map, emu.lib mathl.lib cl.lib>obj\th04\op.@l
+echo -c -s -E c0l.obj obj\th04\op_main.obj obj\th04\opm.obj obj\th01\vplanset.obj obj\th02\frmdely1.obj obj\th03\pi_put.obj obj\th03\pi_load.obj obj\th03\hfliplut.obj obj\th04\input_w.obj obj\th04\vector.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_kaja.obj obj\th04\cdg_p_nc.obj obj\th04\snd_mode.obj obj\th04\snd_dlym.obj obj\th02\exit_dos.obj obj\th04\snd_load.obj obj\th04\grppsafx.obj obj\th04\op2.obj obj\th04\cdg_put.obj obj\th04\exit.obj obj\th04\initop.obj obj\th04\cdg_p_na.obj obj\th04\input_s.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\egcrect.obj obj\th04\bgimage.obj obj\th04\bgimager.obj obj\th04\cdg_load.obj obj\th02\frmdely2.obj obj\th04\op_setup.obj obj\th04\zunsoft.obj obj\th04\op_music.obj obj\th04\score_db.obj obj\th04\op.obj obj\th04\m_char.obj, bin\th04\op.exe, obj\th04\op.map, emu.lib mathl.lib cl.lib>obj\th04\op.@l
 tlink @obj\th04\op.@l
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_main.asm obj\th04\main.obj
+echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=4  -ml  -nobj/th04/  th04/slowdown.cpp  th04/demo.cpp  th04/ems.cpp  th04/tile_set.cpp  th04/std.cpp  th04/tile.cpp  th04/playfld.cpp  th04/midboss4.cpp  th04/f_dialog.cpp  th04/dialog.cpp  th04/boss_exp.cpp  th04/stages.cpp  th04/player_m.cpp  th04/player_p.cpp  th04/hud_ovrl.cpp  th04/cfg_lres.cpp  th04/checkerb.cpp  th04/mb_inv.cpp  th04/boss_bd.cpp  th04/mpn_free.cpp  th04/mpn_l_i.cpp  th04/initmain.cpp  th04/gather.cpp  th04/scrolly3.cpp  th04/midboss.cpp>obj\batch015.@c
+echo th04/hud_hp.cpp  th04/mb_dft.cpp  th04/grcg_3.cpp  th04/it_spl_u.cpp  th04/boss_4m.cpp  th04/bullet_u.cpp  th04/bullet_a.cpp  th04/boss.cpp  th04/boss_4r.cpp  th04/boss_x2.cpp  th04/maine_e.cpp  th04/score_d.cpp  th04/cutscene.cpp  th04/staff.cpp>>obj\batch015.@c
+tcc @obj/batch015.@c
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\scoreupd.asm obj\th04\scoreupd.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_p_pr.asm obj\th04\cdg_p_pr.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\motion_3.asm obj\th04\motion_3.obj
@@ -174,15 +175,15 @@ tlink @obj\th04\main.@l
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_maine_master.asm obj\th04\mainem.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_p_pl.asm obj\th04\cdg_p_pl.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_maine.asm obj\th04\maine.obj
-echo -c -s -E c0l.obj obj\th04\maine_e.obj obj\th04\mainem.obj obj\th01\vplanset.obj obj\th02\frmdely1.obj obj\th03\pi_put.obj obj\th03\pi_load.obj obj\th03\pi_put_q.obj obj\th03\hfliplut.obj obj\th04\input_w.obj obj\th04\vector.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_kaja.obj obj\th04\snd_mode.obj obj\th04\snd_dlym.obj obj\th04\cdg_p_pl.obj obj\th04\snd_load.obj obj\th04\grppsafx.obj obj\th04\maine.obj obj\th04\cdg_put.obj obj\th04\exit.obj obj\th04\initmain.obj obj\th04\input_s.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\bgimage.obj obj\th04\bgimager.obj obj\th04\cdg_load.obj obj\th04\cutscene.obj obj\th04\staff.obj, bin\th04\maine.exe, obj\th04\maine.map, emu.lib mathl.lib cl.lib>obj\th04\maine.@l
+echo -c -s -E c0l.obj obj\th04\maine_e.obj obj\th04\mainem.obj obj\th04\score_d.obj obj\th01\vplanset.obj obj\th02\frmdely1.obj obj\th03\pi_put.obj obj\th03\pi_load.obj obj\th03\pi_put_q.obj obj\th03\hfliplut.obj obj\th04\input_w.obj obj\th04\vector.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_kaja.obj obj\th04\snd_mode.obj obj\th04\snd_dlym.obj obj\th04\cdg_p_pl.obj obj\th04\snd_load.obj obj\th04\grppsafx.obj obj\th04\maine.obj obj\th04\cdg_put.obj obj\th04\exit.obj obj\th04\initmain.obj obj\th04\input_s.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\bgimage.obj obj\th04\bgimager.obj obj\th04\cdg_load.obj obj\th04\cutscene.obj obj\th04\staff.obj, bin\th04\maine.exe, obj\th04\maine.map, emu.lib mathl.lib cl.lib>obj\th04\maine.@l
 tlink @obj\th04\maine.@l
 bin\Pipeline\bmp2arr.com -q -i th05/sprites/gaiji.bmp -o th05/sprites/gaiji.asp -sym _sGAIJI -of asm -sw 16 -sh 16
 bin\Pipeline\bmp2arr.com -q -i th05/sprites/piano_l.bmp -o th05/sprites/piano_l.asp -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_zuninit.asm obj\th05\zuninit.obj
 echo -c -s -t -3  obj\th05\zuninit.obj, bin\th05\zuninit.com, obj\th05\zuninit.map, >obj\th05\zuninit.@l
 tlink @obj\th05\zuninit.@l
-echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=5  -mt  -nobj/th05/  th05/res_kso.cpp>obj\batch015.@c
-tcc @obj/batch015.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=5  -mt  -nobj/th05/  th05/res_kso.cpp>obj\batch016.@c
+tcc @obj/batch016.@c
 echo -c -s -t c0t.obj obj\th05\res_kso.obj, bin\th05\res_kso.com, obj\th05\res_kso.map, bin\masters.lib emu.lib maths.lib ct.lib>obj\th05\res_kso.@l
 tlink @obj\th05\res_kso.@l
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_gjinit.asm obj\th05\gjinit.obj
@@ -194,10 +195,8 @@ tlink @obj\th05\memchk.@l
 echo 5 -O -I -S -G -M libs/kaja/ongchk.com bin/th05/zuninit.com bin/th05/res_kso.com bin/th05/gjinit.com bin/th05/memchk.com>obj\th05\zuncom.@z
 bin\Pipeline\zungen.com obj/Pipeline/zun_stub.bin obj\th05\zuncom.@z obj/th05/zuncom.bin
 bin\Pipeline\comcstm.com th05/zun.txt obj/th05/zuncom.bin obj/Pipeline/cstmstub.bin 628731748 bin/th05/zun.com
-echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=5  -ml  -nobj/th05/  th05/op_main.cpp  th05/vector.cpp  th05/musicp_c.cpp  th05/snd_load.cpp  th05/snd_kaja.cpp  th05/pi_cpp_1.cpp  th05/pi_cpp_2.cpp  th05/initop.cpp  th05/inp_h_w.cpp  th05/snd_dlym.cpp  th05/cdg_p_nc.cpp  th05/frmdelay.cpp  th05/egcrect.cpp  th05/op_setup.cpp  th05/cfg.cpp  th05/op_title.cpp  th05/op_music.cpp  th05/hi_view_.cpp  th05/m_char.cpp  th05/demo.cpp  th05/ems.cpp  th05/cfg_lres.cpp  th05/main010.cpp  th05/f_dialog.cpp  th05/dialog.cpp>obj\batch016.@c
-echo th05/boss_exp.cpp  th05/playfld.cpp  th05/boss_bg.cpp  th05/laser_rh.cpp  th05/p_common.cpp  th05/p_reimu.cpp  th05/p_marisa.cpp  th05/p_mima.cpp  th05/p_yuuka.cpp  th05/midboss5.cpp  th05/hud_ovrl.cpp  th05/bullet_p.cpp  th05/player_a.cpp  th05/bullet_c.cpp  th05/bullet_t.cpp  th05/initmain.cpp  th05/gather.cpp  th05/main032.cpp  th05/midboss.cpp  th05/mb_dft.cpp  th05/laser.cpp  th05/cheeto_u.cpp  th05/bullet_u.cpp  th05/midboss1.cpp  th05/boss_1.cpp  th05/boss_4.cpp  th05/boss_6.cpp  th05/boss_x.cpp  th05/boss.cpp  th05/main014.cpp  th05/maine_e.cpp>>obj\batch016.@c
-echo th05/cutscene.cpp  th05/regist.cpp  th05/staff.cpp>>obj\batch016.@c
-tcc @obj/batch016.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=5  -ml  -DBINARY='O'  -nobj/th05/  th05/op_main.cpp  th05/vector.cpp  th05/musicp_c.cpp  th05/snd_load.cpp  th05/snd_kaja.cpp  th05/pi_cpp_1.cpp  th05/pi_cpp_2.cpp  th05/initop.cpp  th05/inp_h_w.cpp  th05/snd_dlym.cpp  th05/cdg_p_nc.cpp  th05/frmdelay.cpp  th05/egcrect.cpp  th05/op_setup.cpp  th05/cfg.cpp  th05/op_title.cpp  th05/op_music.cpp  th05/score_db.cpp  th05/hi_view_.cpp  th05/m_char.cpp>obj\batch017.@c
+tcc @obj/batch017.@c
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_op_master.asm obj\th05\opm.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_op2.asm obj\th05\op2.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\cdg_put.asm obj\th05\cdg_put.obj
@@ -207,9 +206,12 @@ tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_1.asm obj\th05\pi_asm_1.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_2.asm obj\th05\pi_asm_2.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\input_s.asm obj\th05\input_s.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_op.asm obj\th05\op.obj
-echo -c -s -E c0l.obj obj\th05\op_main.obj obj\th05\opm.obj obj\th03\hfliplut.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_mode.obj obj\th02\exit_dos.obj obj\th04\grppsafx.obj obj\th05\op2.obj obj\th04\cdg_p_na.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\bgimage.obj obj\th05\cdg_put.obj obj\th04\exit.obj obj\th05\vector.obj obj\th05\musicp_c.obj obj\th05\musicp_a.obj obj\th05\bgimager.obj obj\th05\snd_load.obj obj\th05\snd_kaja.obj obj\th05\pi_cpp_1.obj obj\th05\pi_asm_1.obj obj\th05\pi_cpp_2.obj obj\th05\pi_asm_2.obj obj\th05\initop.obj obj\th05\input_s.obj obj\th05\inp_h_w.obj obj\th05\snd_dlym.obj obj\th05\cdg_p_nc.obj obj\th05\frmdelay.obj obj\th04\cdg_load.obj obj\th05\egcrect.obj obj\th05\op_setup.obj obj\th04\zunsoft.obj obj\th05\cfg.obj obj\th05\op_title.obj obj\th05\op_music.obj obj\th05\op.obj obj\th05\hi_view_.obj obj\th05\m_char.obj, bin\th05\op.exe, obj\th05\op.map, emu.lib mathl.lib cl.lib>obj\th05\op.@l
+echo -c -s -E c0l.obj obj\th05\op_main.obj obj\th05\opm.obj obj\th03\hfliplut.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_mode.obj obj\th02\exit_dos.obj obj\th04\grppsafx.obj obj\th05\op2.obj obj\th04\cdg_p_na.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\bgimage.obj obj\th05\cdg_put.obj obj\th04\exit.obj obj\th05\vector.obj obj\th05\musicp_c.obj obj\th05\musicp_a.obj obj\th05\bgimager.obj obj\th05\snd_load.obj obj\th05\snd_kaja.obj obj\th05\pi_cpp_1.obj obj\th05\pi_asm_1.obj obj\th05\pi_cpp_2.obj obj\th05\pi_asm_2.obj obj\th05\initop.obj obj\th05\input_s.obj obj\th05\inp_h_w.obj obj\th05\snd_dlym.obj obj\th05\cdg_p_nc.obj obj\th05\frmdelay.obj obj\th04\cdg_load.obj obj\th05\egcrect.obj obj\th05\op_setup.obj obj\th04\zunsoft.obj obj\th05\cfg.obj obj\th05\op_title.obj obj\th05\op_music.obj obj\th05\score_db.obj obj\th05\op.obj obj\th05\hi_view_.obj obj\th05\m_char.obj, bin\th05\op.exe, obj\th05\op.map, emu.lib mathl.lib cl.lib>obj\th05\op.@l
 tlink @obj\th05\op.@l
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_main.asm obj\th05\main.obj
+echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=5  -ml  -nobj/th05/  th05/demo.cpp  th05/ems.cpp  th05/cfg_lres.cpp  th05/main010.cpp  th05/f_dialog.cpp  th05/dialog.cpp  th05/boss_exp.cpp  th05/playfld.cpp  th05/boss_bg.cpp  th05/laser_rh.cpp  th05/p_common.cpp  th05/p_reimu.cpp  th05/p_marisa.cpp  th05/p_mima.cpp  th05/p_yuuka.cpp  th05/midboss5.cpp  th05/hud_ovrl.cpp  th05/bullet_p.cpp  th05/player_a.cpp  th05/bullet_c.cpp  th05/bullet_t.cpp  th05/initmain.cpp  th05/gather.cpp  th05/main032.cpp  th05/midboss.cpp>obj\batch018.@c
+echo th05/mb_dft.cpp  th05/laser.cpp  th05/cheeto_u.cpp  th05/bullet_u.cpp  th05/midboss1.cpp  th05/boss_1.cpp  th05/boss_4.cpp  th05/boss_6.cpp  th05/boss_x.cpp  th05/boss.cpp  th05/main014.cpp  th05/maine_e.cpp  th05/score_d.cpp  th05/cutscene.cpp  th05/regist.cpp  th05/staff.cpp>>obj\batch018.@c
+tcc @obj/batch018.@c
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\player.asm obj\th05\player.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\hud_bar.asm obj\th05\hud_bar.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\scoreupd.asm obj\th05\scoreupd.obj
@@ -221,22 +223,22 @@ echo obj\th05\snd_load.obj obj\th05\snd_kaja.obj obj\th05\initmain.obj obj\th05\
 tlink @obj\th05\main.@l
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_maine_master.asm obj\th05\mainem.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05_maine.asm obj\th05\maine.obj
-echo -c -s -E c0l.obj obj\th05\maine_e.obj obj\th05\mainem.obj obj\th03\hfliplut.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_mode.obj obj\th04\grppsafx.obj obj\th05\maine.obj obj\th04\cdg_p_na.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\bgimage.obj obj\th04\exit.obj obj\th05\vector.obj obj\th05\bgimager.obj obj\th05\snd_load.obj obj\th05\snd_kaja.obj obj\th05\pi_cpp_1.obj obj\th05\pi_asm_1.obj obj\th05\pi_cpp_2.obj obj\th05\pi_asm_2.obj obj\th05\initmain.obj obj\th05\input_s.obj obj\th05\inp_h_w.obj obj\th05\snd_dlym.obj obj\th05\frmdelay.obj obj\th04\cdg_load.obj obj\th05\egcrect.obj obj\th05\cutscene.obj obj\th05\regist.obj obj\th05\staff.obj, bin\th05\maine.exe, obj\th05\maine.map, emu.lib mathl.lib cl.lib>obj\th05\maine.@l
+echo -c -s -E c0l.obj obj\th05\maine_e.obj obj\th05\mainem.obj obj\th05\score_d.obj obj\th03\hfliplut.obj obj\th04\snd_pmdr.obj obj\th04\snd_mmdr.obj obj\th04\snd_mode.obj obj\th04\grppsafx.obj obj\th05\maine.obj obj\th04\cdg_p_na.obj obj\th02\snd_se_r.obj obj\th04\snd_se.obj obj\th04\bgimage.obj obj\th04\exit.obj obj\th05\vector.obj obj\th05\bgimager.obj obj\th05\snd_load.obj obj\th05\snd_kaja.obj obj\th05\pi_cpp_1.obj obj\th05\pi_asm_1.obj obj\th05\pi_cpp_2.obj obj\th05\pi_asm_2.obj obj\th05\initmain.obj obj\th05\input_s.obj obj\th05\inp_h_w.obj obj\th05\snd_dlym.obj obj\th05\frmdelay.obj obj\th04\cdg_load.obj obj\th05\egcrect.obj obj\th05\cutscene.obj obj\th05\regist.obj obj\th05\staff.obj, bin\th05\maine.exe, obj\th05\maine.map, emu.lib mathl.lib cl.lib>obj\th05\maine.@l
 tlink @obj\th05\maine.@l
-echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -nobj/Research/  Research/holdkey.c>obj\batch017.@c
-tcc @obj/batch017.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -nobj/Research/  Research/holdkey.c>obj\batch019.@c
+tcc @obj/batch019.@c
 echo -c -s c0s.obj obj\Research\holdkey.obj, bin\Research\holdkey.exe, obj\Research\holdkey.map, bin\masters.lib emu.lib maths.lib cs.lib>obj\Research\holdkey.@l
 tlink @obj\Research\holdkey.@l
 bin\Pipeline\bmp2arr.com -q -i Research/blitperf.bmp -o Research/blitperf.csp -sym sBLITPERF -of cpp -sw 16 -sh 16
-echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=8086  -1-  -nobj/Research/8086/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch018.@c
-tcc @obj/batch018.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=8086  -1-  -nobj/Research/8086/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch020.@c
+tcc @obj/batch020.@c
 echo -c -s c0s.obj obj\Research\8086\blitperf.obj obj\Research\8086\noexcept.obj obj\Research\8086\blitter.obj obj\Research\8086\font.obj obj\Research\8086\graph.obj obj\Research\8086\grcg.obj obj\Research\8086\palette.obj obj\Research\8086\vsync.obj, bin\Research\blit8086.exe, obj\Research\8086\blit8086.map, emu.lib maths.lib cs.lib>obj\Research\8086\blit8086.@l
 tlink @obj\Research\8086\blit8086.@l
-echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=286  -2  -nobj/Research/286/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch019.@c
-tcc @obj/batch019.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=286  -2  -nobj/Research/286/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch021.@c
+tcc @obj/batch021.@c
 echo -c -s c0s.obj obj\Research\286\blitperf.obj obj\Research\286\noexcept.obj obj\Research\286\blitter.obj obj\Research\286\font.obj obj\Research\286\graph.obj obj\Research\286\grcg.obj obj\Research\286\palette.obj obj\Research\286\vsync.obj, bin\Research\blit286.exe, obj\Research\286\blit286.map, emu.lib maths.lib cs.lib>obj\Research\286\blit286.@l
 tlink @obj\Research\286\blit286.@l
-echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=386  -nobj/Research/386/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch020.@c
-tcc @obj/batch020.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=386  -nobj/Research/386/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch022.@c
+tcc @obj/batch022.@c
 echo -c -s c0s.obj obj\Research\386\blitperf.obj obj\Research\386\noexcept.obj obj\Research\386\blitter.obj obj\Research\386\font.obj obj\Research\386\graph.obj obj\Research\386\grcg.obj obj\Research\386\palette.obj obj\Research\386\vsync.obj, bin\Research\blit386.exe, obj\Research\386\blit386.map, emu.lib maths.lib cs.lib>obj\Research\386\blit386.@l
 tlink @obj\Research\386\blit386.@l

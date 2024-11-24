@@ -76,7 +76,7 @@ scoredat_recreate_maine	proc near
 @@section_loop:
 	call	scoredat_encode
 	call	file_write pascal, ds, offset _hi, size scoredat_section_t
-	call	scoredat_decode
+	call	scoredat_decode_func
 	inc	[bp+@@i]
 
 @@sections_more?:

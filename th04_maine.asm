@@ -1681,7 +1681,8 @@ public @verdict_animate$qv
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-include th04/formats/scoredat_decode.asm
+	@scoredat_decode$qv procdesc near
+
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
 include th04/formats/scoredat_load_for.asm
@@ -1719,7 +1720,7 @@ loc_C360:
 		movzx	eax, ax
 		call	file_seek pascal, large eax, 0
 		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	scoredat_decode
+		call	scoredat_decode_func
 		call	scoredat_encode
 		mov	ax, si
 		imul	ax, size scoredat_section_t

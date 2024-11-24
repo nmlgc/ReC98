@@ -351,7 +351,8 @@ loc_B4B5:
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-include th04/formats/scoredat_decode.asm
+	@scoredat_decode$qv procdesc near
+
 include th04/formats/scoredat_encode.asm
 include th05/formats/scoredat_recreate_maine.asm
 include th05/formats/scoredat_load_for.asm
@@ -392,7 +393,7 @@ loc_B6E2:
 		push	0
 		call	file_seek
 		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	scoredat_decode
+		call	scoredat_decode_func
 		call	scoredat_encode
 		mov	ax, si
 		imul	ax, size scoredat_section_t

@@ -63,10 +63,10 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
+	@scoredat_decode$qv procdesc near
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
 include th04/formats/scoredat_load_both.asm
