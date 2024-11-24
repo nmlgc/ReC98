@@ -100,7 +100,7 @@ scoredat_recreate_op	proc near
 @@stage_more?:
 	cmp	[bp+@@i], SCOREDAT_PLACES
 	jl	short @@stage_loop
-	call	scoredat_encode
+	call	scoredat_encode_func
 	call	file_write pascal, ds, offset _hi, size scoredat_section_t
 	call	scoredat_decode_func
 	inc	si

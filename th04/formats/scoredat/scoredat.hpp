@@ -60,7 +60,7 @@ extern scoredat_section_t hi2;
 	// variant throughout the game would be much saner.
 	uint8_t near scoredat_decode(void);
 
-	void pascal near scoredat_encode(void);
+	void near scoredat_encode(void);
 
 	#define scoredat_decode_func scoredat_decode
 	#define scoredat_encode_func scoredat_encode

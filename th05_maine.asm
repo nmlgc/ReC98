@@ -352,8 +352,8 @@ maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
+	@scoredat_encode$qv procdesc near
 
-include th04/formats/scoredat_encode.asm
 include th05/formats/scoredat_recreate_maine.asm
 include th05/formats/scoredat_load_for.asm
 
@@ -365,7 +365,7 @@ sub_B6A3	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	scoredat_encode
+		call	scoredat_encode_func
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
@@ -394,7 +394,7 @@ loc_B6E2:
 		call	file_seek
 		call	file_read pascal, ds, offset _hi, size scoredat_section_t
 		call	scoredat_decode_func
-		call	scoredat_encode
+		call	scoredat_encode_func
 		mov	ax, si
 		imul	ax, size scoredat_section_t
 		movzx	eax, ax

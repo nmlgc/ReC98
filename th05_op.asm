@@ -62,10 +62,10 @@ OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
+	@scoredat_encode$qv procdesc near
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-include th04/formats/scoredat_encode.asm
 include th05/formats/scoredat_recreate_op.asm
 include th05/formats/scoredat_load_for.asm
 
