@@ -67,16 +67,7 @@ extern scoredat_section_t hi2;
 #endif
 
 // Recreation
-#if (GAME == 4)
-	void pascal near scoredat_recreate(void);
-	#define scoredat_recreate_func scoredat_recreate
-#elif (GAME == 5) && (BINARY == 'O')
-	void pascal near scoredat_recreate_op(void);
-	#define scoredat_recreate_func scoredat_recreate_op
-#elif (GAME == 5) && (BINARY == 'E')
-	void pascal near scoredat_recreate_maine(void);
-	#define scoredat_recreate_func scoredat_recreate_maine
-#endif
+void near scoredat_recreate(void);
 
 // Loading
 // -------

@@ -30,12 +30,10 @@ _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_BLACK_IN:proc
 	extern PALETTE_BLACK_OUT:proc
 	extern FILE_CLOSE:proc
-	extern FILE_CREATE:proc
 	extern FILE_EXIST:proc
 	extern FILE_READ:proc
 	extern FILE_ROPEN:proc
 	extern FILE_SEEK:proc
-	extern FILE_WRITE:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
@@ -62,11 +60,10 @@ OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
-	@scoredat_encode$qv procdesc near
+	@scoredat_recreate$qv procdesc near
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-include th05/formats/scoredat_recreate_op.asm
 include th05/formats/scoredat_load_for.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -460,7 +457,7 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 include th05/formats/scoredat_load_for[data].asm
-aName		db 'name',0
+aName	= ($ - 5)
 aHi01_pi	db 'hi01.pi',0
 aOp1_pi_1	db 'op1.pi',0
 aOp_1		db 'op',0

@@ -20,7 +20,7 @@ _scoredat_load_both proc near
 	jz	short @@success
 
 @@recreate:
-	call	scoredat_recreate
+	call	@scoredat_recreate$qv
 	mov	al, 1
 	pop	bp
 	retn

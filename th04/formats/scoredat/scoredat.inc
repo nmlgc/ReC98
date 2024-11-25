@@ -39,17 +39,7 @@ ifdef BINARY
 	scoredat_decode_func equ <@scoredat_decode$qv>
 	scoredat_encode_func equ <@scoredat_encode$qv>
 	if (BINARY eq 'M') and (GAME eq 4)
-		scoredat_decode_func equ <scoredat_decode pascal, offset _hi>
-		scoredat_encode_func equ <scoredat_encode pascal, offset _hi>
-	endif
-
-	if GAME eq 5
-		if BINARY eq 'O'
-			scoredat_recreate_func equ <scoredat_recreate_op>
-		elseif BINARY eq 'E'
-			scoredat_recreate_func equ <scoredat_recreate_maine>
-		endif
-	else
-		scoredat_recreate_func equ <scoredat_recreate>
+		scoredat_decode_func equ <@scoredat_decode$qp18scoredat_section_t pascal, offset _hi>
+		scoredat_encode_func equ <@scoredat_encode$qp18scoredat_section_t pascal, offset _hi>
 	endif
 endif

@@ -31,6 +31,6 @@ _scoredat_load_for_cur proc near
 	mov	ah, 3Eh
 	int	21h		; DOS - 2+ - CLOSE A FILE WITH HANDLE
 				; BX = file handle
-	call	scoredat_decode
+	call	@scoredat_decode$qv
 	retn
 _scoredat_load_for_cur endp

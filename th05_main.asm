@@ -2845,7 +2845,7 @@ include th05/formats/scoredat_main.asm
 
 
 sub_E813	proc near
-		call	scoredat_encode
+		call	@scoredat_encode$qv
 		mov	ax, (3Dh shl 8) or 02h
 		mov	dx, offset aGENSOU_SCR
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
@@ -2871,7 +2871,7 @@ sub_E813	proc near
 		mov	ah, 3Eh
 		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 					; BX = file handle
-		call	scoredat_decode
+		call	@scoredat_decode$qv
 		retn
 sub_E813	endp
 

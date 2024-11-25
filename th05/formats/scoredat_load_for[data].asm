@@ -1,9 +1,8 @@
-public _SCOREDAT_FN_0, _SCOREDAT_FN_1
 if BINARY eq 'E'
+	public _SCOREDAT_FN_0, _SCOREDAT_FN_1
 	_SCOREDAT_FN_0	db 'GENSOU.SCR',0
 	_SCOREDAT_FN_1	db 'GENSOU.SCR',0
 else
-	_SCOREDAT_FN_0 label byte
-	_SCOREDAT_FN_1 label byte
-	_SCOREDAT_FN	db 'GENSOU.SCR',0
+	_SCOREDAT_FN_0 = ($ - 16)
+	_SCOREDAT_FN_1 = ($ - 16)
 endif

@@ -35,7 +35,6 @@ _TEXT segment word public 'CODE' use16
 	extern PALETTE_BLACK_OUT:proc
 	extern FILE_APPEND:proc
 	extern FILE_CLOSE:proc
-	extern FILE_CREATE:proc
 	extern FILE_EXIST:proc
 	extern FILE_READ:proc
 	extern FILE_ROPEN:proc
@@ -353,8 +352,8 @@ maine_01_TEXT ends
 SCORE_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
 	@scoredat_encode$qv procdesc near
+	@scoredat_recreate$qv procdesc near
 
-include th05/formats/scoredat_recreate_maine.asm
 include th05/formats/scoredat_load_for.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6297,7 +6296,8 @@ include th04/hiscore/alphabet[data].asm
 byte_11621	db 0
 public _entered_name_cursor
 _entered_name_cursor	dw 0
-aGensou_scr	db 'GENSOU.SCR',0
+public _SCOREDAT_FN
+_SCOREDAT_FN	db 'GENSOU.SCR',0
 include th05/formats/scoredat_load_for[data].asm
 aGensou_scr_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0

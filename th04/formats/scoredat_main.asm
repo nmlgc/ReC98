@@ -25,7 +25,7 @@ _scoredat_load_for_cur proc near
 	jz	short @@ret
 
 @@recreate:
-	call	scoredat_recreate_func
+	call	@scoredat_recreate$qv
 
 @@ret:
 	pop	bp

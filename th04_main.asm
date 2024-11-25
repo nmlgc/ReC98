@@ -9707,10 +9707,10 @@ loc_12A05:
 BOSS_BG_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
+	@scoredat_recreate$qv procdesc near
 SCORE_TEXT ends
 
 BOSS_FG_TEXT segment byte public 'CODE' use16
-include th04/formats/scoredat_recreate.asm
 include th04/formats/scoredat_main.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9720,7 +9720,7 @@ include th04/formats/scoredat_main.asm
 sub_12B1E	proc near
 		push	bp
 		mov	bp, sp
-		call	main_01:scoredat_encode pascal, offset _hi
+		call	scoredat_encode_func
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
@@ -30151,7 +30151,8 @@ _checkerboard checkerboard_t <>
 byte_23242	db 0
 		db    0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
-aGensou_scr	db 'GENSOU.SCR',0
+public _SCOREDAT_FN
+_SCOREDAT_FN	db 'GENSOU.SCR',0
 aGensou_scr_0	db 'GENSOU.SCR',0
 aGensou_scr_1	db 'GENSOU.SCR',0
 aGensou_scr_2	db 'GENSOU.SCR',0

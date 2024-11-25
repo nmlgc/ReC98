@@ -733,10 +733,11 @@ th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th04/op_music.cpp",
 	"th04/score_db.cpp",
 	"th04/score_e.cpp",
+	"th04/hi_view.cpp",
 	"th04_op.asm",
 	"th04/m_char.cpp",
 })
-th04:branch(MODEL_LARGE):link("main", {
+th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	{ "th04_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -763,6 +764,7 @@ th04:branch(MODEL_LARGE):link("main", {
 	"th04/checkerb.cpp",
 	"th04/mb_inv.cpp",
 	"th04/boss_bd.cpp",
+	"th04/score_rm.cpp",
 	"th01/vplanset.cpp",
 	"th03/vector.cpp",
 	"th02/frmdely1.cpp",
@@ -807,6 +809,7 @@ th04:branch(MODEL_LARGE):link("maine", {
 	{ "th04_maine_master.asm", o = "mainem.obj" },
 	"th04/score_d.cpp",
 	"th04/score_e.cpp",
+	"th04/hi_end.cpp",
 	"th01/vplanset.cpp",
 	"th02/frmdely1.cpp",
 	"th03/pi_put.cpp",
@@ -900,11 +903,12 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th05/op_music.cpp",
 	"th05/score_db.cpp",
 	"th05/score_e.cpp",
+	"th05/hi_view.cpp",
 	"th05_op.asm",
 	"th05/hi_view_.cpp",
 	"th05/m_char.cpp",
 })
-th05:branch(MODEL_LARGE):link("main", {
+th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	{ "th05_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -982,11 +986,12 @@ th05:branch(MODEL_LARGE):link("main", {
 	"th05/boss.cpp",
 	"th05/main014.cpp",
 })
-th05:branch(MODEL_LARGE):link("maine", {
+th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th05/maine_e.cpp",
 	{ "th05_maine_master.asm", o = "mainem.obj" },
 	"th05/score_d.cpp",
 	"th05/score_e.cpp",
+	"th05/hi_end.cpp",
 	"th03/hfliplut.asm",
 	"th04/snd_pmdr.c",
 	"th04/snd_mmdr.c",
