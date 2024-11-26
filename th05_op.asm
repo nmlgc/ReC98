@@ -22,7 +22,7 @@ include ReC98.inc
 include th05/th05.inc
 include th04/sprites/op_cdg.inc
 
-op_01 group OP_SETUP_TEXT, SCORE_TEXT, op_01_TEXT, HI_VIEW_TEXT
+op_01 group OP_SETUP_TEXT, SCORE_TEXT, op_01_TEXT
 
 ; ===========================================================================
 
@@ -427,9 +427,6 @@ loc_CD64:
 		retn
 @regist_view_menu$qv endp
 op_01_TEXT ends
-
-HI_VIEW_TEXT segment byte public 'CODE' use16
-HI_VIEW_TEXT ends
 
 ; ===========================================================================
 

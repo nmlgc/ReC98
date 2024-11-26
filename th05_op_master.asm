@@ -132,8 +132,8 @@ SCORE_TEXT ends
 op_01_TEXT segment byte public 'CODE' use16
 op_01_TEXT ends
 
-HI_VIEW_TEXT segment byte public 'CODE' use16
-HI_VIEW_TEXT ends
+HI_VIEW__TEXT segment byte public 'CODE' use16
+HI_VIEW__TEXT ends
 
 M_CHAR_TEXT segment byte public 'CODE' use16
 M_CHAR_TEXT ends

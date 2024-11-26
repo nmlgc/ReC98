@@ -895,7 +895,7 @@ th05:branch(MODEL_LARGE):link("op", {
 	"th05/op_title.cpp",
 	"th05/op_music.cpp",
 	"th05_op.asm",
-	"th05/hi_view.cpp",
+	"th05/hi_view_.cpp",
 	"th05/m_char.cpp",
 })
 th05:branch(MODEL_LARGE):link("main", {
