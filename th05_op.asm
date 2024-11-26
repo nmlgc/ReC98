@@ -56,88 +56,11 @@ OP_SETUP_TEXT ends
 SCORE_TEXT segment byte public 'CODE' use16
 	@HISCORE_SCOREDAT_LOAD_FOR$QI procdesc pascal near \
 		playchar:word
+	@SCORE_PUT$QIII procdesc pascal near \
+		left:word, top:word, place:word
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CA1B	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-@@y		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		mov	bx, di
-		shl	bx, 3
-		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		cmp	ax, 10
-		jl	short loc_CA5B
-		lea	ax, [si-16]
-		push	ax
-		push	[bp+@@y]
-		mov	bx, di
-		shl	bx, 3
-		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	ax
-		call	super_put
-
-loc_CA5B:
-		push	si
-		push	[bp+@@y]
-		mov	bx, di
-		shl	bx, 3
-		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	dx
-		call	super_put
-		add	si, 16
-		mov	[bp+var_2], 6
-		jmp	short loc_CAA4
-; ---------------------------------------------------------------------------
-
-loc_CA83:
-		push	si
-		push	[bp+@@y]
-		mov	bx, di
-		shl	bx, 3
-		add	bx, [bp+var_2]
-		mov	al, _hi.score.g_score[bx]
-		mov	ah, 0
-		add	ax, -gb_0_
-		push	ax
-		call	super_put
-		dec	[bp+var_2]
-		add	si, 16
-
-loc_CAA4:
-		cmp	[bp+var_2], 0
-		jge	short loc_CA83
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_CA1B	endp
-
 include th04/hiscore/hiscore_stage_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -147,13 +70,13 @@ include th04/hiscore/hiscore_stage_put.asm
 sub_CB00	proc near
 
 @@color		= word ptr -2
-arg_0		= word ptr  4
+@@place		= word ptr  4
 arg_2		= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@place], 0
 		jnz	short loc_CB3A
 		mov	bx, [bp+arg_2]
 		cmp	bx, 3
@@ -206,7 +129,7 @@ loc_CB4E:
 		mov	si, 328
 
 loc_CB51:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@place]
 		shl	ax, 4
 		add	ax, 96
 		jmp	short loc_CB6D
@@ -221,7 +144,7 @@ loc_CB61:
 		mov	si, 328
 
 loc_CB64:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@place]
 		shl	ax, 4
 		add	ax, 232
 
@@ -237,7 +160,7 @@ loc_CB74:
 		lea	ax, [di+2]
 		push	ax
 		push	GAIJI_W
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@place]
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
 		push	ds
@@ -247,7 +170,7 @@ loc_CB74:
 		push	si
 		push	di
 		push	GAIJI_W
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@place]
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
 		push	ds
@@ -255,11 +178,11 @@ loc_CB74:
 		push	[bp+@@color]
 		call	graph_gaiji_puts
 		lea	ax, [si+150]
-		call	sub_CA1B pascal, ax, di, [bp+arg_0]
+		call	@score_put$qiii pascal, ax, di, [bp+@@place]
 		lea	ax, [si+286]
 		push	ax
 		push	di
-		mov	bx, [bp+arg_0]
+		mov	bx, [bp+@@place]
 		mov	al, _hi.score.g_stage[bx]
 		mov	ah, 0
 		push	ax

@@ -57,134 +57,11 @@ OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@hiscore_scoredat_load_both$qv procdesc near
+	@SCORES_PUT$QII procdesc pascal near \
+		top:word, place:word
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C79E	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		mov	[bp+var_4], 16
-		mov	bx, si
-		shl	bx, 3
-		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		cmp	ax, 10
-		jl	short loc_C7E0
-		push	140
-		push	di
-		mov	bx, si
-		shl	bx, 3
-		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	ax
-		call	super_put
-
-loc_C7E0:
-		mov	bx, si
-		shl	bx, 3
-		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		cmp	ax, 10
-		jl	short loc_C811
-		push	448
-		push	di
-		mov	bx, si
-		shl	bx, 3
-		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	ax
-		call	super_put
-
-loc_C811:
-		push	156
-		push	di
-		mov	bx, si
-		shl	bx, 3
-		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	dx
-		call	super_put
-		push	464
-		push	di
-		mov	bx, si
-		shl	bx, 3
-		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
-		mov	ah, 0
-		add	ax, -gb_0_
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	dx
-		call	super_put
-		mov	[bp+var_2], 6
-		jmp	short loc_C899
-; ---------------------------------------------------------------------------
-
-loc_C854:
-		mov	ax, [bp+var_4]
-		add	ax, 156
-		push	ax
-		push	di
-		mov	bx, si
-		shl	bx, 3
-		add	bx, [bp+var_2]
-		mov	al, _hi_reimu.score.g_score[bx]
-		mov	ah, 0
-		add	ax, -gb_0_
-		push	ax
-		call	super_put
-		mov	ax, [bp+var_4]
-		add	ax, 464
-		push	ax
-		push	di
-		mov	bx, si
-		shl	bx, 3
-		add	bx, [bp+var_2]
-		mov	al, _hi_marisa.score.g_score[bx]
-		mov	ah, 0
-		add	ax, -gb_0_
-		push	ax
-		call	super_put
-		dec	[bp+var_2]
-		add	[bp+var_4], 16
-
-loc_C899:
-		cmp	[bp+var_2], 0
-		jge	short loc_C854
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_C79E	endp
-
 include th04/hiscore/hiscore_stage_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -238,8 +115,8 @@ arg_0		= word ptr  4
 		push	ax
 		push	7
 		call	graph_gaiji_puts
-		push	600000h
-		call	sub_C79E
+		push	(96 shl 16) or 0
+		call	@scores_put$qii
 		push	(292 shl 16) or 96
 		mov	al, _hi_reimu.score.g_stage[si]
 		mov	ah, 0
@@ -300,9 +177,7 @@ loc_C989:
 		push	ax
 		push	2
 		call	graph_gaiji_puts
-		push	di
-		push	si
-		call	sub_C79E
+		call	@scores_put$qii pascal, di, si
 		push	292
 		push	di
 		mov	al, _hi_reimu.score.g_stage[si]
