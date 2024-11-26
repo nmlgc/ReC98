@@ -35,7 +35,6 @@ _TEXT segment word public 'CODE' use16
 	extern PALETTE_BLACK_OUT:proc
 	extern FILE_APPEND:proc
 	extern FILE_CLOSE:proc
-	extern FILE_EXIST:proc
 	extern FILE_READ:proc
 	extern FILE_ROPEN:proc
 	extern FILE_SEEK:proc
@@ -352,9 +351,8 @@ maine_01_TEXT ends
 SCORE_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
 	@scoredat_encode$qv procdesc near
-	@scoredat_recreate$qv procdesc near
-
-include th05/formats/scoredat_load_for.asm
+	@HISCORE_SCOREDAT_LOAD_FOR$QI procdesc pascal near \
+		playchar:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1994,7 +1992,7 @@ loc_C273:
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jz	short loc_C289
-		call	scoredat_load_for pascal, [bp+var_4]
+		call	@hiscore_scoredat_load_for$qi pascal, [bp+var_4]
 		push	[bp+var_4]
 		call	sub_BCD3
 
@@ -2006,7 +2004,7 @@ loc_C28C:
 		jl	short loc_C273
 		mov	al, playchar_15178
 		mov	ah, 0
-		call	scoredat_load_for pascal, ax
+		call	@hiscore_scoredat_load_for$qi pascal, ax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C2AD
@@ -3235,7 +3233,10 @@ loc_CE08:
 
 loc_CE1C:
 		mov	[bp+var_4], 1000000
-		jmp	loc_CEAF
+		; Hack (jmp	loc_CEAF)
+		; No idea why TASM can't assemble this properly after
+		; scoredat_load_for() was decompiled.
+		db	0E9h, 88h, 00h
 ; ---------------------------------------------------------------------------
 
 loc_CE27:
@@ -6403,6 +6404,7 @@ include th04/formats/scoredat[bss].asm
 public _glyphballs
 _glyphballs	glyphball_t	(SCOREDAT_NAME_LEN + 1) dup (<?>)
 include th03/hiscore/regist[bss].asm
+public _rank
 _rank	db ?
 playchar_15178	db ?
 		db 3 dup(?)

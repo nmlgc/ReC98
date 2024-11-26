@@ -29,11 +29,6 @@ op_01 group OP_SETUP_TEXT, SCORE_TEXT, op_01_TEXT
 _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_BLACK_IN:proc
 	extern PALETTE_BLACK_OUT:proc
-	extern FILE_CLOSE:proc
-	extern FILE_EXIST:proc
-	extern FILE_READ:proc
-	extern FILE_ROPEN:proc
-	extern FILE_SEEK:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRCG_SETCOLOR:proc
 	extern GRAPH_CLEAR:proc
@@ -61,12 +56,10 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@scoredat_decode$qv procdesc near
-	@scoredat_recreate$qv procdesc near
+	@hiscore_scoredat_load_both$qv procdesc near
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-include th04/formats/scoredat_load_both.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -398,7 +391,7 @@ public @regist_view_menu$qv
 		assume es:nothing
 		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
-		call	_scoredat_load_both
+		call	@hiscore_scoredat_load_both$qv
 		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
@@ -424,7 +417,7 @@ loc_CAE4:
 		dec	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	_scoredat_load_both
+		call	@hiscore_scoredat_load_both$qv
 		call	_score_render
 		push	1
 		call	palette_black_in
@@ -437,7 +430,7 @@ loc_CB36:
 		inc	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	_scoredat_load_both
+		call	@hiscore_scoredat_load_both$qv
 		jmp	short loc_CADA
 ; ---------------------------------------------------------------------------
 
@@ -480,7 +473,7 @@ public @cleardata_and_regist_view_sprite$qv
 ; ---------------------------------------------------------------------------
 
 loc_CBEE:
-		call	_scoredat_load_both
+		call	@hiscore_scoredat_load_both$qv
 		or	al, al
 		jnz	loc_CC78
 		mov	al, _rank
@@ -845,6 +838,7 @@ aOp1_pi_1	db 'op1.pi',0
 
 include th04/zunsoft[bss].asm
 include th04/formats/scoredat_op[bss].asm
+public _rank
 _rank	db ?
 public _cleared_with, _extra_unlocked
 _cleared_with label byte

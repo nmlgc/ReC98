@@ -20,7 +20,8 @@ void near cleardata_and_regist_view_sprites_load(void)
 	for(playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
 		rank = RANK_EASY;
 		while(rank < RANK_COUNT) {
-			if(scoredat_load_for(playchar)) {
+			bool pascal near hiscore_scoredat_load_for(int playchar);
+			if(hiscore_scoredat_load_for(playchar)) {
 				break;
 			}
 			cleared_with[playchar][rank] = hi.score.cleared;

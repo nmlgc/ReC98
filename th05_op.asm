@@ -29,11 +29,6 @@ op_01 group OP_SETUP_TEXT, SCORE_TEXT, op_01_TEXT
 _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_BLACK_IN:proc
 	extern PALETTE_BLACK_OUT:proc
-	extern FILE_CLOSE:proc
-	extern FILE_EXIST:proc
-	extern FILE_READ:proc
-	extern FILE_ROPEN:proc
-	extern FILE_SEEK:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
@@ -59,12 +54,11 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@scoredat_decode$qv procdesc near
-	@scoredat_recreate$qv procdesc near
+	@HISCORE_SCOREDAT_LOAD_FOR$QI procdesc pascal near \
+		playchar:word
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-include th05/formats/scoredat_load_for.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -306,7 +300,7 @@ _score_render proc near
 ; ---------------------------------------------------------------------------
 
 loc_CC13:
-		call	scoredat_load_for pascal, si
+		call	@hiscore_scoredat_load_for$qi pascal, si
 		xor	di, di
 		jmp	short loc_CC21
 ; ---------------------------------------------------------------------------

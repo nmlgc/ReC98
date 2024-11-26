@@ -36,7 +36,6 @@ _TEXT segment word public 'CODE' use16
 	extern EGC_OFF:proc
 	extern FILE_APPEND:proc
 	extern FILE_CLOSE:proc
-	extern FILE_EXIST:proc
 	extern FILE_READ:proc
 	extern FILE_ROPEN:proc
 	extern FILE_SEEK:proc
@@ -1682,9 +1681,8 @@ maine_01_TEXT ends
 SCORE_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
 	@scoredat_encode$qv procdesc near
-	@scoredat_recreate$qv procdesc near
-
-include th04/formats/scoredat_load_for.asm
+	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T procdesc pascal near \
+		playchar:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2459,14 +2457,14 @@ loc_C897:
 		mov	al, 1
 		sub	al, playchar_125B8
 		push	ax
-		call	scoredat_load_for
+		call	@hiscore_scoredat_load_for$q10playchar_t
 		mov	al, playchar_125B8
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
 		push	dx
 		call	sub_C7C9
-		call	scoredat_load_for pascal, word ptr playchar_125B8
+		call	@hiscore_scoredat_load_for$q10playchar_t pascal, word ptr playchar_125B8
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C8CB
@@ -3006,10 +3004,10 @@ aPicacovVVcvsfT	db 'èàóùóéÇøÇ…ÇÊÇÈîªíËïsâ¬',0
 aUde_pi		db 'ude.pi',0
 		db    0
 include th04/hiscore/alphabet[data].asm
-public _SCOREDAT_FN
+public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1
 _SCOREDAT_FN	db 'GENSOU.SCR',0
-aGensou_scr_0	db 'GENSOU.SCR',0
-aGensou_scr_1	db 'GENSOU.SCR',0
+_SCOREDAT_FN_0	db 'GENSOU.SCR',0
+_SCOREDAT_FN_1	db 'GENSOU.SCR',0
 aGensou_scr_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum2_bft	db 'scnum2.bft',0
@@ -3055,6 +3053,7 @@ byte_124EF	db ?
 		db 2 dup(?)
 include th04/formats/scoredat[bss].asm
 include th03/hiscore/regist[bss].asm
+public _rank
 _rank	db ?
 playchar_125B8	db ?
 

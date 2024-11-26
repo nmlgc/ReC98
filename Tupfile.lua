@@ -804,7 +804,7 @@ th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th04/boss_4r.cpp",
 	"th04/boss_x2.cpp",
 })
-th04:branch(MODEL_LARGE):link("maine", {
+th04:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th04/maine_e.cpp",
 	{ "th04_maine_master.asm", o = "mainem.obj" },
 	"th04/score_d.cpp",
