@@ -1,6 +1,7 @@
 /// View-only High Score menu
 /// -------------------------
 
+#pragma option -zPop_01
 #include "th04/formats/scoredat/recreate.cpp"
 #include "th04/hiscore/scoredat.cpp"
 #include "libs/master.lib/pc98_gfx.hpp"
@@ -24,6 +25,8 @@ enum hiscore_patnum_t {
 };
 
 enum hiscore_colors_t {
+	COL_NAME = 2,
+	COL_NAME_FIRST = 7,
 	COL_STAGE = 7,
 	COL_SHADOW = 14,
 };
@@ -176,3 +179,117 @@ void pascal near stage_put(
 		);
 	}
 }
+
+#define name_put_shadowed(left, top, str, col_fg) { \
+	graph_gaiji_puts((left + 2), (top + 2), GAIJI_W, str, COL_SHADOW); \
+	graph_gaiji_puts((left + 0), (top + 0), GAIJI_W, str, col_fg); \
+}
+
+#if (GAME == 5)
+void pascal near place_put(playchar2 playchar, int place)
+{
+	screen_x_t left;
+	screen_y_t top;
+	vc2 name_col;
+
+	// ZUN bloat: Could have been calculated arithmetically...
+	if(place == 0) {
+		switch(playchar) {
+		case PLAYCHAR_REIMU:
+			left = (NAME_LEFT + (0 * COLUMN_W));
+			top = TABLE_1_TOP;
+			break;
+		case PLAYCHAR_MARISA:
+			left = (NAME_LEFT + (1 * COLUMN_W));
+			top = TABLE_1_TOP;
+			break;
+		case PLAYCHAR_MIMA:
+			left = (NAME_LEFT + (0 * COLUMN_W));
+			top = TABLE_2_TOP;
+			break;
+		case PLAYCHAR_YUUKA:
+			left = (NAME_LEFT + (1 * COLUMN_W));
+			top = TABLE_2_TOP;
+			break;
+		}
+		name_col = COL_NAME_FIRST;
+	} else {
+		// ZUN bloat: …and without branching by place.
+		switch(playchar) {
+		case PLAYCHAR_REIMU:
+			left = (NAME_LEFT + (0 * COLUMN_W));
+			top = (TABLE_1_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H));
+			break;
+		case PLAYCHAR_MARISA:
+			left = (NAME_LEFT + (1 * COLUMN_W));
+			top = (TABLE_1_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H));
+			break;
+		case PLAYCHAR_MIMA:
+			left = (NAME_LEFT + (0 * COLUMN_W));
+			top = (TABLE_2_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H));
+			break;
+		case PLAYCHAR_YUUKA:
+			left = (NAME_LEFT + (1 * COLUMN_W));
+			top = (TABLE_2_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H));
+			break;
+		}
+		name_col = COL_NAME;
+	}
+	name_put_shadowed(
+		left,
+		top,
+		reinterpret_cast<const char far *>(hi.score.g_name[place]),
+		name_col
+	);
+	score_put((left + (SCORE_LEFT - NAME_LEFT)), top, place);
+	stage_put((left + (STAGE_LEFT - NAME_LEFT)), top, hi.score.g_stage[place]);
+}
+#else
+// ZUN bug: Leaves the second column with 4 fewer pixels of padding between
+// name and score. (Which translates to 0 pixels in case of a 9th score digit.)
+#define names_put(top, col_fg, place) { \
+	name_put_shadowed( \
+		(NAME_LEFT + (PLAYCHAR_REIMU * (COLUMN_W + 4))), \
+		top, \
+		reinterpret_cast<const char far *>(hi.score.g_name[place]), \
+		col_fg \
+	); \
+	name_put_shadowed( \
+		(NAME_LEFT + (PLAYCHAR_MARISA * (COLUMN_W + 4))), \
+		top, \
+		reinterpret_cast<const char far *>(hi2.score.g_name[place]), \
+		col_fg \
+	); \
+}
+
+#define stages_put(top, place) { \
+	stage_put( \
+		(STAGE_LEFT + (PLAYCHAR_REIMU * COLUMN_W)), \
+		top, \
+		hi.score.g_stage[place] \
+	); \
+	stage_put( \
+		(STAGE_LEFT + (PLAYCHAR_MARISA * COLUMN_W)), \
+		top, \
+		hi2.score.g_stage[place] \
+	); \
+}
+
+void pascal near place_put(int place)
+{
+	// ZUN bloat: Again, no need to duplicate the entire function just for
+	// different Y positions and name colors.
+	if(place == 0) {
+		names_put(TABLE_TOP, COL_NAME_FIRST, place);
+		scores_put(TABLE_TOP, 0);
+		stages_put(TABLE_TOP, place);
+	} else {
+		screen_y_t top = (
+			TABLE_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H)
+		);
+		names_put(top, COL_NAME, place);
+		scores_put(top, place);
+		stages_put(top, place);
+	}
+}
+#endif

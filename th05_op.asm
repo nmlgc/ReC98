@@ -39,7 +39,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT_RECT:proc
 	extern SUPER_PUT:proc
-	extern GRAPH_GAIJI_PUTS:proc
 _TEXT	ends
 
 ; ===========================================================================
@@ -55,153 +54,11 @@ OP_SETUP_TEXT ends
 SCORE_TEXT segment byte public 'CODE' use16
 	@HISCORE_SCOREDAT_LOAD_FOR$QI procdesc pascal near \
 		playchar:word
-	@SCORE_PUT$QIII procdesc pascal near \
-		left:word, top:word, place:word
-	@STAGE_PUT$QIII procdesc pascal near \
-		left:word, top:word, gaiji:word
+	@PLACE_PUT$QII procdesc pascal near \
+		playchar:word, place:word
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CB00	proc near
-
-@@color		= word ptr -2
-@@place		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	[bp+@@place], 0
-		jnz	short loc_CB3A
-		mov	bx, [bp+arg_2]
-		cmp	bx, 3
-		ja	short loc_CB33
-		add	bx, bx
-		jmp	cs:off_CBD4[bx]
-
-loc_CB1B:
-		mov	si, 8
-		jmp	short loc_CB23
-; ---------------------------------------------------------------------------
-
-loc_CB20:
-		mov	si, 328
-
-loc_CB23:
-		mov	di, 88
-		jmp	short loc_CB33
-; ---------------------------------------------------------------------------
-
-loc_CB28:
-		mov	si, 8
-		jmp	short loc_CB30
-; ---------------------------------------------------------------------------
-
-loc_CB2D:
-		mov	si, 328
-
-loc_CB30:
-		mov	di, 224
-
-loc_CB33:
-		mov	[bp+@@color], 7
-		jmp	short loc_CB74
-; ---------------------------------------------------------------------------
-
-loc_CB3A:
-		mov	bx, [bp+arg_2]
-		cmp	bx, 3
-		ja	short loc_CB6F
-		add	bx, bx
-		jmp	cs:off_CBCC[bx]
-
-loc_CB49:
-		mov	si, 8
-		jmp	short loc_CB51
-; ---------------------------------------------------------------------------
-
-loc_CB4E:
-		mov	si, 328
-
-loc_CB51:
-		mov	ax, [bp+@@place]
-		shl	ax, 4
-		add	ax, 96
-		jmp	short loc_CB6D
-; ---------------------------------------------------------------------------
-
-loc_CB5C:
-		mov	si, 8
-		jmp	short loc_CB64
-; ---------------------------------------------------------------------------
-
-loc_CB61:
-		mov	si, 328
-
-loc_CB64:
-		mov	ax, [bp+@@place]
-		shl	ax, 4
-		add	ax, 232
-
-loc_CB6D:
-		mov	di, ax
-
-loc_CB6F:
-		mov	[bp+@@color], 2
-
-loc_CB74:
-		lea	ax, [si+2]
-		push	ax
-		lea	ax, [di+2]
-		push	ax
-		push	GAIJI_W
-		mov	ax, [bp+@@place]
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi.score.g_name
-		push	ds
-		push	ax
-		push	14
-		call	graph_gaiji_puts
-		push	si
-		push	di
-		push	GAIJI_W
-		mov	ax, [bp+@@place]
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi.score.g_name
-		push	ds
-		push	ax
-		push	[bp+@@color]
-		call	graph_gaiji_puts
-		lea	ax, [si+150]
-		call	@score_put$qiii pascal, ax, di, [bp+@@place]
-		lea	ax, [si+286]
-		push	ax	; left
-		push	di	; top
-		mov	bx, [bp+@@place]
-		mov	al, _hi.score.g_stage[bx]
-		mov	ah, 0
-		push	ax	; stage
-		call	@stage_put$qiii
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_CB00	endp
-
-; ---------------------------------------------------------------------------
-off_CBCC	dw offset loc_CB49
-		dw offset loc_CB4E
-		dw offset loc_CB5C
-		dw offset loc_CB61
-off_CBD4	dw offset loc_CB1B
-		dw offset loc_CB20
-		dw offset loc_CB28
-		dw offset loc_CB2D
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -229,9 +86,7 @@ loc_CC13:
 ; ---------------------------------------------------------------------------
 
 loc_CC1B:
-		push	si
-		push	di
-		call	sub_CB00
+		call	@place_put$qii pascal, si, di
 		inc	di
 
 loc_CC21:
@@ -393,7 +248,6 @@ aOp_1		db 'op',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-	extern _hi:scoredat_section_t
 	extern _rank:byte
 
 		end

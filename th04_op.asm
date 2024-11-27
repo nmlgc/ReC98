@@ -40,7 +40,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT_RECT:proc
 	extern SUPER_PUT:proc
-	extern GRAPH_GAIJI_PUTS:proc
 _TEXT	ends
 
 ; ===========================================================================
@@ -56,148 +55,11 @@ OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@hiscore_scoredat_load_both$qv procdesc near
-	@SCORES_PUT$QII procdesc pascal near \
-		top:word, place:word
-	@STAGE_PUT$QIII procdesc pascal near \
-		left:word, top:word, gaiji:word
+	@PLACE_PUT$QI procdesc pascal near \
+		place:word
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C8F5	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		or	si, si
-		jnz	loc_C989
-		push	(10 shl 16) or 98
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_reimu.score.g_name
-		push	ds
-		push	ax
-		push	14
-		call	graph_gaiji_puts
-		push	(8 shl 16) or 96
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_reimu.score.g_name
-		push	ds
-		push	ax
-		push	7
-		call	graph_gaiji_puts
-		push	(322 shl 16) or 98
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_marisa.score.g_name
-		push	ds
-		push	ax
-		push	14
-		call	graph_gaiji_puts
-		push	(320 shl 16) or 96
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_marisa.score.g_name
-		push	ds
-		push	ax
-		push	7
-		call	graph_gaiji_puts
-		push	(96 shl 16) or 0
-		call	@scores_put$qii
-		push	(292 shl 16) or 96	; (left shl 16) or top
-		mov	al, _hi_reimu.score.g_stage[si]
-		mov	ah, 0
-		push	ax	; stage
-		call	@stage_put$qiii
-		push	(600 shl 16) or 96	; (left shl 16) or top
-
-		; Hack (jmp	loc_CA0A)
-		; No idea why TASM can't assemble this properly after
-		; dropdown() was decompiled.
-		db	0E9h, 81h, 00h
-; ---------------------------------------------------------------------------
-
-loc_C989:
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 112
-		mov	di, ax
-		push	10
-		add	ax, 2
-		push	ax
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_reimu.score.g_name
-		push	ds
-		push	ax
-		push	14
-		call	graph_gaiji_puts
-		push	8
-		push	di
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_reimu.score.g_name
-		push	ds
-		push	ax
-		push	2
-		call	graph_gaiji_puts
-		push	322
-		lea	ax, [di+2]
-		push	ax
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_marisa.score.g_name
-		push	ds
-		push	ax
-		push	14
-		call	graph_gaiji_puts
-		push	320
-		push	di
-		push	GAIJI_W
-		mov	ax, si
-		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, offset _hi_marisa.score.g_name
-		push	ds
-		push	ax
-		push	2
-		call	graph_gaiji_puts
-		call	@scores_put$qii pascal, di, si
-		push	292	; left
-		push	di	; top
-		mov	al, _hi_reimu.score.g_stage[si]
-		mov	ah, 0
-		push	ax	; stage
-		call	@stage_put$qiii
-		push	600	; left
-		push	di	; top
-
-loc_CA0A:
-		mov	al, _hi_marisa.score.g_stage[si]
-		mov	ah, 0
-		push	ax	; stage
-		call	@stage_put$qiii
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_C8F5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -213,22 +75,19 @@ _score_render proc near
 		graph_accesspage 0
 		call	@pi_palette_apply$qi pascal, 0
 		call	@pi_put_8$qiii pascal, large 0, 0
-		push	0
-		call	sub_C8F5
+		call	@place_put$qi pascal, 0
 		mov	si, 1
 		jmp	short loc_CA5B
 ; ---------------------------------------------------------------------------
 
 loc_CA56:
-		push	si
-		call	sub_C8F5
+		call	@place_put$qi pascal, si
 		inc	si
 
 loc_CA5B:
 		cmp	si, 9
 		jl	short loc_CA56
-		push	9
-		call	sub_C8F5
+		call	@place_put$qi pascal, 9
 		push	(496 shl 16) or 376
 		mov	al, _rank
 		mov	ah, 0
