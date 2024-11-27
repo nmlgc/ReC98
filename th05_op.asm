@@ -40,7 +40,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern SUPER_PUT_RECT:proc
 	extern SUPER_PUT:proc
 	extern GRAPH_GAIJI_PUTS:proc
-	extern GRAPH_GAIJI_PUTC:proc
 _TEXT	ends
 
 ; ===========================================================================
@@ -58,10 +57,11 @@ SCORE_TEXT segment byte public 'CODE' use16
 		playchar:word
 	@SCORE_PUT$QIII procdesc pascal near \
 		left:word, top:word, place:word
+	@STAGE_PUT$QIII procdesc pascal near \
+		left:word, top:word, gaiji:word
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-include th04/hiscore/hiscore_stage_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -180,13 +180,13 @@ loc_CB74:
 		lea	ax, [si+150]
 		call	@score_put$qiii pascal, ax, di, [bp+@@place]
 		lea	ax, [si+286]
-		push	ax
-		push	di
+		push	ax	; left
+		push	di	; top
 		mov	bx, [bp+@@place]
 		mov	al, _hi.score.g_stage[bx]
 		mov	ah, 0
-		push	ax
-		call	hiscore_stage_put
+		push	ax	; stage
+		call	@stage_put$qiii
 		pop	di
 		pop	si
 		leave

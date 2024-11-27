@@ -23,6 +23,11 @@ enum hiscore_patnum_t {
 	// --------
 };
 
+enum hiscore_colors_t {
+	COL_STAGE = 7,
+	COL_SHADOW = 14,
+};
+
 /// Coordinates
 /// -----------
 
@@ -153,3 +158,21 @@ void pascal near scores_put(screen_y_t top, int place)
 	}
 }
 #endif
+
+void pascal near stage_put(
+	screen_x_t left, screen_y_t top, int gaiji // ACTUAL TYPE: gaiji_th04_t
+)
+{
+	// ZUN bloat: Reassigning [gaiji] would have been simpler.
+	if(gaiji != g_NONE) {
+		graph_gaiji_putc((left + 2), (top + 2), gaiji, COL_SHADOW);
+		graph_gaiji_putc((left + 0), (top + 0), gaiji, COL_STAGE);
+	} else {
+		graph_gaiji_putc(
+			(left + 2), (top + 2), g_HISCORE_STAGE_EMPTY, COL_SHADOW
+		);
+		graph_gaiji_putc(
+			(left + 0), (top + 0), g_HISCORE_STAGE_EMPTY, COL_STAGE
+		);
+	}
+}

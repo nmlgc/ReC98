@@ -41,7 +41,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern SUPER_PUT_RECT:proc
 	extern SUPER_PUT:proc
 	extern GRAPH_GAIJI_PUTS:proc
-	extern GRAPH_GAIJI_PUTC:proc
 _TEXT	ends
 
 ; ===========================================================================
@@ -59,10 +58,11 @@ SCORE_TEXT segment byte public 'CODE' use16
 	@hiscore_scoredat_load_both$qv procdesc near
 	@SCORES_PUT$QII procdesc pascal near \
 		top:word, place:word
+	@STAGE_PUT$QIII procdesc pascal near \
+		left:word, top:word, gaiji:word
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-include th04/hiscore/hiscore_stage_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -117,12 +117,12 @@ arg_0		= word ptr  4
 		call	graph_gaiji_puts
 		push	(96 shl 16) or 0
 		call	@scores_put$qii
-		push	(292 shl 16) or 96
+		push	(292 shl 16) or 96	; (left shl 16) or top
 		mov	al, _hi_reimu.score.g_stage[si]
 		mov	ah, 0
-		push	ax
-		call	hiscore_stage_put
-		push	(600 shl 16) or 96
+		push	ax	; stage
+		call	@stage_put$qiii
+		push	(600 shl 16) or 96	; (left shl 16) or top
 
 		; Hack (jmp	loc_CA0A)
 		; No idea why TASM can't assemble this properly after
@@ -178,20 +178,20 @@ loc_C989:
 		push	2
 		call	graph_gaiji_puts
 		call	@scores_put$qii pascal, di, si
-		push	292
-		push	di
+		push	292	; left
+		push	di	; top
 		mov	al, _hi_reimu.score.g_stage[si]
 		mov	ah, 0
-		push	ax
-		call	hiscore_stage_put
-		push	600
-		push	di
+		push	ax	; stage
+		call	@stage_put$qiii
+		push	600	; left
+		push	di	; top
 
 loc_CA0A:
 		mov	al, _hi_marisa.score.g_stage[si]
 		mov	ah, 0
-		push	ax
-		call	hiscore_stage_put
+		push	ax	; stage
+		call	@stage_put$qiii
 		pop	di
 		pop	si
 		pop	bp
