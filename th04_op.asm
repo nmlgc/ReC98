@@ -39,7 +39,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT_RECT:proc
-	extern SUPER_PUT:proc
 _TEXT	ends
 
 ; ===========================================================================
@@ -55,58 +54,10 @@ OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@hiscore_scoredat_load_both$qv procdesc near
-	@PLACE_PUT$QI procdesc pascal near \
-		place:word
+	@rank_render$qv procdesc near
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _score_render
-_score_render proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		graph_accesspage 1
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		graph_accesspage 0
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		call	@place_put$qi pascal, 0
-		mov	si, 1
-		jmp	short loc_CA5B
-; ---------------------------------------------------------------------------
-
-loc_CA56:
-		call	@place_put$qi pascal, si
-		inc	si
-
-loc_CA5B:
-		cmp	si, 9
-		jl	short loc_CA56
-		call	@place_put$qi pascal, 9
-		push	(496 shl 16) or 376
-		mov	al, _rank
-		mov	ah, 0
-		add	ax, ax
-		add	ax, 10
-		push	ax
-		call	super_put
-		push	(560 shl 16) or 376
-		mov	al, _rank
-		mov	ah, 0
-		add	ax, ax
-		add	ax, 11
-		push	ax
-		call	super_put
-		pop	si
-		pop	bp
-		retn
-_score_render endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -129,7 +80,7 @@ public @regist_view_menu$qv
 		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
-		call	_score_render
+		call	@rank_render$qv
 		push	1
 		call	palette_black_in
 
@@ -152,7 +103,7 @@ loc_CAE4:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	@hiscore_scoredat_load_both$qv
-		call	_score_render
+		call	@rank_render$qv
 		push	1
 		call	palette_black_in
 

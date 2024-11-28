@@ -5,6 +5,12 @@
 #include "th04/formats/scoredat/recreate.cpp"
 #include "th04/hiscore/scoredat.cpp"
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "th02/formats/bfnt.h"
+#if (GAME == 5)
+	#include "th05/formats/pi.hpp"
+#else
+	#include "th03/formats/pi.hpp"
+#endif
 
 enum hiscore_patnum_t {
 	// scnum.bft
@@ -293,3 +299,36 @@ void pascal near place_put(int place)
 	}
 }
 #endif
+
+void near rank_render(void)
+{
+	// ZUN bloat: The palette is not page-dependent...
+	graph_accesspage(1);	pi_palette_apply(0);	pi_put_8(0, 0, 0);
+	graph_accesspage(0);	pi_palette_apply(0);	pi_put_8(0, 0, 0);
+
+	#if (GAME == 5)
+		for(playchar2 pc = PLAYCHAR_REIMU; pc < PLAYCHAR_COUNT; pc++) {
+			hiscore_scoredat_load_for(pc);
+			for(int place = 0; place < SCOREDAT_PLACES; place++) {
+				place_put(pc, place);
+			}
+		}
+	#else
+		// ZUN bloat: No need to move calls out of the loop.
+		place_put(0);
+		for(int place = 1; place < (SCOREDAT_PLACES - 1); place++) {
+			place_put(place);
+		}
+		place_put(SCOREDAT_PLACES - 1);
+	#endif
+
+	static_assert(RANK_W == (2 * BFNT_ASSUMED_MAX_W));
+	#define RANK_HALF_W (RANK_W / 2)
+	super_put(
+		(RANK_LEFT + (0 * RANK_HALF_W)), RANK_TOP, (PAT_RANK_1 + (rank * 2))
+	);
+	super_put(
+		(RANK_LEFT + (1 * RANK_HALF_W)), RANK_TOP, (PAT_RANK_2 + (rank * 2))
+	);
+	#undef RANK_HALF_W
+}
