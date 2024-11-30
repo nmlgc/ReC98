@@ -22,7 +22,7 @@ include ReC98.inc
 include th04/th04.inc
 include th04/sprites/op_cdg.inc
 
-op_01 group OP_SETUP_TEXT, SCORE_TEXT, op_01_TEXT
+op_01 group OP_SETUP_TEXT, op_01_TEXT
 
 ; ===========================================================================
 
@@ -52,88 +52,7 @@ OP_SETUP_TEXT segment byte public 'CODE' use16
 include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
-SCORE_TEXT segment byte public 'CODE' use16
-	@hiscore_scoredat_load_both$qv procdesc near
-SCORE_TEXT ends
-
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @cleardata_and_regist_view_sprite$qv
-@cleardata_and_regist_view_sprite$qv	proc near
-		push	bp
-		mov	bp, sp
-		mov	_rank, RANK_EASY
-		jmp	loc_CC6F
-; ---------------------------------------------------------------------------
-
-loc_CBEE:
-		call	@hiscore_scoredat_load_both$qv
-		or	al, al
-		jnz	loc_CC78
-		mov	al, _rank
-		mov	ah, 0
-		mov	dl, _hi_reimu.score.cleared
-		mov	bx, ax
-		mov	_cleared_with_reimu[bx], dl
-		mov	al, _rank
-		mov	ah, 0
-		mov	dl, _hi_marisa.score.cleared
-		mov	bx, ax
-		mov	_cleared_with_marisa[bx], dl
-		mov	al, _rank
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_cleared_with_reimu[bx], SCOREDAT_CLEARED_BOTH
-		jbe	short loc_CC2F
-		mov	al, _rank
-		mov	ah, 0
-		mov	bx, ax
-		mov	_cleared_with_reimu[bx], 0
-
-loc_CC2F:
-		mov	al, _rank
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_cleared_with_marisa[bx], SCOREDAT_CLEARED_BOTH
-		jbe	short loc_CC49
-		mov	al, _rank
-		mov	ah, 0
-		mov	bx, ax
-		mov	_cleared_with_marisa[bx], 0
-
-loc_CC49:
-		cmp	_rank, RANK_EASY
-		jz	short loc_CC6B
-		mov	al, _rank
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _cleared_with_reimu[bx]
-		mov	dl, _rank
-		mov	dh, 0
-		mov	bx, dx
-		or	al, _cleared_with_marisa[bx]
-		or	_extra_unlocked, al
-
-loc_CC6B:
-		inc	_rank
-
-loc_CC6F:
-		cmp	_rank, RANK_COUNT
-		jb	loc_CBEE
-
-loc_CC78:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	_rank, al
-		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
-		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
-		pop	bp
-		retn
-@cleardata_and_regist_view_sprite$qv	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -395,9 +314,6 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-aScnum_bft	db 'scnum.bft',0
-aHi_m_bft	db 'hi_m.bft',0
-		db    0
 aSft1_cd2	db 'sft1.cd2',0
 aSft2_cd2	db 'sft2.cd2',0
 aCar_cd2	db 'car.cd2',0
@@ -429,14 +345,5 @@ aOp1_pi_1	db 'op1.pi',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-include th04/formats/scoredat_op[bss].asm
-public _rank
-_rank	db ?
-public _cleared_with, _extra_unlocked
-_cleared_with label byte
-_cleared_with_reimu 	db RANK_COUNT dup (?)
-_cleared_with_marisa	db RANK_COUNT dup (?)
-_extra_unlocked	db ?
-		db 49 dup(?)
 
 		end

@@ -81,6 +81,21 @@ static const screen_x_t RANK_LEFT = (RES_X - GLYPH_FULL_W - RANK_W);
 static const screen_y_t RANK_TOP = (RES_Y - (GLYPH_H / 2) - GLYPH_H);
 /// -----------
 
+/// State
+/// -----
+
+scoredat_section_t hi;
+scoredat_section_t hi2;
+static uint8_t scoredat_unused; // ZUN bloat
+
+unsigned char rank;
+unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
+bool extra_unlocked;
+#if (GAME == 4)
+	int8_t unused[48]; // ZUN bloat
+#endif
+/// -----
+
 // ZUN bloat: The main difference between the TH04 and TH05 implementations is
 // that TH04 explicitly spells out its two characters while TH05 sanely loops
 // over its four. The `debloated` branch would also migrate TH04 to loops.
@@ -428,3 +443,71 @@ void near regist_view_menu(void)
 	snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 }
+
+#if (GAME == 5)
+void near cleardata_and_regist_view_sprites_load(void)
+{
+	extra_unlocked = false;
+	for(int playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
+		rank = RANK_EASY;
+		while(rank < RANK_COUNT) {
+			if(hiscore_scoredat_load_for(playchar)) {
+				break;
+			}
+			cleared_with[playchar][rank] = hi.score.cleared;
+			if(cleared_with[playchar][rank] != SCOREDAT_CLEARED) {
+				cleared_with[playchar][rank] = false;
+			}
+			if(rank < RANK_EXTRA) {
+				extra_unlocked |= cleared_with[playchar][rank];
+			}
+			rank++;
+		}
+	}
+
+	rank = resident->rank;
+	super_entry_bfnt("scnum.bft");
+	super_entry_bfnt("hi_m.bft");
+
+	// ZUN bloat: Integrate into the upper loop
+	for(playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
+		extra_playable_with[playchar] = (
+			cleared_with[playchar][RANK_EASY] |
+			cleared_with[playchar][RANK_NORMAL] |
+			cleared_with[playchar][RANK_HARD] |
+			cleared_with[playchar][RANK_LUNATIC]
+		);
+	}
+}
+#else
+// ZUN bloat: Same as the TH05 version, just with Reimu and Marisa spelled out
+// instead of looped over.
+void near cleardata_and_regist_view_sprites_load(void)
+{
+	rank = RANK_EASY;
+	while(rank < RANK_COUNT) {
+		if(hiscore_scoredat_load_both()) {
+			break;
+		}
+		cleared_with[PLAYCHAR_REIMU][rank] = hi.score.cleared;
+		cleared_with[PLAYCHAR_MARISA][rank] = hi2.score.cleared;
+		if(cleared_with[PLAYCHAR_REIMU][rank] > SCOREDAT_CLEARED_BOTH) {
+			cleared_with[PLAYCHAR_REIMU][rank] = false;
+		}
+		if(cleared_with[PLAYCHAR_MARISA][rank] > SCOREDAT_CLEARED_BOTH) {
+			cleared_with[PLAYCHAR_MARISA][rank] = false;
+		}
+		if(rank != RANK_EASY) {
+			extra_unlocked |= (
+				cleared_with[PLAYCHAR_REIMU][rank] |
+				cleared_with[PLAYCHAR_MARISA][rank]
+			);
+		}
+		rank++;
+	}
+
+	rank = resident->rank;
+	super_entry_bfnt("scnum.bft");
+	super_entry_bfnt("hi_m.bft");
+}
+#endif

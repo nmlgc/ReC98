@@ -905,7 +905,6 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th05/score_e.cpp",
 	"th05/hi_view.cpp",
 	"th05_op.asm",
-	"th05/hi_view_.cpp",
 	"th05/m_char.cpp",
 })
 th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
