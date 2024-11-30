@@ -5,11 +5,20 @@
 #include "th04/formats/scoredat/recreate.cpp"
 #include "th04/hiscore/scoredat.cpp"
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "th02/hardware/frmdelay.h"
 #include "th02/formats/bfnt.h"
+#include "th04/snd/snd.h"
+#include "th04/shiftjis/fnshared.hpp"
 #if (GAME == 5)
+	#include "th05/resident.hpp"
+	#include "th05/hardware/input.h"
 	#include "th05/formats/pi.hpp"
+	#include "th05/op/op.hpp"
 #else
+	#include "th04/resident.hpp"
+	#include "th04/hardware/input.h"
 	#include "th03/formats/pi.hpp"
+	#include "th04/op/op.hpp"
 #endif
 
 enum hiscore_patnum_t {
@@ -331,4 +340,91 @@ void near rank_render(void)
 		(RANK_LEFT + (1 * RANK_HALF_W)), RANK_TOP, (PAT_RANK_2 + (rank * 2))
 	);
 	#undef RANK_HALF_W
+}
+
+void near regist_view_menu(void)
+{
+	snd_kaja_func(KAJA_SONG_STOP, 0);
+	snd_load(BGM_HISCORE_FN, SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+
+	// ZUN bloat: This both
+	// • doesn't work, because fade-ins require the volume to be set to a lower
+	//   value than what [KAJA_SONG_PLAY] resets it to, and
+	// • sounds terrible, because -128 is the fastest but still not quite
+	//   instant fade speed. This leaves the initial note on each channel muted
+	//   while the rest of the track fades in very abruptly, clashing with the
+	//   bass and chord notes of the name registration themes in both games.
+	snd_kaja_func(KAJA_SONG_FADE, -128);
+
+	palette_black_out(1);
+	rank = resident->rank;
+
+	#if (GAME == 4)
+		hiscore_scoredat_load_both();
+	#endif
+	pi_load(0, HISCORE_BG_FN);
+	rank_render();
+	palette_black_in(1);
+
+	while(1) {
+		// ZUN bug: The TH04 version of this function doesn't address the PC-98
+		// keyboard quirk documented in the `Research/HOLDKEY` example, which
+		// causes input to occasionally be processed a frame or two later than
+		// expected. Not that big of a deal given that every key press launches
+		// a 16-frame palette fade animation, but a bug nonetheless.
+		input_reset_sense_interface();
+		frame_delay(1);
+
+		// ZUN bloat: Testing twice for [INPUT_OK].
+		if(
+			(key_det & INPUT_OK) || (key_det & INPUT_SHOT) ||
+			(key_det & INPUT_CANCEL) || (key_det & INPUT_OK)
+		) {
+			break;
+		}
+		if((key_det & INPUT_LEFT) && (rank != RANK_EASY)) {
+			rank--;
+			palette_black();
+			#if (GAME == 4)
+				hiscore_scoredat_load_both();
+			#endif
+			rank_render();
+			palette_black_in(1);
+		}
+		if((key_det & INPUT_RIGHT) && (rank < RANK_EXTRA)) {
+			rank++;
+			palette_black();
+			#if (GAME == 4)
+				hiscore_scoredat_load_both();
+			#endif
+			rank_render();
+			palette_black_in(1);
+		}
+	}
+
+	snd_kaja_func(KAJA_SONG_FADE, 1);
+	palette_black_out(1);
+	pi_free(0);
+	graph_accesspage(1);
+	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+	graph_copy_page(0);
+	palette_black_in(1);
+
+	do {
+		// ZUN bug: With that one PC-98 keyboard quirk still not addressed in
+		// TH04, the loop will break relatively quickly even while the player
+		// is still holding a key. This cuts short any attempt to listen to the
+		// fade-out by holding a key. In TH05, this works as intended.
+		// (At least it proves that this loop wasn't actually necessary to
+		// ensure that this menu isn't re-entered, confirming this entire loop
+		// to be an easter egg that allows the player to actually listen to the
+		// BGM fade-out.)
+		input_reset_sense_interface();
+		frame_delay(1);
+	} while(key_det != INPUT_NONE);
+
+	snd_kaja_func(KAJA_SONG_STOP, 0);
+	snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
 }

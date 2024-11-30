@@ -72,11 +72,9 @@ void near scoredat_recreate(void)
 
 	#undef c
 
-	#undef SCOREDAT_FN
 	#if (BINARY != 'O')
+		#undef SCOREDAT_FN
 		extern const char SCOREDAT_FN[];
-	#else
-		#define SCOREDAT_FN "GENSOU.SCR\0name"
 	#endif
 	file_create(SCOREDAT_FN);
 	for(i = 0; i < (RANK_COUNT * PLAYCHAR_COUNT); i++) {

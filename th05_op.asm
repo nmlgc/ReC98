@@ -22,12 +22,11 @@ include ReC98.inc
 include th05/th05.inc
 include th04/sprites/op_cdg.inc
 
-op_01 group OP_SETUP_TEXT, SCORE_TEXT, op_01_TEXT
+op_01 group OP_SETUP_TEXT
 
 ; ===========================================================================
 
 _TEXT	segment	word public 'CODE' use16
-	extern PALETTE_BLACK_IN:proc
 	extern PALETTE_BLACK_OUT:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRAPH_CLEAR:proc
@@ -50,91 +49,6 @@ OP_SETUP_TEXT segment byte public 'CODE' use16
 include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
-SCORE_TEXT segment byte public 'CODE' use16
-	@rank_render$qv procdesc near
-SCORE_TEXT ends
-
-op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @regist_view_menu$qv
-@regist_view_menu$qv proc near
-		push	bp
-		mov	bp, sp
-		kajacall	KAJA_SONG_STOP
-		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		kajacall	KAJA_SONG_FADE, -128
-		push	1
-		call	palette_black_out
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	_rank, al
-		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
-
-loc_CC9F:
-		call	@rank_render$qv
-		call	palette_black_in pascal, 1
-
-loc_CCA9:
-		call	@input_reset_sense_held$qv
-		call	@frame_delay$qi pascal, 1
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_CD17
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_CD17
-		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_CD17
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_CD17
-		test	_key_det.lo, low INPUT_LEFT
-		jz	short loc_CCF8
-		cmp	_rank, RANK_EASY
-		jz	short loc_CCF8
-		dec	_rank
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	@rank_render$qv
-		call	palette_black_in pascal, 1
-
-loc_CCF8:
-		test	_key_det.lo, low INPUT_RIGHT
-		jz	short loc_CCA9
-		cmp	_rank, RANK_EXTRA
-		jnb	short loc_CCA9
-		inc	_rank
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		jmp	short loc_CC9F
-; ---------------------------------------------------------------------------
-
-loc_CD17:
-		kajacall	KAJA_SONG_FADE, 1
-		call	palette_black_out pascal, 1
-		call	@pi_free$qi pascal, 0
-		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_1
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		call	@pi_free$qi pascal, 0
-		call	graph_copy_page pascal, 0
-		call	palette_black_in pascal, 1
-
-loc_CD64:
-		call	@input_reset_sense_held$qv
-		call	@frame_delay$qi pascal, 1
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_CD64
-		kajacall	KAJA_SONG_STOP
-		call	snd_load pascal, ds, offset aOp_1, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		pop	bp
-		retn
-@regist_view_menu$qv endp
-op_01_TEXT ends
-
 ; ===========================================================================
 
 SHARED segment byte public 'CODE' use16
@@ -153,7 +67,6 @@ include th02/snd/snd.inc
 	extern @PI_FREE$QI:proc
 	extern @input_reset_sense_held$qv:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern @FRAME_DELAY$QI:proc
 SHARED	ends
 
 	.data
@@ -166,15 +79,8 @@ SHARED	ends
 	extern _CosTable8:word:256
 
 include th04/zunsoft[data].asm
-include th05/formats/scoredat_load_for[data].asm
-aName	= ($ - 5)
-aHi01_pi	db 'hi01.pi',0
-aOp1_pi_1	db 'op1.pi',0
-aOp_1		db 'op',0
 
 	.data?
-
-	extern _resident:dword
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:byte:48
@@ -186,6 +92,5 @@ aOp_1		db 'op',0
 	extern _key_det:word
 
 include th04/zunsoft[bss].asm
-	extern _rank:byte
 
 		end

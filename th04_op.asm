@@ -54,97 +54,9 @@ OP_SETUP_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@hiscore_scoredat_load_both$qv procdesc near
-	@rank_render$qv procdesc near
 SCORE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @regist_view_menu$qv
-@regist_view_menu$qv proc near
-		push	bp
-		mov	bp, sp
-		kajacall	KAJA_SONG_STOP
-		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		kajacall	KAJA_SONG_FADE, -128
-		push	1
-		call	palette_black_out
-		les	bx, _resident
-		assume es:nothing
-		mov	al, es:[bx+resident_t.rank]
-		mov	_rank, al
-		call	@hiscore_scoredat_load_both$qv
-		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
-
-loc_CADA:
-		call	@rank_render$qv
-		push	1
-		call	palette_black_in
-
-loc_CAE4:
-		call	@input_reset_sense$qv
-		call	@frame_delay$qi pascal, 1
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_CB58
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_CB58
-		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_CB58
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_CB58
-		test	_key_det.lo, low INPUT_LEFT
-		jz	short loc_CB36
-		cmp	_rank, RANK_EASY
-		jz	short loc_CB36
-		dec	_rank
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	@hiscore_scoredat_load_both$qv
-		call	@rank_render$qv
-		push	1
-		call	palette_black_in
-
-loc_CB36:
-		test	_key_det.lo, low INPUT_RIGHT
-		jz	short loc_CAE4
-		cmp	_rank, RANK_EXTRA
-		jnb	short loc_CAE4
-		inc	_rank
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	@hiscore_scoredat_load_both$qv
-		jmp	short loc_CADA
-; ---------------------------------------------------------------------------
-
-loc_CB58:
-		kajacall	KAJA_SONG_FADE, 1
-		push	1
-		call	palette_black_out
-		freePISlotLarge	0
-		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_0
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
-		call	graph_copy_page pascal, 0
-		push	1
-		call	palette_black_in
-
-loc_CBB3:
-		call	@input_reset_sense$qv
-		call	@frame_delay$qi pascal, 1
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_CBB3
-		kajacall	KAJA_SONG_STOP
-		call	snd_load pascal, ds, offset aOp_0, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		pop	bp
-		retn
-@regist_view_menu$qv endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -483,11 +395,6 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-aGensou_scr	= ($ - 16)
-aName	= ($ - 5)
-aHi01_pi	db 'hi01.pi',0
-aOp1_pi_0	db 'op1.pi',0
-aOp_0		db 'op',0
 aScnum_bft	db 'scnum.bft',0
 aHi_m_bft	db 'hi_m.bft',0
 		db    0

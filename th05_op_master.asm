@@ -129,9 +129,6 @@ OP_MUSIC_TEXT ends
 SCORE_TEXT segment byte public 'CODE' use16
 SCORE_TEXT ends
 
-op_01_TEXT segment byte public 'CODE' use16
-op_01_TEXT ends
-
 HI_VIEW__TEXT segment byte public 'CODE' use16
 HI_VIEW__TEXT ends
 
