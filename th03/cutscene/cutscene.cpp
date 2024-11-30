@@ -719,7 +719,12 @@ script_ret_t pascal near script_op(unsigned char c)
 		} else {
 			script_p++;
 			script_param_read_number_first(p1, 1);
-			snd_kaja_func(KAJA_SONG_FADE, p1);
+
+			// ZUN landmine: Should restrict [p1] to 8 bits – otherwise, the
+			// parameter would overflow into the function and not make this a
+			// fade. (The regular snd_kaja_func() behaves this way.)
+			snd_kaja_interrupt((KAJA_SONG_FADE << 8) + p1);
+
 			#if (GAME <= 4) // ZUN bloat: `break` or `return`, pick one!
 				return CONTINUE;
 			#endif

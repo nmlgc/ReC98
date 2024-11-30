@@ -73,7 +73,7 @@ void snd_delay_until_volume(uint8_t volume);
 #endif
 
 #define snd_kaja_func(func, param) ( \
-	snd_kaja_interrupt(((func) << 8) + (param)) \
+	snd_kaja_interrupt(((func) << 8) | static_cast<uint8_t>(param)) \
 )
 
 typedef enum {
