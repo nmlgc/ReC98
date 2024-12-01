@@ -465,6 +465,7 @@ void near cleardata_and_regist_view_sprites_load(void)
 		}
 	}
 
+	// See the call site for why these load calls absolutely don't belong here.
 	rank = resident->rank;
 	super_entry_bfnt("scnum.bft");
 	super_entry_bfnt("hi_m.bft");
@@ -506,6 +507,7 @@ void near cleardata_and_regist_view_sprites_load(void)
 		rank++;
 	}
 
+	// See the call site for why these load calls absolutely don't belong here.
 	rank = resident->rank;
 	super_entry_bfnt("scnum.bft");
 	super_entry_bfnt("hi_m.bft");

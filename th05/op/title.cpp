@@ -85,6 +85,9 @@ void near op_animate(void)
 			pi_put_8(0, 278, (frame / ROLL_FRAMES_PER_CEL));
 		}
 		page.wait_and_flip();
+
+		// ZUN bug: Off by one; the last iteration will leave [PaletteTone] at
+		// 99, not 100, which does in fact significantly darken the image.
 		palette_settone((100 - ROLL_DURATION) + frame);
 	}}
 

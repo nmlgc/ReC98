@@ -599,6 +599,25 @@ void main(void)
 
 	#if (GAME == 5)
 		main_cdg_load();
+
+		// ZUN bug: cleardata_and_regist_view_sprites_load() ends with a call
+		// to super_entry_bfnt(), which overwrites the master.lib [Palettes]
+		// with the palette from hi_m.bft's palette. In TH05, this file has a
+		// different palette than the one we loaded from OP1.PI earlier during
+		// op_animate(), thus resulting in [Palettes] going out of sync with
+		// the hardware palette.
+		// This is merely a landmine in this menu, but then turns into a bug
+		// in regist_view_menu(). As this function calls palette_black_out(),
+		// which operates on [Palettes], it thus fades out a much brighter
+		// palette than the one currently shown if the High Score screen is the
+		// first subscreen entered within a OP.EXE process.
+		// The two most obvious ways of fixing this bug:
+		// 1) Separate clear data loading from sprite loading (as any sane
+		//    coder would do), and load the sprites inside regist_view_menu()
+		// 2) Call this function before op_animate() and either bump or remove
+		//    the memory limit of OP.EXE (MEM_ASSIGN_PARAS_OP) accordingly to
+		//    reserve enough room in conventional RAM for both these sprites
+		//    and all title animation cels
 		cleardata_and_regist_view_sprites_load();
 	#else
 		cleardata_and_regist_view_sprites_load();
