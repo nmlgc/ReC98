@@ -104,11 +104,6 @@ else
 endif
 bullet_template_t ends
 
-PELLET_W = 8
-PELLET_H = 8
-BULLET16_W = 16
-BULLET16_H = 16
-
 if GAME eq 5
 	PELLET_COUNT = 180
 	BULLET16_COUNT = 220

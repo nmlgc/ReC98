@@ -1455,6 +1455,11 @@ public @TILES_RENDER$QV
 	extern @TILES_ACTIVATE_AND_RENDER_ALL_FO$QUC:proc
 TILE_TEXT	ends
 
+PELLET_W = 8
+PELLET_H = 8
+BULLET16_W = 16
+BULLET16_H = 16
+
 mai_TEXT	segment	word public 'CODE' use16
 include th04/main/tile/redraw.asm
 include th04/main/scroll_y_1.asm

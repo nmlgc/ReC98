@@ -1,3 +1,5 @@
+#include "th02/sprites/bullet16.h"
+
 void pascal near bullets_add_regular_raw(void);
 void pascal near bullets_add_special_raw(void);
 

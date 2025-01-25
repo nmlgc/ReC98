@@ -1706,6 +1706,12 @@ locret_C999:
 
 ; ---------------------------------------------------------------------------
 		db    0
+
+PELLET_W = 8
+PELLET_H = 8
+BULLET16_W = 16
+BULLET16_H = 16
+
 include th04/main/bullet/pellet_r.asm
 include th04/main/bullets_gather_inv.asm
 include th04/main/tile/inv_all.asm
