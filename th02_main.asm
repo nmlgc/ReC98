@@ -6961,8 +6961,8 @@ loc_10388:
 		mov	al, 0
 
 loc_1038A:
-		mov	byte_2174A, al
-		mov	byte_21752, 0
+		mov	_rank_base_speed, al
+		mov	_rank_base_stack, 0
 		mov	al, _rank
 		cbw
 		cmp	ax, RANK_HARD
@@ -6973,11 +6973,11 @@ loc_1038A:
 		jnz	short loc_103A9
 
 loc_103A4:
-		mov	byte_21752, 1
+		mov	_rank_base_stack, 1
 
 loc_103A9:
-		mov	al, byte_21752
-		mov	byte_21754, al
+		mov	al, _rank_base_stack
+		mov	_bullet_stack, al
 		pop	di
 		pop	si
 		pop	bp
@@ -7453,7 +7453,7 @@ arg_0		= dword	ptr  4
 		idiv	bx
 		mov	bx, word ptr [bp+arg_0]
 		add	es:[bx], ax
-		mov	al, byte_2174A
+		mov	al, _rank_base_speed
 		cbw
 		add	es:[bx], ax
 		cmp	word ptr es:[bx], 10h
@@ -7602,7 +7602,7 @@ loc_1082F:
 		jl	short loc_107CA
 
 loc_10835:
-		mov	al, byte_21754
+		mov	al, _bullet_stack
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jle	short loc_1085F
@@ -7758,7 +7758,7 @@ loc_10963:
 		jl	loc_108A8
 
 loc_1096B:
-		mov	al, byte_21754
+		mov	al, _bullet_stack
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jle	short loc_10995
@@ -7802,14 +7802,14 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
-		mov	bx, word_21750
+		mov	bx, _bullet_cur_top
 		mov	ax, [bx]
 		sar	ax, 4
 		mov	di, ax
 		mov	ax, _player_topleft.y
 		add	ax, 8
 		mov	[bp+@@y2], ax
-		mov	bx, word_2174E
+		mov	bx, _bullet_cur_left
 		mov	ax, [bx]
 		sar	ax, 4
 		mov	[bp+@@x1], ax
@@ -8095,18 +8095,18 @@ loc_10BDB:
 		shl	ax, 2
 		add	ax, si
 		add	ax, bullet_t.BULLET_screen_topleft.x
-		mov	word_2174E, ax
+		mov	_bullet_cur_left, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
 		add	ax, bullet_t.BULLET_screen_topleft.y
-		mov	word_21750, ax
+		mov	_bullet_cur_top, ax
 		mov	ax, [si+bullet_t.BULLET_velocity.x]
-		mov	bx, word_2174E
+		mov	bx, _bullet_cur_left
 		add	[bx], ax
 		mov	ax, [si+bullet_t.BULLET_velocity.y]
-		mov	bx, word_21750
+		mov	bx, _bullet_cur_top
 		add	[bx], ax
 		mov	al, [si+bullet_t.BULLET_size_type]
 		cbw
@@ -8116,18 +8116,18 @@ loc_10BDB:
 		call	sub_1099B
 
 loc_10C37:
-		mov	bx, word_2174E
+		mov	bx, _bullet_cur_left
 		mov	ax, [bx]
 		sar	ax, 4
-		mov	_bullet_left, ax
-		mov	bx, word_21750
+		mov	_bullet_screen_left, ax
+		mov	bx, _bullet_cur_top
 		mov	ax, [bx]
 		sar	ax, 4
-		mov	word_21742, ax
-		mov	di, word_21742
-		cmp	_bullet_left, 20
+		mov	_bullet_screen_top, ax
+		mov	di, _bullet_screen_top
+		cmp	_bullet_screen_left, (PLAYFIELD_LEFT - 12)
 		jle	short loc_10C6C
-		cmp	_bullet_left, PLAYFIELD_RIGHT
+		cmp	_bullet_screen_left, PLAYFIELD_RIGHT
 		jge	short loc_10C6C
 		cmp	di, PLAYFIELD_BOTTOM
 		jge	short loc_10C6C
@@ -8146,11 +8146,11 @@ loc_10C72:
 		jnz	short loc_10CA9
 		mov	ax, _player_topleft.x
 		add	ax, 7
-		cmp	ax, _bullet_left
+		cmp	ax, _bullet_screen_left
 		jg	short loc_10CDC
 		mov	ax, _player_topleft.x
 		add	ax, 17
-		cmp	ax, _bullet_left
+		cmp	ax, _bullet_screen_left
 		jle	short loc_10CDC
 		mov	ax, _player_topleft.y
 		add	ax, 12
@@ -8166,11 +8166,11 @@ loc_10C72:
 loc_10CA9:
 		mov	ax, _player_topleft.x
 		add	ax, -3
-		cmp	ax, _bullet_left
+		cmp	ax, _bullet_screen_left
 		jg	short loc_10CDC
 		mov	ax, _player_topleft.x
 		add	ax, 19
-		cmp	ax, _bullet_left
+		cmp	ax, _bullet_screen_left
 		jle	short loc_10CDC
 		mov	ax, _player_topleft.y
 		add	ax, 4
@@ -8203,13 +8203,13 @@ loc_10CEA:
 		mov	[bp+var_4], 0
 
 loc_10D09:
-		call	pellet_render pascal, _bullet_left, di
+		call	pellet_render pascal, _bullet_screen_left, di
 		jmp	short loc_10D2D
 ; ---------------------------------------------------------------------------
 
 loc_10D13:
 		call	grcg_off
-		push	_bullet_left
+		push	_bullet_screen_left
 		push	di
 		mov	al, [si+bullet_t.BULLET_patnum]
 		mov	ah, 0
@@ -8256,7 +8256,7 @@ loc_10D4C:
 		shl	dx, 2
 		add	ax, dx
 		add	ax, offset _bullets.BULLET_screen_topleft.x
-		mov	word_2174E, ax
+		mov	_bullet_cur_left, ax
 		mov	ax, si
 		imul	ax, size bullet_t
 		mov	dl, _page_back
@@ -8264,18 +8264,18 @@ loc_10D4C:
 		shl	dx, 2
 		add	ax, dx
 		add	ax, offset _bullets.BULLET_screen_topleft.y
-		mov	word_21750, ax
+		mov	_bullet_cur_top, ax
 		mov	bx, si
 		imul	bx, size bullet_t
 		mov	al, _bullets[bx].BULLET_size_type
 		cbw
 		shl	ax, 3
 		mov	di, ax
-		mov	bx, word_2174E
+		mov	bx, _bullet_cur_left
 		mov	ax, [bx]
 		sar	ax, 4
 		push	ax	; left
-		mov	bx, word_21750
+		mov	bx, _bullet_cur_top
 		mov	ax, [bx]
 		sar	ax, 4
 		push	ax	; top
@@ -8302,7 +8302,7 @@ loc_10DCB:
 		shl	ax, 2
 		add	bx, ax
 		mov	ax, _bullets[bx].BULLET_screen_topleft.x
-		mov	bx, word_2174E
+		mov	bx, _bullet_cur_left
 		mov	[bx], ax
 		mov	bx, si
 		imul	bx, size bullet_t
@@ -8311,7 +8311,7 @@ loc_10DCB:
 		shl	ax, 2
 		add	bx, ax
 		mov	ax, _bullets[bx].BULLET_screen_topleft.y
-		mov	bx, word_21750
+		mov	bx, _bullet_cur_top
 		mov	[bx], ax
 
 loc_10DFD:
@@ -8373,12 +8373,12 @@ arg_0		= byte ptr  4
 
 		push	bp
 		mov	bp, sp
-		mov	al, byte_21752
+		mov	al, _rank_base_stack
 		mov	ah, 0
 		mov	dl, [bp+arg_0]
 		mov	dh, 0
 		imul	dx
-		mov	byte_21754, al
+		mov	_bullet_stack, al
 		pop	bp
 		retn	2
 sub_10E39	endp
@@ -29406,9 +29406,11 @@ spark_t ends
 public _sparks
 _sparks	spark_t SPARK_COUNT dup(<?>)
 
-public _bullet_left, _bullet_special
-_bullet_left	dw ?
-word_21742	dw ?
+public _bullet_screen_left, _bullet_screen_top, _bullet_special
+public _rank_base_speed, _spark_sprite_interval, _spark_age_max
+public _bullet_cur_left, _bullet_cur_top, _rank_base_stack, _bullet_stack
+_bullet_screen_left	dw ?
+_bullet_screen_top 	dw ?
 
 _bullet_special label word
 bullet_special_chase_speed label word
@@ -29424,16 +29426,15 @@ bullet_special_turns_max label word
 bullet_special_drift_duration label word
 	dw ?
 
-byte_2174A	db ?
-public _spark_sprite_interval, _spark_age_max
+_rank_base_speed	db ?
 _spark_sprite_interval	db ?
 _spark_age_max	db ?
 	evendata
-word_2174E	dw ?
-word_21750	dw ?
-byte_21752	db ?
+_bullet_cur_left	dw ?
+_bullet_cur_top 	dw ?
+_rank_base_stack	db ?
 byte_21753	db ?
-byte_21754	db ?
+_bullet_stack	db ?
 	evendata
 
 ITEM_COUNT = 20

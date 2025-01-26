@@ -38,5 +38,20 @@ struct bullet_t {
 // State
 // -----
 
+#define cur_left   	bullet_cur_left
+#define cur_top    	bullet_cur_top
+#define screen_left	bullet_screen_left
+#define screen_top 	bullet_screen_top
+#define stack      	bullet_stack
+
 extern bullet_t bullets[BULLET_COUNT];
+
+extern screen_x_t screen_left;
+extern screen_y_t screen_top;
+extern Subpixel8 rank_base_speed;
+extern Subpixel near* cur_left;
+extern Subpixel near* cur_top;
+
+extern uint8_t rank_base_stack;
+extern uint8_t stack;
 // -----
