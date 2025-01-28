@@ -66,6 +66,7 @@ void vector2_to_player_from(
 
 // Sets the velocity for pellet #[i] in the given [group]. Returns true if
 // this was the last pellet for this group.
+// Structurally very similar to the TH02 version.
 bool16 group_velocity_set(
 	Subpixel &ret_x,
 	Subpixel &ret_y,

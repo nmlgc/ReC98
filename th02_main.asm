@@ -6853,456 +6853,8 @@ BST_PELLET = 1
 BST_BULLET16 = 2
 
 	extern @bullets_and_sparks_init$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_103B3	proc near
-
-@@x1		= word ptr -0Ah
-@@x2		= word ptr -8
-@@y2		= word ptr -6
-@@y1		= word ptr -4
-var_2		= word ptr -2
-@@length		= word ptr  4
-@@bullet	= word ptr  6
-arg_4		= word ptr  8
-arg_6		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Ah
-		push	si
-		push	di
-		mov	si, [bp+@@bullet]
-		mov	[bp+var_2], 0
-		xor	di, di
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, [bx+si+bullet_t.BULLET_screen_topleft.y]
-		mov	[bp+@@y1], ax
-		mov	ax, _player_topleft.y
-		add	ax, 20
-		mov	[bp+@@y2], ax
-		mov	ax, _player_topleft.x
-		add	ax, 12
-		mov	[bp+@@x2], ax
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, [bx+si+bullet_t.BULLET_screen_topleft.x]
-		mov	[bp+@@x1], ax
-		mov	bx, [bp+arg_4]
-		dec	bx
-		cmp	bx, 26h	; '&'
-		ja	loc_1065D
-		add	bx, bx
-		jmp	cs:off_106C8[bx]
-
-loc_10409:
-		mov	di, 1
-		jmp	loc_1065D
-; ---------------------------------------------------------------------------
-
-loc_1040F:
-		add	[bp+var_2], 5
-
-loc_10413:
-		add	[bp+var_2], 3
-
-loc_10417:
-		add	[bp+var_2], 3
-
-loc_1041B:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_1042F
-		mov	ax, [bp+var_2]
-		add	ax, 3
-		mov	[bp+var_2], ax
-		jmp	short loc_10444
-; ---------------------------------------------------------------------------
-
-loc_1042F:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_10444
-		mov	ax, 0FFFDh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	di, 1
-
-loc_10444:
-		cmp	[bp+arg_4], 3
-		jg	loc_1065D
-		jmp	loc_10684
-; ---------------------------------------------------------------------------
-
-loc_1044F:
-		add	[bp+var_2], 8
-
-loc_10453:
-		add	[bp+var_2], 8
-
-loc_10457:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_10467
-		mov	[bp+var_2], 0
-		jmp	short loc_10490
-; ---------------------------------------------------------------------------
-
-loc_10467:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_1047B
-		mov	ax, [bp+var_2]
-		add	ax, 8
-		mov	[bp+var_2], ax
-		jmp	short loc_10490
-; ---------------------------------------------------------------------------
-
-loc_1047B:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 2
-		jnz	short loc_10490
-		mov	ax, 0FFF8h
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	di, 1
-
-loc_10490:
-		cmp	[bp+arg_4], 9
-		jg	loc_1065D
-		jmp	loc_10684
-; ---------------------------------------------------------------------------
-
-loc_1049B:
-		add	[bp+var_2], 6
-
-loc_1049F:
-		add	[bp+var_2], 6
-
-loc_104A3:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_104B7
-		mov	ax, [bp+var_2]
-		add	ax, 3
-		mov	[bp+var_2], ax
-		jmp	short loc_10500
-; ---------------------------------------------------------------------------
-
-loc_104B7:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_104CB
-		mov	ax, 0FFFDh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		jmp	short loc_10500
-; ---------------------------------------------------------------------------
-
-loc_104CB:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 2
-		jnz	short loc_104E4
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, [bp+var_2]
-		add	ax, 9
-		mov	[bp+var_2], ax
-		jmp	short loc_10500
-; ---------------------------------------------------------------------------
-
-loc_104E4:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 3
-		jnz	short loc_10500
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, [bp+var_2]
-		mov	dx, 0FFF7h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	di, 1
-
-loc_10500:
-		cmp	[bp+arg_4], 0Fh
-		jg	loc_1065D
-		jmp	loc_10684
-; ---------------------------------------------------------------------------
-
-loc_1050B:
-		add	[bp+var_2], 6
-
-loc_1050F:
-		add	[bp+var_2], 6
-
-loc_10513:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_10523
-		mov	[bp+var_2], 0
-		jmp	short loc_1057A
-; ---------------------------------------------------------------------------
-
-loc_10523:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_10537
-		mov	ax, [bp+var_2]
-		add	ax, 6
-		mov	[bp+var_2], ax
-		jmp	short loc_1057A
-; ---------------------------------------------------------------------------
-
-loc_10537:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 2
-		jnz	short loc_1054B
-		mov	ax, 0FFFAh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		jmp	short loc_1057A
-; ---------------------------------------------------------------------------
-
-loc_1054B:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 3
-		jnz	short loc_10561
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, 0Ch
-		mov	[bp+var_2], ax
-		jmp	short loc_1057A
-; ---------------------------------------------------------------------------
-
-loc_10561:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 4
-		jnz	short loc_1057A
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		mov	dx, 0FFF4h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	di, 1
-
-loc_1057A:
-		cmp	[bp+arg_4], 15h
-		jg	loc_1065D
-		jmp	loc_10684
-; ---------------------------------------------------------------------------
-
-loc_10585:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_10590
-		jmp	short loc_105FC
-; ---------------------------------------------------------------------------
-
-loc_10590:
-		mov	[bp+var_2], 80h
-		mov	di, 1
-		jmp	loc_10684
-; ---------------------------------------------------------------------------
-
-loc_1059B:
-		les	bx, [bp+arg_6]
-		mov	ax, es:[bx]
-		shl	ax, 6
-		mov	[bp+var_2], ax
-		cmp	word ptr es:[bx], 3
-		jl	loc_10684
-		jmp	short loc_10613
-; ---------------------------------------------------------------------------
-
-loc_105B1:
-		les	bx, [bp+arg_6]
-		mov	ax, es:[bx]
-		shl	ax, 5
-		mov	[bp+var_2], ax
-		cmp	word ptr es:[bx], 7
-		jl	loc_10684
-		jmp	short loc_10613
-; ---------------------------------------------------------------------------
-
-loc_105C7:
-		les	bx, [bp+arg_6]
-		mov	ax, es:[bx]
-		shl	ax, 4
-		mov	[bp+var_2], ax
-		cmp	word ptr es:[bx], 0Fh
-		jl	loc_10684
-		jmp	short loc_10613
-; ---------------------------------------------------------------------------
-
-loc_105DD:
-		les	bx, [bp+arg_6]
-		mov	ax, es:[bx]
-		shl	ax, 3
-		mov	[bp+var_2], ax
-		cmp	word ptr es:[bx], 1Fh
-		jl	loc_10684
-		jmp	short loc_10613
-; ---------------------------------------------------------------------------
-
-loc_105F3:
-		les	bx, [bp+arg_6]
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_10604
-
-loc_105FC:
-		mov	[bp+var_2], 0
-		jmp	loc_10684
-; ---------------------------------------------------------------------------
-
-loc_10604:
-		mov	al, [si+bullet_t.BULLET_angle]
-		mov	ah, 0
-		add	ax, ax
-		mov	dx, 80h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-
-loc_10613:
-		mov	di, 1
-		jmp	short loc_10684
-; ---------------------------------------------------------------------------
-
-loc_10618:
-		call	@randring2_next8$qv
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		mov	di, 1
-		jmp	short loc_10684
-; ---------------------------------------------------------------------------
-
-loc_10625:
-		call	@randring2_next8$qv
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		mov	al, [si+bullet_t.BULLET_angle]
-		mov	ah, 0
-		les	bx, [bp+arg_6]
-		cmp	ax, es:[bx]
-		jg	short loc_10684
-		jmp	short loc_10613
-; ---------------------------------------------------------------------------
-
-loc_1063C:
-		call	@randring2_next8$qv
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		call	@randring2_next8_and$quc pascal, 1Fh
-		mov	ah, 0
-		add	[bp+@@length], ax
-		mov	al, [si+bullet_t.BULLET_angle]
-		mov	ah, 0
-		les	bx, [bp+arg_6]
-		cmp	ax, es:[bx]
-		jg	short loc_10684
-		jmp	short loc_10613
-; ---------------------------------------------------------------------------
-
-loc_1065D:
-		push	[bp+@@x1]
-		push	[bp+@@y1]
-		push	[bp+@@x2]
-		push	[bp+@@y2]
-		mov	al, [si+bullet_t.BULLET_angle]
-		add	al, byte ptr [bp+var_2]
-		push	ax
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.x]
-		push	ax
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.y]
-		push	ax
-		push	[bp+@@length]
-		call	@vector2_between_plus$qiiiiucmit6i
-		jmp	short loc_1069D
-; ---------------------------------------------------------------------------
-
-loc_10684:
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.x]
-		push	ax
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.y]
-		push	ax
-		mov	al, [si+bullet_t.BULLET_angle]
-		add	al, byte ptr [bp+var_2]
-		push	ax
-		push	[bp+@@length]
-		call	@vector2$qmit1uci
-
-loc_1069D:
-		les	bx, [bp+arg_6]
-		inc	word ptr es:[bx]
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		shl	word ptr [bx+si+bullet_t.BULLET_screen_topleft.x], 4
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		shl	word ptr [bx+si+bullet_t.BULLET_screen_topleft.y], 4
-		mov	ax, di
-		pop	di
-		pop	si
-		leave
-		retn	0Ah
-sub_103B3	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_106C8	dw offset loc_1041B
-		dw offset loc_10417
-		dw offset loc_10413
-		dw offset loc_1041B
-		dw offset loc_10417
-		dw offset loc_10413
-		dw offset loc_10457
-		dw offset loc_10453
-		dw offset loc_1044F
-		dw offset loc_10457
-		dw offset loc_10453
-		dw offset loc_1044F
-		dw offset loc_104A3
-		dw offset loc_1049F
-		dw offset loc_1049B
-		dw offset loc_104A3
-		dw offset loc_1049F
-		dw offset loc_1049B
-		dw offset loc_10513
-		dw offset loc_1050F
-		dw offset loc_1050B
-		dw offset loc_10513
-		dw offset loc_1050F
-		dw offset loc_1050B
-		dw offset loc_10409
-		dw offset loc_10618
-		dw offset loc_10625
-		dw offset loc_1063C
-		dw offset loc_1065D
-		dw offset loc_1065D
-		dw offset loc_1065D
-		dw offset loc_10613
-		dw offset loc_1059B
-		dw offset loc_10585
-		dw offset loc_105F3
-		dw offset loc_105B1
-		dw offset loc_105C7
-		dw offset loc_1040F
-		dw offset loc_105DD
+	@GROUP_VELOCITY_SET$QMIIR8BULLET_TI procdesc pascal near \
+		i:dword, group:word, bullet:word, speed:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7390,9 +6942,9 @@ sub_10763	endp
 sub_1078E	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
+@@group_i	= word ptr -2
+@@speed	= word ptr  4
+@@group	= byte ptr  6
 @@angle	= byte ptr  8
 @@top	= word ptr  0Ah
 @@left	= word ptr  0Ch
@@ -7402,7 +6954,7 @@ arg_2		= byte ptr  6
 		sub	sp, 4
 		push	si
 		push	di
-		mov	[bp+var_2], 0
+		mov	[bp+@@group_i], 0
 		mov	[bp+var_4], 0
 		push	[bp+@@left]
 		push	[bp+@@top]
@@ -7412,7 +6964,7 @@ arg_2		= byte ptr  6
 		cmp	_bombing, 0
 		jnz	loc_1085F
 		push	ss
-		lea	ax, [bp+arg_0]
+		lea	ax, [bp+@@speed]
 		push	ax
 		call	sub_10716
 		or	ax, ax
@@ -7454,15 +7006,15 @@ loc_107D9:
 		mov	al, [bp+@@angle]
 		mov	[si+bullet_t.BULLET_angle], al
 		inc	di
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		mov	al, [bp+arg_2]
+		push	ss	; i (segment)
+		lea	ax, [bp+@@group_i]
+		push	ax	; i (offset)
+		mov	al, [bp+@@group]
 		mov	ah, 0
-		push	ax
+		push	ax	; group
 		push	si	; bullet
-		push	[bp+arg_0]
-		call	sub_103B3
+		push	[bp+@@speed]	; speed
+		call	@group_velocity_set$qmiir8bullet_ti
 		or	ax, ax
 		jnz	short loc_10835
 
@@ -7475,18 +7027,18 @@ loc_10835:
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jle	short loc_1085F
-		sar	[bp+arg_0], 1
+		sar	[bp+@@speed], 1
 		mov	al, _rank
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1084F
-		add	[bp+arg_0], 8
+		add	[bp+@@speed], 8
 
 loc_1084F:
-		cmp	[bp+arg_0], 10h
+		cmp	[bp+@@speed], (1 shl 4)
 		jl	short loc_1085F
 		inc	[bp+var_4]
-		mov	[bp+var_2], 0
+		mov	[bp+@@group_i], 0
 		jmp	short loc_1082F
 ; ---------------------------------------------------------------------------
 
@@ -7505,11 +7057,11 @@ sub_1078E	endp
 sub_10865	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
-@@length		= word ptr  4
+@@group_i	= word ptr -2
+@@speed	= word ptr  4
 @@patnum	= byte ptr  6
-arg_4		= byte ptr  8
-@@angle		= word ptr  0Ah
+@@group	= byte ptr  8
+@@angle	= word ptr  0Ah
 @@top	= word ptr  0Ch
 @@left	= word ptr  0Eh
 
@@ -7518,7 +7070,7 @@ arg_4		= byte ptr  8
 		sub	sp, 4
 		push	si
 		push	di
-		mov	[bp+var_2], 0
+		mov	[bp+@@group_i], 0
 		mov	[bp+var_4], 0
 		push	[bp+@@left]
 		push	[bp+@@top]
@@ -7527,10 +7079,10 @@ arg_4		= byte ptr  8
 		jnz	loc_10995
 		cmp	_bombing, 0
 		jnz	loc_10995
-		cmp	[bp+arg_4], 83h
+		cmp	[bp+@@group], 83h
 		jz	short loc_108A3
 		push	ss
-		lea	ax, [bp+@@length]
+		lea	ax, [bp+@@speed]
 		push	ax
 		call	sub_10716
 		or	ax, ax
@@ -7555,19 +7107,19 @@ loc_108B8:
 		imul	ax, size bullet_t
 		add	ax, offset _bullets
 		mov	si, ax
-		mov	al, [bp+arg_4]
+		mov	al, [bp+@@group]
 		mov	[si+bullet_t.BULLET_group], al
 		mov	[si+bullet_t.BULLET_size_type], BST_BULLET16
 		mov	[si+bullet_t.BULLET_flag], F_ALIVE
 		mov	al, [bp+@@patnum]
 		mov	[si+bullet_t.BULLET_patnum], al
 		mov	[si+bullet_t.BULLET_u1], 0
-		mov	al, byte ptr [bp+@@length]
+		mov	al, byte ptr [bp+@@speed]
 		mov	[si+bullet_t.BULLET_speed], al
 		mov	al, byte ptr [bp+@@angle]
 		mov	[si+bullet_t.BULLET_angle], al
 		inc	di
-		cmp	[bp+arg_4], 80h
+		cmp	[bp+@@group], 80h
 		jnb	short loc_10924
 		mov	al, _page_back
 		mov	ah, 0
@@ -7581,15 +7133,15 @@ loc_108B8:
 		mov	dx, [bp+@@top]
 		mov	bx, ax
 		mov	[bx+si+bullet_t.BULLET_screen_topleft.y], dx
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		mov	al, [bp+arg_4]
+		push	ss	; i (segment)
+		lea	ax, [bp+@@group_i]
+		push	ax	; i (offset)
+		mov	al, [bp+@@group]
 		mov	ah, 0
-		push	ax
+		push	ax	; group
 		push	si	; bullet
-		push	[bp+@@length]
-		call	sub_103B3
+		push	[bp+@@speed]	; speed
+		call	@group_velocity_set$qmiir8bullet_ti
 		or	ax, ax
 		jnz	short loc_1096B
 		jmp	short loc_10963
@@ -7617,7 +7169,7 @@ loc_10924:
 		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
 		push	[bp+@@angle]
-		push	[bp+@@length]
+		push	[bp+@@speed]
 		call	@vector2$qmit1uci
 		jmp	short loc_1096B
 ; ---------------------------------------------------------------------------
@@ -7631,18 +7183,18 @@ loc_1096B:
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jle	short loc_10995
-		sar	[bp+@@length], 1
+		sar	[bp+@@speed], 1
 		mov	al, _rank
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_10985
-		add	[bp+@@length], 8
+		add	[bp+@@speed], 8
 
 loc_10985:
-		cmp	[bp+@@length], 10h
+		cmp	[bp+@@speed], (1 shl 4)
 		jl	short loc_10995
 		inc	[bp+var_4]
-		mov	[bp+var_2], 0
+		mov	[bp+@@group_i], 0
 		jmp	short loc_10963
 ; ---------------------------------------------------------------------------
 

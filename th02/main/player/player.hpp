@@ -59,6 +59,13 @@ static const pixel_t PLAYER_OPTION_TO_OPTION_DISTANCE = (
 	extern screen_point_t player_option_left_topleft[2];
 	extern screen_x_t near* player_option_left_left_on_back_page;
 	extern screen_y_t near* player_option_left_top_on_back_page;
+
+	inline screen_x_t player_center_x(void) {
+		return (player_topleft.x + (PLAYER_W / 2));
+	}
+	inline screen_x_t player_center_y(void) {
+		return (player_topleft.y + (PLAYER_H / 2));
+	}
 	// ----------------
 #endif
 

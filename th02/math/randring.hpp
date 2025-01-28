@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "th01/math/subpixel.hpp"
 
 #define RANDRING_SIZE 256
 
@@ -40,6 +41,17 @@ template <class T> inline bool is_range_a_power_of_two(T min, T max) {
 			return (min + (randring1_next16() & ((max - min) - 1)));
 		}
 		return (min + (randring1_next16() % (max - min)));
+	}
+
+	inline uint8_t randring2_next8_ge_lt(uint8_t min, uint8_t max) {
+		if(is_range_a_power_of_two(min, max)) {
+			return (min + randring2_next8_and((max - min) - 1));
+		}
+		return (min + (randring2_next8() % (max - min)));
+	}
+
+	inline subpixel_t randring2_next8_ge_lt_sp(float min, float max) {
+		return randring2_next8_ge_lt(to_sp(min), to_sp(max));
 	}
 #endif
 /// --------------------------
