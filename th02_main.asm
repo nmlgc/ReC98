@@ -6849,6 +6849,9 @@ BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM = 87h
 BSM_BOUNCE_TOP_BOTTOM = 88h
 BSM_1 = 0FFh
 
+BST_PELLET = 1
+BST_BULLET16 = 2
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -6870,18 +6873,18 @@ loc_102EE:
 		mov	_spark_age_max, 24
 
 loc_102F8:
-		mov	si, 2C18h
+		mov	si, offset _bullets
 		xor	di, di
 		jmp	short loc_10306
 ; ---------------------------------------------------------------------------
 
 loc_102FF:
-		mov	byte ptr [si], 0
+		mov	[si+bullet_t.BULLET_flag], F_FREE
 		inc	di
-		add	si, 14h
+		add	si, size bullet_t
 
 loc_10306:
-		cmp	di, 96h
+		cmp	di, BULLET_COUNT
 		jl	short loc_102FF
 		mov	si, offset _sparks
 		xor	di, di
@@ -6994,7 +6997,7 @@ sub_103B3	proc near
 @@y1		= word ptr -4
 var_2		= word ptr -2
 @@length		= word ptr  4
-arg_2		= word ptr  6
+@@bullet	= word ptr  6
 arg_4		= word ptr  8
 arg_6		= dword	ptr  0Ah
 
@@ -7003,14 +7006,14 @@ arg_6		= dword	ptr  0Ah
 		sub	sp, 0Ah
 		push	si
 		push	di
-		mov	si, [bp+arg_2]
+		mov	si, [bp+@@bullet]
 		mov	[bp+var_2], 0
 		xor	di, di
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+si+4]
+		mov	ax, [bx+si+bullet_t.BULLET_screen_topleft.y]
 		mov	[bp+@@y1], ax
 		mov	ax, _player_topleft.y
 		add	ax, 20
@@ -7022,7 +7025,7 @@ arg_6		= dword	ptr  0Ah
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+si+2]
+		mov	ax, [bx+si+bullet_t.BULLET_screen_topleft.x]
 		mov	[bp+@@x1], ax
 		mov	bx, [bp+arg_4]
 		dec	bx
@@ -7291,7 +7294,7 @@ loc_105FC:
 ; ---------------------------------------------------------------------------
 
 loc_10604:
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, 80h
@@ -7315,7 +7318,7 @@ loc_10625:
 		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_angle]
 		mov	ah, 0
 		les	bx, [bp+arg_6]
 		cmp	ax, es:[bx]
@@ -7330,7 +7333,7 @@ loc_1063C:
 		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	[bp+@@length], ax
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_angle]
 		mov	ah, 0
 		les	bx, [bp+arg_6]
 		cmp	ax, es:[bx]
@@ -7343,14 +7346,14 @@ loc_1065D:
 		push	[bp+@@y1]
 		push	[bp+@@x2]
 		push	[bp+@@y2]
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_angle]
 		add	al, byte ptr [bp+var_2]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
 		push	[bp+@@length]
 		call	@vector2_between_plus$qiiiiucmit6i
@@ -7359,12 +7362,12 @@ loc_1065D:
 
 loc_10684:
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_angle]
 		add	al, byte ptr [bp+var_2]
 		push	ax
 		push	[bp+@@length]
@@ -7377,12 +7380,12 @@ loc_1069D:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		shl	word ptr [bx+si+2], 4
+		shl	word ptr [bx+si+bullet_t.BULLET_screen_topleft.x], 4
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		shl	word ptr [bx+si+4], 4
+		shl	word ptr [bx+si+bullet_t.BULLET_screen_topleft.y], 4
 		mov	ax, di
 		pop	di
 		pop	si
@@ -7482,20 +7485,20 @@ sub_10716	endp
 
 sub_10763	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@top	= word ptr  4
+@@left	= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	dx, [bp+arg_2]
-		mov	bx, [bp+arg_0]
-		cmp	dx, 18h
+		mov	dx, [bp+@@left]
+		mov	bx, [bp+@@top]
+		cmp	dx, (PLAYFIELD_LEFT - 8)
 		jl	short loc_10781
-		cmp	dx, 1A0h
+		cmp	dx, PLAYFIELD_RIGHT
 		jg	short loc_10781
-		or	bx, bx
+		or	bx, bx	; (PLAYFIELD_TOP - 16)
 		jl	short loc_10781
-		cmp	bx, 17Fh
+		cmp	bx, (PLAYFIELD_BOTTOM - 1)
 		jle	short loc_10788
 
 loc_10781:
@@ -7521,9 +7524,9 @@ var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= byte ptr  6
-arg_4		= byte ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
+@@angle	= byte ptr  8
+@@top	= word ptr  0Ah
+@@left	= word ptr  0Ch
 
 		push	bp
 		mov	bp, sp
@@ -7532,8 +7535,8 @@ arg_8		= word ptr  0Ch
 		push	di
 		mov	[bp+var_2], 0
 		mov	[bp+var_4], 0
-		push	[bp+arg_8]
-		push	[bp+arg_6]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		call	sub_10763
 		or	ax, ax
 		jnz	loc_1085F
@@ -7551,8 +7554,8 @@ arg_8		= word ptr  0Ch
 
 loc_107CA:
 		mov	bx, di
-		imul	bx, 14h
-		cmp	byte ptr [bx+2C18h], 0
+		imul	bx, size bullet_t
+		cmp	_bullets[bx].BULLET_flag, F_FREE
 		jz	short loc_107D9
 		inc	di
 		jmp	short loc_1082F
@@ -7560,27 +7563,27 @@ loc_107CA:
 
 loc_107D9:
 		mov	ax, di
-		imul	ax, 14h
-		add	ax, 2C18h
+		imul	ax, size bullet_t
+		add	ax, offset _bullets
 		mov	si, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		mov	dx, [bp+arg_8]
+		mov	dx, [bp+@@left]
 		mov	bx, ax
-		mov	[bx+si+2], dx
+		mov	[bx+si+bullet_t.BULLET_screen_topleft.x], dx
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		mov	dx, [bp+arg_6]
+		mov	dx, [bp+@@top]
 		mov	bx, ax
-		mov	[bx+si+4], dx
-		mov	byte ptr [si+0Fh], 0
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 1
-		mov	byte ptr [si+12h], 0
-		mov	al, [bp+arg_4]
-		mov	[si+10h], al
+		mov	[bx+si+bullet_t.BULLET_screen_topleft.y], dx
+		mov	[si+bullet_t.BULLET_group], 0
+		mov	[si+bullet_t.BULLET_flag], F_ALIVE
+		mov	[si+bullet_t.BULLET_size_type], BST_PELLET
+		mov	[si+bullet_t.BULLET_u1], 0
+		mov	al, [bp+@@angle]
+		mov	[si+bullet_t.BULLET_angle], al
 		inc	di
 		push	ss
 		lea	ax, [bp+var_2]
@@ -7588,14 +7591,14 @@ loc_107D9:
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		push	ax
-		push	si
+		push	si	; bullet
 		push	[bp+arg_0]
 		call	sub_103B3
 		or	ax, ax
 		jnz	short loc_10835
 
 loc_1082F:
-		cmp	di, 96h
+		cmp	di, BULLET_COUNT
 		jl	short loc_107CA
 
 loc_10835:
@@ -7635,11 +7638,11 @@ sub_10865	proc near
 var_4		= word ptr -4
 var_2		= word ptr -2
 @@length		= word ptr  4
-arg_2		= byte ptr  6
+@@patnum	= byte ptr  6
 arg_4		= byte ptr  8
 @@angle		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
+@@top	= word ptr  0Ch
+@@left	= word ptr  0Eh
 
 		push	bp
 		mov	bp, sp
@@ -7648,8 +7651,8 @@ arg_A		= word ptr  0Eh
 		push	di
 		mov	[bp+var_2], 0
 		mov	[bp+var_4], 0
-		push	[bp+arg_A]
-		push	[bp+arg_8]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		call	sub_10763
 		or	ax, ax
 		jnz	loc_10995
@@ -7671,8 +7674,8 @@ loc_108A3:
 
 loc_108A8:
 		mov	bx, di
-		imul	bx, 14h
-		cmp	byte ptr [bx+2C18h], 0
+		imul	bx, size bullet_t
+		cmp	_bullets[bx].BULLET_flag, F_FREE
 		jz	short loc_108B8
 		inc	di
 		jmp	loc_10963
@@ -7680,42 +7683,42 @@ loc_108A8:
 
 loc_108B8:
 		mov	ax, di
-		imul	ax, 14h
-		add	ax, 2C18h
+		imul	ax, size bullet_t
+		add	ax, offset _bullets
 		mov	si, ax
 		mov	al, [bp+arg_4]
-		mov	[si+0Fh], al
-		mov	byte ptr [si+1], 2
-		mov	byte ptr [si], 1
-		mov	al, [bp+arg_2]
-		mov	[si+0Eh], al
-		mov	byte ptr [si+12h], 0
+		mov	[si+bullet_t.BULLET_group], al
+		mov	[si+bullet_t.BULLET_size_type], BST_BULLET16
+		mov	[si+bullet_t.BULLET_flag], F_ALIVE
+		mov	al, [bp+@@patnum]
+		mov	[si+bullet_t.BULLET_patnum], al
+		mov	[si+bullet_t.BULLET_u1], 0
 		mov	al, byte ptr [bp+@@length]
-		mov	[si+11h], al
+		mov	[si+bullet_t.BULLET_speed], al
 		mov	al, byte ptr [bp+@@angle]
-		mov	[si+10h], al
+		mov	[si+bullet_t.BULLET_angle], al
 		inc	di
 		cmp	[bp+arg_4], 80h
 		jnb	short loc_10924
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		mov	dx, [bp+arg_A]
+		mov	dx, [bp+@@left]
 		mov	bx, ax
-		mov	[bx+si+2], dx
+		mov	[bx+si+bullet_t.BULLET_screen_topleft.x], dx
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		mov	dx, [bp+arg_8]
+		mov	dx, [bp+@@top]
 		mov	bx, ax
-		mov	[bx+si+4], dx
+		mov	[bx+si+bullet_t.BULLET_screen_topleft.y], dx
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
 		mov	al, [bp+arg_4]
 		mov	ah, 0
 		push	ax
-		push	si
+		push	si	; bullet
 		push	[bp+@@length]
 		call	sub_103B3
 		or	ax, ax
@@ -7724,25 +7727,25 @@ loc_108B8:
 ; ---------------------------------------------------------------------------
 
 loc_10924:
-		mov	ax, [bp+arg_A]
+		mov	ax, [bp+@@left]
 		shl	ax, 4
 		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
-		mov	[bx+si+2], ax
-		mov	ax, [bp+arg_8]
+		mov	[bx+si+bullet_t.BULLET_screen_topleft.x], ax
+		mov	ax, [bp+@@top]
 		shl	ax, 4
 		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
-		mov	[bx+si+4], ax
+		mov	[bx+si+bullet_t.BULLET_screen_topleft.y], ax
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
 		push	[bp+@@angle]
 		push	[bp+@@length]
@@ -7751,7 +7754,7 @@ loc_10924:
 ; ---------------------------------------------------------------------------
 
 loc_10963:
-		cmp	di, 96h
+		cmp	di, BULLET_COUNT
 		jl	loc_108A8
 
 loc_1096B:
@@ -7813,7 +7816,7 @@ arg_0		= word ptr  4
 		mov	ax, _player_topleft.x
 		add	ax, 8
 		mov	[bp+@@x2], ax
-		mov	al, [si+0Fh]
+		mov	al, [si+bullet_t.BULLET_group]
 		mov	ah, 0
 		sub	ax, 80h
 		mov	bx, ax
@@ -7827,7 +7830,7 @@ loc_109E7:
 		cmp	ax, [bp+@@x2]
 		jge	short loc_109F7
 		mov	ax, bullet_special_chase_speed
-		add	[si+0Ah], ax
+		add	[si+bullet_t.BULLET_velocity.x], ax
 		jmp	short loc_10A05
 ; ---------------------------------------------------------------------------
 
@@ -7836,13 +7839,13 @@ loc_109F7:
 		cmp	ax, [bp+@@x2]
 		jle	short loc_10A05
 		mov	ax, bullet_special_chase_speed
-		sub	[si+0Ah], ax
+		sub	[si+bullet_t.BULLET_velocity.x], ax
 
 loc_10A05:
 		cmp	di, [bp+@@y2]
 		jge	short loc_10A13
 		mov	ax, bullet_special_chase_speed
-		add	[si+0Ch], ax
+		add	[si+bullet_t.BULLET_velocity.y], ax
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
 
@@ -7850,13 +7853,13 @@ loc_10A13:
 		cmp	di, [bp+@@y2]
 		jle	loc_10BAD
 		mov	ax, bullet_special_chase_speed
-		sub	[si+0Ch], ax
+		sub	[si+bullet_t.BULLET_velocity.y], ax
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
 
 loc_10A23:
-		inc	byte ptr [si+12h]
-		mov	al, [si+12h]
+		inc	[si+bullet_t.BULLET_u1]
+		mov	al, [si+bullet_t.BULLET_u1]
 		mov	ah, 0
 		cmp	ax, bullet_special_homing_duration
 		jge	loc_10BA9
@@ -7866,12 +7869,12 @@ loc_10A23:
 		push	[bp+@@y2]
 		push	0
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
-		mov	al, [si+11h]
+		mov	al, [si+bullet_t.BULLET_speed]
 		mov	ah, 0
 		push	ax
 		call	@vector2_between_plus$qiiiiucmit6i
@@ -7881,19 +7884,19 @@ loc_10A23:
 loc_10A57:
 		test	byte ptr _stage_frame, 7
 		jnz	loc_10BAD
-		mov	ax, [si+0Ah]
+		mov	ax, [si+bullet_t.BULLET_velocity.x]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	[si+0Ah], ax
-		mov	ax, [si+0Ch]
+		mov	[si+bullet_t.BULLET_velocity.x], ax
+		mov	ax, [si+bullet_t.BULLET_velocity.y]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	[si+0Ch], ax
-		cmp	word ptr [si+0Ah], 0
+		mov	[si+bullet_t.BULLET_velocity.y], ax
+		cmp	word ptr [si+bullet_t.BULLET_velocity.x], 0
 		jnz	loc_10BAD
-		cmp	word ptr [si+0Ch], 0
+		cmp	word ptr [si+bullet_t.BULLET_velocity.y], 0
 		jnz	loc_10BAD
 		push	[bp+@@x1]
 		push	di
@@ -7901,17 +7904,17 @@ loc_10A57:
 		push	[bp+@@y2]
 		push	0
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
-		mov	al, [si+11h]
+		mov	al, [si+bullet_t.BULLET_speed]
 		mov	ah, 0
 		push	ax
 		call	@vector2_between_plus$qiiiiucmit6i
-		inc	byte ptr [si+12h]
-		mov	al, [si+12h]
+		inc	[si+bullet_t.BULLET_u1]
+		mov	al, [si+bullet_t.BULLET_u1]
 		mov	ah, 0
 		cmp	ax, bullet_special_turns_max
 		jl	loc_10BAD
@@ -7920,30 +7923,30 @@ loc_10A57:
 
 loc_10ABA:
 		mov	ax, bullet_special_gravity_speed
-		add	[si+0Ch], ax
+		add	[si+bullet_t.BULLET_velocity.y], ax
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
 
 loc_10AC3:
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_angle]
 		add	al, byte ptr bullet_special_drift_angle
-		mov	[si+10h], al
-		mov	al, [si+11h]
+		mov	[si+bullet_t.BULLET_angle], al
+		mov	al, [si+bullet_t.BULLET_speed]
 		add	al, byte ptr bullet_special_drift_speed
-		mov	[si+11h], al
+		mov	[si+bullet_t.BULLET_speed], al
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
-		push	word ptr [si+10h]
-		mov	al, [si+11h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.BULLET_speed]
 		mov	ah, 0
 		push	ax
 		call	@vector2$qmit1uci
-		inc	byte ptr [si+12h]
-		mov	al, [si+12h]
+		inc	[si+bullet_t.BULLET_u1]
+		mov	al, [si+bullet_t.BULLET_u1]
 		mov	ah, 0
 		cmp	ax, bullet_special_drift_duration
 		jle	loc_10BAD
@@ -7951,17 +7954,17 @@ loc_10AC3:
 ; ---------------------------------------------------------------------------
 
 loc_10B02:
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_angle]
 		add	al, byte ptr bullet_special_drift_angle
-		mov	[si+10h], al
+		mov	[si+bullet_t.BULLET_angle], al
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
-		push	word ptr [si+10h]
-		mov	al, [si+11h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.BULLET_speed]
 		mov	ah, 0
 		push	ax
 		call	@vector2$qmit1uci
@@ -7969,7 +7972,7 @@ loc_10B02:
 		cmp	ax, [bp+@@x2]
 		jge	short loc_10B34
 		mov	ax, bullet_special_drift_speed
-		add	[si+0Ah], ax
+		add	[si+bullet_t.BULLET_velocity.x], ax
 		jmp	short loc_10B42
 ; ---------------------------------------------------------------------------
 
@@ -7978,13 +7981,13 @@ loc_10B34:
 		cmp	ax, [bp+@@x2]
 		jle	short loc_10B42
 		mov	ax, bullet_special_drift_speed
-		sub	[si+0Ah], ax
+		sub	[si+bullet_t.BULLET_velocity.x], ax
 
 loc_10B42:
 		cmp	di, [bp+@@y2]
 		jge	short loc_10B4F
 		mov	ax, bullet_special_drift_speed
-		add	[si+0Ch], ax
+		add	[si+bullet_t.BULLET_velocity.y], ax
 		jmp	short loc_10B5A
 ; ---------------------------------------------------------------------------
 
@@ -7992,11 +7995,11 @@ loc_10B4F:
 		cmp	di, [bp+@@y2]
 		jle	short loc_10B5A
 		mov	ax, bullet_special_drift_speed
-		sub	[si+0Ch], ax
+		sub	[si+bullet_t.BULLET_velocity.y], ax
 
 loc_10B5A:
-		inc	byte ptr [si+12h]
-		mov	al, [si+12h]
+		inc	[si+bullet_t.BULLET_u1]
+		mov	al, [si+bullet_t.BULLET_u1]
 		mov	ah, 0
 		cmp	ax, bullet_special_drift_duration
 		jle	short loc_10BAD
@@ -8011,10 +8014,10 @@ loc_10B6A:
 
 loc_10B77:
 		mov	dx, 0FFFFh
-		mov	ax, [si+0Ah]
+		mov	ax, [si+bullet_t.BULLET_velocity.x]
 		imul	dx
-		mov	[si+0Ah], ax
-		inc	byte ptr [si+12h]
+		mov	[si+bullet_t.BULLET_velocity.x], ax
+		inc	[si+bullet_t.BULLET_u1]
 
 loc_10B85:
 		cmp	di, 24
@@ -8024,19 +8027,19 @@ loc_10B85:
 
 loc_10B90:
 		mov	dx, 0FFFFh
-		mov	ax, [si+0Ch]
+		mov	ax, [si+bullet_t.BULLET_velocity.y]
 		imul	dx
-		mov	[si+0Ch], ax
-		inc	byte ptr [si+12h]
+		mov	[si+bullet_t.BULLET_velocity.y], ax
+		inc	[si+bullet_t.BULLET_u1]
 
 loc_10B9E:
-		mov	al, [si+12h]
+		mov	al, [si+bullet_t.BULLET_u1]
 		mov	ah, 0
 		cmp	ax, bullet_special_turns_max
 		jle	short loc_10BAD
 
 loc_10BA9:
-		mov	byte ptr [si+0Fh], 0
+		mov	[si+bullet_t.BULLET_group], 0
 
 loc_10BAD:
 		pop	di
@@ -8078,36 +8081,36 @@ var_2		= word ptr -2
 
 loc_10BDB:
 		mov	bx, [bp+var_2]
-		imul	bx, 14h
-		mov	al, [bx+2C18h]
+		imul	bx, size bullet_t
+		mov	al, _bullets[bx].BULLET_flag
 		cbw
-		cmp	ax, 1
+		cmp	ax, F_ALIVE
 		jnz	loc_10D2D
 		mov	ax, [bp+var_2]
-		imul	ax, 14h
-		add	ax, 2C18h
+		imul	ax, size bullet_t
+		add	ax, offset _bullets
 		mov	si, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
-		add	ax, 2
+		add	ax, bullet_t.BULLET_screen_topleft.x
 		mov	word_2174E, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
-		add	ax, 4
+		add	ax, bullet_t.BULLET_screen_topleft.y
 		mov	word_21750, ax
-		mov	ax, [si+0Ah]
+		mov	ax, [si+bullet_t.BULLET_velocity.x]
 		mov	bx, word_2174E
 		add	[bx], ax
-		mov	ax, [si+0Ch]
+		mov	ax, [si+bullet_t.BULLET_velocity.y]
 		mov	bx, word_21750
 		add	[bx], ax
-		mov	al, [si+1]
+		mov	al, [si+bullet_t.BULLET_size_type]
 		cbw
-		cmp	ax, 2
+		cmp	ax, BST_BULLET16
 		jnz	short loc_10C37
 		push	si
 		call	sub_1099B
@@ -8132,14 +8135,14 @@ loc_10C37:
 		jg	short loc_10C72
 
 loc_10C6C:
-		mov	byte ptr [si], 2
+		mov	[si+bullet_t.BULLET_flag], F_REMOVE
 		jmp	loc_10D2D
 ; ---------------------------------------------------------------------------
 
 loc_10C72:
-		mov	al, [si+1]
+		mov	al, [si+bullet_t.BULLET_size_type]
 		cbw
-		cmp	ax, 1
+		cmp	ax, BST_PELLET
 		jnz	short loc_10CA9
 		mov	ax, _player_topleft.x
 		add	ax, 7
@@ -8190,9 +8193,9 @@ loc_10CDC:
 		sub	di, RES_Y
 
 loc_10CEA:
-		mov	al, [si+1]
+		mov	al, [si+bullet_t.BULLET_size_type]
 		cbw
-		cmp	ax, 1
+		cmp	ax, BST_PELLET
 		jnz	short loc_10D13
 		cmp	[bp+var_4], 0
 		jz	short loc_10D09
@@ -8208,7 +8211,7 @@ loc_10D13:
 		call	grcg_off
 		push	_bullet_left
 		push	di
-		mov	al, [si+0Eh]
+		mov	al, [si+bullet_t.BULLET_patnum]
 		mov	ah, 0
 		push	ax
 		call	super_roll_put_tiny
@@ -8218,7 +8221,7 @@ loc_10D2D:
 		inc	[bp+var_2]
 
 loc_10D30:
-		cmp	[bp+var_2], 96h
+		cmp	[bp+var_2], BULLET_COUNT
 		jl	loc_10BDB
 		call	grcg_off
 		pop	di
@@ -8243,28 +8246,28 @@ sub_10D42	proc far
 
 loc_10D4C:
 		mov	bx, si
-		imul	bx, 14h
-		cmp	byte ptr [bx+2C18h], 0
+		imul	bx, size bullet_t
+		cmp	_bullets[bx].BULLET_flag, F_FREE
 		jz	loc_10DFD
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bullet_t
 		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		add	ax, dx
-		add	ax, 2C1Ah
+		add	ax, offset _bullets.BULLET_screen_topleft.x
 		mov	word_2174E, ax
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bullet_t
 		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		add	ax, dx
-		add	ax, 2C1Ch
+		add	ax, offset _bullets.BULLET_screen_topleft.y
 		mov	word_21750, ax
 		mov	bx, si
-		imul	bx, 14h
-		mov	al, [bx+2C19h]
+		imul	bx, size bullet_t
+		mov	al, _bullets[bx].BULLET_size_type
 		cbw
 		shl	ax, 3
 		mov	di, ax
@@ -8280,34 +8283,34 @@ loc_10D4C:
 		push	di	; h
 		call	@tiles_invalidate_rect$qiiii
 		mov	bx, si
-		imul	bx, 14h
-		mov	al, [bx+2C18h]
+		imul	bx, size bullet_t
+		mov	al, _bullets[bx].BULLET_flag
 		cbw
-		cmp	ax, 2
+		cmp	ax, F_REMOVE
 		jnz	short loc_10DCB
 		mov	bx, si
-		imul	bx, 14h
-		mov	byte ptr [bx+2C18h], 0
+		imul	bx, size bullet_t
+		mov	_bullets[bx].BULLET_flag, F_FREE
 		jmp	short loc_10DFD
 ; ---------------------------------------------------------------------------
 
 loc_10DCB:
 		mov	bx, si
-		imul	bx, 14h
+		imul	bx, size bullet_t
 		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, [bx+2C1Ah]
+		mov	ax, _bullets[bx].BULLET_screen_topleft.x
 		mov	bx, word_2174E
 		mov	[bx], ax
 		mov	bx, si
-		imul	bx, 14h
+		imul	bx, size bullet_t
 		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, [bx+2C1Ch]
+		mov	ax, _bullets[bx].BULLET_screen_topleft.y
 		mov	bx, word_21750
 		mov	[bx], ax
 
@@ -8315,7 +8318,7 @@ loc_10DFD:
 		inc	si
 
 loc_10DFE:
-		cmp	si, 96h
+		cmp	si, BULLET_COUNT
 		jl	loc_10D4C
 		pop	di
 		pop	si
@@ -8339,20 +8342,20 @@ sub_10E0A	proc far
 
 loc_10E16:
 		mov	bx, si
-		imul	bx, 14h
-		mov	al, [bx+2C18h]
+		imul	bx, size bullet_t
+		mov	al, _bullets[bx].BULLET_flag
 		cbw
-		cmp	ax, 1
+		cmp	ax, F_ALIVE
 		jnz	short loc_10E2F
 		mov	bx, si
-		imul	bx, 14h
-		mov	byte ptr [bx+2C18h], 2
+		imul	bx, size bullet_t
+		mov	_bullets[bx].BULLET_flag, F_REMOVE
 
 loc_10E2F:
 		inc	si
 
 loc_10E30:
-		cmp	si, 96h
+		cmp	si, BULLET_COUNT
 		jl	short loc_10E16
 		pop	si
 		pop	bp
@@ -29363,7 +29366,24 @@ byte_20672	db ?
 public _sigma_frames
 _sigma_frames	dd ?
 word_20686	dw ?
-		db 3000 dup(?)
+
+BULLET_COUNT = 150
+
+bullet_t struc
+	BULLET_flag          	db ?
+	BULLET_size_type     	db ?
+	BULLET_screen_topleft	Point 2 dup(<?>)
+	BULLET_velocity      	Point ?
+	BULLET_patnum        	db ?
+	BULLET_group         	db ?
+	BULLET_angle         	db ?
+	BULLET_speed         	db ?
+	BULLET_u1            	db ?
+		db ?
+bullet_t ends
+
+public _bullets
+_bullets bullet_t BULLET_COUNT dup(<?>)
 
 SRA_DOT = 0
 SRA_SPRITE = 14

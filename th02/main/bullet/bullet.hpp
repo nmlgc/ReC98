@@ -1,4 +1,7 @@
 #include "th01/math/subpixel.hpp"
+#include "th02/sprites/main_pat.h"
+
+#define BULLET_COUNT 150
 
 static const pixel_t BOUNCE_MARGIN = 8; // ZUN quirk
 
