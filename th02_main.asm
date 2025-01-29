@@ -1295,7 +1295,7 @@ var_C		= byte ptr -0Ch
 		call	@pi_palette_apply$qi stdcall, 0
 		call	@pi_put_8$qiii stdcall, 96, large 144
 		add	sp, 0Ah
-		call	sub_102D6
+		call	@bullets_and_sparks_init$qv
 		call	sub_16A6B
 		call	sub_3DDE
 		call	sub_129DD
@@ -6852,138 +6852,7 @@ BSM_1 = 0FFh
 BST_PELLET = 1
 BST_BULLET16 = 2
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_102D6	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	_reduce_effects, 0
-		jnz	short loc_102EE
-		mov	_spark_sprite_interval, 1
-		mov	_spark_age_max, 48
-		jmp	short loc_102F8
-; ---------------------------------------------------------------------------
-
-loc_102EE:
-		mov	_spark_sprite_interval, 7
-		mov	_spark_age_max, 24
-
-loc_102F8:
-		mov	si, offset _bullets
-		xor	di, di
-		jmp	short loc_10306
-; ---------------------------------------------------------------------------
-
-loc_102FF:
-		mov	[si+bullet_t.BULLET_flag], F_FREE
-		inc	di
-		add	si, size bullet_t
-
-loc_10306:
-		cmp	di, BULLET_COUNT
-		jl	short loc_102FF
-		mov	si, offset _sparks
-		xor	di, di
-		jmp	short loc_1033F
-; ---------------------------------------------------------------------------
-
-loc_10313:
-		mov	[si+spark_t.SPARK_flag], F_FREE
-		call	IRand
-		mov	[si+spark_t.SPARK_angle], al
-		call	IRand
-		and	al, 3Fh
-		mov	[si+spark_t.SPARK_speed_base], al
-		mov	al, _spark_sprite_interval
-		mov	ah, 0
-		test	ax, di
-		jnz	short loc_10337
-		mov	[si+spark_t.SPARK_default_render_as], SRA_SPRITE
-		jmp	short loc_1033B
-; ---------------------------------------------------------------------------
-
-loc_10337:
-		mov	[si+spark_t.SPARK_default_render_as], SRA_DOT
-
-loc_1033B:
-		inc	di
-		add	si, size spark_t
-
-loc_1033F:
-		cmp	di, SPARK_COUNT
-		jl	short loc_10313
-
-		; Well, it corresponds to the earliest usage of the respective unions...
-		; (The Stage 2 midboss uses BSM_CHASE, Meira uses BSM_BOUNCE_*, and
-		; BSM_DRIFT_* remains unused until Marisa.)
-		mov	bullet_special_chase_speed, 1
-		mov	bullet_special_drift_speed, (4 shl 4)
-		mov	bullet_special_turns_max, 1
-
-		cmp	_rank, RANK_EASY
-		jnz	short loc_10361
-		mov	al, 0F6h
-		jmp	short loc_1038A
-; ---------------------------------------------------------------------------
-
-loc_10361:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_1036E
-		mov	al, 0
-		jmp	short loc_1038A
-; ---------------------------------------------------------------------------
-
-loc_1036E:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_1037B
-		mov	al, 0
-		jmp	short loc_1038A
-; ---------------------------------------------------------------------------
-
-loc_1037B:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_10388
-		mov	al, 0Ch
-		jmp	short loc_1038A
-; ---------------------------------------------------------------------------
-
-loc_10388:
-		mov	al, 0
-
-loc_1038A:
-		mov	_rank_base_speed, al
-		mov	_rank_base_stack, 0
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jz	short loc_103A4
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_103A9
-
-loc_103A4:
-		mov	_rank_base_stack, 1
-
-loc_103A9:
-		mov	al, _rank_base_stack
-		mov	_bullet_stack, al
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_102D6	endp
-
+	extern @bullets_and_sparks_init$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 

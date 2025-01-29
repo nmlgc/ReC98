@@ -141,5 +141,8 @@ enum bullet_group_or_special_motion_t {
 	// --------------------
 };
 
+// ZUN bloat: Should be separate.
+void bullets_and_sparks_init(void);
+
 // Renders a pellet at the given position.
 void pascal near pellet_render(screen_x_t left, screen_y_t top);
