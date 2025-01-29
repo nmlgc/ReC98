@@ -6857,41 +6857,8 @@ BST_BULLET16 = 2
 		i:dword, group:word, bullet:word, speed:word
 	@BULLET_SPEED_TUNE$QMI procdesc pascal near \
 		speed:dword
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10763	proc near
-
-@@top	= word ptr  4
-@@left	= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+@@left]
-		mov	bx, [bp+@@top]
-		cmp	dx, (PLAYFIELD_LEFT - 8)
-		jl	short loc_10781
-		cmp	dx, PLAYFIELD_RIGHT
-		jg	short loc_10781
-		or	bx, bx	; (PLAYFIELD_TOP - 16)
-		jl	short loc_10781
-		cmp	bx, (PLAYFIELD_BOTTOM - 1)
-		jle	short loc_10788
-
-loc_10781:
-		mov	ax, 1
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_10788:
-		xor	ax, ax
-		pop	bp
-		retn	4
-sub_10763	endp
-
+	@BULLET_CLIP$QII procdesc pascal near \
+		left:word, top:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6914,9 +6881,7 @@ var_4		= word ptr -4
 		push	di
 		mov	[bp+@@group_i], 0
 		mov	[bp+var_4], 0
-		push	[bp+@@left]
-		push	[bp+@@top]
-		call	sub_10763
+		call	@bullet_clip$qii pascal, [bp+@@left], [bp+@@top]
 		or	ax, ax
 		jnz	loc_1085F
 		cmp	_bombing, 0
@@ -7030,9 +6995,7 @@ var_4		= word ptr -4
 		push	di
 		mov	[bp+@@group_i], 0
 		mov	[bp+var_4], 0
-		push	[bp+@@left]
-		push	[bp+@@top]
-		call	sub_10763
+		call	@bullet_clip$qii pascal, [bp+@@left], [bp+@@top]
 		or	ax, ax
 		jnz	loc_10995
 		cmp	_bombing, 0

@@ -13,6 +13,7 @@
 #include "th02/main/spark.hpp"
 #include "th02/main/player/player.hpp"
 #include "th01/sprites/pellet.h"
+#include "th02/sprites/bullet16.h"
 
 // Conceptually identical to the same constants in TH04, but not worth their
 // own header to avoid the duplication. (And indeed named "size type" so that
@@ -319,5 +320,19 @@ bool16 pascal near bullet_speed_tune(subpixel_t& speed)
 		return true;
 	}
 	speed = SPEED_MIN;
+	return false;
+}
+
+bool16 pascal near bullet_clip(screen_x_t left, screen_y_t top)
+{
+	// ZUN quirk: Inconsistent for both 8×8 pellets and 16×16 bullets.
+	if(
+		(left < (PLAYFIELD_LEFT - PELLET_W)) ||
+		(left > PLAYFIELD_RIGHT) ||
+		(top < (PLAYFIELD_TOP - BULLET16_H)) ||
+		(top > (PLAYFIELD_BOTTOM - 1))
+	) {
+		return true;
+	}
 	return false;
 }
