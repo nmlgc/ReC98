@@ -11,6 +11,7 @@
 #include "th02/main/entity.hpp"
 #include "th02/main/playperf.hpp"
 #include "th02/main/spark.hpp"
+#include "th02/main/player/bomb.hpp"
 #include "th02/main/player/player.hpp"
 #include "th01/sprites/pellet.h"
 #include "th02/sprites/bullet16.h"
@@ -140,6 +141,12 @@ bool16 pascal near group_velocity_set(
 )
 {
 	int16_t i_angle = 0;
+
+	// Due to this default, invalid group values will cause the spawn functions
+	// to repeatedly call this function, until it completely filled the pellet
+	// array with identical aimed bullets, moving at the same velocity.
+	// (Not really a ZUN bug until we can discover a game state where this can
+	// actually happen.)
 	bool16 done = false;
 
 	// ZUN bloat: Should take the pixel values as parameters instead of
@@ -336,3 +343,128 @@ bool16 pascal near bullet_clip(screen_x_t left, screen_y_t top)
 	}
 	return false;
 }
+
+#pragma warn -rch
+#pragma warn -ccc
+#define stack_next(stack_i, group_i, speed) \
+	/* Sneaky! That's how we can pretend this is an actual function that */ \
+	/* returns a value. */ \
+	stack_i >= bullet_stack) { \
+		break; \
+	} \
+	speed >>= 1; \
+	if(rank == RANK_LUNATIC) { \
+		speed += to_sp(0.5f); \
+	} \
+	if(speed < SPEED_MIN) { \
+		break; \
+	} \
+	stack_i++; \
+	group_i = 0; \
+	if(false
+
+void pascal near bullets_add_pellet(
+	screen_x_t left,
+	screen_y_t top,
+	unsigned char angle,
+	uint8_t group,
+	subpixel_t speed
+)
+{
+	int group_i = 0;
+	int stack_i = 0;
+	if(bullet_clip(left, top) || bombing || bullet_speed_tune(speed)) {
+		return;
+	}
+
+	// ZUN bloat: Could have been a single `for` loop.
+	int slot_i = 0;
+	do {
+		while(slot_i < BULLET_COUNT) {
+			if(bullets[slot_i].flag != F_FREE) {
+				slot_i++;
+				continue;
+			}
+			bullet_t near& p = bullets[slot_i];
+
+			// Already scored as ZUN bloat in group_velocity_set().
+			p.screen_topleft[page_back].x.v = left;
+			p.screen_topleft[page_back].y.v = top;
+
+			p.group_or_special_motion = BG_NONE;
+			p.flag = F_ALIVE;
+			p.size_type = BST_PELLET;
+			p.u1.v = 0;
+			p.angle = angle;
+
+			slot_i++;
+			if(group_velocity_set(group_i, group, p, speed)) {
+				break;
+			}
+		}
+		if(stack_next(stack_i, group_i, speed)) {
+			break;
+		}
+	} while(1);
+}
+
+void pascal near bullets_add_16x16(
+	screen_x_t left,
+	screen_y_t top,
+	unsigned char angle,
+	bullet_group_or_special_motion_t group_or_special_motion,
+	main_patnum_t patnum,
+	subpixel_t speed
+)
+{
+	int group_i = 0;
+	int stack_i = 0;
+	if(
+		bullet_clip(left, top) ||
+		bombing ||
+		((group_or_special_motion != BSM_GRAVITY) && bullet_speed_tune(speed))
+	) {
+		return;
+	}
+
+	// ZUN bloat: Could have been a single `for` loop.
+	int slot_i = 0;
+	do {
+		while(slot_i < BULLET_COUNT) {
+			if(bullets[slot_i].flag != F_FREE) {
+				slot_i++;
+				continue;
+			}
+			bullet_t near& p = bullets[slot_i];
+			p.group_or_special_motion = group_or_special_motion;
+			p.size_type = BST_BULLET16;
+			p.flag = F_ALIVE;
+			p.patnum = patnum;
+			p.u1.v = 0;
+			p.speed.v = speed;
+			p.angle = angle;
+			slot_i++;
+			if(group_or_special_motion < BG_SPECIAL_MOTIONS) {
+				// Already scored as ZUN bloat in group_velocity_set().
+				p.screen_topleft[page_back].x.v = left;
+				p.screen_topleft[page_back].y.v = top;
+				if(!group_velocity_set(
+					group_i, group_or_special_motion, p, speed
+				)) {
+					continue;
+				}
+			} else {
+				p.screen_topleft[page_back].x.v = TO_SP(left);
+				p.screen_topleft[page_back].y.v = TO_SP(top);
+				vector2(p.velocity.x.v, p.velocity.y.v, angle, speed);
+			}
+			break;
+		}
+		if(stack_next(stack_i, group_i, speed)) {
+			break;
+		}
+	} while(1);
+}
+
+#pragma warn .rch
+#pragma warn .ccc

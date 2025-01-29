@@ -30,7 +30,9 @@ enum bullet_group_or_special_motion_t {
 	// Groups
 	// ------
 	// Supported for both pellets and 16×16 bullets, and subject to the same
-	// description that applies to TH01's `pellet_group_t`.
+	// description that applies to TH01's `pellet_group_t`. The resulting
+	// angles and speeds can be freely offset via the angle and speed
+	// parameters to the bullet_add_*() functions.
 
 	BG_1 = 0x20,
 	BG_1_AIMED = 0x19,
@@ -87,7 +89,8 @@ enum bullet_group_or_special_motion_t {
 
 	// Special motion types
 	// --------------------
-	// Only supported for 16×16 sprite bullets.
+	// Only supported for 16×16 sprite bullets. These types always start with
+	// the angle and (tuned) speed passed to bullets_add_16x16().
 
 	BG_SPECIAL_MOTIONS = 0x80,
 
@@ -143,6 +146,27 @@ enum bullet_group_or_special_motion_t {
 
 // ZUN bloat: Should be separate.
 void bullets_and_sparks_init(void);
+
+// Spawns a number of bullets according to the given group with corresponding
+// velocities, or a single special motion bullet, at (left, top). [speed] is
+// tuned according to the currently played difficulty and [playperf]. Special
+// motions are only supported for 16×16 reasons, for what seem to be game
+// design reasons.
+void pascal near bullets_add_pellet(
+	screen_x_t left,
+	screen_y_t top,
+	unsigned char angle,
+	uint8_t group,
+	subpixel_t speed
+);
+void pascal near bullets_add_16x16(
+	screen_x_t left,
+	screen_y_t top,
+	unsigned char angle,
+	bullet_group_or_special_motion_t group_or_special_motion,
+	main_patnum_t patnum,
+	subpixel_t speed
+);
 
 // Renders a pellet at the given position.
 void pascal near pellet_render(screen_x_t left, screen_y_t top);

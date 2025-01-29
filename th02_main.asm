@@ -6853,279 +6853,10 @@ BST_PELLET = 1
 BST_BULLET16 = 2
 
 	extern @bullets_and_sparks_init$qv:proc
-	@GROUP_VELOCITY_SET$QMIIR8BULLET_TI procdesc pascal near \
-		i:dword, group:word, bullet:word, speed:word
-	@BULLET_SPEED_TUNE$QMI procdesc pascal near \
-		speed:dword
-	@BULLET_CLIP$QII procdesc pascal near \
-		left:word, top:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1078E	proc near
-
-var_4		= word ptr -4
-@@group_i	= word ptr -2
-@@speed	= word ptr  4
-@@group	= byte ptr  6
-@@angle	= byte ptr  8
-@@top	= word ptr  0Ah
-@@left	= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	[bp+@@group_i], 0
-		mov	[bp+var_4], 0
-		call	@bullet_clip$qii pascal, [bp+@@left], [bp+@@top]
-		or	ax, ax
-		jnz	loc_1085F
-		cmp	_bombing, 0
-		jnz	loc_1085F
-		push	ss	; speed (segment)
-		lea	ax, [bp+@@speed]
-		push	ax	; speed (offset)
-		call	@bullet_speed_tune$qmi
-		or	ax, ax
-		jnz	loc_1085F
-		xor	di, di
-		jmp	short loc_1082F
-; ---------------------------------------------------------------------------
-
-loc_107CA:
-		mov	bx, di
-		imul	bx, size bullet_t
-		cmp	_bullets[bx].BULLET_flag, F_FREE
-		jz	short loc_107D9
-		inc	di
-		jmp	short loc_1082F
-; ---------------------------------------------------------------------------
-
-loc_107D9:
-		mov	ax, di
-		imul	ax, size bullet_t
-		add	ax, offset _bullets
-		mov	si, ax
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	dx, [bp+@@left]
-		mov	bx, ax
-		mov	[bx+si+bullet_t.BULLET_screen_topleft.x], dx
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	dx, [bp+@@top]
-		mov	bx, ax
-		mov	[bx+si+bullet_t.BULLET_screen_topleft.y], dx
-		mov	[si+bullet_t.BULLET_group], 0
-		mov	[si+bullet_t.BULLET_flag], F_ALIVE
-		mov	[si+bullet_t.BULLET_size_type], BST_PELLET
-		mov	[si+bullet_t.BULLET_u1], 0
-		mov	al, [bp+@@angle]
-		mov	[si+bullet_t.BULLET_angle], al
-		inc	di
-		push	ss	; i (segment)
-		lea	ax, [bp+@@group_i]
-		push	ax	; i (offset)
-		mov	al, [bp+@@group]
-		mov	ah, 0
-		push	ax	; group
-		push	si	; bullet
-		push	[bp+@@speed]	; speed
-		call	@group_velocity_set$qmiir8bullet_ti
-		or	ax, ax
-		jnz	short loc_10835
-
-loc_1082F:
-		cmp	di, BULLET_COUNT
-		jl	short loc_107CA
-
-loc_10835:
-		mov	al, _bullet_stack
-		mov	ah, 0
-		cmp	ax, [bp+var_4]
-		jle	short loc_1085F
-		sar	[bp+@@speed], 1
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_1084F
-		add	[bp+@@speed], 8
-
-loc_1084F:
-		cmp	[bp+@@speed], (1 shl 4)
-		jl	short loc_1085F
-		inc	[bp+var_4]
-		mov	[bp+@@group_i], 0
-		jmp	short loc_1082F
-; ---------------------------------------------------------------------------
-
-loc_1085F:
-		pop	di
-		pop	si
-		leave
-		retn	0Ah
-sub_1078E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10865	proc near
-
-var_4		= word ptr -4
-@@group_i	= word ptr -2
-@@speed	= word ptr  4
-@@patnum	= byte ptr  6
-@@group	= byte ptr  8
-@@angle	= word ptr  0Ah
-@@top	= word ptr  0Ch
-@@left	= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	[bp+@@group_i], 0
-		mov	[bp+var_4], 0
-		call	@bullet_clip$qii pascal, [bp+@@left], [bp+@@top]
-		or	ax, ax
-		jnz	loc_10995
-		cmp	_bombing, 0
-		jnz	loc_10995
-		cmp	[bp+@@group], 83h
-		jz	short loc_108A3
-		push	ss	; speed (segment)
-		lea	ax, [bp+@@speed]
-		push	ax	; speed (offset)
-		call	@bullet_speed_tune$qmi
-		or	ax, ax
-		jnz	loc_10995
-
-loc_108A3:
-		xor	di, di
-		jmp	loc_10963
-; ---------------------------------------------------------------------------
-
-loc_108A8:
-		mov	bx, di
-		imul	bx, size bullet_t
-		cmp	_bullets[bx].BULLET_flag, F_FREE
-		jz	short loc_108B8
-		inc	di
-		jmp	loc_10963
-; ---------------------------------------------------------------------------
-
-loc_108B8:
-		mov	ax, di
-		imul	ax, size bullet_t
-		add	ax, offset _bullets
-		mov	si, ax
-		mov	al, [bp+@@group]
-		mov	[si+bullet_t.BULLET_group], al
-		mov	[si+bullet_t.BULLET_size_type], BST_BULLET16
-		mov	[si+bullet_t.BULLET_flag], F_ALIVE
-		mov	al, [bp+@@patnum]
-		mov	[si+bullet_t.BULLET_patnum], al
-		mov	[si+bullet_t.BULLET_u1], 0
-		mov	al, byte ptr [bp+@@speed]
-		mov	[si+bullet_t.BULLET_speed], al
-		mov	al, byte ptr [bp+@@angle]
-		mov	[si+bullet_t.BULLET_angle], al
-		inc	di
-		cmp	[bp+@@group], 80h
-		jnb	short loc_10924
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	dx, [bp+@@left]
-		mov	bx, ax
-		mov	[bx+si+bullet_t.BULLET_screen_topleft.x], dx
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	dx, [bp+@@top]
-		mov	bx, ax
-		mov	[bx+si+bullet_t.BULLET_screen_topleft.y], dx
-		push	ss	; i (segment)
-		lea	ax, [bp+@@group_i]
-		push	ax	; i (offset)
-		mov	al, [bp+@@group]
-		mov	ah, 0
-		push	ax	; group
-		push	si	; bullet
-		push	[bp+@@speed]	; speed
-		call	@group_velocity_set$qmiir8bullet_ti
-		or	ax, ax
-		jnz	short loc_1096B
-		jmp	short loc_10963
-; ---------------------------------------------------------------------------
-
-loc_10924:
-		mov	ax, [bp+@@left]
-		shl	ax, 4
-		mov	dl, _page_back
-		mov	dh, 0
-		shl	dx, 2
-		mov	bx, dx
-		mov	[bx+si+bullet_t.BULLET_screen_topleft.x], ax
-		mov	ax, [bp+@@top]
-		shl	ax, 4
-		mov	dl, _page_back
-		mov	dh, 0
-		shl	dx, 2
-		mov	bx, dx
-		mov	[bx+si+bullet_t.BULLET_screen_topleft.y], ax
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.x]
-		push	ax
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.y]
-		push	ax
-		push	[bp+@@angle]
-		push	[bp+@@speed]
-		call	@vector2$qmit1uci
-		jmp	short loc_1096B
-; ---------------------------------------------------------------------------
-
-loc_10963:
-		cmp	di, BULLET_COUNT
-		jl	loc_108A8
-
-loc_1096B:
-		mov	al, _bullet_stack
-		mov	ah, 0
-		cmp	ax, [bp+var_4]
-		jle	short loc_10995
-		sar	[bp+@@speed], 1
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_10985
-		add	[bp+@@speed], 8
-
-loc_10985:
-		cmp	[bp+@@speed], (1 shl 4)
-		jl	short loc_10995
-		inc	[bp+var_4]
-		mov	[bp+@@group_i], 0
-		jmp	short loc_10963
-; ---------------------------------------------------------------------------
-
-loc_10995:
-		pop	di
-		pop	si
-		leave
-		retn	0Ch
-sub_10865	endp
-
+	@BULLETS_ADD_PELLET$QIIUCUCI procdesc pascal near \
+		left:word, top:word, angle:byte, group:byte, speed:word
+	@BULLETS_ADD_16X16$QIIUC32BULLET_GROUP_OR_SPECIAL_MOTION_T13MAIN_PATNUM_TI procdesc pascal near \
+		left:word, top:word, angle:byte, group_or_special_motion:byte, patnum:byte, speed:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8304,7 +8035,7 @@ loc_1134D:
 
 loc_11379:
 		push	28h ; '('
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	loc_114D0
 ; ---------------------------------------------------------------------------
 
@@ -8400,7 +8131,7 @@ loc_11449:
 		push	ax
 		push	20h ; ' '
 		push	32h ; '2'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_114D0
 ; ---------------------------------------------------------------------------
 
@@ -9029,7 +8760,7 @@ loc_11975:
 		push	ax
 		push	19h
 		push	4Dh ; 'M'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_11993:
 		pop	di
@@ -9104,7 +8835,7 @@ loc_119F5:
 		push	0
 		push	word_2066E
 		push	26h ; '&'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_11A1F:
 		inc	si
@@ -9142,7 +8873,7 @@ loc_11A42:
 		push	0
 		push	19h
 		push	510050h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_11A6E:
 		inc	si
@@ -9217,7 +8948,7 @@ loc_11AC4:
 		push	ax
 		push	82h
 		push	520038h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
 loc_11AEF:
@@ -9270,7 +9001,7 @@ loc_11B21:
 		push	ax
 		push	82h
 		push	520038h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
 loc_11B4C:
@@ -9357,7 +9088,7 @@ stones_11BFE	proc near
 		push	word_1EB28
 		push	23h ; '#'
 		push	46h ; 'F'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	al, byte ptr word_1EB28
 		add	al, 8
 		mov	byte ptr word_1EB28, al
@@ -9458,7 +9189,7 @@ loc_11CC4:
 		push	ax
 		push	20h ; ' '
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	word_22D98
 		push	word_22D9A
 		mov	al, [bp+var_1]
@@ -9466,7 +9197,7 @@ loc_11CC4:
 		push	ax
 		push	20h ; ' '
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -9601,7 +9332,7 @@ loc_11E0A:
 		push	ax
 		push	83h
 		push	520020h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
 loc_11E2B:
@@ -9638,7 +9369,7 @@ stones_11E40	proc near
 		sar	ax, 1
 		add	ax, 1Eh
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_11E66:
 		cmp	_boss_phase_frame, 130
@@ -9699,7 +9430,7 @@ loc_11EBE:
 		push	0
 		push	19h
 		push	46h ; 'F'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_11F2B
 ; ---------------------------------------------------------------------------
 
@@ -9781,7 +9512,7 @@ loc_11F57:
 		push	word_22FAF
 		push	19h
 		push	52003Ch
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	bx, si
 		add	bx, bx
 		push	_stone_left[bx]
@@ -9793,7 +9524,7 @@ loc_11F57:
 		push	ax
 		push	19h
 		push	52003Ch
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
 loc_11F98:
@@ -9836,13 +9567,13 @@ loc_11FC4:
 		push	ax
 		push	word_20670
 		push	40h
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	word_22D98
 		push	word_22D9A
 		push	word_22FAF+1
 		push	word_20670
 		push	40h
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	al, byte ptr word_22FAF+1
 		add	al, 0FDh
 		mov	byte ptr word_22FAF+1, al
@@ -9924,7 +9655,7 @@ loc_12075:
 		push	ax
 		push	20h ; ' '
 		push	70h ; 'p'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		inc	si
 
 loc_1209A:
@@ -9954,7 +9685,7 @@ loc_120AA:
 		push	word_22FB5
 		push	21h ; '!'
 		push	560070h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
 loc_120D2:
@@ -11974,7 +11705,7 @@ loc_138F2:
 		push	32h ; '2'
 
 loc_13903:
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_13906:
 		pop	si
@@ -12347,13 +12078,13 @@ var_1		= byte ptr -1
 		push	0
 		push	word_2066E
 		push	32h ; '2'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	si
 		push	70h ; 'p'
 		push	40h
 		push	word_2066E+1
 		push	1Eh
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	loc_13ECA
 ; ---------------------------------------------------------------------------
 
@@ -12379,13 +12110,13 @@ loc_13CE0:
 		push	word_250DE
 		push	word_20670
 		push	36h ; '6'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	si
 		push	70h ; 'p'
 		push	word_250DE
 		push	word_20670+1
 		push	2Ch ; ','
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		add	si, 2Ch	; ','
 		push	si
 		push	70h ; 'p'
@@ -12394,7 +12125,7 @@ loc_13CE0:
 		push	ax
 		push	word_20670
 		push	36h ; '6'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	si
 		push	70h ; 'p'
 		mov	al, 80h
@@ -12402,7 +12133,7 @@ loc_13CE0:
 		push	ax
 		push	word_20670+1
 		push	2Ch ; ','
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	loc_13ECA
 ; ---------------------------------------------------------------------------
 
@@ -12530,7 +12261,7 @@ loc_13E98:
 		push	40h
 		push	word ptr [bp+var_1]
 		push	3Ah ; ':'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_13ECA
 ; ---------------------------------------------------------------------------
 
@@ -12546,7 +12277,7 @@ loc_13EA7:
 		push	1
 		push	1Ch
 		push	50002Ch
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_13ECA:
 		pop	si
@@ -12636,7 +12367,7 @@ loc_13F66:
 		shl	ax, 2
 		add	ax, 28h	; '('
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -12968,7 +12699,7 @@ midboss2_14203	proc near
 		push	ax
 		push	80h
 		push	54001Eh
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_14248:
 		pop	bp
@@ -13625,7 +13356,7 @@ loc_147F3:
 		mov	al, [si+8]
 		mov	ah, 0
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_14822:
 		inc	byte_252E1
@@ -14038,7 +13769,7 @@ loc_14B7E:
 		push	40h
 		push	word_2066E+1
 		push	word_252E8
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		add	word_252E8, 0Bh
 		pop	bp
 		retn
@@ -14100,7 +13831,7 @@ loc_14C14:
 		push	0
 		push	word_20670
 		push	word_252EA
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		add	word_252EA, 0Bh
 
 loc_14C48:
@@ -14311,7 +14042,7 @@ meira_14DFC	proc near
 		push	0
 		push	word_20670
 		push	4Ah ; 'J'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		pop	bp
 		retn
 meira_14DFC	endp
@@ -14416,7 +14147,7 @@ loc_14ED8:
 		add	ax, 7Ah	; 'z'
 		push	ax
 		push	36h ; '6'
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
 loc_14F02:
@@ -14587,7 +14318,7 @@ loc_1505F:
 		lea	ax, [di+7Ah]
 		push	ax
 		push	36h ; '6'
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	di
 
 loc_15084:
@@ -15032,7 +14763,7 @@ loc_153D5:
 		mov	al, [si+8]
 		mov	ah, 0
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	byte ptr [si], 0
 
 loc_153F5:
@@ -16144,7 +15875,7 @@ loc_15DF2:
 		mov	ah, 0
 		add	ax, 1Eh
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_15E81
 ; ---------------------------------------------------------------------------
 
@@ -16185,7 +15916,7 @@ loc_15E4D:
 		mov	ah, 0
 		add	ax, 1Eh
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		inc	si
 
 loc_15E74:
@@ -16248,7 +15979,7 @@ loc_15EB9:
 		push	0
 		push	17h
 		push	78h ; 'x'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_15EE7:
 		cmp	_boss_phase_frame, 200
@@ -16352,7 +16083,7 @@ sigma_15F6F	proc near
 		push	ax
 		push	27h ; '''
 		push	55h ; 'U'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_15F93:
 		pop	bp
@@ -16514,7 +16245,7 @@ loc_16122:
 		push	ax
 		push	27h ; '''
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_16172
 ; ---------------------------------------------------------------------------
 
@@ -16552,7 +16283,7 @@ sigma_16176	proc near
 		push	ax
 		push	25h ; '%'
 		push	32h ; '2'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1619A:
 		pop	bp
@@ -16605,7 +16336,7 @@ loc_161EE:
 		add	ax, 7Ah	; 'z'
 		push	ax
 		push	40h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	ax, 1B0h
 		sub	ax, word_255A0
 		push	ax
@@ -16617,7 +16348,7 @@ loc_161EE:
 		add	ax, 7Ah	; 'z'
 		push	ax
 		push	40h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		add	word_255A0, 10h
 		cmp	word_255A0, 0E0h
 		jnz	short loc_162B2
@@ -16802,7 +16533,7 @@ loc_163EC:
 		add	dx, 7Ah	; 'z'
 		push	dx
 		push	3Ch ; '<'
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	al, byte ptr [bp+var_B]
 		add	al, 10h
 		mov	byte ptr [bp+var_B], al
@@ -16942,7 +16673,7 @@ loc_16540:
 		push	ax
 		push	25h ; '%'
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 locret_16553:
 		leave
@@ -16987,7 +16718,7 @@ loc_16589:
 		push	ax
 		push	27h ; '''
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_165A3:
 		pop	bp
@@ -17092,7 +16823,7 @@ loc_16636:
 		push	0
 		push	26h ; '&'
 		push	46h ; 'F'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1664E:
 		pop	bp
@@ -17122,7 +16853,7 @@ loc_16666:
 		push	word_255B1
 		push	24h ; '$'
 		push	560050h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	al, byte ptr word_255B1
 		add	al, 8
 		mov	byte ptr word_255B1, al
@@ -17170,7 +16901,7 @@ loc_166BE:
 		push	ax
 		push	25h ; '%'
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_166DC:
 		pop	bp
@@ -17578,7 +17309,7 @@ arg_0		= word ptr  4
 		mov	al, [bx+25h]
 		mov	ah, 0
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		pop	bp
 		retn	2
 sub_16AA7	endp
@@ -18465,7 +18196,7 @@ loc_171D0:
 		mov	al, [bx+25h]
 		mov	ah, 0
 		push	ax
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	[bp+var_4], 3
 		jmp	loc_174E1
 ; ---------------------------------------------------------------------------
@@ -18507,7 +18238,7 @@ loc_17244:
 		mov	al, [bx+4]
 		mov	ah, 0
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	[bp+var_4], 5
 		jmp	loc_174E1
 ; ---------------------------------------------------------------------------
@@ -18556,7 +18287,7 @@ loc_172A8:
 		mov	al, [bx+5]
 		mov	ah, 0
 		push	ax
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	[bp+var_4], 6
 		jmp	loc_174E1
 ; ---------------------------------------------------------------------------
@@ -19188,7 +18919,7 @@ loc_17864:
 		push	0
 		push	19h
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1789D:
 		mov	bx, word_26C46
@@ -20210,7 +19941,7 @@ loc_18170:
 		push	ax
 		push	word_2066E
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	word_26C58
 		push	word_26C60
 		push	0
@@ -20220,7 +19951,7 @@ loc_18170:
 		mov	al, [bx+2BFFh]
 		push	ax
 		push	28h ; '('
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_181B1:
 		pop	bp
@@ -20421,7 +20152,7 @@ loc_183B2:
 		push	0
 		push	word ptr [bp+@@angle]
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_183CC
 ; ---------------------------------------------------------------------------
 
@@ -20657,7 +20388,7 @@ loc_18631:
 		push	word ptr [bp+@@angle]
 		push	20h ; ' '
 		push	23h ; '#'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		inc	[bp+var_4]
 		mov	al, [bp+@@angle]
 		add	al, 8
@@ -20682,7 +20413,7 @@ loc_18661:
 		mov	ax, 23h	; '#'
 		sub	ax, [bp+var_4]
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		inc	[bp+var_4]
 		mov	al, [bp+@@angle]
 		add	al, 8
@@ -20776,7 +20507,7 @@ loc_18746:
 		mov	ax, [bp+var_4]
 		add	ax, 23h	; '#'
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		add	[bp+var_4], 0Ch
 
 loc_1875F:
@@ -21063,7 +20794,7 @@ loc_189DC:
 		mov	al, byte ptr word_26CDA+1
 		mov	ah, 0
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		call	_snd_se_play c, 3
 
 loc_18A19:
@@ -21132,7 +20863,7 @@ loc_18A93:
 		push	word_26CDC
 		push	23h ; '#'
 		push	5Ah ; 'Z'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	al, byte ptr word_26CDC
 		add	al, 3
 		mov	byte ptr word_26CDC, al
@@ -21148,7 +20879,7 @@ loc_18AB8:
 		push	word_26CDC
 		push	23h ; '#'
 		push	5Ah ; 'Z'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	al, byte ptr word_26CDC
 		add	al, 0FDh
 		mov	byte ptr word_26CDC, al
@@ -21172,7 +20903,7 @@ loc_18ADD:
 		push	40h
 		push	7
 		push	5Ah ; 'Z'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21185,7 +20916,7 @@ loc_18B0D:
 		push	ax
 		push	20h ; ' '
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	word_26C5A
 		push	word_26C62
 		call	@randring2_next8_and$quc pascal, 3Fh
@@ -21193,7 +20924,7 @@ loc_18B0D:
 		push	ax
 		push	20h ; ' '
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21406,7 +21137,7 @@ loc_18CEE:
 		push	ax
 		push	88h
 		push	550050h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		push	word_26C5A
 		push	word_26C62
 		mov	al, byte_26CE2
@@ -21414,7 +21145,7 @@ loc_18CEE:
 		push	ax
 		push	88h
 		push	550050h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		push	word_26C5A
 		push	word_26C62
 		mov	al, byte_26CE2
@@ -21422,7 +21153,7 @@ loc_18CEE:
 		push	ax
 		push	88h
 		push	550050h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		push	word_26C5A
 		push	word_26C62
 		mov	al, byte_26CE2
@@ -21438,7 +21169,7 @@ loc_18D75:
 		push	ax
 		push	88h
 		push	550050h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		push	word_26C5A
 		push	word_26C62
 		mov	al, byte_26CE2
@@ -21448,7 +21179,7 @@ loc_18D9C:
 		push	ax
 		push	88h
 		push	550050h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_18DA9:
 		cmp	_boss_phase_frame, 150
@@ -21537,7 +21268,7 @@ loc_18E54:
 		push	ax
 		push	7
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		push	word_26C5A
 		push	word_26C62
 		mov	al, 78h	; 'x'
@@ -21545,7 +21276,7 @@ loc_18E54:
 		push	ax
 		push	7
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	al, byte_26CE4
 		add	al, 0Ah
 		mov	byte_26CE4, al
@@ -21793,7 +21524,7 @@ loc_190EF:
 		push	[bp+var_3]
 		push	20h ; ' '
 		push	80h
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_19127:
 		inc	[bp+var_3+1]
@@ -21860,7 +21591,7 @@ loc_1918B:
 		push	word_26CED
 		push	23h ; '#'
 		push	560032h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	al, byte_20672
 		add	byte ptr word_26CED, al
 		pop	bp
@@ -21970,13 +21701,13 @@ loc_192CA:
 		push	2
 		push	1Ch
 		push	56003Ch
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		push	word_26C5C
 		push	word_26C64
 		push	2
 		push	1Ch
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_192FF:
 		mov	al, _rank
@@ -21992,13 +21723,13 @@ loc_192FF:
 		push	2
 		push	1Ch
 		push	56003Ch
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		push	word_26C5C
 		push	word_26C64
 		push	2
 		push	1Ch
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_19338:
 		test	byte ptr _boss_phase_frame, 7
@@ -22049,7 +21780,7 @@ loc_1937A:
 
 loc_19391:
 		push	56005Ah
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -23367,7 +23098,7 @@ midboss4_1A0CE	proc near
 		push	40h
 		push	20h ; ' '
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1A101:
 		pop	bp
@@ -23415,7 +23146,7 @@ loc_1A12D:
 		mov	ax, _boss_phase_frame
 		add	ax, -20
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 locret_1A14F:
 		leave
@@ -23446,7 +23177,7 @@ midboss4_1A151	proc near
 		push	80h
 		push	50h ; 'P'
 		push	bx
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_1A17C:
 		pop	bp
@@ -23518,7 +23249,7 @@ loc_1A1D5:
 		push	ax
 		push	20h ; ' '
 		push	46h ; 'F'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		inc	si
 
 loc_1A1F7:
@@ -23620,7 +23351,7 @@ loc_1A296:
 		push	40h
 		push	20h ; ' '
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1A30A:
 		cmp	_boss_phase_frame, 32
@@ -25173,7 +24904,7 @@ loc_1B27A:
 		push	word_26D7F
 		push	20h ; ' '
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	ax, point_26D76.x
 		add	ax, 52
 		push	ax
@@ -25198,7 +24929,7 @@ loc_1B2C6:
 		push	32h ; '2'
 
 loc_1B2DC:
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	al, byte ptr word_26D7F
 		add	al, 0Ah
 		mov	byte ptr word_26D7F, al
@@ -25239,7 +24970,7 @@ loc_1B30A:
 		push	0
 		push	word_2066E
 		push	36h ; '6'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	ax, point_26D76.x
 		add	ax, 64
 		push	ax
@@ -25249,7 +24980,7 @@ loc_1B30A:
 		push	0
 		push	word_2066E+1
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1B349:
 		cmp	_boss_phase_frame, 192
@@ -25308,7 +25039,7 @@ loc_1B3A8:
 		push	word_26D7F+1
 		push	84h
 		push	550028h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	al, byte ptr word_26D7F+1
 		add	al, 2Bh	; '+'
 		mov	byte ptr word_26D7F+1, al
@@ -25570,7 +25301,7 @@ loc_1B592:
 		push	0
 		push	19h
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1B631:
 		cmp	word_26D4A, 8
@@ -25586,7 +25317,7 @@ loc_1B631:
 		push	0
 		push	0Ah
 		push	50h ; 'P'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1B654:
 		cmp	_boss_phase_frame, 266
@@ -25757,7 +25488,7 @@ loc_1B762:
 		push	word_26D87
 		push	20h ; ' '
 		push	32h ; '2'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_1B7D0
 ; ---------------------------------------------------------------------------
 
@@ -25774,7 +25505,7 @@ loc_1B79B:
 		push	word_26D87
 		push	20h ; ' '
 		push	3Ch ; '<'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		cmp	_boss_phase_frame, 270
 		jle	short loc_1B7D0
 		mov	_boss_phase_frame, 0
@@ -25918,7 +25649,7 @@ loc_1B8C5:
 		push	word_26D87+1
 		push	255
 		push	55003Ch
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		jmp	loc_1B992
 ; ---------------------------------------------------------------------------
 
@@ -25969,7 +25700,7 @@ loc_1B932:
 		push	ax
 		push	20h ; ' '
 		push	46h ; 'F'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1B98A:
 		add	si, 2
@@ -26064,7 +25795,7 @@ loc_1BA55:
 		push	ax
 		push	20h ; ' '
 		push	46h ; 'F'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		add	[bp+var_4], 10h
 
 loc_1BA6C:
@@ -26120,7 +25851,7 @@ loc_1BAC5:
 		mov	ah, 0
 		add	ax, 10h
 		push	ax
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		add	[bp+var_4], 0Ch
 
 loc_1BAE5:
@@ -26238,7 +25969,7 @@ loc_1BBAB:
 		push	ax
 		push	20h ; ' '
 		push	[bp+var_4]
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 		mov	al, [si-6CE6h]
 		mov	bx, si
 		add	bx, bx
@@ -26266,7 +25997,7 @@ loc_1BC0F:
 		push	_boss_phase_frame
 		push	25h ; '%'
 		push	32h ; '2'
-		call	sub_1078E
+		call	@bullets_add_pellet$qiiucuci
 
 loc_1BC3B:
 		inc	byte_26D89
@@ -26384,7 +26115,7 @@ loc_1BD46:
 		push	0C0h
 		push	255
 		push	550046h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_1BD83:
 		inc	[bp+var_3+1]
@@ -26401,7 +26132,7 @@ loc_1BD86:
 		push	0C0h
 		push	255
 		push	550046h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		jmp	loc_1BE2F
 ; ---------------------------------------------------------------------------
 
@@ -26443,7 +26174,7 @@ loc_1BDC4:
 		mov	ah, 0
 		add	ax, 10h
 		push	ax
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		push	si
 		call	@randring2_next16$qv
 		mov	bx, 320
@@ -26458,7 +26189,7 @@ loc_1BDC4:
 		mov	ah, 0
 		add	ax, 10h
 		push	ax
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	[bp+var_3+1]
 
 loc_1BE25:
@@ -26489,7 +26220,7 @@ loc_1BE3D:
 		push	ax
 		push	85h
 		push	550046h
-		call	sub_10865
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	[bp+var_3+1]
 
 loc_1BE69:
