@@ -16,6 +16,10 @@ extern struct {
 		int16_t homing_duration;
 		Subpixel drift_speed;
 	} u2;
+
+	// See the special motion type comment for why it makes sense that these
+	// are 16-bit values, despite being compared against an 8-bit per-bullet
+	// field.
 	union {
 		int16_t turns_max;
 		int16_t drift_duration;
@@ -91,6 +95,11 @@ enum bullet_group_or_special_motion_t {
 	// --------------------
 	// Only supported for 16×16 sprite bullets. These types always start with
 	// the angle and (tuned) speed passed to bullets_add_16x16().
+	// Most of these types are limited by the 16-bit duration or turn values in
+	// [bullet_special] and reset the bullet to BG_NONE once its frame or turn
+	// counter matches or exceeds the limiter. Since bullets track that counter
+	// in the 8-bit [u1] field, setting the respective limiter to ≥256 prevents
+	// this reset.
 
 	BG_SPECIAL_MOTIONS = 0x80,
 

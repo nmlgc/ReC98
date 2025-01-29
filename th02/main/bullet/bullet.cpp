@@ -9,6 +9,7 @@
 #include "th02/math/randring.hpp"
 #include "th02/hardware/pages.hpp"
 #include "th02/main/entity.hpp"
+#include "th02/main/frames.hpp"
 #include "th02/main/playperf.hpp"
 #include "th02/main/spark.hpp"
 #include "th02/main/player/bomb.hpp"
@@ -468,3 +469,132 @@ void pascal near bullets_add_16x16(
 
 #pragma warn .rch
 #pragma warn .ccc
+
+// Calculates [bullet.velocity] for the special motion types.
+void pascal near bullet_update_special(bullet_t near &bullet)
+{
+	const pixel_t bullet_top = cur_top->to_pixel();
+	const pixel_t aim_y = (player_center_y() - 16);
+	const pixel_t bullet_left = cur_left->to_pixel();
+	const pixel_t aim_x = (player_center_x() - (BULLET16_W / 2));
+
+	#define chase_player(bullet, bullet_left, bullet_top, x2, y2, speed) { \
+		/**/ if(bullet_left < aim_x) { bullet.velocity.x.v += speed.v; } \
+		else if(bullet_left > aim_x) { bullet.velocity.x.v -= speed.v; } \
+		/**/ if(bullet_top  < aim_y) { bullet.velocity.y.v += speed.v; } \
+		else if(bullet_top  > aim_y) { bullet.velocity.y.v -= speed.v; } \
+	}
+
+	switch(bullet.group_or_special_motion) {
+	case BSM_CHASE:
+		chase_player(
+			bullet,
+			bullet_left,
+			bullet_top,
+			aim_x,
+			aim_y,
+			bullet_special.u1.chase_speed
+		);
+		break;
+
+	case BSM_HOMING:
+		bullet.u1.special_frames++;
+		if(bullet.u1.special_frames < bullet_special.u2.homing_duration) {
+			vector2_between_plus(
+				bullet_left,
+				bullet_top,
+				aim_x,
+				aim_y,
+				0x00,
+				bullet.velocity.x.v,
+				bullet.velocity.y.v,
+				bullet.speed
+			);
+		} else {
+			bullet.group_or_special_motion = BG_NONE;
+		}
+		break;
+
+	case BSM_DECELERATE_THEN_TURN_AIMED:
+		if((stage_frame & 7) != 0) {
+			break;
+		}
+		bullet.velocity.x.v /= 2;
+		bullet.velocity.y.v /= 2;
+		if((bullet.velocity.x.v == 0) && (bullet.velocity.y.v == 0)) {
+			vector2_between_plus(
+				bullet_left,
+				bullet_top,
+				aim_x,
+				aim_y,
+				0x00,
+				bullet.velocity.x.v,
+				bullet.velocity.y.v,
+				bullet.speed
+			);
+			bullet.u1.turns_done++;
+			if(bullet.u1.turns_done >= bullet_special.u3.turns_max) {
+				bullet.group_or_special_motion = BG_NONE;
+			}
+		}
+		break;
+
+	case BSM_GRAVITY:
+		bullet.velocity.y.v += bullet_special.u1.gravity_speed.v;
+		break;
+
+	case BSM_DRIFT_ANGLE_AND_SPEED:
+		bullet.angle += bullet_special.u1.drift_angle;
+		bullet.speed.v += bullet_special.u2.drift_speed.v;
+		vector2(
+			bullet.velocity.x.v, bullet.velocity.y.v, bullet.angle, bullet.speed
+		);
+		bullet.u1.special_frames++;
+		if(bullet.u1.special_frames > bullet_special.u3.drift_duration) {
+			bullet.group_or_special_motion = BG_NONE;
+		}
+		break;
+
+	case BSM_DRIFT_ANGLE_CHASE:
+		bullet.angle += bullet_special.u1.drift_angle;
+		vector2(
+			bullet.velocity.x.v, bullet.velocity.y.v, bullet.angle, bullet.speed
+		);
+		chase_player(
+			bullet,
+			bullet_left,
+			bullet_top,
+			aim_x,
+			aim_y,
+			bullet_special.u2.drift_speed
+		);
+		bullet.u1.special_frames++;
+		if(bullet.u1.special_frames > bullet_special.u3.drift_duration) {
+			bullet.group_or_special_motion = BG_NONE;
+		}
+		break;
+
+	case BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM:
+		if(
+			(bullet_left < (PLAYFIELD_LEFT + BOUNCE_MARGIN)) ||
+			(bullet_left > (PLAYFIELD_RIGHT - BULLET16_W - BOUNCE_MARGIN))
+		) {
+			bullet.velocity.x.v *= -1;
+			bullet.u1.turns_done++;
+		}
+		// fallthrough
+
+	case BSM_BOUNCE_TOP_BOTTOM:
+		if(
+			(bullet_top < (PLAYFIELD_TOP + BOUNCE_MARGIN)) ||
+			(bullet_top > (PLAYFIELD_BOTTOM - BULLET16_H - BOUNCE_MARGIN))
+		) {
+			bullet.velocity.y.v *= -1;
+			bullet.u1.turns_done++;
+		}
+		if(bullet.u1.turns_done > bullet_special.u3.turns_max) {
+			bullet.group_or_special_motion = BG_NONE;
+		}
+		break;
+	}
+}
