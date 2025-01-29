@@ -9,6 +9,7 @@
 #include "th02/math/randring.hpp"
 #include "th02/hardware/pages.hpp"
 #include "th02/main/entity.hpp"
+#include "th02/main/playperf.hpp"
 #include "th02/main/spark.hpp"
 #include "th02/main/player/player.hpp"
 #include "th01/sprites/pellet.h"
@@ -47,6 +48,12 @@ struct bullet_t {
 	int8_t padding;
 };
 
+// Constants
+// ---------
+
+static const subpixel_t SPEED_MIN = TO_SP(1);
+// ---------
+
 // State
 // -----
 
@@ -66,6 +73,7 @@ extern Subpixel near* cur_top;
 
 extern uint8_t rank_base_stack;
 extern uint8_t stack;
+extern int8_t easy_slow_skip_cycle;
 // -----
 
 #pragma option -a2
@@ -292,4 +300,24 @@ bool16 pascal near group_velocity_set(
 	TO_SP_INPLACE(bullet.screen_topleft[page_back].x.v);
 	TO_SP_INPLACE(bullet.screen_topleft[page_back].y.v);
 	return done;
+}
+
+// Returns whether this bullet should be skipped.
+bool16 pascal near bullet_speed_tune(subpixel_t& speed)
+{
+	// Makes more sense to express it as a scalar in relation to [playperf]
+	// because "3.0f" too easily suggests that a [playperf] of -3 would zero
+	// the speed (which it doesn't).
+	speed += ((speed * playperf) / 48);
+
+	speed += rank_base_speed;
+	if(speed >= SPEED_MIN) {
+		return false;
+	}
+	easy_slow_skip_cycle++;
+	if((rank == RANK_EASY) && (easy_slow_skip_cycle & 1)) {
+		return true;
+	}
+	speed = SPEED_MIN;
+	return false;
 }

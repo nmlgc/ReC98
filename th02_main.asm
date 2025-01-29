@@ -6855,50 +6855,8 @@ BST_BULLET16 = 2
 	extern @bullets_and_sparks_init$qv:proc
 	@GROUP_VELOCITY_SET$QMIIR8BULLET_TI procdesc pascal near \
 		i:dword, group:word, bullet:word, speed:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10716	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		imul	_playperf
-		mov	bx, 30h	; '0'
-		cwd
-		idiv	bx
-		mov	bx, word ptr [bp+arg_0]
-		add	es:[bx], ax
-		mov	al, _rank_base_speed
-		cbw
-		add	es:[bx], ax
-		cmp	word ptr es:[bx], 10h
-		jge	short loc_1075D
-		inc	byte_21753
-		cmp	_rank, RANK_EASY
-		jnz	short loc_10755
-		test	byte_21753, 1
-		jz	short loc_10755
-		mov	ax, 1
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_10755:
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 10h
-
-loc_1075D:
-		xor	ax, ax
-		pop	bp
-		retn	4
-sub_10716	endp
-
+	@BULLET_SPEED_TUNE$QMI procdesc pascal near \
+		speed:dword
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6963,10 +6921,10 @@ var_4		= word ptr -4
 		jnz	loc_1085F
 		cmp	_bombing, 0
 		jnz	loc_1085F
-		push	ss
+		push	ss	; speed (segment)
 		lea	ax, [bp+@@speed]
-		push	ax
-		call	sub_10716
+		push	ax	; speed (offset)
+		call	@bullet_speed_tune$qmi
 		or	ax, ax
 		jnz	loc_1085F
 		xor	di, di
@@ -7081,10 +7039,10 @@ var_4		= word ptr -4
 		jnz	loc_10995
 		cmp	[bp+@@group], 83h
 		jz	short loc_108A3
-		push	ss
+		push	ss	; speed (segment)
 		lea	ax, [bp+@@speed]
-		push	ax
-		call	sub_10716
+		push	ax	; speed (offset)
+		call	@bullet_speed_tune$qmi
 		or	ax, ax
 		jnz	loc_10995
 
@@ -28829,7 +28787,8 @@ _sparks	spark_t SPARK_COUNT dup(<?>)
 
 public _bullet_screen_left, _bullet_screen_top, _bullet_special
 public _rank_base_speed, _spark_sprite_interval, _spark_age_max
-public _bullet_cur_left, _bullet_cur_top, _rank_base_stack, _bullet_stack
+public _bullet_cur_left, _bullet_cur_top, _rank_base_stack
+public _easy_slow_skip_cycle, _bullet_stack
 _bullet_screen_left	dw ?
 _bullet_screen_top 	dw ?
 
@@ -28854,7 +28813,7 @@ _spark_age_max	db ?
 _bullet_cur_left	dw ?
 _bullet_cur_top 	dw ?
 _rank_base_stack	db ?
-byte_21753	db ?
+_easy_slow_skip_cycle	db ?
 _bullet_stack	db ?
 	evendata
 
