@@ -6861,6 +6861,9 @@ PAT_BULLET16_BALL = 86
 PAT_BULLET16_BILLIARD_BALL_RED = 122
 PAT_BULLET16_BILLIARD_BALL_PURPLE = 123
 
+PELLET_W = 8
+BULLET16_W = 16
+
 	extern @bullets_and_sparks_init$qv:proc
 	@BULLETS_ADD_PELLET$QIIUCUCI procdesc pascal near \
 		left:word, top:word, angle:byte, group:byte, speed:word
@@ -7718,7 +7721,8 @@ midboss3_1120F	endp
 
 midboss3_11308	proc near
 
-var_3		= word ptr -3
+@@group	= byte ptr -3
+var_2		= word ptr -2
 arg_0		= word ptr  4
 
 		push	bp
@@ -7737,12 +7741,12 @@ loc_1131C:
 		mov	ax, 0FFF8h
 
 loc_1131F:
-		mov	[bp+var_3+1], ax
+		mov	[bp+var_2], ax
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+5300h]
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		mov	di, ax
 		cmp	_boss_phase_frame, 152
 		jge	short loc_11381
@@ -7755,21 +7759,21 @@ loc_1134D:
 		test	byte ptr _boss_phase_frame, 3
 		jnz	loc_114D0
 		mov	al, [si+5536h]
-		add	al, byte ptr [bp+var_3+1]
+		add	al, byte ptr [bp+var_2]
 		mov	[si+5536h], al
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+52ECh]
 		mov	ax, es:[bx]
-		add	ax, 1Ch
-		push	ax
-		push	di
+		add	ax, 28
+		push	ax	; left
+		push	di	; top
 		mov	al, [si+5536h]
-		push	ax
-		push	20h ; ' '
+		push	ax	; angle
+		push	BG_1	; group
 
 loc_11379:
-		push	28h ; '('
+		push	((2 shl 4) + 8)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		jmp	loc_114D0
 ; ---------------------------------------------------------------------------
@@ -7780,36 +7784,36 @@ loc_11381:
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+52ECh]
-		mov	ax, [bp+var_3+1]
+		mov	ax, [bp+var_2]
 		add	es:[bx], ax
 		test	byte ptr _boss_phase_frame, 7
 		jnz	loc_114D0
 		mov	al, [si+5536h]
-		mov	dl, byte ptr [bp+var_3+1]
+		mov	dl, byte ptr [bp+var_2]
 		add	dl, dl
 		add	al, dl
 		mov	[si+5536h], al
 		cmp	_rank, RANK_EASY
 		jz	short loc_113BD
-		mov	byte ptr [bp+var_3], 0Eh
+		mov	[bp+@@group], BG_4_SPREAD_MEDIUM
 		jmp	short loc_113C1
 ; ---------------------------------------------------------------------------
 
 loc_113BD:
-		mov	byte ptr [bp+var_3], 2
+		mov	[bp+@@group], BG_2_SPREAD_MEDIUM
 
 loc_113C1:
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+52ECh]
 		mov	ax, es:[bx]
-		add	ax, 1Ch
-		push	ax
-		push	di
+		add	ax, 28
+		push	ax	; left
+		push	di	; top
 		mov	al, 80h
 		sub	al, [si+5536h]
-		push	ax
-		push	[bp+var_3]
+		push	ax	; angle
+		push	word ptr [bp+@@group]	; group
 		jmp	short loc_11379
 ; ---------------------------------------------------------------------------
 
@@ -7846,26 +7850,26 @@ loc_11429:
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+52ECh]
-		mov	ax, [bp+var_3+1]
+		mov	ax, [bp+var_2]
 		sub	es:[bx], ax
 		test	byte ptr _boss_phase_frame, 3
 		jnz	loc_114D0
 
 loc_11449:
 		mov	al, [si+5536h]
-		sub	al, byte ptr [bp+var_3+1]
+		sub	al, byte ptr [bp+var_2]
 		mov	[si+5536h], al
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+52ECh]
 		mov	ax, es:[bx]
-		add	ax, 1Ch
-		push	ax
-		push	di
+		add	ax, 28
+		push	ax	; left
+		push	di	; top
 		mov	al, [si+5536h]
-		push	ax
-		push	20h ; ' '
-		push	32h ; '2'
+		push	ax	; angle
+		push	BG_1	; group
+		push	((3 shl 4) + 2)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_114D0
 ; ---------------------------------------------------------------------------
@@ -7898,11 +7902,11 @@ loc_114A5:
 		shl	bx, 2
 		les	bx, [bx+52ECh]
 		mov	ax, es:[bx]
-		add	ax, 1Ch
-		push	ax
-		push	di
-		push	0
-		push	19h
+		add	ax, 28
+		push	ax	; left
+		push	di	; top
+		push	00h	; angle
+		push	BG_1_AIMED	; group
 		jmp	loc_11379
 ; ---------------------------------------------------------------------------
 
@@ -8488,13 +8492,13 @@ loc_11970:
 loc_11975:
 		cmp	_player_topleft.y, (PLAYFIELD_TOP + 80)
 		jge	short loc_11993
-		push	word_22D98
-		push	word_22D9A
+		push	left_22D98	; left
+		push	top_22D9A	; top
 		call	@randring2_next8_and$quc pascal, 0Fh
-		add	al, 0F9h
-		push	ax
-		push	19h
-		push	4Dh ; 'M'
+		add	al, -07h
+		push	ax	; angle
+		push	BG_1_AIMED	; group
+		push	((4 shl 4) + 13)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_11993:
@@ -8514,19 +8518,19 @@ stones_11997	proc near
 		mov	bp, sp
 		cmp	_rank, RANK_EASY
 		jz	short loc_119B7
-		mov	byte ptr word_2066E, 18h
-		mov	byte ptr word_2066E+1, 0
-		mov	byte ptr word_20670, 24h ; '$'
-		mov	byte ptr word_20670+1, 21h ; '!'
+		mov	byte_2066E, 18h
+		mov	byte_2066F, 0
+		mov	group_20670, BG_8_RING
+		mov	byte_20671, 21h
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_119B7:
-		mov	byte ptr word_2066E, 0Ch
-		mov	byte ptr word_2066E+1, 2
-		mov	byte ptr word_20670, 21h ; '!'
-		mov	byte ptr word_20670+1, 22h ; '"'
+		mov	byte_2066E, 0Ch
+		mov	byte_2066F, 2
+		mov	group_20670, BG_4_RING
+		mov	byte_20671, 22h
 		pop	bp
 		retn
 stones_11997	endp
@@ -8561,15 +8565,15 @@ loc_119F5:
 		add	bx, bx
 		mov	ax, _stone_left[bx]
 		add	ax, 12
-		push	ax
+		push	ax	; left
 		mov	bx, si
 		add	bx, bx
 		mov	ax, _stone_top[bx]
 		add	ax, 8
-		push	ax
-		push	0
-		push	word_2066E
-		push	26h ; '&'
+		push	ax	; top
+		push	00h	; angle
+		push	word ptr byte_2066E	; group
+		push	((2 shl 4) + 6)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_11A1F:
@@ -8599,15 +8603,15 @@ loc_11A42:
 		add	bx, bx
 		mov	ax, _stone_left[bx]
 		add	ax, 12
-		push	ax
+		push	ax	; left
 		mov	bx, si
 		add	bx, bx
 		mov	ax, _stone_top[bx]
 		add	ax, 8
-		push	ax
-		push	0
-		push	19h
-		push	510050h
+		push	ax	; top
+		push	0	; angle
+		push	BG_1_AIMED	; group
+		push	(PAT_BULLET16_OUTLINED_BALL_RED shl 16) or (5 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_11A6E:
@@ -8672,17 +8676,17 @@ loc_11AC4:
 		add	bx, bx
 		mov	ax, _stone_left[bx]
 		add	ax, 12
-		push	ax
+		push	ax	; left
 		mov	bx, di
 		add	bx, bx
 		mov	ax, _stone_top[bx]
 		add	ax, 8
-		push	ax
+		push	ax	; top
 		mov	ax, si
 		imul	ax, 2Ah
-		push	ax
-		push	82h
-		push	520038h
+		push	ax	; angle
+		push	BSM_DECELERATE_THEN_TURN_AIMED	; group
+		push	(PAT_BULLET16_OUTLINED_BALL_GREEN shl 16) or ((3 shl 4) + 8)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
@@ -8725,17 +8729,17 @@ loc_11B21:
 		add	bx, bx
 		mov	ax, _stone_left[bx]
 		add	ax, 12
-		push	ax
+		push	ax	; left
 		mov	bx, di
 		add	bx, bx
 		mov	ax, _stone_top[bx]
 		add	ax, 8
-		push	ax
+		push	ax	; top
 		mov	ax, si
 		imul	ax, 2Ah
-		push	ax
-		push	82h
-		push	520038h
+		push	ax	; angle
+		push	BSM_DECELERATE_THEN_TURN_AIMED	; group
+		push	(PAT_BULLET16_OUTLINED_BALL_GREEN shl 16) or ((3 shl 4) + 8)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
@@ -8818,19 +8822,14 @@ stones_11BFE	proc near
 		mov	bp, sp
 		test	byte ptr _boss_phase_frame, 3
 		jnz	short loc_11C35
-		push	word_22D98
-		push	word_22D9A
-		push	word_1EB28
-		push	23h ; '#'
-		push	46h ; 'F'
-		call	@bullets_add_pellet$qiiucuci
-		mov	al, byte ptr word_1EB28
+		call	@bullets_add_pellet$qiiucuci pascal, left_22D98, top_22D9A, word ptr angle_1EB28, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC, ((4 shl 4) + 6)
+		mov	al, angle_1EB28
 		add	al, 8
-		mov	byte ptr word_1EB28, al
-		cmp	byte ptr word_1EB28, 82h
+		mov	angle_1EB28, al
+		cmp	angle_1EB28, -7Eh
 		jbe	short loc_11C35
 		mov	_boss_phase_frame, 0
-		mov	byte ptr word_1EB28, 0
+		mov	angle_1EB28, 0
 
 loc_11C35:
 		pop	bp
@@ -8890,8 +8889,8 @@ stones_11C37	endp
 
 stones_11C8A	proc near
 
-var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@angle_2	= byte ptr -2
+@@angle_1	= byte ptr -1
 
 		push	bp
 		mov	bp, sp
@@ -8911,27 +8910,27 @@ var_1		= byte ptr -1
 		sub	ax, _stone_left[STONE_NORTH * word]
 		push	ax
 		call	iatan2
-		mov	[bp+var_1], al
+		mov	[bp+@@angle_1], al
 		call	@randring2_next8_and$quc pascal, 1Fh
 		add	al, 10h
 
 loc_11CC4:
-		mov	[bp+var_2], al
-		push	word_22D98
-		push	word_22D9A
-		mov	al, [bp+var_1]
-		add	al, [bp+var_2]
-		push	ax
-		push	20h ; ' '
-		push	50h ; 'P'
+		mov	[bp+@@angle_2], al
+		push	left_22D98	; left
+		push	top_22D9A	; top
+		mov	al, [bp+@@angle_1]
+		add	al, [bp+@@angle_2]
+		push	ax	; angle
+		push	BG_1	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		push	word_22D98
-		push	word_22D9A
-		mov	al, [bp+var_1]
-		sub	al, [bp+var_2]
-		push	ax
-		push	20h ; ' '
-		push	50h ; 'P'
+		push	left_22D98	; left
+		push	top_22D9A	; top
+		mov	al, [bp+@@angle_1]
+		sub	al, [bp+@@angle_2]
+		push	ax	; angle
+		push	BG_1	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		leave
 		retn
@@ -8953,7 +8952,7 @@ loc_11CF5:
 		sub	ax, _stone_left[STONE_NORTH * word]
 		push	ax
 		call	iatan2
-		mov	[bp+var_1], al
+		mov	[bp+@@angle_1], al
 		mov	al, 5Fh	; '_'
 		sub	al, byte ptr _boss_phase_frame
 		jmp	short loc_11CC4
@@ -9050,7 +9049,7 @@ stones_11DF6	proc near
 		push	si
 		test	byte ptr _boss_phase_frame, 0Fh
 		jnz	short loc_11E30
-		mov	al, byte ptr word_2066E+1
+		mov	al, byte_2066F
 		mov	ah, 0
 		mov	si, ax
 		jmp	short loc_11E2B
@@ -9059,14 +9058,14 @@ stones_11DF6	proc near
 loc_11E0A:
 		mov	bx, si
 		add	bx, bx
-		push	_stone_left[bx]
+		push	_stone_left[bx]	; left
 		mov	bx, si
 		add	bx, bx
-		push	_stone_top[bx]
+		push	_stone_top[bx]	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	83h
-		push	520020h
+		push	ax	; angle
+		push	BSM_GRAVITY	; group
+		push	(PAT_BULLET16_OUTLINED_BALL_GREEN shl 16) or (2 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
@@ -9095,15 +9094,15 @@ stones_11E40	proc near
 		mov	bp, sp
 		test	byte ptr _boss_phase_frame, 3
 		jnz	short loc_11E66
-		push	word_22D98
-		push	word_22D9A
+		push	left_22D98	; left
+		push	top_22D9A	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	word_20670+1
+		push	ax	; angle
+		push	word ptr byte_20671	; group
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
-		add	ax, 1Eh
-		push	ax
+		add	ax, ((1 shl 4) + 14)
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_11E66:
@@ -9160,12 +9159,7 @@ loc_11EBE:
 		jnz	short loc_11F2B
 		cmp	_rank, RANK_EASY
 		jz	short loc_11F2B
-		push	word_22D98
-		push	word_22D9A
-		push	0
-		push	19h
-		push	46h ; 'F'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, left_22D98, top_22D9A, 00h, BG_1_AIMED, ((4 shl 4) + 6)
 		jmp	short loc_11F2B
 ; ---------------------------------------------------------------------------
 
@@ -9224,7 +9218,7 @@ stones_11F2F	proc near
 		jl	short loc_11FB2
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_11F46
-		mov	byte ptr word_22FAF, 29h ; ')'
+		mov	angle_22FAF, 29h
 
 loc_11F46:
 		mov	ax, _boss_phase_frame
@@ -9240,37 +9234,37 @@ loc_11F46:
 loc_11F57:
 		mov	bx, si
 		add	bx, bx
-		push	_stone_left[bx]
+		push	_stone_left[bx]	; left
 		mov	bx, si
 		add	bx, bx
-		push	_stone_top[bx]
-		push	word_22FAF
-		push	19h
-		push	52003Ch
+		push	_stone_top[bx]	; top
+		push	word ptr angle_22FAF	; angle
+		push	BG_1_AIMED	; group
+		push	(PAT_BULLET16_OUTLINED_BALL_GREEN shl 16) or ((3 shl 4) + 12)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	bx, si
 		add	bx, bx
-		push	_stone_left[bx]
+		push	_stone_left[bx]	; left
 		mov	bx, si
 		add	bx, bx
-		push	_stone_top[bx]
-		mov	al, byte ptr word_22FAF
+		push	_stone_top[bx]	; top
+		mov	al, angle_22FAF
 		neg	al
-		push	ax
-		push	19h
-		push	52003Ch
+		push	ax	; angle
+		push	BG_1_AIMED	; group
+		push	(PAT_BULLET16_OUTLINED_BALL_GREEN shl 16) or ((3 shl 4) + 12)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
 loc_11F98:
 		cmp	si, STONE_NORTH
 		jl	short loc_11F57
-		mov	al, byte ptr word_22FAF
-		add	al, 0FDh
-		mov	byte ptr word_22FAF, al
+		mov	al, angle_22FAF
+		add	al, -03h
+		mov	angle_22FAF, al
 
 loc_11FA5:
-		cmp	byte ptr word_22FAF, 0C8h
+		cmp	angle_22FAF, -38h
 		jb	short loc_11FB2
 		mov	_boss_phase_frame, 0
 
@@ -9290,29 +9284,24 @@ stones_11FB5	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 2
 		jnz	short loc_11FC4
-		mov	byte ptr word_22FAF+1, 3Eh ; '>'
+		mov	angle_22FB0, 3Eh
 
 loc_11FC4:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_1200D
-		push	word_22D98
-		push	word_22D9A
+		push	left_22D98	; left
+		push	top_22D9A	; top
 		mov	al, 0
-		sub	al, byte ptr word_22FAF+1
-		push	ax
-		push	word_20670
-		push	40h
+		sub	al, angle_22FB0
+		push	ax	; angle
+		push	word ptr group_20670	; group
+		push	(4 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		push	word_22D98
-		push	word_22D9A
-		push	word_22FAF+1
-		push	word_20670
-		push	40h
-		call	@bullets_add_pellet$qiiucuci
-		mov	al, byte ptr word_22FAF+1
-		add	al, 0FDh
-		mov	byte ptr word_22FAF+1, al
-		cmp	byte ptr word_22FAF+1, 0C8h
+		call	@bullets_add_pellet$qiiucuci pascal, left_22D98, top_22D9A, word ptr angle_22FB0, word ptr group_20670, (4 shl 4)
+		mov	al, angle_22FB0
+		add	al, -03h
+		mov	angle_22FB0, al
+		cmp	angle_22FB0, -38h
 		jbe	short loc_1200D
 		mov	_boss_phase_frame, 0
 
@@ -9352,7 +9341,7 @@ loc_1202D:
 		sub	ax, _stone_left[bx]
 		push	ax
 		call	iatan2
-		mov	[si+5541h], al
+		mov	angle_22FB1[si], al
 		inc	si
 
 loc_1204A:
@@ -9380,16 +9369,16 @@ loc_12075:
 		add	bx, bx
 		mov	ax, _stone_left[bx]
 		add	ax, 12
-		push	ax
+		push	ax	; left
 		mov	bx, si
 		add	bx, bx
 		mov	ax, _stone_top[bx]
 		add	ax, 12
-		push	ax
-		mov	al, [si+5541h]
-		push	ax
-		push	20h ; ' '
-		push	70h ; 'p'
+		push	ax	; top
+		mov	al, angle_22FB1[si]
+		push	ax	; angle
+		push	BG_1	; group
+		push	(7 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		inc	si
 
@@ -9411,15 +9400,15 @@ loc_120AA:
 		add	bx, bx
 		mov	ax, _stone_left[bx]
 		add	ax, 8
-		push	ax
+		push	ax	; left
 		mov	bx, si
 		add	bx, bx
 		mov	ax, _stone_top[bx]
 		add	ax, 8
-		push	ax
-		push	word_22FB5
-		push	21h ; '!'
-		push	560070h
+		push	ax	; top
+		push	word ptr angle_22FB1[4]	; angle
+		push	BG_4_RING	; group
+		push	(PAT_BULLET16_BALL shl 16) or (7 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
@@ -10294,8 +10283,8 @@ loc_127A5:
 		mov	_stone_top[STONE_OUTER_EAST * word], (PLAYFIELD_TOP + 32)
 		mov	_stone_left[STONE_NORTH * word], (PLAYFIELD_LEFT + 16 + (2 * 80))
 		mov	_stone_top[STONE_NORTH * word], (PLAYFIELD_TOP + 16)
-		mov	word_22D9A, 28h	; '('
-		mov	word_22D98, 0DCh
+		mov	top_22D9A, (PLAYFIELD_TOP + 24)
+		mov	left_22D98, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PELLET_W / 2))
 		nopcall	sub_17A55
 		mov	byte_23A70, 0Ch
 		mov	word_22FAA, 0
@@ -11415,11 +11404,11 @@ midboss1_138B3	proc near
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 28
-		push	ax
-		push	si
-		push	0
-		push	0Bh
-		push	1Eh
+		push	ax	; left
+		push	si	; top
+		push	00h	; angle
+		push	BG_3_SPREAD_MEDIUM_AIMED	; group
+		push	((1 shl 4) + 14)	; speed
 		jmp	short loc_13903
 ; ---------------------------------------------------------------------------
 
@@ -11433,11 +11422,11 @@ loc_138F2:
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 28
-		push	ax
-		push	si
-		push	0
-		push	12h
-		push	32h ; '2'
+		push	ax	; left
+		push	si	; top
+		push	00h	; angle
+		push	BG_4_SPREAD_WIDE_AIMED	; group
+		push	((3 shl 4) + 2)	; speed
 
 loc_13903:
 		call	@bullets_add_pellet$qiiucuci
@@ -11653,20 +11642,20 @@ rika_init	proc far
 loc_13B4E:
 		cmp	_rank, RANK_EASY
 		jz	short loc_13B70
-		mov	byte ptr word_2066E, 0Bh
-		mov	byte ptr word_2066E+1, 15h
-		mov	byte ptr word_20670, 20h ; ' '
-		mov	byte ptr word_20670+1, 2
+		mov	byte_2066E, 0Bh
+		mov	byte_2066F, 15h
+		mov	group_20670, BG_1
+		mov	byte_20671, 2
 		mov	byte_20672, 3
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_13B70:
-		mov	byte ptr word_2066E, 19h
-		mov	byte ptr word_2066E+1, 15h
-		mov	byte ptr word_20670, 20h ; ' '
-		mov	byte ptr word_20670+1, 20h ; ' '
+		mov	byte_2066E, 19h
+		mov	byte_2066F, 15h
+		mov	group_20670, BG_1
+		mov	byte_20671, 20h
 		mov	byte_20672, 7
 		pop	bp
 		retf
@@ -11793,7 +11782,7 @@ rika_13C0C	endp
 
 rika_13C91	proc near
 
-var_1		= byte ptr -1
+@@group		= byte ptr -1
 
 		push	bp
 		mov	bp, sp
@@ -11808,18 +11797,8 @@ var_1		= byte ptr -1
 		test	byte ptr _boss_phase_frame, 3Fh
 		jnz	loc_13ECA
 		call	_snd_se_play c, 3
-		push	si
-		push	70h ; 'p'
-		push	0
-		push	word_2066E
-		push	32h ; '2'
-		call	@bullets_add_pellet$qiiucuci
-		push	si
-		push	70h ; 'p'
-		push	40h
-		push	word_2066E+1
-		push	1Eh
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, si, (PLAYFIELD_TOP + 96), 00h, word ptr byte_2066E, ((3 shl 4) + 2)
+		call	@bullets_add_pellet$qiiucuci pascal, si, (PLAYFIELD_TOP + 96), 40h, word ptr byte_2066F, ((1 shl 4) + 14)
 		jmp	loc_13ECA
 ; ---------------------------------------------------------------------------
 
@@ -11828,46 +11807,36 @@ loc_13CE0:
 		jge	short loc_13D63
 		test	byte ptr _stage_frame, 1Fh
 		jnz	loc_13ECA
-		mov	al, byte ptr word_250DE
+		mov	al, angle_250DE
 		add	al, 18h
-		mov	byte ptr word_250DE, al
+		mov	angle_250DE, al
 		mov	ah, 0
 		mov	bx, 80h
 		cwd
 		idiv	bx
-		mov	byte ptr word_250DE, dl
+		mov	angle_250DE, dl
 		mov	ax, point_24E7C.x
 		add	ax, 8
 		mov	si, ax
 		call	_snd_se_play c, 3
-		push	si
-		push	70h ; 'p'
-		push	word_250DE
-		push	word_20670
-		push	36h ; '6'
-		call	@bullets_add_pellet$qiiucuci
-		push	si
-		push	70h ; 'p'
-		push	word_250DE
-		push	word_20670+1
-		push	2Ch ; ','
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, si, (PLAYFIELD_TOP + 96), word ptr angle_250DE, word ptr group_20670, ((3 shl 4) + 6)
+		call	@bullets_add_pellet$qiiucuci pascal, si, (PLAYFIELD_TOP + 96), word ptr angle_250DE, word ptr byte_20671, ((2 shl 4) + 12)
 		add	si, 2Ch	; ','
-		push	si
-		push	70h ; 'p'
+		push	si	; left
+		push	(PLAYFIELD_TOP + 96)	; top
 		mov	al, 80h
-		sub	al, byte ptr word_250DE
-		push	ax
-		push	word_20670
-		push	36h ; '6'
+		sub	al, angle_250DE
+		push	ax	; angle
+		push	word ptr group_20670	; group
+		push	((3 shl 4) + 6)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		push	si
-		push	70h ; 'p'
+		push	si	; left
+		push	(PLAYFIELD_TOP + 96)	; top
 		mov	al, 80h
-		sub	al, byte ptr word_250DE
-		push	ax
-		push	word_20670+1
-		push	2Ch ; ','
+		sub	al, angle_250DE
+		push	ax	; angle
+		push	word ptr byte_20671	; group
+		push	((2 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		jmp	loc_13ECA
 ; ---------------------------------------------------------------------------
@@ -11877,7 +11846,7 @@ loc_13D63:
 		jnz	short loc_13D7B
 		mov	word_24E80, 1
 		mov	word_250E0, 0
-		mov	byte ptr word_250DE, 0
+		mov	angle_250DE, 0
 
 loc_13D7B:
 		inc	word_250E0
@@ -11977,7 +11946,7 @@ loc_13E5F:
 		jnz	short loc_13E89
 
 loc_13E83:
-		mov	[bp+var_1], 0Fh
+		mov	[bp+@@group], BG_4_SPREAD_WIDE
 		jmp	short loc_13E98
 ; ---------------------------------------------------------------------------
 
@@ -11988,15 +11957,10 @@ loc_13E89:
 		jnz	short loc_13E98
 
 loc_13E94:
-		mov	[bp+var_1], 0Eh
+		mov	[bp+@@group], BG_4_SPREAD_MEDIUM
 
 loc_13E98:
-		push	si
-		push	70h ; 'p'
-		push	40h
-		push	word ptr [bp+var_1]
-		push	3Ah ; ':'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, si, (PLAYFIELD_TOP + 96), 40h, word ptr [bp+@@group], ((3 shl 4) + 10)
 		jmp	short loc_13ECA
 ; ---------------------------------------------------------------------------
 
@@ -12007,11 +11971,11 @@ loc_13EA7:
 		mov	ah, 0
 		test	word_250E0, ax
 		jnz	short loc_13ECA
-		push	si
-		push	48h ; 'H'
-		push	1
-		push	1Ch
-		push	50002Ch
+		push	si	; left
+		push	(PLAYFIELD_TOP + 56)	; top
+		push	01h	; angle
+		push	BG_RANDOM_ANGLE_AND_SPEED	; group
+		push	(PAT_BULLET16_OUTLINED_BALL_BEIGE shl 16) or ((2 shl 4) + 12)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_13ECA:
@@ -12071,7 +12035,7 @@ rika_13ECD	endp
 
 rika_13F34	proc far
 
-var_1		= byte ptr -1
+@@angle	= byte ptr -1
 
 		push	bp
 		mov	bp, sp
@@ -12087,21 +12051,21 @@ var_1		= byte ptr -1
 		cmp	ax, RANK_HARD
 		jl	short loc_13F62
 		mov	al, byte ptr _boss_phase_frame
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		jmp	short loc_13F66
 ; ---------------------------------------------------------------------------
 
 loc_13F62:
-		mov	[bp+var_1], 0
+		mov	[bp+@@angle], 0
 
 loc_13F66:
-		push	0E40070h
-		push	word ptr [bp+var_1]
-		push	25h ; '%'
+		push	(228 shl 16) or 112 ; (left shl 16) or top
+		push	word ptr [bp+@@angle]	; angle
+		push	BG_16_RING	; group
 		mov	ax, _boss_phase_frame
 		shl	ax, 2
-		add	ax, 28h	; '('
-		push	ax
+		add	ax, ((2 shl 4) + 8)
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		leave
 		retf
@@ -12424,16 +12388,16 @@ midboss2_14203	proc near
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 28
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
+		push	ax	; top
 		mov	al, byte ptr _boss_phase_frame
 		shl	al, 2
-		push	ax
-		push	80h
-		push	54001Eh
+		push	ax	; angle
+		push	BSM_CHASE	; group
+		push	(PAT_BULLET16_NOROI shl 16) or ((1 shl 4) + 14)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_14248:
@@ -13081,16 +13045,16 @@ loc_147F3:
 		cmp	dx, ax
 		jg	short loc_14822
 		mov	di, [si+4]
-		add	di, 0Ch
+		add	di, 12
 		mov	ax, [si+2]
-		add	ax, 0Ch
-		push	ax
-		push	di
-		push	word ptr [si+6]
-		push	word ptr [si+1]
+		add	ax, 12
+		push	ax	; left
+		push	di	; top
+		push	word ptr [si+6]	; angle
+		push	word ptr [si+1]	; group
 		mov	al, [si+8]
 		mov	ah, 0
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_14822:
@@ -13364,7 +13328,7 @@ meira_14A39	proc near
 		jnz	short loc_14A64
 		call	_snd_se_play c, 9
 		mov	patnum_2064E, 142
-		mov	al, byte ptr word_2066E
+		mov	al, byte_2066E
 		mov	byte ptr word_252E2, al
 		pop	bp
 		retn
@@ -13483,7 +13447,7 @@ loc_14B58:
 		jnz	short loc_14B7E
 		call	_snd_se_play c, 3
 		mov	patnum_2064E, 143
-		mov	word_252E8, 20h	; ' '
+		mov	speed_252E8, (2 shl 4)
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -13496,16 +13460,16 @@ loc_14B7E:
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 24
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
-		push	40h
-		push	word_2066E+1
-		push	word_252E8
+		push	ax	; top
+		push	40h	; angle
+		push	word ptr byte_2066F	; group
+		push	speed_252E8	; speed
 		call	@bullets_add_pellet$qiiucuci
-		add	word_252E8, 0Bh
+		add	speed_252E8, 11
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -13545,7 +13509,7 @@ loc_14BEC:
 		jnz	short loc_14C14
 		call	_snd_se_play c, 3
 		mov	patnum_2064E, 143
-		mov	word_252EA, 20h	; ' '
+		mov	speed_252EA, (2 shl 4)
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -13558,16 +13522,16 @@ loc_14C14:
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 24
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
-		push	0
-		push	word_20670
-		push	word_252EA
+		push	ax	; top
+		push	00h	; angle
+		push	word ptr group_20670	; group
+		push	speed_252EA	; speed
 		call	@bullets_add_pellet$qiiucuci
-		add	word_252EA, 0Bh
+		add	speed_252EA, 11
 
 loc_14C48:
 		mov	bx, _boss_left_on_back_page
@@ -13769,14 +13733,14 @@ meira_14DFC	proc near
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 24
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
-		push	0
-		push	word_20670
-		push	4Ah ; 'J'
+		push	ax	; top
+		push	00h	; angle
+		push	word ptr group_20670	; group
+		push	((4 shl 4) + 10)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		pop	bp
 		retn
@@ -13869,19 +13833,19 @@ loc_14ED8:
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 24
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 24
-		push	ax
+		push	ax	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	87h
+		push	ax	; angle
+		push	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM	; group
 		mov	ax, si
 		and	ax, 1
-		add	ax, 7Ah	; 'z'
-		push	ax
-		push	36h ; '6'
+		add	ax, PAT_BULLET16_BILLIARD_BALL_RED
+		push	ax	; patnum
+		push	(3 shl 4) + 6	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	si
 
@@ -14042,17 +14006,17 @@ loc_1505F:
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 24
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 24
-		push	ax
+		push	ax	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	87h
-		lea	ax, [di+7Ah]
-		push	ax
-		push	36h ; '6'
+		push	ax	; angle
+		push	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM	; group
+		lea	ax, [di+PAT_BULLET16_BILLIARD_BALL_RED]
+		push	ax	; patnum
+		push	(3 shl 4) + 6	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		inc	di
 
@@ -14346,16 +14310,16 @@ loc_15296:
 		mov	word_250FE, 0
 		cmp	_rank, RANK_EASY
 		jz	short loc_152FF
-		mov	byte ptr word_2066E, 1Ah
-		mov	byte ptr word_2066E+1, 15h
-		mov	byte ptr word_20670, 17h
+		mov	byte_2066E, 1Ah
+		mov	byte_2066F, 15h
+		mov	group_20670, BG_5_SPREAD_MEDIUM_AIMED
 		jmp	short loc_1530E
 ; ---------------------------------------------------------------------------
 
 loc_152FF:
-		mov	byte ptr word_2066E, 1Ah
-		mov	byte ptr word_2066E+1, 9
-		mov	byte ptr word_20670, 0Bh
+		mov	byte_2066E, 1Ah
+		mov	byte_2066F, 9
+		mov	group_20670, BG_3_SPREAD_MEDIUM_AIMED
 
 loc_1530E:
 		pop	si
@@ -14489,15 +14453,15 @@ loc_15393:
 loc_153D5:
 		mov	ax, [si+2]
 		add	ax, 4
-		push	ax
+		push	ax	; left
 		mov	ax, [si+4]
 		add	ax, 4
-		push	ax
-		push	word ptr [si+7]
-		push	word ptr [si+6]
+		push	ax	; top
+		push	word ptr [si+7]	; angle
+		push	word ptr [si+6]	; group
 		mov	al, [si+8]
 		mov	ah, 0
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		mov	byte ptr [si], 0
 
@@ -15529,7 +15493,7 @@ sigma_15A25	endp
 
 sigma_15D56	proc near
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		push	bp
 		mov	bp, sp
@@ -15600,16 +15564,16 @@ loc_15DF2:
 		call	@randring2_next8_and$quc pascal, 7Fh
 		mov	ah, 0
 		add	ax, point_254E6.x
-		push	ax
+		push	ax	; left
 		mov	ax, point_254E6.y
 		add	ax, 64
-		push	ax
-		push	40h
-		push	20h ; ' '
+		push	ax	; top
+		push	40h	; angle
+		push	BG_1	; group
 		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
-		add	ax, 1Eh
-		push	ax
+		add	ax, ((1 shl 4) + 14)
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_15E81
 ; ---------------------------------------------------------------------------
@@ -15630,7 +15594,7 @@ loc_15E19:
 		mov	al, 40h
 		sub	al, byte_25596
 		add	dl, al
-		mov	[bp+var_1], dl
+		mov	[bp+@@angle], dl
 		test	byte ptr _boss_phase_frame, 3
 		jnz	short loc_15E81
 		xor	si, si
@@ -15641,16 +15605,16 @@ loc_15E4D:
 		call	@randring2_next8_and$quc pascal, 7Fh
 		mov	ah, 0
 		add	ax, point_254E6.x
-		push	ax
+		push	ax	; left
 		mov	ax, point_254E6.y
 		add	ax, 64
-		push	ax
-		push	word ptr [bp+var_1]
-		push	20h ; ' '
+		push	ax	; top
+		push	word ptr [bp+@@angle]	; angle
+		push	BG_1	; group
 		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
-		add	ax, 1Eh
-		push	ax
+		add	ax, ((1 shl 4) + 14)
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		inc	si
 
@@ -15709,12 +15673,7 @@ loc_15EB9:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_15EE7
-		push	word_253B6
-		push	word_253B8
-		push	0
-		push	17h
-		push	78h ; 'x'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, left_253B6, top_253B8, 00h, BG_5_SPREAD_MEDIUM_AIMED, ((7 shl 4) + 8)
 
 loc_15EE7:
 		cmp	_boss_phase_frame, 200
@@ -15812,12 +15771,12 @@ sigma_15F6F	proc near
 		jnz	short loc_15F93
 		test	byte ptr _boss_phase_frame, 1Fh
 		jnz	short loc_15F93
-		push	word_253B6
-		push	word_253B8
+		push	left_253B6	; left
+		push	top_253B8	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	27h ; '''
-		push	55h ; 'U'
+		push	ax	; angle
+		push	BG_32_RING	; group
+		push	((5 shl 4) + 5)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_15F93:
@@ -15974,12 +15933,12 @@ loc_16122:
 		jl	short loc_16172
 		test	byte ptr _boss_phase_frame, 0Fh
 		jnz	short loc_16172
-		push	word_253B6
-		push	word_253B8
+		push	left_253B6	; left
+		push	top_253B8	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	27h ; '''
-		push	50h ; 'P'
+		push	ax	; angle
+		push	BG_32_RING	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_16172
 ; ---------------------------------------------------------------------------
@@ -16012,12 +15971,12 @@ sigma_16176	proc near
 		jnz	short loc_1619A
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_1619A
-		push	word_253B6
-		push	word_253B8
+		push	left_253B6	; left
+		push	top_253B8	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	25h ; '%'
-		push	32h ; '2'
+		push	ax	; angle
+		push	BG_16_RING	; group
+		push	((3 shl 4) + 2)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_1619A:
@@ -16055,77 +16014,77 @@ loc_161D0:
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_161EE
 		mov	patnum_2064E, 128
-		mov	word_255A0, 20h	; ' '
+		mov	left_255A0, PLAYFIELD_LEFT
 		mov	byte_255A2, 0
 		mov	bullet_special_turns_max, 1
 
 loc_161EE:
 		test	byte ptr _boss_phase_frame, 0Fh
 		jnz	loc_162D1
-		push	word_255A0
-		push	18h
-		push	40h
-		push	87h
+		push	left_255A0	; left
+		push	(PLAYFIELD_TOP + 8)	; top
+		push	40h	; angle
+		push	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM	; group
 		mov	al, byte_255A2
 		mov	ah, 0
-		add	ax, 7Ah	; 'z'
-		push	ax
-		push	40h
+		add	ax, PAT_BULLET16_BILLIARD_BALL_RED
+		push	ax	; patnum
+		push	(4 shl 4)	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		mov	ax, 1B0h
-		sub	ax, word_255A0
-		push	ax
-		push	18h
-		push	40h
-		push	87h
+		mov	ax, (PLAYFIELD_RIGHT + BULLET16_W)
+		sub	ax, left_255A0
+		push	ax	; left
+		push	(PLAYFIELD_TOP + 8)	; top
+		push	40h	; angle
+		push	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM	; group
 		mov	al, byte_255A2
 		mov	ah, 0
-		add	ax, 7Ah	; 'z'
-		push	ax
-		push	40h
+		add	ax, PAT_BULLET16_BILLIARD_BALL_RED
+		push	ax	; patnum
+		push	(4 shl 4)	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		add	word_255A0, 10h
-		cmp	word_255A0, 0E0h
+		add	left_255A0, BULLET16_W
+		cmp	left_255A0, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2))
 		jnz	short loc_162B2
 		mov	byte_23A70, 20h	; ' '
 		mov	ax, point_254E6.x
 		add	ax, 60
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		mov	byte_23A70, 30h	; '0'
 		mov	ax, point_254E6.x
 		add	ax, 44
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		mov	ax, point_254E6.x
 		add	ax, 76
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		mov	byte_23A70, 64h	; 'd'
 		mov	ax, point_254E6.x
 		add	ax, 28
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		mov	ax, point_254E6.x
 		add	ax, 92
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		mov	byte_23A70, 10h
 
 loc_162B2:
-		cmp	word_255A0, 1B0h
+		cmp	left_255A0, (PLAYFIELD_RIGHT + BULLET16_W)
 		jl	short loc_162D1
-		mov	word_255A0, 20h	; ' '
+		mov	left_255A0, PLAYFIELD_LEFT
 		inc	byte_255A2
 		cmp	byte_255A2, 2
 		jb	short loc_162D1
@@ -16144,7 +16103,8 @@ sigma_1619C	endp
 sigma_162D3	proc near
 
 var_E		= word ptr -0Eh
-var_B		= word ptr -0Bh
+@@angle	= byte ptr -0Bh
+var_A	= word ptr -0Ah
 
 		push	bp
 		mov	bp, sp
@@ -16152,7 +16112,7 @@ var_B		= word ptr -0Bh
 		push	si
 		push	di
 		mov	si, 13AEh
-		lea	di, [bp+var_B+1]
+		lea	di, [bp+var_A]
 		push	ss
 		pop	es
 		mov	cx, 5
@@ -16183,13 +16143,13 @@ loc_16325:
 		inc	byte_255A3
 		cbw
 		add	ax, ax
-		lea	dx, [bp+var_B+1]
+		lea	dx, [bp+var_A]
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
 		add	ax, point_254E6.x
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 
@@ -16198,13 +16158,13 @@ loc_1634B:
 		inc	byte_255A3
 		cbw
 		add	ax, ax
-		lea	dx, [bp+var_B+1]
+		lea	dx, [bp+var_A]
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
 		add	ax, point_254E6.x
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		jmp	loc_1641D
@@ -16219,25 +16179,25 @@ loc_1637C:
 		inc	byte_255A3
 		cbw
 		add	ax, ax
-		lea	dx, [bp+var_B+1]
+		lea	dx, [bp+var_A]
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
 		add	ax, point_254E6.x
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		mov	al, byte_255A3
 		cbw
 		add	ax, ax
-		lea	dx, [bp+var_B+1]
+		lea	dx, [bp+var_A]
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
 		add	ax, point_254E6.x
 		push	ax
-		push	word_253B8
+		push	top_253B8
 		push	1006Fh
 		call	sub_12A19
 		mov	byte_255A3, 0
@@ -16251,31 +16211,31 @@ loc_163CB:
 		jge	short loc_1641D
 		test	byte ptr _boss_phase_frame, 0Fh
 		jnz	short loc_1641D
-		mov	byte ptr [bp+var_B], 90h
+		mov	[bp+@@angle], -70h
 		mov	[bp+var_E], 0
 		jmp	short loc_16417
 ; ---------------------------------------------------------------------------
 
 loc_163EC:
-		push	word_253B6
-		push	word_253B8
-		push	[bp+var_B]
-		push	87h
+		push	left_253B6	; left
+		push	top_253B8	; top
+		push	word ptr [bp+@@angle]	; angle
+		push	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM	; group
 		mov	ax, [bp+var_E]
 		mov	bx, 2
 		cwd
 		idiv	bx
-		add	dx, 7Ah	; 'z'
-		push	dx
-		push	3Ch ; '<'
+		add	dx, PAT_BULLET16_BILLIARD_BALL_RED
+		push	dx	; patnum
+		push	(3 shl 4) + 12	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		mov	al, byte ptr [bp+var_B]
+		mov	al, [bp+@@angle]
 		add	al, 10h
-		mov	byte ptr [bp+var_B], al
+		mov	[bp+@@angle], al
 		inc	[bp+var_E]
 
 loc_16417:
-		cmp	byte ptr [bp+var_B], 0F0h
+		cmp	[bp+@@angle], -10h
 		jb	short loc_163EC
 
 loc_1641D:
@@ -16318,8 +16278,8 @@ loc_16441:
 loc_16458:
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_164AD
-		push	word_253B6
-		push	word_253B8
+		push	left_253B6
+		push	top_253B8
 		mov	ax, _player_topleft.x
 		add	ax, 16
 		push	ax
@@ -16337,12 +16297,12 @@ loc_16458:
 		neg	ax
 		mov	word_255AC, ax
 		mov	patnum_2064E, 128
-		mov	ax, word_253B6
+		mov	ax, left_253B6
 		mov	word_255A8, ax
 		mov	word_255AE, ax
 		mov	byte_2558D, 0FCh
 		mov	byte_2558C, 3
-		mov	ax, word_253B8
+		mov	ax, top_253B8
 		mov	word_255AA, ax
 
 loc_164AD:
@@ -16402,12 +16362,12 @@ loc_1652F:
 		add	word_255AE, 10h
 
 loc_16540:
-		push	word_253B6
-		push	word_253B8
+		push	left_253B6	; left
+		push	top_253B8	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	25h ; '%'
-		push	3Ch ; '<'
+		push	ax	; angle
+		push	BG_16_RING	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 locret_16553:
@@ -16447,12 +16407,12 @@ loc_1656B:
 loc_16589:
 		test	byte ptr _boss_phase_frame, 3Fh
 		jnz	short loc_165A3
-		push	word_253B6
-		push	word_253B8
+		push	left_253B6	; left
+		push	top_253B8	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	27h ; '''
-		push	3Ch ; '<'
+		push	ax	; angle
+		push	BG_32_RING	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_165A3:
@@ -16553,12 +16513,7 @@ loc_1661C:
 loc_16636:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_1664E
-		push	word_253B6
-		push	word_253B8
-		push	0
-		push	26h ; '&'
-		push	46h ; 'F'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, left_253B6, top_253B8, 00h, BG_2_SPREAD_ULTRAWIDE_AIMED, ((4 shl 4) + 6)
 
 loc_1664E:
 		pop	bp
@@ -16578,20 +16533,20 @@ sigma_16650	proc near
 		jnz	short loc_1668C
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_16666
-		mov	byte ptr word_255B1, 0
+		mov	angle_255B1, 0
 
 loc_16666:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_1668C
-		push	word_253B6
-		push	word_253B8
-		push	word_255B1
-		push	24h ; '$'
-		push	560050h
+		push	left_253B6	; left
+		push	top_253B8	; top
+		push	word ptr angle_255B1	; angle
+		push	BG_8_RING	; group
+		push	(PAT_BULLET16_BALL shl 16) or (5 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		mov	al, byte ptr word_255B1
-		add	al, 8
-		mov	byte ptr word_255B1, al
+		mov	al, angle_255B1
+		add	al, 08h
+		mov	angle_255B1, al
 
 loc_1668C:
 		pop	bp
@@ -16630,12 +16585,12 @@ loc_166BE:
 		and	ax, 1Fh
 		cmp	ax, 16
 		jnz	short loc_166DC
-		push	word_253B6
-		push	word_253B8
+		push	left_253B6	; left
+		push	top_253B8	; top
 		call	@randring2_next8$qv
-		push	ax
-		push	25h ; '%'
-		push	3Ch ; '<'
+		push	ax	; angle
+		push	BG_16_RING	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_166DC:
@@ -16694,7 +16649,7 @@ loc_16725:
 		cmp	ax, word_255BC
 		jl	short loc_16742
 		mov	_boss_damage, 0
-		inc	byte ptr word_255B1+1
+		inc	byte_255B2
 		mov	byte_255B4, 0
 		mov	byte_255B3, 0
 
@@ -16724,14 +16679,14 @@ var_1		= byte ptr -1
 		mov	point_254E6.y, ax
 		mov	ax, point_254E6.x
 		add	ax, 60
-		mov	word_253B6, ax
+		mov	left_253B6, ax
 		mov	ax, point_254E6.y
 		add	ax, 60
-		mov	word_253B8, ax
+		mov	top_253B8, ax
 		inc	_boss_phase_frame
-		mov	ax, word_253B6
+		mov	ax, left_253B6
 		mov	word_205D8, ax
-		mov	ax, word_253B8
+		mov	ax, top_253B8
 		mov	word_205DA, ax
 		test	byte ptr _stage_frame, 1
 		jnz	short loc_167D0
@@ -16776,13 +16731,13 @@ loc_167D0:
 ; ---------------------------------------------------------------------------
 
 loc_167E6:
-		cmp	byte ptr word_255B1+1, 0
+		cmp	byte_255B2, 0
 		jnz	short loc_16825
 		cmp	_boss_phase_frame, 50
 		jle	loc_16948
 		mov	byte_255B4, 0
 		mov	_boss_phase_frame, 0
-		inc	byte ptr word_255B1+1
+		inc	byte_255B2
 		mov	byte_255B3, 0
 		mov	fp_255B6, offset sigma_15D56
 		mov	fp_255B8, offset sigma_15E84
@@ -16792,7 +16747,7 @@ loc_167E6:
 ; ---------------------------------------------------------------------------
 
 loc_16825:
-		cmp	byte ptr word_255B1+1, 1
+		cmp	byte_255B2, 1
 		jnz	short loc_16838
 		push	3
 		call	sigma_166DE
@@ -16801,11 +16756,11 @@ loc_16825:
 ; ---------------------------------------------------------------------------
 
 loc_16838:
-		cmp	byte ptr word_255B1+1, 2
+		cmp	byte_255B2, 2
 		jnz	short loc_16868
 		mov	byte_255B4, 0
 		mov	_boss_phase_frame, 0
-		inc	byte ptr word_255B1+1
+		inc	byte_255B2
 		mov	byte_255B3, 0
 		mov	fp_255B6, offset sigma_15F95
 		mov	fp_255B8, offset sigma_16176
@@ -16814,13 +16769,13 @@ loc_16838:
 ; ---------------------------------------------------------------------------
 
 loc_16868:
-		cmp	byte ptr word_255B1+1, 3
+		cmp	byte_255B2, 3
 		jz	short loc_168DC
-		cmp	byte ptr word_255B1+1, 4
+		cmp	byte_255B2, 4
 		jnz	short loc_1689F
 		mov	byte_255B4, 0
 		mov	_boss_phase_frame, 0
-		inc	byte ptr word_255B1+1
+		inc	byte_255B2
 		mov	byte_255B3, 0
 		mov	fp_255B6, offset sigma_1619C
 		mov	fp_255B8, offset sigma_162D3
@@ -16829,13 +16784,13 @@ loc_16868:
 ; ---------------------------------------------------------------------------
 
 loc_1689F:
-		cmp	byte ptr word_255B1+1, 5
+		cmp	byte_255B2, 5
 		jz	short loc_168DC
-		cmp	byte ptr word_255B1+1, 6
+		cmp	byte_255B2, 6
 		jnz	short loc_168D5
 		mov	byte_255B4, 0
 		mov	_boss_phase_frame, 0
-		inc	byte ptr word_255B1+1
+		inc	byte_255B2
 		mov	byte_255B3, 0
 		mov	fp_255B6, offset sigma_16421
 		mov	fp_255B8, offset sigma_16555
@@ -16844,7 +16799,7 @@ loc_1689F:
 ; ---------------------------------------------------------------------------
 
 loc_168D5:
-		cmp	byte ptr word_255B1+1, 7
+		cmp	byte_255B2, 7
 		jnz	short loc_168E7
 
 loc_168DC:
@@ -16855,11 +16810,11 @@ loc_168DC:
 ; ---------------------------------------------------------------------------
 
 loc_168E7:
-		cmp	byte ptr word_255B1+1, 8
+		cmp	byte_255B2, 8
 		jnz	short loc_1691C
 		mov	byte_255B4, 0
 		mov	_boss_phase_frame, 0
-		inc	byte ptr word_255B1+1
+		inc	byte_255B2
 		mov	byte_255B3, 0
 		mov	fp_255B6, offset sigma_16606
 		mov	fp_255B8, offset sigma_16650
@@ -16869,7 +16824,7 @@ loc_168E7:
 ; ---------------------------------------------------------------------------
 
 loc_1691C:
-		cmp	byte ptr word_255B1+1, 9
+		cmp	byte_255B2, 9
 		jnz	short loc_16948
 		push	3
 		call	sigma_166DE
@@ -16926,7 +16881,7 @@ sigma_init	proc far
 		mov	_boss_damage, 0
 		mov	_boss_phase_frame, 0
 		mov	patnum_2064E, 128
-		mov	byte ptr word_255B1+1, 0
+		mov	byte_255B2, 0
 		mov	byte_2558C, 7
 		nopcall	sub_10E0A
 		call	sub_D376
@@ -17024,7 +16979,7 @@ sub_16A8A	endp
 
 sub_16AA7	proc near
 
-arg_0		= word ptr  4
+@@angle		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -17032,18 +16987,18 @@ arg_0		= word ptr  4
 		mov	ax, [bx+4]
 		mov	bx, word_26C4A
 		add	ax, [bx]
-		push	ax
+		push	ax	; left
 		mov	bx, word_26C48
 		mov	ax, [bx+6]
 		mov	bx, word_26C4C
 		add	ax, [bx]
-		push	ax
-		push	[bp+arg_0]
+		push	ax	; top
+		push	[bp+@@angle]	; angle
 		mov	bx, word_26C46
-		push	word ptr [bx+24h]
+		push	word ptr [bx+24h]	; group
 		mov	al, [bx+25h]
 		mov	ah, 0
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		pop	bp
 		retn	2
@@ -17851,8 +17806,7 @@ loc_17136:
 ; ---------------------------------------------------------------------------
 
 loc_17157:
-		push	0
-		call	sub_16AA7
+		call	sub_16AA7 pascal, 00h
 		jmp	loc_174F2
 ; ---------------------------------------------------------------------------
 
@@ -17861,16 +17815,14 @@ loc_1715F:
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
-		push	word ptr [bx+1]
-		call	sub_16AA7
+		call	sub_16AA7 pascal, word ptr [bx+1]
 		mov	[bp+var_4], 2
 		jmp	loc_174E1
 ; ---------------------------------------------------------------------------
 
 loc_17177:
 		mov	bx, word_26C46
-		push	word ptr [bx+16h]
-		call	sub_16AA7
+		call	sub_16AA7 pascal, word ptr [bx+16h]
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
@@ -17907,30 +17859,30 @@ loc_171D0:
 		mov	ax, [bx+4]
 		mov	bx, word_26C4A
 		add	ax, [bx]
-		push	ax
+		push	ax	; left
 		mov	bx, word_26C48
 		mov	ax, [bx+6]
 		mov	bx, word_26C4C
 		add	ax, [bx]
-		push	ax
+		push	ax	; top
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
-		push	word ptr [bx+1]
+		push	word ptr [bx+1]	; angle
 		mov	bx, word_26C46
-		push	word ptr [bx+24h]
+		push	word ptr [bx+24h]	; group
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
 		mov	al, [bx+2]
 		mov	ah, 0
-		push	ax
+		push	ax	; patnum
 		mov	bx, word_26C46
 		mov	al, [bx+25h]
 		mov	ah, 0
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	[bp+var_4], 3
 		jmp	loc_174E1
@@ -17954,25 +17906,25 @@ loc_17244:
 		mov	ax, [bx+4]
 		mov	bx, word_26C4A
 		add	ax, [bx]
-		push	ax
-		push	si
+		push	ax	; left
+		push	si	; top
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; angle
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
-		push	word ptr [bx+3]
+		push	word ptr [bx+3]	; group
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
 		mov	al, [bx+4]
 		mov	ah, 0
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		mov	[bp+var_4], 5
 		jmp	loc_174E1
@@ -17996,32 +17948,32 @@ loc_172A8:
 		mov	ax, [bx+4]
 		mov	bx, word_26C4A
 		add	ax, [bx]
-		push	ax
-		push	si
+		push	ax	; left
+		push	si	; top
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
-		push	word ptr [bx+2]
+		push	word ptr [bx+2]	; angle
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
-		push	word ptr [bx+3]
+		push	word ptr [bx+3]	; group
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
 		mov	al, [bx+4]
 		mov	ah, 0
-		push	ax
+		push	ax	; patnum
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
 		mov	al, [bx+5]
 		mov	ah, 0
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	[bp+var_4], 6
 		jmp	loc_174E1
@@ -18647,13 +18599,13 @@ loc_17864:
 		jnz	short loc_1789D
 		mov	ax, [bx+4]
 		add	ax, word_26C4E
-		push	ax
+		push	ax	; left
 		mov	ax, [bx+6]
 		add	ax, word_26C50
-		push	ax
-		push	0
-		push	19h
-		push	3Ch ; '<'
+		push	ax	; top
+		push	00h	; angle
+		push	BG_1_AIMED	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_1789D:
@@ -18701,8 +18653,7 @@ loc_178E9:
 		idiv	[bp+var_8]
 		or	dx, dx
 		jnz	short loc_17913
-		push	0
-		call	sub_16AA7
+		call	sub_16AA7 pascal, 00h
 
 loc_17913:
 		mov	bx, word_26C48
@@ -19588,20 +19539,20 @@ mima_180AC	proc near
 		mov	bp, sp
 		cmp	_rank, RANK_EASY
 		jz	short loc_180D1
-		mov	byte ptr word_2066E, 25h ; '%'
-		mov	byte ptr word_2066E+1, 17h
-		mov	byte ptr word_20670, 27h ; '''
-		mov	byte ptr word_20670+1, 21h ; '!'
+		mov	byte_2066E, 25h
+		mov	byte_2066F, 17h
+		mov	group_20670, BG_32_RING
+		mov	byte_20671, 21h
 		mov	byte_20672, 6
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_180D1:
-		mov	byte ptr word_2066E, 25h ; '%'
-		mov	byte ptr word_2066E+1, 19h
-		mov	byte ptr word_20670, 5
-		mov	byte ptr word_20670+1, 22h ; '"'
+		mov	byte_2066E, 25h
+		mov	byte_2066F, 19h
+		mov	group_20670, BG_2_SPREAD_MEDIUM_AIMED
+		mov	byte_20671, 22h
 		mov	byte_20672, 8
 		pop	bp
 		retn
@@ -19669,23 +19620,23 @@ loc_18170:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_181B1
-		push	word_26C58
-		push	word_26C60
+		push	word_26C58	; left
+		push	word_26C60	; top
 		call	@randring2_next8_and$quc pascal, 0Fh
-		add	al, 38h	; '8'
-		push	ax
-		push	word_2066E
-		push	3Ch ; '<'
+		add	al, 38h
+		push	ax	; angle
+		push	word ptr byte_2066E	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		push	word_26C58
-		push	word_26C60
-		push	0
+		push	word_26C58	; left
+		push	word_26C60	; top
+		push	00h	; angle
 		mov	al, byte_26CC0
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2BFFh]
-		push	ax
-		push	28h ; '('
+		mov	al, byte_2066F[bx]
+		push	ax	; group
+		push	((2 shl 4) + 8)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_181B1:
@@ -19882,12 +19833,7 @@ loc_183AE:
 		mov	[bp+@@angle], 27h
 
 loc_183B2:
-		push	word_26C56
-		push	word_26C5E
-		push	0
-		push	word ptr [bp+@@angle]
-		push	3Ch ; '<'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, left_26C56, top_26C5E, 00h	, word ptr [bp+@@angle], ((3 shl 4) + 12)
 		jmp	short loc_183CC
 ; ---------------------------------------------------------------------------
 
@@ -19909,7 +19855,7 @@ mima_181B3	endp
 mima_183D0	proc near
 
 @@angle		= byte ptr -5
-var_4		= word ptr -4
+@@speed		= word ptr -4
 var_2		= word ptr -2
 arg_0		= dword	ptr  4
 arg_4		= dword	ptr  8
@@ -19947,7 +19893,7 @@ loc_18424:
 		call	_snd_se_play c, 10
 		mov	patnum_2064E, 134
 		mov	[bp+var_2], 0
-		mov	al, byte_26CD2
+		mov	al, angle_26CD2
 		jmp	loc_184D4
 ; ---------------------------------------------------------------------------
 
@@ -20005,7 +19951,7 @@ loc_184E2:
 		jge	loc_18589
 		add	word_26CD0, 4
 		mov	[bp+var_2], 0
-		mov	al, byte_26CD2
+		mov	al, angle_26CD2
 		jmp	loc_1857B
 ; ---------------------------------------------------------------------------
 
@@ -20097,7 +20043,7 @@ loc_185EA:
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, [bx-6E04h]
-		add	ax, 0Ch
+		add	ax, 12
 		mov	si, ax
 		mov	al, _page_back
 		mov	ah, 0
@@ -20107,55 +20053,50 @@ loc_185EA:
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, [bx-6DE4h]
-		add	ax, 0Ch
+		add	ax, 12
 		mov	di, ax
-		mov	[bp+var_4], 0
+		mov	[bp+@@speed], 0
 		mov	al, byte ptr [bp+var_2]
 		shl	al, 6
-		add	al, byte_26CD2
-		add	al, 0C0h
+		add	al, angle_26CD2
+		add	al, -40h
 		jmp	short loc_18645
 ; ---------------------------------------------------------------------------
 
 loc_18631:
-		push	si
-		push	di
-		push	word ptr [bp+@@angle]
-		push	20h ; ' '
-		push	23h ; '#'
-		call	@bullets_add_pellet$qiiucuci
-		inc	[bp+var_4]
+		call	@bullets_add_pellet$qiiucuci pascal, si, di, word ptr [bp+@@angle], BG_1, ((2 shl 4) + 3)
+		inc	[bp+@@speed]
 		mov	al, [bp+@@angle]
-		add	al, 8
+		add	al, 08h
 
 loc_18645:
 		mov	[bp+@@angle], al
-		cmp	[bp+var_4], 10h
+		cmp	[bp+@@speed], (1 shl 4)
 		jl	short loc_18631
-		mov	[bp+var_4], 0
+		mov	[bp+@@speed], 0
 		mov	al, byte ptr [bp+var_2]
 		shl	al, 6
-		add	al, byte_26CD2
-		add	al, 0C4h
+		add	al, angle_26CD2
+		add	al, -3Ch
 		jmp	short loc_1867A
 ; ---------------------------------------------------------------------------
 
 loc_18661:
-		push	si
-		push	di
-		push	word ptr [bp+@@angle]
-		push	20h ; ' '
-		mov	ax, 23h	; '#'
-		sub	ax, [bp+var_4]
-		push	ax
+		push	si	; left
+		push	di	; top
+		push	word ptr [bp+@@angle]	; angle
+		push	BG_1	; group
+		mov	ax, ((2 shl 4) + 3)
+		sub	ax, [bp+@@speed]
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
-		inc	[bp+var_4]
+		inc	[bp+@@speed]
 		mov	al, [bp+@@angle]
 		add	al, 8
 
 loc_1867A:
 		mov	[bp+@@angle], al
-		cmp	[bp+var_4], 10h
+		cmp	[bp+@@speed], (1 shl 4)
 		jl	short loc_18661
 		mov	bx, [bp+var_2]
 		add	bx, bx
@@ -20177,17 +20118,17 @@ loc_186AD:
 		jz	short loc_186CA
 		cmp	byte_26CC0, 0
 		jz	short loc_186C2
-		mov	al, byte_26CD2
-		add	al, 0FDh
+		mov	al, angle_26CD2
+		add	al, -03h
 		jmp	short loc_186C7
 ; ---------------------------------------------------------------------------
 
 loc_186C2:
-		mov	al, byte_26CD2
-		add	al, 0FBh
+		mov	al, angle_26CD2
+		add	al, -05h
 
 loc_186C7:
-		mov	byte_26CD2, al
+		mov	angle_26CD2, al
 
 loc_186CA:
 		cmp	word_26CD0, 190h
@@ -20200,8 +20141,8 @@ loc_186CA:
 		mov	word ptr es:[bx], 0
 		mov	byte_26CD4, 1
 		call	_snd_se_play c, 3
-		mov	al, byte_26CD2
-		add	al, 8
+		mov	al, angle_26CD2
+		add	al, 08h
 		mov	[bp+@@angle], al
 		mov	[bp+var_2], 0
 		jmp	short loc_18770
@@ -20228,25 +20169,25 @@ loc_1870B:
 		mov	ax, [bx-6DE4h]
 		add	ax, 0Ch
 		mov	di, ax
-		mov	[bp+var_4], 0
+		mov	[bp+@@speed], 0
 		jmp	short loc_1875F
 ; ---------------------------------------------------------------------------
 
 loc_18746:
-		push	si
-		push	di
+		push	si	; left
+		push	di	; top
 		mov	al, [bp+@@angle]
-		add	al, byte ptr [bp+var_4]
-		push	ax
-		push	20h ; ' '
-		mov	ax, [bp+var_4]
-		add	ax, 23h	; '#'
-		push	ax
+		add	al, byte ptr [bp+@@speed]
+		push	ax	; angle
+		push	BG_1	; group
+		mov	ax, [bp+@@speed]
+		add	ax, ((2 shl 4) + 3)
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
-		add	[bp+var_4], 0Ch
+		add	[bp+@@speed], 12
 
 loc_1875F:
-		cmp	[bp+var_4], 30h ; '0'
+		cmp	[bp+@@speed], (3 shl 4)
 		jl	short loc_18746
 		inc	[bp+var_2]
 		mov	al, [bp+@@angle]
@@ -20317,7 +20258,7 @@ loc_187F4:
 
 loc_18806:
 		mov	[bp+var_2], 0
-		mov	al, byte_26CD2
+		mov	al, angle_26CD2
 		jmp	loc_18891
 ; ---------------------------------------------------------------------------
 
@@ -20370,9 +20311,9 @@ loc_18891:
 		jl	loc_18811
 
 loc_1889C:
-		mov	al, byte_26CD2
-		add	al, 5
-		mov	byte_26CD2, al
+		mov	al, angle_26CD2
+		add	al, 05h
+		mov	angle_26CD2, al
 
 loc_188A4:
 		pop	di
@@ -20457,7 +20398,7 @@ loc_1893E:
 		jnz	short loc_1895D
 		call	_snd_se_play c, 9
 		mov	patnum_2064E, 131
-		mov	byte ptr word_26CDA+1, 14h
+		mov	speed_26CDB, ((1 shl 4) + 4)
 		jmp	loc_189DC
 ; ---------------------------------------------------------------------------
 
@@ -20469,22 +20410,22 @@ loc_1895D:
 		call	_snd_se_play c, 10
 		mov	patnum_2064E, 134
 		call	@randring2_next8$qv
-		mov	byte ptr word_26CDA, al
+		mov	angle_26CDA, al
 		jmp	short loc_189DC
 ; ---------------------------------------------------------------------------
 
 loc_18985:
 		cmp	_boss_phase_frame, 160
 		jg	short loc_18993
-		dec	byte ptr word_26CDA
+		dec	angle_26CDA
 		jmp	short loc_189DC
 ; ---------------------------------------------------------------------------
 
 loc_18993:
 		cmp	_boss_phase_frame, 240
 		jg	short loc_189A5
-		inc	byte ptr word_26CDA
-		inc	byte ptr word_26CDA+1
+		inc	angle_26CDA
+		inc	speed_26CDB
 		jmp	short loc_189DC
 ; ---------------------------------------------------------------------------
 
@@ -20493,16 +20434,16 @@ loc_189A5:
 		jz	short loc_189D0
 		cmp	_boss_phase_frame, 320
 		jg	short loc_189BE
-		inc	byte ptr word_26CDA
-		dec	byte ptr word_26CDA+1
+		inc	angle_26CDA
+		dec	speed_26CDB
 		jmp	short loc_189DC
 ; ---------------------------------------------------------------------------
 
 loc_189BE:
 		cmp	_boss_phase_frame, 400
 		jg	short loc_189D0
-		dec	byte ptr word_26CDA
-		inc	byte ptr word_26CDA+1
+		dec	angle_26CDA
+		inc	speed_26CDB
 		jmp	short loc_189DC
 ; ---------------------------------------------------------------------------
 
@@ -20522,13 +20463,13 @@ loc_189DC:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18A19
-		push	word_26C5A
-		push	word_26C62
-		push	word_26CDA
-		push	word_20670+1
-		mov	al, byte ptr word_26CDA+1
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		push	word ptr angle_26CDA	; angle
+		push	word ptr byte_20671	; group
+		mov	al, speed_26CDB
 		mov	ah, 0
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		call	_snd_se_play c, 3
 
@@ -20574,7 +20515,7 @@ loc_18A53:
 		jnz	short loc_18A71
 		call	_snd_se_play c, 9
 		mov	patnum_2064E, 131
-		mov	byte ptr word_26CDC, 0D8h
+		mov	angle_26CDC, -28h
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20593,15 +20534,10 @@ loc_18A71:
 loc_18A93:
 		cmp	_boss_phase_frame, 132
 		jg	short loc_18AB8
-		push	word_26C5A
-		push	word_26C62
-		push	word_26CDC
-		push	23h ; '#'
-		push	5Ah ; 'Z'
-		call	@bullets_add_pellet$qiiucuci
-		mov	al, byte ptr word_26CDC
-		add	al, 3
-		mov	byte ptr word_26CDC, al
+		call	@bullets_add_pellet$qiiucuci pascal, left_26C5A, top_26C62, word ptr angle_26CDC, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC, ((5 shl 4) + 10)
+		mov	al, angle_26CDC
+		add	al, 03h
+		mov	angle_26CDC, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20609,15 +20545,10 @@ loc_18A93:
 loc_18AB8:
 		cmp	_boss_phase_frame, 150
 		jg	short loc_18ADD
-		push	word_26C5A
-		push	word_26C62
-		push	word_26CDC
-		push	23h ; '#'
-		push	5Ah ; 'Z'
-		call	@bullets_add_pellet$qiiucuci
-		mov	al, byte ptr word_26CDC
-		add	al, 0FDh
-		mov	byte ptr word_26CDC, al
+		call	@bullets_add_pellet$qiiucuci pascal, left_26C5A, top_26C62, word ptr angle_26CDC, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC, ((5 shl 4) + 10)
+		mov	al, angle_26CDC
+		add	al, -03h
+		mov	angle_26CDC, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20633,32 +20564,27 @@ loc_18ADD:
 		jnz	short loc_18B49
 		cmp	byte_26CC0, 0
 		jnz	short loc_18B0D
-		push	word_26C5A
-		push	word_26C62
-		push	40h
-		push	7
-		push	5Ah ; 'Z'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, left_26C5A, top_26C62, 40h, BG_3_SPREAD_NARROW, ((5 shl 4) + 10)
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_18B0D:
-		push	word_26C5A
-		push	word_26C62
+		push	left_26C5A	; left
+		push	top_26C62	; top
 		call	@randring2_next8_and$quc pascal, 3Fh
-		add	al, 20h	; ' '
-		push	ax
-		push	20h ; ' '
-		push	50h ; 'P'
+		add	al, 20h
+		push	ax	; angle
+		push	BG_1	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		push	word_26C5A
-		push	word_26C62
+		push	left_26C5A	; left
+		push	top_26C62	; top
 		call	@randring2_next8_and$quc pascal, 3Fh
-		add	al, 20h	; ' '
-		push	ax
-		push	20h ; ' '
-		push	50h ; 'P'
+		add	al, 20h
+		push	ax	; angle
+		push	BG_1	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		pop	bp
 		retn
@@ -20740,8 +20666,8 @@ loc_18BCB:
 		mov	patnum_2064E, 134
 		cmp	word_26C68, 6
 		jnz	short loc_18C39
-		push	word_26C5A	; left
-		push	word_26C62	; top
+		push	left_26C5A	; left
+		push	top_26C62	; top
 		push	IT_BOMB	; type
 		jmp	short loc_18C43
 ; ---------------------------------------------------------------------------
@@ -20760,15 +20686,15 @@ loc_18C0F:
 		mov	patnum_2064E, 128
 		cmp	word_26C68, 2
 		jnz	short loc_18C39
-		push	word_26C5A	; left
-		push	word_26C62	; top
+		push	left_26C5A	; left
+		push	top_26C62	; top
 		push	IT_1UP	; type
 		jmp	short loc_18C43
 ; ---------------------------------------------------------------------------
 
 loc_18C39:
-		push	word_26C5A	; left
-		push	word_26C62	; top
+		push	left_26C5A	; left
+		push	top_26C62	; top
 		push	IT_BIGPOWER	; type
 
 loc_18C43:
@@ -20828,13 +20754,13 @@ loc_18C9B:
 		call	_snd_se_play c, 10
 		mov	patnum_2064E, 134
 		mov	ax, _player_topleft.y
-		sub	ax, word_26C62
+		sub	ax, top_26C62
 		push	ax
 		mov	ax, _player_topleft.x
-		sub	ax, word_26C5A
+		sub	ax, left_26C5A
 		push	ax
 		call	iatan2
-		mov	byte_26CE2, al
+		mov	angle_26CE2, al
 		cmp	_player_topleft.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PLAYER_W / 2))
 		jg	short loc_18CDF
 		mov	al, -1
@@ -20845,7 +20771,7 @@ loc_18CDF:
 		mov	al, 1
 
 loc_18CE1:
-		mov	byte_26CE3, al
+		mov	direction_26CE3, al
 		mov	al, byte_26CC0
 		mov	ah, 0
 		mov	bullet_special_turns_max, ax
@@ -20865,55 +20791,55 @@ loc_18CEE:
 		call	_snd_se_play c, 10
 		cmp	_rank, RANK_EASY
 		jz	short loc_18D75
-		push	word_26C5A
-		push	word_26C62
-		mov	al, byte_26CE2
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, angle_26CE2
 		add	al, 0Ah
-		push	ax
-		push	88h
-		push	550050h
+		push	ax	; angle
+		push	BSM_BOUNCE_TOP_BOTTOM	; group
+		push	(PAT_BULLET16_STAR shl 16) or (5 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		push	word_26C5A
-		push	word_26C62
-		mov	al, byte_26CE2
-		add	al, 0F6h
-		push	ax
-		push	88h
-		push	550050h
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, angle_26CE2
+		add	al, -0Ah
+		push	ax	; angle
+		push	BSM_BOUNCE_TOP_BOTTOM	; group
+		push	(PAT_BULLET16_STAR shl 16) or (5 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		push	word_26C5A
-		push	word_26C62
-		mov	al, byte_26CE2
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, angle_26CE2
 		add	al, 1Eh
-		push	ax
-		push	88h
-		push	550050h
+		push	ax	; angle
+		push	BSM_BOUNCE_TOP_BOTTOM	; group
+		push	(PAT_BULLET16_STAR shl 16) or (5 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		push	word_26C5A
-		push	word_26C62
-		mov	al, byte_26CE2
-		add	al, 0E2h
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, angle_26CE2
+		add	al, -1Eh
 		jmp	short loc_18D9C
 ; ---------------------------------------------------------------------------
 
 loc_18D75:
-		push	word_26C5A
-		push	word_26C62
-		mov	al, byte_26CE2
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, angle_26CE2
 		add	al, 0Fh
-		push	ax
-		push	88h
-		push	550050h
+		push	ax	; angle
+		push	BSM_BOUNCE_TOP_BOTTOM	; group
+		push	(PAT_BULLET16_STAR shl 16) or (5 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		push	word_26C5A
-		push	word_26C62
-		mov	al, byte_26CE2
-		add	al, 0F1h
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, angle_26CE2
+		add	al, -0Fh
 
 loc_18D9C:
-		push	ax
-		push	88h
-		push	550050h
+		push	ax	; angle
+		push	BSM_BOUNCE_TOP_BOTTOM	; group
+		push	(PAT_BULLET16_STAR shl 16) or (5 shl 4)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_18DA9:
@@ -20923,15 +20849,15 @@ loc_18DA9:
 		jz	short loc_18DDE
 		cmp	_boss_phase_frame, 210
 		jge	short loc_18DC9
-		mov	al, byte_26CE3
-		add	byte_26CE2, al
+		mov	al, direction_26CE3
+		add	angle_26CE2, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_18DC9:
-		mov	al, byte_26CE3
-		sub	byte_26CE2, al
+		mov	al, direction_26CE3
+		sub	angle_26CE2, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20993,28 +20919,28 @@ loc_18E31:
 		jnz	short loc_18E89
 		call	_snd_se_play c, 3
 		mov	patnum_2064E, 134
-		mov	byte_26CE4, 4
+		mov	angle_26CE4, 04h
 
 loc_18E54:
-		push	word_26C5A
-		push	word_26C62
-		mov	al, byte_26CE4
-		add	al, 8
-		push	ax
-		push	7
-		push	50h ; 'P'
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, angle_26CE4
+		add	al, 08h
+		push	ax	; angle
+		push	BG_3_SPREAD_NARROW	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		push	word_26C5A
-		push	word_26C62
-		mov	al, 78h	; 'x'
-		sub	al, byte_26CE4
-		push	ax
-		push	7
-		push	50h ; 'P'
+		push	left_26C5A	; left
+		push	top_26C62	; top
+		mov	al, 78h
+		sub	al, angle_26CE4
+		push	ax	; angle
+		push	BG_3_SPREAD_NARROW	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		mov	al, byte_26CE4
+		mov	al, angle_26CE4
 		add	al, 0Ah
-		mov	byte_26CE4, al
+		mov	angle_26CE4, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21049,7 +20975,8 @@ mima_18DE0	endp
 mima_18EB8	proc near
 
 @@angle		= byte ptr -4
-var_3		= word ptr -3
+var_3		= byte ptr -3
+var_2		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -21070,7 +20997,7 @@ var_3		= word ptr -3
 		mov	word_26CE8, ax
 		mov	word_26CEA, 4
 		call	@randring2_next8$qv
-		mov	byte_26CEC, al
+		mov	angle_26CEC, al
 		jmp	loc_19169
 ; ---------------------------------------------------------------------------
 
@@ -21081,8 +21008,8 @@ loc_18F05:
 		jnz	loc_18FC3
 		call	_snd_se_play c, 10
 		mov	patnum_2064E, 134
-		mov	[bp+var_3+1], 0
-		mov	al, byte_26CEC
+		mov	[bp+var_2], 0
+		mov	al, angle_26CEC
 		jmp	loc_18FB5
 ; ---------------------------------------------------------------------------
 
@@ -21098,10 +21025,10 @@ loc_18F32:
 		mov	dx, word_26CE6
 		sar	dx, 4
 		add	ax, dx
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		mov	[bx-6DF4h], ax
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		mov	[bx-6E04h], ax
 		movsx	eax, word_26CEA
@@ -21115,30 +21042,30 @@ loc_18F32:
 		mov	dx, word_26CE8
 		sar	dx, 4
 		add	ax, dx
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		mov	[bx-6DD4h], ax
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		mov	[bx-6DE4h], ax
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		mov	word ptr [bx-6DC4h], 1
-		inc	[bp+var_3+1]
+		inc	[bp+var_2]
 		mov	al, [bp+@@angle]
 		add	al, 40h
 
 loc_18FB5:
 		mov	[bp+@@angle], al
-		cmp	[bp+var_3+1], 4
+		cmp	[bp+var_2], 4
 		jl	loc_18F32
 		jmp	loc_19169
 ; ---------------------------------------------------------------------------
 
 loc_18FC3:
 		add	word_26CEA, 2
-		mov	[bp+var_3+1], 0
-		mov	al, byte_26CEC
+		mov	[bp+var_2], 0
+		mov	al, angle_26CEC
 		jmp	loc_1912F
 ; ---------------------------------------------------------------------------
 
@@ -21155,7 +21082,7 @@ loc_18FD3:
 		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		add	dx, bx
 		mov	bx, dx
@@ -21172,7 +21099,7 @@ loc_18FD3:
 		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		add	dx, bx
 		mov	bx, dx
@@ -21190,7 +21117,7 @@ loc_18FD3:
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, [bp+var_3+1]
+		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
@@ -21199,7 +21126,7 @@ loc_18FD3:
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, [bp+var_3+1]
+		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
@@ -21208,7 +21135,7 @@ loc_18FD3:
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, [bp+var_3+1]
+		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
@@ -21217,7 +21144,7 @@ loc_18FD3:
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, [bp+var_3+1]
+		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
@@ -21225,73 +21152,73 @@ loc_18FD3:
 		jge	short loc_19127
 		cmp	byte_26CC0, 0
 		jnz	short loc_190E3
-		mov	al, byte ptr [bp+var_3+1]
+		mov	al, byte ptr [bp+var_2]
 		shl	al, 6
-		add	al, byte_26CEC
+		add	al, angle_26CEC
 		add	al, 40h
 		jmp	short loc_190EF
 ; ---------------------------------------------------------------------------
 
 loc_190E3:
-		mov	al, byte ptr [bp+var_3+1]
+		mov	al, byte ptr [bp+var_2]
 		shl	al, 6
-		add	al, byte_26CEC
+		add	al, angle_26CEC
 		add	al, 60h
 
 loc_190EF:
-		mov	byte ptr [bp+var_3], al
+		mov	[bp+var_3], al
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, [bp+var_3+1]
+		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx-6E04h]
+		push	word ptr [bx-6E04h]	; left
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, [bp+var_3+1]
+		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx-6DE4h]
-		push	[bp+var_3]
-		push	20h ; ' '
-		push	80h
+		push	word ptr [bx-6DE4h]	; top
+		push	word ptr [bp+var_3]	; angle
+		push	BG_1	; group
+		push	(8 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_19127:
-		inc	[bp+var_3+1]
+		inc	[bp+var_2]
 		mov	al, [bp+@@angle]
 		add	al, 40h
 
 loc_1912F:
 		mov	[bp+@@angle], al
-		cmp	[bp+var_3+1], 4
+		cmp	[bp+var_2], 4
 		jl	loc_18FD3
 		cmp	word_26CEA, 1CCh
 		jle	short loc_19169
-		mov	[bp+var_3+1], 0
+		mov	[bp+var_2], 0
 		jmp	short loc_19157
 ; ---------------------------------------------------------------------------
 
 loc_19149:
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		mov	word ptr [bx-6DC4h], 0
-		inc	[bp+var_3+1]
+		inc	[bp+var_2]
 
 loc_19157:
-		cmp	[bp+var_3+1], 4
+		cmp	[bp+var_2], 4
 		jl	short loc_19149
 		mov	_boss_phase_frame, 0
 		mov	patnum_2064E, 128
 
 loc_19169:
-		mov	al, byte_26CEC
-		add	al, 0FDh
-		mov	byte_26CEC, al
+		mov	al, angle_26CEC
+		add	al, -03h
+		mov	angle_26CEC, al
 
 locret_19171:
 		leave
@@ -21310,7 +21237,7 @@ mima_19173	proc near
 		jl	short loc_191CA
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_1918B
-		mov	byte ptr word_26CED, 0
+		mov	angle_26CED, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21321,14 +21248,14 @@ loc_1918B:
 		test	byte ptr _boss_phase_frame, 1
 		jz	short loc_191CA
 		call	_snd_se_play c, 3
-		push	word_26C5C
-		push	word_26C64
-		push	word_26CED
-		push	23h ; '#'
-		push	560032h
+		push	x_26C5C	; left
+		push	y_26C64	; top
+		push	word ptr angle_26CED	; angle
+		push	BG_2_SPREAD_HORIZONTALLY_SYMMETRIC	; group
+		push	(PAT_BULLET16_BALL shl 16) or ((3 shl 4) + 2)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		mov	al, byte_20672
-		add	byte ptr word_26CED, al
+		add	angle_26CED, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21355,14 +21282,14 @@ mima_191CC	proc near
 		jnz	short loc_1920E
 		mov	ax, _player_topleft.y
 		add	ax, 12
-		sub	ax, word_26C64
+		sub	ax, y_26C64
 		push	ax
 		mov	ax, _player_topleft.x
 		add	ax, 12
-		sub	ax, word_26C5C
+		sub	ax, x_26C5C
 		push	ax
 		call	iatan2
-		mov	byte ptr word_26CED+1, al
+		mov	angle_26CEE, al
 		mov	byte_26CEF, 1Eh
 		call	_snd_se_play c, 9
 		pop	bp
@@ -21375,21 +21302,21 @@ loc_1920E:
 		test	byte ptr _boss_phase_frame, 1
 		jz	loc_19351
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	word_26C5C
-		push	word_26C64
+		push	x_26C5C
+		push	y_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		push	ax
 		call	grcg_circle
-		push	word_26C5C
-		push	word_26C64
+		push	x_26C5C
+		push	y_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		add	ax, ax
 		push	ax
 		call	grcg_circle
-		push	word_26C5C
-		push	word_26C64
+		push	x_26C5C
+		push	y_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		shl	ax, 2
@@ -21401,21 +21328,21 @@ loc_1920E:
 		cmp	_boss_phase_frame, 80
 		jz	loc_19351
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
-		push	word_26C5C
-		push	word_26C64
+		push	x_26C5C
+		push	y_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		push	ax
 		call	grcg_circle
-		push	word_26C5C
-		push	word_26C64
+		push	x_26C5C
+		push	y_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		add	ax, ax
 		push	ax
 		call	grcg_circle
-		push	word_26C5C
-		push	word_26C64
+		push	x_26C5C
+		push	y_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		shl	ax, 2
@@ -21431,18 +21358,13 @@ loc_192CA:
 		jge	short loc_1934B
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_192FF
-		push	word_26C5C
-		push	word_26C64
-		push	2
-		push	1Ch
-		push	56003Ch
+		push	x_26C5C	; left
+		push	y_26C64	; top
+		push	02h	; angle
+		push	BG_RANDOM_ANGLE_AND_SPEED	; group
+		push	(PAT_BULLET16_BALL shl 16) or ((3 shl 4) + 12)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		push	word_26C5C
-		push	word_26C64
-		push	2
-		push	1Ch
-		push	3Ch ; '<'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, x_26C5C, y_26C64, 02h, BG_RANDOM_ANGLE_AND_SPEED, ((3 shl 4) + 12)
 
 loc_192FF:
 		mov	al, _rank
@@ -21453,18 +21375,13 @@ loc_192FF:
 		and	ax, 7
 		cmp	ax, 4
 		jnz	short loc_19338
-		push	word_26C5C
-		push	word_26C64
-		push	2
-		push	1Ch
-		push	56003Ch
+		push	x_26C5C	; left
+		push	y_26C64	; top
+		push	02h	; angle
+		push	BG_RANDOM_ANGLE_AND_SPEED	; group
+		push	(PAT_BULLET16_BALL shl 16) or ((3 shl 4) + 12)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		push	word_26C5C
-		push	word_26C64
-		push	2
-		push	1Ch
-		push	3Ch ; '<'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, x_26C5C, y_26C64, 02h, BG_RANDOM_ANGLE_AND_SPEED, ((3 shl 4) + 12)
 
 loc_19338:
 		test	byte ptr _boss_phase_frame, 7
@@ -21496,10 +21413,10 @@ mima_19353	proc near
 		jge	short loc_1939C
 		test	byte ptr _boss_phase_frame, 1Fh
 		jnz	short loc_1937A
-		push	word_26C5C
-		push	word_26C64
-		push	0
-		push	17h
+		push	x_26C5C	; left
+		push	y_26C64	; top
+		push	0	; angle
+		push	BG_5_SPREAD_MEDIUM_AIMED	; group
 		jmp	short loc_19391
 ; ---------------------------------------------------------------------------
 
@@ -21508,13 +21425,13 @@ loc_1937A:
 		and	ax, 31
 		cmp	ax, 16
 		jnz	short loc_193A2
-		push	word_26C5C
-		push	word_26C64
-		push	0
-		push	11h
+		push	x_26C5C	; left
+		push	y_26C64	; top
+		push	0	; angle
+		push	BG_4_SPREAD_MEDIUM_AIMED	; group
 
 loc_19391:
-		push	56005Ah
+		push	(PAT_BULLET16_BALL shl 16) or ((5 shl 4) + 10)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		pop	bp
 		retn
@@ -21646,29 +21563,29 @@ var_1		= byte ptr -1
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		mov	word_26C56, ax
+		mov	left_26C56, ax
 		mov	ax, [bx]
 		add	ax, 40
 		mov	word_26C58, ax
 		mov	ax, [bx]
 		add	ax, 64
-		mov	word_26C5A, ax
+		mov	left_26C5A, ax
 		mov	ax, [bx]
 		add	ax, 64
-		mov	word_26C5C, ax
+		mov	x_26C5C, ax
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 96
-		mov	word_26C5E, ax
+		mov	top_26C5E, ax
 		mov	ax, [bx]
 		add	ax, 16
 		mov	word_26C60, ax
 		mov	ax, [bx]
 		add	ax, 114
-		mov	word_26C62, ax
+		mov	top_26C62, ax
 		mov	ax, [bx]
 		add	ax, 44
-		mov	word_26C64, ax
+		mov	y_26C64, ax
 		test	byte ptr _stage_frame, 1
 		jnz	short loc_1953B
 		cmp	_reduce_effects, 0
@@ -22086,7 +22003,7 @@ loc_19878:
 loc_1988A:
 		cmp	_boss_phase_frame, 30
 		jge	short loc_198A8
-		mov	ax, word_26C5C
+		mov	ax, x_26C5C
 		cmp	ax, _player_topleft.x
 		jge	short loc_1989F
 		mov	ax, 1
@@ -22828,12 +22745,7 @@ midboss4_1A0CE	proc near
 		shl	ax, 4
 		add	ax, point_26D76.x
 		add	ax, 28
-		push	ax
-		push	60h
-		push	40h
-		push	20h ; ' '
-		push	50h ; 'P'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, ax, (PLAYFIELD_TOP + 80), 40h, BG_1, (5 shl 4)
 
 loc_1A101:
 		pop	bp
@@ -22847,7 +22759,7 @@ midboss4_1A0CE	endp
 
 midboss4_1A103	proc near
 
-var_1		= byte ptr -1
+@@group		= byte ptr -1
 
 		push	bp
 		mov	bp, sp
@@ -22861,26 +22773,26 @@ var_1		= byte ptr -1
 		call	_snd_se_play c, 3
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1A12B
-		mov	al, 0Fh
+		mov	al, BG_4_SPREAD_WIDE
 		jmp	short loc_1A12D
 ; ---------------------------------------------------------------------------
 
 loc_1A12B:
-		mov	al, 14h
+		mov	al, BG_5_SPREAD_MEDIUM
 
 loc_1A12D:
-		mov	[bp+var_1], al
+		mov	[bp+@@group], al
 		mov	ax, word_26CFE
 		shl	ax, 4
 		add	ax, point_26D76.x
 		add	ax, 28
-		push	ax
-		push	60h
-		push	40h
-		push	word ptr [bp+var_1]
+		push	ax	; left
+		push	(PLAYFIELD_TOP + 80)	; top
+		push	40h	; angle
+		push	word ptr [bp+@@group]	; group
 		mov	ax, _boss_phase_frame
-		add	ax, -20
-		push	ax
+		add	ax, -((1 shl 4) + 4)
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 locret_1A14F:
@@ -22906,13 +22818,7 @@ midboss4_1A151	proc near
 		shl	ax, 4
 		add	ax, point_26D76.x
 		add	ax, 28
-		push	ax
-		push	60h
-		push	40h
-		push	80h
-		push	50h ; 'P'
-		push	bx
-		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
+		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti pascal, ax, (PLAYFIELD_TOP + 80), 40h, 80h, PAT_BULLET16_OUTLINED_BALL_BEIGE, bx
 
 loc_1A17C:
 		pop	bp
@@ -22977,13 +22883,13 @@ loc_1A1D5:
 		shl	ax, 4
 		add	ax, point_26D76.x
 		add	ax, 28
-		push	ax
-		push	word_26D00
+		push	ax	; left
+		push	top_26D00	; top
 		call	@randring2_next8_and$quc pascal, 3Fh
-		add	al, 20h	; ' '
-		push	ax
-		push	20h ; ' '
-		push	46h ; 'F'
+		add	al, 20h
+		push	ax	; angle
+		push	BG_1	; group
+		push	((4 shl 4) + 6)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		inc	si
 
@@ -23055,7 +22961,7 @@ loc_1A296:
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 48
-		mov	word_26D00, ax
+		mov	top_26D00, ax
 		mov	ax, [bx]
 		mov	point_26D76.y, ax
 		cmp	byte_2066A, 0
@@ -23081,12 +22987,7 @@ loc_1A296:
 		shl	ax, 4
 		add	ax, point_26D76.x
 		add	ax, 28
-		push	ax
-		push	word_26D00
-		push	40h
-		push	20h ; ' '
-		push	50h ; 'P'
-		call	@bullets_add_pellet$qiiucuci
+		call	@bullets_add_pellet$qiiucuci pascal, ax, top_26D00, 40h, BG_1, (5 shl 4)
 
 loc_1A30A:
 		cmp	_boss_phase_frame, 32
@@ -24579,19 +24480,19 @@ marisa_1B214	proc near
 		mov	bp, sp
 		cmp	_rank, RANK_EASY
 		jz	short loc_1B234
-		mov	byte ptr word_2066E, 17h
-		mov	byte ptr word_2066E+1, 11h
-		mov	byte ptr word_20670, 2
-		mov	byte ptr word_20670+1, 4
+		mov	byte_2066E, 17h
+		mov	byte_2066F, 11h
+		mov	group_20670, BG_2_SPREAD_MEDIUM
+		mov	byte_20671, 4
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_1B234:
-		mov	byte ptr word_2066E, 18h
-		mov	byte ptr word_2066E+1, 12h
-		mov	byte ptr word_20670, 20h ; ' '
-		mov	byte ptr word_20670+1, 2
+		mov	byte_2066E, 18h
+		mov	byte_2066F, 12h
+		mov	group_20670, BG_1
+		mov	byte_20671, 2
 		pop	bp
 		retn
 marisa_1B214	endp
@@ -24609,7 +24510,7 @@ marisa_1B24A	proc near
 		call	marisa_1B19D
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_1B267
-		mov	byte ptr word_26D7F, 18h
+		mov	angle_26D7F, 18h
 		jmp	short loc_1B27A
 ; ---------------------------------------------------------------------------
 
@@ -24632,42 +24533,42 @@ loc_1B27A:
 		jz	short loc_1B2C6
 		mov	ax, point_26D76.x
 		add	ax, 36
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 64
-		push	ax
-		push	word_26D7F
-		push	20h ; ' '
-		push	3Ch ; '<'
+		push	ax	; top
+		push	word ptr angle_26D7F	; angle
+		push	BG_1	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		mov	ax, point_26D76.x
 		add	ax, 52
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 64
 		push	ax
-		push	word_26D7F
-		push	20h ; ' '
-		push	3Ch ; '<'
+		push	word ptr angle_26D7F
+		push	BG_1	; group
+		push	((3 shl 4) + 12)	; speed
 		jmp	short loc_1B2DC
 ; ---------------------------------------------------------------------------
 
 loc_1B2C6:
 		mov	ax, point_26D76.x
 		add	ax, 44
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 64
-		push	ax
-		push	word_26D7F
-		push	20h ; ' '
-		push	32h ; '2'
+		push	ax	; top
+		push	word ptr angle_26D7F	; angle
+		push	BG_1	; group
+		push	((3 shl 4) + 2)	; speed
 
 loc_1B2DC:
 		call	@bullets_add_pellet$qiiucuci
-		mov	al, byte ptr word_26D7F
+		mov	al, angle_26D7F
 		add	al, 0Ah
-		mov	byte ptr word_26D7F, al
+		mov	angle_26D7F, al
 
 loc_1B2E7:
 		pop	bp
@@ -24698,23 +24599,23 @@ loc_1B30A:
 		jnz	short loc_1B349
 		mov	ax, point_26D76.x
 		add	ax, 64
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 16
-		push	ax
-		push	0
-		push	word_2066E
-		push	36h ; '6'
+		push	ax	; top
+		push	00h	; angle
+		push	word ptr byte_2066E	; group
+		push	((3 shl 4) + 6)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		mov	ax, point_26D76.x
 		add	ax, 64
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 16
-		push	ax
-		push	0
-		push	word_2066E+1
-		push	3Ch ; '<'
+		push	ax	; top
+		push	00h	; angle
+		push	word ptr byte_2066F	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_1B349:
@@ -24742,7 +24643,7 @@ marisa_1B35F	proc near
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_1B39A
 		call	@randring2_next8$qv
-		mov	byte ptr word_26D7F+1, al
+		mov	angle_26D80, al
 		mov	al, byte_1EEA4
 		mov	ah, 0
 		mov	bullet_special_drift_angle, ax
@@ -24767,17 +24668,17 @@ loc_1B3A8:
 		jnz	short loc_1B3DC
 		mov	ax, point_26D76.x
 		add	ax, 44
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 64
-		push	ax
-		push	word_26D7F+1
-		push	84h
-		push	550028h
+		push	ax	; top
+		push	word ptr angle_26D80	; angle
+		push	BSM_DRIFT_ANGLE_AND_SPEED	; group
+		push	(PAT_BULLET16_STAR shl 16) or ((2 shl 4) + 8)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		mov	al, byte ptr word_26D7F+1
-		add	al, 2Bh	; '+'
-		mov	byte ptr word_26D7F+1, al
+		mov	al, angle_26D80
+		add	al, 2Bh
+		mov	angle_26D80, al
 
 loc_1B3DC:
 		pop	bp
@@ -25025,17 +24926,17 @@ loc_1B592:
 		shl	bx, 2
 		les	bx, [bx-6D1Ah]
 		mov	ax, es:[bx]
-		add	ax, 0Ch
-		push	ax
+		add	ax, 12
+		push	ax	; left
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx-6D0Ah]
 		mov	ax, es:[bx]
-		add	ax, 0Ch
-		push	ax
-		push	0
-		push	19h
-		push	50h ; 'P'
+		add	ax, 12
+		push	ax	; top
+		push	00h	; angle
+		push	BG_1_AIMED	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_1B631:
@@ -25045,13 +24946,13 @@ loc_1B631:
 		jge	short loc_1B654
 		mov	ax, point_26D76.x
 		add	ax, 64
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 16
-		push	ax
-		push	0
-		push	0Ah
-		push	50h ; 'P'
+		push	ax	; top
+		push	00h	; angle
+		push	BG_3_SPREAD_NARROW_AIMED	; group
+		push	(5 shl 4)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_1B654:
@@ -25185,7 +25086,7 @@ loc_1B72B:
 		call	marisa_1B665
 		cmp	_boss_phase_frame, 220
 		jnz	short loc_1B73E
-		mov	byte ptr word_26D87, 0
+		mov	angle_26D87, 0
 
 loc_1B73E:
 		cmp	word_26D4A, 8
@@ -25205,9 +25106,9 @@ loc_1B75B:
 loc_1B762:
 		cmp	word_26D4A, 8
 		jz	short loc_1B79B
-		mov	al, byte ptr word_26D87
+		mov	al, angle_26D87
 		add	al, 0Dh
-		mov	byte ptr word_26D87, al
+		mov	angle_26D87, al
 		mov	al, _rank
 		cbw
 		mov	dx, _boss_phase_frame
@@ -25216,30 +25117,30 @@ loc_1B762:
 		jl	short loc_1B7D0
 		mov	ax, point_26D76.x
 		add	ax, 44
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 64
-		push	ax
-		push	word_26D87
-		push	20h ; ' '
-		push	32h ; '2'
+		push	ax	; top
+		push	word ptr angle_26D87	; angle
+		push	BG_1	; group
+		push	((3 shl 4) + 2)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		jmp	short loc_1B7D0
 ; ---------------------------------------------------------------------------
 
 loc_1B79B:
-		mov	al, byte ptr word_26D87
+		mov	al, angle_26D87
 		add	al, 0Ah
-		mov	byte ptr word_26D87, al
+		mov	angle_26D87, al
 		mov	ax, point_26D76.x
 		add	ax, 64
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 16
-		push	ax
-		push	word_26D87
-		push	20h ; ' '
-		push	3Ch ; '<'
+		push	ax	; top
+		push	word ptr angle_26D87	; angle
+		push	BG_1	; group
+		push	((3 shl 4) + 12)	; speed
 		call	@bullets_add_pellet$qiiucuci
 		cmp	_boss_phase_frame, 270
 		jle	short loc_1B7D0
@@ -25364,7 +25265,7 @@ loc_1B8B2:
 		call	marisa_1B665
 		cmp	_boss_phase_frame, 140
 		jnz	short loc_1B8C5
-		mov	byte ptr word_26D87+1, 0
+		mov	angle_26D88, 0
 
 loc_1B8C5:
 		cmp	word_26D4A, 8
@@ -25372,18 +25273,18 @@ loc_1B8C5:
 		mov	patnum_2064E, 130
 		mov	al, 18h
 		sub	al, _rank
-		mov	dl, byte ptr word_26D87+1
+		mov	dl, angle_26D88
 		sub	dl, al
-		mov	byte ptr word_26D87+1, dl
+		mov	angle_26D88, dl
 		mov	ax, point_26D76.x
 		add	ax, 64
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 16
-		push	ax
-		push	word_26D87+1
-		push	255
-		push	55003Ch
+		push	ax	; top
+		push	word ptr angle_26D88	; angle
+		push	BSM_1	; group
+		push	(PAT_BULLET16_STAR shl 16) or ((3 shl 4) + 12)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		jmp	loc_1B992
 ; ---------------------------------------------------------------------------
@@ -25395,9 +25296,9 @@ loc_1B903:
 		jge	short loc_1B992
 		test	byte ptr _boss_phase_frame, 3
 		jnz	short loc_1B992
-		mov	al, byte ptr word_26D87+1
+		mov	al, angle_26D88
 		add	al, 3
-		mov	byte ptr word_26D87+1, al
+		mov	angle_26D88, al
 		call	_snd_se_play c, 10
 		xor	si, si
 		jmp	short loc_1B98D
@@ -25426,15 +25327,15 @@ loc_1B932:
 		cmp	[bp+var_2], 170h
 		jg	short loc_1B98A
 		lea	ax, [di+0Ch]
-		push	ax
+		push	ax	; left
 		mov	ax, [bp+var_2]
-		add	ax, 0Ch
-		push	ax
+		add	ax, 12
+		push	ax	; top
 		mov	al, [si-6D20h]
-		add	al, byte ptr word_26D87+1
-		push	ax
-		push	20h ; ' '
-		push	46h ; 'F'
+		add	al, angle_26D88
+		push	ax	; angle
+		push	BG_1	; group
+		push	((4 shl 4) + 6)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_1B98A:
@@ -25458,7 +25359,7 @@ marisa_1B7D3	endp
 
 marisa_1B996	proc near
 
-var_4		= word ptr -4
+@@angle = word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -25516,25 +25417,25 @@ loc_1BA20:
 		shl	bx, 2
 		les	bx, [bx-6D0Ah]
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		mov	[bp+var_2], ax
-		mov	[bp+var_4], 0FFC0h
+		mov	[bp+@@angle], -40h
 		jmp	short loc_1BA6C
 ; ---------------------------------------------------------------------------
 
 loc_1BA55:
-		push	di
-		push	[bp+var_2]
+		push	di	; left
+		push	[bp+var_2]	; top
 		mov	al, [si-6D20h]
-		add	al, byte ptr [bp+var_4]
-		push	ax
-		push	20h ; ' '
-		push	46h ; 'F'
+		add	al, byte ptr [bp+@@angle]
+		push	ax	; angle
+		push	BG_1	; group
+		push	((4 shl 4) + 6)	; speed
 		call	@bullets_add_pellet$qiiucuci
-		add	[bp+var_4], 10h
+		add	[bp+@@angle], 10h
 
 loc_1BA6C:
-		cmp	[bp+var_4], 40h
+		cmp	[bp+@@angle], 40h
 		jl	short loc_1BA55
 
 loc_1BA72:
@@ -25576,16 +25477,16 @@ loc_1BA90:
 ; ---------------------------------------------------------------------------
 
 loc_1BAC5:
-		push	di
-		push	[bp+var_2]
+		push	di	; left
+		push	[bp+var_2]	; top
 		mov	al, [si-6D20h]
 		add	al, byte ptr [bp+var_4]
-		push	ax
-		push	20h ; ' '
+		push	ax	; angle
+		push	BG_1	; group
 		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
-		add	ax, 10h
-		push	ax
+		add	ax, (1 shl 4)
+		push	ax	; speed
 		call	@bullets_add_pellet$qiiucuci
 		add	[bp+var_4], 0Ch
 
@@ -25617,7 +25518,7 @@ marisa_1B996	endp
 
 marisa_1BAFF	proc near
 
-var_4		= word ptr -4
+@@speed		= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -25695,15 +25596,15 @@ loc_1BBAB:
 		mov	[bp+var_2], ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 2
-		add	ax, 25
-		mov	[bp+var_4], ax
-		push	di
-		push	[bp+var_2]
+		add	ax, ((1 shl 4) + 9)
+		mov	[bp+@@speed], ax
+		push	di	; left
+		push	[bp+var_2]	; top
 		mov	al, [si-6D20h]
 		add	al, [si-6CE6h]
-		push	ax
-		push	20h ; ' '
-		push	[bp+var_4]
+		push	ax	; angle
+		push	BG_1	; group
+		push	[bp+@@speed]	; speed
 		call	@bullets_add_pellet$qiiucuci
 		mov	al, [si-6CE6h]
 		mov	bx, si
@@ -25725,13 +25626,13 @@ loc_1BC0F:
 		jnz	short loc_1BC3B
 		mov	ax, point_26D76.x
 		add	ax, 44
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 44
-		push	ax
-		push	_boss_phase_frame
-		push	25h ; '%'
-		push	32h ; '2'
+		push	ax	; top
+		push	_boss_phase_frame	; angle
+		push	BG_16_RING	; group
+		push	((3 shl 4) + 2)	; speed
 		call	@bullets_add_pellet$qiiucuci
 
 loc_1BC3B:
@@ -25751,7 +25652,8 @@ marisa_1BAFF	endp
 
 marisa_1BC43	proc near
 
-var_3		= word ptr -3
+@@angle	= byte ptr -3
+var_2	= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -25826,47 +25728,47 @@ loc_1BD16:
 		call	_snd_se_play c, 10
 		cmp	_boss_phase_frame, 120
 		jg	short loc_1BDAC
-		mov	[bp+var_3+1], 0
+		mov	[bp+var_2], 0
 		jmp	short loc_1BD86
 ; ---------------------------------------------------------------------------
 
 loc_1BD46:
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		add	bx, bx
 		cmp	word ptr [bx-6D46h], 0
 		jnz	short loc_1BD83
-		mov	bx, [bp+var_3+1]
+		mov	bx, [bp+var_2]
 		shl	bx, 2
 		les	bx, [bx-6D1Ah]
 		mov	ax, es:[bx]
 		add	ax, 8
-		push	ax
-		mov	bx, [bp+var_3+1]
+		push	ax	; left
+		mov	bx, [bp+var_2]
 		shl	bx, 2
 		les	bx, [bx-6D0Ah]
 		mov	ax, es:[bx]
 		add	ax, 8
-		push	ax
-		push	0C0h
-		push	255
-		push	550046h
+		push	ax	; top
+		push	(-40h and 0FFh)	; angle
+		push	BSM_1	; group
+		push	(PAT_BULLET16_STAR shl 16) or ((4 shl 4) + 6)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 
 loc_1BD83:
-		inc	[bp+var_3+1]
+		inc	[bp+var_2]
 
 loc_1BD86:
-		cmp	[bp+var_3+1], 4
+		cmp	[bp+var_2], 4
 		jl	short loc_1BD46
 		mov	ax, point_26D76.x
 		add	ax, 40
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 40
-		push	ax
-		push	0C0h
-		push	255
-		push	550046h
+		push	ax	; top
+		push	(-40h and 0FFh)	; angle
+		push	BSM_1	; group
+		push	(PAT_BULLET16_STAR shl 16) or ((4 shl 4) + 6)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
 		jmp	loc_1BE2F
 ; ---------------------------------------------------------------------------
@@ -25884,7 +25786,7 @@ loc_1BDBA:
 		mov	si, 20h	; ' '
 
 loc_1BDBD:
-		mov	[bp+var_3+1], 0
+		mov	[bp+var_2], 0
 		jmp	short loc_1BE25
 ; ---------------------------------------------------------------------------
 
@@ -25894,72 +25796,72 @@ loc_1BDC4:
 		shl	dl, 4
 		add	al, dl
 		add	al, 40h
-		mov	byte ptr [bp+var_3], al
+		mov	[bp+@@angle], al
 		call	@randring2_next16$qv
-		mov	bx, 368
+		mov	bx, (PLAYFIELD_W - BULLET16_W)
 		xor	dx, dx
 		div	bx
-		add	dx, 20h	; ' '
-		push	dx
-		push	10h
-		push	[bp+var_3]
-		push	255
-		push	55h ; 'U'
+		add	dx, PLAYFIELD_LEFT
+		push	dx	; left
+		push	PLAYFIELD_TOP	; top
+		push	word ptr [bp+@@angle]	; angle
+		push	BSM_1	; group
+		push	PAT_BULLET16_STAR	; patnum
 		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	ax, 10h
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		push	si
+		push	si	; left
 		call	@randring2_next16$qv
 		mov	bx, 320
 		xor	dx, dx
 		div	bx
-		add	dx, 10h
-		push	dx
-		push	[bp+var_3]
-		push	255
-		push	55h ; 'U'
+		add	dx, PLAYFIELD_TOP
+		push	dx	; top
+		push	word ptr [bp+@@angle]	; angle
+		push	BSM_1	; group
+		push	PAT_BULLET16_STAR	; patnum
 		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	ax, 10h
-		push	ax
+		push	ax	; speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		inc	[bp+var_3+1]
+		inc	[bp+var_2]
 
 loc_1BE25:
-		mov	al, byte ptr word_20670+1
+		mov	al, byte_20671
 		mov	ah, 0
-		cmp	ax, [bp+var_3+1]
+		cmp	ax, [bp+var_2]
 		jg	short loc_1BDC4
 
 loc_1BE2F:
 		cmp	word_26D4A, 8
 		jnz	short loc_1BE6F
-		mov	[bp+var_3+1], 0
+		mov	[bp+var_2], 0
 		jmp	short loc_1BE69
 ; ---------------------------------------------------------------------------
 
 loc_1BE3D:
 		mov	ax, point_26D76.x
 		add	ax, 40
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 40
-		push	ax
-		mov	al, byte ptr [bp+var_3+1]
+		push	ax	; top
+		mov	al, byte ptr [bp+var_2]
 		shl	al, 6
 		mov	dl, byte ptr _boss_phase_frame
 		add	dl, dl
 		add	al, dl
-		push	ax
-		push	85h
-		push	550046h
+		push	ax	; angle
+		push	BSM_DRIFT_ANGLE_CHASE	; group
+		push	(PAT_BULLET16_STAR shl 16) or ((4 shl 4) + 6)	; (patnum shl 16) or speed
 		call	@bullets_add_16x16$qiiuc32bullet_group_or_special_motion_t13main_patnum_ti
-		inc	[bp+var_3+1]
+		inc	[bp+var_2]
 
 loc_1BE69:
-		cmp	[bp+var_3+1], 4
+		cmp	[bp+var_2], 4
 		jl	short loc_1BE3D
 
 loc_1BE6F:
@@ -27513,7 +27415,8 @@ byte_1EB0E	db -1
 		db    0
 		db    0
 word_1EB26	dw 0
-word_1EB28	dw 0
+angle_1EB28	db 0
+		db    0
 		db    1
 		db    2
 		db    3
@@ -28167,8 +28070,10 @@ byte_2066B	db ?
 public _reduce_effects, _slowdown_factor
 _reduce_effects	db ?
 _slowdown_factor	db ?
-word_2066E	dw ?
-word_20670	dw ?
+byte_2066E	db ?
+byte_2066F	db ?
+group_20670	db ?
+byte_20671	db ?
 byte_20672	db ?
 		db 15 dup(?)
 public _sigma_frames
@@ -28368,8 +28273,8 @@ public _stone_left, _stone_top
 _stone_left	dw STONE_COUNT dup(?)
 _stone_top 	dw STONE_COUNT dup(?)
 
-word_22D98	dw ?
-word_22D9A	dw ?
+left_22D98	dw ?
+top_22D9A	dw ?
 y_22D9C	dw ?
 word_22D9E	dw ?
 word_22DA0	dw ?
@@ -28383,10 +28288,10 @@ byte_22FA8	db ?
 word_22FAA	dw ?
 word_22FAC	dw ?
 byte_22FAE	db ?
-word_22FAF	dw ?
-		db 4 dup(?)
-word_22FB5	dw ?
-		db 23 dup(?)
+angle_22FAF	db ?
+angle_22FB0	db ?
+angle_22FB1 db 5 dup(?)
+		db 24 dup(?)
 byte_22FCE	db ?
 byte_22FCF	db ?
 byte_22FD0	db ?
@@ -28413,7 +28318,8 @@ word_24E80	dw ?
 word_24E82	dw ?
 word_24E84	dw ?
 		db 600 dup(?)
-word_250DE	dw ?
+angle_250DE	db ?
+		db ?
 word_250E0	dw ?
 word_250E2	dw ?
 word_250E4	dw ?
@@ -28425,8 +28331,8 @@ byte_252E1	db ?
 word_252E2	dw ?
 word_252E4	dw ?
 word_252E6	dw ?
-word_252E8	dw ?
-word_252EA	dw ?
+speed_252E8	dw ?
+speed_252EA	dw ?
 word_252EC	dw ?
 word_252EE	dw ?
 word_252F0	dw ?
@@ -28469,8 +28375,8 @@ public _hi
 _hi	scoredat_section_t <?>
 byte_253B4	db ?
 		db ?
-word_253B6	dw ?
-word_253B8	dw ?
+left_253B6	dw ?
+top_253B8	dw ?
 		db 300 dup(?)
 point_254E6	Point <?>
 byte_254EA	db ?
@@ -28491,7 +28397,7 @@ word_2559A	dw ?
 word_2559C	dw ?
 angle_2559E	db ?
 		db ?
-word_255A0	dw ?
+left_255A0	dw ?
 byte_255A2	db ?
 byte_255A3	db ?
 point_255A4	Point <?>
@@ -28500,7 +28406,8 @@ word_255AA	dw ?
 word_255AC	dw ?
 word_255AE	dw ?
 byte_255B0	db ?
-word_255B1	dw ?
+angle_255B1	db ?
+byte_255B2	db ?
 byte_255B3	db ?
 byte_255B4	db ?
 		db ?
@@ -28524,14 +28431,14 @@ word_26C4E	dw ?
 word_26C50	dw ?
 word_26C52	dw ?
 word_26C54	dw ?
-word_26C56	dw ?
+left_26C56	dw ?
 word_26C58	dw ?
-word_26C5A	dw ?
-word_26C5C	dw ?
-word_26C5E	dw ?
+left_26C5A	dw ?
+x_26C5C	dw ?
+top_26C5E	dw ?
 word_26C60	dw ?
-word_26C62	dw ?
-word_26C64	dw ?
+top_26C62	dw ?
+y_26C64	dw ?
 word_26C66	dw ?
 word_26C68	dw ?
 word_26C6A	dw ?
@@ -28553,23 +28460,26 @@ byte_26CCA	db ?
 word_26CCC	dw ?
 word_26CCE	dw ?
 word_26CD0	dw ?
-byte_26CD2	db ?
+angle_26CD2	db ?
 byte_26CD3	db ?
 byte_26CD4	db ?
 		db ?
 point_26CD6	Point <?>
-word_26CDA	dw ?
-word_26CDC	dw ?
+angle_26CDA	db ?
+speed_26CDB	db ?
+angle_26CDC	db ?
+		db ?
 point_26CDE	Point <?>
-byte_26CE2	db ?
-byte_26CE3	db ?
-byte_26CE4	db ?
+angle_26CE2	db ?
+direction_26CE3	db ?
+angle_26CE4	db ?
 		db ?
 word_26CE6	dw ?
 word_26CE8	dw ?
 word_26CEA	dw ?
-byte_26CEC	db ?
-word_26CED	dw ?
+angle_26CEC	db ?
+angle_26CED	db ?
+angle_26CEE	db ?
 byte_26CEF	db ?
 word_26CF0	dw ?
 word_26CF2	dw ?
@@ -28581,7 +28491,7 @@ byte_26CFA	db ?
 		db ?
 word_26CFC	dw ?
 word_26CFE	dw ?
-word_26D00	dw ?
+top_26D00	dw ?
 		db 64 dup(?)
 word_26D42	dw ?
 word_26D44	dw ?
@@ -28600,12 +28510,14 @@ word_26D7A	dw ?
 byte_26D7C	db ?
 byte_26D7D	db ?
 byte_26D7E	db ?
-word_26D7F	dw ?
+angle_26D7F	db ?
+angle_26D80	db ?
 byte_26D81	db ?
 word_26D82	dw ?
 word_26D84	dw ?
 angle_26D86	db ?
-word_26D87	dw ?
+angle_26D87	db ?
+angle_26D88	db ?
 byte_26D89	db ?
 byte_26D8A	db ?
 byte_26D8B	db ?
