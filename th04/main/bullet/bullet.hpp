@@ -25,15 +25,15 @@ static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * BMS_DECAY_FRAMES_PER_CEL)
 
-// Regular bullets with a given speed below BMS_SLOWDOWN_THRESHOLD are set to
-// BMS_SLOWDOWN. This fires them at BMS_SLOWDOWN_BASE_SPEED instead, and then
-// gradually slows them down to their given speed over the next
-// BMS_SLOWDOWN_FRAMES.
+// Regular bullets with a given speed below BMS_DECELERATE_THRESHOLD are set to
+// BMS_DECELERATE. This fires them at BMS_DECELERATE_BASE_SPEED instead, and
+// then gradually slows them down to their given speed over the next
+// BMS_DECELERATE_FRAMES.
 // • In TH04, this is not done for stacks.
-// • In TH05, this is not done for any group with BST_NO_SLOWDOWN set.
-#define BMS_SLOWDOWN_BASE_SPEED 4.5f
-#define BMS_SLOWDOWN_THRESHOLD (BMS_SLOWDOWN_BASE_SPEED - 0.5f)
-#define BMS_SLOWDOWN_FRAMES 32
+// • In TH05, this is not done for any group with BST_NO_DECELERATE set.
+#define BMS_DECELERATE_BASE_SPEED 4.5f
+#define BMS_DECELERATE_THRESHOLD (BMS_DECELERATE_BASE_SPEED - 0.5f)
+#define BMS_DECELERATE_FRAMES 32
 
 enum bullet_spawn_state_t {
 	/// Hitbox is active
@@ -59,8 +59,8 @@ enum bullet_move_state_t {
 	/// Hitbox is active
 	/// ----------------
 
-	// Slows down from BMS_SLOWDOWN_BASE_SPEED to [final_speed]
-	BMS_SLOWDOWN = 0,
+	// Slows down from BMS_DECELERATE_BASE_SPEED to [final_speed]
+	BMS_DECELERATE = 0,
 	// Special processing according to [special_motion]
 	BMS_SPECIAL = 1,
 	// No special processing
@@ -84,12 +84,12 @@ enum bullet_special_motion_t {
 	// Slows down the bullet from its initial speed to 0, then aims to the
 	// player and resets to its initial speed.
 	// Affected by [bullet_special_motion.turns_max].
-	BSM_SLOWDOWN_THEN_TURN_AIMED,
+	BSM_DECELERATE_THEN_TURN_AIMED,
 
 	// Slows down the bullet from its initial speed to 0, then increases its
 	// angle by [angle.turn_by] and resets to its initial speed.
 	// Affected by [bullet_special_motion.turns_max].
-	BSM_SLOWDOWN_THEN_TURN,
+	BSM_DECELERATE_THEN_TURN,
 
 	// Accelerates the speed of the bullet by
 	// [bullet_special_motion.speed_delta] every frame.
@@ -98,7 +98,7 @@ enum bullet_special_motion_t {
 	// Slows down the bullet from its initial speed to 0 while turning it
 	// towards [angle.target]. Upon reaching a speed of 0, the bullet
 	// continues flying at that exact angle and resets to its initial speed.
-	BSM_SLOWDOWN_TO_ANGLE,
+	BSM_DECELERATE_TO_ANGLE,
 
 	// Bounces the bullet into the opposite direction if it reaches the
 	// respective edge of the playfield.
@@ -143,14 +143,14 @@ struct bullet_t {
 	bullet_special_motion_t special_motion;
 	SubpixelLength8 speed_final;
 	union {
-		unsigned char slowdown_time;	// with BMS_SLOWDOWN
-		unsigned char turns_done;   	// with BMS_SPECIAL
+		unsigned char decelerate_time;	// with BMS_DECELERATE
+		unsigned char turns_done;     	// with BMS_SPECIAL
 	} u1;
 	union {
-		// Difference between [speed_final] and the BMS_SLOWDOWN_BASE_SPEED.
-		// Always positive for BMS_SLOWDOWN bullets.
-		SubpixelLength8 slowdown_speed_delta;	// with BMS_SLOWDOWN
-		bullet_special_angle_t angle;        	// with BMS_SPECIAL
+		// Difference between [speed_final] and the BMS_DECELERATE_BASE_SPEED.
+		// Always positive for BMS_DECELERATE bullets.
+		SubpixelLength8 decelerate_speed_delta;	// with BMS_DECELERATE
+		bullet_special_angle_t angle;          	// with BMS_SPECIAL
 	} u2;
 	int patnum;
 
@@ -337,7 +337,7 @@ extern nearfunc_t_near bullet_template_tune;
 
 // The actual functions for spawning bullets based on the [bullet_template].
 // Both TH04 and TH05 pointlessly use separate functions for spawning "regular"
-// bullets (which receive a move state of BMS_SLOWDOWN or BMS_REGULAR) or
+// bullets (which receive a move state of BMS_DECELERATE or BMS_REGULAR) or
 // "special" ones (which are BMS_SPECIAL).
 #if (GAME == 5)
 	void near bullets_add_regular(void);

@@ -111,7 +111,7 @@ enum bullet_bounce_edge_t {
 void pascal near bullet_update_special(bullet_t near &bullet)
 {
 	switch(bullet.special_motion) {
-	case BSM_SLOWDOWN_THEN_TURN_AIMED:
+	case BSM_DECELERATE_THEN_TURN_AIMED:
 		if(bullet.speed_cur.v != to_sp(0.0f)) {
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
@@ -125,7 +125,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		}
 		break;
 
-	case BSM_SLOWDOWN_THEN_TURN:
+	case BSM_DECELERATE_THEN_TURN:
 		if(bullet.speed_cur.v != to_sp(0.0f)) {
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
@@ -141,7 +141,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		bullet.speed_cur.v += bullet_special_motion.speed_delta.v;
 		break;
 
-	case BSM_SLOWDOWN_TO_ANGLE:
+	case BSM_DECELERATE_TO_ANGLE:
 		if(bullet.speed_cur.v != to_sp(0.0f)) {
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			// >= to_sp(2 / 16.0f) would have been cleaner
@@ -298,12 +298,13 @@ void bullets_update(void)
 			}
 			if(bullet->move_state == BMS_SPECIAL) {
 				bullet_update_special(*bullet);
-			} else if(bullet->move_state == BMS_SLOWDOWN) {
-				bullet->u1.slowdown_time--;
+			} else if(bullet->move_state == BMS_DECELERATE) {
+				bullet->u1.decelerate_time--;
 				bullet->speed_cur.v = (bullet->speed_final.v + ((
-					bullet->u1.slowdown_time * bullet->u2.slowdown_speed_delta.v
-				) / BMS_SLOWDOWN_FRAMES));
-				if(bullet->u1.slowdown_time == 0) {
+					bullet->u1.decelerate_time *
+					bullet->u2.decelerate_speed_delta.v
+				) / BMS_DECELERATE_FRAMES));
+				if(bullet->u1.decelerate_time == 0) {
 					bullet->speed_cur = bullet->speed_final;
 					bullet->move_state = BMS_REGULAR;
 				}

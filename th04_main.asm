@@ -16238,7 +16238,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_STAR
 		mov	_bullet_template.speed, (5 shl 4) + 12
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_TO_ANGLE
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_TO_ANGLE
 		call	_bullet_template_tune
 		mov	_bit_fire, offset marisa_bit_fire_17061
 		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 0
@@ -18004,7 +18004,7 @@ loc_183A7:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.speed, (2 shl 4) + 8
 		mov	_bullet_special_motion_turns_max, 2
 		mov	_bullet_template_special_angle.BSA_turn_by, -20h
@@ -18121,7 +18121,7 @@ mugetsu_184AC	proc near
 ; ---------------------------------------------------------------------------
 
 loc_184C8:
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_special_motion_turns_max, 1
 		pop	bp
@@ -19133,7 +19133,7 @@ loc_18DCF:
 		mov	_bullet_template.BT_origin, eax
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 16
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.speed, (3 shl 4)
 		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
@@ -21889,7 +21889,7 @@ loc_1AB86:
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_group, BG_RING
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.count, 20
 		mov	_bullet_template_special_angle.BSA_turn_by, -40h
 		call	_bullet_template_tune
@@ -26978,7 +26978,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.speed, (5 shl 4) + 5
 		mov	_bullet_template.BT_angle, 0
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN_AIMED
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN_AIMED
 		mov	al, _boss_statebyte[2].BSB_spread_turns_max
 		mov	_bullet_special_motion_turns_max, al
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
@@ -28647,7 +28647,7 @@ loc_1FC61:
 loc_1FC68:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_1FCE0
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW

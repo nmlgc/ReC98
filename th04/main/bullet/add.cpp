@@ -531,14 +531,14 @@ void pascal near bullets_add_regular_raw(void)
 
 	move_state = BMS_REGULAR;
 	if(
-		(bullet_template.speed < to_sp8(BMS_SLOWDOWN_THRESHOLD)) ||
+		(bullet_template.speed < to_sp8(BMS_DECELERATE_THRESHOLD)) ||
 		bullet_clear_time
 	) {
 		if(
 			(bullet_template.group != BG_STACK) &&
 			(bullet_template.group != BG_STACK_AIMED)
 		) {
-			move_state = BMS_SLOWDOWN;
+			move_state = BMS_DECELERATE;
 		}
 	}
 
@@ -547,9 +547,9 @@ void pascal near bullets_add_regular_raw(void)
 		if(bullet->flag == F_FREE) {
 			bullet->flag = F_ALIVE;
 			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
-			bullet->u1.slowdown_time = BMS_SLOWDOWN_FRAMES;
-			bullet->u2.slowdown_speed_delta.v = (
-				to_sp8(BMS_SLOWDOWN_BASE_SPEED) - bullet_template.speed
+			bullet->u1.decelerate_time = BMS_DECELERATE_FRAMES;
+			bullet->u2.decelerate_speed_delta.v = (
+				to_sp8(BMS_DECELERATE_BASE_SPEED) - bullet_template.speed
 			);
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
 			if(group_done) {
