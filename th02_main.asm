@@ -1966,7 +1966,7 @@ loc_BDE8:
 		call	sub_EF36
 		call	@items_update_and_render$qv
 		call	farfp_23A76
-		call	sub_10BC6
+		call	@bullets_update_and_render$qv
 		call	sub_41AA
 		test	byte ptr _key_det, INPUT_CANCEL
 		jz	short loc_BE0F
@@ -6487,8 +6487,6 @@ BULLET_TEXT	segment	byte public 'CODE' use16
 	@RANDRING2_NEXT8_AND$QUC procdesc pascal near \
 		mask:byte
 	@randring2_next16$qv procdesc near
-	PELLET_RENDER procdesc pascal near \
-		left:word, top:word
 	extern @overlay_wipe$qv:far
 	@stage_clear_bonus_animate$qv procdesc near
 	@stage_extra_clear_bonus_animate$qv procdesc near
@@ -6849,9 +6847,6 @@ BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM = 87h
 BSM_BOUNCE_TOP_BOTTOM = 88h
 BSM_1 = 0FFh
 
-BST_PELLET = 1
-BST_BULLET16 = 2
-
 PAT_BULLET16_OUTLINED_BALL_BEIGE = 80
 PAT_BULLET16_OUTLINED_BALL_RED = 81
 PAT_BULLET16_OUTLINED_BALL_GREEN = 82
@@ -6869,178 +6864,7 @@ BULLET16_W = 16
 		left:word, top:word, angle:byte, group:byte, speed:word
 	@BULLETS_ADD_16X16$QIIUC32BULLET_GROUP_OR_SPECIAL_MOTION_T13MAIN_PATNUM_TI procdesc pascal near \
 		left:word, top:word, angle:byte, group_or_special_motion:byte, patnum:byte, speed:word
-	@BULLET_UPDATE_SPECIAL$QR8BULLET_T procdesc pascal near \
-		bullet:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10BC6	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	[bp+var_4], 1
-		mov	[bp+var_2], 0
-		jmp	loc_10D30
-; ---------------------------------------------------------------------------
-
-loc_10BDB:
-		mov	bx, [bp+var_2]
-		imul	bx, size bullet_t
-		mov	al, _bullets[bx].BULLET_flag
-		cbw
-		cmp	ax, F_ALIVE
-		jnz	loc_10D2D
-		mov	ax, [bp+var_2]
-		imul	ax, size bullet_t
-		add	ax, offset _bullets
-		mov	si, ax
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, si
-		add	ax, bullet_t.BULLET_screen_topleft.x
-		mov	_bullet_cur_left, ax
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, si
-		add	ax, bullet_t.BULLET_screen_topleft.y
-		mov	_bullet_cur_top, ax
-		mov	ax, [si+bullet_t.BULLET_velocity.x]
-		mov	bx, _bullet_cur_left
-		add	[bx], ax
-		mov	ax, [si+bullet_t.BULLET_velocity.y]
-		mov	bx, _bullet_cur_top
-		add	[bx], ax
-		mov	al, [si+bullet_t.BULLET_size_type]
-		cbw
-		cmp	ax, BST_BULLET16
-		jnz	short loc_10C37
-		call	@bullet_update_special$qr8bullet_t pascal, si
-
-loc_10C37:
-		mov	bx, _bullet_cur_left
-		mov	ax, [bx]
-		sar	ax, 4
-		mov	_bullet_screen_left, ax
-		mov	bx, _bullet_cur_top
-		mov	ax, [bx]
-		sar	ax, 4
-		mov	_bullet_screen_top, ax
-		mov	di, _bullet_screen_top
-		cmp	_bullet_screen_left, (PLAYFIELD_LEFT - 12)
-		jle	short loc_10C6C
-		cmp	_bullet_screen_left, PLAYFIELD_RIGHT
-		jge	short loc_10C6C
-		cmp	di, PLAYFIELD_BOTTOM
-		jge	short loc_10C6C
-		or	di, di
-		jg	short loc_10C72
-
-loc_10C6C:
-		mov	[si+bullet_t.BULLET_flag], F_REMOVE
-		jmp	loc_10D2D
-; ---------------------------------------------------------------------------
-
-loc_10C72:
-		mov	al, [si+bullet_t.BULLET_size_type]
-		cbw
-		cmp	ax, BST_PELLET
-		jnz	short loc_10CA9
-		mov	ax, _player_topleft.x
-		add	ax, 7
-		cmp	ax, _bullet_screen_left
-		jg	short loc_10CDC
-		mov	ax, _player_topleft.x
-		add	ax, 17
-		cmp	ax, _bullet_screen_left
-		jle	short loc_10CDC
-		mov	ax, _player_topleft.y
-		add	ax, 12
-		cmp	ax, di
-		jg	short loc_10CDC
-		mov	ax, _player_topleft.y
-		add	ax, 22
-		cmp	ax, di
-		jl	short loc_10CDC
-		jmp	short loc_10CD5
-; ---------------------------------------------------------------------------
-
-loc_10CA9:
-		mov	ax, _player_topleft.x
-		add	ax, -3
-		cmp	ax, _bullet_screen_left
-		jg	short loc_10CDC
-		mov	ax, _player_topleft.x
-		add	ax, 19
-		cmp	ax, _bullet_screen_left
-		jle	short loc_10CDC
-		mov	ax, _player_topleft.y
-		add	ax, 4
-		cmp	ax, di
-		jg	short loc_10CDC
-		mov	ax, _player_topleft.y
-		add	ax, 24
-		cmp	ax, di
-		jl	short loc_10CDC
-
-loc_10CD5:
-		mov	_player_is_hit, 1
-		jmp	short loc_10C6C
-; ---------------------------------------------------------------------------
-
-loc_10CDC:
-		add	di, _scroll_line
-		cmp	di, RES_Y
-		jl	short loc_10CEA
-		sub	di, RES_Y
-
-loc_10CEA:
-		mov	al, [si+bullet_t.BULLET_size_type]
-		cbw
-		cmp	ax, BST_PELLET
-		jnz	short loc_10D13
-		cmp	[bp+var_4], 0
-		jz	short loc_10D09
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		mov	[bp+var_4], 0
-
-loc_10D09:
-		call	pellet_render pascal, _bullet_screen_left, di
-		jmp	short loc_10D2D
-; ---------------------------------------------------------------------------
-
-loc_10D13:
-		call	grcg_off
-		push	_bullet_screen_left
-		push	di
-		mov	al, [si+bullet_t.BULLET_patnum]
-		mov	ah, 0
-		push	ax
-		call	super_roll_put_tiny
-		mov	[bp+var_4], 1
-
-loc_10D2D:
-		inc	[bp+var_2]
-
-loc_10D30:
-		cmp	[bp+var_2], BULLET_COUNT
-		jl	loc_10BDB
-		call	grcg_off
-		pop	di
-		pop	si
-		leave
-		retf
-sub_10BC6	endp
-
+	extern @bullets_update_and_render$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 

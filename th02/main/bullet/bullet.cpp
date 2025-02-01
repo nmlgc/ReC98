@@ -2,8 +2,10 @@
 
 #include "th02/main/bullet/bullet.hpp"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th02/resident.hpp"
+#include "th02/v_colors.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/math/vector.hpp"
 #include "th02/math/randring.hpp"
@@ -11,6 +13,7 @@
 #include "th02/main/entity.hpp"
 #include "th02/main/frames.hpp"
 #include "th02/main/playperf.hpp"
+#include "th02/main/scroll.hpp"
 #include "th02/main/spark.hpp"
 #include "th02/main/player/bomb.hpp"
 #include "th02/main/player/player.hpp"
@@ -473,6 +476,11 @@ void pascal near bullets_add_16x16(
 // Calculates [bullet.velocity] for the special motion types.
 void pascal near bullet_update_special(bullet_t near &bullet)
 {
+	// ZUN quirk: Another off-center aim point that is inconsistent with the
+	// one in group_velocity_set() and that even the hitboxes below fail to
+	// consistently explain. For pellets, it's 4 pixels above the top-left edge
+	// of the hitbox, whereas 16×16 bullets are aimed right inside of theirs,
+	// at Reimu's exact center position.
 	const pixel_t bullet_top = cur_top->to_pixel();
 	const pixel_t aim_y = (player_center_y() - 16);
 	const pixel_t bullet_left = cur_left->to_pixel();
@@ -597,4 +605,101 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		}
 		break;
 	}
+}
+
+void bullets_update_and_render(void)
+{
+	int i;
+	bool16 not_rendering_pellets = true;
+	for(i = 0; i < BULLET_COUNT; i++) {
+		if(bullets[i].flag != F_ALIVE) {
+			continue;
+		}
+
+		// Update
+		// ------
+
+		bullet_t near& bullet = bullets[i];
+		cur_left = &bullet.screen_topleft[page_back].x;
+		cur_top = &bullet.screen_topleft[page_back].y;
+		cur_left->v += bullet.velocity.x.v;
+		cur_top->v += bullet.velocity.y.v;
+		if(bullet.size_type == BST_BULLET16) {
+			bullet_update_special(bullet);
+		}
+		screen_left = cur_left->to_pixel();
+		screen_top = cur_top->to_pixel();
+
+		// ZUN bloat: Should be assigned in the rendering section.
+		vram_y_t vram_top = screen_top;
+		#undef screen_top
+		#define screen_top vram_top
+
+		// ZUN quirk: Inconsistent for both 8×8 pellets and 16×16 bullets, and
+		// also different from bullet_clip().
+		if(
+			(screen_left <= (PLAYFIELD_LEFT - 12)) ||
+			(screen_left >= PLAYFIELD_RIGHT) ||
+			(screen_top >= PLAYFIELD_BOTTOM) ||
+			(screen_top <= (PLAYFIELD_TOP - BULLET16_H))
+		) {
+		remove: // ZUN bloat
+			bullet.flag = F_REMOVE;
+			continue;
+		}
+
+		// Reformatted the raw top-left coordinate comparisons relative to the
+		// respective center points of the sprites, which gives a better
+		// indication of the relative hitbox position and particularly its
+		// vertical offset.
+		// ZUN bloat: The right condition could have been more legibly written
+		// using <= as well. This would have also revealed that both hitboxes
+		// aren't actually horizontally centered, but extend 1 pixel further to
+		// the left than to the right.
+		if((bullet.size_type == BST_PELLET)) {
+			if(
+				(screen_left >= (-(PELLET_W / 2) + player_center_x() - 5)) &&
+				(screen_left <  (-(PELLET_W / 2) + player_center_x() + 5)) &&
+				(screen_top  >= (-(PELLET_H / 2) + player_center_y() - 8)) &&
+				(screen_top  <= (-(PELLET_H / 2) + player_center_y() + 2))
+			) {
+				player_is_hit = true;
+				goto remove;
+			}
+		} else {
+			if(
+				(screen_left >= (-(BULLET16_W / 2) + player_center_x() - 11)) &&
+				(screen_left <  (-(BULLET16_W / 2) + player_center_x() + 11)) &&
+				(screen_top  >= (-(BULLET16_H / 2) + player_center_y() - 12)) &&
+				(screen_top  <= (-(BULLET16_H / 2) + player_center_y() +  8))
+			) {
+				player_is_hit = true;
+				goto remove;
+			}
+		}
+		#undef screen_top
+		// ------
+
+		// Render
+		// ------
+
+		vram_top = scroll_screen_y_to_vram(vram_top, vram_top);
+		if(bullet.size_type == BST_PELLET) {
+			if(not_rendering_pellets) {
+				grcg_setcolor(GC_RMW, V_WHITE);
+				not_rendering_pellets = false;
+			}
+			pellet_render(screen_left, vram_top);
+		} else {
+			// ZUN bloat: Only needed when ([not_rendering_pellets] == false).
+			// (Also, not inlined.)
+			grcg_off();
+
+			super_roll_put_tiny(screen_left, vram_top, bullet.patnum);
+			not_rendering_pellets = true;
+		}
+		// ------
+	}
+	// ZUN bloat: Same as above.
+	grcg_off();
 }
