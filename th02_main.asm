@@ -74,7 +74,7 @@ FACE_EXRIKA_FROWN = 156
 FACE_COL_0 = 255
 
 main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
-main_03 group main_03_TEXT, DIALOG_TEXT, BOSS_5_TEXT, main_03__TEXT
+main_03 group main_03_TEXT, BULLET_TEXT, DIALOG_TEXT, BOSS_5_TEXT, main_03__TEXT
 main_06 group REGIST_M_TEXT, main_06_TEXT
 
 ; ===========================================================================
@@ -6478,7 +6478,7 @@ SHARED	ends
 main_03_TEXT	segment	byte public 'CODE' use16
 main_03_TEXT	ends
 
-DIALOG_TEXT	segment	byte public 'CODE' use16
+BULLET_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_03
 		;org 6
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -6797,7 +6797,57 @@ loc_102A9:
 		pop	bp
 		retf
 sub_1028C	endp
+BULLET_TEXT ends
 
+DIALOG_TEXT	segment	byte public 'CODE' use16
+
+BG_NONE = 00h
+BG_1 = 20h
+BG_1_AIMED = 19h
+BG_2_SPREAD_NARROW = 01h
+BG_2_SPREAD_MEDIUM = 02h
+BG_2_SPREAD_WIDE = 03h
+BG_2_SPREAD_NARROW_AIMED = 04h
+BG_2_SPREAD_MEDIUM_AIMED = 05h
+BG_2_SPREAD_WIDE_AIMED = 06h
+BG_2_SPREAD_ULTRAWIDE_AIMED = 26h
+BG_3_SPREAD_NARROW = 07h
+BG_3_SPREAD_MEDIUM = 08h
+BG_3_SPREAD_WIDE = 09h
+BG_3_SPREAD_NARROW_AIMED = 0Ah
+BG_3_SPREAD_MEDIUM_AIMED = 0Bh
+BG_3_SPREAD_WIDE_AIMED = 0Ch
+BG_4_SPREAD_NARROW = 0Dh
+BG_4_SPREAD_MEDIUM = 0Eh
+BG_4_SPREAD_WIDE = 0Fh
+BG_4_SPREAD_NARROW_AIMED = 10h
+BG_4_SPREAD_MEDIUM_AIMED = 11h
+BG_4_SPREAD_WIDE_AIMED = 12h
+BG_5_SPREAD_NARROW = 13h
+BG_5_SPREAD_MEDIUM = 14h
+BG_5_SPREAD_WIDE = 15h
+BG_5_SPREAD_NARROW_AIMED = 16h
+BG_5_SPREAD_MEDIUM_AIMED = 17h
+BG_5_SPREAD_WIDE_AIMED = 18h
+BG_2_RING = 22h
+BG_4_RING = 21h
+BG_8_RING = 24h
+BG_16_RING = 25h
+BG_32_RING = 27h
+BG_1_RANDOM_ANGLE = 1Ah
+BG_RANDOM_ANGLE = 1Bh
+BG_RANDOM_ANGLE_AND_SPEED = 1Ch
+BG_2_SPREAD_HORIZONTALLY_SYMMETRIC = 23h
+BG_SPECIAL_MOTIONS = 80h
+BSM_CHASE = BG_SPECIAL_MOTIONS
+BSM_HOMING = 81h
+BSM_DECELERATE_THEN_TURN_AIMED = 82h
+BSM_GRAVITY = 83h
+BSM_DRIFT_ANGLE_AND_SPEED = 84h
+BSM_DRIFT_ANGLE_CHASE = 85h
+BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM = 87h
+BSM_BOUNCE_TOP_BOTTOM = 88h
+BSM_1 = 0FFh
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6863,9 +6913,14 @@ loc_1033B:
 loc_1033F:
 		cmp	di, SPARK_COUNT
 		jl	short loc_10313
-		mov	word_21744, 1
-		mov	word_21746, 40h
-		mov	word_21748, 1
+
+		; Well, it corresponds to the earliest usage of the respective unions...
+		; (The Stage 2 midboss uses BSM_CHASE, Meira uses BSM_BOUNCE_*, and
+		; BSM_DRIFT_* remains unused until Marisa.)
+		mov	bullet_special_chase_speed, 1
+		mov	bullet_special_drift_speed, (4 shl 4)
+		mov	bullet_special_turns_max, 1
+
 		cmp	_rank, RANK_EASY
 		jnz	short loc_10361
 		mov	al, 0F6h
@@ -7771,7 +7826,7 @@ loc_109E7:
 		mov	ax, [bp+@@x1]
 		cmp	ax, [bp+@@x2]
 		jge	short loc_109F7
-		mov	ax, word_21744
+		mov	ax, bullet_special_chase_speed
 		add	[si+0Ah], ax
 		jmp	short loc_10A05
 ; ---------------------------------------------------------------------------
@@ -7780,13 +7835,13 @@ loc_109F7:
 		mov	ax, [bp+@@x1]
 		cmp	ax, [bp+@@x2]
 		jle	short loc_10A05
-		mov	ax, word_21744
+		mov	ax, bullet_special_chase_speed
 		sub	[si+0Ah], ax
 
 loc_10A05:
 		cmp	di, [bp+@@y2]
 		jge	short loc_10A13
-		mov	ax, word_21744
+		mov	ax, bullet_special_chase_speed
 		add	[si+0Ch], ax
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
@@ -7794,7 +7849,7 @@ loc_10A05:
 loc_10A13:
 		cmp	di, [bp+@@y2]
 		jle	loc_10BAD
-		mov	ax, word_21744
+		mov	ax, bullet_special_chase_speed
 		sub	[si+0Ch], ax
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
@@ -7803,7 +7858,7 @@ loc_10A23:
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
-		cmp	ax, word_21746
+		cmp	ax, bullet_special_homing_duration
 		jge	loc_10BA9
 		push	[bp+@@x1]
 		push	di
@@ -7858,23 +7913,23 @@ loc_10A57:
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
-		cmp	ax, word_21748
+		cmp	ax, bullet_special_turns_max
 		jl	loc_10BAD
 		jmp	loc_10BA9
 ; ---------------------------------------------------------------------------
 
 loc_10ABA:
-		mov	ax, word_21744
+		mov	ax, bullet_special_gravity_speed
 		add	[si+0Ch], ax
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
 
 loc_10AC3:
 		mov	al, [si+10h]
-		add	al, byte ptr word_21744
+		add	al, byte ptr bullet_special_drift_angle
 		mov	[si+10h], al
 		mov	al, [si+11h]
-		add	al, byte ptr word_21746
+		add	al, byte ptr bullet_special_drift_speed
 		mov	[si+11h], al
 		push	ds
 		lea	ax, [si+0Ah]
@@ -7890,14 +7945,14 @@ loc_10AC3:
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
-		cmp	ax, word_21748
+		cmp	ax, bullet_special_drift_duration
 		jle	loc_10BAD
 		jmp	loc_10BA9
 ; ---------------------------------------------------------------------------
 
 loc_10B02:
 		mov	al, [si+10h]
-		add	al, byte ptr word_21744
+		add	al, byte ptr bullet_special_drift_angle
 		mov	[si+10h], al
 		push	ds
 		lea	ax, [si+0Ah]
@@ -7913,7 +7968,7 @@ loc_10B02:
 		mov	ax, [bp+@@x1]
 		cmp	ax, [bp+@@x2]
 		jge	short loc_10B34
-		mov	ax, word_21746
+		mov	ax, bullet_special_drift_speed
 		add	[si+0Ah], ax
 		jmp	short loc_10B42
 ; ---------------------------------------------------------------------------
@@ -7922,13 +7977,13 @@ loc_10B34:
 		mov	ax, [bp+@@x1]
 		cmp	ax, [bp+@@x2]
 		jle	short loc_10B42
-		mov	ax, word_21746
+		mov	ax, bullet_special_drift_speed
 		sub	[si+0Ah], ax
 
 loc_10B42:
 		cmp	di, [bp+@@y2]
 		jge	short loc_10B4F
-		mov	ax, word_21746
+		mov	ax, bullet_special_drift_speed
 		add	[si+0Ch], ax
 		jmp	short loc_10B5A
 ; ---------------------------------------------------------------------------
@@ -7936,14 +7991,14 @@ loc_10B42:
 loc_10B4F:
 		cmp	di, [bp+@@y2]
 		jle	short loc_10B5A
-		mov	ax, word_21746
+		mov	ax, bullet_special_drift_speed
 		sub	[si+0Ch], ax
 
 loc_10B5A:
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
-		cmp	ax, word_21748
+		cmp	ax, bullet_special_drift_duration
 		jle	short loc_10BAD
 		jmp	short loc_10BA9
 ; ---------------------------------------------------------------------------
@@ -7977,7 +8032,7 @@ loc_10B90:
 loc_10B9E:
 		mov	al, [si+12h]
 		mov	ah, 0
-		cmp	ax, word_21748
+		cmp	ax, bullet_special_turns_max
 		jle	short loc_10BAD
 
 loc_10BA9:
@@ -14987,7 +15042,7 @@ meira_14E9D	proc near
 		jnz	short loc_14EC7
 		call	_snd_se_play c, 9
 		mov	patnum_2064E, 142
-		mov	word_21748, 5
+		mov	bullet_special_turns_max, 5
 		jmp	short loc_14F13
 ; ---------------------------------------------------------------------------
 
@@ -15473,7 +15528,7 @@ loc_15296:
 		call	@dialog_post$qv
 		mov	_boss_damage, 0
 		mov	byte_2066A, 0
-		mov	word_21748, 2
+		mov	bullet_special_turns_max, 2
 		mov	angle_1E510, 0
 		mov	byte_252F6, 0
 		mov	byte_252F7, 0
@@ -17191,7 +17246,7 @@ loc_161D0:
 		mov	patnum_2064E, 128
 		mov	word_255A0, 20h	; ' '
 		mov	byte_255A2, 0
-		mov	word_21748, 1
+		mov	bullet_special_turns_max, 1
 
 loc_161EE:
 		test	byte ptr _boss_phase_frame, 0Fh
@@ -21982,7 +22037,7 @@ loc_18CE1:
 		mov	byte_26CE3, al
 		mov	al, byte_26CC0
 		mov	ah, 0
-		mov	word_21748, ax
+		mov	bullet_special_turns_max, ax
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -25879,9 +25934,9 @@ marisa_1B35F	proc near
 		mov	byte ptr word_26D7F+1, al
 		mov	al, byte_1EEA4
 		mov	ah, 0
-		mov	word_21744, ax
-		mov	word_21746, 2
-		mov	word_21748, 80h
+		mov	bullet_special_drift_angle, ax
+		mov	bullet_special_drift_speed, 2
+		mov	bullet_special_drift_duration, 128
 		mov	al, byte_1EEA4
 		mov	ah, 0
 		imul	ax, -1
@@ -26905,9 +26960,9 @@ loc_1BC60:
 		mov	patnum_2064E, 130
 		mov	al, byte_1EEA5
 		cbw
-		mov	word_21744, ax
-		mov	word_21746, 0
-		mov	word_21748, 40h
+		mov	bullet_special_drift_angle, ax
+		mov	bullet_special_drift_speed, 0
+		mov	bullet_special_drift_duration, 64
 		mov	al, byte_1EEA5
 		cbw
 		imul	ax, -1
@@ -29331,12 +29386,24 @@ spark_t ends
 public _sparks
 _sparks	spark_t SPARK_COUNT dup(<?>)
 
-public _bullet_left
+public _bullet_left, _bullet_special
 _bullet_left	dw ?
 word_21742	dw ?
-word_21744	dw ?
-word_21746	dw ?
-word_21748	dw ?
+
+_bullet_special label word
+bullet_special_chase_speed label word
+bullet_special_gravity_speed label word
+bullet_special_drift_angle label word
+	dw ?
+
+bullet_special_homing_duration label word
+bullet_special_drift_speed label word
+	dw ?
+
+bullet_special_turns_max label word
+bullet_special_drift_duration label word
+	dw ?
+
 byte_2174A	db ?
 public _spark_sprite_interval, _spark_age_max
 _spark_sprite_interval	db ?
