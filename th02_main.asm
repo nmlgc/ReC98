@@ -1312,7 +1312,7 @@ var_C		= byte ptr -0Ch
 		mov	ax, PLAYER_TOP_START
 		mov	_player_top_on_page[0 * word], ax
 		mov	_player_top_on_page[1 * word], ax
-		mov	dword_20612, 0
+		mov	_stage_frame, 0
 		mov	byte_2061A, 0
 		mov	_stage_progression, SP_STAGE
 		mov	_slowdown_factor, 1
@@ -2087,7 +2087,7 @@ loc_BEED:
 		call	farfp_1F494
 		les	bx, _resident
 		inc	es:[bx+mikoconfig_t.frame]
-		inc	dword_20612
+		inc	_stage_frame
 		call	farfp_1F48C
 		or	ax, ax
 		jz	short loc_BF36
@@ -2098,7 +2098,7 @@ loc_BEED:
 ; ---------------------------------------------------------------------------
 
 loc_BF36:
-		mov	eax, dword_20612
+		mov	eax, _stage_frame
 		mov	ebx, 1800
 		xor	edx, edx
 		div	ebx
@@ -2231,7 +2231,7 @@ sub_BFD0	endp
 sub_C05D	proc far
 		push	bp
 		mov	bp, sp
-		cmp	dword_20612, 0A0h
+		cmp	_stage_frame, 160
 		jnz	short loc_C0A6
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
@@ -4514,7 +4514,7 @@ loc_D589:
 		call	super_roll_put
 
 loc_D59F:
-		test	byte ptr dword_20612, 3
+		test	byte ptr _stage_frame, 3
 		jnz	short loc_D613
 		mov	al, [si+1]
 		inc	al
@@ -4528,7 +4528,7 @@ loc_D5B0:
 		mov	al, byte_1E518
 		cbw
 		movsx	ebx, ax
-		mov	eax, dword_20612
+		mov	eax, _stage_frame
 		xor	edx, edx
 		div	ebx
 		cmp	edx, 0
@@ -4543,7 +4543,7 @@ loc_D5B0:
 ; ---------------------------------------------------------------------------
 
 loc_D5E1:
-		test	byte ptr dword_20612, 1
+		test	byte ptr _stage_frame, 1
 		jz	short loc_D5F7
 		sar	word ptr [si+0Ch], 1
 		jmp	short loc_D5F7
@@ -7824,7 +7824,7 @@ loc_10A23:
 ; ---------------------------------------------------------------------------
 
 loc_10A57:
-		test	byte ptr dword_20612, 7
+		test	byte ptr _stage_frame, 7
 		jnz	loc_10BAD
 		mov	ax, [si+0Ah]
 		cwd
@@ -11656,7 +11656,7 @@ loc_129BA:
 		cmp	_bombing, 0
 		jz	short loc_129CD
 		mov	al, byte_1EB88
-		test	byte ptr dword_20612, al
+		test	byte ptr _stage_frame, al
 		jnz	short loc_129CD
 		inc	[bp+var_8]
 
@@ -11801,7 +11801,7 @@ loc_12A89:
 		push	ax	; top
 		push	(32 shl 16) or 32	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
-		test	byte ptr dword_20612, 3
+		test	byte ptr _stage_frame, 3
 		jnz	short loc_12ACD
 		inc	byte ptr [si+0Ah]
 		jmp	short loc_12ACD
@@ -11986,7 +11986,7 @@ loc_12C00:
 loc_12C11:
 		cmp	byte ptr [si+1], 4
 		jnb	short loc_12C33
-		test	byte ptr dword_20612, 7
+		test	byte ptr _stage_frame, 7
 		jnz	short loc_12C21
 		inc	byte ptr [si+1]
 
@@ -12010,7 +12010,7 @@ loc_12C42:
 ; ---------------------------------------------------------------------------
 
 loc_12C47:
-		test	byte ptr dword_20612, 3
+		test	byte ptr _stage_frame, 3
 		jnz	short loc_12C51
 		inc	byte ptr [si+1]
 
@@ -12773,7 +12773,7 @@ rika_init	proc far
 		mov	_boss_damage, 0
 		mov	byte_2066A, 0
 		mov	patnum_2064E, 150
-		mov	dword_20612, 0
+		mov	_stage_frame, 0
 		mov	word_24E80, 0
 		nopcall	sub_129FC
 		mov	patnum_2064E, 150
@@ -12960,7 +12960,7 @@ var_1		= byte ptr -1
 loc_13CE0:
 		cmp	_boss_damage, 1400
 		jge	short loc_13D63
-		test	byte ptr dword_20612, 1Fh
+		test	byte ptr _stage_frame, 1Fh
 		jnz	loc_13ECA
 		mov	al, byte ptr word_250DE
 		add	al, 18h
@@ -17867,7 +17867,7 @@ var_1		= byte ptr -1
 		mov	word_205D8, ax
 		mov	ax, word_253B8
 		mov	word_205DA, ax
-		test	byte ptr dword_20612, 1
+		test	byte ptr _stage_frame, 1
 		jnz	short loc_167D0
 		mov	al, byte_255BE
 		add	al, 8
@@ -22803,7 +22803,7 @@ var_1		= byte ptr -1
 		mov	ax, [bx]
 		add	ax, 44
 		mov	word_26C64, ax
-		test	byte ptr dword_20612, 1
+		test	byte ptr _stage_frame, 1
 		jnz	short loc_1953B
 		cmp	_reduce_effects, 0
 		jnz	short loc_1950F
@@ -27215,11 +27215,11 @@ loc_1BF2E:
 
 loc_1BF3A:
 		inc	word_20650
-		test	byte ptr dword_20612, 1
+		test	byte ptr _stage_frame, 1
 		jz	short loc_1BF78
 		cmp	_reduce_effects, 0
 		jz	short loc_1BF53
-		test	byte ptr dword_20612, 3
+		test	byte ptr _stage_frame, 3
 		jz	short loc_1BF78
 
 loc_1BF53:
@@ -27241,7 +27241,7 @@ loc_1BF53:
 		call	sub_3E1C
 
 loc_1BF78:
-		test	byte ptr dword_20612, 1Fh
+		test	byte ptr _stage_frame, 1Fh
 		jnz	short loc_1BF9E
 		inc	byte_26D4C
 		mov	al, byte_26D4C
@@ -29254,7 +29254,8 @@ byte_2060E	db ?
 byte_2060F	db ?
 byte_20610	db ?
 byte_20611	db ?
-dword_20612	dd ?
+public _stage_frame
+_stage_frame	dd ?
 word_20616	dw ?
 include th02/hardware/pages[bss].asm
 byte_2061A	db ?
