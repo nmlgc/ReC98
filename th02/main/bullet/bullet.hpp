@@ -178,6 +178,7 @@ void pascal near bullets_add_16x16(
 );
 
 void bullets_update_and_render(void);
+void bullets_invalidate(void);
 
 // Renders a pellet at the given position.
 void pascal near pellet_render(screen_x_t left, screen_y_t top);

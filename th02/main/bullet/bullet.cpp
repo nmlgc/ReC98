@@ -15,6 +15,7 @@
 #include "th02/main/playperf.hpp"
 #include "th02/main/scroll.hpp"
 #include "th02/main/spark.hpp"
+#include "th02/main/tile/tile.hpp"
 #include "th02/main/player/bomb.hpp"
 #include "th02/main/player/player.hpp"
 #include "th01/sprites/pellet.h"
@@ -74,6 +75,8 @@ extern bullet_t bullets[BULLET_COUNT];
 extern screen_x_t screen_left;
 extern screen_y_t screen_top;
 extern Subpixel8 rank_base_speed;
+
+// ZUN bloat: Could have been local variables.
 extern Subpixel near* cur_left;
 extern Subpixel near* cur_top;
 
@@ -702,4 +705,25 @@ void bullets_update_and_render(void)
 	}
 	// ZUN bloat: Same as above.
 	grcg_off();
+}
+
+void bullets_invalidate(void)
+{
+	for(int i = 0; i < BULLET_COUNT; i++) {
+		if(bullets[i].flag == F_FREE) {
+			continue;
+		}
+		cur_left = &bullets[i].screen_topleft[page_back].x;
+		cur_top = &bullets[i].screen_topleft[page_back].y;
+		int size = (bullets[i].size_type * 8);
+		tiles_invalidate_rect(
+			cur_left->to_pixel(), cur_top->to_pixel(), size, size
+		);
+		if(bullets[i].flag == F_REMOVE) {
+			bullets[i].flag = F_FREE;
+			continue;
+		}
+		*cur_left = bullets[i].screen_topleft[page_front].x;
+		*cur_top = bullets[i].screen_topleft[page_front].y;
+	}
 }

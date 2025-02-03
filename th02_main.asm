@@ -1885,7 +1885,7 @@ loc_BCC3:
 loc_BCF9:
 		call	farfp_26C3C
 		call	@player_invalidate$qv
-		call	sub_10D42
+		call	@bullets_invalidate$qv
 		call	farfp_23A72
 		call	@items_invalidate$qv
 		call	sub_4288
@@ -6865,102 +6865,7 @@ BULLET16_W = 16
 	@BULLETS_ADD_16X16$QIIUC32BULLET_GROUP_OR_SPECIAL_MOTION_T13MAIN_PATNUM_TI procdesc pascal near \
 		left:word, top:word, angle:byte, group_or_special_motion:byte, patnum:byte, speed:word
 	extern @bullets_update_and_render$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10D42	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	si, si
-		jmp	loc_10DFE
-; ---------------------------------------------------------------------------
-
-loc_10D4C:
-		mov	bx, si
-		imul	bx, size bullet_t
-		cmp	_bullets[bx].BULLET_flag, F_FREE
-		jz	loc_10DFD
-		mov	ax, si
-		imul	ax, size bullet_t
-		mov	dl, _page_back
-		mov	dh, 0
-		shl	dx, 2
-		add	ax, dx
-		add	ax, offset _bullets.BULLET_screen_topleft.x
-		mov	_bullet_cur_left, ax
-		mov	ax, si
-		imul	ax, size bullet_t
-		mov	dl, _page_back
-		mov	dh, 0
-		shl	dx, 2
-		add	ax, dx
-		add	ax, offset _bullets.BULLET_screen_topleft.y
-		mov	_bullet_cur_top, ax
-		mov	bx, si
-		imul	bx, size bullet_t
-		mov	al, _bullets[bx].BULLET_size_type
-		cbw
-		shl	ax, 3
-		mov	di, ax
-		mov	bx, _bullet_cur_left
-		mov	ax, [bx]
-		sar	ax, 4
-		push	ax	; left
-		mov	bx, _bullet_cur_top
-		mov	ax, [bx]
-		sar	ax, 4
-		push	ax	; top
-		push	di	; w
-		push	di	; h
-		call	@tiles_invalidate_rect$qiiii
-		mov	bx, si
-		imul	bx, size bullet_t
-		mov	al, _bullets[bx].BULLET_flag
-		cbw
-		cmp	ax, F_REMOVE
-		jnz	short loc_10DCB
-		mov	bx, si
-		imul	bx, size bullet_t
-		mov	_bullets[bx].BULLET_flag, F_FREE
-		jmp	short loc_10DFD
-; ---------------------------------------------------------------------------
-
-loc_10DCB:
-		mov	bx, si
-		imul	bx, size bullet_t
-		mov	al, _page_front
-		mov	ah, 0
-		shl	ax, 2
-		add	bx, ax
-		mov	ax, _bullets[bx].BULLET_screen_topleft.x
-		mov	bx, _bullet_cur_left
-		mov	[bx], ax
-		mov	bx, si
-		imul	bx, size bullet_t
-		mov	al, _page_front
-		mov	ah, 0
-		shl	ax, 2
-		add	bx, ax
-		mov	ax, _bullets[bx].BULLET_screen_topleft.y
-		mov	bx, _bullet_cur_top
-		mov	[bx], ax
-
-loc_10DFD:
-		inc	si
-
-loc_10DFE:
-		cmp	si, BULLET_COUNT
-		jl	loc_10D4C
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_10D42	endp
-
+	extern @bullets_invalidate$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6970,7 +6875,7 @@ sub_10E0A	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_10D42
+		call	@bullets_invalidate$qv
 		xor	si, si
 		jmp	short loc_10E30
 ; ---------------------------------------------------------------------------
