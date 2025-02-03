@@ -1622,7 +1622,7 @@ sub_B98E	proc near
 		call	@tiles_render_all$qv
 		graph_accesspage _page_back
 		call	@tiles_render_all$qv
-		call	sub_10E0A
+		call	@bullets_clear$qv
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		nopcall	@overlay_stage_enter_animate$qv
@@ -4738,7 +4738,7 @@ player_bomb	proc near
 		mov	_bomb_circle_center.y, (PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 4)
 		mov	_bomb_circle_frame, 0
 		mov	_bomb_circle_done, 0
-		call	sub_10E0A
+		call	@bullets_clear$qv
 
 loc_E2D7:
 		pop	bp
@@ -5336,7 +5336,7 @@ loc_E821:
 		mov	_slowdown_factor, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		call	sub_10E0A
+		call	@bullets_clear$qv
 		jmp	short loc_E892
 ; ---------------------------------------------------------------------------
 
@@ -5504,7 +5504,7 @@ loc_EA11:
 		mov	_slowdown_factor, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		call	sub_10E0A
+		call	@bullets_clear$qv
 		jmp	short loc_EA60
 ; ---------------------------------------------------------------------------
 
@@ -5747,7 +5747,7 @@ loc_EC56:
 		mov	_slowdown_factor, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		call	sub_10E0A
+		call	@bullets_clear$qv
 		jmp	short loc_ECA2
 ; ---------------------------------------------------------------------------
 
@@ -6866,42 +6866,7 @@ BULLET16_W = 16
 		left:word, top:word, angle:byte, group_or_special_motion:byte, patnum:byte, speed:word
 	extern @bullets_update_and_render$qv:proc
 	extern @bullets_invalidate$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10E0A	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@bullets_invalidate$qv
-		xor	si, si
-		jmp	short loc_10E30
-; ---------------------------------------------------------------------------
-
-loc_10E16:
-		mov	bx, si
-		imul	bx, size bullet_t
-		mov	al, _bullets[bx].BULLET_flag
-		cbw
-		cmp	ax, F_ALIVE
-		jnz	short loc_10E2F
-		mov	bx, si
-		imul	bx, size bullet_t
-		mov	_bullets[bx].BULLET_flag, F_REMOVE
-
-loc_10E2F:
-		inc	si
-
-loc_10E30:
-		cmp	si, BULLET_COUNT
-		jl	short loc_10E16
-		pop	si
-		pop	bp
-		retf
-sub_10E0A	endp
-
+	extern @bullets_clear$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16612,7 +16577,7 @@ sigma_init	proc far
 		mov	patnum_2064E, 128
 		mov	byte_255B2, 0
 		mov	byte_2558C, 7
-		nopcall	sub_10E0A
+		nopcall	@bullets_clear$qv
 		call	sub_D376
 		push	1
 		call	palette_white_out
@@ -22022,7 +21987,7 @@ mima_19C8D	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_D376
-		nopcall	sub_10E0A
+		nopcall	@bullets_clear$qv
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax

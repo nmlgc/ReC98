@@ -727,3 +727,20 @@ void bullets_invalidate(void)
 		*cur_top = bullets[i].screen_topleft[page_front].y;
 	}
 }
+
+void bullets_clear(void)
+{
+	// ZUN bloat: Redundant; bullets_invalidate() is already called at the
+	// start of the game loop, followed by tiles_egc_render() to apply the
+	// invalidated regions to VRAM. It can only ever not be redundant if this
+	// function can be called between a previous call to bullets_invalidate()
+	// and a future call to tiles_egc_render() on the same frame, which makes
+	// no sense.
+	bullets_invalidate();
+
+	for(int i = 0; i < BULLET_COUNT; i++) {
+		if(bullets[i].flag == F_ALIVE) {
+			bullets[i].flag = F_REMOVE;
+		}
+	}
+}
