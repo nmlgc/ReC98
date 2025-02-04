@@ -184,5 +184,9 @@ void bullets_invalidate(void);
 // next frame.
 void bullets_clear(void);
 
+// Sets the bullet stack size to a multiple of the current difficulty's base
+// stack size.
+void pascal near bullets_set_stack_multiplier(uint8_t v);
+
 // Renders a pellet at the given position.
 void pascal near pellet_render(screen_x_t left, screen_y_t top);

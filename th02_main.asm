@@ -6867,27 +6867,8 @@ BULLET16_W = 16
 	extern @bullets_update_and_render$qv:proc
 	extern @bullets_invalidate$qv:proc
 	extern @bullets_clear$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10E39	proc near
-
-arg_0		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	al, _rank_base_stack
-		mov	ah, 0
-		mov	dl, [bp+arg_0]
-		mov	dh, 0
-		imul	dx
-		mov	_bullet_stack, al
-		pop	bp
-		retn	2
-sub_10E39	endp
-
+	@BULLETS_SET_STACK_MULTIPLIER$QUC procdesc pascal near \
+		v:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9083,8 +9064,7 @@ loc_1209A:
 ; ---------------------------------------------------------------------------
 
 loc_120A1:
-		push	0
-		call	sub_10E39
+		call	@bullets_set_stack_multiplier$quc pascal, 0
 		xor	si, si
 		jmp	short loc_120D2
 ; ---------------------------------------------------------------------------
@@ -9117,8 +9097,7 @@ loc_120E1:
 		cmp	_boss_phase_frame, 447
 		jl	short loc_120F4
 		mov	_boss_phase_frame, 0
-		push	1
-		call	sub_10E39
+		call	@bullets_set_stack_multiplier$quc pascal, 1
 
 loc_120F4:
 		pop	si
@@ -19264,8 +19243,7 @@ mima_180EC	proc near
 		jl	loc_181B1
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_1810A
-		push	0
-		call	sub_10E39
+		call	@bullets_set_stack_multiplier$quc pascal, 0
 		mov	patnum_2064E, 131
 
 loc_1810A:
@@ -19304,8 +19282,7 @@ loc_18142:
 loc_1815F:
 		mov	_boss_phase_frame, 0
 		mov	patnum_2064E, 128
-		push	1
-		call	sub_10E39
+		call	@bullets_set_stack_multiplier$quc pascal, 1
 
 loc_18170:
 		mov	ax, _boss_phase_frame
@@ -19722,8 +19699,7 @@ loc_185C5:
 		jge	loc_1879E
 		mov	byte_26CD4, 0
 		call	_snd_se_play c, 3
-		push	0
-		call	sub_10E39
+		call	@bullets_set_stack_multiplier$quc pascal, 0
 		mov	[bp+var_2], 0
 		jmp	loc_18691
 ; ---------------------------------------------------------------------------
@@ -19800,8 +19776,7 @@ loc_1867A:
 loc_18691:
 		cmp	[bp+var_2], 4
 		jl	loc_185EA
-		push	1
-		call	sub_10E39
+		call	@bullets_set_stack_multiplier$quc pascal, 1
 		mov	word_26CD0, 140h
 		mov	patnum_2064E, 128
 		jmp	loc_1879E

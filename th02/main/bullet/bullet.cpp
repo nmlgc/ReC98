@@ -744,3 +744,8 @@ void bullets_clear(void)
 		}
 	}
 }
+
+void pascal near bullets_set_stack_multiplier(uint8_t v)
+{
+	stack = (rank_base_stack * v);
+}
