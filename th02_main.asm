@@ -8682,7 +8682,7 @@ loc_1117F:
 
 ; Attributes: bp-based frame
 
-sub_11183	proc near
+midboss3_11183	proc near
 
 arg_0		= word ptr  4
 
@@ -8710,14 +8710,14 @@ loc_111AF:
 		pop	si
 		pop	bp
 		retn	2
-sub_11183	endp
+midboss3_11183	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_111D1	proc near
+midboss3_111D1	proc near
 
 arg_0		= word ptr  4
 
@@ -8744,14 +8744,14 @@ loc_111F3:
 		pop	si
 		pop	bp
 		retn	2
-sub_111D1	endp
+midboss3_111D1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1120F	proc near
+midboss3_1120F	proc near
 
 @@patnum		= word ptr -2
 arg_0		= word ptr  4
@@ -8843,14 +8843,14 @@ loc_11302:
 		pop	si
 		leave
 		retn	2
-sub_1120F	endp
+midboss3_1120F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11308	proc near
+midboss3_11308	proc near
 
 var_3		= word ptr -3
 arg_0		= word ptr  4
@@ -9048,7 +9048,7 @@ loc_114D0:
 		pop	si
 		leave
 		retn	2
-sub_11308	endp
+midboss3_11308	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9155,13 +9155,13 @@ loc_11599:
 		add	bx, bx
 		add	[bx+2BD4h], di
 		push	si
-		call	sub_11183
+		call	midboss3_11183
 		jmp	short loc_115E7
 ; ---------------------------------------------------------------------------
 
 loc_115E3:
 		push	si
-		call	sub_111D1
+		call	midboss3_111D1
 
 loc_115E7:
 		inc	si
@@ -9190,7 +9190,7 @@ loc_1160D:
 		cmp	byte ptr [si+2BF0h], 1
 		jnz	short loc_1161B
 		push	si
-		call	sub_1120F
+		call	midboss3_1120F
 		jmp	loc_116A1
 ; ---------------------------------------------------------------------------
 
@@ -9198,7 +9198,7 @@ loc_1161B:
 		cmp	byte ptr [si+2BF0h], 0
 		jnz	short loc_11697
 		push	si
-		call	sub_11308
+		call	midboss3_11308
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+52ECh]
@@ -9222,7 +9222,7 @@ loc_1161B:
 		cmp	word ptr [bx+2BD4h], 118h
 		jg	short loc_1166B
 		push	si
-		call	sub_11183
+		call	midboss3_11183
 		jmp	short loc_11689
 ; ---------------------------------------------------------------------------
 
@@ -9235,7 +9235,7 @@ loc_1166B:
 
 loc_11685:
 		push	si
-		call	sub_111D1
+		call	midboss3_111D1
 
 loc_11689:
 		cmp	byte_22FA8, 4
@@ -12458,7 +12458,7 @@ loc_137CC:
 
 ; Attributes: bp-based frame
 
-sub_137FE	proc near
+midboss1_137FE	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -12525,14 +12525,14 @@ loc_138AF:
 		pop	si
 		pop	bp
 		retn
-sub_137FE	endp
+midboss1_137FE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_138B3	proc near
+midboss1_138B3	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -12580,7 +12580,7 @@ loc_13906:
 		pop	si
 		pop	bp
 		retn
-sub_138B3	endp
+midboss1_138B3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12644,12 +12644,12 @@ loc_13997:
 loc_1399D:
 		cmp	byte_2066A, 0
 		jz	short loc_139AA
-		call	sub_137FE
+		call	midboss1_137FE
 		jmp	loc_13AB8
 ; ---------------------------------------------------------------------------
 
 loc_139AA:
-		call	sub_138B3
+		call	midboss1_138B3
 		test	byte ptr _scroll_line, 0Fh
 		jnz	short loc_13A09
 		mov	si, 48
@@ -13476,7 +13476,7 @@ public @midboss2_invalidate$qv
 
 ; Attributes: bp-based frame
 
-sub_14169	proc near
+midboss2_14169	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -13533,14 +13533,14 @@ loc_141FF:
 		pop	si
 		pop	bp
 		retn
-sub_14169	endp
+midboss2_14169	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_14203	proc near
+midboss2_14203	proc near
 		push	bp
 		mov	bp, sp
 		mov	ax, _boss_phase_frame
@@ -13573,7 +13573,7 @@ sub_14203	proc near
 loc_14248:
 		pop	bp
 		retn
-sub_14203	endp
+midboss2_14203	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13663,12 +13663,12 @@ loc_14321:
 		mov	di, ax
 		cmp	byte_2066A, 0
 		jz	short loc_1433E
-		call	sub_14169
+		call	midboss2_14169
 		jmp	loc_143E1
 ; ---------------------------------------------------------------------------
 
 loc_1433E:
-		call	sub_14203
+		call	midboss2_14203
 		mov	bx, _boss_top_on_back_page
 		mov	si, [bx]
 		add	si, _scroll_line
@@ -15502,7 +15502,7 @@ meira_init	endp
 
 ; Attributes: bp-based frame
 
-sub_15311	proc near
+midbossx_15311	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
@@ -15562,14 +15562,14 @@ loc_15366:
 		pop	si
 		pop	bp
 		retn	0Ah
-sub_15311	endp
+midbossx_15311	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1536C	proc near
+midbossx_1536C	proc near
 
 var_8		= word ptr -8
 var_6		= word ptr -6
@@ -15646,7 +15646,7 @@ loc_153F9:
 		pop	si
 		leave
 		retn
-sub_1536C	endp
+midbossx_1536C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15703,7 +15703,7 @@ loc_1544C:
 		push	21h ; '!'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		push	80h
 		mov	al, byte_254EA
 		mov	ah, 0
@@ -15713,7 +15713,7 @@ loc_1544C:
 		push	21h ; '!'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		mov	al, byte_254EA
 		mov	ah, 0
 		add	ax, 80h
@@ -15722,7 +15722,7 @@ loc_1544C:
 		push	21h ; '!'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		push	80h
 		mov	al, byte_254EA
 		mov	ah, 0
@@ -15761,7 +15761,7 @@ loc_154CD:
 		push	24h ; '$'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		push	130h
 		mov	al, byte_254EA
 		mov	ah, 0
@@ -15770,7 +15770,7 @@ loc_154CD:
 		push	24h ; '$'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		mov	al, byte_254EA
 		mov	ah, 0
 		add	ax, 130h
@@ -15779,7 +15779,7 @@ loc_154CD:
 		push	24h ; '$'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		push	130h
 		mov	al, byte_254EA
 		mov	ah, 0
@@ -15824,7 +15824,7 @@ loc_1554D:
 		push	25h ; '%'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		push	0C0h
 		mov	al, byte_254EA
 		mov	ah, 0
@@ -15834,7 +15834,7 @@ loc_1554D:
 		push	25h ; '%'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		mov	al, byte_254EA
 		mov	ah, 0
 		add	ax, 0C0h
@@ -15843,7 +15843,7 @@ loc_1554D:
 		push	25h ; '%'
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		push	0C0h
 		mov	al, byte_254EA
 		mov	ah, 0
@@ -15856,7 +15856,7 @@ loc_1559C:
 loc_1559E:
 		push	0
 		push	64h ; 'd'
-		call	sub_15311
+		call	midbossx_15311
 		mov	al, byte_254EA
 		add	al, 10h
 		mov	byte_254EA, al
@@ -15868,7 +15868,7 @@ loc_155AD:
 		mov	byte_253B4, 0
 
 loc_155C0:
-		call	sub_1536C
+		call	midbossx_1536C
 		pop	bp
 		retf
 @midbossx_update_and_render$qv	endp
@@ -23787,7 +23787,7 @@ public @midboss4_invalidate$qv
 
 ; Attributes: bp-based frame
 
-sub_19F52	proc near
+midboss4_19F52	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -23820,14 +23820,14 @@ loc_19FAC:
 		pop	si
 		pop	bp
 		retn
-sub_19F52	endp
+midboss4_19F52	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19FAF	proc near
+midboss4_19FAF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -23883,14 +23883,14 @@ loc_1A040:
 		pop	si
 		pop	bp
 		retn
-sub_19FAF	endp
+midboss4_19FAF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A044	proc near
+midboss4_1A044	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -23941,14 +23941,14 @@ loc_1A0CA:
 		pop	si
 		pop	bp
 		retn
-sub_1A044	endp
+midboss4_1A044	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A0CE	proc near
+midboss4_1A0CE	proc near
 		push	bp
 		mov	bp, sp
 		mov	ax, _boss_phase_frame
@@ -23972,14 +23972,14 @@ sub_1A0CE	proc near
 loc_1A101:
 		pop	bp
 		retn
-sub_1A0CE	endp
+midboss4_1A0CE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A103	proc near
+midboss4_1A103	proc near
 
 var_1		= byte ptr -1
 
@@ -24020,14 +24020,14 @@ loc_1A12D:
 locret_1A14F:
 		leave
 		retn
-sub_1A103	endp
+midboss4_1A103	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A151	proc near
+midboss4_1A151	proc near
 		push	bp
 		mov	bp, sp
 		mov	ax, _boss_phase_frame
@@ -24051,14 +24051,14 @@ sub_1A151	proc near
 loc_1A17C:
 		pop	bp
 		retn
-sub_1A151	endp
+midboss4_1A151	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A17E	proc near
+midboss4_1A17E	proc near
 		push	bp
 		mov	bp, sp
 		mov	al, _rank
@@ -24084,14 +24084,14 @@ sub_1A17E	proc near
 loc_1A1B4:
 		pop	bp
 		retn
-sub_1A17E	endp
+midboss4_1A17E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A1B6	proc near
+midboss4_1A1B6	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -24129,7 +24129,7 @@ loc_1A1FC:
 		pop	si
 		pop	bp
 		retn
-sub_1A1B6	endp
+midboss4_1A1B6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -24270,27 +24270,27 @@ loc_1A368:
 		jmp	cs:off_1A419[bx]
 
 loc_1A38C:
-		call	sub_1A0CE
+		call	midboss4_1A0CE
 		jmp	short loc_1A3A3
 ; ---------------------------------------------------------------------------
 
 loc_1A391:
-		call	sub_1A103
+		call	midboss4_1A103
 		jmp	short loc_1A3A3
 ; ---------------------------------------------------------------------------
 
 loc_1A396:
-		call	sub_1A151
+		call	midboss4_1A151
 		jmp	short loc_1A3A3
 ; ---------------------------------------------------------------------------
 
 loc_1A39B:
-		call	sub_1A17E
+		call	midboss4_1A17E
 		jmp	short loc_1A3A3
 ; ---------------------------------------------------------------------------
 
 loc_1A3A0:
-		call	sub_1A1B6
+		call	midboss4_1A1B6
 
 loc_1A3A3:
 		cmp	byte_26D7D, 0Ch
@@ -24330,14 +24330,14 @@ loc_1A3EB:
 loc_1A405:
 		cmp	byte_2066A, 0
 		jz	short loc_1A411
-		call	sub_19FAF
+		call	midboss4_19FAF
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1A411:
-		call	sub_1A044
-		call	sub_19F52
+		call	midboss4_1A044
+		call	midboss4_19F52
 		pop	bp
 		retf
 @midboss4_update_and_render$qv	endp
