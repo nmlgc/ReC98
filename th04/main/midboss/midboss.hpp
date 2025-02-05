@@ -83,6 +83,7 @@ void near midboss_defeat_update(void);
 // Renders the default PHASE_EXPLODE_BIG animation.
 void near midboss_defeat_render(void);
 
+#undef MIDBOSS_DEC
 #define MIDBOSS_DEC(stage) \
 	void pascal  far midboss##stage##_update(void); \
 	void pascal near midboss##stage##_render(void);

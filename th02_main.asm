@@ -1449,8 +1449,8 @@ loc_B4D7:
 
 loc_B63C:
 		mov	word_20616, 74h	; 't'
-		setfarfp	_midboss_invalidate, sub_13786
-		setfarfp	_midboss_update_and_render, sub_13909
+		setfarfp	_midboss_invalidate, @midboss1_invalidate$qv
+		setfarfp	_midboss_update_and_render, @midboss1_update_and_render$qv
 		setfarfp	_boss_init, rika_init
 		setfarfp	_boss_end, rika_end
 		setfarfp	_boss_bg_render_func, rika_bg_render
@@ -1461,8 +1461,8 @@ loc_B63C:
 
 loc_B698:
 		mov	word_20616, 50h	; 'P'
-		setfarfp	_midboss_invalidate, sub_1410A
-		setfarfp	_midboss_update_and_render, sub_1424A
+		setfarfp	_midboss_invalidate, @midboss2_invalidate$qv
+		setfarfp	_midboss_update_and_render, @midboss2_update_and_render$qv
 		setfarfp	_boss_init, meira_init
 		setfarfp	_boss_end, meira_end
 		setfarfp	_boss_bg_render_func, meira_bg_render
@@ -1476,8 +1476,8 @@ loc_B6F2:
 
 loc_B701:
 		mov	word_20616, 67h	; 'g'
-		setfarfp	_midboss_invalidate, sub_110B7
-		setfarfp	_midboss_update_and_render, sub_114D6
+		setfarfp	_midboss_invalidate, @midboss3_invalidate$qv
+		setfarfp	_midboss_update_and_render, @midboss3_update_and_render$qv
 		setfarfp	_boss_init, stones_init
 		setfarfp	_boss_end, stones_end
 		setfarfp	_boss_bg_render_func, stones_bg_render
@@ -1489,8 +1489,8 @@ loc_B701:
 
 loc_B76A:
 		mov	word_20616, 3B0h
-		setfarfp	_midboss_invalidate, sub_19EF3
-		setfarfp	_midboss_update_and_render, sub_1A1FF
+		setfarfp	_midboss_invalidate, @midboss4_invalidate$qv
+		setfarfp	_midboss_update_and_render, @midboss4_update_and_render$qv
 		setfarfp	_boss_init, marisa_init
 		setfarfp	_boss_end, marisa_end
 		setfarfp	_boss_bg_render_func, marisa_bg_render
@@ -1520,8 +1520,8 @@ loc_B7DD:
 
 loc_B832:
 		mov	word_20616, 0C8h
-		setfarfp	_midboss_invalidate, sub_15402
-		setfarfp	_midboss_update_and_render, sub_1540C
+		setfarfp	_midboss_invalidate, @midbossx_invalidate$qv
+		setfarfp	_midboss_update_and_render, @midbossx_update_and_render$qv
 		setfarfp	_boss_init, evileye_init
 		setfarfp	_boss_end, evileye_end
 		setfarfp	_boss_bg_render_func, evileye_bg_render
@@ -8581,8 +8581,8 @@ sub_10E95	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_110B7	proc far
+public @midboss3_invalidate$qv
+@midboss3_invalidate$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -8675,7 +8675,7 @@ loc_1117F:
 		pop	si
 		pop	bp
 		retf
-sub_110B7	endp
+@midboss3_invalidate$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9054,8 +9054,8 @@ sub_11308	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_114D6	proc far
+public @midboss3_update_and_render$qv
+@midboss3_update_and_render$qv	proc far
 
 var_2		= word ptr -2
 
@@ -9261,7 +9261,7 @@ loc_116A9:
 		pop	si
 		leave
 		retf
-sub_114D6	endp
+@midboss3_update_and_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12398,8 +12398,8 @@ sub_13671	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13786	proc far
+public @midboss1_invalidate$qv
+@midboss1_invalidate$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _page_back
@@ -12451,7 +12451,7 @@ loc_137CC:
 		mov	ax, word_24E82
 		pop	bp
 		retf
-sub_13786	endp
+@midboss1_invalidate$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12586,8 +12586,8 @@ sub_138B3	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13909	proc far
+public @midboss1_update_and_render$qv
+@midboss1_update_and_render$qv	proc far
 
 var_2		= word ptr -2
 
@@ -12731,7 +12731,7 @@ loc_13AB8:
 		pop	si
 		leave
 		retf
-sub_13909	endp
+@midboss1_update_and_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13432,8 +13432,8 @@ sub_140AE	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1410A	proc far
+public @midboss2_invalidate$qv
+@midboss2_invalidate$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _page_back
@@ -13469,7 +13469,7 @@ sub_1410A	proc far
 		mov	ax, word_250E2
 		pop	bp
 		retf
-sub_1410A	endp
+@midboss2_invalidate$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13579,8 +13579,8 @@ sub_14203	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1424A	proc far
+public @midboss2_update_and_render$qv
+@midboss2_update_and_render$qv	proc far
 
 @@damage		= word ptr -4
 var_2		= word ptr -2
@@ -13727,7 +13727,7 @@ loc_143E1:
 		pop	si
 		leave
 		retf
-sub_1424A	endp
+@midboss2_update_and_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15652,22 +15652,22 @@ sub_1536C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_15402	proc far
+public @midbossx_invalidate$qv
+@midbossx_invalidate$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte_253B4
 		mov	ah, 0
 		pop	bp
 		retf
-sub_15402	endp
+@midbossx_invalidate$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1540C	proc far
+public @midbossx_update_and_render$qv
+@midbossx_update_and_render$qv	proc far
 		push	bp
 		mov	bp, sp
 		inc	_boss_phase_frame
@@ -15871,7 +15871,7 @@ loc_155C0:
 		call	sub_1536C
 		pop	bp
 		retf
-sub_1540C	endp
+@midbossx_update_and_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23743,8 +23743,8 @@ sub_19E2F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_19EF3	proc far
+public @midboss4_invalidate$qv
+@midboss4_invalidate$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _page_back
@@ -23780,7 +23780,7 @@ sub_19EF3	proc far
 		mov	ax, word_26D7A
 		pop	bp
 		retf
-sub_19EF3	endp
+@midboss4_invalidate$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -24135,8 +24135,8 @@ sub_1A1B6	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1A1FF	proc far
+public @midboss4_update_and_render$qv
+@midboss4_update_and_render$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, point_26D76.x
@@ -24340,7 +24340,7 @@ loc_1A411:
 		call	sub_19F52
 		pop	bp
 		retf
-sub_1A1FF	endp
+@midboss4_update_and_render$qv	endp
 
 ; ---------------------------------------------------------------------------
 off_1A419	dw offset loc_1A38C
