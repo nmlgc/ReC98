@@ -1313,7 +1313,7 @@ var_C		= byte ptr -0Ch
 		mov	_player_top_on_page[0 * word], ax
 		mov	_player_top_on_page[1 * word], ax
 		mov	_stage_frame, 0
-		mov	byte_2061A, 0
+		mov	_midboss_active, 0
 		mov	_stage_progression, SP_STAGE
 		mov	_slowdown_factor, 1
 		les	bx, _resident
@@ -1449,8 +1449,8 @@ loc_B4D7:
 
 loc_B63C:
 		mov	word_20616, 74h	; 't'
-		setfarfp	farfp_1F474, sub_13786
-		setfarfp	farfp_1F470, sub_13909
+		setfarfp	_midboss_invalidate, sub_13786
+		setfarfp	_midboss_update_and_render, sub_13909
 		setfarfp	_boss_init, rika_init
 		setfarfp	_boss_end, rika_end
 		setfarfp	_boss_bg_render_func, rika_bg_render
@@ -1461,8 +1461,8 @@ loc_B63C:
 
 loc_B698:
 		mov	word_20616, 50h	; 'P'
-		setfarfp	farfp_1F474, sub_1410A
-		setfarfp	farfp_1F470, sub_1424A
+		setfarfp	_midboss_invalidate, sub_1410A
+		setfarfp	_midboss_update_and_render, sub_1424A
 		setfarfp	_boss_init, meira_init
 		setfarfp	_boss_end, meira_end
 		setfarfp	_boss_bg_render_func, meira_bg_render
@@ -1476,8 +1476,8 @@ loc_B6F2:
 
 loc_B701:
 		mov	word_20616, 67h	; 'g'
-		setfarfp	farfp_1F474, sub_110B7
-		setfarfp	farfp_1F470, sub_114D6
+		setfarfp	_midboss_invalidate, sub_110B7
+		setfarfp	_midboss_update_and_render, sub_114D6
 		setfarfp	_boss_init, stones_init
 		setfarfp	_boss_end, stones_end
 		setfarfp	_boss_bg_render_func, stones_bg_render
@@ -1489,8 +1489,8 @@ loc_B701:
 
 loc_B76A:
 		mov	word_20616, 3B0h
-		setfarfp	farfp_1F474, sub_19EF3
-		setfarfp	farfp_1F470, sub_1A1FF
+		setfarfp	_midboss_invalidate, sub_19EF3
+		setfarfp	_midboss_update_and_render, sub_1A1FF
 		setfarfp	_boss_init, marisa_init
 		setfarfp	_boss_end, marisa_end
 		setfarfp	_boss_bg_render_func, marisa_bg_render
@@ -1508,8 +1508,8 @@ loc_B7CB:
 
 loc_B7DD:
 		mov	word_20616, 0FFFFh
-		setfarfp	farfp_1F474, @nullfunc_false$qv
-		setfarfp	farfp_1F470, @nullfunc_void$qv
+		setfarfp	_midboss_invalidate, @nullfunc_false$qv
+		setfarfp	_midboss_update_and_render, @nullfunc_void$qv
 		setfarfp	_boss_init, mima_init
 		setfarfp	_boss_end, mima_end
 		setfarfp	_boss_bg_render_func, mima_bg_render
@@ -1520,8 +1520,8 @@ loc_B7DD:
 
 loc_B832:
 		mov	word_20616, 0C8h
-		setfarfp	farfp_1F474, sub_15402
-		setfarfp	farfp_1F470, sub_1540C
+		setfarfp	_midboss_invalidate, sub_15402
+		setfarfp	_midboss_update_and_render, sub_1540C
 		setfarfp	_boss_init, evileye_init
 		setfarfp	_boss_end, evileye_end
 		setfarfp	_boss_bg_render_func, evileye_bg_render
@@ -1877,10 +1877,10 @@ loc_BCC3:
 		mov	ax, ss:[bx]
 		mov	_scroll_line, ax
 		call	_boss_bg_render
-		cmp	byte_2061A, 0
+		cmp	_midboss_active, 0
 		jz	short loc_BCF9
-		call	farfp_1F474
-		mov	byte_2061A, al
+		call	_midboss_invalidate
+		mov	_midboss_active, al
 
 loc_BCF9:
 		call	farfp_26C3C
@@ -1909,7 +1909,7 @@ loc_BD26:
 		mov	ax, word_2034A
 		cmp	ax, word_20616
 		jnz	short loc_BD62
-		mov	byte_2061A, 1
+		mov	_midboss_active, 1
 
 loc_BD62:
 		mov	byte_1E503, 0
@@ -1958,9 +1958,9 @@ loc_BDCC:
 		call	farfp_26C40
 		call	_boss_update
 		mov	_stage_progression, al
-		cmp	byte_2061A, 0
+		cmp	_midboss_active, 0
 		jz	short loc_BDE8
-		call	farfp_1F470
+		call	_midboss_update_and_render
 
 loc_BDE8:
 		call	sub_EF36
@@ -18566,7 +18566,7 @@ loc_16DC4:
 		imul	bx, 24h
 		mov	ax, [bx+7F08h]
 		mov	[bp+var_4], ax
-		cmp	byte_2061A, 0
+		cmp	_midboss_active, 0
 		jnz	short loc_16E2F
 		xor	si, si
 		jmp	short loc_16E2A
@@ -29130,8 +29130,9 @@ bgm_show_timer	db ?
 _bgm_title_id	db ?
 byte_1F46E	db ?
 		db ?
-farfp_1F470	dd ?
-farfp_1F474	dd ?
+public _midboss_update_and_render, _midboss_invalidate
+_midboss_update_and_render	dd ?
+_midboss_invalidate	dd ?
 include th02/main/boss/funcs[bss].asm
 farfp_1F48C	dd ?
 farfp_1F490	dd ?
@@ -29258,8 +29259,9 @@ public _stage_frame
 _stage_frame	dd ?
 word_20616	dw ?
 include th02/hardware/pages[bss].asm
-byte_2061A	db ?
-		db ?
+public _midboss_active
+_midboss_active	db ?
+	evendata
 word_2061C	dw ?
 word_2061E	dw ?
 word_20620	dw ?

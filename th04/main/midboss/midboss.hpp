@@ -1,3 +1,4 @@
+#include "th02/main/midboss/midboss.hpp"
 #include "th04/main/playfld.hpp"
 
 static const pixel_t MIDBOSS_W_MAX = 64;
@@ -17,9 +18,6 @@ struct midboss_stuff_t {
 };
 
 extern midboss_stuff_t midboss;
-
-// Prevents stage enemies from being spawned if `true`.
-extern bool midboss_active;
 
 // Grants a score bonus of [units * MIDBOSS_BONUS_UNIT_VALUE], rendered as one
 // new point number popup per unit around the midboss sprite.
