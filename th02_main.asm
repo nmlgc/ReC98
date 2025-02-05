@@ -1425,17 +1425,17 @@ loc_B4D7:
 		call	sub_1C608
 		call	sub_1C3DF
 		call	@dialog_load_and_init$qv
-		setfarfp	_boss_bg_render, sub_BF90
-		setfarfp	_boss_update, sub_BF95
-		setfarfp	farfp_1F490, sub_BF90
-		setfarfp	farfp_1F4A0, sub_BF90
-		setfarfp	farfp_23A72, sub_BF90
-		setfarfp	farfp_23A76, sub_BF90
+		setfarfp	_boss_bg_render, @nullfunc_void$qv
+		setfarfp	_boss_update, @nullfunc_false$qv
+		setfarfp	farfp_1F490, @nullfunc_void$qv
+		setfarfp	farfp_1F4A0, @nullfunc_void$qv
+		setfarfp	farfp_23A72, @nullfunc_void$qv
+		setfarfp	farfp_23A76, @nullfunc_void$qv
 		setfarfp	farfp_26C3C, sub_17979
 		setfarfp	farfp_26C40, sub_1766E
 		setfarfp	farfp_1F494, sub_BFD0
 		setfarfp	farfp_1F498, sub_C05D
-		setfarfp	farfp_1F48C, sub_BF95
+		setfarfp	farfp_1F48C, @nullfunc_false$qv
 		call	sub_C5B0
 		mov	_scroll_speed, 1
 		mov	_scroll_interval, 4
@@ -1508,8 +1508,8 @@ loc_B7CB:
 
 loc_B7DD:
 		mov	word_20616, 0FFFFh
-		setfarfp	farfp_1F474, sub_BF95
-		setfarfp	farfp_1F470, sub_BF90
+		setfarfp	farfp_1F474, @nullfunc_false$qv
+		setfarfp	farfp_1F470, @nullfunc_void$qv
 		setfarfp	_boss_init, mima_init
 		setfarfp	_boss_end, mima_end
 		setfarfp	_boss_bg_render_func, mima_bg_render
@@ -2141,31 +2141,7 @@ text_wipe	proc near
 		retn
 text_wipe	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF90	proc far
-		push	bp
-		mov	bp, sp
-		pop	bp
-		retf
-sub_BF90	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF95	proc far
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		pop	bp
-		retf
-sub_BF95	endp
-
+include th02/main/null.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2213,7 +2189,7 @@ sub_BFD0	proc far
 		cbw
 		cmp	ax, 3
 		jnz	short loc_BFF8
-		setfarfp	farfp_1F490, sub_BF90
+		setfarfp	farfp_1F490, @nullfunc_void$qv
 		jmp	short loc_C015
 ; ---------------------------------------------------------------------------
 
@@ -2231,7 +2207,7 @@ loc_C015:
 		call	_boss_init
 		call	sub_17A55
 		call	sub_16A8A
-		setfarfp	farfp_1F494, sub_BF90
+		setfarfp	farfp_1F494, @nullfunc_void$qv
 		mov	eax, _boss_bg_render_func
 		mov	_boss_bg_render, eax
 		mov	eax, _boss_update_func
@@ -2264,7 +2240,7 @@ sub_C05D	proc far
 		call	text_putsa pascal, (4 shl 16) + 13, ds, offset aEMPTY, TX_WHITE
 
 loc_C09A:
-		setfarfp	farfp_1F498, sub_BF90
+		setfarfp	farfp_1F498, @nullfunc_void$qv
 
 loc_C0A6:
 		pop	bp
