@@ -11347,7 +11347,7 @@ sub_147DB	proc near
 		add	al, -048h
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
-		mov	_bullet_special_motion_turns_max, 2
+		mov	_bullet_special_turns_max, 2
 		call	_bullets_add_special
 		call	snd_se_play pascal, 9
 
@@ -14094,7 +14094,7 @@ loc_160F4:
 		mov	_bullet_template.BT_angle, 80h
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.count, 32
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
@@ -14143,7 +14143,7 @@ loc_16187:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.count, 32
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
@@ -14222,7 +14222,7 @@ loc_16228:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_YELLOW
 		mov	_bullet_template.speed, (2 shl 4)
 		call	_bullet_template_tune
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 
 loc_1626B:
 		cmp	_boss_phase_frame, 32 ; default
@@ -14268,7 +14268,7 @@ yuuka5_162A3	proc near
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_template.count, 8
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		jmp	short loc_162EA
 ; ---------------------------------------------------------------------------
 
@@ -18006,7 +18006,7 @@ loc_183A7:
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.speed, (2 shl 4) + 8
-		mov	_bullet_special_motion_turns_max, 2
+		mov	_bullet_special_turns_max, 2
 		mov	_bullet_template_special_angle.BSA_turn_by, -20h
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
@@ -18123,7 +18123,7 @@ mugetsu_184AC	proc near
 loc_184C8:
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -18770,7 +18770,7 @@ loc_18AC4:
 		sub	ax, [si+kurumi_spawnray_t.B2S_velocity.y]
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	[bp+var_4], 0
 		mov	_bullet_template.speed, (2 shl 4)
 		jmp	short loc_18AFA
@@ -19137,7 +19137,7 @@ loc_18DCF:
 		mov	_bullet_template.speed, (3 shl 4)
 		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		test	byte_259F0, 1
 		jz	short loc_18E19
 		mov	al, 40h
@@ -22048,7 +22048,7 @@ loc_1ACD9:
 		mov	_bullet_template.BT_origin.x, ax
 		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
 		call	@randring2_next16$qv
@@ -26980,7 +26980,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN_AIMED
 		mov	al, _boss_statebyte[2].BSB_spread_turns_max
-		mov	_bullet_special_motion_turns_max, al
+		mov	_bullet_special_turns_max, al
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
 		mov	_bullet_template.count, 9
 		mov	_bullet_template.BT_delta.spread_angle, 6
@@ -27076,7 +27076,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 16
 		call	_bullet_template_tune
@@ -27269,7 +27269,7 @@ loc_1F0B0:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		call	_bullet_template_tune
 		call	_bullets_add_special
 		push	15
@@ -28566,7 +28566,7 @@ gengetsu_1FB86	proc near
 
 loc_1FBA1:
 		mov	_bullet_template.BT_special_motion, BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM
-		mov	_bullet_special_motion_turns_max, 4
+		mov	_bullet_special_turns_max, 4
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -28639,7 +28639,7 @@ gengetsu_1FC46	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1FC61:
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------

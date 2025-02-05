@@ -83,16 +83,16 @@ enum bullet_special_motion_t {
 
 	// Slows down the bullet from its initial speed to 0, then aims to the
 	// player and resets to its initial speed.
-	// Affected by [bullet_special_motion.turns_max].
+	// Affected by [bullet_special.turns_max].
 	BSM_DECELERATE_THEN_TURN_AIMED,
 
 	// Slows down the bullet from its initial speed to 0, then increases its
 	// angle by [angle.turn_by] and resets to its initial speed.
-	// Affected by [bullet_special_motion.turns_max].
+	// Affected by [bullet_special.turns_max].
 	BSM_DECELERATE_THEN_TURN,
 
-	// Accelerates the speed of the bullet by
-	// [bullet_special_motion.speed_delta] every frame.
+	// Accelerates the speed of the bullet by [bullet_special.speed_delta]
+	// every frame.
 	BSM_SPEEDUP,
 
 	// Slows down the bullet from its initial speed to 0 while turning it
@@ -102,14 +102,14 @@ enum bullet_special_motion_t {
 
 	// Bounces the bullet into the opposite direction if it reaches the
 	// respective edge of the playfield.
-	// Affected by [bullet_special_motion.turns_max].
+	// Affected by [bullet_special.turns_max].
 	BSM_BOUNCE_LEFT_RIGHT,
 	BSM_BOUNCE_TOP_BOTTOM,
 	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM,
 	BSM_BOUNCE_LEFT_RIGHT_TOP,
 
-	// Accelerates the Y velocity of the bullet by
-	// [bullet_special_motion.speed_delta] every two frames.
+	// Accelerates the Y velocity of the bullet by [bullet_special.speed_delta]
+	// every two frames.
 	BSM_GRAVITY,
 
 	#if (GAME == 5)
@@ -211,7 +211,7 @@ extern union {
 	unsigned char turns_max;
 
 	SubpixelLength8 speed_delta;
-} bullet_special_motion;
+} bullet_special;
 
 /// Template
 /// --------

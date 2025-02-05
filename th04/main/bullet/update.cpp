@@ -60,7 +60,7 @@ void pascal near bullet_turn_x(bullet_t near &bullet)
 {
 	bullet.u1.turns_done++;
 	bullet.angle = (0x80 - bullet.angle);
-	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -71,7 +71,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 {
 	bullet.u1.turns_done++;
 	bullet.angle = (/* 0x00 */ - bullet.angle);
-	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -81,7 +81,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 #define bullet_turn_complete(bullet) \
 	bullet_update_patnum(bullet); \
 	bullet.speed_cur = bullet.speed_final; \
-	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) { \
+	if(bullet.u1.turns_done >= bullet_special.turns_max) { \
 		bullet.move_state = BMS_REGULAR; \
 	} \
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -138,7 +138,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 
 	case BSM_SPEEDUP:
 		bullet_velocity_set_from_angle_and_speed(bullet);
-		bullet.speed_cur.v += bullet_special_motion.speed_delta.v;
+		bullet.speed_cur.v += bullet_special.speed_delta.v;
 		break;
 
 	case BSM_DECELERATE_TO_ANGLE:
@@ -181,7 +181,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 
 	case BSM_GRAVITY:
 		if(stage_frame_mod2) {
-			bullet.pos.velocity.y.v += bullet_special_motion.speed_delta;
+			bullet.pos.velocity.y.v += bullet_special.speed_delta;
 		}
 		break;
 

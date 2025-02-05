@@ -10358,7 +10358,7 @@ loc_18F93:
 		mov	dword ptr _bullet_template.spread, (9 shl 24) or (5 shl 16) or (8 shl 8) or 24
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		push	1
 		call	@randring2_next16_and$qui
 		or	ax, ax
@@ -14784,7 +14784,7 @@ sub_1B973	proc near
 		mov	_bullet_template.spawn_type, BST_NO_DECELERATE
 		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	al, _rank
 		add	al, al
@@ -15234,7 +15234,7 @@ sub_1BDD0	proc near
 		jnz	short loc_1BE12
 		mov	_bullet_template.spawn_type, BST_NO_DECELERATE
 		mov	_bullet_template.BT_group, BG_STACK
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	al, _rank
@@ -15574,7 +15574,7 @@ sub_1C0E4	proc near
 		jnz	short loc_1C121
 		mov	_bullet_template.spawn_type, BST_NO_DECELERATE
 		mov	_bullet_template.BT_group, BG_SPREAD_STACK
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	dword ptr _bullet_template.spread, (8 shl 24) or (2 shl 16) or (8 shl 8) or 2
@@ -15764,7 +15764,7 @@ loc_1C2AB:
 		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
 		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.BT_special_motion, BSM_BOUNCE_LEFT_RIGHT_TOP
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		mov	al, _boss_statebyte[13]
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
@@ -17098,7 +17098,7 @@ sub_1D1C6	proc near
 		call	_bullet_template_tune
 		call	snd_se_play pascal, 8
 		mov	_boss_statebyte[15], 0
-		mov	_bullet_special_motion_turns_max, 2
+		mov	_bullet_special_turns_max, 2
 		mov	_boss_statebyte[14], 0
 		pop	bp
 		retn
@@ -17581,7 +17581,7 @@ loc_1E62A:
 		cmp	_midboss_phase_frame, 114
 		jg	short loc_1E65F
 		mov	_bullet_template.spawn_type, BST_NO_DECELERATE
-		mov	_bullet_special_motion_speed_delta, 2
+		mov	_bullet_special_speed_delta, 2
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	word ptr _bullet_template.spread, (16 shl 8) or 18
 		mov	_bullet_template.BT_group, BG_RING
@@ -17651,7 +17651,7 @@ sub_1E6A6	proc near
 		or	dx, dx
 		jnz	short loc_1E6FE
 		mov	_bullet_template.spawn_type, BST_CLOUD_BACKWARDS or BST_NO_DECELERATE
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SPREAD_STACK
 		mov	dword ptr _bullet_template.spread, (16 shl 24) or (4 shl 16) or (8 shl 8) or 5
@@ -17925,7 +17925,7 @@ loc_1E9B5:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN_AIMED
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		mov	word ptr _bullet_template.spread, (10 shl 8) or 12
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_RED
 		mov	ax, _boss_phase_frame
@@ -18116,7 +18116,7 @@ sub_1EB52	proc near
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_SPREAD
 		mov	_bullet_template.BT_special_motion, BSM_GRAVITY
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
 		mov	word ptr _bullet_template.spread, (12 shl 8) or 3
 		call	_bullets_add_special
@@ -18250,7 +18250,7 @@ loc_1EC7B:
 		inc	_bullet_template.spread
 
 loc_1ECB9:
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		mov	al, _bullet_template.BT_angle
 		add	al, 2
 		mov	_bullet_template.BT_angle, al
@@ -18382,7 +18382,7 @@ sub_1EDC1	proc near
 		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_DECELERATE
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 2
+		mov	_bullet_special_speed_delta, 2
 		mov	_bullet_template.speed, (4 shl 4)
 		mov	word ptr _bullet_template.spread, (9 shl 8) or 7
 		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN
