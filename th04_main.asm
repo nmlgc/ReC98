@@ -27,7 +27,6 @@ include th04/sprites/main_cdg.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th04/main/tile/tile.inc
-include th04/main/bullet/types.inc
 
 bullet_template_delta_t union
 	spread_angle	db ?
@@ -30465,6 +30464,26 @@ include th04/main/play[bss].asm
 include th04/main/drawpoint[bss].asm
 include th04/main/ems[bss].asm
 include th04/main/slowdown[bss].asm
+
+BG_SINGLE = 000h
+BG_SINGLE_AIMED = 001h
+BG_RANDOM_ANGLE = 01Bh
+BG_RANDOM_ANGLE_AND_SPEED = 01Ch
+BG_RING = 026h
+BG_RING_AIMED = 02Ch
+BG_SPREAD = 02Dh
+BG_SPREAD_AIMED = 02Eh
+BG_STACK = 02Fh
+BG_STACK_AIMED = 030h
+BG_FORCESINGLE = 040h
+BG_FORCESINGLE_AIMED = 041h
+
+BST_PELLET = 1
+BST_BULLET16 = 2
+BST_GATHER_PELLET = 3
+BST_BULLET16_CLOUD_FORWARDS = 4
+BST_BULLET16_CLOUD_BACKWARDS = 5
+
 include th04/main/bullet/template[bss].asm
 include th04/main/midboss/vars[bss].asm
 include th04/main/boss/vars[bss].asm
