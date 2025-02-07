@@ -773,8 +773,6 @@ sub_4090	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-include th02/main/spark_render.asm
 	extern @sparks_update_and_render$qv:proc
 	extern @sparks_invalidate$qv:proc
 	extern @tiles_stuff_reset$qv:proc

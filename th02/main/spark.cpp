@@ -10,8 +10,31 @@
 // ZUN bloat
 #define unneeded_copy	reinterpret_cast<spark_t near *>(_AX)
 
+// Blits a hardcoded spark sprite. Assumptions:
+// • The GRCG is active, and set to the intended color
+// • [cel] ≤ SPARK_CELS
 void pascal near grcg_spark_sprite_put(screen_x_t left, vram_y_t top, int cel)
-;
+{
+	#define left_copy	static_cast<screen_x_t>(_BX) // ZUN bloat
+
+	_ES = SEG_PLANE_B;
+	left_copy = left;
+	_DI = vram_offset_shift_fast(left_copy, top);
+	_SI = reinterpret_cast<uint16_t>(&sSPARKS[left_copy & BYTE_MASK][cel][0]);
+	_CX = SPARK_H;
+	put_loop: {
+		asm { movsw; }
+		_DI += (ROW_SIZE - sizeof(dots16_t));
+		if(static_cast<int16_t>(_DI) >= PLANE_SIZE) {
+			_DI -= PLANE_SIZE;
+		}
+	}
+	asm { loop	put_loop; }
+
+	#undef left_copy
+}
+
+#pragma codestring "\x90"
 
 void sparks_update_and_render(void)
 {
