@@ -893,78 +893,7 @@ loc_427F:
 		retf
 sub_41AA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4288	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, offset _sparks
-		mov	si, ax
-		xor	di, di
-		jmp	short loc_42EF
-; ---------------------------------------------------------------------------
-
-loc_4296:
-		cmp	[si+spark_t.SPARK_flag], F_FREE
-		jz	short loc_42EB
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, [bx+si+spark_t.SPARK_screen_topleft+Point.x]
-		sar	ax, SUBPIXEL_BITS
-		push	ax	; left
-		mov	ax, [bx+si+spark_t.SPARK_screen_topleft+Point.y]
-		sar	ax, SUBPIXEL_BITS
-		push	ax	; top
-		cmp	[si+spark_t.SPARK_render_as], SRA_DOT
-		jnz	short loc_42BF
-		push	1	; w
-		push	1	; h
-		jmp	short loc_42C3
-; ---------------------------------------------------------------------------
-
-loc_42BF:
-		push	SPARK_W	; w
-		push	SPARK_H	; h
-
-loc_42C3:
-		nopcall	@tiles_invalidate_rect$qiiii
-		cmp	[si+spark_t.SPARK_flag], F_REMOVE
-		jnz	short loc_42D2
-		mov	[si+spark_t.SPARK_flag], F_FREE
-		jmp	short loc_42EB
-; ---------------------------------------------------------------------------
-
-loc_42D2:
-		mov	al, _page_front
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, [bx+si+spark_t.SPARK_screen_topleft+Point.x]
-		mov	dx, [bx+si+spark_t.SPARK_screen_topleft+Point.y]
-		xor	bx, size Point
-		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.x], ax
-		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.y], dx
-
-loc_42EB:
-		inc	di
-		add	si, size spark_t
-
-loc_42EF:
-		cmp	di, SPARK_COUNT
-		jl	short loc_4296
-		pop	di
-		pop	si
-		leave
-		retf
-sub_4288	endp
-
+	extern @sparks_invalidate$qv:proc
 	extern @tiles_stuff_reset$qv:proc
 	extern @MAP_LOAD$QNXC:proc
 	extern @tile_area_init_and_put_both$qv:proc
@@ -1888,7 +1817,7 @@ loc_BCF9:
 		call	@bullets_invalidate$qv
 		call	farfp_23A72
 		call	@items_invalidate$qv
-		call	sub_4288
+		call	@sparks_invalidate$qv
 		call	sub_E2D9
 		cmp	word_2034C, 0
 		jz	short loc_BD26
@@ -27766,24 +27695,6 @@ bullet_t ends
 
 public _bullets
 _bullets bullet_t BULLET_COUNT dup(<?>)
-
-SRA_DOT = 0
-SRA_SPRITE = 14
-
-SPARK_COUNT = 64
-
-spark_t struc
-	SPARK_flag             	db ?
-	SPARK_age              	db ?
-	SPARK_screen_topleft   	Point 2 dup(<?>)
-	SPARK_velocity         	Point <?>
-	SPARK_render_as        	db ?
-	                       	db ?
-	SPARK_angle            	db ?
-	SPARK_speed_base       	db ?
-	                       	db ?
-	SPARK_default_render_as	db ?
-spark_t ends
 
 public _sparks
 _sparks	spark_t SPARK_COUNT dup(<?>)

@@ -45,3 +45,5 @@ extern uint8_t spark_sprite_interval;
 
 // Sparks are transitioned to F_REMOVE after their [age] reaches this value.
 extern uint8_t spark_age_max;
+
+void sparks_invalidate(void);
