@@ -309,7 +309,7 @@ bool16 pascal near cutscene_script_load(const char* fn)
 			// using the GRCG and doing an unaccelerated 4-plane VRAM OR.
 			graph_pack_put_8_noclip(0, TEMP_ROW, row_p, CUTSCENE_PIC_W);
 			egc_start_copy();
-			egc_setup_copy_masked(PI_MASKS[mask_id][y & (PI_MASK_COUNT - 1)]);
+			egc_setup_copy_masked(PI_MASKS[mask_id][y % PI_MASK_COUNT]);
 			vo_temp = vram_offset_shift(0, TEMP_ROW);
 			vram_word = 0;
 			while(vram_word < (CUTSCENE_PIC_W / EGC_REGISTER_DOTS)) {
@@ -533,7 +533,7 @@ void near cursor_advance_and_animate(void)
 			graph_gaiji_putc(
 				LEFT,
 				cursor.y,
-				(ga_RETURN_KEY + ((frames_waited / 8) & (RETURN_KEY_CELS - 1))),
+				(ga_RETURN_KEY + ((frames_waited / 8) % RETURN_KEY_CELS)),
 				V_WHITE
 			);
 			frames_waited++;

@@ -71,7 +71,7 @@ clip_y_done:
 	tile_top_ = top;
 	first_bit_wide = left;
 
-	// first_bit_wide &= (8 - 1);. Using a 16-bit-immediate for some reason.
+	// `first_bit_wide %= 8u;`. Using a 16-bit-immediate for some reason.
 	asm { and	cx, (8 - 1); }
 	// byte_x_wide = (left >> 3);
 	byte_x_wide >>= 3;

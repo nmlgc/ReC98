@@ -555,7 +555,7 @@ void pascal fire_random_downwards_pellets(void)
 	);
 
 	for(int i = 0; i < 10; i++) {
-		unsigned char angle = (irand() & (0x80 - 1));
+		unsigned char angle = (irand() % 0x80u);
 		Pellets.add_single(
 			(ent.cur_center_x() - (PELLET_W / 2)),
 			(ent.cur_center_y() - (PELLET_H / 2)),

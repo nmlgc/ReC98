@@ -427,8 +427,11 @@ void near bullet_template_speedtune_for_playperf(void)
 
 unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 {
+	// ZUN bloat: The `static_cast` is not needed and generates an integer
+	// division rather than a bitshift.
 	return (
-		((angle + (ANGLE_PER_SPRITE / 2) - 1) & (0x80 - 1)) / ANGLE_PER_SPRITE
+		static_cast<int>((angle + (ANGLE_PER_SPRITE / 2) - 1) % 0x80u) /
+		ANGLE_PER_SPRITE
 	);
 }
 

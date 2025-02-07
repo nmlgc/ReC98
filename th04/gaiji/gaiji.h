@@ -5,7 +5,7 @@
 #include "th02/gaiji/from_2.h"
 
 #define OVERLAY_FADE_CELS 8
-#define RETURN_KEY_CELS 4
+#define RETURN_KEY_CELS 4u
 
 typedef enum {
 	g_NULL = '\0',

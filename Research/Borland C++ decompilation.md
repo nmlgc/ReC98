@@ -412,6 +412,21 @@ void foo(int i) {
 
 ### `-Z` (Suppress register reloads)
 
+* Modulo operations with compile-time power-of-two divisors are turned into
+  `AND (divisor - 1)` in these cases:
+  * For standalone binary `%` operations:
+
+    |           Dividend            |         Divisor         |
+    | :---------------------------: | :---------------------: |
+    | `unsigned (short\|int\|long)` |  `signed (short\|int)`  |
+    | Anything except `signed long` | `unsigned (short\|int)` |
+    |        `unsigned long`        |      `signed long`      |
+    |           Anything            |     `unsigned long`     |
+
+  * For `%=` assignments:
+    * Dividend is `char`, `unsigned char`, or `short/int`, and divisor is
+      `unsigned short/int`
+
 * The tracked contents of `ES` are reset after a conditional statement. If the
   original code had more `LES` instructions than necessary, this indicates a
   specific layout of conditional branches:
