@@ -73,7 +73,7 @@ FACE_EXRIKA_SMILE = 153
 FACE_EXRIKA_FROWN = 156
 FACE_COL_0 = 255
 
-main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
+main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, PLAYER_TEXT, main_01____TEXT
 main_03 group main_03_TEXT, BULLET_TEXT, DIALOG_TEXT, BOSS_5_TEXT, main_03__TEXT
 main_06 group REGIST_M_TEXT, main_06_TEXT
 
@@ -5484,63 +5484,12 @@ PLAYER_B_TEXT	segment	byte public 'CODE' use16
 		left:word, top:word, eight_tiles:byte
 PLAYER_B_TEXT	ends
 
+PLAYER_TEXT	segment	byte public 'CODE' use16
+	@PLAYER_MOVE$QII procdesc pascal near \
+		delta_x:word, delta_y:word
+PLAYER_TEXT ends
+
 main_01____TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @PLAYER_MOVE$QII
-@player_move$qii proc near
-
-@@delta_y	= word ptr  4
-@@delta_x	= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, _player_top_on_back_page
-		mov	ax, [bx]
-		mov	_player_topleft.y, ax
-		mov	ax, [bp+@@delta_y]
-		add	_player_topleft.y, ax
-		cmp	_player_topleft.y, PLAYFIELD_TOP
-		jge	short loc_EEE5
-		mov	_player_topleft.y, PLAYFIELD_TOP
-		jmp	short loc_EEF3
-; ---------------------------------------------------------------------------
-
-loc_EEE5:
-		cmp	_player_topleft.y, (PLAYFIELD_BOTTOM - PLAYER_H + (PLAYER_H / 6))
-		jle	short loc_EEF3
-		mov	_player_topleft.y, (PLAYFIELD_BOTTOM - PLAYER_H + (PLAYER_H / 6))
-
-loc_EEF3:
-		mov	bx, _player_top_on_back_page
-		mov	ax, _player_topleft.y
-		mov	[bx], ax
-		mov	bx, _player_left_on_back_page
-		mov	ax, [bx]
-		mov	_player_topleft.x, ax
-		mov	ax, [bp+@@delta_x]
-		add	_player_topleft.x, ax
-		cmp	_player_topleft.x, (PLAYFIELD_RIGHT - PLAYER_W + 6)
-		jl	short loc_EF1C
-		mov	_player_topleft.x, (PLAYFIELD_RIGHT - PLAYER_W + 6)
-		jmp	short loc_EF29
-; ---------------------------------------------------------------------------
-
-loc_EF1C:
-		cmp	_player_topleft.x, (PLAYFIELD_LEFT - (PLAYER_W / 8))
-		jg	short loc_EF29
-		mov	_player_topleft.x, (PLAYFIELD_LEFT - (PLAYER_W / 8))
-
-loc_EF29:
-		mov	bx, _player_left_on_back_page
-		mov	ax, _player_topleft.x
-		mov	[bx], ax
-		pop	bp
-		retn	4
-@player_move$qii endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

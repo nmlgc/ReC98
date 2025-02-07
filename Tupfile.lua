@@ -518,6 +518,7 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th02/item.cpp",
 	"th02/hud.cpp",
 	"th02/player_b.cpp",
+	"th02/player.cpp",
 	"th02/zunerror.cpp",
 	"th02/keydelay.cpp",
 	"th02/main02_1.cpp",
