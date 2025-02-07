@@ -775,124 +775,7 @@ sub_4090	endp
 		nop
 
 include th02/main/spark_render.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_41AA	proc far
-
-@@screen_top 	= word ptr -0Eh
-@@screen_left	= word ptr -0Ch
-@@top_p      	= word ptr -0Ah
-@@left_p     	= word ptr -6
-@@i          	= word ptr -2
-
-		enter	0Eh, 0
-		push	si
-		push	di
-		push	GC_RMW
-		push	14
-		nopcall	grcg_setcolor
-		mov	ax, offset _sparks
-		mov	si, ax
-		mov	[bp+@@i], 0
-		jmp	loc_4276
-; ---------------------------------------------------------------------------
-
-loc_41C7:
-		cmp	[si+spark_t.SPARK_flag], F_ALIVE
-		jz	short loc_41CF
-		jmp	loc_4270
-; ---------------------------------------------------------------------------
-
-loc_41CF:
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, si
-		add	ax, SPARK_screen_topleft
-		mov	[bp+@@left_p], ax
-		add	ax, Point.y
-		mov	[bp+@@top_p], ax
-		mov	ax, [si+spark_t.SPARK_velocity+Point.x]
-		mov	bx, [bp+@@left_p]
-		add	[bx], ax
-		mov	ax, _spark_accel_x
-		add	[si+spark_t.SPARK_velocity+Point.x], ax
-		mov	ax, [si+spark_t.SPARK_velocity+Point.y]
-		mov	bx, [bp+@@top_p]
-		add	[bx], ax
-		mov	ax, [bx]
-		mov	[bp+@@screen_top], ax
-		mov	bx, [bp+@@left_p]
-		mov	ax, [bx]
-		sar	ax, 4
-		mov	[bp+@@screen_left], ax
-		mov	bx, [bp+@@top_p]
-		mov	ax, [bx]
-		sar	ax, 4
-		mov	[bp+@@screen_top], ax
-		mov	di, [bp+@@screen_top]
-		inc	word ptr [si+spark_t.SPARK_velocity+Point.y]
-		inc	[si+spark_t.SPARK_age]
-		cmp	[bp+@@screen_left], PLAYFIELD_LEFT
-		jl	short loc_4240
-		cmp	[bp+@@screen_left], (PLAYFIELD_RIGHT - SPARK_W)
-		jge	short loc_4240
-		mov	al, [si+spark_t.SPARK_age]
-		cmp	al, _spark_age_max
-		ja	short loc_4240
-		cmp	di, PLAYFIELD_BOTTOM
-		jge	short loc_4240
-		cmp	di, (PLAYFIELD_TOP - SPARK_H)
-		jg	short loc_4245
-
-loc_4240:
-		mov	[si+spark_t.SPARK_flag], F_REMOVE
-		jmp	short loc_4270
-; ---------------------------------------------------------------------------
-
-loc_4245:
-		add	di, _scroll_line
-		cmp	di, RES_Y
-		jb	short loc_4253
-		sub	di, RES_Y
-
-loc_4253:
-		push	[bp+@@screen_left]
-		push	di
-		cmp	[si+spark_t.SPARK_render_as], SRA_DOT
-		jnz	short loc_4264
-		nopcall	grcg_pset
-		jmp	short loc_4270
-; ---------------------------------------------------------------------------
-
-loc_4264:
-		mov	al, [si+spark_t.SPARK_age]
-		mov	ah, 0
-		and	ax, (SPARK_CELS - 1)
-		push	ax
-		call	spark_render
-
-loc_4270:
-		inc	[bp+@@i]
-		add	si, size spark_t
-
-loc_4276:
-		cmp	[bp+@@i], SPARK_COUNT
-		jge	short loc_427F
-		jmp	loc_41C7
-; ---------------------------------------------------------------------------
-
-loc_427F:
-		nopcall	grcg_off
-		pop	di
-		pop	si
-		leave
-		retf
-sub_41AA	endp
-
+	extern @sparks_update_and_render$qv:proc
 	extern @sparks_invalidate$qv:proc
 	extern @tiles_stuff_reset$qv:proc
 	extern @MAP_LOAD$QNXC:proc
@@ -1896,7 +1779,7 @@ loc_BDE8:
 		call	@items_update_and_render$qv
 		call	farfp_23A76
 		call	@bullets_update_and_render$qv
-		call	sub_41AA
+		call	@sparks_update_and_render$qv
 		test	byte ptr _key_det, INPUT_CANCEL
 		jz	short loc_BE0F
 		call	sub_B9E2

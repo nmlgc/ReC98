@@ -46,4 +46,8 @@ extern uint8_t spark_sprite_interval;
 // Sparks are transitioned to F_REMOVE after their [age] reaches this value.
 extern uint8_t spark_age_max;
 
+// Added to the velocity of each active spark after its position was updated.
+extern Subpixel spark_accel_x;
+
+void sparks_update_and_render(void);
 void sparks_invalidate(void);

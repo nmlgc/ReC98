@@ -3,8 +3,8 @@
 ; • The GRCG is active, and set to the intended color
 ; • [sprite_id] ≤ SPARK_SPRITES
 
-; void pascal near spark_render(screen_x_t x, vram_y_t vram_y, int sprite_id);
-spark_render	proc near
+public @GRCG_SPARK_SPRITE_PUT$QIII
+@grcg_spark_sprite_put$qiii proc near
 @@sprite_id	= word ptr  4
 @@vram_y   	= word ptr  6
 @@x        	= word ptr  8
@@ -47,5 +47,5 @@ spark_render	proc near
 	pop	si
 	pop	bp
 	retn	6
-spark_render	endp
+@grcg_spark_sprite_put$qiii endp
 	even

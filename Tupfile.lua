@@ -511,6 +511,7 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 		th02_sprites["sparks"],
 		th02_sprites["pointnum"],
 	} },
+	"th02/spark.cpp",
 	"th02/spark_i.asm",
 	"th02/tile.cpp",
 	"th02/pointnum.cpp",
