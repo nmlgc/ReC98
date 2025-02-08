@@ -1,3 +1,6 @@
+#ifndef TH02_SPRITES_MAIN_PAT_H
+#define TH02_SPRITES_MAIN_PAT_H
+
 #define MISS_ANIM_CELS 6
 
 /// Sprite sizes
@@ -75,3 +78,5 @@ typedef enum {
 	_main_patnum_t_FORCE_UINT8 = 0xFF
 } main_patnum_t;
 /// -------------------------------------------------------------
+
+#endif /* TH02_SPRITES_MAIN_PAT_H */

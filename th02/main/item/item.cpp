@@ -20,7 +20,6 @@
 #include "th02/main/player/player.hpp"
 #include "th02/main/pointnum/pointnum.hpp"
 #include "th02/main/tile/tile.hpp"
-#include "th02/sprites/main_pat.h"
 
 // Constants
 // ---------

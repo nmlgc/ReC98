@@ -18,6 +18,7 @@ static const pixel_t PLAYER_OPTION_TO_OPTION_DISTANCE = (
 
 #if (GAME == 2)
 	#include "th02/main/playfld.hpp"
+	#include "th02/sprites/main_pat.h"
 
 	// Coordinates
 	// -----------
@@ -67,6 +68,8 @@ static const pixel_t PLAYER_OPTION_TO_OPTION_DISTANCE = (
 		return (player_topleft.y + (PLAYER_H / 2));
 	}
 	// ----------------
+
+	extern main_patnum_t player_option_patnum;
 #endif
 
 extern bool player_is_hit;
@@ -82,6 +85,9 @@ static const uint8_t POWER_MIN = 1;
 	// Grants invincibility as long as it's true. Works independently from
 	// [player_invincibility_time].
 	extern bool player_invincible_via_bomb;
+
+	extern uint8_t miss_frames;
+	extern bool miss_active; // ZUN bloat: Same as ([miss_frames] != 0)
 #endif
 
 static const int SHOT_LEVEL_MAX = 9;

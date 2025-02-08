@@ -1,5 +1,4 @@
 #include "th02/main/player/player.hpp"
-#include "th02/sprites/main_pat.h"
 
 extern int player_patnum; // ACTUAL TYPE: main_patnum_t
 

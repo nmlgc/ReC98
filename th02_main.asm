@@ -1671,7 +1671,7 @@ loc_BDE8:
 		call	sub_B9E2
 		or	ax, ax
 		jz	short loc_BE0F
-		mov	byte_20607, 1
+		mov	_quit, 1
 
 loc_BE0F:
 		cmp	byte_1E503, 0
@@ -1789,7 +1789,7 @@ loc_BEED:
 		call	farfp_1F48C
 		or	ax, ax
 		jz	short loc_BF36
-		cmp	byte_20607, 0
+		cmp	_quit, 0
 		jnz	short loc_BF36
 		mov	ax, 1
 		jmp	short loc_BF78
@@ -1813,10 +1813,10 @@ loc_BF60:
 		call	@score_update_and_render$qv
 
 loc_BF63:
-		cmp	byte_20607, 0
+		cmp	_quit, 0
 		jz	loc_BCC3
 		nopcall	@score_delta_commit$qv
-		mov	byte_20607, 0
+		mov	_quit, 0
 		xor	ax, ax
 
 loc_BF78:
@@ -2062,7 +2062,7 @@ loc_C20B:
 		mov	_key_det, 0
 		push	0Ah
 		call	palette_black_out
-		mov	byte_20607, 1
+		mov	_quit, 1
 		call	_snd_se_reset
 
 loc_C222:
@@ -2393,13 +2393,13 @@ loc_C5C2:
 		mov	byte_205DE, 0
 		mov	_player_invincibility_time, 0
 		mov	_player_invincible_via_bomb, 0
-		mov	byte_20607, 0
+		mov	_quit, 0
 		mov	_stage_miss_count, 0
-		mov	byte_20609, 0
+		mov	_miss_frames, 0
 		mov	byte_205DF, 8
 		mov	byte_205E0, 0
 		mov	_player_is_hit, 0
-		mov	byte_1E517, 0
+		mov	_miss_active, 0
 		mov	_player_option_patnum, PAT_OPTION_A
 		mov	word_205D8, 0FFFFh
 		mov	word_205DC, 0FFFFh
@@ -2488,28 +2488,28 @@ var_2		= word ptr -2
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, offset _player_option_left_topleft.x
-		mov	_player_option_left_left_on_back_page, ax
+		mov	_player_option_left_left_on_back_, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, offset _player_option_left_topleft.y
-		mov	_player_option_left_top_on_back_page, ax
+		mov	_player_option_left_top_on_back_p, ax
 		mov	bx, _player_left_on_back_page
 		push	word ptr [bx]	; left
 		mov	bx, _player_top_on_back_page
 		push	word ptr [bx]	; top
 		push	(PLAYER_W shl 16) or PLAYER_H	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
-		mov	bx, _player_option_left_left_on_back_page
+		mov	bx, _player_option_left_left_on_back_
 		mov	si, [bx]
 		push	si	; left
-		mov	bx, _player_option_left_top_on_back_page
+		mov	bx, _player_option_left_top_on_back_p
 		push	word ptr [bx]	; top
 		push	(PLAYER_OPTION_W shl 16) or PLAYER_OPTION_H	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
 		lea	ax, [si+PLAYER_OPTION_TO_OPTION_DISTANCE]
 		push	ax	; left
-		mov	bx, _player_option_left_top_on_back_page
+		mov	bx, _player_option_left_top_on_back_p
 		push	word ptr [bx]	; top
 		push	(PLAYER_OPTION_W shl 16) or PLAYER_OPTION_H	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
@@ -2645,14 +2645,14 @@ arg_4		= word ptr  8
 		add	ax, ax
 		mov	dx, ax
 		mov	word ptr [si], 101h
-		mov	bx, _player_option_left_left_on_back_page
+		mov	bx, _player_option_left_left_on_back_
 		mov	ax, [bx]
 		add	ax, [bp+arg_4]
 		shl	ax, 4
 		mov	bx, dx
 		add	bx, bx
 		mov	[bx+si+2], ax
-		mov	bx, _player_option_left_top_on_back_page
+		mov	bx, _player_option_left_top_on_back_p
 		mov	ax, [bx]
 		shl	ax, 4
 		mov	bx, dx
@@ -5554,7 +5554,7 @@ sub_EF36	proc near
 		jnz	short loc_EF4F
 		cmp	_player_invincibility_time, 0
 		jz	short loc_EF54
-		cmp	byte_1E517, 0
+		cmp	_miss_active, 0
 		jnz	short loc_EF54
 
 loc_EF4F:
@@ -5572,7 +5572,7 @@ loc_EF5F:
 		call	sub_EFF2
 		cmp	_player_is_hit, -1
 		jnz	short loc_EFEF
-		mov	byte_20607, 1
+		mov	_quit, 1
 		mov	_player_is_hit, 0
 		jmp	short loc_EFEF
 ; ---------------------------------------------------------------------------
@@ -5595,7 +5595,7 @@ loc_EF9E:
 loc_EFAC:
 		cmp	_power, 8
 		jb	short loc_EFEF
-		mov	bx, _player_option_left_top_on_back_page
+		mov	bx, _player_option_left_top_on_back_p
 		mov	si, [bx]
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -5603,14 +5603,14 @@ loc_EFAC:
 		sub	si, RES_Y
 
 loc_EFC7:
-		mov	bx, _player_option_left_left_on_back_page
+		mov	bx, _player_option_left_left_on_back_
 		push	word ptr [bx]
 		push	si
 		mov	al, _player_option_patnum
 		mov	ah, 0
 		push	ax
 		call	super_roll_put_tiny
-		mov	bx, _player_option_left_left_on_back_page
+		mov	bx, _player_option_left_left_on_back_
 		mov	ax, [bx]
 		add	ax, (PLAYER_OPTION_DISTANCE * 2)
 		push	ax
@@ -5639,10 +5639,10 @@ sub_EFF2	proc near
 		mov	bp, sp
 		sub	sp, 2
 		push	si
-		cmp	byte_20609, 0
+		cmp	_miss_frames, 0
 		jnz	short loc_F03D
 		call	_snd_se_play c, 2
-		mov	byte_1E517, 1
+		mov	_miss_active, 1
 		inc	_stage_miss_count
 
 		; ZUN bug: The fact that this function does not re-render the score
@@ -5671,10 +5671,10 @@ loc_F03D:
 		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
 		mov	_player_topleft.y, ax
-		inc	byte_20609
-		cmp	byte_20609, 18h
+		inc	_miss_frames
+		cmp	_miss_frames, 24
 		jnb	short loc_F08A
-		mov	al, byte_20609
+		mov	al, _miss_frames
 		mov	ah, 0
 		sar	ax, 2
 		add	ax, PAT_PLAYCHAR_MISS
@@ -5692,7 +5692,7 @@ loc_F078:
 ; ---------------------------------------------------------------------------
 
 loc_F08A:
-		cmp	byte_20609, 18h
+		cmp	_miss_frames, 24
 		jnz	loc_F12A
 		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		cmp	_playperf, 2
@@ -5721,7 +5721,7 @@ loc_F0B9:
 		call	@sparks_add$qiuiiii
 		cmp	_lives, 0
 		jnz	short loc_F107
-		mov	byte_20609, 0
+		mov	_miss_frames, 0
 		mov	_items_miss_add_gameover, 1
 		mov	bx, _player_left_on_back_page
 		push	word ptr [bx]	; screen_left
@@ -5749,7 +5749,7 @@ loc_F107:
 ; ---------------------------------------------------------------------------
 
 loc_F12A:
-		cmp	byte_20609, 2Bh	; '+'
+		cmp	_miss_frames, 43
 		jnb	short loc_F13B
 		mov	bx, _player_top_on_back_page
 		add	word ptr [bx], 4
@@ -5757,7 +5757,7 @@ loc_F12A:
 ; ---------------------------------------------------------------------------
 
 loc_F13B:
-		cmp	byte_20609, 2Bh	; '+'
+		cmp	_miss_frames, 43
 		jnz	short loc_F198
 		dec	_lives
 		call	@hud_lives_put$qv
@@ -5793,7 +5793,7 @@ loc_F160:
 ; ---------------------------------------------------------------------------
 
 loc_F198:
-		cmp	byte_20609, 44h	; 'D'
+		cmp	_miss_frames, 68
 		jnb	short loc_F1C6
 		mov	bx, _player_top_on_back_page
 		sub	word ptr [bx], 2
@@ -5810,8 +5810,8 @@ loc_F1B6:
 ; ---------------------------------------------------------------------------
 
 loc_F1C6:
-		mov	byte_20609, 0
-		mov	byte_1E517, 0
+		mov	_miss_frames, 0
+		mov	_miss_active, 0
 		mov	_player_is_hit, 0
 
 loc_F1D5:
@@ -5834,7 +5834,7 @@ sub_F1D8	proc near
 		jnz	short loc_F1F2
 		cmp	_player_invincibility_time, 0
 		jz	short loc_F1F7
-		cmp	byte_1E517, 0
+		cmp	_miss_active, 0
 		jnz	short loc_F1F7
 
 loc_F1F2:
@@ -5996,12 +5996,12 @@ loc_F2FB:
 		mov	ax, _player_topleft.x
 		add	ax, -PLAYER_LEFT_TO_OPTION_LEFT_LEFT
 		sub	ax, si
-		mov	bx, _player_option_left_left_on_back_page
+		mov	bx, _player_option_left_left_on_back_
 		mov	[bx], ax
 		mov	ax, _player_topleft.y
 		add	ax, ((PLAYER_H / 2) - (PLAYER_OPTION_H / 2))
 		sub	ax, di
-		mov	bx, _player_option_left_top_on_back_page
+		mov	bx, _player_option_left_top_on_back_p
 		mov	[bx], ax
 		test	byte ptr _key_det, INPUT_SHOT
 		jz	short loc_F349
@@ -26564,9 +26564,9 @@ public _player_patnum
 _player_patnum	dw PAT_PLAYCHAR_STILL
 		db    0
 		db    0
-public _power
+public _power, _miss_active
 _power	db 1
-byte_1E517	db 0
+_miss_active	db 0
 byte_1E518	db 4
 byte_1E519	db 40h
 byte_1E51A	db 4Ch
@@ -27362,24 +27362,25 @@ word_205E2	dw ?
 word_205E4	dw ?
 public _player_left_on_page, _player_top_on_page
 public _player_left_on_back_page, _player_top_on_back_page
+public _player_option_left_left_on_back_, _player_option_left_top_on_back_p
 _player_left_on_page	dw 2 dup(?)
 _player_top_on_page 	dw 2 dup(?)
 _player_left_on_back_page	dw ?
 _player_top_on_back_page 	dw ?
-_player_option_left_left_on_back_page	dw ?
-_player_option_left_top_on_back_page	dw ?
+_player_option_left_left_on_back_	dw ?
+_player_option_left_top_on_back_p	dw ?
 public _player_topleft, _player_option_left_topleft
 _player_topleft	Point <?>
 _player_option_left_topleft	Point 2 dup(<?>)
 playchar_shot_func	dw ?
 include th01/main/player_is_hit[bss].asm
 public _player_invincibility_time, _player_invincible_via_bomb
+public _quit, _stage_miss_count, _miss_frames
 _player_invincibility_time	db ?
 _player_invincible_via_bomb	db ?
-byte_20607	db ?
-public _stage_miss_count
+_quit	db ?
 _stage_miss_count	db ?
-byte_20609	db ?
+_miss_frames	db ?
 include th02/main/player/speed[bss].asm
 byte_2060E	db ?
 byte_2060F	db ?
