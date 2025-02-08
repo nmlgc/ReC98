@@ -666,7 +666,7 @@ void bullets_update_and_render(void)
 				(screen_top  >= (-(PELLET_H / 2) + player_center_y() - 8)) &&
 				(screen_top  <= (-(PELLET_H / 2) + player_center_y() + 2))
 			) {
-				player_is_hit = true;
+				player_is_hit = PLAYER_HIT;
 				goto remove;
 			}
 		} else {
@@ -676,7 +676,7 @@ void bullets_update_and_render(void)
 				(screen_top  >= (-(BULLET16_H / 2) + player_center_y() - 12)) &&
 				(screen_top  <= (-(BULLET16_H / 2) + player_center_y() +  8))
 			) {
-				player_is_hit = true;
+				player_is_hit = PLAYER_HIT;
 				goto remove;
 			}
 		}

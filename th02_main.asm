@@ -1661,7 +1661,7 @@ loc_BDCC:
 		call	_midboss_update_and_render
 
 loc_BDE8:
-		call	sub_EF36
+		call	@player_update_and_render$qv
 		call	@items_update_and_render$qv
 		call	farfp_23A76
 		call	@bullets_update_and_render$qv
@@ -4080,8 +4080,8 @@ sub_D38F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D488	proc near
+public @shots_update_and_render$qv
+@shots_update_and_render$qv proc near
 
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
@@ -4279,7 +4279,7 @@ loc_D61D:
 		pop	si
 		leave
 		retn
-sub_D488	endp
+@shots_update_and_render$qv endp
 main_01__TEXT	ends
 
 ITEM_TEXT	segment	byte public 'CODE' use16
@@ -5487,6 +5487,7 @@ PLAYER_B_TEXT	ends
 PLAYER_TEXT	segment	byte public 'CODE' use16
 	@PLAYER_MOVE$QII procdesc pascal near \
 		delta_x:word, delta_y:word
+	@player_update_and_render$qv procdesc near
 PLAYER_TEXT ends
 
 main_01____TEXT	segment	byte public 'CODE' use16
@@ -5494,93 +5495,8 @@ main_01____TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_EF36	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_player_invincible_via_bomb, 0
-		jnz	short loc_EF4F
-		cmp	_player_invincibility_time, 0
-		jz	short loc_EF54
-		cmp	_miss_active, 0
-		jnz	short loc_EF54
-
-loc_EF4F:
-		mov	_player_is_hit, 0
-
-loc_EF54:
-		cmp	_player_invincibility_time, 0
-		jbe	short loc_EF5F
-		dec	_player_invincibility_time
-
-loc_EF5F:
-		call	sub_D488
-		cmp	_player_is_hit, 0
-		jz	short loc_EF7F
-		call	sub_EFF2
-		cmp	_player_is_hit, -1
-		jnz	short loc_EFEF
-		mov	_quit, 1
-		mov	_player_is_hit, 0
-		jmp	short loc_EFEF
-; ---------------------------------------------------------------------------
-
-loc_EF7F:
-		mov	al, _player_invincibility_time
-		mov	ah, 0
-		and	ax, 3
-		cmp	ax, 3
-		jge	short loc_EFAC
-		mov	si, _player_topleft.y
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_EF9E
-		sub	si, RES_Y
-
-loc_EF9E:
-		call	super_roll_put pascal, _player_topleft.x, si, _player_patnum
-
-loc_EFAC:
-		cmp	_power, 8
-		jb	short loc_EFEF
-		mov	bx, _player_option_left_top_on_back_p
-		mov	si, [bx]
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_EFC7
-		sub	si, RES_Y
-
-loc_EFC7:
-		mov	bx, _player_option_left_left_on_back_
-		push	word ptr [bx]
-		push	si
-		mov	al, _player_option_patnum
-		mov	ah, 0
-		push	ax
-		call	super_roll_put_tiny
-		mov	bx, _player_option_left_left_on_back_
-		mov	ax, [bx]
-		add	ax, (PLAYER_OPTION_DISTANCE * 2)
-		push	ax
-		push	si
-		mov	al, _player_option_patnum
-		mov	ah, 0
-		push	ax
-		call	super_roll_put_tiny
-
-loc_EFEF:
-		pop	si
-		pop	bp
-		retn
-sub_EF36	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EFF2	proc near
+public @player_miss_update_and_render$qv
+@player_miss_update_and_render$qv proc near
 
 @@patnum		= word ptr -2
 
@@ -5767,7 +5683,7 @@ loc_F1D5:
 		pop	si
 		leave
 		retn
-sub_EFF2	endp
+@player_miss_update_and_render$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

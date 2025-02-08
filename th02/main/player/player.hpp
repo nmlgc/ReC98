@@ -72,7 +72,15 @@ static const pixel_t PLAYER_OPTION_TO_OPTION_DISTANCE = (
 	extern main_patnum_t player_option_patnum;
 #endif
 
-extern bool player_is_hit;
+#if (GAME == 2)
+	extern enum {
+		PLAYER_NOT_HIT = false,
+		PLAYER_HIT = true,
+		PLAYER_HIT_GAMEOVER = 0xFF,
+	} player_is_hit;
+#else
+	extern bool player_is_hit;
+#endif
 
 // Grants invincibility when >0. Decrements by 1 each frame in that case.
 // In TH02, this works independently from [player_invincible_via_bomb].
