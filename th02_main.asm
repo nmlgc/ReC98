@@ -660,119 +660,7 @@ loc_4087:
 		retf
 sub_3F8A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4090	proc far
-
-@@i		= word ptr -8
-@@page_offset		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-@@as_circle_sprite		= word ptr  6
-@@count		= word ptr  8
-@@speed		= word ptr  0Ah
-@@top		= word ptr  0Ch
-@@left		= word ptr  0Eh
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	ax, [bp+@@top]
-		cmp	ax, RES_Y
-		jb	short loc_40A1
-		sub	ax, RES_Y
-
-loc_40A1:
-		mov	[bp+@@top], ax
-		shl	[bp+@@left], SUBPIXEL_BITS
-		shl	[bp+@@top], SUBPIXEL_BITS
-		mov	ax, offset _sparks
-		mov	si, ax
-		mov	ax, _spark_ring_i
-		mov	[bp+@@i], ax
-		mov	cl, size spark_t
-		imul	cl
-		add	si, ax
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		mov	[bp+@@page_offset], ax
-		xor	di, di
-		jmp	short loc_4142
-; ---------------------------------------------------------------------------
-
-loc_40CC:
-		mov	[si+spark_t.SPARK_flag], F_ALIVE
-		mov	[si+spark_t.SPARK_age], 0
-		mov	bx, [bp+@@page_offset]
-		mov	dx, [bp+@@left]
-		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.x], dx
-		mov	dx, [bp+@@top]
-		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.y], dx
-		cmp	[bp+@@as_circle_sprite], 0
-		jnz	short loc_4100
-		mov	al, [si+spark_t.SPARK_default_render_as]
-		mov	[si+spark_t.SPARK_render_as], al
-		mov	al, [si+spark_t.SPARK_speed_base]
-		mov	ah, 0
-		add	ax, [bp+@@speed]
-		mov	[bp+var_2], ax
-		mov	al, [si+spark_t.SPARK_angle]
-		mov	ah, 0
-		jmp	short loc_4114
-; ---------------------------------------------------------------------------
-
-loc_4100:
-		mov	[si+spark_t.SPARK_render_as], SRA_SPRITE
-		mov	ax, [bp+@@speed]
-		mov	[bp+var_2], ax
-		mov	ax, di
-		mov	cl, 8
-		shl	ax, cl
-		cwd
-		idiv	[bp+@@count]
-
-loc_4114:
-		mov	[bp+var_4], ax
-		push	ds
-		lea	ax, [si+spark_t.SPARK_velocity+Point.x]
-		push	ax
-		push	ds
-		lea	ax, [si+spark_t.SPARK_velocity+Point.y]
-		push	ax
-		push	[bp+var_4]
-		push	[bp+var_2]
-		nop
-		push	cs
-		; Hack (what is this I don't even)
-		db 0e8h
-		db 036h
-		db 0b4h
-		inc	di
-		add	si, size spark_t
-		inc	[bp+@@i]
-		cmp	[bp+@@i], SPARK_COUNT
-		jl	short loc_4142
-		mov	[bp+@@i], 0
-		sub	si, (SPARK_COUNT * size spark_t)
-
-loc_4142:
-		cmp	di, [bp+@@count]
-		jl	short loc_40CC
-		mov	ax, [bp+@@count]
-		add	byte ptr _spark_ring_i, al
-		and	byte ptr _spark_ring_i, (SPARK_COUNT - 1)
-		pop	di
-		pop	si
-		leave
-		retf	0Ah
-sub_4090	endp
-
-; ---------------------------------------------------------------------------
-		nop
+	extern @SPARKS_ADD$QIUIIII:proc
 	extern @sparks_update_and_render$qv:proc
 	extern @sparks_invalidate$qv:proc
 	extern @tiles_stuff_reset$qv:proc
@@ -5055,10 +4943,7 @@ loc_E745:
 ; ---------------------------------------------------------------------------
 
 loc_E74D:
-		push	0D400BEh
-		push	320001h
-		push	0
-		call	sub_4090
+		call	@sparks_add$qiuiiii pascal, large ((PLAYFIELD_LEFT + 180) shl 16) or (PLAYFIELD_TOP + 174), large (((3 shl 4) + 2) shl 16) or 1, 0
 		cmp	_bomb_frame, 70
 		jnz	short loc_E774
 		mov	PaletteTone, 100
@@ -5770,14 +5655,14 @@ sub_EFF2	proc near
 		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
 		add	ax, (PLAYER_W / 2)
-		push	ax
+		push	ax	; left
 		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
 		add	ax, (PLAYER_H / 2)
-		push	ax
-		push	800010h
-		push	1
-		call	sub_4090
+		push	ax	; top
+		push	((8 shl 4) shl 16) or 16	; (speed_base shl 16) or count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 
 loc_F03D:
 		mov	bx, _player_left_on_back_page
@@ -5826,14 +5711,14 @@ loc_F0B9:
 		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
 		add	ax, (PLAYER_W / 2)
-		push	ax
+		push	ax	; left
 		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
 		add	ax, (PLAYER_H / 2)
-		push	ax
-		push	800020h
-		push	1
-		call	sub_4090
+		push	ax	; top
+		push	((8 shl 4) shl 16) or 32	; (speed_base shl 16) or count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 		cmp	_lives, 0
 		jnz	short loc_F107
 		mov	byte_20609, 0
@@ -5890,14 +5775,14 @@ loc_F160:
 		mov	bx, _player_left_on_back_page
 		mov	ax, [bx]
 		add	ax, (PLAYER_W / 2)
-		push	ax
+		push	ax	; left
 		mov	bx, _player_top_on_back_page
 		mov	ax, [bx]
 		add	ax, (PLAYER_H / 2)
-		push	ax
-		push	800010h
-		push	1
-		call	sub_4090
+		push	ax	; top
+		push	((8 shl 4) shl 16) or 16	; (speed_base shl 16) or count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	ax, PLAYER_LEFT_START
 		mov	_player_left_on_page[0 * word], ax
 		mov	_player_left_on_page[1 * word], ax
@@ -7120,17 +7005,17 @@ arg_0		= word ptr  4
 		shl	bx, 2
 		les	bx, [bx+52ECh]
 		mov	ax, es:[bx]
-		add	ax, 20h	; ' '
-		push	ax
+		add	ax, 32
+		push	ax	; left
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+5300h]
 		mov	ax, es:[bx]
-		add	ax, 10h
-		push	ax
-		push	3C0001h
-		push	0
-		call	sub_4090
+		add	ax, 16
+		push	ax	; top
+		push	(((3 shl 4) + 12) shl 16) or 1	; (speed_base shl 16) or count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	[bp+@@patnum], 10
 		mov	bx, si
 		add	bx, bx
@@ -7150,17 +7035,17 @@ arg_0		= word ptr  4
 		shl	bx, 2
 		les	bx, [bx+52ECh]
 		mov	ax, es:[bx]
-		add	ax, 20h	; ' '
-		push	ax
+		add	ax, 32
+		push	ax	; left
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+5300h]
 		mov	ax, es:[bx]
-		add	ax, 10h
-		push	ax
-		push	800020h
-		push	1
-		call	sub_4090
+		add	ax, 16
+		push	ax	; top
+		push	((8 shl 4) shl 16) or 32	; (speed_base shl 16) or count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx+10AAh], 0
@@ -7743,15 +7628,15 @@ arg_0		= word ptr  4
 		add	bx, bx
 		mov	ax, _stone_left[bx]
 		add	ax, 16
-		push	ax
+		push	ax	; left
 		mov	bx, si
 		add	bx, bx
 		mov	ax, _stone_top[bx]
 		add	ax, 12
-		push	ax
-		push	500002h
-		push	0
-		call	sub_4090
+		push	ax	; top
+		push	((5 shl 4) shl 16) or 2	; (speed_base shl 16) or count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	[bp+var_2], 0Ah
 		mov	bx, si
 		add	bx, bx
@@ -9805,7 +9690,7 @@ var_B		= byte ptr -0Bh
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@left		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -9865,7 +9750,7 @@ loc_128A9:
 		mov	bx, ax
 		mov	ax, [bx+si-2]
 		sar	ax, 4
-		mov	[bp+var_4], ax
+		mov	[bp+@@left], ax
 		cmp	ax, [bp+arg_6]
 		jg	short loc_128C1
 		jmp	loc_129AB
@@ -9924,17 +9809,17 @@ loc_12923:
 		add	[bp+var_8], ax
 
 loc_12926:
-		push	[bp+var_4]
+		push	[bp+@@left]	; left
 		mov	al, [bp+var_B]
 		mov	ah, 0
 		mov	bx, ax
 		mov	ax, [bx+si]
 		sar	ax, 4
-		push	ax
-		push	1Eh
-		push	1
-		push	0
-		call	sub_4090
+		push	ax	; top
+		push	((1 shl 4) + 14)	; speed_base
+		push	1	; count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 		jmp	short loc_129AB
 ; ---------------------------------------------------------------------------
 
@@ -9944,12 +9829,12 @@ loc_12943:
 		mov	bx, ax
 		mov	ax, [bx+si-2]
 		sar	ax, 4
-		mov	[bp+var_4], ax
+		mov	[bp+@@left], ax
 		cmp	ax, [bp+arg_6]
 		jle	short loc_129AB
 		mov	ax, [bp+arg_6]
 		add	ax, [bp+arg_2]
-		cmp	ax, [bp+var_4]
+		cmp	ax, [bp+@@left]
 		jle	short loc_129AB
 		mov	al, [bp+var_B]
 		mov	ah, 0
@@ -9965,17 +9850,17 @@ loc_12943:
 		jle	short loc_129AB
 		cmp	byte ptr [si+1], 1
 		jnz	short loc_129A5
-		push	[bp+var_4]
+		push	[bp+@@left]	; left
 		mov	al, [bp+var_B]
 		mov	ah, 0
 		mov	bx, ax
 		mov	ax, [bx+si]
 		sar	ax, 4
-		push	ax
-		push	28h ; '('
-		push	1
-		push	0
-		call	sub_4090
+		push	ax	; top
+		push	((2 shl 4) + 8)	; speed_base
+		push	1	; count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	byte ptr [si+1], 2
 
 loc_129A5:
@@ -10809,27 +10694,27 @@ midboss1_137FE	proc near
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 48
-		push	ax
-		push	3C0001h
-		push	0
-		call	sub_4090
+		push	ax	; top
+		push	(((3 shl 4) + 12) shl 16) or 1	; (speed_base shl 16) or count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 		cmp	word_1ED96, 40h
 		jl	short loc_1387B
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 48
-		push	ax
-		push	800030h
-		push	1
-		call	sub_4090
+		push	ax	; top
+		push	((8 shl 4) shl 16) or 48	; (speed_base shl 16) or count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	word_1ED96, 0
 		mov	_boss_phase_frame, 0
 		mov	word_205D8, 0FFFFh
@@ -11208,10 +11093,7 @@ rika_13C0C	proc near
 		push	si
 		mov	ax, point_24E7C.x
 		add	ax, 32
-		push	ax
-		push	800032h
-		push	20000h
-		call	sub_4090
+		call	@sparks_add$qiuiiii pascal, ax, large ((PLAYFIELD_LEFT + 96) shl 16) or (PLAYFIELD_TOP + 34), large (2 shl 16) or 0
 		mov	si, 0Ah
 		mov	ax, word_1ED98
 		add	ax, 0FFE0h
@@ -11803,14 +11685,14 @@ midboss2_14169	proc near
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 32
-		push	ax
-		push	800018h
-		push	1
-		call	sub_4090
+		push	ax	; top
+		push	((8 shl 4) shl 16) or 24	; (speed_base shl 16) or count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 
 loc_141A1:
 		mov	di, 0Ah
@@ -12210,14 +12092,14 @@ meira_14519	proc near
 		mov	bx, _boss_left_on_back_page
 		mov	ax, [bx]
 		add	ax, 48
-		push	ax
+		push	ax	; left
 		mov	bx, _boss_top_on_back_page
 		mov	ax, [bx]
 		add	ax, 48
-		push	ax
-		push	3C0001h
-		push	0
-		call	sub_4090
+		push	ax	; top
+		push	(((3 shl 4) + 12) shl 16) or 1	; (speed_base shl 16) or count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	di, 0Ah
 		mov	ax, word_1EDAA
 		add	ax, 0FFE0h
@@ -17769,20 +17651,20 @@ var_2		= word ptr -2
 		mov	bx, word_26C46
 		cmp	byte ptr [bx+23h], 0
 		jnz	short loc_175D1
-		mov	si, word_26C50
+		mov	si, top_26C50
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, word_26C4E
-		add	dx, 0FFF0h
+		mov	dx, left_26C4E
+		add	dx, -16
 		mov	bx, ax
 		cmp	_player_left_on_page[bx], dx
 		jle	short loc_175D1
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, word_26C4E
-		add	dx, 10h
+		mov	dx, left_26C4E
+		add	dx, 16
 		mov	bx, ax
 		cmp	_player_left_on_page[bx], dx
 		jge	short loc_175D1
@@ -17798,8 +17680,8 @@ var_2		= word ptr -2
 		mov	byte ptr [bx+10h], 1
 
 loc_175D1:
-		push	word_26C4E
-		push	word_26C50
+		push	left_26C4E
+		push	top_26C50
 		push	200020h
 		call	sub_1283C
 		mov	[bp+var_2], ax
@@ -17840,15 +17722,15 @@ loc_175FF:
 		mov	bx, word_26C46
 		cmp	word ptr [bx+0Ah], 0
 		jnz	short loc_17635
-		mov	ax, word_26C4E
-		add	ax, 10h
-		push	ax
-		mov	ax, word_26C50
-		add	ax, 10h
-		push	ax
-		push	140008h
-		push	0
-		call	sub_4090
+		mov	ax, left_26C4E
+		add	ax, 16
+		push	ax	; left
+		mov	ax, top_26C50
+		add	ax, 16
+		push	ax	; top
+		push	(((1 shl 4) + 4) shl 16) or 8	; (speed_base shl 16) or count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 
 loc_17635:
 		mov	bx, word_26C46
@@ -17861,14 +17743,14 @@ loc_17635:
 ; ---------------------------------------------------------------------------
 
 loc_1764B:
-		mov	si, word_26C50
+		mov	si, top_26C50
 		add	si, _scroll_line
 		cmp	si, RES_Y
 		jl	short loc_1765D
 		sub	si, RES_Y
 
 loc_1765D:
-		call	super_roll_put pascal, word_26C4E, si, di
+		call	super_roll_put pascal, left_26C4E, si, di
 		xor	ax, ax
 
 loc_1766A:
@@ -17945,14 +17827,14 @@ loc_176F6:
 		jz	short loc_176E6
 		mov	bx, word_26C4A
 		mov	ax, [bx]
-		mov	word_26C4E, ax
+		mov	left_26C4E, ax
 		mov	bx, word_26C4C
 		mov	ax, [bx]
-		mov	word_26C50, ax
-		mov	si, word_26C50
-		cmp	word_26C4E, 0
+		mov	top_26C50, ax
+		mov	si, top_26C50
+		cmp	left_26C4E, (PLAYFIELD_LEFT - 32)
 		jl	short loc_17729
-		cmp	word_26C4E, 1A2h
+		cmp	left_26C4E, (PLAYFIELD_RIGHT + 2)
 		jle	short loc_17734
 
 loc_17729:
@@ -17965,9 +17847,9 @@ loc_17734:
 		mov	bx, word_26C46
 		cmp	byte ptr [bx+1Eh], 0
 		jz	short loc_17758
-		cmp	word_26C50, 180h
+		cmp	top_26C50, PLAYFIELD_BOTTOM
 		jge	short loc_1774D
-		cmp	word_26C50, 0FFF0h
+		cmp	top_26C50, (PLAYFIELD_TOP - 32)
 		jg	short loc_17758
 
 loc_1774D:
@@ -18022,7 +17904,7 @@ loc_177CE:
 		jge	short loc_177EB
 		cmp	si, [bp+var_4]
 		jle	short loc_177EB
-		mov	ax, word_26C4E
+		mov	ax, left_26C4E
 		add	ax, 8
 		mov	word_205D8, ax
 		lea	ax, [si+8]
@@ -18054,10 +17936,10 @@ loc_1780E:
 		mov	bx, word_26C48
 		cmp	byte ptr [bx+10h], 1
 		jbe	short loc_17854
-		mov	ax, word_26C4E
-		add	ax, 0Ch
+		mov	ax, left_26C4E
+		add	ax, 12
 		push	ax	; left
-		push	word_26C50	; top
+		push	top_26C50	; top
 		mov	al, [bx+10h]
 		mov	ah, 0
 		add	ax, -IT_BOMB
@@ -18067,9 +17949,9 @@ loc_1780E:
 ; ---------------------------------------------------------------------------
 
 loc_17854:
-		mov	ax, word_26C4E
-		add	ax, 0Ch
-		call	@items_add_semirandom$qii pascal, ax, word_26C50
+		mov	ax, left_26C4E
+		add	ax, 12
+		call	@items_add_semirandom$qii pascal, ax, top_26C50
 
 loc_17864:
 		call	_snd_se_play c, 3
@@ -18081,10 +17963,10 @@ loc_17864:
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1789D
 		mov	ax, [bx+4]
-		add	ax, word_26C4E
+		add	ax, left_26C4E
 		push	ax	; left
 		mov	ax, [bx+6]
-		add	ax, word_26C50
+		add	ax, top_26C50
 		push	ax	; top
 		push	00h	; angle
 		push	BG_1_AIMED	; group
@@ -18110,7 +17992,7 @@ loc_178C0:
 		add	si, RES_Y
 
 loc_178C8:
-		push	word_26C4E
+		push	left_26C4E
 		push	si
 		mov	bx, word_26C48
 		mov	ax, [bx+8]
@@ -18123,7 +18005,7 @@ loc_178C8:
 ; ---------------------------------------------------------------------------
 
 loc_178E9:
-		mov	si, word_26C50
+		mov	si, top_26C50
 		mov	bx, word_26C48
 		cmp	word ptr [bx+1Ah], 1
 		jle	short loc_17913
@@ -18156,7 +18038,7 @@ loc_17933:
 		mov	bx, word_26C46
 		cmp	word ptr [bx+14h], 2
 		jz	short loc_17953
-		push	word_26C4E
+		push	left_26C4E
 		push	si
 		mov	bx, word_26C48
 		mov	ax, [bx+8]
@@ -18167,7 +18049,7 @@ loc_17933:
 ; ---------------------------------------------------------------------------
 
 loc_17953:
-		push	word_26C4E
+		push	left_26C4E
 		push	si
 		mov	bx, word_26C46
 		push	word ptr [bx+12h]
@@ -22102,14 +21984,14 @@ midboss4_19FAF	proc near
 		jnz	short loc_19FDA
 		mov	ax, point_26D76.x
 		add	ax, 32
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 32
-		push	ax
-		push	80h
-		push	bx
-		push	1
-		call	sub_4090
+		push	ax	; top
+		push	(8 shl 4)	; speed_base
+		push	bx	; count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 
 loc_19FDA:
 		mov	di, 0Ah
@@ -23374,13 +23256,13 @@ loc_1ACD5:
 		jnz	short loc_1AD16
 		mov	ax, point_26D76.x
 		add	ax, 48
-		push	ax
+		push	ax	; left
 		mov	ax, point_26D76.y
 		add	ax, 48
-		push	ax
-		push	880018h
-		push	1
-		call	sub_4090
+		push	ax	; top
+		push	(((8 shl 4) + 8) shl 16) or 24	; (speed_base shl 16) or count
+		push	1	; as_sprite
+		call	@sparks_add$qiuiiii
 
 loc_1AD16:
 		mov	ax, word_1EE9A
@@ -23443,17 +23325,17 @@ arg_0		= word ptr  4
 		shl	bx, 2
 		les	bx, [bx-6D1Ah]
 		mov	ax, es:[bx]
-		add	ax, 10h
-		push	ax
+		add	ax, 16
+		push	ax	; left
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx-6D0Ah]
 		mov	ax, es:[bx]
-		add	ax, 10h
-		push	ax
-		push	3C0002h
-		push	0
-		call	sub_4090
+		add	ax, 16
+		push	ax	; top
+		push	(((3 shl 4) + 12) shl 16) or 2	; (speed_base shl 16) or count
+		push	0	; as_sprite
+		call	@sparks_add$qiuiiii
 		mov	di, 0Ah
 		mov	bx, si
 		add	bx, bx
@@ -27888,8 +27770,8 @@ word_26C46	dw ?
 word_26C48	dw ?
 word_26C4A	dw ?
 word_26C4C	dw ?
-word_26C4E	dw ?
-word_26C50	dw ?
+left_26C4E	dw ?
+top_26C50	dw ?
 word_26C52	dw ?
 word_26C54	dw ?
 left_26C56	dw ?

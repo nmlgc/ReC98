@@ -31,7 +31,7 @@ struct spark_t {
 	// ----------------------------------------------------
 };
 
-static const int SPARK_COUNT = 64;
+static const unsigned int SPARK_COUNT = 64;
 
 extern spark_t sparks[SPARK_COUNT];
 
@@ -48,6 +48,20 @@ extern uint8_t spark_age_max;
 
 // Added to the velocity of each active spark after its position was updated.
 extern Subpixel spark_accel_x;
+
+// Spawns [count] sparks at the given point, overwriting old sprites in case
+// there aren't enough free slots. When spawning [as_sprite], the sparks form
+// expand in a [count]-ring at [speed_base] from the given point; otherwise,
+// they move at their initially seeded angle and speed with [speed_base] added.
+// [top] can be within [0; (RES_Y * 2)[, and is wrapped into the regular VRAM
+// range if necessary.
+void pascal sparks_add(
+	screen_x_t left,
+	uscreen_y_t top,
+	subpixel_t speed_base,
+	int count,
+	bool16 as_sprite
+);
 
 void sparks_update_and_render(void);
 void sparks_invalidate(void);
