@@ -36,6 +36,10 @@ void pascal sparks_add(
 	uint16_t page_offset;
 	int slot_i;
 
+	// Lol? Does this wraparound exist because ZUN was fully aware that the
+	// player's Y position could fall below [RES_Y] during the death animation,
+	// and he actually wanted these sparks near the top of the playfield? (See
+	// player_miss_update_and_render() for context.)
 	// ZUN landmine: Proper, arbitrary wrapping would have been safer. (Could
 	// be a bug if we discover a call site that actually passes [top] values
 	// >800.)

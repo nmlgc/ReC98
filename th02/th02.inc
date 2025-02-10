@@ -43,7 +43,6 @@ mikoconfig_t	ends
 
 ; Player
 ; ------
-MISS_INVINCIBILITY_FRAMES = 220
 CONTINUE_INVINCIBILITY_FRAMES = 200
 ; ------
 

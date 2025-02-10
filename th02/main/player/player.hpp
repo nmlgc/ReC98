@@ -89,6 +89,7 @@ extern unsigned char player_invincibility_time;
 static const uint8_t POWER_MIN = 1;
 #if (GAME == 2)
 	static const uint8_t POWER_MAX = 80;
+	static const uint8_t MISS_INVINCIBILITY_FRAMES = 220;
 
 	// Grants invincibility as long as it's true. Works independently from
 	// [player_invincibility_time].

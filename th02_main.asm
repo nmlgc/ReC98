@@ -4286,8 +4286,6 @@ ITEM_TEXT	segment	byte public 'CODE' use16
 	@items_init_and_reset$qv procdesc near
 	extern @ITEMS_ADD_SEMIRANDOM$QII:proc
 	extern @ITEMS_ADD$QIII:proc
-	@ITEMS_MISS_ADD$QII procdesc pascal near \
-		player_left:word, player_top:word
 	@items_invalidate$qv procdesc near
 	@items_update_and_render$qv procdesc near
 ITEM_TEXT	ends
@@ -4300,7 +4298,6 @@ HUD_TEXT	segment	byte public 'CODE' use16
 	@score_reset$qv procdesc near
 	@score_update_and_render$qv procdesc near
 	extern @score_grant_current_delta_as_bon$qv:proc
-	@player_shot_level_update_and_hud$qv procdesc near
 	@hud_lives_put$qv procdesc near
 	@hud_bombs_put$qv procdesc near
 	@hud_put$qv procdesc near
@@ -5491,200 +5488,6 @@ PLAYER_TEXT	segment	byte public 'CODE' use16
 PLAYER_TEXT ends
 
 main_01____TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @player_miss_update_and_render$qv
-@player_miss_update_and_render$qv proc near
-
-@@patnum		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		cmp	_miss_frames, 0
-		jnz	short loc_F03D
-		call	_snd_se_play c, 2
-		mov	_miss_active, 1
-		inc	_stage_miss_count
-
-		; ZUN bug: The fact that this function does not re-render the score
-		; means that any existing [score_delta] will stop being animated. The
-		; score display will therefore only refresh with the correct value
-		; after the player gained another point.
-		nopcall	@score_delta_commit$qv
-
-		inc	_total_miss_count
-		mov	bx, _player_left_on_back_page
-		mov	ax, [bx]
-		add	ax, (PLAYER_W / 2)
-		push	ax	; left
-		mov	bx, _player_top_on_back_page
-		mov	ax, [bx]
-		add	ax, (PLAYER_H / 2)
-		push	ax	; top
-		push	((8 shl 4) shl 16) or 16	; (speed_base shl 16) or count
-		push	1	; as_sprite
-		call	@sparks_add$qiuiiii
-
-loc_F03D:
-		mov	bx, _player_left_on_back_page
-		mov	ax, [bx]
-		mov	_player_topleft.x, ax
-		mov	bx, _player_top_on_back_page
-		mov	ax, [bx]
-		mov	_player_topleft.y, ax
-		inc	_miss_frames
-		cmp	_miss_frames, 24
-		jnb	short loc_F08A
-		mov	al, _miss_frames
-		mov	ah, 0
-		sar	ax, 2
-		add	ax, PAT_PLAYCHAR_MISS
-		mov	[bp+@@patnum], ax
-		mov	si, [bx]
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_F078
-		sub	si, RES_Y
-
-loc_F078:
-		mov	bx, _player_left_on_back_page
-		call	super_roll_put pascal, word ptr [bx], si, [bp+@@patnum]
-		jmp	loc_F1D5
-; ---------------------------------------------------------------------------
-
-loc_F08A:
-		cmp	_miss_frames, 24
-		jnz	loc_F12A
-		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
-		cmp	_playperf, 2
-		jle	short loc_F0A7
-		mov	_playperf, 0
-		jmp	short loc_F0B9
-; ---------------------------------------------------------------------------
-
-loc_F0A7:
-		sub	_playperf, 2
-		cmp	_playperf, playperf_min
-		jge	short loc_F0B9
-		mov	_playperf, playperf_min
-
-loc_F0B9:
-		mov	bx, _player_left_on_back_page
-		mov	ax, [bx]
-		add	ax, (PLAYER_W / 2)
-		push	ax	; left
-		mov	bx, _player_top_on_back_page
-		mov	ax, [bx]
-		add	ax, (PLAYER_H / 2)
-		push	ax	; top
-		push	((8 shl 4) shl 16) or 32	; (speed_base shl 16) or count
-		push	1	; as_sprite
-		call	@sparks_add$qiuiiii
-		cmp	_lives, 0
-		jnz	short loc_F107
-		mov	_miss_frames, 0
-		mov	_items_miss_add_gameover, 1
-		mov	bx, _player_left_on_back_page
-		push	word ptr [bx]	; screen_left
-		mov	bx, _player_top_on_back_page
-		push	word ptr [bx]	; screen_top
-		call	@items_miss_add$qii
-		mov	_items_miss_add_gameover, 0
-		mov	_player_is_hit, -1
-		jmp	loc_F1D5
-; ---------------------------------------------------------------------------
-
-loc_F107:
-		mov	al, _shot_level
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+109Fh]
-		mov	_power, al
-		call	@player_shot_level_update_and_hud$qv
-		mov	bx, _player_left_on_back_page
-		push	word ptr [bx]	; screen_left
-		mov	bx, _player_top_on_back_page
-		push	word ptr [bx]	; screen_top
-		call	@items_miss_add$qii
-		jmp	loc_F1D5
-; ---------------------------------------------------------------------------
-
-loc_F12A:
-		cmp	_miss_frames, 43
-		jnb	short loc_F13B
-		mov	bx, _player_top_on_back_page
-		add	word ptr [bx], 4
-		jmp	loc_F1D5
-; ---------------------------------------------------------------------------
-
-loc_F13B:
-		cmp	_miss_frames, 43
-		jnz	short loc_F198
-		dec	_lives
-		call	@hud_lives_put$qv
-		les	bx, _resident
-		assume es:nothing
-		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	_bombs, al
-		cmp	_lives, 0
-		jnz	short loc_F160
-		add	al, 2
-		mov	_bombs, al
-
-loc_F160:
-		call	@hud_bombs_put$qv
-		mov	bx, _player_left_on_back_page
-		mov	ax, [bx]
-		add	ax, (PLAYER_W / 2)
-		push	ax	; left
-		mov	bx, _player_top_on_back_page
-		mov	ax, [bx]
-		add	ax, (PLAYER_H / 2)
-		push	ax	; top
-		push	((8 shl 4) shl 16) or 16	; (speed_base shl 16) or count
-		push	1	; as_sprite
-		call	@sparks_add$qiuiiii
-		mov	ax, PLAYER_LEFT_START
-		mov	_player_left_on_page[0 * word], ax
-		mov	_player_left_on_page[1 * word], ax
-		mov	ax, (((PLAYFIELD_BOTTOM + PLAYFIELD_ROLL_MARGIN) - PLAYER_H) - 2)
-		mov	_player_top_on_page[0 * word], ax
-		mov	_player_top_on_page[1 * word], ax
-		jmp	short loc_F1D5
-; ---------------------------------------------------------------------------
-
-loc_F198:
-		cmp	_miss_frames, 68
-		jnb	short loc_F1C6
-		mov	bx, _player_top_on_back_page
-		sub	word ptr [bx], 2
-		mov	si, [bx]
-		add	si, _scroll_line
-		cmp	si, RES_Y
-		jl	short loc_F1B6
-		sub	si, RES_Y
-
-loc_F1B6:
-		mov	bx, _player_left_on_back_page
-		call	super_roll_put pascal, word ptr [bx], si, PAT_PLAYCHAR_STILL
-		jmp	short loc_F1D5
-; ---------------------------------------------------------------------------
-
-loc_F1C6:
-		mov	_miss_frames, 0
-		mov	_miss_active, 0
-		mov	_player_is_hit, 0
-
-loc_F1D5:
-		pop	si
-		leave
-		retn
-@player_miss_update_and_render$qv endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26612,22 +26415,13 @@ aBomb1_bft	db 'bomb1.bft',0
 asc_1E6DF	db '  ',0
 include th02/sprites/bombpart.asp
 include th02/sprites/sparks.asp
-public _spark_accel_x, _total_miss_count
+public _spark_accel_x, _total_miss_count, _POWER_RESET_FOR
 _spark_accel_x	dw 0
 _total_miss_count	db 0
 byte_1EB0D	db -1
 byte_1EB0E	db -1
-		db    1
-		db    1
-		db    4
-		db    8
-		db  10h
-		db  18h
-		db  20h
-		db  28h	; (
-		db  34h	; 4
-		db  40h
-		db    0
+_POWER_RESET_FOR	db 1, 1, 4, 8, 16, 24, 32, 40, 52, 64
+	evendata
 		db    0
 		db    0
 		db    0
