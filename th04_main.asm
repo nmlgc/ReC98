@@ -41,7 +41,7 @@ include th04/main/enemy/enemy.inc
 	extern _execl:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, BOSS_FG_TEXT
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, END_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, BOSS_FG_TEXT
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
@@ -995,10 +995,10 @@ TILE_SET_TEXT	ends
 
 STD_TEXT	segment	byte public 'CODE' use16
 	@std_load$qv procdesc near
+	@std_free$qv procdesc near
 STD_TEXT	ends
 
-TILE_TEXT	segment	word public 'CODE' use16
-include th04/formats/std.asm
+END_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1266,7 +1266,9 @@ loc_B9D4:
 		pop	bp
 		retn
 @map_free$qv	endp
+END_TEXT ends
 
+TILE_TEXT segment word public 'CODE' use16
 include th04/main/tile/inv.asm
 include th04/main/tile/fill_ini.asm
 

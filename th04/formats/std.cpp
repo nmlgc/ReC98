@@ -66,3 +66,11 @@ void near std_load(void)
 	std_ip = std_off;
 	stage_vm = std_run;
 }
+
+void near std_free(void)
+{
+	if(std_seg) {
+		hmem_free(std_seg);
+		std_seg = nullptr;
+	}
+}
