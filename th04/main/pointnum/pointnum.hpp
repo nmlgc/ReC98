@@ -65,7 +65,7 @@ void pascal near pointnums_add_yellow(
 );
 
 void pascal near pointnums_init(void);
-void pascal near pointnums_invalidate(void);
+void near pointnums_invalidate(void);
 void pascal near pointnums_update(void);
 /// ---------
 

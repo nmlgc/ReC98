@@ -1,5 +1,5 @@
-public BULLETS_GATHER_INVALIDATE
-bullets_gather_invalidate	proc near
+public @bullets_and_gather_invalidate$qv
+@bullets_and_gather_invalidate$qv proc near
 	push	si
 	push	di
 	mov	si, offset _bullets
@@ -88,5 +88,5 @@ bullets_gather_invalidate	proc near
 	pop	di
 	pop	si
 	retn
-bullets_gather_invalidate	endp
+@bullets_and_gather_invalidate$qv endp
 	even

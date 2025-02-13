@@ -364,3 +364,6 @@ void near bullets_add_special_fixedspeed(void);
 /// --------
 
 }
+
+// ZUN bloat: Should be separate functions.
+void near bullets_and_gather_invalidate(void);

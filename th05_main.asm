@@ -1438,9 +1438,9 @@ public @TILES_RENDER$QV
 		mov	bp, sp
 		call	@overlay_titles_invalidate$qv
 		call	@player_invalidate$qv
-		call	sub_123AD
+		call	@shots_invalidate$qv
 		call	@enemies_invalidate$qv
-		call	bullets_gather_invalidate
+		call	@bullets_and_gather_invalidate$qv
 		call	@items_invalidate$qv
 		call	@sparks_invalidate$qv
 		call	@pointnums_invalidate$qv
@@ -6498,8 +6498,8 @@ include th04/main/player/render.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_123AD	proc near
+public @shots_invalidate$qv
+@shots_invalidate$qv proc near
 
 @@i		= word ptr -2
 
@@ -6546,7 +6546,7 @@ loc_123E0:
 		pop	si
 		leave
 		retn
-sub_123AD	endp
+@shots_invalidate$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

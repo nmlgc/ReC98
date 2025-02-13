@@ -140,6 +140,8 @@ inline int shots_hittest(
 	return shots_hittest();
 }
 
+void near shots_invalidate(void);
+
 // Also renders hitshots in TH05.
 void near shots_render(void);
 

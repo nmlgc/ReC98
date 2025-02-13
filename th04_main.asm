@@ -1727,9 +1727,9 @@ public @TILES_RENDER$QV
 		mov	bp, sp
 		call	@overlay_titles_invalidate$qv
 		call	@player_invalidate$qv
-		call	main_01:sub_10444
+		call	@shots_invalidate$qv
 		call	@enemies_invalidate$qv
-		call	main_01:bullets_gather_invalidate
+		call	@bullets_and_gather_invalidate$qv
 		call	@items_invalidate$qv
 		call	@sparks_invalidate$qv
 		call	@pointnums_invalidate$qv
@@ -6906,8 +6906,8 @@ sub_1042A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_10444	proc near
+public @shots_invalidate$qv
+@shots_invalidate$qv proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6963,7 +6963,7 @@ loc_104B2:
 		pop	si
 		pop	bp
 		retn
-sub_10444	endp
+@shots_invalidate$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
