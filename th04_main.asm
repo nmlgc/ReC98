@@ -1717,29 +1717,7 @@ BULLET16_H = 16
 include th04/main/bullet/pellet_r.asm
 include th04/main/bullets_gather_inv.asm
 include th04/main/tile/inv_all.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @TILES_RENDER$QV
-@tiles_render$qv	proc near
-		push	bp
-		mov	bp, sp
-		call	@overlay_titles_invalidate$qv
-		call	@player_invalidate$qv
-		call	@shots_invalidate$qv
-		call	@enemies_invalidate$qv
-		call	@bullets_and_gather_invalidate$qv
-		call	@items_invalidate$qv
-		call	@sparks_invalidate$qv
-		call	@pointnums_invalidate$qv
-		call	_midboss_invalidate
-		call	_stage_invalidate
-		call	@tiles_redraw_invalidated$qv
-		pop	bp
-		retn
-@tiles_render$qv	endp
-
+	@TILES_RENDER$QV procdesc near
 	extern @tiles_activate$qv:proc
 TILE_TEXT	ends
 
