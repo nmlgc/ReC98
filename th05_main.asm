@@ -1077,7 +1077,7 @@ sub_B55A	proc near
 		call	pointnums_init
 		nopcall	hud_put
 		mov	_bg_render_bombing_func, offset @tiles_render_all$qv
-		call	tiles_invalidate_reset
+		call	@tiles_invalidate_reset$qv
 		pop	bp
 		retn
 sub_B55A	endp
@@ -1427,7 +1427,8 @@ loc_BDE8:
 sub_BD20	endp
 
 include th05/formats/std.asm
-include th04/main/tile/inv_all.asm
+	@tiles_invalidate_reset$qv procdesc near
+	@tiles_invalidate_all$qv procdesc near
 	extern @tiles_activate$qv:proc
 	extern @TILES_ACTIVATE_AND_RENDER_ALL_FO$QUC:proc
 TILE_TEXT	ends
@@ -5725,7 +5726,7 @@ loc_11469:
 		jl	short loc_11441
 
 loc_1146F:
-		call	tiles_invalidate_all
+		call	@tiles_invalidate_all$qv
 		jmp	loc_1162C
 ; ---------------------------------------------------------------------------
 
@@ -5759,7 +5760,7 @@ loc_114A6:
 loc_114AD:
 		cmp	di, 18h
 		jl	short loc_1148A
-		call	tiles_invalidate_all
+		call	@tiles_invalidate_all$qv
 		mov	_scroll_active, 1
 		mov	word_22856, 0
 		mov	byte_22858, 0

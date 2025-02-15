@@ -943,7 +943,7 @@ sub_B1D0	proc near
 		call	main_01:pointnums_init
 		nopcall	main_01:hud_put
 		mov	_bg_render_bombing_func, offset @tiles_render_all$qv
-		call	main_01:tiles_invalidate_reset
+		call	@tiles_invalidate_reset$qv
 		pop	bp
 		retn
 sub_B1D0	endp
@@ -1716,7 +1716,7 @@ BULLET16_H = 16
 
 include th04/main/bullet/pellet_r.asm
 include th04/main/bullets_gather_inv.asm
-include th04/main/tile/inv_all.asm
+	@tiles_invalidate_reset$qv procdesc near
 	@TILES_RENDER$QV procdesc near
 	extern @tiles_activate$qv:proc
 TILE_TEXT	ends

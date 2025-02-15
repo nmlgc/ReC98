@@ -110,6 +110,7 @@ template <class T> union StupidBytewiseWrapperAround {
 // assembler. Makes no sense to compile with `#pragma inline` (and thus,
 // require a 16-bit TASM) just for those.
 #define MOVSD	__emit__(0x66, 0xA5);
+#define STOSD	__emit__(0x66, 0xAB);
 #define REP  	__emit__(0xF3);
 
 #endif /* DECOMP_HPP */
