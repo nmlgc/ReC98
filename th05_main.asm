@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 
 main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_TEXT, mai_TEXT, CFG_LRES_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, LASER_RH_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, PLAYER_P_TEXT, main_01_TEXT
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, B1_UPDATE_TEXT, B4_UPDATE_TEXT, main_035_TEXT, B6_UPDATE_TEXT, BX_UPDATE_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, B1_UPDATE_TEXT, B4_UPDATE_TEXT, main_035_TEXT, B6_UPDATE_TEXT, BX_UPDATE_TEXT, main_036_TEXT, HUD_NUM_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -4161,8 +4161,8 @@ public HUD_POINT_ITEMS_PUT
 hud_point_items_put	proc far
 		push	bp
 		mov	bp, sp
-		call	hud_int_put pascal, (62 shl 16) + 16, _stage_point_items_collected, TX_WHITE
-		call	hud_int_put pascal, (62 shl 16) + 15, _extend_point_items_collected, TX_CYAN
+		call	@hud_5_digit_put$quiuiuiui pascal, (62 shl 16) or 16, _stage_point_items_collected, TX_WHITE
+		call	@hud_5_digit_put$quiuiuiui pascal, (62 shl 16) or 15, _extend_point_items_collected, TX_CYAN
 		pop	bp
 		retf
 hud_point_items_put	endp
@@ -4229,7 +4229,7 @@ public @hud_graze_put$qv
 @hud_graze_put$qv	proc far
 		push	bp
 		mov	bp, sp
-		call	hud_int_put pascal, (62 shl 16) + 18, _stage_graze, TX_WHITE
+		call	@hud_5_digit_put$quiuiuiui pascal, (62 shl 16) or 18, _stage_graze, TX_WHITE
 		pop	bp
 		retf
 @hud_graze_put$qv	endp
@@ -8643,7 +8643,7 @@ public @stage_clear_bonus$qv
 
 var_6		= byte ptr -6
 var_5		= byte ptr -5
-var_4		= dword	ptr -4
+@@points		= dword	ptr -4
 
 		enter	6, 0
 		push	si
@@ -8704,35 +8704,35 @@ loc_165F8:
 		add	ax, 100
 		mov	si, ax
 		movzx	eax, si
-		mov	[bp+var_4], eax
-		push	(34 shl 16) + 8
-		push	eax
+		mov	[bp+@@points], eax
+		push	(34 shl 16) or 8	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		mov	al, _dream
 		mov	ah, 0
-		imul	ax, 0Ah
+		imul	ax, 10
 		mov	si, ax
 		movzx	eax, si
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 10
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 10	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		mov	ax, _stage_graze
 		imul	ax, 5
 		mov	si, ax
 		movzx	eax, si
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 12
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 12	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		mov	si, _stage_point_items_collected
 		movzx	eax, si
-		imul	eax, [bp+var_4]
-		mov	[bp+var_4], eax
-		push	(40 shl 16) + 14
-		push	si
-		push	TX_WHITE
-		nopcall	hud_int_put
+		imul	eax, [bp+@@points]
+		mov	[bp+@@points], eax
+		push	(40 shl 16) or 14	; (left shl 16) or y
+		push	si	; val
+		push	TX_WHITE	; atrb
+		nopcall	@hud_5_digit_put$quiuiuiui
 		mov	al, _stage_id
 		mov	ah, 0
 		imul	ax, 5000
@@ -8741,36 +8741,36 @@ loc_165F8:
 		cmp	[bp+var_5], 0
 		jz	short loc_166B2
 		movzx	eax, si
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 16
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 16	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 
 loc_166B2:
 		cmp	[bp+var_6], 0
 		jz	short loc_166CD
 		movzx	eax, si
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 17
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 17	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 
 loc_166CD:
-		cmp	[bp+var_4], 1200000
+		cmp	[bp+@@points], 1200000
 		jb	short loc_166DB
 		push	4
 		jmp	short loc_166F5
 ; ---------------------------------------------------------------------------
 
 loc_166DB:
-		cmp	[bp+var_4], 800000
+		cmp	[bp+@@points], 800000
 		jb	short loc_166E9
 		push	2
 		jmp	short loc_166F5
 ; ---------------------------------------------------------------------------
 
 loc_166E9:
-		cmp	[bp+var_4], 500000
+		cmp	[bp+@@points], 500000
 		jb	short loc_166FC
 		push	1
 
@@ -8780,14 +8780,14 @@ loc_166F5:
 ; ---------------------------------------------------------------------------
 
 loc_166FC:
-		cmp	[bp+var_4], 100000
+		cmp	[bp+@@points], 100000
 		ja	short loc_1670A
 		push	2
 		jmp	short loc_16716
 ; ---------------------------------------------------------------------------
 
 loc_1670A:
-		cmp	[bp+var_4], 200000
+		cmp	[bp+@@points], 200000
 		ja	short loc_1671B
 		push	1
 
@@ -8796,13 +8796,13 @@ loc_16716:
 
 loc_1671B:
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@points]
 		push	ax
 		call	sub_16438
-		push	(34 shl 16) + 21
-		pushd	[bp+var_4]
+		push	(34 shl 16) or 21	; (left shl 16) or y
+		pushd	[bp+@@points]	; points
 		nopcall	@hud_points_put$quiuiul
-		mov	eax, [bp+var_4]
+		mov	eax, [bp+@@points]
 		add	_score_delta, eax
 		pop	si
 		leave
@@ -8819,7 +8819,7 @@ public @stage_allclear_bonus$qv
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
 var_8		= dword	ptr -8
-var_4		= dword	ptr -4
+@@points	= dword	ptr -4
 
 		enter	0Ah, 0
 		push	si
@@ -8879,26 +8879,26 @@ loc_1683E:
 		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
 		mov	si, 1000
 		movzx	eax, si
-		mov	[bp+var_4], eax
-		push	(34 shl 16) + 6
-		push	eax
+		mov	[bp+@@points], eax
+		push	(34 shl 16) or 6	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		mov	al, _dream
 		mov	ah, 0
-		imul	ax, 0Ah
+		imul	ax, 10
 		mov	si, ax
 		movzx	eax, si
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 8
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 8	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		mov	ax, _stage_graze
 		imul	ax, 5
 		mov	si, ax
 		movzx	eax, si
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 10
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 10	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		mov	al, _lives
 		mov	ah, 0
@@ -8906,52 +8906,52 @@ loc_1683E:
 		add	ax, -1000
 		mov	si, ax
 		movzx	eax, si
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 12
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 12	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		mov	si, _stage_point_items_collected
 		movzx	eax, si
-		imul	eax, [bp+var_4]
-		mov	[bp+var_4], eax
-		push	(40 shl 16) + 14
-		push	si
-		push	TX_WHITE
-		nopcall	hud_int_put
+		imul	eax, [bp+@@points]
+		mov	[bp+@@points], eax
+		push	(40 shl 16) or 14	; (left shl 16) or y
+		push	si	; val
+		push	TX_WHITE	; atrb
+		nopcall	@hud_5_digit_put$quiuiuiui
 		mov	[bp+var_8], 50000
 		cmp	[bp+var_9], 0
 		jz	short loc_1691E
 		mov	eax, [bp+var_8]
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 16
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 16	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 
 loc_1691E:
 		cmp	[bp+var_A], 0
 		jz	short loc_16939
 		mov	eax, [bp+var_8]
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 17
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 17	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 
 loc_16939:
 		movzx	eax, _extend_point_items_collected
 		imul	eax, 250
 		mov	[bp+var_8], eax
-		add	[bp+var_4], eax
-		push	(34 shl 16) + 18
-		push	eax
+		add	[bp+@@points], eax
+		push	(34 shl 16) or 18	; (left shl 16) or y
+		push	eax	; points
 		nopcall	@hud_points_put$quiuiul
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@points]
 		push	ax
 		call	sub_16438
-		push	(34 shl 16) + 21
-		pushd	[bp+var_4]
+		push	(34 shl 16) or 21	; (left shl 16) or y
+		pushd	[bp+@@points]	; points
 		nopcall	@hud_points_put$quiuiul
-		mov	eax, [bp+var_4]
+		mov	eax, [bp+@@points]
 		add	_score_delta, eax
 		pop	si
 		leave
@@ -19584,8 +19584,12 @@ loc_1F9A1:
 ; ---------------------------------------------------------------------------
 		db 0
 include th05/main/pointnum/digits.asm
-include th05/main/hud/number_put.asm
 main_036_TEXT	ends
+
+HUD_NUM_TEXT segment byte public 'CODE' use16
+	extern @HUD_5_DIGIT_PUT$QUIUIUIUI:proc
+	extern @HUD_POINTS_PUT$QUIUIUL:proc
+HUD_NUM_TEXT ends
 
 BOSS_TEXT	segment	byte public 'CODE' use16
 	@BOSS_HITTEST_SHOTS_DAMAGE$QIII procdesc pascal near \
