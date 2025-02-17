@@ -44,6 +44,11 @@ void near std_load(void)
 		reinterpret_cast<SubpixelLength8 near *>(std_off) +
 		(TILES_Y / TILE_ROWS_PER_SECTION)
 	);
+
+	// ZUN bloat: Assigning the chunk size??? This indeed makes no semantic
+	// sense. The first frame only wants [scroll_speed] to be non-zero, and
+	// then it will read the intended speed from [std_scroll_speed]. Assigning
+	// a fixed initialization constant like 0xFF would have been clearer.
 	scroll_speed = *reinterpret_cast<SubpixelLength8 __es *>(std_off);
 
 	// Advance to enemy script section

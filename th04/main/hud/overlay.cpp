@@ -66,11 +66,7 @@ extern int stage_bgm_title_len;
 // Pre-declarations, since we want some of the data to be function-static, but
 // still need to preserve the original order
 extern unsigned char titles_frame;
-#if (GAME == 5)
-	extern shiftjis_t *stage_title;
-	extern shiftjis_t *stage_bgm_title;
-	extern shiftjis_t *boss_bgm_title;
-#else
+#if (GAME == 4)
 	extern const shiftjis_t* BGM_TITLES[];
 	extern const shiftjis_t* STAGE_TITLES[];
 	#define stage_title (STAGE_TITLES[stage_title_id])
