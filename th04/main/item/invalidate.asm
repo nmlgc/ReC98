@@ -1,5 +1,5 @@
-public ITEMS_INVALIDATE
-items_invalidate	proc near
+public @items_invalidate$qv
+@items_invalidate$qv proc near
 	push	si
 	push	di
 	mov	_tile_invalidate_box, (ITEM_W shl 16) or ITEM_H
@@ -41,5 +41,5 @@ endif
 	pop	di
 	pop	si
 	retn
-items_invalidate	endp
+@items_invalidate$qv endp
 	nop

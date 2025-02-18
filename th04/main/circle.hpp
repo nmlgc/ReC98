@@ -1,6 +1,5 @@
 // Growing or shrinking circles
 // ----------------------------
-extern "C" {
 
 #include "th01/math/subpixel.hpp"
 
@@ -10,8 +9,6 @@ extern "C" {
 void pascal circles_add_growing(subpixel_t center_x, subpixel_t center_y);
 void pascal circles_add_shrinking(subpixel_t center_x, subpixel_t center_y);
 
-void pascal near circles_update(void);
-void pascal near circles_render(void);
-
-}
+void near circles_update(void);
+void near circles_render(void);
 // ----------------------------

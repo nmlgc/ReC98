@@ -87,3 +87,5 @@ extern unsigned int total_max_valued_point_items_collected;
 // -------------------
 
 extern bool items_pull_to_player;
+
+void near items_invalidate();

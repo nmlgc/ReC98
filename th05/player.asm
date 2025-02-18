@@ -33,9 +33,8 @@ extrn _playchar_speed_diagonal:word
 MAIN_01_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_01
 
-; void pascal near player_invalidate(void);
-public PLAYER_INVALIDATE
-PLAYER_INVALIDATE	proc pascal near
+public @player_invalidate$qv
+@player_invalidate$qv proc near
 	mov	_tile_invalidate_box.y, PLAYER_H
 	cmp	_miss_time, 0
 	jz	short @@alive
@@ -78,9 +77,7 @@ PLAYER_INVALIDATE	proc pascal near
 
 @@ret:
 	retn
-PLAYER_INVALIDATE	endp
-
-
+@player_invalidate$qv endp
 	even
 
 

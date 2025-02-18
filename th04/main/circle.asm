@@ -1,5 +1,5 @@
-public CIRCLES_ADD_GROWING
-circles_add_growing	proc far
+public @CIRCLES_ADD_GROWING$QII
+@circles_add_growing$qii proc far
 @@center_y	= word ptr  6
 @@center_x	= word ptr  8
 
@@ -42,11 +42,11 @@ circles_add_growing	proc far
 	pop	si
 	pop	bp
 	retf	4
-circles_add_growing	endp
+@circles_add_growing$qii endp
 
 
-public CIRCLES_ADD_SHRINKING
-circles_add_shrinking	proc far
+public @CIRCLES_ADD_SHRINKING$QII
+@circles_add_shrinking$qii proc far
 @@center_y	= word ptr  6
 @@center_x	= word ptr  8
 
@@ -89,11 +89,11 @@ circles_add_shrinking	proc far
 	pop	si
 	pop	bp
 	retf	4
-circles_add_shrinking	endp
+@circles_add_shrinking$qii endp
 
 
-public CIRCLES_UPDATE
-circles_update	proc near
+public @CIRCLES_UPDATE$QV
+@circles_update$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -126,11 +126,11 @@ circles_update	proc near
 	pop	si
 	pop	bp
 	retn
-circles_update	endp
+@circles_update$qv endp
 
 
-public CIRCLES_RENDER
-circles_render	proc near
+public @CIRCLES_RENDER$QV
+@circles_render$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -160,4 +160,4 @@ circles_render	proc near
 	pop	si
 	pop	bp
 	retn
-circles_render	endp
+@circles_render$qv endp

@@ -408,7 +408,7 @@ loc_AED7:
 
 @@update:
 		call	pointnums_update
-		call	circles_update
+		call	@circles_update$qv
 		call	_sparks_update
 		call	sub_1214A
 		call	sub_1240B
@@ -438,7 +438,7 @@ loc_AF2D:
 		call	items_render
 		call	pointnums_render
 		call	sub_100C6
-		call	circles_render
+		call	@circles_render$qv
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay1
 		call	_overlay2
@@ -1437,13 +1437,13 @@ public @TILES_RENDER$QV
 		push	bp
 		mov	bp, sp
 		call	@overlay_titles_invalidate$qv
-		call	player_invalidate
+		call	@player_invalidate$qv
 		call	sub_123AD
-		call	enemies_invalidate
+		call	@enemies_invalidate$qv
 		call	bullets_gather_invalidate
-		call	items_invalidate
-		call	_sparks_invalidate
-		call	pointnums_invalidate
+		call	@items_invalidate$qv
+		call	@sparks_invalidate$qv
+		call	@pointnums_invalidate$qv
 		call	_midboss_invalidate
 		call	_stage_invalidate
 		call	@tiles_redraw_invalidated$qv
@@ -7181,7 +7181,7 @@ sub_12842	endp
 	SHOT_YUUKA_L7 procdesc pascal near
 	SHOT_YUUKA_L8 procdesc pascal near
 	SHOT_YUUKA_L9 procdesc pascal near
-	PLAYER_INVALIDATE procdesc pascal near
+	@player_invalidate$qv procdesc near
 	@PLAYER_MOVE$QUI procdesc pascal near \
 		input:word
 	HUD_BAR_PUT procdesc near
@@ -11393,7 +11393,7 @@ sub_198B7	proc near
 		mov	si, [bp+@@puppet]
 		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_198CF
-		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
+		call	@circles_add_shrinking$qii pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_198CF:
 		cmp	[si+puppet_t.phase_frame], 32
@@ -11448,7 +11448,7 @@ sub_19928	proc near
 		mov	si, [bp+@@puppet]
 		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_19940
-		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
+		call	@circles_add_shrinking$qii pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_19940:
 		cmp	[si+puppet_t.phase_frame], 32
@@ -11501,7 +11501,7 @@ sub_1999A	proc near
 		mov	si, [bp+@@puppet]
 		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_199B2
-		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
+		call	@circles_add_shrinking$qii pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_199B2:
 		cmp	[si+puppet_t.phase_frame], 32
@@ -11556,7 +11556,7 @@ sub_19A0F	proc near
 		mov	si, [bp+@@puppet]
 		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_19A27
-		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
+		call	@circles_add_shrinking$qii pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_19A27:
 		cmp	[si+puppet_t.phase_frame], 32
@@ -11611,7 +11611,7 @@ sub_19A84	proc near
 		mov	si, [bp+@@puppet]
 		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_19A9C
-		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
+		call	@circles_add_shrinking$qii pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_19A9C:
 		cmp	[si+puppet_t.phase_frame], 32
@@ -14916,7 +14916,7 @@ loc_1BAAD:
 		mov	_yuki_pos.cur.y, ax
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		call	circles_add_growing
+		call	@circles_add_growing$qii
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		mov	fp_2CE42, offset sub_1B557
 		mov	_boss_sprite_left, 206
@@ -16099,7 +16099,7 @@ loc_1C5D8:
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		call	circles_add_growing
+		call	@circles_add_growing$qii
 		mov	fp_2CE42, offset sub_1BD2C
 		mov	_boss_sprite_left, 190
 		mov	_boss_sprite_right, 189

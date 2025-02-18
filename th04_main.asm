@@ -367,7 +367,7 @@ loc_ABBA:
 
 @@update:
 		call	main_01:pointnums_update
-		call	main_01:circles_update
+		call	@circles_update$qv
 		call	_sparks_update
 		call	main_01:sub_10ABF
 		call	main_01:sub_104B6
@@ -390,7 +390,7 @@ loc_ABBA:
 		call	main_01:items_render
 		call	main_01:pointnums_render
 		call	main_01:bullets_render
-		call	main_01:circles_render
+		call	@circles_render$qv
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay1
 		call	_overlay2
@@ -1724,13 +1724,13 @@ public @TILES_RENDER$QV
 		push	bp
 		mov	bp, sp
 		call	@overlay_titles_invalidate$qv
-		call	main_01:player_invalidate
+		call	@player_invalidate$qv
 		call	main_01:sub_10444
-		call	main_01:enemies_invalidate
+		call	@enemies_invalidate$qv
 		call	main_01:bullets_gather_invalidate
-		call	items_invalidate
-		call	_sparks_invalidate
-		call	main_01:pointnums_invalidate
+		call	@items_invalidate$qv
+		call	@sparks_invalidate$qv
+		call	@pointnums_invalidate$qv
 		call	_midboss_invalidate
 		call	_stage_invalidate
 		call	@tiles_redraw_invalidated$qv
@@ -6490,7 +6490,7 @@ loc_10096:
 		call	vector2_at
 		push	_drawpoint.x
 		push	_drawpoint.y
-		nopcall	main_01:circles_add_growing
+		nopcall	@circles_add_growing$qii
 		mov	al, 80h
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
@@ -6502,7 +6502,7 @@ loc_10096:
 		call	vector2_at
 		push	_drawpoint.x
 		push	_drawpoint.y
-		nopcall	main_01:circles_add_growing
+		nopcall	@circles_add_growing$qii
 		call	snd_se_play pascal, 9
 
 loc_100FE:
@@ -6603,7 +6603,7 @@ loc_101D7:
 		mov	ax, [bp+var_2]
 		shl	ax, 4
 		push	ax
-		nopcall	main_01:circles_add_growing
+		nopcall	@circles_add_growing$qii
 		call	snd_se_play pascal, 9
 
 loc_101F4:
@@ -14216,7 +14216,7 @@ loc_16221:
 ; ---------------------------------------------------------------------------
 
 loc_16228:
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.speed, (1 shl 4)
@@ -14394,7 +14394,7 @@ loc_163B5:
 
 loc_163C6:
 		mov	_circles_color, V_WHITE	; jumptable 000163A9 cases 56,64,72,80
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 
 loc_163D8:
 		mov	al, _gather_template.GT_angle_delta	; jumptable 000163A9 case 40
@@ -14533,7 +14533,7 @@ yuuka5_1653D	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jnz	short loc_1656A
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 		mov	_boss_angle, 16
 		mov	_boss_statebyte[15].BSB_spread_angle, 10h
@@ -15066,7 +15066,7 @@ loc_16A86:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		jmp	short loc_16ADA
 ; ---------------------------------------------------------------------------
 
@@ -17550,7 +17550,7 @@ loc_18090:
 loc_18097:
 		push	_gather_template.GT_center.x ; jumptable 00018067 case 48
 		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 locret_180A9:
@@ -18794,7 +18794,7 @@ loc_18AFA:
 		inc	[si+kurumi_spawnray_t.B2S_flag] ; = B2SF_SHRINK
 		call	snd_se_play pascal, 6
 		mov	_circles_color, GC_RG
-		call	circles_add_growing pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_growing$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		jmp	short loc_18B4D
 ; ---------------------------------------------------------------------------
 
@@ -18924,7 +18924,7 @@ loc_18BF7:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -18989,7 +18989,7 @@ loc_18C87:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19055,14 +19055,14 @@ loc_18D16:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-12 shl 4)
 		push	ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		leave
@@ -19194,7 +19194,7 @@ loc_18E54:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19270,7 +19270,7 @@ loc_18EF8:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19347,14 +19347,14 @@ loc_18F9C:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	ax, _boss_pos.cur.x
 		add	ax, (12 shl 4)
 		push	ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19834,7 +19834,7 @@ loc_19444:
 		jnz	short loc_1945E
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 loc_1945E:
@@ -20045,7 +20045,7 @@ loc_19656:
 		jnz	short loc_19671
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		jmp	short loc_19682
 ; ---------------------------------------------------------------------------
@@ -20442,7 +20442,7 @@ loc_199BC:
 		jnz	short loc_199ED
 
 loc_199DB:
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 
 loc_199ED:
@@ -20767,7 +20767,7 @@ loc_19D15:
 loc_19D2B:
 		cmp	_boss_phase_frame, 112
 		jnz	short loc_19D44
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 
 loc_19D44:
@@ -21604,12 +21604,12 @@ loc_1A96C:
 loc_1A981:
 		push	_gather_template.GT_center.x ; jumptable 0001A926 case 32
 		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	ax, _gather_template.GT_center.x
 		add	ax, (44 shl 4)
 		push	ax
 		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 locret_1A9A3:
@@ -21692,7 +21692,7 @@ loc_1AA19:
 loc_1AA20:
 		push	_gather_template.GT_center.x ; jumptable 0001A9E9 case 64
 		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 locret_1AA32:
@@ -21768,12 +21768,12 @@ loc_1AAAD:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (32 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		push	point_25A0C.x
 		mov	ax, point_25A0C.y
 		add	ax, (32 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 locret_1AAD2:
@@ -21840,7 +21840,7 @@ loc_1AB31:
 loc_1AB38:
 		push	_gather_template.GT_center.x ; jumptable 0001AB04 case 32
 		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 locret_1AB4A:
@@ -21999,7 +21999,7 @@ loc_1ACA5:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (40 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		leave
 		retn
@@ -23860,7 +23860,7 @@ loc_1BDFF:
 loc_1BE11:
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 loc_1BE23:
@@ -26575,7 +26575,7 @@ loc_1EAC0:
 		mov	_boss_sprite, 132
 		push	_gather_template.GT_center.x
 		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
 
@@ -28238,7 +28238,7 @@ loc_1F94E:
 loc_1F955:
 		push	_gather_template.GT_center.x
 		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 locret_1F967:
