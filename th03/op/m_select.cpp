@@ -326,11 +326,15 @@ void pascal near curve_put(
 		// choice. On an i486/Pentium, ZUN wastes:
 		//
 		// • ≥42 / 64 cycles by dividing by [FREQ_FACTOR] instead of
-		//   right-shifting,
+		//   right-shifting*,
 		// • ≥42 / 16 cycles by not inlining grcg_pset(), and
 		// • ≥100 / 40 cycles by not inlining polar().
 		//
 		// Total waste for all points: ≥753,664 / 491,520 cycles.
+		//
+		// *) Usually, this would cause inaccuracies for negative numbers as
+		//    documented in th01/math/polar.hpp, but [freq_x] and [freq_y] only
+		//    ever hold unsigned values.
 		unsigned char angle;
 		angle = (angle_base + angle_offset_x);
 		angle = ((angle * freq_x) / FREQ_FACTOR);
