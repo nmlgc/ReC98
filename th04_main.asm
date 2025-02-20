@@ -378,7 +378,7 @@ loc_ABBA:
 		call	items_update
 		call	@gather_update$qv
 		call	_stage_render
-		call	main_01:sub_1020A
+		call	@bomb_update_and_render$qv
 		call	_boss_fg_render
 		call	_midboss_render
 		call	main_01:enemies_render
@@ -6623,8 +6623,8 @@ bomb_marisa	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1020A	proc near
+public @bomb_update_and_render$qv
+@bomb_update_and_render$qv proc near
 		push	bp
 		mov	bp, sp
 		cmp	_bombing, 0
@@ -6731,7 +6731,7 @@ loc_10307:
 loc_1030B:
 		pop	bp
 		retn
-sub_1020A	endp
+@bomb_update_and_render$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

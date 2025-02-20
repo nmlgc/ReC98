@@ -16,6 +16,12 @@ void pascal near bomb_reimu(void);
 void pascal near bomb_marisa(void);
 // ---------------------------------------------------
 
+#if (GAME == 4)
+	// Handles the BB?.BB animation, scroll deactivation, common palette
+	// manipulation, and calls [playchar_bomb_func].
+	void near bomb_update_and_render(void);
+#endif
+
 // Drops a bomb, if possible. Also cancels a death if called during the
 // deathbomb window.
 void pascal near player_bomb(void);
