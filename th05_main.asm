@@ -36,7 +36,7 @@ include th05/main/enemy/enemy.inc
 
 	extern _execl:proc
 
-main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_TEXT, mai_TEXT, CFG_LRES_TEXT, STD_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, LASER_RH_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_TEXT, mai_TEXT, CFG_LRES_TEXT, STD_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, LASER_RH_TEXT, main_TEXT, CIRCLE_TEXT, F_DIALOG_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, PLAYER_P_TEXT, main_01_TEXT
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, B1_UPDATE_TEXT, B4_UPDATE_TEXT, main_035_TEXT, B6_UPDATE_TEXT, BX_UPDATE_TEXT, main_036_TEXT, HUD_NUM_TEXT, BOSS_TEXT
 
 ; ===========================================================================
@@ -3121,13 +3121,22 @@ sub_EACE	proc near
 sub_EACE	endp
 
 include th04/main/enemy/render.asm
-include th04/main/circle.asm
 main_TEXT	ends
 
-DIALOG_TEXT	segment	byte public 'CODE' use16
+CIRCLE_TEXT segment byte public 'CODE' use16
+	extern @CIRCLES_ADD_GROWING$QII:proc
+	extern @CIRCLES_ADD_SHRINKING$QII:proc
+	@circles_update$qv procdesc near
+	@circles_render$qv procdesc near
+CIRCLE_TEXT ends
+
+F_DIALOG_TEXT segment byte public 'CODE' use16
 	extern @DIALOG_LOAD$QNXC:proc
 	@dialog_load$qv procdesc near
 	@dialog_free$qv procdesc near
+F_DIALOG_TEXT ends
+
+DIALOG_TEXT	segment	byte public 'CODE' use16
 	@std_update_frames_then_animate_d$qv procdesc near
 	extern @dialog_animate$qv:proc
 DIALOG_TEXT	ends
@@ -14896,9 +14905,7 @@ loc_1BAAD:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (16 shl 4)
 		mov	_yuki_pos.cur.y, ax
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	@circles_add_growing$qii
+		call	@circles_add_growing$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		mov	fp_2CE42, offset sub_1B557
 		mov	_boss_sprite_left, 206
@@ -16079,9 +16086,7 @@ loc_1C5D8:
 		mov	_boss_mode, 1
 		mov	_boss_phase_state, 0
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	@circles_add_growing$qii
+		call	@circles_add_growing$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		mov	fp_2CE42, offset sub_1BD2C
 		mov	_boss_sprite_left, 190
 		mov	_boss_sprite_right, 189

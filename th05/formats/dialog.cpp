@@ -1,4 +1,4 @@
-#pragma option -zCmain_TEXT -zPmain_01
+#pragma option -zPmain_01
 
 #include <stddef.h>
 #include "libs/master.lib/master.hpp"

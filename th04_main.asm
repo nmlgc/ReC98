@@ -41,7 +41,7 @@ include th04/main/enemy/enemy.inc
 	extern _execl:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, END_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, BOSS_FG_TEXT
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, END_TEXT, CIRCLE_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, BOSS_FG_TEXT
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
@@ -1268,7 +1268,7 @@ loc_B9D4:
 @map_free$qv	endp
 END_TEXT ends
 
-TILE_TEXT segment word public 'CODE' use16
+CIRCLE_TEXT segment word public 'CODE' use16
 include th04/main/tile/inv.asm
 include th04/main/tile/fill_ini.asm
 
@@ -1453,8 +1453,14 @@ include th04/main/playperf.asm
 include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
 include th04/formats/z_super_roll_put_tiny.asm
-include th04/main/circle.asm
-		db    0
+
+	extern @CIRCLES_ADD_GROWING$QII:proc
+	extern @CIRCLES_ADD_SHRINKING$QII:proc
+	@circles_update$qv procdesc near
+	@circles_render$qv procdesc near
+CIRCLE_TEXT ends
+
+TILE_TEXT segment word public 'CODE' use16
 include th04/main/enemy/inv.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17528,9 +17534,7 @@ loc_18090:
 ; ---------------------------------------------------------------------------
 
 loc_18097:
-		push	_gather_template.GT_center.x ; jumptable 00018067 case 48
-		push	_gather_template.GT_center.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_180A9:
@@ -19812,9 +19816,7 @@ loc_19431:
 loc_19444:
 		cmp	_boss_phase_frame, 144
 		jnz	short loc_1945E
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		mov	_circles_color, V_WHITE
 
 loc_1945E:
@@ -20023,9 +20025,7 @@ loc_19647:
 loc_19656:
 		cmp	_boss_phase_frame, 70
 		jnz	short loc_19671
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		mov	_circles_color, V_WHITE
 		jmp	short loc_19682
 ; ---------------------------------------------------------------------------
@@ -21582,14 +21582,10 @@ loc_1A96C:
 ; ---------------------------------------------------------------------------
 
 loc_1A981:
-		push	_gather_template.GT_center.x ; jumptable 0001A926 case 32
-		push	_gather_template.GT_center.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	ax, _gather_template.GT_center.x
 		add	ax, (44 shl 4)
-		push	ax
-		push	_gather_template.GT_center.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, ax, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1A9A3:
@@ -21670,9 +21666,7 @@ loc_1AA19:
 ; ---------------------------------------------------------------------------
 
 loc_1AA20:
-		push	_gather_template.GT_center.x ; jumptable 0001A9E9 case 64
-		push	_gather_template.GT_center.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1AA32:
@@ -21818,9 +21812,7 @@ loc_1AB31:
 ; ---------------------------------------------------------------------------
 
 loc_1AB38:
-		push	_gather_template.GT_center.x ; jumptable 0001AB04 case 32
-		push	_gather_template.GT_center.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1AB4A:
@@ -23838,9 +23830,7 @@ loc_1BDFF:
 ; ---------------------------------------------------------------------------
 
 loc_1BE11:
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		mov	_circles_color, V_WHITE
 
 loc_1BE23:
@@ -26553,9 +26543,7 @@ loc_1EAB9:
 
 loc_1EAC0:
 		mov	_boss_sprite, 132
-		push	_gather_template.GT_center.x
-		push	_gather_template.GT_center.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
 
@@ -28216,9 +28204,7 @@ loc_1F94E:
 ; ---------------------------------------------------------------------------
 
 loc_1F955:
-		push	_gather_template.GT_center.x
-		push	_gather_template.GT_center.y
-		call	@circles_add_shrinking$qii
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1F967:
