@@ -103,15 +103,10 @@ _TEXT	ends
 
 	.data
 
-		db    6
-
-public gp1P_VS_CPU, gp1P_VS_2P, gpCPU_VS_CPU, gpSTART, gpVS_START
+public gpSTART, gpVS_START
 public gpMUSIC_ROOM, gpHISCORE, gpOPTION, gpQUIT, gpRANK, gpMUSIC, gpKEYCONFIG
 public gpEASY, gpNORMAL, gpHARD, gpLUNATIC, gpOFF, gpFM_86, gpMIDI_SC88, gpOFF
 public gpFM_86, gpMIDI_SC88, gpKEY_VS_KEY, gpJOY_VS_KEY, gpKEY_VS_JOY
-gp1P_VS_CPU	db 88h, 89h, 8Ah, 8Bh, 8Ch, 8Dh, 8Eh, 8Fh, 0
-gp1P_VS_2P	db 88h, 89h, 8Ah, 8Bh, 96h, 97h, 98h, 99h, 0
-gpCPU_VS_CPU	db 92h, 93h, 94h, 95h, 8Ch, 8Dh, 8Eh, 8Fh, 0
 include th03/start[data].asm
 gpSTART	db 30h, 31h, 32h, 0
 gpVS_START	db 33h, 34h, 35h, 36h, 37h, 38h, 0

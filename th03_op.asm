@@ -72,53 +72,8 @@ BOX_MAIN_RIGHT = (BOX_LEFT + MAIN_W)
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
 	@story_menu$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9B9D	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		or	di, di
-		jnz	short loc_9BB8
-		push	(27 shl 16) or 18
-		push	ds
-		push	offset gp1P_VS_CPU
-		jmp	short loc_9BD3
-; ---------------------------------------------------------------------------
-
-loc_9BB8:
-		cmp	di, 1
-		jnz	short loc_9BC9
-		push	(27 shl 16) or 19
-		push	ds
-		push	offset gp1P_VS_2P
-		jmp	short loc_9BD3
-; ---------------------------------------------------------------------------
-
-loc_9BC9:
-		push	(27 shl 16) or 20
-		push	ds
-		push	offset gpCPU_VS_CPU
-
-loc_9BD3:
-		push	si
-		call	gaiji_putsa
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_9B9D	endp
-
+	@VS_CHOICE_PUT$QIUI procdesc pascal near \
+		atrb:word, sel:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -137,12 +92,12 @@ var_2		= word ptr -2
 		call	text_clear
 		call	@box_main_to_submenu_animate$qv
 		mov	[bp+var_2], 0
-		pushd	0E1h
-		call	sub_9B9D
-		push	10001h
-		call	sub_9B9D
-		push	20001h
-		call	sub_9B9D
+		pushd	((VS_1P_CPU shl 16) or TX_WHITE)
+		call	@vs_choice_put$qiui
+		push	((VS_1P_2P shl 16) or TX_BLACK)
+		call	@vs_choice_put$qiui
+		push	((VS_CPU_CPU shl 16) or TX_BLACK)
+		call	@vs_choice_put$qiui
 
 loc_9C1B:
 		call	@input_mode_interface$qv
@@ -150,34 +105,26 @@ loc_9C1B:
 		jnz	short loc_9C7E
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_9C4A
-		push	[bp+var_2]
-		push	1
-		call	sub_9B9D
+		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_BLACK
 		dec	[bp+var_2]
-		cmp	[bp+var_2], 0
+		cmp	[bp+var_2], VS_1P_CPU
 		jge	short loc_9C41
-		mov	[bp+var_2], 2
+		mov	[bp+var_2], VS_CPU_CPU
 
 loc_9C41:
-		push	[bp+var_2]
-		push	0E1h
-		call	sub_9B9D
+		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_WHITE
 
 loc_9C4A:
 		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_9C70
-		push	[bp+var_2]
-		push	1
-		call	sub_9B9D
+		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_BLACK
 		inc	[bp+var_2]
-		cmp	[bp+var_2], 2
+		cmp	[bp+var_2], VS_CPU_CPU
 		jle	short loc_9C67
-		mov	[bp+var_2], 0
+		mov	[bp+var_2], VS_1P_CPU
 
 loc_9C67:
-		push	[bp+var_2]
-		push	0E1h
-		call	sub_9B9D
+		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_WHITE
 
 loc_9C70:
 		test	_input_sp.lo, low INPUT_SHOT
@@ -230,7 +177,7 @@ loc_9CBB:
 		add	al, GM_VS
 		mov	es:[bx+resident_t.game_mode], al
 		mov	es:[bx+resident_t.show_score_menu], 0
-		cmp	[bp+var_2], 1
+		cmp	[bp+var_2], VS_1P_2P
 		jnz	short loc_9CEF
 		call	@select_1p_vs_2p_menu$qv
 		or	al, al
@@ -1185,9 +1132,6 @@ SHARED	ends
 
 	extern _snd_sel_disabled:byte
 
-	extern gp1P_VS_CPU:byte
-	extern gp1P_VS_2P:byte
-	extern gpCPU_VS_CPU:byte
 	extern _demo_chars:byte
 	extern _demo_rand:dword
 	extern gpSTART:byte

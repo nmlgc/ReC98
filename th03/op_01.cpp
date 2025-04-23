@@ -8,11 +8,31 @@
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/formats/cfg_impl.hpp"
+#include "th03/gaiji/str.hpp"
 #include "th03/snd/snd.h"
 #include "th03/shiftjis/fns.hpp"
+#include "th03/op/m_main.hpp"
 #include "th03/op/m_select.hpp"
 #include <stddef.h>
 #include <process.h>
+
+// Proportional gaiji strings
+// --------------------------
+
+enum gaiji_th03_mikoft_t {
+	gp_1P_vs = 0x88,
+	gp_1P_vs_last = ((gp_1P_vs + 4) - 1),
+	gp__CPU,
+	gp__CPU_last = ((gp__CPU + 4) - 1),
+	gp_CPU_vs = 0x92,
+	gp_CPU_vs_last = ((gp_CPU_vs + 4) - 1),
+	gp__2P,
+	gp__2P_last = ((gp__2P + 4) - 1),
+};
+
+// Constructs a VS choice string out of its two halves.
+#define g_str_vs(first, second) { g_str_4(first), g_str_4(second), '\0' }
+// --------------------------
 
 bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 
@@ -103,7 +123,7 @@ bool near story_menu(void)
 	static bool opponent_seen[RANDOM_OPPONENT_COUNT] = { false };
 
 	// ACTUAL TYPE: playchar_t
-	static const uint8_t STAGE7_OPPONENT_FOR[PLAYCHAR_COUNT - 1] = {
+	static const uint8_t STAGE7_OPPONENT_FOR[PLAYCHAR_COUNT] = {
 		PLAYCHAR_MIMA, // for Reimu
 		PLAYCHAR_REIMU, // for Mima
 		PLAYCHAR_REIMU, // for Marisa
@@ -112,7 +132,7 @@ bool near story_menu(void)
 		PLAYCHAR_ELLEN, // for Kana
 		PLAYCHAR_KANA, // for Rikako
 		PLAYCHAR_KOTOHIME, // for Chiyuri
-		// PLAYCHAR_RIKAKO, // for Yumemi
+		PLAYCHAR_RIKAKO, // for Yumemi
 	};
 
 	int stage;
@@ -195,4 +215,25 @@ retry_opponent_selection:
 	return switch_to_mainl();
 }
 
+inline tram_y_t choice_tram_y(unsigned int line) {
+	return ((BOX_TOP / GLYPH_H) + 1 + line);
+}
+
+void pascal near vs_choice_put(int sel, tram_atrb2 atrb)
+{
+	enum {
+		W = (8 * GAIJI_W),
+		TRAM_LEFT = ((BOX_SUBMENU_CENTER_X - (W / 2)) / GLYPH_HALF_W),
+	};
+	if(sel == VS_1P_CPU) {
+		static const char STR[] = g_str_vs(gp_1P_vs, gp__CPU);
+		gaiji_putsa(TRAM_LEFT, choice_tram_y(1), STR, atrb);
+	} else if(sel == VS_1P_2P) {
+		static const char STR[] = g_str_vs(gp_1P_vs, gp__2P);
+		gaiji_putsa(TRAM_LEFT, choice_tram_y(2), STR, atrb);
+	} else /* if (sel == VS_CPU_CPU) */ {
+		static const char STR[] = g_str_vs(gp_CPU_vs, gp__CPU);
+		gaiji_putsa(TRAM_LEFT, choice_tram_y(3), STR, atrb);
+	}
+}
 void pascal near start_demo();
