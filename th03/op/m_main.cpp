@@ -1,3 +1,5 @@
+// ZUN bloat: Only contains animations, the rest is in `op_01.cpp`.
+
 #include "th03/op/m_main.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"

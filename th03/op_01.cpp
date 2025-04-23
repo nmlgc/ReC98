@@ -3,11 +3,16 @@
  * Code segment #1 of TH03's OP.EXE
  */
 
-#include <stddef.h>
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/core/initexit.hpp"
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/formats/cfg_impl.hpp"
 #include "th03/snd/snd.h"
+#include "th03/shiftjis/fns.hpp"
+#include "th03/op/m_select.hpp"
+#include <stddef.h>
+#include <process.h>
 
 bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 
@@ -19,7 +24,9 @@ bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 
 // These will be removed once the strings can be defined here
 #undef CFG_FN
+#undef BINARY_MAINL
 extern const char CFG_FN[];
+extern char BINARY_MAINL[];
 
 void near cfg_load(void)
 {
@@ -65,5 +72,127 @@ void near cfg_save_exit(void)
 	cfg_save_bytes(cfg, sizeof(cfg));
 }
 /// ---------------------------
+
+#define resident_reset_scores(i) { \
+	/* ZUN bloat: Very unsafe. */ \
+	for(i = 0; i < (PLAYER_COUNT * SCORE_DIGITS); i++) { \
+		resident->score_last[0].digits[i] = 0; \
+	} \
+}
+
+inline bool switch_to_mainl(void) {
+	cfg_save();
+	gaiji_restore();
+	snd_kaja_func(KAJA_SONG_STOP, 0);
+	game_exit();
+	execl(BINARY_MAINL, BINARY_MAINL, 0, 0);
+	return false;
+}
+
+bool near story_menu(void)
+{
+	enum {
+		RANDOM_OPPONENT_MIN = PLAYCHAR_REIMU,
+		RANDOM_OPPONENT_MAX = PLAYCHAR_RIKAKO,
+		RANDOM_OPPONENT_COUNT = (
+			(RANDOM_OPPONENT_MAX - RANDOM_OPPONENT_MIN) + 1
+		),
+	};
+
+	// ZUN bloat: Could have been local.
+	static bool opponent_seen[RANDOM_OPPONENT_COUNT] = { false };
+
+	// ACTUAL TYPE: playchar_t
+	static const uint8_t STAGE7_OPPONENT_FOR[PLAYCHAR_COUNT - 1] = {
+		PLAYCHAR_MIMA, // for Reimu
+		PLAYCHAR_REIMU, // for Mima
+		PLAYCHAR_REIMU, // for Marisa
+		PLAYCHAR_MARISA, // for Ellen
+		PLAYCHAR_REIMU, // for Kotohime
+		PLAYCHAR_ELLEN, // for Kana
+		PLAYCHAR_KANA, // for Rikako
+		PLAYCHAR_KOTOHIME, // for Chiyuri
+		// PLAYCHAR_RIKAKO, // for Yumemi
+	};
+
+	int stage;
+	int candidate;
+
+	resident->demo_num = 0;
+	resident->pid_winner = 0;
+	resident->story_stage = 0;
+	resident->is_cpu[0] = false;
+	resident->is_cpu[1] = true;
+	resident->game_mode = GM_STORY;
+	resident->story_lives = CREDIT_LIVES;
+	resident->show_score_menu = false;
+	resident->playchar_paletted[1].v = -1;
+
+	if(select_story_menu()) {
+		return true;
+	}
+
+retry_opponent_selection:
+	// ACTUAL TYPE: playchar_t
+	int stage7_opponent = STAGE7_OPPONENT_FOR[
+		resident->playchar_paletted[0].char_id_16()
+	];
+	irand_init(resident->rand);
+
+	for(stage = 0; stage < 6; stage++) {
+		// Confirmed to terminate for all 2³² possible seeds and all original
+		// combinations of player character and Stage 7 opponent.
+		do {
+			candidate = (
+				RANDOM_OPPONENT_MIN + (irand() % RANDOM_OPPONENT_COUNT)
+			);
+		} while(opponent_seen[candidate] || (stage7_opponent == candidate));
+		opponent_seen[candidate] = true;
+
+		// ZUN bloat: Should not change types.
+		#define candidate_paletted candidate
+		candidate_paletted = TO_OPTIONAL_PALETTED(candidate);
+		resident->story_opponents[stage].v = candidate_paletted;
+
+		// ZUN bloat: All of these palette swaps could have been done in a
+		// single loop at the end.
+		if(candidate_paletted == resident->playchar_paletted[0].v) {
+			resident->story_opponents[stage].v = (candidate_paletted + 1);
+		}
+		#undef candidate_paletted
+	}
+
+	resident->playchar_paletted[1] = resident->story_opponents[0];
+	resident->story_opponents[6].v = TO_OPTIONAL_PALETTED(stage7_opponent);
+
+	// ZUN bloat: Palette swaps...
+	resident->story_opponents[7].set(PLAYCHAR_CHIYURI);
+	if(
+		resident->playchar_paletted[0].v ==
+		TO_OPTIONAL_PALETTED(PLAYCHAR_CHIYURI)
+	) {
+		resident->story_opponents[7].v++;
+	}
+	resident->story_opponents[8].set(PLAYCHAR_YUMEMI);
+	if(
+		resident->playchar_paletted[0].v ==
+		TO_OPTIONAL_PALETTED(PLAYCHAR_YUMEMI)
+	) {
+		resident->story_opponents[8].v++;
+	}
+
+	// ZUN bloat: This can never happen.
+	for(stage = 0; stage < STAGE_COUNT; stage++) {
+		if(resident->story_opponents[stage].char_id_16() >= PLAYCHAR_COUNT) {
+			goto retry_opponent_selection;
+		}
+	}
+
+	resident_reset_scores(stage);
+	resident->rem_credits = 3;
+	resident->op_skip_animation = false;
+	resident->skill = (70 + (resident->rank * 25));
+	return switch_to_mainl();
+}
 
 void pascal near start_demo();

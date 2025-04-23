@@ -52,6 +52,8 @@ struct PlaycharPaletted {
 	}
 };
 
+#define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
+
 // Like PlaycharPaletted, but with all IDs shifted up by 1 to reserve 0 for "no
 // character".
 struct PlaycharPalettedOptional {
@@ -64,8 +66,15 @@ struct PlaycharPalettedOptional {
 	playchar_t char_id() const {
 		return static_cast<playchar_t>(filename_id() / 2);
 	}
-};
 
-#define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
+	// ZUN bloat
+	int char_id_16() const {
+		return (filename_id() / 2);
+	}
+
+	void set(playchar_t playchar) {
+		v = TO_OPTIONAL_PALETTED(playchar);
+	}
+};
 
 #endif /* TH03_PLAYCHAR_HPP */

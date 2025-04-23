@@ -41,7 +41,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern GRAPH_400LINE:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
-	extern IRAND:proc
 	extern TEXT_CLEAR:proc
 	extern TEXT_PUTSA:proc
 	extern HMEM_FREE:proc
@@ -72,171 +71,7 @@ BOX_MAIN_RIGHT = (BOX_LEFT + MAIN_W)
 	@cfg_load$qv procdesc near
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public START_GAME
-start_game	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		les	bx, _resident
-		mov	es:[bx+resident_t.demo_num], 0
-		mov	es:[bx+resident_t.pid_winner], 0
-		mov	es:[bx+resident_t.story_stage], 0
-		mov	es:[bx+resident_t.RESIDENT_is_cpu][0], 0
-		mov	es:[bx+resident_t.RESIDENT_is_cpu][1], 1
-		mov	es:[bx+resident_t.game_mode], GM_STORY
-		mov	es:[bx+resident_t.story_lives], CREDIT_LIVES
-		mov	es:[bx+resident_t.show_score_menu], 0
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], -1
-		call	@select_story_menu$qv
-		or	al, al
-		jz	short loc_9A59
-		mov	al, 1
-		jmp	loc_9B9A
-; ---------------------------------------------------------------------------
-
-loc_9A59:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		mov	bx, ax
-		sar	bx, 1
-		mov	al, [bx+0A0h]
-		mov	ah, 0
-		mov	[bp+var_4], ax
-		mov	bx, word ptr _resident
-		mov	eax, es:[bx+resident_t.rand]
-		mov	random_seed, eax
-		xor	si, si
-		jmp	short loc_9ADB
-; ---------------------------------------------------------------------------
-
-loc_9A85:
-		call	IRand
-		mov	bx, 7
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		mov	bx, [bp+var_2]
-		cmp	byte ptr [bx+99h], 0
-		jnz	short loc_9A85
-		mov	ax, [bp+var_4]
-		cmp	ax, [bp+var_2]
-		jz	short loc_9A85
-		mov	byte ptr [bx+99h], 1
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		inc	ax
-		mov	[bp+var_2], ax
-		les	bx, _resident
-		add	bx, si
-		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+resident_t.story_opponents], al
-		mov	bx, word ptr _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		mov	ah, 0
-		cmp	ax, [bp+var_2]
-		jnz	short loc_9ADA
-		add	bx, si
-		mov	al, byte ptr [bp+var_2]
-		inc	al
-		mov	es:[bx+resident_t.story_opponents], al
-
-loc_9ADA:
-		inc	si
-
-loc_9ADB:
-		cmp	si, 6
-		jl	short loc_9A85
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.story_opponents]
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], al
-		mov	al, byte ptr [bp+var_4]
-		add	al, al
-		inc	al
-		mov	es:[bx+resident_t.story_opponents][6], al
-		mov	es:[bx+resident_t.story_opponents][7], (1 + (PLAYCHAR_CHIYURI * 2))
-		cmp	es:[bx+resident_t.RESIDENT_playchar_paletted][0], (1 + (PLAYCHAR_CHIYURI * 2))
-		jnz	short loc_9B07
-		inc	es:[bx+resident_t.story_opponents][7]
-
-loc_9B07:
-		les	bx, _resident
-		mov	es:[bx+resident_t.story_opponents][8], (1 + (PLAYCHAR_YUMEMI * 2))
-		cmp	es:[bx+resident_t.RESIDENT_playchar_paletted][0], (1 + (PLAYCHAR_YUMEMI * 2))
-		jnz	short loc_9B1B
-		inc	es:[bx+resident_t.story_opponents][8]
-
-loc_9B1B:
-		xor	si, si
-		jmp	short loc_9B39
-; ---------------------------------------------------------------------------
-
-loc_9B1F:
-		les	bx, _resident
-		add	bx, si
-		mov	al, es:[bx+resident_t.story_opponents]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		cmp	ax, 9
-		jge	loc_9A59
-		inc	si
-
-loc_9B39:
-		cmp	si, STAGE_COUNT
-		jl	short loc_9B1F
-		xor	si, si
-		jmp	short loc_9B4E
-; ---------------------------------------------------------------------------
-
-loc_9B42:
-		les	bx, _resident
-		add	bx, si
-		mov	es:[bx+resident_t.score_last], 0
-		inc	si
-
-loc_9B4E:
-		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
-		jl	short loc_9B42
-		les	bx, _resident
-		mov	es:[bx+resident_t.rem_credits], 3
-		mov	es:[bx+resident_t.op_skip_animation], 0
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		imul	ax, 25
-		add	al, 70
-		mov	es:[bx+resident_t.skill], al
-		call	@cfg_save$qv
-		call	gaiji_restore
-		kajacall	KAJA_SONG_STOP
-		call	@game_exit$qv
-		pushd	0
-		push	ds
-		push	offset path	; "mainl"
-		push	ds
-		push	offset path	; "mainl"
-		call	_execl
-		add	sp, 0Ch
-		mov	al, 0
-
-loc_9B9A:
-		pop	si
-		leave
-		retn
-start_game	endp
-
+	@story_menu$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -435,9 +270,9 @@ loc_9D19:
 		call	@game_exit$qv
 		pushd	0
 		push	ds
-		push	offset path	; "mainl"
+		push	offset _BINARY_MAINL
 		push	ds
-		push	offset path	; "mainl"
+		push	offset _BINARY_MAINL
 		call	_execl
 		add	sp, 0Ch
 		mov	al, 0
@@ -530,9 +365,9 @@ loc_9EA6:
 		call	@game_exit$qv
 		pushd	0
 		push	ds
-		push	offset path	; "mainl"
+		push	offset _BINARY_MAINL
 		push	ds
-		push	offset path	; "mainl"
+		push	offset _BINARY_MAINL
 		call	_execl
 		add	sp, 0Ch
 		mov	al, 0
@@ -895,7 +730,7 @@ loc_A172:
 		jmp	cs:off_A1F7[bx]
 
 menu_sel_start:
-		call	start_game
+		call	@story_menu$qv
 		jmp	short loc_A19A
 ; ---------------------------------------------------------------------------
 
@@ -1331,7 +1166,6 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 	@select_cdg_load_part3_of_4$qv procdesc near
 	@select_1p_vs_2p_menu$qv procdesc near
 	@select_vs_cpu_menu$qv procdesc near
-	@select_story_menu$qv procdesc near
 OP_SEL_TEXT	ends
 
 ; ===========================================================================
@@ -1384,7 +1218,7 @@ SHARED	ends
 	extern byte_D953:byte
 	extern _main_menu_initialized:byte
 	extern _option_initialized:byte
-	extern path:byte
+	extern _BINARY_MAINL:byte
 	extern asc_D965:byte
 	extern aVfvcvbgngngbgn:byte
 	extern aUmx:byte
@@ -1395,9 +1229,6 @@ SHARED	ends
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramZoom:word
-
-	; libs/master.lib/rand[data].asm
-	extern random_seed:dword
 
 	; libs/master.lib/sin8[data].asm
 	extern _SinTable8:word:256

@@ -59,7 +59,7 @@ start_demo	proc near
 	call	gaiji_restore
 	kajacall	KAJA_SONG_STOP
 	call	@game_exit$qv
-	call	_execl c, offset path, ds, offset path, ds, large 0
+	call	_execl c, offset _BINARY_MAINL, ds, offset _BINARY_MAINL, ds, large 0
 	pop	si
 	pop	bp
 	retn

@@ -1,5 +1,7 @@
 #include "th03/playchar.hpp"
 
+#define BINARY_MAINL "mainl"
+
 #define BGM_MENU_MAIN_FN	"op.m"
 
 #define MENU_MAIN_BG_FN	"TL02.PI"

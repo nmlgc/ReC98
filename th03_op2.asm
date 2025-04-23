@@ -103,20 +103,6 @@ _TEXT	ends
 
 	.data
 
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    2
-		db    0
-		db    3
-		db    5
-		db    4
 		db    6
 
 public gp1P_VS_CPU, gp1P_VS_2P, gpCPU_VS_CPU, gpSTART, gpVS_START
@@ -158,9 +144,9 @@ byte_D953	db 1
 _main_menu_initialized	db 0
 _option_initialized	db 0
 
-public _CFG_FN, path
+public _CFG_FN, _BINARY_MAINL
 _CFG_FN	db 'YUME.CFG',0
-path	db 'mainl',0
+_BINARY_MAINL	db 'mainl',0
 
 public asc_D965, aVfvcvbgngngbgn, aUmx, aViosrfvVVkvqbd, aCOul
 public aGbgvgkxsslvVBb, aMikoft_bft
