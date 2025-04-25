@@ -4,9 +4,12 @@
  */
 
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
+#include "th02/hardware/frmdelay.h"
 #include "th03/common.h"
 #include "th03/resident.hpp"
+#include "th03/hardware/input.h"
 #include "th03/formats/cfg_impl.hpp"
 #include "th03/gaiji/str.hpp"
 #include "th03/snd/snd.h"
@@ -236,4 +239,73 @@ void pascal near vs_choice_put(int sel, tram_atrb2 atrb)
 		gaiji_putsa(TRAM_LEFT, choice_tram_y(3), STR, atrb);
 	}
 }
+
+bool near vs_menu(void)
+{
+	int sel;
+	input_t input_prev = INPUT_NONE;
+
+	// After a match, we come back here, skip the menu, and launch into
+	// character selection.
+	if(resident->game_mode < GM_VS) {
+		text_clear();
+		box_main_to_submenu_animate();
+
+		sel = VS_1P_CPU;
+		vs_choice_put(VS_1P_CPU, TX_WHITE);
+		vs_choice_put(VS_1P_2P, TX_BLACK);
+		vs_choice_put(VS_CPU_CPU, TX_BLACK);
+
+		while(1) {
+			input_mode_interface();
+			if(input_prev == INPUT_NONE) {
+				if(input_sp & INPUT_UP) {
+					vs_choice_put(sel, TX_BLACK);
+					ring_dec(sel, VS_CPU_CPU);
+					vs_choice_put(sel, TX_WHITE);
+				}
+				if(input_sp & INPUT_DOWN) {
+					vs_choice_put(sel, TX_BLACK);
+					ring_inc(sel, VS_CPU_CPU);
+					vs_choice_put(sel, TX_WHITE);
+				}
+				if((input_sp & INPUT_SHOT) || (input_sp & INPUT_OK)) {
+					break;
+				}
+				// ZUN bug: Should have added a INPUT_CANCEL branch to allow
+				// players to quit back to the main menu once they entered this
+				// one.
+			}
+			input_prev = input_sp;
+			frame_delay(1);
+		}
+	} else {
+		sel = (resident->game_mode - GM_VS);
+	}
+
+	resident->is_cpu[0] = ((sel == VS_CPU_CPU) ? true : false);
+	resident->is_cpu[1] = ((sel != VS_1P_2P) ? true : false);
+	resident->demo_num = 0;
+	resident->pid_winner = 0;
+	resident->story_stage = 0;
+	resident->game_mode = (GM_VS + sel);
+	resident->show_score_menu = false;
+
+	// ZUN bloat: Could be compressed into a single branch.
+	if(sel == VS_1P_2P) {
+		if(select_1p_vs_2p_menu()) {
+			resident->game_mode = GM_NONE;
+			return true;
+		}
+	} else {
+		if(select_vs_cpu_menu()) {
+			resident->game_mode = GM_NONE;
+			return true;
+		}
+	}
+
+	resident_reset_scores(sel);
+	return switch_to_mainl();
+}
+
 void pascal near start_demo();

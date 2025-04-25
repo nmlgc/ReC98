@@ -72,163 +72,7 @@ BOX_MAIN_RIGHT = (BOX_LEFT + MAIN_W)
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
 	@story_menu$qv procdesc near
-	@VS_CHOICE_PUT$QIUI procdesc pascal near \
-		atrb:word, sel:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public START_VS
-start_vs	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		les	bx, _resident
-		cmp	es:[bx+resident_t.game_mode], GM_VS
-		jnb	loc_9C8B
-		call	text_clear
-		call	@box_main_to_submenu_animate$qv
-		mov	[bp+var_2], 0
-		pushd	((VS_1P_CPU shl 16) or TX_WHITE)
-		call	@vs_choice_put$qiui
-		push	((VS_1P_2P shl 16) or TX_BLACK)
-		call	@vs_choice_put$qiui
-		push	((VS_CPU_CPU shl 16) or TX_BLACK)
-		call	@vs_choice_put$qiui
-
-loc_9C1B:
-		call	@input_mode_interface$qv
-		or	si, si
-		jnz	short loc_9C7E
-		test	_input_sp.lo, low INPUT_UP
-		jz	short loc_9C4A
-		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_BLACK
-		dec	[bp+var_2]
-		cmp	[bp+var_2], VS_1P_CPU
-		jge	short loc_9C41
-		mov	[bp+var_2], VS_CPU_CPU
-
-loc_9C41:
-		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_WHITE
-
-loc_9C4A:
-		test	_input_sp.lo, low INPUT_DOWN
-		jz	short loc_9C70
-		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_BLACK
-		inc	[bp+var_2]
-		cmp	[bp+var_2], VS_CPU_CPU
-		jle	short loc_9C67
-		mov	[bp+var_2], VS_1P_CPU
-
-loc_9C67:
-		call	@vs_choice_put$qiui pascal, [bp+var_2], TX_WHITE
-
-loc_9C70:
-		test	_input_sp.lo, low INPUT_SHOT
-		jnz	short loc_9C9B
-		test	_input_sp.hi, high INPUT_OK
-		jnz	short loc_9C9B
-
-loc_9C7E:
-		mov	si, _input_sp
-		call	@frame_delay$qi pascal, 1
-		jmp	short loc_9C1B
-; ---------------------------------------------------------------------------
-
-loc_9C8B:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.game_mode]
-		mov	ah, 0
-		add	ax, -GM_VS
-		mov	[bp+var_2], ax
-
-loc_9C9B:
-		cmp	[bp+var_2], VS_CPU_CPU
-		jnz	short loc_9CA5
-		mov	al, 1
-		jmp	short loc_9CA7
-; ---------------------------------------------------------------------------
-
-loc_9CA5:
-		mov	al, 0
-
-loc_9CA7:
-		les	bx, _resident
-		mov	es:[bx+resident_t.RESIDENT_is_cpu][0], al
-		cmp	[bp+var_2], VS_1P_2P
-		jz	short loc_9CB9
-		mov	al, 1
-		jmp	short loc_9CBB
-; ---------------------------------------------------------------------------
-
-loc_9CB9:
-		mov	al, 0
-
-loc_9CBB:
-		les	bx, _resident
-		mov	es:[bx+resident_t.RESIDENT_is_cpu][1], al
-		mov	es:[bx+resident_t.demo_num], 0
-		mov	es:[bx+resident_t.pid_winner], 0
-		mov	es:[bx+resident_t.story_stage], 0
-		mov	al, byte ptr [bp+var_2]
-		add	al, GM_VS
-		mov	es:[bx+resident_t.game_mode], al
-		mov	es:[bx+resident_t.show_score_menu], 0
-		cmp	[bp+var_2], VS_1P_2P
-		jnz	short loc_9CEF
-		call	@select_1p_vs_2p_menu$qv
-		or	al, al
-		jz	short loc_9D03
-		jmp	short loc_9CF6
-; ---------------------------------------------------------------------------
-
-loc_9CEF:
-		call	@select_vs_cpu_menu$qv
-		or	al, al
-		jz	short loc_9D03
-
-loc_9CF6:
-		les	bx, _resident
-		mov	es:[bx+resident_t.game_mode], GM_NONE
-		mov	al, 1
-		jmp	short loc_9D49
-; ---------------------------------------------------------------------------
-
-loc_9D03:
-		mov	[bp+var_2], 0
-		jmp	short loc_9D19
-; ---------------------------------------------------------------------------
-
-loc_9D0A:
-		les	bx, _resident
-		add	bx, [bp+var_2]
-		mov	es:[bx+resident_t.score_last], 0
-		inc	[bp+var_2]
-
-loc_9D19:
-		cmp	[bp+var_2], (PLAYER_COUNT * SCORE_DIGITS)
-		jl	short loc_9D0A
-		call	@cfg_save$qv
-		call	gaiji_restore
-		kajacall	KAJA_SONG_STOP
-		call	@game_exit$qv
-		pushd	0
-		push	ds
-		push	offset _BINARY_MAINL
-		push	ds
-		push	offset _BINARY_MAINL
-		call	_execl
-		add	sp, 0Ch
-		mov	al, 0
-
-loc_9D49:
-		pop	si
-		leave
-		retn
-start_vs	endp
+	@vs_menu$qv procdesc near
 
 include th03/start.asm
 
@@ -685,7 +529,7 @@ menu_sel_vs_start:
 		les	bx, _resident
 		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][0], (1 + (PLAYCHAR_REIMU * 2))
 		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], (1 + (PLAYCHAR_REIMU * 2))
-		call	start_vs
+		call	@vs_menu$qv
 
 loc_A19A:
 		call	@op_fadein_animate$qv
@@ -1034,7 +878,7 @@ loc_A468:
 		call	@select_cdg_load_part1_of_4$qv
 		call	@select_cdg_load_part3_of_4$qv
 		call	@select_cdg_load_part2_of_4$qv
-		call	start_vs
+		call	@vs_menu$qv
 
 loc_A497:
 		les	bx, _resident
@@ -1111,8 +955,6 @@ OP_SEL_TEXT segment byte public 'CODE' use16
 	@select_cdg_load_part1_of_4$qv procdesc near
 	@select_cdg_load_part2_of_4$qv procdesc near
 	@select_cdg_load_part3_of_4$qv procdesc near
-	@select_1p_vs_2p_menu$qv procdesc near
-	@select_vs_cpu_menu$qv procdesc near
 OP_SEL_TEXT	ends
 
 ; ===========================================================================
