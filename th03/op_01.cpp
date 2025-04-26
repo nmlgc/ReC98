@@ -349,3 +349,33 @@ void near start_demo(void)
 
 	switch_to_mainl();
 }
+
+void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
+{
+	{
+		input_sp = INPUT_NONE;
+		int frame = 0;
+		while(input_sp == INPUT_NONE) {
+			input_mode_interface();
+			resident->rand++;
+			frame++;
+			if(frame > 520) {
+				start_demo();
+			}
+			frame_delay(1);
+		}
+	}
+
+	super_put(BOX_LEFT, BOX_TOP, OPWIN_LEFT);
+
+	// ZUN bloat: Should maybe be merged with the two others in `m_main.cpp`.
+	{for(
+		screen_x_t right_left = (BOX_LEFT + OPWIN_W);
+		right_left < (BOX_MAIN_RIGHT - OPWIN_STEP_W);
+		right_left += OPWIN_STEP_W
+	) {
+		box_column16_unput(right_left);
+		super_put(right_left, BOX_TOP, OPWIN_RIGHT);
+		frame_delay(1);
+	}}
+}

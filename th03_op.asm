@@ -44,7 +44,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern TEXT_PUTSA:proc
 	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
-	extern SUPER_PUT:proc
 	extern RESPAL_CREATE:proc
 	extern RESPAL_FREE:proc
 _TEXT	ends
@@ -57,70 +56,12 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-OPWIN_LEFT = 0
-OPWIN_RIGHT = 2
-
-OPWIN_W = 16
-OPWIN_STEP_W = (OPWIN_W / 2)
-MAIN_W = 136
-BOX_LEFT = 160
-BOX_TOP = 256
-BOX_MAIN_RIGHT = (BOX_LEFT + MAIN_W)
-
 	@cfg_load$qv procdesc near
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
 	@story_menu$qv procdesc near
 	@vs_menu$qv procdesc near
-	@start_demo$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9E16	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	_input_sp, INPUT_NONE
-		xor	si, si
-		jmp	short loc_9E43
-; ---------------------------------------------------------------------------
-
-loc_9E24:
-		call	@input_mode_interface$qv
-		les	bx, _resident
-		inc	es:[bx+resident_t.rand]
-		inc	si
-		cmp	si, 208h
-		jle	short loc_9E3C
-		call	@start_demo$qv
-
-loc_9E3C:
-		call	@frame_delay$qi pascal, 1
-
-loc_9E43:
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_9E24
-		call	super_put pascal, large (BOX_LEFT shl 16) or BOX_TOP, OPWIN_LEFT
-		mov	si, (BOX_LEFT + OPWIN_W)
-		jmp	short loc_9E76
-; ---------------------------------------------------------------------------
-
-loc_9E5C:
-		call	@box_column16_unput$qui pascal, si
-		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
-		call	@frame_delay$qi pascal, 1
-		add	si, OPWIN_STEP_W
-
-loc_9E76:
-		cmp	si, (BOX_MAIN_RIGHT - (OPWIN_STEP_W))
-		jl	short loc_9E5C
-		pop	si
-		pop	bp
-		retn
-sub_9E16	endp
-
+	@wait_for_input_or_start_demo_the$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -531,7 +472,7 @@ menu_sel_vs_start:
 
 loc_A19A:
 		call	@op_fadein_animate$qv
-		call	sub_9E16
+		call	@wait_for_input_or_start_demo_the$qv
 		call	@select_cdg_load_part2_of_4$qv
 		mov	_main_menu_initialized, 0
 		mov	_main_input_allowed, 0
@@ -894,7 +835,7 @@ loc_A4B0:
 		call	@op_fadein_animate$qv
 
 loc_A4BC:
-		call	sub_9E16
+		call	@wait_for_input_or_start_demo_the$qv
 		mov	_in_option, 0
 		mov	_input_sp, INPUT_NONE
 		call	main_update_and_render
@@ -945,8 +886,6 @@ OP_MUSIC_TEXT segment byte public 'CODE' use16
 	@op_fadein_animate$qv procdesc near
 	@box_main_to_submenu_animate$qv procdesc near
 	@box_submenu_to_main_animate$qv procdesc near
-	@BOX_COLUMN16_UNPUT$QUI procdesc pascal near \
-		left:word
 OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
