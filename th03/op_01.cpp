@@ -39,9 +39,6 @@ enum gaiji_th03_mikoft_t {
 
 bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 
-// extern const playchar_paletted_t demo_chars[DEMO_COUNT][PLAYER_COUNT];
-// extern const int32_t demo_rand[DEMO_COUNT];
-
 /// YUME.CFG loading and saving
 /// ---------------------------
 
@@ -308,4 +305,47 @@ bool near vs_menu(void)
 	return switch_to_mainl();
 }
 
-void pascal near start_demo();
+void near start_demo(void)
+{
+	static const int8_t PAIRINGS[DEMO_COUNT * PLAYER_COUNT] = {
+		TO_OPTIONAL_PALETTED(PLAYCHAR_MIMA),
+		TO_OPTIONAL_PALETTED(PLAYCHAR_REIMU),
+
+		TO_OPTIONAL_PALETTED(PLAYCHAR_MARISA),
+		TO_OPTIONAL_PALETTED(PLAYCHAR_RIKAKO),
+
+		TO_OPTIONAL_PALETTED(PLAYCHAR_ELLEN),
+		TO_OPTIONAL_PALETTED(PLAYCHAR_KANA),
+
+		TO_OPTIONAL_PALETTED(PLAYCHAR_KOTOHIME),
+		TO_OPTIONAL_PALETTED(PLAYCHAR_MARISA),
+	};
+	static const int32_t RAND[DEMO_COUNT] = { 600, 1000, 3200, 500 };
+
+	resident->is_cpu[0] = true;
+	resident->is_cpu[1] = true;
+	ring_inc_range(resident->demo_num, 1, DEMO_COUNT);
+	resident->pid_winner = 0;
+
+	// Critically important to guarantee deterministic demos!
+	resident->story_stage = 0;
+
+	resident->game_mode = GM_DEMO;
+	resident->show_score_menu = false;
+
+	// ZUN bloat: A two-dimensional array would have been more readable and
+	// would have generated better code.
+	resident->playchar_paletted[0].v = (
+		PAIRINGS[((resident->demo_num - 1) * PLAYER_COUNT) + 0]
+	);
+	resident->playchar_paletted[1].v = (
+		PAIRINGS[((resident->demo_num - 1) * PLAYER_COUNT) + 1]
+	);
+
+	resident->rand = RAND[resident->demo_num - 1];
+	int i;
+	resident_reset_scores(i);
+	palette_black_out(1);
+
+	switch_to_mainl();
+}

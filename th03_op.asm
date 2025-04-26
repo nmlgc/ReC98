@@ -29,7 +29,6 @@ group_01 group op_01_TEXT, OP_MUSIC_TEXT, OP_SEL_TEXT
 ; ===========================================================================
 
 _TEXT	segment	word public 'CODE' use16
-	extern PALETTE_BLACK_OUT:proc
 	extern DOS_PUTS2:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRCG_SETCOLOR:proc
@@ -73,8 +72,7 @@ BOX_MAIN_RIGHT = (BOX_LEFT + MAIN_W)
 	@cfg_save_exit$qv procdesc near
 	@story_menu$qv procdesc near
 	@vs_menu$qv procdesc near
-
-include th03/start.asm
+	@start_demo$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -96,7 +94,7 @@ loc_9E24:
 		inc	si
 		cmp	si, 208h
 		jle	short loc_9E3C
-		call	start_demo
+		call	@start_demo$qv
 
 loc_9E3C:
 		call	@frame_delay$qi pascal, 1
@@ -974,8 +972,6 @@ SHARED	ends
 
 	extern _snd_sel_disabled:byte
 
-	extern _demo_chars:byte
-	extern _demo_rand:dword
 	extern gpSTART:byte
 	extern gpVS_START:byte
 	extern gpMUSIC_ROOM:byte

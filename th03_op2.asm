@@ -107,7 +107,6 @@ public gpSTART, gpVS_START
 public gpMUSIC_ROOM, gpHISCORE, gpOPTION, gpQUIT, gpRANK, gpMUSIC, gpKEYCONFIG
 public gpEASY, gpNORMAL, gpHARD, gpLUNATIC, gpOFF, gpFM_86, gpMIDI_SC88, gpOFF
 public gpFM_86, gpMIDI_SC88, gpKEY_VS_KEY, gpJOY_VS_KEY, gpKEY_VS_JOY
-include th03/start[data].asm
 gpSTART	db 30h, 31h, 32h, 0
 gpVS_START	db 33h, 34h, 35h, 36h, 37h, 38h, 0
 gpMUSIC_ROOM	db 41h, 42h, 43h, 44h, 45h, 46h, 47h, 0
