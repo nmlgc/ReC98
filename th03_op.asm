@@ -63,6 +63,9 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+OPWIN_LEFT = 0
+OPWIN_RIGHT = 2
+
 	@cfg_load$qv procdesc near
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
@@ -472,7 +475,7 @@ loc_9E3C:
 loc_9E43:
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_9E24
-		call	super_put pascal, large (160 shl 16) or 256, 0
+		call	super_put pascal, large (160 shl 16) or 256, OPWIN_LEFT
 		mov	si, 176
 		jmp	short loc_9E76
 ; ---------------------------------------------------------------------------
@@ -480,7 +483,7 @@ loc_9E43:
 loc_9E5C:
 		push	si
 		call	sub_B10A
-		call	super_put pascal, si, large (256 shl 16) or 2
+		call	super_put pascal, si, large (256 shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
 		add	si, 8
 
@@ -1522,7 +1525,7 @@ sub_B0AF	proc near
 loc_B0B8:
 		push	si
 		call	sub_B10A
-		call	super_put pascal, si, large (256 shl 16) or 2
+		call	super_put pascal, si, large (256 shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
 		add	si, 8
 
@@ -1551,7 +1554,7 @@ loc_B0E4:
 		lea	ax, [si+8]
 		push	ax
 		call	sub_B10A
-		call	super_put pascal, si, large (256 shl 16) or 2
+		call	super_put pascal, si, large (256 shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
 		sub	si, 8
 
