@@ -21,7 +21,6 @@ include th03/th03.inc
 include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
 
-	extern _execl:proc
 	extern _getch:proc
 
 group_01 group op_01_TEXT, OP_MUSIC_TEXT, OP_SEL_TEXT
@@ -43,7 +42,6 @@ _TEXT	segment	word public 'CODE' use16
 	extern TEXT_CLEAR:proc
 	extern TEXT_PUTSA:proc
 	extern HMEM_FREE:proc
-	extern SUPER_FREE:proc
 	extern RESPAL_CREATE:proc
 	extern RESPAL_FREE:proc
 _TEXT	ends
@@ -57,55 +55,11 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 	@cfg_load$qv procdesc near
-	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
 	@story_menu$qv procdesc near
 	@vs_menu$qv procdesc near
 	@wait_for_input_or_start_demo_the$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public SCORE_MENU
-score_menu	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		les	bx, _resident
-		mov	es:[bx+resident_t.story_stage], STAGE_NONE
-		mov	es:[bx+resident_t.show_score_menu], 1
-		mov	es:[bx+resident_t.game_mode], GM_NONE
-		xor	si, si
-		jmp	short loc_9EA6
-; ---------------------------------------------------------------------------
-
-loc_9E9A:
-		les	bx, _resident
-		add	bx, si
-		mov	es:[bx+resident_t.score_last], 0
-		inc	si
-
-loc_9EA6:
-		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
-		jl	short loc_9E9A
-		call	@cfg_save$qv
-		call	gaiji_restore
-		kajacall	KAJA_SONG_STOP
-		call	super_free
-		call	@game_exit$qv
-		pushd	0
-		push	ds
-		push	offset _BINARY_MAINL
-		push	ds
-		push	offset _BINARY_MAINL
-		call	_execl
-		add	sp, 0Ch
-		mov	al, 0
-		pop	si
-		pop	bp
-		retn
-score_menu	endp
-
+	@score_menu$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -486,7 +440,7 @@ menu_sel_musicroom:
 ; ---------------------------------------------------------------------------
 
 menu_sel_hiscore:
-		call	score_menu
+		call	@score_menu$qv
 		jmp	short loc_A1DB
 ; ---------------------------------------------------------------------------
 
@@ -899,7 +853,6 @@ OP_SEL_TEXT	ends
 SHARED	segment	word public 'CODE' use16
 	extern @game_exit_to_dos$qv:proc
 	extern _snd_determine_mode:proc
-	extern @game_exit$qv:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @input_reset_sense_key_held$qv:proc
 	extern SND_KAJA_INTERRUPT:proc
@@ -939,7 +892,6 @@ SHARED	ends
 	extern byte_D953:byte
 	extern _main_menu_initialized:byte
 	extern _option_initialized:byte
-	extern _BINARY_MAINL:byte
 	extern asc_D965:byte
 	extern aVfvcvbgngngbgn:byte
 	extern aUmx:byte

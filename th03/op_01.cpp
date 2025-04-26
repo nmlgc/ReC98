@@ -100,10 +100,13 @@ void near cfg_save_exit(void)
 	} \
 }
 
-inline bool switch_to_mainl(void) {
+inline bool switch_to_mainl(bool opwin_free) {
 	cfg_save();
 	gaiji_restore();
 	snd_kaja_func(KAJA_SONG_STOP, 0);
+	if(opwin_free) {
+		super_free(); // ZUN bloat: Process termination will do this anyway.
+	}
 	game_exit();
 	execl(BINARY_MAINL, BINARY_MAINL, 0, 0);
 	return false;
@@ -212,7 +215,7 @@ retry_opponent_selection:
 	resident->rem_credits = 3;
 	resident->op_skip_animation = false;
 	resident->skill = (70 + (resident->rank * 25));
-	return switch_to_mainl();
+	return switch_to_mainl(false);
 }
 
 inline tram_y_t choice_tram_y(unsigned int line) {
@@ -302,7 +305,7 @@ bool near vs_menu(void)
 	}
 
 	resident_reset_scores(sel);
-	return switch_to_mainl();
+	return switch_to_mainl(false);
 }
 
 void near start_demo(void)
@@ -347,7 +350,7 @@ void near start_demo(void)
 	resident_reset_scores(i);
 	palette_black_out(1);
 
-	switch_to_mainl();
+	switch_to_mainl(false);
 }
 
 void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
@@ -378,4 +381,14 @@ void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
 		super_put(right_left, BOX_TOP, OPWIN_RIGHT);
 		frame_delay(1);
 	}}
+}
+
+bool near score_menu(void)
+{
+	resident->story_stage = STAGE_NONE;
+	resident->show_score_menu = true;
+	resident->game_mode = GM_NONE;
+	int i;
+	resident_reset_scores(i);
+	return switch_to_mainl(true);
 }
