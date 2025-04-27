@@ -103,16 +103,9 @@ _TEXT	ends
 
 	.data
 
-public gpSTART, gpVS_START
-public gpMUSIC_ROOM, gpHISCORE, gpOPTION, gpQUIT, gpRANK, gpMUSIC, gpKEYCONFIG
+public gpRANK, gpMUSIC, gpKEYCONFIG
 public gpEASY, gpNORMAL, gpHARD, gpLUNATIC, gpOFF, gpFM_86, gpMIDI_SC88, gpOFF
 public gpFM_86, gpMIDI_SC88, gpKEY_VS_KEY, gpJOY_VS_KEY, gpKEY_VS_JOY
-gpSTART	db 30h, 31h, 32h, 0
-gpVS_START	db 33h, 34h, 35h, 36h, 37h, 38h, 0
-gpMUSIC_ROOM	db 41h, 42h, 43h, 44h, 45h, 46h, 47h, 0
-gpHISCORE	db 82h, 83h, 84h, 85h, 86h, 0
-gpOPTION	db 3Dh, 3Eh, 3Fh, 40h, 0
-gpQUIT	db 48h, 49h, 4Ah, 0
 gpRANK	db 6Eh, 6Fh, 70h, 0
 gpMUSIC	db 4Bh, 4Ch, 4Dh, 4Eh, 0
 gpKEYCONFIG	db 5Ch, 5Dh, 5Eh, 5Fh, 60h, 61h, 0

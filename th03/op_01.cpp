@@ -19,10 +19,33 @@
 #include <stddef.h>
 #include <process.h>
 
+enum main_choice_t {
+	MC_STORY,
+	MC_VS,
+	MC_MUSICROOM,
+	MC_REGIST_VIEW,
+	MC_OPTION,
+	MC_QUIT,
+	MC_COUNT,
+};
+
 // Proportional gaiji strings
 // --------------------------
 
 enum gaiji_th03_mikoft_t {
+	gp_Start = 0x30,
+	gp_Start_last = ((gp_Start + 3) - 1),
+	gp_VS_Start,
+	gp_VS_Start_last = ((gp_VS_Start + 6) - 1),
+	gp_Option = 0x3D,
+	gp_Option_last = ((gp_Option + 4) - 1),
+	gp_Music_room,
+	gp_Music_room_last = ((gp_Music_room + 7) - 1),
+	gp_Quit,
+	gp_Quit_last = ((gp_Quit + 3) - 1),
+
+	gp_HiScore = 0x82,
+	gp_HiScore_last = ((gp_HiScore + 5) - 1),
 	gp_1P_vs = 0x88,
 	gp_1P_vs_last = ((gp_1P_vs + 4) - 1),
 	gp__CPU,
@@ -392,3 +415,60 @@ bool near score_menu(void)
 	resident_reset_scores(i);
 	return switch_to_mainl(true);
 }
+
+/// The menu
+/// --------
+
+// Must be non-`const` for data ordering reasons. Declared at global scope
+// because
+// 1) the same [COMMAND_QUIT] string is used in both the main and Option menu,
+//    and
+// 2) some of those are unused, which points toward ZUN having declared them at
+//    global scope as well.
+char COMMAND_STORY[] = { g_str_3(gp_Start), '\0' };
+char COMMAND_VS[] = { g_str_6(gp_VS_Start), '\0' };
+char COMMAND_MUSICROOM[] = { g_str_7(gp_Music_room), '\0' };
+char COMMAND_REGIST_VIEW[] = { g_str_5(gp_HiScore), '\0' };
+char COMMAND_OPTION[] = { g_str_4(gp_Option), '\0' };
+char COMMAND_QUIT[] = { g_str_3(gp_Quit), '\0' };
+
+// These menus want to display centered strings. However, the underlying gaiji
+// of all of these (except "Start", which exactly fits into the 48 pixels
+// covered by its 3 gaiji) are left-aligned and leave anywhere from 6 to 14
+// pixels of trailing blank space in their last gaiji. Hence, ZUN shifts the
+// mathematically correct center a bit to get as close as possible to visual
+// centering, but still fails to perfectly center three of these labels; only
+// "Music room" and "Option" are. Would be a ZUN bug, but a fix would also have
+// to change assets. We'll probably only do that once we translate the game.
+#define gaiji_w_shifted(str, shift_x) ( \
+	((sizeof(str) - 1) + shift_x) * GAIJI_W \
+)
+
+#define choice_put_centered(center_x, line, shift_x, str, atrb) { \
+	gaiji_putsa( \
+		((center_x - (gaiji_w_shifted(str, shift_x) / 2)) / GLYPH_HALF_W), \
+		choice_tram_y(line), \
+		str, \
+		atrb \
+	); \
+}
+
+void pascal near main_choice_put(int sel, tram_atrb2 atrb)
+{
+	if(sel == MC_STORY) {
+		choice_put_centered(BOX_MAIN_CENTER_X, 0, 0, COMMAND_STORY, atrb);
+	} else if(sel == MC_VS) {
+		choice_put_centered(BOX_MAIN_CENTER_X, 1, -1, COMMAND_VS, atrb);
+	} else if(sel == MC_MUSICROOM) {
+		choice_put_centered(BOX_MAIN_CENTER_X, 2, -1, COMMAND_MUSICROOM, atrb);
+	} else if(sel == MC_REGIST_VIEW) {
+		choice_put_centered(
+			BOX_MAIN_CENTER_X, 3, -1, COMMAND_REGIST_VIEW, atrb
+		);
+	} else if(sel == MC_OPTION) {
+		choice_put_centered(BOX_MAIN_CENTER_X, 4, -1, COMMAND_OPTION, atrb);
+	} else if(sel == MC_QUIT) {
+		choice_put_centered(BOX_MAIN_CENTER_X, 5, -1, COMMAND_QUIT, atrb);
+	}
+}
+/// --------

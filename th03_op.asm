@@ -60,84 +60,8 @@ op_01_TEXT	segment	byte public 'CODE' use16
 	@vs_menu$qv procdesc near
 	@wait_for_input_or_start_demo_the$qv procdesc near
 	@score_menu$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MAIN_PUT
-main_put	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		or	si, si
-		jnz	short loc_9EF8
-		push	(25 shl 16) + 17
-		push	ds
-		push	offset gpSTART
-		jmp	short loc_9F4B
-; ---------------------------------------------------------------------------
-
-loc_9EF8:
-		cmp	si, 1
-		jnz	short loc_9F09
-		push	(23 shl 16) + 18
-		push	ds
-		push	offset gpVS_START
-		jmp	short loc_9F4B
-; ---------------------------------------------------------------------------
-
-loc_9F09:
-		cmp	si, 2
-		jnz	short loc_9F1A
-		push	(22 shl 16) + 19
-		push	ds
-		push	offset gpMUSIC_ROOM
-		jmp	short loc_9F4B
-; ---------------------------------------------------------------------------
-
-loc_9F1A:
-		cmp	si, 3
-		jnz	short loc_9F2B
-		push	(24 shl 16) + 20
-		push	ds
-		push	offset gpHISCORE
-		jmp	short loc_9F4B
-; ---------------------------------------------------------------------------
-
-loc_9F2B:
-		cmp	si, 4
-		jnz	short loc_9F3C
-		push	(25 shl 16) + 21
-		push	ds
-		push	offset gpOPTION
-		jmp	short loc_9F4B
-; ---------------------------------------------------------------------------
-
-loc_9F3C:
-		cmp	si, 5
-		jnz	short loc_9F51
-		push	(26 shl 16) + 22
-		push	ds
-		push	offset gpQUIT
-
-loc_9F4B:
-		push	di
-		call	gaiji_putsa
-
-loc_9F51:
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-main_put	endp
-
+	@MAIN_CHOICE_PUT$QIUI procdesc pascal near \
+		atrb:word, sel:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -274,7 +198,7 @@ loc_A07D:
 		jnz	short loc_A092
 		push	(32 shl 16) + 22
 		push	ds
-		push	offset gpQUIT
+		push	0FAh ; "Quit"
 
 loc_A08C:
 		push	si
@@ -362,22 +286,22 @@ loc_A108:
 		cbw
 		cmp	ax, si
 		jnz	short loc_A116
-		mov	ax, 0E1h
+		mov	ax, TX_WHITE
 		jmp	short loc_A119
 ; ---------------------------------------------------------------------------
 
 loc_A116:
-		mov	ax, 1
+		mov	ax, TX_BLACK
 
 loc_A119:
 		push	ax
-		call	main_put
+		call	@main_choice_put$qiui
 		inc	si
 
 loc_A11E:
 		cmp	si, 6
 		jl	short loc_A108
-		mov	_putfunc, offset main_put
+		mov	_putfunc, offset @main_choice_put$qiui
 		mov	_main_menu_initialized, 1
 		mov	_main_input_allowed, 0
 
@@ -864,12 +788,6 @@ SHARED	ends
 
 	extern _snd_sel_disabled:byte
 
-	extern gpSTART:byte
-	extern gpVS_START:byte
-	extern gpMUSIC_ROOM:byte
-	extern gpHISCORE:byte
-	extern gpOPTION:byte
-	extern gpQUIT:byte
 	extern gpRANK:byte
 	extern gpMUSIC:byte
 	extern gpKEYCONFIG:byte
