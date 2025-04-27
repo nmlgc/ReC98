@@ -66,6 +66,15 @@ op_01_TEXT	segment	byte public 'CODE' use16
 OPWIN_LEFT = 0
 OPWIN_RIGHT = 2
 
+OPWIN_W = 16
+OPWIN_STEP_W = (OPWIN_W / 2)
+MAIN_W = 136
+SUBMENU_W = 240
+BOX_LEFT = 160
+BOX_TOP = 256
+BOX_MAIN_RIGHT = (BOX_LEFT + MAIN_W)
+BOX_SUBMENU_RIGHT = (BOX_LEFT + SUBMENU_W)
+
 	@cfg_load$qv procdesc near
 	@cfg_save$qv procdesc near
 	@cfg_save_exit$qv procdesc near
@@ -252,7 +261,7 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_0]
 		or	di, di
 		jnz	short loc_9BB8
-		push	1B0012h
+		push	(27 shl 16) or 18
 		push	ds
 		push	offset gp1P_VS_CPU
 		jmp	short loc_9BD3
@@ -261,14 +270,14 @@ arg_2		= word ptr  6
 loc_9BB8:
 		cmp	di, 1
 		jnz	short loc_9BC9
-		push	1B0013h
+		push	(27 shl 16) or 19
 		push	ds
 		push	offset gp1P_VS_2P
 		jmp	short loc_9BD3
 ; ---------------------------------------------------------------------------
 
 loc_9BC9:
-		push	1B0014h
+		push	(27 shl 16) or 20
 		push	ds
 		push	offset gpCPU_VS_CPU
 
@@ -475,20 +484,20 @@ loc_9E3C:
 loc_9E43:
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_9E24
-		call	super_put pascal, large (160 shl 16) or 256, OPWIN_LEFT
-		mov	si, 176
+		call	super_put pascal, large (BOX_LEFT shl 16) or BOX_TOP, OPWIN_LEFT
+		mov	si, (BOX_LEFT + OPWIN_W)
 		jmp	short loc_9E76
 ; ---------------------------------------------------------------------------
 
 loc_9E5C:
 		push	si
 		call	sub_B10A
-		call	super_put pascal, si, large (256 shl 16) or OPWIN_RIGHT
+		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
-		add	si, 8
+		add	si, OPWIN_STEP_W
 
 loc_9E76:
-		cmp	si, 288
+		cmp	si, (BOX_MAIN_RIGHT - (OPWIN_STEP_W))
 		jl	short loc_9E5C
 		pop	si
 		pop	bp
@@ -1518,19 +1527,19 @@ sub_B0AF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 288
+		mov	si, (BOX_MAIN_RIGHT - OPWIN_STEP_W)
 		jmp	short loc_B0D2
 ; ---------------------------------------------------------------------------
 
 loc_B0B8:
 		push	si
 		call	sub_B10A
-		call	super_put pascal, si, large (256 shl 16) or OPWIN_RIGHT
+		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
-		add	si, 8
+		add	si, OPWIN_STEP_W
 
 loc_B0D2:
-		cmp	si, 392
+		cmp	si, (BOX_SUBMENU_RIGHT - OPWIN_STEP_W)
 		jl	short loc_B0B8
 		pop	si
 		pop	bp
@@ -1546,20 +1555,20 @@ sub_B0DB	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 384
+		mov	si, (BOX_SUBMENU_RIGHT - OPWIN_W)
 		jmp	short loc_B101
 ; ---------------------------------------------------------------------------
 
 loc_B0E4:
-		lea	ax, [si+8]
+		lea	ax, [si+OPWIN_STEP_W]
 		push	ax
 		call	sub_B10A
-		call	super_put pascal, si, large (256 shl 16) or OPWIN_RIGHT
+		call	super_put pascal, si, large (BOX_TOP shl 16) or OPWIN_RIGHT
 		call	@frame_delay$qi pascal, 1
-		sub	si, 8
+		sub	si, OPWIN_STEP_W
 
 loc_B101:
-		cmp	si, 280
+		cmp	si, (BOX_MAIN_RIGHT - OPWIN_W)
 		jge	short loc_B0E4
 		pop	si
 		pop	bp
