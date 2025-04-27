@@ -400,7 +400,7 @@ void main_update_and_render(void)
 		main_input_allowed = true;
 	}
 	if(main_input_allowed) {
-		menu_update_vertical(6);
+		menu_update_vertical(key_det, 6);
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {
 			case 0:
@@ -576,7 +576,7 @@ void option_update_and_render(void)
 		input_allowed = 1;
 	}
 	if(input_allowed) {
-		menu_update_vertical(7);
+		menu_update_vertical(key_det, 7);
 		if(key_det & INPUT_RIGHT) {
 			option_change(ring_inc);
 		}

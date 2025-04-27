@@ -362,7 +362,7 @@ void near main_update_and_render(void)
 	if(!input_allowed) {
 		return;
 	}
-	menu_update_vertical(MC_COUNT);
+	menu_update_vertical(key_det, MC_COUNT);
 
 	if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) {
 		snd_se_play_force(11);
@@ -459,7 +459,7 @@ void near option_update_and_render(void)
 	if(!input_allowed) {
 		return;
 	}
-	menu_update_vertical(OC_COUNT);
+	menu_update_vertical(key_det, OC_COUNT);
 
 	if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) {
 		switch(menu_sel) {

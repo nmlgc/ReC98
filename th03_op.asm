@@ -54,162 +54,13 @@ op_01_TEXT	segment	byte public 'CODE' use16
 
 	@cfg_load$qv procdesc near
 	@cfg_save_exit$qv procdesc near
-	@story_menu$qv procdesc near
 	@vs_menu$qv procdesc near
 	@wait_for_input_or_start_demo_the$qv procdesc near
-	@score_menu$qv procdesc near
-	@MAIN_CHOICE_PUT$QIUI procdesc pascal near \
-		atrb:word, sel:word
 	@OPTION_CHOICE_PUT$QIUI procdesc pascal near \
 		atrb:word, sel:word
 	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
 		max:byte, direction:byte
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MAIN_UPDATE_AND_RENDER
-main_update_and_render	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_main_menu_initialized, 0
-		jnz	short @@main_initialized
-		call	text_clear
-		cmp	byte_D953, 0
-		jnz	short loc_A0FA
-		call	@box_submenu_to_main_animate$qv
-
-loc_A0FA:
-		mov	byte_D953, 0
-		mov	_main_input_allowed, 0
-		xor	si, si
-		jmp	short loc_A11E
-; ---------------------------------------------------------------------------
-
-loc_A108:
-		push	si
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, si
-		jnz	short loc_A116
-		mov	ax, TX_WHITE
-		jmp	short loc_A119
-; ---------------------------------------------------------------------------
-
-loc_A116:
-		mov	ax, TX_BLACK
-
-loc_A119:
-		push	ax
-		call	@main_choice_put$qiui
-		inc	si
-
-loc_A11E:
-		cmp	si, 6
-		jl	short loc_A108
-		mov	_menu_put, offset @main_choice_put$qiui
-		mov	_main_menu_initialized, 1
-		mov	_main_input_allowed, 0
-
-@@main_initialized:
-		cmp	_input_sp, INPUT_NONE
-		jnz	short loc_A13F
-		mov	_main_input_allowed, 1
-
-loc_A13F:
-		cmp	_main_input_allowed, 0
-		jz	@@no_main_input_allowed
-		test	_input_sp.lo, low INPUT_UP
-		jz	short loc_A156
-		call	@menu_sel_update_and_render$qcc pascal, 5, -1
-
-loc_A156:
-		test	_input_sp.lo, low INPUT_DOWN
-		jz	short loc_A164
-		call	@menu_sel_update_and_render$qcc pascal, 5, 1
-
-loc_A164:
-		test	_input_sp.hi, high INPUT_OK
-		jnz	short loc_A172
-		test	_input_sp.lo, low INPUT_SHOT
-		jz	short loc_A1DB
-
-loc_A172:
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 5
-		ja	short loc_A1DB
-		add	bx, bx
-		jmp	cs:off_A1F7[bx]
-
-menu_sel_start:
-		call	@story_menu$qv
-		jmp	short loc_A19A
-; ---------------------------------------------------------------------------
-
-menu_sel_vs_start:
-		les	bx, _resident
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][0], (1 + (PLAYCHAR_REIMU * 2))
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], (1 + (PLAYCHAR_REIMU * 2))
-		call	@vs_menu$qv
-
-loc_A19A:
-		call	@op_fadein_animate$qv
-		call	@wait_for_input_or_start_demo_the$qv
-		call	@select_cdg_load_part2_of_4$qv
-		mov	_main_menu_initialized, 0
-		mov	_main_input_allowed, 0
-		mov	byte_D953, 1
-		jmp	short @@no_main_input_allowed
-; ---------------------------------------------------------------------------
-
-menu_sel_musicroom:
-		nopcall	@musicroom_menu$qv
-		jmp	short loc_A19A
-; ---------------------------------------------------------------------------
-
-menu_sel_hiscore:
-		call	@score_menu$qv
-		jmp	short loc_A1DB
-; ---------------------------------------------------------------------------
-
-menu_sel_option:
-		mov	_main_menu_initialized, 0
-		mov	_in_option, 1
-		mov	_menu_sel, 0
-		jmp	short loc_A1DB
-; ---------------------------------------------------------------------------
-
-menu_sel_quit:
-		mov	_main_menu_initialized, 0
-		mov	_quit, 1
-
-loc_A1DB:
-		test	_input_sp.hi, high INPUT_CANCEL
-		jz	short loc_A1E7
-		mov	_quit, 1
-
-loc_A1E7:
-		cmp	_input_sp, INPUT_NONE
-		jz	short @@no_main_input_allowed
-		mov	_main_input_allowed, 0
-
-@@no_main_input_allowed:
-		pop	si
-		pop	bp
-		retn
-main_update_and_render	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_A1F7	dw offset menu_sel_start
-		dw offset menu_sel_vs_start
-		dw offset menu_sel_musicroom
-		dw offset menu_sel_hiscore
-		dw offset menu_sel_option
-		dw offset menu_sel_quit
+	@main_update_and_render$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -515,7 +366,7 @@ loc_A4BC:
 		call	@wait_for_input_or_start_demo_the$qv
 		mov	_in_option, 0
 		mov	_input_sp, INPUT_NONE
-		call	main_update_and_render
+		call	@main_update_and_render$qv
 		call	@select_cdg_load_part2_of_4$qv
 		jmp	short loc_A4FE
 ; ---------------------------------------------------------------------------
@@ -532,7 +383,7 @@ loc_A4D2:
 ; ---------------------------------------------------------------------------
 
 @@not_in_option:
-		call	main_update_and_render
+		call	@main_update_and_render$qv
 		jmp	short loc_A4EE
 ; ---------------------------------------------------------------------------
 
@@ -558,11 +409,9 @@ _main		endp
 op_01_TEXT ends
 
 OP_MUSIC_TEXT segment byte public 'CODE' use16
-	extern @musicroom_menu$qv:proc
 	@op_animate$qv procdesc near
 	@op_fadein_animate$qv procdesc near
 	@box_main_to_submenu_animate$qv procdesc near
-	@box_submenu_to_main_animate$qv procdesc near
 OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
@@ -589,8 +438,6 @@ SHARED	ends
 
 	extern _menu_sel:byte
 	extern _quit:byte
-	extern byte_D953:byte
-	extern _main_menu_initialized:byte
 	extern _option_initialized:byte
 	extern aVfvcvbgngngbgn:byte
 	extern aUmx:byte
@@ -662,7 +509,6 @@ _SELECT_PALETTE_FN	db 'TLSL.RGB',0
 
 	.data?
 
-	extern _main_input_allowed:byte
 	extern _option_input_allowed:byte
 	extern _in_option:byte
 	extern _menu_put:word

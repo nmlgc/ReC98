@@ -9,6 +9,7 @@
 #include "th01/core/initexit.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/op/menu.hpp"
+#include "th02/op/m_music.hpp"
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/hardware/input.h"
@@ -511,7 +512,16 @@ char VALUE_KEY_JOY[] = {
 // -------
 
 int8_t menu_sel = 0;
-extern menu_put_func_t menu_put;
+bool quit = false;
+bool in_main = true;
+
+// ZUN bloat: Should be function-level statics.
+bool main_input_allowed;
+bool option_input_allowed;
+
+int8_t in_option; // ACTUAL TYPE: bool
+static int8_t padding; // ZUN bloat
+menu_put_func_t menu_put;
 // -------
 
 // These menus want to display centered strings. However, the underlying gaiji
@@ -634,5 +644,96 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 		menu_sel = 0;
 	}
 	menu_put(menu_sel, TX_WHITE);
+}
+
+#define menu_init(in_this_menu, input_allowed, choice_count, put) { \
+	input_allowed = false; /* ZUN bloat: Redundant */ \
+	for(int i = 0; i < choice_count; i++) { \
+		put(i, ((menu_sel == i) ? TX_WHITE : TX_BLACK)); \
+	} \
+	menu_put = put; \
+	in_this_menu = true; \
+	input_allowed = false; \
+}
+
+inline void return_from_other_screen_to_main(
+	bool& in_this_menu, bool& main_input_allowed
+) {
+	op_fadein_animate();
+	wait_for_input_or_start_demo_then_box_to_main_animate();
+	select_cdg_load_part2_of_4();
+	in_this_menu = false;
+	main_input_allowed = false;
+	in_main = true;
+}
+
+// Sure, *maybe* these names should point out the possibility of a blocking
+// box transition animation, but main_update_and_render() also directly enters
+// the even more blocking character selection and Music Room screens.
+void near main_update_and_render(void)
+{
+	#define in_this_menu 	main_in_this_menu
+	#define input_allowed	main_input_allowed
+	extern bool in_this_menu;
+
+	if(!in_this_menu) {
+		text_clear();
+		if(!in_main) {
+			box_submenu_to_main_animate();
+		}
+		in_main = false;
+		menu_init(in_this_menu, input_allowed, MC_COUNT, main_choice_put);
+	}
+
+	if(input_sp == INPUT_NONE) {
+		input_allowed = true;
+	}
+	if(!input_allowed) {
+		return;
+	}
+	menu_update_vertical(input_sp, MC_COUNT);
+	if((input_sp & INPUT_OK) || (input_sp & INPUT_SHOT)) {
+		switch(menu_sel) {
+		case MC_STORY:
+			story_menu();
+			return_from_other_screen_to_main(in_this_menu, input_allowed);
+			return;
+		case MC_VS:
+			resident->playchar_paletted[0].set(PLAYCHAR_REIMU);
+			resident->playchar_paletted[1].set(PLAYCHAR_REIMU);
+			vs_menu();
+			return_from_other_screen_to_main(in_this_menu, input_allowed);
+			return;
+		case MC_MUSICROOM:
+			/* TODO: Replace with the decompiled call
+			* 	musicroom_menu();
+			* once the segmentation allows us to, if ever */
+			_asm { nop; push cs; call near ptr musicroom_menu; }
+
+			return_from_other_screen_to_main(in_this_menu, input_allowed);
+			return;
+		case MC_REGIST_VIEW:
+			score_menu();
+			break; // launches into MAINL.EXE
+		case MC_OPTION:
+			in_this_menu = false;
+			in_option = true;
+			menu_sel = OC_RANK;
+			break;
+		case MC_QUIT:
+			in_this_menu = false; // We're quitting anyway...
+			quit = true;
+			break;
+		}
+	}
+	if(input_sp & INPUT_CANCEL) {
+		quit = true;
+	}
+	if(input_sp != INPUT_NONE) { // Covers all previous input cases too! Good!
+		input_allowed = false;
+	}
+
+	#undef input_allowed
+	#undef in_this_menu
 }
 /// --------
