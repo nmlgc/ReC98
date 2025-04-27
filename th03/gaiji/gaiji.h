@@ -18,5 +18,8 @@ typedef enum {
 	gc_P2_BOTTOM_2 = 0x19,
 	gaiji_bar(0x20),
 	gaiji_boldfont(0xA0),
+
+	g_SP = 0xCF,
+
 	gaiji_symbols_th02(0xE0),
 } gaiji_th03_t;

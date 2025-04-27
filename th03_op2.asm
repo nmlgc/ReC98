@@ -102,27 +102,7 @@ include libs/master.lib/pf_str_ieq.asm
 _TEXT	ends
 
 	.data
-
-public gpRANK, gpMUSIC, gpKEYCONFIG
-public gpEASY, gpNORMAL, gpHARD, gpLUNATIC, gpOFF, gpFM_86, gpMIDI_SC88, gpOFF
-public gpFM_86, gpMIDI_SC88, gpKEY_VS_KEY, gpJOY_VS_KEY, gpKEY_VS_JOY
-gpRANK	db 6Eh, 6Fh, 70h, 0
-gpMUSIC	db 4Bh, 4Ch, 4Dh, 4Eh, 0
-gpKEYCONFIG	db 5Ch, 5Dh, 5Eh, 5Fh, 60h, 61h, 0
-g4SPACES	db 0CFh, 0CFh, 0CFh, 0CFh, 0
-gpEASY	db 71h, 72h, 73h, 0
-gpNORMAL	db 74h, 75h, 76h, 77h, 0
-gpHARD	db 78h, 79h, 7Ah, 0
-gpLUNATIC	db 7Bh, 7Ch, 7Dh, 7Eh, 0
-gpOFF	db 0CFh, 0CFh, 5Ah, 5Bh, 0CFh, 0CFh, 0CFh, 0
-gpFM_86	db 0CFh, 4Fh, 50h, 51h, 52h, 0CFh, 0CFh, 0
-gpMIDI_SC88	db 53h, 54h, 55h, 56h, 57h, 58h, 59h, 0
-gpTYPE1	db 62h, 63h, 64h, 65h, 0
-gpTYPE2	db 62h, 63h, 64h, 66h, 0
-gpTYPE3	db 62h, 63h, 64h, 67h, 0
-gpKEY_VS_KEY	db 68h, 69h, 6Ch, 6Dh, 68h, 69h, 0
-gpJOY_VS_KEY	db 6Ah, 6Bh, 6Ch, 6Dh, 68h, 69h, 0
-gpKEY_VS_JOY	db 68h, 69h, 6Ch, 6Dh, 6Ah, 6Bh, 0
+	db 0
 
 public _menu_sel, _quit, byte_D953, _main_menu_initialized, _option_initialized
 _menu_sel	db 0
@@ -135,9 +115,9 @@ public _CFG_FN, _BINARY_MAINL
 _CFG_FN	db 'YUME.CFG',0
 _BINARY_MAINL	db 'mainl',0
 
-public asc_D965, aVfvcvbgngngbgn, aUmx, aViosrfvVVkvqbd, aCOul
+public _VALUE_ASCII_SPACES, aVfvcvbgngngbgn, aUmx, aViosrfvVVkvqbd, aCOul
 public aGbgvgkxsslvVBb, aMikoft_bft
-asc_D965	db '        ',0
+_VALUE_ASCII_SPACES	db '        ',0
 aVfvcvbgngngbgn	db 'ÇfÇcÇbÉNÉçÉbÉNÇ™ÇTÇlÇgÇöÇ…Ç»Ç¡ÇƒÇ¢Ç‹Ç∑ÅB',0Ah,0
 aUmx	db 'ìåï˚ñ≤éûãÛÇÕÇQÅDÇTÇlÇgÇöÇ≈Ç»Ç¢Ç∆ê≥èÌÇ…ÉQÅ[ÉÄÇ™ÉvÉåÉCèoóàÇ‹ÇπÇÒ',0Ah,0
 aViosrfvVVkvqbd	db 0Ah

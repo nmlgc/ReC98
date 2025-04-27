@@ -4,6 +4,7 @@
  */
 
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/rank.h"
 #include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -11,6 +12,7 @@
 #include "th03/resident.hpp"
 #include "th03/hardware/input.h"
 #include "th03/formats/cfg_impl.hpp"
+#include "th03/gaiji/gaiji.h"
 #include "th03/gaiji/str.hpp"
 #include "th03/snd/snd.h"
 #include "th03/shiftjis/fns.hpp"
@@ -29,6 +31,14 @@ enum main_choice_t {
 	MC_COUNT,
 };
 
+enum option_choice_t {
+	OC_RANK,
+	OC_BGM,
+	OC_KEY_MODE,
+	OC_QUIT,
+	OC_COUNT,
+};
+
 // Proportional gaiji strings
 // --------------------------
 
@@ -43,6 +53,37 @@ enum gaiji_th03_mikoft_t {
 	gp_Music_room_last = ((gp_Music_room + 7) - 1),
 	gp_Quit,
 	gp_Quit_last = ((gp_Quit + 3) - 1),
+	gp_Music,
+	gp_Music_last = ((gp_Music + 4) - 1),
+	gp_FM_86_,
+	gp_FM_86__last = ((gp_FM_86_ + 4) - 1),
+	gp_MIDI__SC_88_,
+	gp_MIDI__SC_88__last = ((gp_MIDI__SC_88_ + 7) - 1),
+	gp_off,
+	gp_off_last = ((gp_off + 2) - 1),
+	gp_KeyConfig,
+	gp_KeyConfig_last = ((gp_KeyConfig + 6) - 1),
+	gp_Type,
+	gp_Type_last = ((gp_Type + 3) - 1),
+	gp_1,
+	gp_2,
+	gp_3,
+	gp_Key,
+	gp_Key_last = ((gp_Key + 2) - 1),
+	gp_Joy,
+	gp_Joy_last = ((gp_Joy + 2) - 1),
+	gp_vs,
+	gp_vs_last = ((gp_vs + 2) - 1),
+	gp_Rank,
+	gp_Rank_last = ((gp_Rank + 3) - 1),
+	gp_Easy,
+	gp_Easy_last = ((gp_Easy + 3) - 1),
+	gp_Normal,
+	gp_Normal_last = ((gp_Normal + 4) - 1),
+	gp_Hard,
+	gp_Hard_last = ((gp_Hard + 3) - 1),
+	gp_Lunatic,
+	gp_Lunatic_last = ((gp_Lunatic + 4) - 1),
 
 	gp_HiScore = 0x82,
 	gp_HiScore_last = ((gp_HiScore + 5) - 1),
@@ -432,6 +473,39 @@ char COMMAND_REGIST_VIEW[] = { g_str_5(gp_HiScore), '\0' };
 char COMMAND_OPTION[] = { g_str_4(gp_Option), '\0' };
 char COMMAND_QUIT[] = { g_str_3(gp_Quit), '\0' };
 
+char LABEL_RANK[] = { g_str_3(gp_Rank), '\0' };
+char LABEL_MUSIC[] = { g_str_4(gp_Music), '\0' };
+char LABEL_KEYCONFIG[] = { g_str_6(gp_KeyConfig), '\0' };
+
+// ZUN bloat: Unused.
+char UNUSED_SPACES[5] = { g_SP, g_SP, g_SP, g_SP, '\0' };
+
+// ZUN bloat: Centering these would have removed both the need for arithmetic
+// and the space string.
+char VALUE_EASY[] = { g_str_3(gp_Easy), '\0' };
+char VALUE_NORMAL[] = { g_str_4(gp_Normal), '\0' };
+char VALUE_HARD[] = { g_str_3(gp_Hard), '\0' };
+char VALUE_LUNATIC[] = { g_str_4(gp_Lunatic), '\0' };
+
+char VALUE_OFF[8] = { g_SP, g_SP, g_str_2(gp_off), g_SP, g_SP, g_SP };
+char VALUE_FM[8] = { g_SP, g_str_4(gp_FM_86_), g_SP, g_SP };
+char VALUE_MIDI[8] = { g_str_7(gp_MIDI__SC_88_) };
+
+// The initial names for the three input modes? Unused in the final game.
+char VALUE_TYPE_1[] = { g_str_3(gp_Type), gp_1, '\0' };
+char VALUE_TYPE_2[] = { g_str_3(gp_Type), gp_2, '\0' };
+char VALUE_TYPE_3[] = { g_str_3(gp_Type), gp_3, '\0' };
+
+char VALUE_KEY_KEY[] = {
+	g_str_2(gp_Key), g_str_2(gp_vs), g_str_2(gp_Key), '\0',
+};
+char VALUE_JOY_KEY[] = {
+	g_str_2(gp_Joy), g_str_2(gp_vs), g_str_2(gp_Key), '\0',
+};
+char VALUE_KEY_JOY[] = {
+	g_str_2(gp_Key), g_str_2(gp_vs), g_str_2(gp_Joy),
+};
+
 // These menus want to display centered strings. However, the underlying gaiji
 // of all of these (except "Start", which exactly fits into the 48 pixels
 // covered by its 3 gaiji) are left-aligned and leave anywhere from 6 to 14
@@ -469,6 +543,75 @@ void pascal near main_choice_put(int sel, tram_atrb2 atrb)
 		choice_put_centered(BOX_MAIN_CENTER_X, 4, -1, COMMAND_OPTION, atrb);
 	} else if(sel == MC_QUIT) {
 		choice_put_centered(BOX_MAIN_CENTER_X, 5, -1, COMMAND_QUIT, atrb);
+	}
+}
+
+#pragma option -a2
+
+void pascal near option_choice_put(int sel, tram_atrb2 atrb)
+{
+	enum {
+		// ZUN quirk: Not the center of the left column.
+		LABEL_CENTER_X = BOX_MAIN_CENTER_X,
+
+		VALUE_LEFT = BOX_SUBMENU_CENTER_X,
+		VALUE_W = (BOX_SUBMENU_RIGHT - VALUE_LEFT),
+		VALUE_TRAM_LEFT = (VALUE_LEFT / GLYPH_HALF_W),
+		VALUE_CENTER_X = (VALUE_LEFT + (VALUE_W / 2)),
+	};
+
+	if(sel == OC_RANK) {
+		extern const char VALUE_ASCII_SPACES[9];
+
+		choice_put_centered(LABEL_CENTER_X, 0, 0, LABEL_RANK, atrb);
+		text_putsa(
+			(VALUE_TRAM_LEFT + 2), // This is bloat anyway, who cares
+			choice_tram_y(0),
+			VALUE_ASCII_SPACES,
+			TX_WHITE
+		);
+		switch(resident->rank) {
+		case RANK_EASY:
+			choice_put_centered(VALUE_CENTER_X, 0, 1, VALUE_EASY, atrb);
+			break;
+		case RANK_NORMAL:
+			choice_put_centered(VALUE_CENTER_X, 0, 1, VALUE_NORMAL, atrb);
+			break;
+		case RANK_HARD:
+			choice_put_centered(VALUE_CENTER_X, 0, 1, VALUE_HARD, atrb);
+			break;
+		case RANK_LUNATIC:
+			choice_put_centered(VALUE_CENTER_X, 0, 1, VALUE_LUNATIC, atrb);
+			break;
+		}
+	} else if(sel == OC_BGM) {
+		choice_put_centered(LABEL_CENTER_X, 2, -1, LABEL_MUSIC, atrb);
+		switch(resident->bgm_mode) {
+		case SND_BGM_OFF:
+			gaiji_putsa(VALUE_TRAM_LEFT, choice_tram_y(2), VALUE_OFF, atrb);
+			break;
+		case SND_BGM_FM:
+			gaiji_putsa(VALUE_TRAM_LEFT, choice_tram_y(2), VALUE_FM, atrb);
+			break;
+		case SND_BGM_MIDI:
+			gaiji_putsa(VALUE_TRAM_LEFT, choice_tram_y(2), VALUE_MIDI, atrb);
+			break;
+		}
+	} else if(sel == OC_KEY_MODE) {
+		choice_put_centered(LABEL_CENTER_X, 4, -1, LABEL_KEYCONFIG, atrb);
+		switch(resident->key_mode) {
+		case KM_KEY_KEY:
+			choice_put_centered(VALUE_CENTER_X, 4, -1, VALUE_KEY_KEY, atrb);
+			break;
+		case KM_JOY_KEY:
+			choice_put_centered(VALUE_CENTER_X, 4, -1, VALUE_JOY_KEY, atrb);
+			break;
+		case KM_KEY_JOY:
+			choice_put_centered(VALUE_CENTER_X, 4, 0, VALUE_KEY_JOY, atrb);
+			break;
+		}
+	} else if(sel == OC_QUIT) {
+		choice_put_centered(BOX_SUBMENU_CENTER_X, 5, 0, COMMAND_QUIT, atrb);
 	}
 }
 /// --------

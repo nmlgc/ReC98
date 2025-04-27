@@ -35,12 +35,10 @@ _TEXT	segment	word public 'CODE' use16
 	extern GAIJI_BACKUP:proc
 	extern GAIJI_RESTORE:proc
 	extern GAIJI_ENTRY_BFNT:proc
-	extern GAIJI_PUTSA:proc
 	extern GRAPH_400LINE:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
 	extern TEXT_CLEAR:proc
-	extern TEXT_PUTSA:proc
 	extern HMEM_FREE:proc
 	extern RESPAL_CREATE:proc
 	extern RESPAL_FREE:proc
@@ -62,161 +60,8 @@ op_01_TEXT	segment	byte public 'CODE' use16
 	@score_menu$qv procdesc near
 	@MAIN_CHOICE_PUT$QIUI procdesc pascal near \
 		atrb:word, sel:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public OPTION_PUT
-option_put	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		or	di, di
-		jnz	short loc_9FD6
-		call	gaiji_putsa pascal, (25 shl 16) + 17, ds offset gpRANK, si
-		call	text_putsa pascal, (37 shl 16) + 17, ds, offset asc_D965, TX_WHITE
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, RANK_LUNATIC
-		ja	loc_A092
-		add	bx, bx
-		jmp	cs:off_A099[bx]
-
-@@easy:
-		push	(38 shl 16) + 17
-		push	ds
-		push	offset gpEASY
-		jmp	loc_A08C
-; ---------------------------------------------------------------------------
-
-@@normal:
-		push	(37 shl 16) + 17
-		push	ds
-		push	offset gpNORMAL
-		jmp	loc_A08C
-; ---------------------------------------------------------------------------
-
-@@hard:
-		push	(38 shl 16) + 17
-		push	ds
-		push	offset gpHARD
-		jmp	loc_A08C
-; ---------------------------------------------------------------------------
-
-@@lunatic:
-		push	(37 shl 16) + 17
-		push	ds
-		push	offset gpLUNATIC
-		jmp	loc_A08C
-; ---------------------------------------------------------------------------
-
-loc_9FD6:
-		cmp	di, 1
-		jnz	short loc_A02A
-		call	gaiji_putsa pascal, (25 shl 16) + 19, ds, offset gpMUSIC, si
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	ah, 0
-		or	ax, ax
-		jz	short loc_A006
-		cmp	ax, SND_BGM_FM
-		jz	short @@fm
-		cmp	ax, SND_BGM_MIDI
-		jz	short @@midi
-		jmp	loc_A092
-; ---------------------------------------------------------------------------
-
-loc_A006:
-		push	(35 shl 16) + 19
-		push	ds
-		push	offset gpOFF
-		jmp	short loc_A08C
-; ---------------------------------------------------------------------------
-
-@@fm:
-		push	(35 shl 16) + 19
-		push	ds
-		push	offset gpFM_86
-		jmp	short loc_A08C
-; ---------------------------------------------------------------------------
-
-@@midi:
-		push	(35 shl 16) + 19
-		push	ds
-		push	offset gpMIDI_SC88
-		jmp	short loc_A08C
-; ---------------------------------------------------------------------------
-
-loc_A02A:
-		cmp	di, 2
-		jnz	short loc_A07D
-		call	gaiji_putsa pascal, (23 shl 16) + 21, ds, offset gpKEYCONFIG, si
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.key_mode]
-		mov	ah, 0
-		or	ax, ax
-		jz	short @@key_vs_key
-		cmp	ax, KM_JOY_KEY
-		jz	short @@joy_vs_key
-		cmp	ax, KM_KEY_JOY
-		jz	short @@key_vs_joy
-		jmp	short loc_A092
-; ---------------------------------------------------------------------------
-
-@@key_vs_key:
-		push	(37 shl 16) + 21
-		push	ds
-		push	offset gpKEY_VS_KEY
-		jmp	short loc_A08C
-; ---------------------------------------------------------------------------
-
-@@joy_vs_key:
-		push	(37 shl 16) + 21
-		push	ds
-		push	offset gpJOY_VS_KEY
-		jmp	short loc_A08C
-; ---------------------------------------------------------------------------
-
-@@key_vs_joy:
-		push	(37 shl 16) + 21
-		push	ds
-		push	offset gpKEY_VS_JOY
-		jmp	short loc_A08C
-; ---------------------------------------------------------------------------
-
-loc_A07D:
-		cmp	di, 3
-		jnz	short loc_A092
-		push	(32 shl 16) + 22
-		push	ds
-		push	0FAh ; "Quit"
-
-loc_A08C:
-		push	si
-		call	gaiji_putsa
-
-loc_A092:
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-
-; ---------------------------------------------------------------------------
-		db 0
-off_A099	dw offset @@easy
-		dw offset @@normal
-		dw offset @@hard
-		dw offset @@lunatic
-option_put	endp
+	@OPTION_CHOICE_PUT$QIUI procdesc pascal near \
+		atrb:word, sel:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -436,13 +281,13 @@ loc_A22D:
 
 loc_A230:
 		push	ax
-		call	option_put
+		call	@option_choice_put$qiui
 		inc	si
 
 loc_A235:
 		cmp	si, 4
 		jl	short loc_A21F
-		mov	_putfunc, offset option_put
+		mov	_putfunc, offset @option_choice_put$qiui
 		mov	_option_initialized, 1
 		mov	_option_input_allowed, 0
 
@@ -508,9 +353,7 @@ loc_A2DB:
 loc_A2F1:
 		mov	al, _menu_sel
 		cbw
-		push	ax
-		push	0E1h
-		call	option_put
+		call	@option_choice_put$qiui pascal, ax, TX_WHITE
 		jmp	short loc_A312
 ; ---------------------------------------------------------------------------
 
@@ -524,9 +367,7 @@ loc_A2FE:
 loc_A312:
 		mov	al, _menu_sel
 		cbw
-		push	ax
-		push	0E1h
-		call	option_put
+		call	@option_choice_put$qiui pascal, ax, TX_WHITE
 
 loc_A31D:
 		test	_input_sp.lo, low INPUT_LEFT
@@ -578,9 +419,7 @@ loc_A384:
 loc_A39A:
 		mov	al, _menu_sel
 		cbw
-		push	ax
-		push	0E1h
-		call	option_put
+		call	@option_choice_put$qiui pascal, ax, TX_WHITE
 		jmp	short loc_A3C1
 ; ---------------------------------------------------------------------------
 
@@ -599,9 +438,7 @@ loc_A3B9:
 loc_A3C1:
 		mov	al, _menu_sel
 		cbw
-		push	ax
-		push	0E1h
-		call	option_put
+		call	@option_choice_put$qiui pascal, ax, TX_WHITE
 
 loc_A3CC:
 		test	_input_sp.hi, high INPUT_OK
@@ -788,29 +625,11 @@ SHARED	ends
 
 	extern _snd_sel_disabled:byte
 
-	extern gpRANK:byte
-	extern gpMUSIC:byte
-	extern gpKEYCONFIG:byte
-	extern gpEASY:byte
-	extern gpNORMAL:byte
-	extern gpHARD:byte
-	extern gpLUNATIC:byte
-	extern gpOFF:byte
-	extern gpFM_86:byte
-	extern gpMIDI_SC88:byte
-	extern gpOFF:byte
-	extern gpFM_86:byte
-	extern gpMIDI_SC88:byte
-	extern gpKEY_VS_KEY:byte
-	extern gpJOY_VS_KEY:byte
-	extern gpKEY_VS_JOY:byte
-
 	extern _menu_sel:byte
 	extern _quit:byte
 	extern byte_D953:byte
 	extern _main_menu_initialized:byte
 	extern _option_initialized:byte
-	extern asc_D965:byte
 	extern aVfvcvbgngngbgn:byte
 	extern aUmx:byte
 	extern aViosrfvVVkvqbd:byte
