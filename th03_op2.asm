@@ -102,10 +102,8 @@ include libs/master.lib/pf_str_ieq.asm
 _TEXT	ends
 
 	.data
-	db 0
 
-public _menu_sel, _quit, byte_D953, _main_menu_initialized, _option_initialized
-_menu_sel	db 0
+public _quit, byte_D953, _main_menu_initialized, _option_initialized
 _quit	db 0
 byte_D953	db 1
 _main_menu_initialized	db 0
@@ -156,12 +154,12 @@ include th03/formats/cdg[data].asm
 
 	.data?
 
-public _main_input_allowed, _option_input_allowed, _in_option, _putfunc
+public _main_input_allowed, _option_input_allowed, _in_option, _menu_put
 _main_input_allowed	db ?
 _option_input_allowed	db ?
 _in_option	db ?
 	evendata
-_putfunc	dw ?
+_menu_put	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm

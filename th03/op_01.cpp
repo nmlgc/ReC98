@@ -8,6 +8,7 @@
 #include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
 #include "th02/hardware/frmdelay.h"
+#include "th02/op/menu.hpp"
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/hardware/input.h"
@@ -503,8 +504,15 @@ char VALUE_JOY_KEY[] = {
 	g_str_2(gp_Joy), g_str_2(gp_vs), g_str_2(gp_Key), '\0',
 };
 char VALUE_KEY_JOY[] = {
-	g_str_2(gp_Key), g_str_2(gp_vs), g_str_2(gp_Joy),
+	g_str_2(gp_Key), g_str_2(gp_vs), g_str_2(gp_Joy), '\0',
 };
+
+// Globals
+// -------
+
+int8_t menu_sel = 0;
+extern menu_put_func_t menu_put;
+// -------
 
 // These menus want to display centered strings. However, the underlying gaiji
 // of all of these (except "Start", which exactly fits into the 48 pixels
@@ -607,11 +615,24 @@ void pascal near option_choice_put(int sel, tram_atrb2 atrb)
 			choice_put_centered(VALUE_CENTER_X, 4, -1, VALUE_JOY_KEY, atrb);
 			break;
 		case KM_KEY_JOY:
-			choice_put_centered(VALUE_CENTER_X, 4, 0, VALUE_KEY_JOY, atrb);
+			choice_put_centered(VALUE_CENTER_X, 4, -1, VALUE_KEY_JOY, atrb);
 			break;
 		}
 	} else if(sel == OC_QUIT) {
 		choice_put_centered(BOX_SUBMENU_CENTER_X, 5, 0, COMMAND_QUIT, atrb);
 	}
+}
+
+void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
+{
+	menu_put(menu_sel, TX_BLACK);
+	menu_sel += direction;
+	if(menu_sel < ring_min()) {
+		menu_sel = max;
+	}
+	if(menu_sel > max) {
+		menu_sel = 0;
+	}
+	menu_put(menu_sel, TX_WHITE);
 }
 /// --------

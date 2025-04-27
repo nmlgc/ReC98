@@ -62,46 +62,8 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		atrb:word, sel:word
 	@OPTION_CHOICE_PUT$QIUI procdesc pascal near \
 		atrb:word, sel:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MENU_SEL_MOVE
-menu_sel_move	proc near
-
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	1
-		call	_putfunc
-		mov	al, [bp+arg_0]
-		add	_menu_sel, al
-		cmp	_menu_sel, 0
-		jge	short loc_A0C3
-		mov	al, [bp+arg_2]
-		mov	_menu_sel, al
-
-loc_A0C3:
-		mov	al, _menu_sel
-		cmp	al, [bp+arg_2]
-		jle	short loc_A0D0
-		mov	_menu_sel, 0
-
-loc_A0D0:
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		push	0E1h
-		call	_putfunc
-		pop	bp
-		retn	4
-menu_sel_move	endp
-
+	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
+		max:byte, direction:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -146,7 +108,7 @@ loc_A119:
 loc_A11E:
 		cmp	si, 6
 		jl	short loc_A108
-		mov	_putfunc, offset @main_choice_put$qiui
+		mov	_menu_put, offset @main_choice_put$qiui
 		mov	_main_menu_initialized, 1
 		mov	_main_input_allowed, 0
 
@@ -160,12 +122,12 @@ loc_A13F:
 		jz	@@no_main_input_allowed
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_A156
-		call	menu_sel_move pascal, 5, -1
+		call	@menu_sel_update_and_render$qcc pascal, 5, -1
 
 loc_A156:
 		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_A164
-		call	menu_sel_move pascal, 5, 1
+		call	@menu_sel_update_and_render$qcc pascal, 5, 1
 
 loc_A164:
 		test	_input_sp.hi, high INPUT_OK
@@ -287,7 +249,7 @@ loc_A230:
 loc_A235:
 		cmp	si, 4
 		jl	short loc_A21F
-		mov	_putfunc, offset @option_choice_put$qiui
+		mov	_menu_put, offset @option_choice_put$qiui
 		mov	_option_initialized, 1
 		mov	_option_input_allowed, 0
 
@@ -301,12 +263,12 @@ loc_A256:
 		jz	loc_A414
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_A26D
-		call	menu_sel_move pascal, 3, -1
+		call	@menu_sel_update_and_render$qcc pascal, 3, -1
 
 loc_A26D:
 		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_A27B
-		call	menu_sel_move pascal, 3, 1
+		call	@menu_sel_update_and_render$qcc pascal, 3, 1
 
 loc_A27B:
 		test	_input_sp.lo, low INPUT_RIGHT
@@ -703,7 +665,7 @@ _SELECT_PALETTE_FN	db 'TLSL.RGB',0
 	extern _main_input_allowed:byte
 	extern _option_input_allowed:byte
 	extern _in_option:byte
-	extern _putfunc:word
+	extern _menu_put:word
 	extern _snd_active:byte
 	extern _input_sp:word
 
