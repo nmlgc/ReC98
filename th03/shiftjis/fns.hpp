@@ -2,6 +2,8 @@
 
 #define BGM_MENU_MAIN_FN	"op.m"
 
+#define MENU_MAIN_BG_FN	"TL02.PI"
+
 #define PLAYCHAR_PIC_FN_DEF { \
 	"00SL.CD2", \
 	"02SL.CD2", \

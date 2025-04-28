@@ -910,7 +910,7 @@ menu_sel_vs_start:
 		call	start_vs
 
 loc_A19A:
-		call	sub_B008
+		call	@op_fadein_animate$qv
 		call	sub_9E16
 		call	@select_cdg_load_part2_of_4$qv
 		mov	_main_menu_initialized, 0
@@ -1271,7 +1271,7 @@ loc_A497:
 loc_A4B0:
 		les	bx, _resident
 		mov	es:[bx+resident_t.op_skip_animation], 0
-		call	sub_B008
+		call	@op_fadein_animate$qv
 
 loc_A4BC:
 		call	sub_9E16
@@ -1335,9 +1335,9 @@ var_2		= word ptr -2
 		push	si
 		mov	[bp+var_2], 0
 		mov	[bp+@@page], 0
-		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
+		call	super_entry_bfnt pascal, ds, offset _OPWIN_BFT ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
-		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset _BGM_MENU_MAIN_FN, ds, SND_LOAD_SONG
 		call	@pi_load$qinxc pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
@@ -1356,7 +1356,7 @@ var_2		= word ptr -2
 		mov	Palettes[11 * size rgb_t].b, 0
 		call	far ptr	palette_show
 		freePISlotLarge	0
-		call	@pi_load$qinxc pascal, 0, ds, offset aTl02_pi
+		call	@pi_load$qinxc pascal, 0, ds, offset _MENU_MAIN_BG_FN
 		graph_showpage 1
 		mov	si, 0A0h
 		jmp	short loc_AF02
@@ -1471,50 +1471,7 @@ loc_AFD9:
 		retn
 sub_ADE2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B008	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
-		kajacall	KAJA_SONG_STOP
-		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	@pi_load$qinxc pascal, 0, ds, offset aTl02_pi
-		graph_showpage 0
-		call	@select_cdg_load_part3_of_4$qv
-		graph_accesspage 1
-		call	@pi_put_8$qiii pascal, large 0, 0
-		graph_accesspage 0
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		graph_accesspage 0
-		freePISlotLarge	0
-		call	@select_cdg_load_part1_of_4$qv
-		kajacall	KAJA_SONG_PLAY
-		xor	si, si
-		jmp	short loc_B0A7
-; ---------------------------------------------------------------------------
-
-loc_B094:
-		mov	PaletteTone, si
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		add	si, 4
-
-loc_B0A7:
-		cmp	si, 100
-		jle	short loc_B094
-		pop	si
-		pop	bp
-		retn
-sub_B008	endp
-
+	@op_fadein_animate$qv procdesc near
 	@box_main_to_submenu_animate$qv procdesc near
 	@box_submenu_to_main_animate$qv procdesc near
 	@BOX_COLUMN16_UNPUT$QUI procdesc pascal near \
@@ -1607,10 +1564,11 @@ SHARED	ends
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
 
-aOpwin_bft	db 'opwin.bft',0
-aOp_m		db 'op.m',0
+public _OPWIN_BFT, _BGM_MENU_MAIN_FN, _MENU_MAIN_BG_FN
+_OPWIN_BFT	db 'opwin.bft',0
+_BGM_MENU_MAIN_FN	db 'op.m',0
 aTl01_pi	db 'TL01.PI',0
-aTl02_pi	db 'TL02.PI',0
+_MENU_MAIN_BG_FN	db 'TL02.PI',0
 		db 0
 public _SCOREDAT_FN
 _SCOREDAT_FN	dw offset aYume_nem
