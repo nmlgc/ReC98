@@ -21,198 +21,35 @@ include th03/th03.inc
 include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
 
-	extern _getch:proc
-
 group_01 group op_01_TEXT, OP_MUSIC_TEXT, OP_SEL_TEXT
 
 ; ===========================================================================
 
 _TEXT	segment	word public 'CODE' use16
-	extern DOS_PUTS2:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRCG_SETCOLOR:proc
 	extern GRCG_OFF:proc
-	extern GAIJI_BACKUP:proc
-	extern GAIJI_RESTORE:proc
-	extern GAIJI_ENTRY_BFNT:proc
 	extern GRAPH_400LINE:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
-	extern TEXT_CLEAR:proc
 	extern HMEM_FREE:proc
-	extern RESPAL_CREATE:proc
-	extern RESPAL_FREE:proc
 _TEXT	ends
 
-; ===========================================================================
-
-; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:group_01
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-	@cfg_load$qv procdesc near
-	@cfg_save_exit$qv procdesc near
-	@vs_menu$qv procdesc near
-	@wait_for_input_or_start_demo_the$qv procdesc near
-	@main_update_and_render$qv procdesc near
-	@option_update_and_render$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		call	graph_400line
-		call	text_clear
-		call	respal_create
-		cmp	graph_VramZoom, 0
-		jz	short loc_A452
-		push	ds
-		push	offset aVfvcvbgngngbgn
-		call	dos_puts2
-		push	ds
-		push	offset aUmx
-		call	dos_puts2
-		push	ds
-		push	offset aViosrfvVVkvqbd
-
-loc_A446:
-		call	dos_puts2
-		call	_getch
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A452:
-		call	@game_init_op$qnxuc c, offset aCOul, ds
-		or	ax, ax
-		jz	short loc_A468
-		push	ds
-		push	offset aGbgvgkxsslvVBb ; "\nÉÅÉÇÉäïsë´Ç≈Ç∑ÅBÉÅÉÇÉäãÛÇ´ÇëùÇ‚ÇµÇƒÇ©"...
-		jmp	short loc_A446
-; ---------------------------------------------------------------------------
-
-loc_A468:
-		call	gaiji_backup
-		push	ds
-		push	offset aMikoft_bft ; "MIKOFT.bft"
-		call	gaiji_entry_bfnt
-		call	@cfg_load$qv
-		les	bx, _resident
-		cmp	es:[bx+resident_t.game_mode], GM_VS
-		jb	short loc_A497
-		cmp	es:[bx+resident_t.demo_num], 0
-		jnz	short loc_A497
-		call	@select_cdg_load_part1_of_4$qv
-		call	@select_cdg_load_part3_of_4$qv
-		call	@select_cdg_load_part2_of_4$qv
-		call	@vs_menu$qv
-
-loc_A497:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.op_skip_animation], 0
-		jnz	short loc_A4B0
-		call	@op_animate$qv
-		les	bx, _resident
-		mov	es:[bx+resident_t.op_skip_animation], 1
-		jmp	short loc_A4BC
-; ---------------------------------------------------------------------------
-
-loc_A4B0:
-		les	bx, _resident
-		mov	es:[bx+resident_t.op_skip_animation], 0
-		call	@op_fadein_animate$qv
-
-loc_A4BC:
-		call	@wait_for_input_or_start_demo_the$qv
-		mov	_in_option, 0
-		mov	_input_sp, INPUT_NONE
-		call	@main_update_and_render$qv
-		call	@select_cdg_load_part2_of_4$qv
-		jmp	short loc_A4FE
-; ---------------------------------------------------------------------------
-
-loc_A4D2:
-		call	@input_mode_interface$qv
-		mov	al, _in_option
-		cbw
-		or	ax, ax
-		jz	short @@not_in_option
-		cmp	ax, 1
-		jz	short @@in_option
-		jmp	short loc_A4EE
-; ---------------------------------------------------------------------------
-
-@@not_in_option:
-		call	@main_update_and_render$qv
-		jmp	short loc_A4EE
-; ---------------------------------------------------------------------------
-
-@@in_option:
-		call	@option_update_and_render$qv
-
-loc_A4EE:
-		les	bx, _resident
-		inc	es:[bx+resident_t.rand]
-		call	@frame_delay$qi pascal, 1
-
-loc_A4FE:
-		cmp	_quit, 0
-		jz	short loc_A4D2
-		call	@cfg_save_exit$qv
-		call	gaiji_restore
-		call	text_clear
-		call	@game_exit_to_dos$qv
-		call	respal_free
-		pop	bp
-		retf
-_main		endp
 op_01_TEXT ends
 
 OP_MUSIC_TEXT segment byte public 'CODE' use16
-	@op_animate$qv procdesc near
-	@op_fadein_animate$qv procdesc near
 OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
-	@select_cdg_load_part1_of_4$qv procdesc near
-	@select_cdg_load_part2_of_4$qv procdesc near
-	@select_cdg_load_part3_of_4$qv procdesc near
 OP_SEL_TEXT	ends
 
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
-	extern @game_exit_to_dos$qv:proc
-	extern @FRAME_DELAY$QI:proc
-	extern @input_reset_sense_key_held$qv:proc
-	extern @game_init_op$qnxuc:proc
-	extern @INPUT_MODE_INTERFACE$QV:proc
 SHARED	ends
 
 	.data
-
-	extern _quit:byte
-	extern aVfvcvbgngngbgn:byte
-	extern aUmx:byte
-	extern aViosrfvVVkvqbd:byte
-	extern aCOul:byte
-	extern aGbgvgkxsslvVBb:byte
-	extern aMikoft_bft:byte
-
-	; libs/master.lib/grp[data].asm
-	extern graph_VramZoom:word
 
 	; libs/master.lib/sin8[data].asm
 	extern _SinTable8:word:256
@@ -273,9 +110,6 @@ _SELECT_PALETTE_FN	db 'TLSL.RGB',0
 		db 041h, 0C1h, 0E1h, 0
 
 	.data?
-
-	extern _in_option:byte
-	extern _input_sp:word
 
 public _hi, _curve_cycle
 _hi	scoredat_section_t <?>

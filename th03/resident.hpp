@@ -56,7 +56,7 @@ struct resident_t {
 	unsigned char story_lives;
 	bool show_score_menu;
 	unsigned char rem_credits;
-	bool op_skip_animation;
+	bool op_animation_fast;
 	unsigned char skill;
 	unsigned char demo_num;	// 0 = no demo active
 	int8_t unused_3[198];

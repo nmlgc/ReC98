@@ -2,6 +2,11 @@
 
 #define BINARY_MAINL "mainl"
 
+// Packfile loaded during OP.EXE and MAINL.EXE
+#define OP_AND_END_PF_FN	"–²Žž‹ó1.dat"
+
+#define GAIJI_FN	"MIKOFT.bft"
+
 #define BGM_MENU_MAIN_FN	"op.m"
 
 #define MENU_MAIN_BG_FN	"TL02.PI"

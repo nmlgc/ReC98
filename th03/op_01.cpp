@@ -14,12 +14,15 @@
 #include "th03/resident.hpp"
 #include "th03/hardware/input.h"
 #include "th03/formats/cfg_impl.hpp"
+#include "th03/core/initexit.h"
 #include "th03/gaiji/gaiji.h"
 #include "th03/gaiji/str.hpp"
 #include "th03/snd/snd.h"
 #include "th03/shiftjis/fns.hpp"
+#include "th03/shiftjis/main.hpp"
 #include "th03/op/m_main.hpp"
 #include "th03/op/m_select.hpp"
+#include <conio.h>
 #include <stddef.h>
 #include <process.h>
 
@@ -108,17 +111,11 @@ bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 /// YUME.CFG loading and saving
 /// ---------------------------
 
-// These will be removed once the strings can be defined here
-#undef CFG_FN
-#undef BINARY_MAINL
-extern const char CFG_FN[];
-extern char BINARY_MAINL[];
-
 void near cfg_load(void)
 {
 	cfg_t cfg;
 
-	cfg_load_and_set_resident(cfg, CFG_FN);
+	cfg_load_and_set_resident(cfg, CFG_FN_CAPS);
 
 	resident->bgm_mode = cfg.opts.bgm_mode;
 	snd_determine_mode();
@@ -135,7 +132,7 @@ void near cfg_load(void)
 }
 
 inline void cfg_save_bytes(cfg_t &cfg, size_t bytes) {
-	file_append(CFG_FN);
+	file_append(CFG_FN_CAPS);
 	file_seek(0, SEEK_SET);
 
 	cfg.opts.bgm_mode = resident->bgm_mode;
@@ -279,7 +276,7 @@ retry_opponent_selection:
 
 	resident_reset_scores(stage);
 	resident->rem_credits = 3;
-	resident->op_skip_animation = false;
+	resident->op_animation_fast = false;
 	resident->skill = (70 + (resident->rank * 25));
 	return switch_to_mainl(false);
 }
@@ -579,13 +576,11 @@ void pascal near option_choice_put(int sel, tram_atrb2 atrb)
 	};
 
 	if(sel == OC_RANK) {
-		extern const char VALUE_ASCII_SPACES[9];
-
 		choice_put_centered(LABEL_CENTER_X, 0, 0, LABEL_RANK, atrb);
 		text_putsa(
 			(VALUE_TRAM_LEFT + 2), // This is bloat anyway, who cares
 			choice_tram_y(0),
-			VALUE_ASCII_SPACES,
+			"        ",
 			TX_WHITE
 		);
 		switch(resident->rank) {
@@ -820,5 +815,67 @@ void near option_update_and_render(void)
 	}
 
 	#undef input_allowed
+}
+
+void main(void)
+{
+	graph_400line();
+	text_clear();
+	respal_create();
+
+	if(graph_VramZoom) {
+		dos_puts2(ERROR_GDC_5MHZ_1);
+		dos_puts2(ERROR_GDC_5MHZ_2);
+		dos_puts2(ERROR_GDC_5MHZ_3);
+		getch();
+		return;
+	}
+	if(game_init_op(OP_AND_END_PF_FN)) {
+		dos_puts2(ERROR_OUT_OF_MEMORY);
+		getch();
+		return;
+	}
+
+	gaiji_backup();
+	gaiji_entry_bfnt(GAIJI_FN);
+	cfg_load();
+	if((resident->game_mode >= GM_VS) && (resident->demo_num == 0)) {
+		select_cdg_load_part1_of_4();
+		select_cdg_load_part3_of_4();
+		select_cdg_load_part2_of_4();
+		vs_menu();
+	}
+
+	if(!resident->op_animation_fast) {
+		op_animate();
+		resident->op_animation_fast = true;
+	} else {
+		resident->op_animation_fast = false;
+		op_fadein_animate();
+	}
+	wait_for_input_or_start_demo_then_box_to_main_animate();
+
+	// Showing the menu options before loading part 2 is actually a pretty nice
+	// idea to better hide potentially long loading times.
+	in_option = false;
+	input_sp = INPUT_NONE;
+	main_update_and_render();
+
+	select_cdg_load_part2_of_4();
+
+	while(!quit) {
+		input_mode_interface();
+		switch(in_option) {
+		case false:	main_update_and_render();  	break;
+		case true: 	option_update_and_render();	break;
+		}
+		resident->rand++;
+		frame_delay(1);
+	}
+	cfg_save_exit();
+	gaiji_restore();
+	text_clear();
+	game_exit_to_dos();
+	respal_free();
 }
 /// --------

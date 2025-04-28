@@ -48,7 +48,7 @@ resident_t	struc
 	story_lives	db ?
 	show_score_menu	db ?
 	rem_credits	db ?
-	op_skip_animation	db ?
+	op_animation_fast	db ?
 	skill	db ?
 	demo_num	db ?
 resident_t	ends

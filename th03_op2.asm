@@ -103,22 +103,6 @@ _TEXT	ends
 
 	.data
 
-public _CFG_FN, _BINARY_MAINL
-_CFG_FN	db 'YUME.CFG',0
-_BINARY_MAINL	db 'mainl',0
-
-public _VALUE_ASCII_SPACES, aVfvcvbgngngbgn, aUmx, aViosrfvVVkvqbd, aCOul
-public aGbgvgkxsslvVBb, aMikoft_bft
-_VALUE_ASCII_SPACES	db '        ',0
-aVfvcvbgngngbgn	db 'ＧＤＣクロックが５ＭＨｚになっています。',0Ah,0
-aUmx	db '東方夢時空は２．５ＭＨｚでないと正常にゲームがプレイ出来ません',0Ah,0
-aViosrfvVVkvqbd	db 0Ah
-	db 'お手数ですが２．５ＭＨｚに切り替えて、もう一度実行してね。',0Ah,0
-aCOul	db '夢時空1.dat',0
-aGbgvgkxsslvVBb	db 0Ah
-	db 'メモリ不足です。メモリ空きを増やしてから実行してくりゃれ',0Ah,0
-aMikoft_bft	db 'MIKOFT.bft',0
-	evendata
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
