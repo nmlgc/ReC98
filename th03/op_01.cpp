@@ -672,16 +672,15 @@ inline void return_from_other_screen_to_main(
 // the even more blocking character selection and Music Room screens.
 void near main_update_and_render(void)
 {
-	#define in_this_menu 	main_in_this_menu
 	#define input_allowed	main_input_allowed
-	extern bool in_this_menu;
+	static bool in_this_menu = false;
 
 	if(!in_this_menu) {
 		text_clear();
 		if(!in_main) {
 			box_submenu_to_main_animate();
 		}
-		in_main = false;
+		in_main = false; // ZUN bloat: Why is this set here, and now?
 		menu_init(in_this_menu, input_allowed, MC_COUNT, main_choice_put);
 	}
 
@@ -734,6 +733,92 @@ void near main_update_and_render(void)
 	}
 
 	#undef input_allowed
-	#undef in_this_menu
+}
+
+#define snd_flip() { \
+	if(!snd_sel_disabled) { \
+		if(resident->bgm_mode == SND_BGM_OFF) { \
+			resident->bgm_mode = SND_BGM_FM; \
+			snd_kaja_func(KAJA_SONG_STOP, 0); \
+			snd_determine_mode(); \
+			snd_kaja_func(KAJA_SONG_PLAY, 0); \
+		} else { \
+			resident->bgm_mode = SND_BGM_OFF; \
+			snd_kaja_func(KAJA_SONG_STOP, 0); \
+			snd_active = false; \
+		} \
+		/* ZUN bloat: Already done at the call site. */ \
+		option_choice_put(menu_sel, TX_WHITE); \
+	} \
+}
+
+inline void return_from_option_to_main(bool& option_initialized) {
+	option_initialized = false;
+	menu_sel = MC_OPTION;
+	in_option = false;
+}
+
+void near option_update_and_render(void)
+{
+	#define input_allowed	option_input_allowed
+	static bool in_this_menu = false;
+
+	if(!in_this_menu) {
+		text_clear();
+		box_main_to_submenu_animate();
+		menu_init(in_this_menu, input_allowed, OC_COUNT, option_choice_put);
+	}
+
+	if(input_sp == INPUT_NONE) {
+		input_allowed = true;
+	}
+	if(!input_allowed) {
+		return;
+	}
+	menu_update_vertical(input_sp, OC_COUNT);
+
+	// ZUN bloat: Could have been deduplicated.
+	if(input_sp & INPUT_RIGHT) {
+		switch(menu_sel) {
+		case OC_RANK:
+			ring_inc_range(resident->rank, RANK_EASY, RANK_LUNATIC);
+			break;
+		case OC_BGM:
+			snd_flip();
+			break;
+		case OC_KEY_MODE:
+			ring_inc_range(resident->key_mode, KM_KEY_KEY, KM_KEY_JOY);
+			break;
+		}
+		option_choice_put(menu_sel, TX_WHITE);
+	}
+	if(input_sp & INPUT_LEFT) {
+		switch(menu_sel) {
+		case OC_RANK:
+			ring_dec_range(resident->rank, RANK_EASY, RANK_LUNATIC);
+			break;
+		case OC_BGM:
+			snd_flip();
+			break;
+		case OC_KEY_MODE:
+			ring_dec_range(resident->key_mode, KM_KEY_KEY, KM_KEY_JOY);
+			break;
+		}
+		option_choice_put(menu_sel, TX_WHITE);
+	}
+
+	if((input_sp & INPUT_OK) || (input_sp & INPUT_SHOT)) {
+		if(menu_sel == OC_QUIT) {
+			return_from_option_to_main(in_this_menu);
+		}
+	}
+	if(input_sp & INPUT_CANCEL) {
+		return_from_option_to_main(in_this_menu);
+	}
+	if(input_sp != INPUT_NONE) { // Covers all previous input cases too! Good!
+		input_allowed = false;
+	}
+
+	#undef input_allowed
 }
 /// --------

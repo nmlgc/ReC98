@@ -56,236 +56,8 @@ op_01_TEXT	segment	byte public 'CODE' use16
 	@cfg_save_exit$qv procdesc near
 	@vs_menu$qv procdesc near
 	@wait_for_input_or_start_demo_the$qv procdesc near
-	@OPTION_CHOICE_PUT$QIUI procdesc pascal near \
-		atrb:word, sel:word
-	@MENU_SEL_UPDATE_AND_RENDER$QCC procdesc pascal near \
-		max:byte, direction:byte
 	@main_update_and_render$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public OPTION_UPDATE_AND_RENDER
-option_update_and_render	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_option_initialized, 0
-		jnz	short loc_A24A
-		call	text_clear
-		call	@box_main_to_submenu_animate$qv
-		mov	_option_input_allowed, 0
-		xor	si, si
-		jmp	short loc_A235
-; ---------------------------------------------------------------------------
-
-loc_A21F:
-		push	si
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, si
-		jnz	short loc_A22D
-		mov	ax, TX_WHITE
-		jmp	short loc_A230
-; ---------------------------------------------------------------------------
-
-loc_A22D:
-		mov	ax, TX_BLACK
-
-loc_A230:
-		push	ax
-		call	@option_choice_put$qiui
-		inc	si
-
-loc_A235:
-		cmp	si, 4
-		jl	short loc_A21F
-		mov	_menu_put, offset @option_choice_put$qiui
-		mov	_option_initialized, 1
-		mov	_option_input_allowed, 0
-
-loc_A24A:
-		cmp	_input_sp, INPUT_NONE
-		jnz	short loc_A256
-		mov	_option_input_allowed, 1
-
-loc_A256:
-		cmp	_option_input_allowed, 0
-		jz	loc_A414
-		test	_input_sp.lo, low INPUT_UP
-		jz	short loc_A26D
-		call	@menu_sel_update_and_render$qcc pascal, 3, -1
-
-loc_A26D:
-		test	_input_sp.lo, low INPUT_DOWN
-		jz	short loc_A27B
-		call	@menu_sel_update_and_render$qcc pascal, 3, 1
-
-loc_A27B:
-		test	_input_sp.lo, low INPUT_RIGHT
-		jz	loc_A31D
-		mov	al, _menu_sel
-		cbw
-		or	ax, ax
-		jz	short loc_A298
-		cmp	ax, 1
-		jz	short loc_A2AE
-		cmp	ax, 2
-		jz	short loc_A2FE
-		jmp	short loc_A312
-; ---------------------------------------------------------------------------
-
-loc_A298:
-		les	bx, _resident
-		inc	es:[bx+resident_t.rank]
-		cmp	es:[bx+resident_t.rank], RANK_LUNATIC
-		jbe	short loc_A312
-		mov	es:[bx+resident_t.rank], RANK_EASY
-		jmp	short loc_A312
-; ---------------------------------------------------------------------------
-
-loc_A2AE:
-		cmp	_snd_sel_disabled, 0
-		jnz	short loc_A312
-		les	bx, _resident
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		jnz	short loc_A2DB
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
-		kajacall	KAJA_SONG_STOP
-		call	_snd_determine_mode
-		kajacall	KAJA_SONG_PLAY
-		jmp	short loc_A2F1
-; ---------------------------------------------------------------------------
-
-loc_A2DB:
-		les	bx, _resident
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		kajacall	KAJA_SONG_STOP
-		mov	_snd_active, 0
-
-loc_A2F1:
-		mov	al, _menu_sel
-		cbw
-		call	@option_choice_put$qiui pascal, ax, TX_WHITE
-		jmp	short loc_A312
-; ---------------------------------------------------------------------------
-
-loc_A2FE:
-		les	bx, _resident
-		inc	es:[bx+resident_t.key_mode]
-		cmp	es:[bx+resident_t.key_mode], KM_KEY_JOY
-		jbe	short loc_A312
-		mov	es:[bx+resident_t.key_mode], KM_KEY_KEY
-
-loc_A312:
-		mov	al, _menu_sel
-		cbw
-		call	@option_choice_put$qiui pascal, ax, TX_WHITE
-
-loc_A31D:
-		test	_input_sp.lo, low INPUT_LEFT
-		jz	loc_A3CC
-		mov	al, _menu_sel
-		cbw
-		or	ax, ax
-		jz	short loc_A33B
-		cmp	ax, 1
-		jz	short loc_A357
-		cmp	ax, 2
-		jz	short loc_A3A7
-		jmp	loc_A3C1
-; ---------------------------------------------------------------------------
-
-loc_A33B:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rank], RANK_EASY
-		jnz	short loc_A34D
-		mov	es:[bx+resident_t.rank], RANK_LUNATIC
-		jmp	short loc_A3C1
-; ---------------------------------------------------------------------------
-
-loc_A34D:
-		les	bx, _resident
-		dec	es:[bx+resident_t.rank]
-		jmp	short loc_A3C1
-; ---------------------------------------------------------------------------
-
-loc_A357:
-		cmp	_snd_sel_disabled, 0
-		jnz	short loc_A3C1
-		les	bx, _resident
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		jnz	short loc_A384
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
-		kajacall	KAJA_SONG_STOP
-		call	_snd_determine_mode
-		kajacall	KAJA_SONG_PLAY
-		jmp	short loc_A39A
-; ---------------------------------------------------------------------------
-
-loc_A384:
-		les	bx, _resident
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		kajacall	KAJA_SONG_STOP
-		mov	_snd_active, 0
-
-loc_A39A:
-		mov	al, _menu_sel
-		cbw
-		call	@option_choice_put$qiui pascal, ax, TX_WHITE
-		jmp	short loc_A3C1
-; ---------------------------------------------------------------------------
-
-loc_A3A7:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
-		jnz	short loc_A3B9
-		mov	es:[bx+resident_t.key_mode], KM_KEY_JOY
-		jmp	short loc_A3C1
-; ---------------------------------------------------------------------------
-
-loc_A3B9:
-		les	bx, _resident
-		dec	es:[bx+resident_t.key_mode]
-
-loc_A3C1:
-		mov	al, _menu_sel
-		cbw
-		call	@option_choice_put$qiui pascal, ax, TX_WHITE
-
-loc_A3CC:
-		test	_input_sp.hi, high INPUT_OK
-		jnz	short loc_A3DA
-		test	_input_sp.lo, low INPUT_SHOT
-		jz	short loc_A3F2
-
-loc_A3DA:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 3
-		jnz	short loc_A3F2
-		mov	_option_initialized, 0
-		mov	_menu_sel, 4
-		mov	_in_option, 0
-
-loc_A3F2:
-		test	_input_sp.hi, high INPUT_CANCEL
-		jz	short loc_A408
-		mov	_option_initialized, 0
-		mov	_menu_sel, 4
-		mov	_in_option, 0
-
-loc_A408:
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_A414
-		mov	_option_input_allowed, 0
-
-loc_A414:
-		pop	si
-		pop	bp
-		retn
-option_update_and_render	endp
-
+	@option_update_and_render$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -388,7 +160,7 @@ loc_A4D2:
 ; ---------------------------------------------------------------------------
 
 @@in_option:
-		call	option_update_and_render
+		call	@option_update_and_render$qv
 
 loc_A4EE:
 		les	bx, _resident
@@ -411,7 +183,6 @@ op_01_TEXT ends
 OP_MUSIC_TEXT segment byte public 'CODE' use16
 	@op_animate$qv procdesc near
 	@op_fadein_animate$qv procdesc near
-	@box_main_to_submenu_animate$qv procdesc near
 OP_MUSIC_TEXT ends
 
 OP_SEL_TEXT segment byte public 'CODE' use16
@@ -424,21 +195,15 @@ OP_SEL_TEXT	ends
 
 SHARED	segment	word public 'CODE' use16
 	extern @game_exit_to_dos$qv:proc
-	extern _snd_determine_mode:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @input_reset_sense_key_held$qv:proc
-	extern SND_KAJA_INTERRUPT:proc
 	extern @game_init_op$qnxuc:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
 SHARED	ends
 
 	.data
 
-	extern _snd_sel_disabled:byte
-
-	extern _menu_sel:byte
 	extern _quit:byte
-	extern _option_initialized:byte
 	extern aVfvcvbgngngbgn:byte
 	extern aUmx:byte
 	extern aViosrfvVVkvqbd:byte
@@ -509,10 +274,7 @@ _SELECT_PALETTE_FN	db 'TLSL.RGB',0
 
 	.data?
 
-	extern _option_input_allowed:byte
 	extern _in_option:byte
-	extern _menu_put:word
-	extern _snd_active:byte
 	extern _input_sp:word
 
 public _hi, _curve_cycle

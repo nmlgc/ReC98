@@ -103,10 +103,6 @@ _TEXT	ends
 
 	.data
 
-public _main_in_this_menu, _option_initialized
-_main_in_this_menu	db 0
-_option_initialized	db 0
-
 public _CFG_FN, _BINARY_MAINL
 _CFG_FN	db 'YUME.CFG',0
 _BINARY_MAINL	db 'mainl',0

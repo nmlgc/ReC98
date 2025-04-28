@@ -62,12 +62,22 @@
 	} \
 }
 
-#define ring_dec_range(val, ring_min, ring_max) { \
-	if(val == (ring_min)) { \
-		(val) = ((ring_max) + 1); \
-	} \
-	(val)--; \
-}
+#if (GAME >= 4)
+	#define ring_dec_range(val, ring_min, ring_max) { \
+		if(val == (ring_min)) { \
+			(val) = ((ring_max) + 1); \
+		} \
+		(val)--; \
+	}
+#else
+	#define ring_dec_range(val, ring_min, ring_max) { \
+		if(val == (ring_min)) { \
+			(val) = (ring_max); \
+		} else { \
+			(val)--; \
+		} \
+	}
+#endif
 
 #define ring_dec(val, ring_end) \
 	(val)--; \
