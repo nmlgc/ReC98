@@ -61,6 +61,7 @@ void MASTER_RET egc_shift_down(
 void MASTER_RET egc_shift_left(
 	screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
 );
+void MASTER_RET egc_shift_left_all(pixel_t dots);
 void MASTER_RET egc_shift_right(
 	screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
 );

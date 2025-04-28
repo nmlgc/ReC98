@@ -25,4 +25,9 @@ void pascal near box_column16_unput(uscreen_x_t left);
 void near box_main_to_submenu_animate(void);
 void near box_submenu_to_main_animate(void);
 
+// Shows either the long (shifting kanji and flashing) or short (just fading)
+// title animation. Both of these return with the title image blitted to both
+// VRAM pages, page 0 both accessed and shown, and parts 1 and 3 of the
+// character selection CDG images loaded.
+void near op_animate(void);
 void near op_fadein_animate(void);

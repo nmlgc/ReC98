@@ -31,7 +31,6 @@ group_01 group op_01_TEXT, OP_MUSIC_TEXT, OP_SEL_TEXT
 _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_BLACK_OUT:proc
 	extern DOS_PUTS2:proc
-	extern EGC_SHIFT_LEFT_ALL:proc
 	extern GRCG_BYTEBOXFILL_X:proc
 	extern GRCG_SETCOLOR:proc
 	extern GRCG_OFF:proc
@@ -42,14 +41,11 @@ _TEXT	segment	word public 'CODE' use16
 	extern GRAPH_400LINE:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
-	extern GRAPH_PI_FREE:proc
-	extern PALETTE_SHOW:proc
 	extern IRAND:proc
 	extern TEXT_CLEAR:proc
 	extern TEXT_PUTSA:proc
 	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
-	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT:proc
 	extern RESPAL_CREATE:proc
 	extern RESPAL_FREE:proc
@@ -1262,7 +1258,7 @@ loc_A497:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.op_skip_animation], 0
 		jnz	short loc_A4B0
-		call	sub_ADE2
+		call	@op_animate$qv
 		les	bx, _resident
 		mov	es:[bx+resident_t.op_skip_animation], 1
 		jmp	short loc_A4BC
@@ -1321,156 +1317,7 @@ op_01_TEXT ends
 
 OP_MUSIC_TEXT segment byte public 'CODE' use16
 	extern @musicroom_menu$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ADE2	proc near
-
-@@page		= byte ptr -3
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		mov	[bp+var_2], 0
-		mov	[bp+@@page], 0
-		call	super_entry_bfnt pascal, ds, offset _OPWIN_BFT ; "opwin.bft"
-		kajacall	KAJA_SONG_STOP
-		call	_snd_load c, offset _BGM_MENU_MAIN_FN, ds, SND_LOAD_SONG
-		call	@pi_load$qinxc pascal, 0, ds, offset aTl01_pi
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_accesspage 1
-		call	@pi_put_8$qiii pascal, large 0, 0
-		graph_accesspage 0
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		call	egc_shift_left_all pascal, 2
-		mov	Palettes[15 * size rgb_t].r, 0
-		mov	Palettes[15 * size rgb_t].g, 0
-		mov	Palettes[15 * size rgb_t].b, 0
-		call	far ptr	palette_show
-		mov	Palettes[11 * size rgb_t].r, 0
-		mov	Palettes[11 * size rgb_t].g, 0
-		mov	Palettes[11 * size rgb_t].b, 0
-		call	far ptr	palette_show
-		freePISlotLarge	0
-		call	@pi_load$qinxc pascal, 0, ds, offset _MENU_MAIN_BG_FN
-		graph_showpage 1
-		mov	si, 0A0h
-		jmp	short loc_AF02
-; ---------------------------------------------------------------------------
-
-loc_AEA0:
-		call	@frame_delay$qi pascal, 1
-		mov	al, byte ptr [bp+var_2]
-		mov	Palettes[15 * size rgb_t].r, al
-		mov	Palettes[15 * size rgb_t].g, al
-		mov	Palettes[15 * size rgb_t].b, al
-		call	far ptr	palette_show
-		cmp	[bp+var_2], 128
-		jg	short loc_AECB
-		mov	al, byte ptr [bp+var_2]
-		mov	Palettes[11 * size rgb_t].r, al
-		mov	Palettes[11 * size rgb_t].g, al
-		mov	Palettes[11 * size rgb_t].b, al
-
-loc_AECB:
-		call	far ptr	palette_show
-		cmp	[bp+var_2], 100
-		jg	short loc_AEE1
-		mov	ax, [bp+var_2]
-		mov	PaletteTone, ax
-		call	far ptr	palette_show
-
-loc_AEE1:
-		add	[bp+var_2], 2
-		graph_showpage [bp+@@page]
-		mov	al, 1
-		sub	al, [bp+@@page]
-		mov	[bp+@@page], al
-		graph_accesspage al
-		call	egc_shift_left_all pascal, 4
-		sub	si, 2
-
-loc_AF02:
-		cmp	si, 11h
-		jg	short loc_AEA0
-		jmp	short loc_AF25
-; ---------------------------------------------------------------------------
-
-loc_AF09:
-		mov	al, byte ptr [bp+var_2]
-		mov	Palettes[15 * size rgb_t].r, al
-		mov	Palettes[15 * size rgb_t].g, al
-		mov	Palettes[15 * size rgb_t].b, al
-		call	far ptr	palette_show
-		add	[bp+var_2], 2
-		call	@frame_delay$qi pascal, 1
-
-loc_AF25:
-		cmp	[bp+var_2], 255
-		jl	short loc_AF09
-		mov	vsync_Count1, 0
-		call	@select_cdg_load_part3_of_4$qv
-
-loc_AF35:
-		cmp	vsync_Count1, 10h
-		jb	short loc_AF35
-		xor	si, si
-		jmp	short loc_AF65
-; ---------------------------------------------------------------------------
-
-loc_AF40:
-		mov	PaletteTone, 200
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		inc	si
-
-loc_AF65:
-		cmp	si, 8
-		jl	short loc_AF40
-		mov	PaletteTone, 200
-		call	far ptr	palette_show
-		kajacall	KAJA_SONG_PLAY
-		graph_showpage 0
-		graph_accesspage al
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		call	@frame_delay$qi pascal, 1
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		xor	si, si
-		jmp	short loc_AFD9
-; ---------------------------------------------------------------------------
-
-loc_AFB4:
-		mov	PaletteTone, 200
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		inc	si
-
-loc_AFD9:
-		cmp	si, 8
-		jl	short loc_AFB4
-		graph_accesspage 1
-		call	@pi_put_8$qiii pascal, large 0, 0
-		graph_accesspage 0
-		freePISlotLarge	0
-		call	@select_cdg_load_part1_of_4$qv
-		pop	si
-		leave
-		retn
-sub_ADE2	endp
-
+	@op_animate$qv procdesc near
 	@op_fadein_animate$qv procdesc near
 	@box_main_to_submenu_animate$qv procdesc near
 	@box_submenu_to_main_animate$qv procdesc near
@@ -1490,18 +1337,13 @@ OP_SEL_TEXT	ends
 ; ===========================================================================
 
 SHARED	segment	word public 'CODE' use16
-include th02/snd/snd.inc
 	extern @game_exit_to_dos$qv:proc
 	extern _snd_determine_mode:proc
-	extern _snd_load:proc
 	extern @game_exit$qv:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @input_reset_sense_key_held$qv:proc
-	extern @PI_PALETTE_APPLY$QI:proc
-	extern @PI_PUT_8$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @game_init_op$qnxuc:proc
-	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
 SHARED	ends
 
@@ -1554,9 +1396,6 @@ SHARED	ends
 	; libs/master.lib/grp[data].asm
 	extern graph_VramZoom:word
 
-	; libs/master.lib/pal[data].asm
-	extern PaletteTone:word
-
 	; libs/master.lib/rand[data].asm
 	extern random_seed:dword
 
@@ -1564,12 +1403,6 @@ SHARED	ends
 	extern _SinTable8:word:256
 	extern _CosTable8:word:256
 
-public _OPWIN_BFT, _BGM_MENU_MAIN_FN, _MENU_MAIN_BG_FN
-_OPWIN_BFT	db 'opwin.bft',0
-_BGM_MENU_MAIN_FN	db 'op.m',0
-aTl01_pi	db 'TL01.PI',0
-_MENU_MAIN_BG_FN	db 'TL02.PI',0
-		db 0
 public _SCOREDAT_FN
 _SCOREDAT_FN	dw offset aYume_nem
 aYume_nem	db 'YUME.NEM',0
@@ -1630,19 +1463,8 @@ _SELECT_PALETTE_FN	db 'TLSL.RGB',0
 	extern _option_input_allowed:byte
 	extern _in_option:byte
 	extern _putfunc:word
-
-	; libs/master.lib/pal[bss].asm
-	extern Palettes:byte:48
-
-	; libs/master.lib/vs[bss].asm
-	extern vsync_Count1:word
-
 	extern _snd_active:byte
-
 	extern _input_sp:word
-
-	extern _pi_buffers:dword
-	extern _pi_headers:PiHeader
 
 public _hi, _curve_cycle
 _hi	scoredat_section_t <?>
