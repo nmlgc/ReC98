@@ -6513,29 +6513,29 @@ loc_110CE:
 		mov	dh, 0
 		add	dx, dx
 		add	ax, dx
-		add	ax, 2BACh
+		add	ax, offset _midboss3_left_on_page
 		mov	bx, si
 		shl	bx, 2
-		mov	word ptr [bx+52EEh], ds
-		mov	[bx+52ECh], ax
+		mov	word ptr (_midboss3_left_on_back_page + 2)[bx], ds
+		mov	word ptr (_midboss3_left_on_back_page + 0)[bx], ax
 		mov	ax, si
 		shl	ax, 2
 		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		add	ax, dx
-		add	ax, 2BC0h
+		add	ax, offset _midboss3_top_on_page
 		mov	bx, si
 		shl	bx, 2
-		mov	word ptr [bx+5302h], ds
-		mov	[bx+5300h], ax
+		mov	word ptr (_midboss3_top_on_back_page + 2)[bx], ds
+		mov	word ptr (_midboss3_top_on_back_page + 0)[bx], ax
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		push	word ptr es:[bx]	; left
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		push	word ptr es:[bx]	; top
 		push	(64 shl 16) or 32	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
@@ -6545,10 +6545,10 @@ loc_110CE:
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
-		mov	ax, [bx+2BACh]
+		mov	ax, _midboss3_left_on_page[bx]
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	es:[bx], ax
 		mov	bx, si
 		shl	bx, 2
@@ -6556,19 +6556,19 @@ loc_110CE:
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
-		mov	ax, [bx+2BC0h]
+		mov	ax, _midboss3_top_on_page[bx]
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		mov	es:[bx], ax
 
 loc_1116B:
 		inc	si
 
 loc_1116C:
-		cmp	si, 2
+		cmp	si, MIDBOSS3_COUNT
 		jl	loc_110C3
-		cmp	di, 2
+		cmp	di, MIDBOSS3_COUNT
 		jnz	short loc_1117C
 		xor	ax, ax
 		jmp	short loc_1117F
@@ -6591,17 +6591,17 @@ loc_1117F:
 
 midboss3_11183	proc near
 
-arg_0		= word ptr  4
+@@i	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_0]
+		mov	di, [bp+@@i]
 		call	_snd_se_play c, 4
 		mov	bx, di
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		mov	si, es:[bx]
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -6611,7 +6611,7 @@ arg_0		= word ptr  4
 loc_111AF:
 		mov	bx, di
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		call	super_roll_put_1plane pascal, word ptr es:[bx], si, word_22D4C, large PLANE_PUT or GC_BRGI
 		pop	di
 		pop	si
@@ -6626,16 +6626,16 @@ midboss3_11183	endp
 
 midboss3_111D1	proc near
 
-arg_0		= word ptr  4
+@@i	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_0]
+		mov	di, [bp+@@i]
 		mov	bx, di
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		mov	si, es:[bx]
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -6645,7 +6645,7 @@ arg_0		= word ptr  4
 loc_111F3:
 		mov	bx, di
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		call	super_roll_put pascal, word ptr es:[bx], si, word_22D4C
 		pop	di
 		pop	si
@@ -6661,23 +6661,23 @@ midboss3_111D1	endp
 midboss3_1120F	proc near
 
 @@patnum		= word ptr -2
-arg_0		= word ptr  4
+@@i	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 2
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@i]
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 32
 		push	ax	; left
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 16
 		push	ax	; top
@@ -6701,13 +6701,13 @@ arg_0		= word ptr  4
 		jl	short loc_112BA
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 32
 		push	ax	; left
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 16
 		push	ax	; top
@@ -6726,7 +6726,7 @@ arg_0		= word ptr  4
 loc_112BA:
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		mov	di, es:[bx]
 		add	di, _scroll_line
 		cmp	di, RES_Y
@@ -6736,11 +6736,11 @@ loc_112BA:
 loc_112D4:
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		call	super_roll_put pascal, word ptr es:[bx], di, [bp+@@patnum]
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 32
 		call	super_roll_put pascal, ax, di, [bp+@@patnum]
@@ -6761,14 +6761,14 @@ midboss3_11308	proc near
 
 @@group	= byte ptr -3
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@i	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 4
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@i]
 		or	si, si
 		jnz	short loc_1131C
 		mov	ax, 8
@@ -6782,7 +6782,7 @@ loc_1131F:
 		mov	[bp+var_2], ax
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 12
 		mov	di, ax
@@ -6801,7 +6801,7 @@ loc_1134D:
 		mov	[si+5536h], al
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 28
 		push	ax	; left
@@ -6821,7 +6821,7 @@ loc_11381:
 		jge	short loc_113DE
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, [bp+var_2]
 		add	es:[bx], ax
 		test	byte ptr _boss_phase_frame, 7
@@ -6843,7 +6843,7 @@ loc_113BD:
 loc_113C1:
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 28
 		push	ax	; left
@@ -6860,17 +6860,17 @@ loc_113DE:
 		jge	short loc_11416
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		add	word ptr es:[bx], 2
 		mov	bx, si
 		shl	bx, 2
-		mov	bx, [bx+5300h]
-		cmp	word ptr es:[bx], 190h
+		mov	bx, word ptr _midboss3_top_on_back_page[bx]
+		cmp	word ptr es:[bx], RES_Y
 		jl	loc_114D0
 		mov	bx, si
 		shl	bx, 2
-		mov	bx, [bx+5300h]
-		sub	word ptr es:[bx], 190h
+		mov	bx, word ptr _midboss3_top_on_back_page[bx]
+		sub	word ptr es:[bx], RES_Y
 		jmp	loc_114D0
 ; ---------------------------------------------------------------------------
 
@@ -6887,7 +6887,7 @@ loc_11429:
 		jge	short loc_11473
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, [bp+var_2]
 		sub	es:[bx], ax
 		test	byte ptr _boss_phase_frame, 3
@@ -6899,7 +6899,7 @@ loc_11449:
 		mov	[si+5536h], al
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 28
 		push	ax	; left
@@ -6917,17 +6917,17 @@ loc_11473:
 		jge	short loc_114CA
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		sub	word ptr es:[bx], 2
 		mov	bx, si
 		shl	bx, 2
-		mov	bx, [bx+5300h]
+		mov	bx, word ptr _midboss3_top_on_back_page[bx]
 		cmp	word ptr es:[bx], 0
 		jge	short loc_114A5
 		mov	bx, si
 		shl	bx, 2
-		mov	bx, [bx+5300h]
-		add	word ptr es:[bx], 190h
+		mov	bx, word ptr _midboss3_top_on_back_page[bx]
+		add	word ptr es:[bx], RES_Y
 
 loc_114A5:
 		mov	ax, _boss_phase_frame
@@ -6938,7 +6938,7 @@ loc_114A5:
 		jnz	short loc_114D0
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
 		add	ax, 28
 		push	ax	; left
@@ -6979,14 +6979,14 @@ var_2		= word ptr -2
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2BACh]
-		add	ax, 18h
+		mov	ax, midboss3_0_left_on_page[bx]
+		add	ax, 24
 		mov	word_205D8, ax
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2BC0h]
+		mov	ax, midboss3_0_top_on_page[bx]
 		jmp	short loc_1152C
 ; ---------------------------------------------------------------------------
 
@@ -6995,32 +6995,32 @@ loc_1150C:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2BB0h]
-		add	ax, 18h
+		mov	ax, midboss3_1_left_on_page[bx]
+		add	ax, 24
 		mov	word_205D8, ax
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2BC4h]
+		mov	ax, midboss3_1_top_on_page[bx]
 
 loc_1152C:
-		add	ax, 10h
+		add	ax, 16
 		mov	word_205DA, ax
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_11581
-		mov	word_2061C, 20h	; ' '
-		mov	word_2061E, 20h	; ' '
-		mov	word_20630, 0FFF0h
-		mov	word_20632, 0FFF0h
+		mov	midboss3_0_left_on_page_0, PLAYFIELD_LEFT
+		mov	midboss3_0_left_on_page_1, PLAYFIELD_LEFT
+		mov	midboss3_0_top_on_page_0, -16
+		mov	midboss3_0_top_on_page_1, -16
 		mov	word_20644, 0
-		mov	word_20620, 160h
-		mov	word_20622, 160h
-		mov	ax, word_20630
-		mov	word_20634, ax
-		mov	ax, word_20630
-		mov	word_20636, ax
+		mov	midboss3_1_left_on_page_0, (PLAYFIELD_RIGHT - 64)
+		mov	midboss3_1_left_on_page_1, (PLAYFIELD_RIGHT - 64)
+		mov	ax, midboss3_0_top_on_page_0
+		mov	midboss3_1_top_on_page_0, ax
+		mov	ax, midboss3_0_top_on_page_0
+		mov	midboss3_1_top_on_page_1, ax
 		mov	word_20646, 0
 		mov	byte_22FA8, 0
 		jmp	loc_116A9
@@ -7042,17 +7042,17 @@ loc_11599:
 		mov	ah, 0
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		add	es:[bx], ax
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		push	word ptr es:[bx]
 		push	28001Eh
 		call	sub_1283C
@@ -7062,20 +7062,18 @@ loc_11599:
 		mov	bx, si
 		add	bx, bx
 		add	[bx+2BD4h], di
-		push	si
-		call	midboss3_11183
+		call	midboss3_11183 pascal, si
 		jmp	short loc_115E7
 ; ---------------------------------------------------------------------------
 
 loc_115E3:
-		push	si
-		call	midboss3_111D1
+		call	midboss3_111D1 pascal, si
 
 loc_115E7:
 		inc	si
 
 loc_115E8:
-		cmp	si, 2
+		cmp	si, MIDBOSS3_COUNT
 		jl	short loc_11599
 		jmp	loc_116A9
 ; ---------------------------------------------------------------------------
@@ -7097,25 +7095,23 @@ loc_11608:
 loc_1160D:
 		cmp	byte ptr [si+2BF0h], 1
 		jnz	short loc_1161B
-		push	si
-		call	midboss3_1120F
+		call	midboss3_1120F pascal, si
 		jmp	loc_116A1
 ; ---------------------------------------------------------------------------
 
 loc_1161B:
 		cmp	byte ptr [si+2BF0h], 0
 		jnz	short loc_11697
-		push	si
-		call	midboss3_11308
+		call	midboss3_11308 pascal, si
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+52ECh]
+		les	bx, _midboss3_left_on_back_page[bx]
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		shl	bx, 2
-		les	bx, [bx+5300h]
+		les	bx, _midboss3_top_on_back_page[bx]
 		push	word ptr es:[bx]
 		push	28001Eh
 		call	sub_1283C
@@ -7129,8 +7125,7 @@ loc_1161B:
 		add	bx, bx
 		cmp	word ptr [bx+2BD4h], 118h
 		jg	short loc_1166B
-		push	si
-		call	midboss3_11183
+		call	midboss3_11183 pascal, si
 		jmp	short loc_11689
 ; ---------------------------------------------------------------------------
 
@@ -7142,8 +7137,7 @@ loc_1166B:
 ; ---------------------------------------------------------------------------
 
 loc_11685:
-		push	si
-		call	midboss3_111D1
+		call	midboss3_111D1 pascal, si
 
 loc_11689:
 		cmp	byte_22FA8, 4
@@ -7161,7 +7155,7 @@ loc_116A1:
 		inc	si
 
 loc_116A2:
-		cmp	si, 2
+		cmp	si, MIDBOSS3_COUNT
 		jl	loc_1160D
 
 loc_116A9:
@@ -27052,16 +27046,25 @@ include th02/hardware/pages[bss].asm
 public _midboss_active
 _midboss_active	db ?
 	evendata
-word_2061C	dw ?
-word_2061E	dw ?
-word_20620	dw ?
-word_20622	dw ?
-		db 12 dup(?)
-word_20630	dw ?
-word_20632	dw ?
-word_20634	dw ?
-word_20636	dw ?
-		db 12 dup(?)
+
+public _midboss3_left_on_page, _midboss3_top_on_page
+_midboss3_left_on_page label word
+midboss3_0_left_on_page label word
+midboss3_0_left_on_page_0	dw ?
+midboss3_0_left_on_page_1	dw ?
+midboss3_1_left_on_page label word
+midboss3_1_left_on_page_0	dw ?
+midboss3_1_left_on_page_1	dw ?
+		dw 3 dup(2 dup (?))
+_midboss3_top_on_page label word
+midboss3_0_top_on_page label word
+midboss3_0_top_on_page_0	dw ?
+midboss3_0_top_on_page_1	dw ?
+midboss3_1_top_on_page label word
+midboss3_1_top_on_page_0	dw ?
+midboss3_1_top_on_page_1	dw ?
+		dw 3 dup(2 dup (?))
+
 word_20644	dw ?
 word_20646	dw ?
 		db 4 dup(?)
@@ -27261,7 +27264,12 @@ patnum_22D54	dw ?
 byte_22D56	db ?
 byte_22D57	db ?
 dword_22D58	dd ?
-		db 40 dup(?)
+
+MIDBOSS3_COUNT = 2
+
+public _midboss3_left_on_back_page, _midboss3_top_on_back_page
+_midboss3_left_on_back_page	dd STONE_COUNT dup (?)
+_midboss3_top_on_back_page	dd STONE_COUNT dup (?)
 
 STONE_INNER_WEST = 0
 STONE_INNER_EAST = 1
