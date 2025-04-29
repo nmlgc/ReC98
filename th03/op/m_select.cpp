@@ -28,10 +28,28 @@ extern "C" {
 /// Constants
 /// ---------
 
+static const char* PLAYCHAR_PIC_FN[PLAYCHAR_COUNT] = PLAYCHAR_PIC_FN_DEF;
+
 static const int STAT_COUNT = 3;
-extern const uint8_t PLAYCHAR_STATS[PLAYCHAR_COUNT][STAT_COUNT];
-extern const unsigned char g_CURSOR_TOP[PLAYER_COUNT][gc_GAIJI_W + 1];
-extern const unsigned char g_CURSOR_BOTTOM[PLAYER_COUNT][gc_GAIJI_W + 1];
+static const uint8_t PLAYCHAR_STATS[PLAYCHAR_COUNT][STAT_COUNT] = {
+	{ 3, 1, 5 },
+	{ 4, 4, 2 },
+	{ 3, 4, 3 },
+	{ 2, 3, 1 },
+	{ 4, 1, 4 },
+	{ 2, 2, 5 },
+	{ 4, 5, 1 },
+	{ 5, 2, 4 },
+	{ 5, 5, 3 },
+};
+static const unsigned char g_CURSOR_TOP[PLAYER_COUNT][gc_GAIJI_W + 1] = {
+	{ gc_P1_TOP_1, gc_P1_TOP_2 },
+	{ gc_P2_TOP_1, gc_P2_TOP_2 },
+};
+static const unsigned char g_CURSOR_BOTTOM[PLAYER_COUNT][gc_GAIJI_W + 1] = {
+	{ gc_P1_BOTTOM_1, gc_P1_BOTTOM_2 },
+	{ gc_P2_BOTTOM_1, gc_P2_BOTTOM_2 },
+};
 /// ---------
 
 /// Coordinates
@@ -67,16 +85,20 @@ static const screen_y_t STATS_TOP = (PIC_TOP + PIC_H + 16);
 /// State
 /// -----
 
-extern unsigned char curve_cycle;
+static bool input_locked[PLAYER_COUNT] = { false, false };
 
-extern bool input_locked[PLAYER_COUNT];
-extern playchar_t sel[PLAYER_COUNT];
-extern bool sel_confirmed[PLAYER_COUNT];
-extern page_t page_shown;
-extern unsigned int fadeout_frames;
-extern int16_t curve_unused; // ZUN bloat
-extern int curve_trail_count;
-extern unsigned char playchars_available;
+static unsigned char curve_cycle;
+static int8_t padding_1; // ZUN bloat
+resident_t far* resident; // ZUN bloat: Why is this here?
+static playchar_t sel[PLAYER_COUNT];
+static bool sel_confirmed[PLAYER_COUNT];
+static page_t page_shown;
+static int8_t padding_2; // ZUN bloat
+static farfunc_t_near input_mode; // ZUN bloat: Why is this here?
+static unsigned int fadeout_frames;
+static int16_t curve_unused; // ZUN bloat
+static int curve_trail_count;
+static unsigned char playchars_available;
 /// -----
 
 #include "th03/formats/score_ld.cpp"
@@ -99,34 +121,26 @@ unsigned char near playchars_available_load(void)
 // version.
 void near select_cdg_load_part1_of_4(void)
 {
-	extern const char SELECT_EXTRA_FOR_PLAYCHAR_FN[];
-
 	hflip_lut_generate();
 
 	static_assert(PLAYCHAR_COUNT >= 3);
 	for(int i = 0; i < 3; i++) {
 		cdg_load_single((CDG_PIC + i), PLAYCHAR_PIC_FN[i], 0);
 	}
-	cdg_load_all_noalpha(CDG_EXTRA_FOR_PLAYCHAR, SELECT_EXTRA_FOR_PLAYCHAR_FN);
+	cdg_load_all_noalpha(CDG_EXTRA_FOR_PLAYCHAR, "slex.cd2");
 }
 
 void near select_cdg_load_part2_of_4(void)
 {
-	extern const char PLAYCHAR_PIC_UNKNOWN_FN[];
-	extern const char SELECT_STATS_FN[];
-	extern const char SELECT_EXTRA_BG_FN[];
-
 	// ZUN bloat: Shouldn't this be exclusively loaded for Story Mode?
-	cdg_load_single((CDG_PIC_SELECTED + 1), PLAYCHAR_PIC_UNKNOWN_FN, 0);
+	cdg_load_single((CDG_PIC_SELECTED + 1), "99sl.cdg", 0);
 
-	cdg_load_single_noalpha(CDG_STATS, SELECT_STATS_FN, 0);
-	cdg_load_single_noalpha(CDG_EXTRA_BG, SELECT_EXTRA_BG_FN, 0);
+	cdg_load_single_noalpha(CDG_STATS, "slwin.cdg", 0);
+	cdg_load_single_noalpha(CDG_EXTRA_BG, "slex.cdg", 0);
 }
 
 void near select_cdg_load_part3_of_4(void)
 {
-	extern const char SELECT_EXTRA_FOR_PLAYCHAR_FN[];
-
 	// ZUN bloat: Redundant, PID 0 always has to select a character before the
 	// game shows the image in this slot.
 	cdg_load_single((CDG_PIC_SELECTED + 0), PLAYCHAR_PIC_FN[PLAYCHAR_REIMU], 0);
@@ -146,14 +160,10 @@ void near select_cdg_load_part3_of_4(void)
 
 void near select_init_and_load(void)
 {
-	extern const char BGM_SELECT_FN[];
-	extern const char PLAYCHAR_NAME_FN[];
-	extern const char SELECT_PALETTE_FN[];
-
 	vsync_Count1 = 0;
 
 	snd_kaja_func(KAJA_SONG_STOP, 0);
-	snd_load(BGM_SELECT_FN, SND_LOAD_SONG);
+	snd_load("select.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 
 	curve_unused = 200;
@@ -161,7 +171,7 @@ void near select_init_and_load(void)
 
 	text_clear();
 	super_free();
-	super_entry_bfnt(PLAYCHAR_NAME_FN);
+	super_entry_bfnt("chname.bft");
 
 	// ZUN landmine: Does nothing to avoid this happening mid-frame and causing
 	// tearing.
@@ -170,7 +180,7 @@ void near select_init_and_load(void)
 	graph_showpage(0);
 	page_shown = 0;
 
-	palette_entry_rgb_show(SELECT_PALETTE_FN);
+	palette_entry_rgb_show("TLSL.RGB");
 	select_cdg_load_part4_of_4();
 
 	// ZUN bug: Is this supposed to be long enough for the player to release
@@ -264,6 +274,10 @@ void near stats_put(void)
 
 	grcg_off();
 }
+
+// Either names, cursors, or both were drawn to the text layer at one point?
+// Unused in the final game.
+static const tram_atrb_t TRAM_COLORS_UNUSED[] = { TX_RED, TX_YELLOW, TX_WHITE };
 
 void near names_put(void)
 {

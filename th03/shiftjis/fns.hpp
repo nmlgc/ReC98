@@ -22,5 +22,3 @@
 	"14SL.CD2", \
 	"16SL.CD2", \
 }
-
-extern const char* PLAYCHAR_PIC_FN[PLAYCHAR_COUNT];

@@ -16,23 +16,11 @@
 		.386
 		.model use16 large _TEXT
 
-include ReC98.inc
-include th03/th03.inc
-include th03/sprites/regi.inc
-include th03/formats/scoredat.inc
-
 group_01 group op_01_TEXT, OP_MUSIC_TEXT, OP_SEL_TEXT
 
 ; ===========================================================================
 
 _TEXT	segment	word public 'CODE' use16
-	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_SETCOLOR:proc
-	extern GRCG_OFF:proc
-	extern GRAPH_400LINE:proc
-	extern GRAPH_CLEAR:proc
-	extern GRAPH_COPY_PAGE:proc
-	extern HMEM_FREE:proc
 _TEXT	ends
 
 op_01_TEXT	segment	byte public 'CODE' use16
@@ -48,86 +36,5 @@ OP_SEL_TEXT	ends
 
 SHARED	segment	word public 'CODE' use16
 SHARED	ends
-
-	.data
-
-	; libs/master.lib/sin8[data].asm
-	extern _SinTable8:word:256
-	extern _CosTable8:word:256
-
-public _SCOREDAT_FN
-_SCOREDAT_FN	dw offset aYume_nem
-aYume_nem	db 'YUME.NEM',0
-	evendata
-public _PLAYCHAR_PIC_FN
-_PLAYCHAR_PIC_FN label dword
-	dd a00sl_cd2
-	dd a02sl_cd2
-	dd a04sl_cd2
-	dd a06sl_cd2
-	dd a08sl_cd2
-	dd a10sl_cd2
-	dd a12sl_cd2
-	dd a14sl_cd2
-	dd a16sl_cd2
-
-public _PLAYCHAR_STATS
-_PLAYCHAR_STATS label byte
-		db 3, 1, 5
-		db 4, 4, 2
-		db 3, 4, 3
-		db 2, 3, 1
-		db 4, 1, 4
-		db 2, 2, 5
-		db 4, 5, 1
-		db 5, 2, 4
-		db 5, 5, 3
-include th03/gaiji/p_cursor[data].asm
-public _input_locked
-_input_locked label byte
-	db PLAYER_COUNT dup (0)
-a00sl_cd2	db '00SL.CD2',0
-a02sl_cd2	db '02SL.CD2',0
-a04sl_cd2	db '04SL.CD2',0
-a06sl_cd2	db '06SL.CD2',0
-a08sl_cd2	db '08SL.CD2',0
-a10sl_cd2	db '10SL.CD2',0
-a12sl_cd2	db '12SL.CD2',0
-a14sl_cd2	db '14SL.CD2',0
-a16sl_cd2	db '16SL.CD2',0
-
-public _SELECT_EXTRA_FOR_PLAYCHAR_FN, _PLAYCHAR_PIC_UNKNOWN_FN
-public _SELECT_STATS_FN, _SELECT_EXTRA_BG_FN
-_SELECT_EXTRA_FOR_PLAYCHAR_FN	db 'slex.cd2',0
-_PLAYCHAR_PIC_UNKNOWN_FN	db '99sl.cdg',0
-_SELECT_STATS_FN	db 'slwin.cdg',0
-_SELECT_EXTRA_BG_FN	db 'slex.cdg',0
-
-public _BGM_SELECT_FN, _PLAYCHAR_NAME_FN, _SELECT_PALETTE_FN
-_BGM_SELECT_FN	db 'select.m',0
-_PLAYCHAR_NAME_FN	db 'chname.bft',0
-_SELECT_PALETTE_FN	db 'TLSL.RGB',0
-		db 041h, 0C1h, 0E1h, 0
-
-	.data?
-
-public _hi, _curve_cycle
-_hi	scoredat_section_t <?>
-_curve_cycle	dw ?
-public _resident, _sel, _sel_confirmed, _page_shown
-_resident	dd ?
-_sel	db PLAYER_COUNT dup (?)
-_sel_confirmed label byte
-_sel_confirmed_p1	db ?
-_sel_confirmed_p2	db ?
-_page_shown	db ?
-	evendata
-include th03/hardware/input_modes[bss].asm
-
-public _fadeout_frames, _curve_unused, _curve_trail_count, _playchars_available
-_fadeout_frames	dw ?
-_curve_unused	dw ?
-_curve_trail_count	dw ?
-_playchars_available	db ?
 
 		end
