@@ -13,4 +13,7 @@ enum stone_t {
 	STONE_NORTH = 4,
 	STONE_COUNT,
 };
+
+extern int16_t stone_damage[STONE_COUNT];
+#define midboss3_damage stone_damage
 // ------------------------------

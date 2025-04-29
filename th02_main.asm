@@ -6140,13 +6140,13 @@ sub_1028C	proc far
 loc_10294:
 		mov	bx, si
 		add	bx, bx
-		mov	word ptr [bx+2BD4h], 0
+		mov	_stone_damage[bx], 0
 		mov	byte ptr [si+2BF0h], 0
 		mov	byte ptr [si+2BF5h], 0
 		inc	si
 
 loc_102A9:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_10294
 		mov	_boss_phase_frame, 0
 		mov	byte_2066A, 0
@@ -7014,14 +7014,14 @@ loc_1152C:
 		mov	midboss3_0_left_on_page_1, PLAYFIELD_LEFT
 		mov	midboss3_0_top_on_page_0, -16
 		mov	midboss3_0_top_on_page_1, -16
-		mov	word_20644, 0
+		mov	midboss3_damage[0 * word], 0
 		mov	midboss3_1_left_on_page_0, (PLAYFIELD_RIGHT - 64)
 		mov	midboss3_1_left_on_page_1, (PLAYFIELD_RIGHT - 64)
 		mov	ax, midboss3_0_top_on_page_0
 		mov	midboss3_1_top_on_page_0, ax
 		mov	ax, midboss3_0_top_on_page_0
 		mov	midboss3_1_top_on_page_1, ax
-		mov	word_20646, 0
+		mov	midboss3_damage[1 * word], 0
 		mov	byte_22FA8, 0
 		jmp	loc_116A9
 ; ---------------------------------------------------------------------------
@@ -7061,7 +7061,7 @@ loc_11599:
 		jz	short loc_115E3
 		mov	bx, si
 		add	bx, bx
-		add	[bx+2BD4h], di
+		add	midboss3_damage[bx], di
 		call	midboss3_11183 pascal, si
 		jmp	short loc_115E7
 ; ---------------------------------------------------------------------------
@@ -7120,10 +7120,10 @@ loc_1161B:
 		jz	short loc_11685
 		mov	bx, si
 		add	bx, bx
-		add	[bx+2BD4h], di
+		add	midboss3_damage[bx], di
 		mov	bx, si
 		add	bx, bx
-		cmp	word ptr [bx+2BD4h], 118h
+		cmp	word ptr midboss3_damage[bx], 280
 		jg	short loc_1166B
 		call	midboss3_11183 pascal, si
 		jmp	short loc_11689
@@ -7426,27 +7426,27 @@ loc_11885:
 		mov	byte ptr [si+2BF5h], 1
 		mov	bx, si
 		add	bx, bx
-		add	[bx+2BD4h], di
+		add	_stone_damage[bx], di
 		cmp	si, 4
 		jnz	short loc_118CF
-		mov	ax, 3A2h
+		mov	ax, 930
 		jmp	short loc_118DC
 ; ---------------------------------------------------------------------------
 
 loc_118CF:
 		cmp	si, 1
 		jg	short loc_118D9
-		mov	ax, 8Ch
+		mov	ax, 140
 		jmp	short loc_118DC
 ; ---------------------------------------------------------------------------
 
 loc_118D9:
-		mov	ax, 78h	; 'x'
+		mov	ax, 120
 
 loc_118DC:
 		mov	bx, si
 		add	bx, bx
-		cmp	ax, [bx+2BD4h]
+		cmp	ax, _stone_damage[bx]
 		jg	short loc_1193E
 		mov	byte ptr [si+2BF0h], 2
 		add	_score_delta, 30000
@@ -9081,9 +9081,9 @@ loc_125B4:
 		mov	byte_22D57, 0
 
 loc_125D6:
-		cmp	word_2064C, 1F4h
+		cmp	_stone_damage[STONE_NORTH * word], 500
 		jl	loc_12734
-		mov	word_2064C, 1F4h
+		mov	_stone_damage[STONE_NORTH * word], 500
 		jmp	loc_12734
 ; ---------------------------------------------------------------------------
 
@@ -9293,7 +9293,7 @@ loc_12786:
 		mov	byte ptr [si+2BF0h], 0
 		mov	bx, si
 		add	bx, bx
-		mov	word ptr [bx+2BD4h], 0
+		mov	_stone_damage[bx], 0
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx+52DCh], 94h
@@ -9301,7 +9301,7 @@ loc_12786:
 		inc	si
 
 loc_127A5:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_12786
 		mov	_stone_left[STONE_INNER_WEST * word], (PLAYFIELD_LEFT + 16 + (1 * 80))
 		mov	_stone_top[STONE_INNER_WEST * word], (PLAYFIELD_TOP + 16)
@@ -27065,10 +27065,10 @@ midboss3_1_top_on_page_0	dw ?
 midboss3_1_top_on_page_1	dw ?
 		dw 3 dup(2 dup (?))
 
-word_20644	dw ?
-word_20646	dw ?
-		db 4 dup(?)
-word_2064C	dw ?
+public _stone_damage
+midboss3_damage label word
+_stone_damage	dw STONE_COUNT dup(?)
+
 patnum_2064E	dw ?
 _boss_phase_frame	dw ?
 
