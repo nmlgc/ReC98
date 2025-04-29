@@ -6141,7 +6141,7 @@ loc_10294:
 		mov	bx, si
 		add	bx, bx
 		mov	_stone_damage[bx], 0
-		mov	byte ptr [si+2BF0h], 0
+		mov	_stone_flag[si], SF_DORMANT
 		mov	byte ptr [si+2BF5h], 0
 		inc	si
 
@@ -6487,6 +6487,10 @@ sub_10E95	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
+M3F_ALIVE = 0
+M3F_KILL_ANIM = 1
+M3F_REMOVED = 2
+
 ; Attributes: bp-based frame
 public @midboss3_invalidate$qv
 @midboss3_invalidate$qv	proc far
@@ -6500,7 +6504,7 @@ public @midboss3_invalidate$qv
 ; ---------------------------------------------------------------------------
 
 loc_110C3:
-		cmp	byte ptr [si+2BF0h], 2
+		cmp	midboss3_flag[si], M3F_REMOVED
 		jnz	short loc_110CE
 		inc	di
 		jmp	loc_1116B
@@ -6717,7 +6721,7 @@ midboss3_1120F	proc near
 		mov	bx, si
 		add	bx, bx
 		mov	_midboss3_kill_frames[bx], 0
-		mov	byte ptr [si+2BF0h], 2
+		mov	midboss3_flag[si], M3F_REMOVED
 		mov	word_205D8, 0FFFFh
 		mov	word_205DA, 0FFFFh
 		jmp	short loc_11302
@@ -6973,7 +6977,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_2], 0
-		cmp	byte_20660, 0
+		cmp	midboss3_flag[0], M3F_ALIVE
 		jnz	short loc_1150C
 		mov	al, _page_back
 		mov	ah, 0
@@ -7093,14 +7097,14 @@ loc_11608:
 ; ---------------------------------------------------------------------------
 
 loc_1160D:
-		cmp	byte ptr [si+2BF0h], 1
+		cmp	midboss3_flag[si], M3F_KILL_ANIM
 		jnz	short loc_1161B
 		call	midboss3_1120F pascal, si
 		jmp	loc_116A1
 ; ---------------------------------------------------------------------------
 
 loc_1161B:
-		cmp	byte ptr [si+2BF0h], 0
+		cmp	midboss3_flag[si], M3F_ALIVE
 		jnz	short loc_11697
 		call	midboss3_11308 pascal, si
 		mov	bx, si
@@ -7131,7 +7135,7 @@ loc_1161B:
 
 loc_1166B:
 		call	_snd_se_play c, 2
-		mov	byte ptr [si+2BF0h], 1
+		mov	midboss3_flag[si], M3F_KILL_ANIM
 		add	_score_delta, 20000
 		jmp	short loc_11689
 ; ---------------------------------------------------------------------------
@@ -7142,12 +7146,12 @@ loc_11685:
 loc_11689:
 		cmp	byte_22FA8, 4
 		jb	short loc_116A1
-		mov	byte ptr [si+2BF0h], 1
+		mov	midboss3_flag[si], M3F_KILL_ANIM
 		jmp	short loc_116A1
 ; ---------------------------------------------------------------------------
 
 loc_11697:
-		cmp	byte ptr [si+2BF0h], 2
+		cmp	midboss3_flag[si], M3F_REMOVED
 		jnz	short loc_116A1
 		inc	[bp+var_2]
 
@@ -7165,6 +7169,11 @@ loc_116A9:
 		retf
 @midboss3_update_and_render$qv	endp
 
+SF_DORMANT = 0
+SF_ACTIVE = 1
+SF_KILL_ANIM = 2
+SF_REMOVE = 3
+SF_REMOVED = 4
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7179,7 +7188,7 @@ stones_bg_render	proc far
 ; ---------------------------------------------------------------------------
 
 loc_116B5:
-		cmp	byte ptr [si+2BF0h], 4
+		cmp	_stone_flag[si], SF_REMOVED
 		jnb	short loc_116E3
 		mov	bx, si
 		add	bx, bx
@@ -7189,9 +7198,9 @@ loc_116B5:
 		push	_stone_top[bx]	; top
 		push	(32 shl 16) or 32	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
-		cmp	byte ptr [si+2BF0h], 3
+		cmp	_stone_flag[si], SF_REMOVE
 		jnz	short loc_116E3
-		mov	byte ptr [si+2BF0h], 4
+		mov	_stone_flag[si], SF_REMOVED
 
 loc_116E3:
 		inc	si
@@ -7219,7 +7228,7 @@ stones_116EC	proc near
 ; ---------------------------------------------------------------------------
 
 loc_116F5:
-		cmp	byte ptr [si+2BF0h], 2
+		cmp	_stone_flag[si], SF_KILL_ANIM
 		jnb	short loc_1175C
 		mov	bx, si
 		add	bx, bx
@@ -7277,14 +7286,14 @@ stones_11766	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@i	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 4
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@i]
 		mov	[bp+var_4], 40h
 		mov	bx, si
 		add	bx, bx
@@ -7374,7 +7383,7 @@ loc_1182C:
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx+10AEh], 0
-		mov	byte ptr [si+2BF0h], 3
+		mov	_stone_flag[si], SF_REMOVE
 		mov	ax, 1
 		jmp	short loc_11871
 ; ---------------------------------------------------------------------------
@@ -7408,7 +7417,7 @@ stones_11877	proc near
 ; ---------------------------------------------------------------------------
 
 loc_11885:
-		cmp	byte ptr [si+2BF0h], 1
+		cmp	_stone_flag[si], SF_ACTIVE
 		ja	loc_1193E
 		mov	bx, si
 		add	bx, bx
@@ -7421,7 +7430,7 @@ loc_11885:
 		mov	di, ax
 		or	ax, ax
 		jz	loc_1193E
-		cmp	byte ptr [si+2BF0h], 1
+		cmp	_stone_flag[si], SF_ACTIVE
 		jnz	loc_1193E
 		mov	byte ptr [si+2BF5h], 1
 		mov	bx, si
@@ -7448,7 +7457,7 @@ loc_118DC:
 		add	bx, bx
 		cmp	ax, _stone_damage[bx]
 		jg	short loc_1193E
-		mov	byte ptr [si+2BF0h], 2
+		mov	_stone_flag[si], SF_KILL_ANIM
 		add	_score_delta, 30000
 		cmp	si, 3
 		jg	short loc_11939
@@ -7499,7 +7508,7 @@ loc_1193F:
 ; ---------------------------------------------------------------------------
 
 loc_1194A:
-		cmp	byte ptr [si+2BF0h], 1
+		cmp	_stone_flag[si], SF_ACTIVE
 		jnz	short loc_1196F
 		mov	bx, si
 		add	bx, bx
@@ -7591,7 +7600,7 @@ stones_119CD	proc near
 ; ---------------------------------------------------------------------------
 
 loc_119F5:
-		cmp	byte ptr [si+2BF0h], 1
+		cmp	_stone_flag[si], SF_ACTIVE
 		jnz	short loc_11A1F
 		mov	bx, si
 		add	bx, bx
@@ -7629,7 +7638,7 @@ loc_11A27:
 ; ---------------------------------------------------------------------------
 
 loc_11A42:
-		cmp	byte ptr [si+2BF0h], 1
+		cmp	_stone_flag[si], SF_ACTIVE
 		jnz	short loc_11A6E
 		mov	bx, si
 		add	bx, bx
@@ -7697,7 +7706,7 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_11AB9:
-		cmp	byte ptr [di+2BF0h], 1
+		cmp	_stone_flag[di], SF_ACTIVE
 		jnz	short loc_11AF4
 		xor	si, si
 		jmp	short loc_11AEF
@@ -7750,7 +7759,7 @@ loc_11AFC:
 ; ---------------------------------------------------------------------------
 
 loc_11B16:
-		cmp	byte ptr [di+2BF0h], 1
+		cmp	_stone_flag[di], SF_ACTIVE
 		jnz	short loc_11B51
 		xor	si, si
 		jmp	short loc_11B4C
@@ -8469,12 +8478,12 @@ stones_1200F	endp
 
 stones_120F7	proc near
 
-arg_0		= word ptr  4
+@@i	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@i]
 		or	si, si
 		jz	short loc_12107
 		cmp	si, 1
@@ -8488,7 +8497,7 @@ loc_12107:
 		add	bx, bx
 		cmp	word ptr [bx+52DCh], 9Bh
 		jl	loc_121B3
-		mov	byte ptr [si+2BF0h], 1
+		mov	_stone_flag[si], SF_ACTIVE
 		mov	ax, 1
 		jmp	loc_121B5
 ; ---------------------------------------------------------------------------
@@ -8529,7 +8538,7 @@ loc_12166:
 		add	bx, bx
 		cmp	word ptr [bx+52DCh], 9Fh
 		jl	short loc_121B3
-		mov	byte ptr [si+2BF0h], 1
+		mov	_stone_flag[si], SF_ACTIVE
 		mov	ax, 1
 		jmp	short loc_121B5
 ; ---------------------------------------------------------------------------
@@ -8554,7 +8563,7 @@ loc_1219D:
 loc_121A1:
 		cmp	patnum_22D54, 163
 		jl	short loc_121B3
-		mov	byte_20664, 1
+		mov	_stone_flag[STONE_NORTH], SF_ACTIVE
 		mov	ax, 1
 		jmp	short loc_121B5
 ; ---------------------------------------------------------------------------
@@ -8583,7 +8592,7 @@ stones_121BA	proc near
 loc_121C9:
 		cmp	patnum_22D54, 159
 		jnz	short loc_121DE
-		mov	byte_20664, 0
+		mov	_stone_flag[STONE_NORTH], SF_DORMANT
 		mov	patnum_22D54, 151
 		jmp	short loc_121E2
 ; ---------------------------------------------------------------------------
@@ -8873,15 +8882,14 @@ stones_update	proc far
 ; ---------------------------------------------------------------------------
 
 loc_123C3:
-		cmp	byte ptr [si+2BF0h], 2
+		cmp	_stone_flag[si], SF_KILL_ANIM
 		jnz	short loc_123D0
-		push	si
-		call	stones_11766
+		call	stones_11766 pascal, si
 		jmp	short loc_123D8
 ; ---------------------------------------------------------------------------
 
 loc_123D0:
-		cmp	byte ptr [si+2BF0h], 4
+		cmp	_stone_flag[si], SF_REMOVED
 		jnz	short loc_123D8
 		inc	di
 
@@ -8889,9 +8897,9 @@ loc_123D8:
 		inc	si
 
 loc_123D9:
-		cmp	si, 5
+		cmp	si, STONE_COUNT
 		jl	short loc_123C3
-		cmp	di, 5
+		cmp	di, STONE_COUNT
 		jl	short loc_123E9
 		mov	ax, 2
 		jmp	loc_12737
@@ -8925,8 +8933,8 @@ loc_12425:
 		inc	word_22D4C
 		inc	word_22D4E
 		mov	_boss_phase_frame, 0
-		mov	byte_20660, 1
-		mov	byte_20661, 1
+		mov	_stone_flag[STONE_INNER_WEST], SF_ACTIVE
+		mov	_stone_flag[STONE_INNER_EAST], SF_ACTIVE
 		mov	byte_22D56, 1
 		mov	word_22FAA, 0
 		jmp	loc_12734
@@ -8938,14 +8946,14 @@ loc_12454:
 		call	stones_119CD
 		cmp	dword_22D58, 514h
 		jle	short loc_12481
-		cmp	byte_20660, 1
+		cmp	_stone_flag[STONE_INNER_WEST], SF_ACTIVE
 		jnz	short loc_12475
-		mov	byte_20660, 2
+		mov	_stone_flag[STONE_INNER_WEST], SF_KILL_ANIM
 
 loc_12475:
-		cmp	byte_20661, 1
+		cmp	_stone_flag[STONE_INNER_EAST], SF_ACTIVE
 		jnz	short loc_12481
-		mov	byte_20661, 2
+		mov	_stone_flag[STONE_INNER_EAST], SF_KILL_ANIM
 
 loc_12481:
 		cmp	di, 2
@@ -8956,10 +8964,8 @@ loc_12481:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_12734
-		push	2
-		call	stones_120F7
-		push	3
-		call	stones_120F7
+		call	stones_120F7 pascal, 2
+		call	stones_120F7 pascal, 3
 		or	ax, ax
 		jz	short loc_124B6
 		mov	byte_22D56, 2
@@ -8976,14 +8982,14 @@ loc_124C2:
 		jnz	short loc_12520
 		cmp	dword_22D58, 514h
 		jle	short loc_124EC
-		cmp	byte_20662, 1
+		cmp	_stone_flag[STONE_OUTER_WEST], SF_ACTIVE
 		jnz	short loc_124E0
-		mov	byte_20662, 2
+		mov	_stone_flag[STONE_OUTER_WEST], SF_KILL_ANIM
 
 loc_124E0:
-		cmp	byte_20663, 1
+		cmp	_stone_flag[STONE_OUTER_EAST], SF_ACTIVE
 		jnz	short loc_124EC
-		mov	byte_20663, 2
+		mov	_stone_flag[STONE_OUTER_EAST], SF_KILL_ANIM
 
 loc_124EC:
 		cmp	di, 4
@@ -9017,8 +9023,7 @@ loc_12520:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_12734
-		push	4
-		call	stones_120F7
+		call	stones_120F7 pascal, 4
 		or	ax, ax
 		jz	loc_12734
 		mov	byte_22D56, 4
@@ -9157,8 +9162,7 @@ loc_1266F:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_12734
-		push	4
-		call	stones_120F7
+		call	stones_120F7 pascal, 4
 		or	ax, ax
 		jz	loc_12734
 		mov	byte_22D56, 8
@@ -9225,7 +9229,7 @@ loc_12707:
 loc_12724:
 		cmp	dword_22D58, 7D0h
 		jle	short loc_12734
-		mov	byte_20664, 2
+		mov	_stone_flag[STONE_NORTH], SF_KILL_ANIM
 
 loc_12734:
 		mov	ax, 1
@@ -9290,7 +9294,7 @@ stones_12778	proc near
 ; ---------------------------------------------------------------------------
 
 loc_12786:
-		mov	byte ptr [si+2BF0h], 0
+		mov	_stone_flag[si], SF_DORMANT
 		mov	bx, si
 		add	bx, bx
 		mov	_stone_damage[bx], 0
@@ -27083,11 +27087,10 @@ public _boss_left_on_back_page, _boss_top_on_back_page
 _boss_left_on_back_page	dw ?
 _boss_top_on_back_page	dw ?
 
-byte_20660	db ?
-byte_20661	db ?
-byte_20662	db ?
-byte_20663	db ?
-byte_20664	db ?
+public _stone_flag
+label midboss3_flag byte
+_stone_flag	db STONE_COUNT dup(?)
+
 		db 5 dup(?)
 byte_2066A	db ?
 byte_2066B	db ?
