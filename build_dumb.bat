@@ -115,12 +115,11 @@ echo 5 -1 -2 -3 -4 -5 libs/kaja/ongchk.com bin/th02/zuninit.com bin/th01/zunsoft
 bin\Pipeline\zungen.com obj/Pipeline/zun_stub.bin obj\th03\zun.@z bin/th03/zun.com
 echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=3  -ml  -DBINARY='O'  -nobj/th03/  th03/op_01.cpp  th03/op_music.cpp  th03/op_main.cpp  th03/op_02.cpp  th03/scoredat.cpp  th03/op_sel.cpp  th03/exit.cpp  th03/polar.cpp  th03/input_s.cpp  th03/pi_put.cpp  th03/snd_kaja.cpp  th03/initop.cpp  th03/cdg_load.cpp  th03/grppsafx.cpp  th03/pi_load.cpp  th03/inp_m_w.cpp>obj\batch010.@c
 tcc @obj/batch010.@c
-tasm32 /m /mx /kh32768 /t /dGAME=3 th03_op2.asm obj\th03\op2.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03_op.asm obj\th03\op.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\cdg_put.asm obj\th03\cdg_put.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\cdg_p_na.asm obj\th03\cdg_p_na.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\hfliplut.asm obj\th03\hfliplut.obj
-echo -c -s -E c0l.obj obj\th03\op_01.obj obj\th03\op2.obj obj\th03\op_music.obj obj\th03\op_main.obj obj\th03\op_02.obj obj\th03\scoredat.obj obj\th03\op_sel.obj obj\th03\op.obj obj\th02\exit_dos.obj obj\th01\vplanset.obj obj\th02\snd_mode.obj obj\th02\snd_pmdr.obj obj\th02\snd_load.obj obj\th03\exit.obj obj\th03\polar.obj obj\th03\cdg_put.obj obj\th02\frmdely1.obj obj\th03\input_s.obj obj\th03\pi_put.obj obj\th03\snd_kaja.obj obj\th03\initop.obj obj\th03\cdg_load.obj obj\th03\grppsafx.obj obj\th03\pi_load.obj obj\th03\inp_m_w.obj obj\th03\cdg_p_na.obj obj\th03\hfliplut.obj obj\th02\frmdely2.obj, bin\th03\op.exe, obj\th03\op.map, emu.lib mathl.lib cl.lib>obj\th03\op.@l
+echo -c -s -E c0l.obj obj\th03\op_01.obj obj\th03\op.obj obj\th03\op_music.obj obj\th03\op_main.obj obj\th03\op_02.obj obj\th03\scoredat.obj obj\th03\op_sel.obj obj\th02\exit_dos.obj obj\th01\vplanset.obj obj\th02\snd_mode.obj obj\th02\snd_pmdr.obj obj\th02\snd_load.obj obj\th03\exit.obj obj\th03\polar.obj obj\th03\cdg_put.obj obj\th02\frmdely1.obj obj\th03\input_s.obj obj\th03\pi_put.obj obj\th03\snd_kaja.obj obj\th03\initop.obj obj\th03\cdg_load.obj obj\th03\grppsafx.obj obj\th03\pi_load.obj obj\th03\inp_m_w.obj obj\th03\cdg_p_na.obj obj\th03\hfliplut.obj obj\th02\frmdely2.obj, bin\th03\op.exe, obj\th03\op.map, emu.lib mathl.lib cl.lib>obj\th03\op.@l
 tlink @obj\th03\op.@l
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03_main.asm obj\th03\main.obj
 echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=3  -ml  -nobj/th03/  th03/playfld.cpp  th03/cfg_lres.cpp  th03/hitcirc.cpp  th03/player_m.cpp  th03/main_010.cpp  th03/main_011.cpp  th03/vector.cpp  th03/snd_se.cpp  th03/initmain.cpp  th03/mrs.cpp  th03/sprite16.cpp>obj\batch011.@c

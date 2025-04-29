@@ -592,13 +592,12 @@ th03:zungen("bin/th03/zun.com", {
 })
 th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th03/op_01.cpp",
-	"th03_op2.asm",
+	"th03_op.asm",
 	"th03/op_music.cpp",
 	"th03/op_main.cpp",
 	"th03/op_02.cpp",
 	"th03/scoredat.cpp",
 	"th03/op_sel.cpp",
-	"th03_op.asm",
 	"th02/exit_dos.cpp",
 	"th01/vplanset.cpp",
 	"th02/snd_mode.c",

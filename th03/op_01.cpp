@@ -3,6 +3,8 @@
  * Code segment #1 of TH03's OP.EXE
  */
 
+#pragma option -zPgroup_01
+
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
