@@ -33,7 +33,7 @@ BOSS_ATTACK_LEVEL_MAX = 16
 
 	extern _execl:proc
 
-main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
+main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
 
 ; ===========================================================================
@@ -901,7 +901,7 @@ loc_9E24:
 		graph_accesspage 0
 		graph_showpage 1
 		call	_snd_se_reset
-		nopcall	sub_B8F7
+		nopcall	@hud_wipe$qv
 		nopcall	sub_BAE0
 		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		kajacall	KAJA_SONG_PLAY
@@ -1292,7 +1292,7 @@ sub_A21F	proc near
 		mov	_p1.hyper, offset hyper_standby
 		mov	_p2.hyper, offset hyper_standby
 		call	_snd_se_reset
-		nopcall	sub_B8F7
+		nopcall	@hud_wipe$qv
 		nopcall	sub_A38E
 		nopcall	sub_BAE0
 		pop	bp
@@ -2589,22 +2589,11 @@ sub_B60A	endp
 	@hitcircles_render$qv procdesc near
 HITCIRC_TEXT ends
 
+HUD_STAT_TEXT segment byte public 'CODE' use16
+	extern @hud_wipe$qv:proc
+HUD_STAT_TEXT ends
+
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B8F7	proc far
-		push	bp
-		mov	bp, sp
-		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		call	text_boxfilla pascal, (2 shl 16) + 1, (37 shl 16) + 24, TX_WHITE
-		call	text_boxfilla pascal, (42 shl 16) + 1, (77 shl 16) + 24, TX_WHITE
-		pop	bp
-		retf
-sub_B8F7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

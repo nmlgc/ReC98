@@ -23,6 +23,16 @@
 
 #define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / BYTE_DOTS)
 
+inline screen_x_t playfield_x(pid_t pid, pixel_t x) {
+	return ((PLAYFIELD_LEFT + x) + (pid * PLAYFIELD_W_BORDERED));
+}
+
+inline tram_x_t playfield_tram_x(pid_t pid, pixel_t x) {
+	return (playfield_x(pid, x) / GLYPH_HALF_W);
+}
+
+static const tram_y_t PLAYFIELD_TRAM_TOP = (PLAYFIELD_TOP / GLYPH_H);
+
 // A subpixel X or Y coordinate, width, or height within one of the playfields.
 typedef subpixel_t playfield_subpixel_t;
 typedef Subpixel PlayfieldSubpixel;

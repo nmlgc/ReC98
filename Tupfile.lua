@@ -624,6 +624,7 @@ th03:branch(MODEL_LARGE):link("main", {
 	"th03/playfld.cpp",
 	"th03/cfg_lres.cpp",
 	"th03/hitcirc.cpp",
+	"th03/hud_stat.cpp",
 	"th03/player_m.cpp",
 	"th03/main_010.cpp",
 	"th03/main_011.cpp",
