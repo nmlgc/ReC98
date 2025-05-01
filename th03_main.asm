@@ -4110,7 +4110,7 @@ loc_C4E8:
 		call	@player_move$qui pascal, di
 		cmp	al, MOVE_VALID
 		jnz	short loc_C505
-		call	@player_pos_update_and_clamp$qr8player_t pascal, si
+		call	@player_pos_update_and_clamp$qr7SPPoint pascal, si
 
 loc_C505:
 		call	@player_hittest$qi pascal, (8 / 2)
@@ -4393,7 +4393,7 @@ loc_C6C7:
 		call	@player_move$qui pascal, di
 		cmp	al, MOVE_VALID
 		jnz	short loc_C6D3
-		call	@player_pos_update_and_clamp$qr8player_t pascal, si
+		call	@player_pos_update_and_clamp$qr7SPPoint pascal, si
 
 loc_C6D3:
 		cmp	[bp+var_B], 0
@@ -6432,8 +6432,8 @@ MOVE_INVALID = 0
 MOVE_VALID = 1
 MOVE_NOINPUT = 2
 
-	@PLAYER_POS_UPDATE_AND_CLAMP$QR8PLAYER_T procdesc pascal near \
-		player:word
+	@PLAYER_POS_UPDATE_AND_CLAMP$QR7SPPOINT procdesc pascal near \
+		center:word
 	@PLAYER_MOVE$QUI procdesc pascal near \
 		input:word
 PLAYER_M_TEXT	ends
@@ -6859,7 +6859,7 @@ loc_DAC7:
 loc_DAEF:
 		cmp	[bp+var_5], MOVE_VALID
 		jnz	short loc_DAF9
-		call	@player_pos_update_and_clamp$qr8player_t pascal, si
+		call	@player_pos_update_and_clamp$qr7SPPoint pascal, si
 
 loc_DAF9:
 		cmp	[bp+var_6], 0
@@ -7512,7 +7512,7 @@ loc_E036:
 		mov	_player_velocity.x8, al
 		mov	al, [bp+@@vector_y]
 		mov	_player_velocity.y8, al
-		call	@player_pos_update_and_clamp$qr8player_t pascal, si
+		call	@player_pos_update_and_clamp$qr7SPPoint pascal, si
 		jmp	short loc_E078
 ; ---------------------------------------------------------------------------
 
