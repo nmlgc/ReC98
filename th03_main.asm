@@ -2596,59 +2596,10 @@ HUD_STAT_TEXT segment byte public 'CODE' use16
 	@HUD_STATIC_ROUNDS_WON_PUT$QUC procdesc pascal near \
 		pid:word
 	@hud_static_story_lives_put$qv procdesc near
+	extern @HUD_STATIC_GAUGE_LEVELS_PUT$QI:proc
 HUD_STAT_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA91	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 2
-		cmp	[bp+arg_0], 0
-		jz	short loc_BAA2
-		add	di, 28h	; '('
-
-loc_BAA2:
-		mov	bx, [bp+arg_0]
-		mov	al, _gauge_attack_level[bx]
-		mov	ah, 0
-		mov	si, ax
-		push	di
-		push	24
-		add	ax, 1Fh
-		push	ax
-		push	TX_GREEN
-		call	gaiji_putca
-		add	di, 22h	; '"'
-		mov	al, _boss_attack_level
-		mov	ah, 0
-		mov	si, ax
-		cmp	si, 10h
-		jl	short loc_BACC
-		dec	si
-
-loc_BACC:
-		push	di
-		push	24
-		lea	ax, [si+20h]
-		push	ax
-		push	TX_RED
-		call	gaiji_putca
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_BA91	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2666,8 +2617,7 @@ loc_BAE8:
 		call	@hud_static_halfhearts_put$quc pascal, si
 		call	@hud_static_bombs_put$quc pascal, si
 		call	@hud_static_rounds_won_put$quc pascal, si
-		push	si
-		call	sub_BA91
+		call	@hud_static_gauge_levels_put$qi pascal, si
 		inc	si
 
 loc_BAFC:
@@ -4654,9 +4604,9 @@ loc_CA4E:
 		call	snd_se_play pascal, 19
 		call	_snd_se_update
 		push	0
-		nopcall	sub_BA91
+		nopcall	@hud_static_gauge_levels_put$qi
 		push	1
-		nopcall	sub_BA91
+		nopcall	@hud_static_gauge_levels_put$qi
 		cmp	byte_1DCF8, 2
 		jnz	short loc_CA81
 		mov	byte_1DCF8, 3

@@ -13,3 +13,6 @@ void pascal near hud_static_rounds_won_put(pid_t pid);
 
 // No parameter because it only applies to P1.
 void near hud_static_story_lives_put(void);
+
+// Renders the gauge and boss attack levels.
+void pascal hud_static_gauge_levels_put(pid2 pid);

@@ -27,7 +27,12 @@ typedef enum {
 	gc_P2_TOP_2 = 0x17,
 	gc_P2_BOTTOM_1 = 0x18,
 	gc_P2_BOTTOM_2 = 0x19,
-	gaiji_bar(0x20),
+
+	// Proportional digits from 1 to 16. MIKOFT.BFT has a gaiji_bar() instead,
+	// but that one is unused.
+	gpd_1 = 0x20,
+	gpd_16 = (gpd_1 + 16 - 1),
+
 	gaiji_boldfont(0xA0),
 
 	g_SP = 0xCF,
