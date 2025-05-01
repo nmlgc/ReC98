@@ -6687,17 +6687,17 @@ midboss3_1120F	proc near
 		mov	[bp+@@patnum], 10
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+10AAh]
+		mov	ax, _midboss3_kill_frames[bx]
 		mov	bx, 6
 		cwd
 		idiv	bx
 		add	[bp+@@patnum], ax
 		mov	bx, si
 		add	bx, bx
-		inc	word ptr [bx+10AAh]
+		inc	_midboss3_kill_frames[bx]
 		mov	bx, si
 		add	bx, bx
-		cmp	word ptr [bx+10AAh], 30h ; '0'
+		cmp	_midboss3_kill_frames[bx], 48
 		jl	short loc_112BA
 		mov	bx, si
 		shl	bx, 2
@@ -6716,7 +6716,7 @@ midboss3_1120F	proc near
 		call	@sparks_add$qiuiiii
 		mov	bx, si
 		add	bx, bx
-		mov	word ptr [bx+10AAh], 0
+		mov	_midboss3_kill_frames[bx], 0
 		mov	byte ptr [si+2BF0h], 2
 		mov	word_205D8, 0FFFFh
 		mov	word_205DA, 0FFFFh
@@ -26416,10 +26416,10 @@ byte_1EB0D	db -1
 byte_1EB0E	db -1
 _POWER_RESET_FOR	db 1, 1, 4, 8, 16, 24, 32, 40, 52, 64
 	evendata
-		db    0
-		db    0
-		db    0
-		db    0
+
+public _midboss3_kill_frames
+_midboss3_kill_frames	dw MIDBOSS3_COUNT dup(0)
+
 		db    0
 		db    0
 		db    0
