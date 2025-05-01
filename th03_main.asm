@@ -2591,87 +2591,10 @@ HITCIRC_TEXT ends
 
 HUD_STAT_TEXT segment byte public 'CODE' use16
 	extern @hud_wipe$qv:proc
+	extern @HUD_STATIC_HALFHEARTS_PUT$QUC:proc
 HUD_STAT_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B92F	proc far
-
-var_4		= word ptr -4
-@@halfhearts		= word ptr -2
-@@pid		= byte ptr  6
-
-		enter	4, 0
-		push	si
-		push	di
-		xor	di, di
-		cmp	[bp+@@pid], 0
-		jnz	short loc_B942
-		mov	si, 0Fh
-		jmp	short loc_B945
-; ---------------------------------------------------------------------------
-
-loc_B942:
-		mov	si, 37h	; '7'
-
-loc_B945:
-		mov	[bp+var_4], 1
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		mov	al, _players[bx].halfhearts
-		cbw
-		mov	[bp+@@halfhearts], ax
-		jmp	short loc_B984
-; ---------------------------------------------------------------------------
-
-loc_B95E:
-		mov	ax, [bp+@@halfhearts]
-		sub	ax, di
-		cmp	ax, 2
-		jl	short loc_B970
-		push	si
-		push	[bp+var_4]
-		push	5
-		jmp	short loc_B976
-; ---------------------------------------------------------------------------
-
-loc_B970:
-		push	si
-		push	[bp+var_4]
-		push	6
-
-loc_B976:
-		push	TX_WHITE
-		call	gaiji_putca
-		add	si, 2
-		add	di, 2
-
-loc_B984:
-		cmp	di, [bp+@@halfhearts]
-		jl	short loc_B95E
-		jmp	short loc_B9A0
-; ---------------------------------------------------------------------------
-
-loc_B98B:
-		call	gaiji_putca pascal, si, [bp+var_4], (4 shl 16) + TX_WHITE
-		add	si, 2
-		add	di, 2
-
-loc_B9A0:
-		cmp	di, 0Ah
-		jl	short loc_B98B
-		pop	di
-		pop	si
-		leave
-		retf	2
-sub_B92F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2874,8 +2797,7 @@ sub_BAE0	proc far
 ; ---------------------------------------------------------------------------
 
 loc_BAE8:
-		push	si
-		call	sub_B92F
+		call	@hud_static_halfhearts_put$quc pascal, si
 		push	si
 		call	sub_B9AB
 		push	si
@@ -7217,7 +7139,7 @@ loc_DE26:
 
 loc_DE36:
 		push	word ptr _pid_PID_current
-		nopcall	sub_B92F
+		nopcall	@hud_static_halfhearts_put$quc
 
 loc_DE3F:
 		mov	byte ptr [si+4], 0

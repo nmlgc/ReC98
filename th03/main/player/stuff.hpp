@@ -85,6 +85,8 @@ struct player_stuff_t {
 	uint8_t padding[6];
 };
 
+extern player_stuff_t players[PLAYER_COUNT];
+
 // Currently updated stuff instance.
 extern player_stuff_t near *player_cur;
 

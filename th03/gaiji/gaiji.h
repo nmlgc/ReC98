@@ -8,6 +8,10 @@ typedef enum {
 	// 1P/2P selection cursor
 	#define gc_GAIJI_W 2
 
+	gs_HEART_EMPTY = 0x04,
+	gs_HEART_FULL,
+	gs_HEART_HALF,
+
 	gc_P1_TOP_1 = 0x12,
 	gc_P1_TOP_2 = 0x13,
 	gc_P1_BOTTOM_1 = 0x14,
