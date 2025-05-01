@@ -9,3 +9,4 @@ void hud_wipe(void);
 
 void pascal hud_static_halfhearts_put(pid_t pid);
 void pascal hud_static_bombs_put(pid_t pid);
+void pascal near hud_static_rounds_won_put(pid_t pid);

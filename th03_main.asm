@@ -2593,57 +2593,11 @@ HUD_STAT_TEXT segment byte public 'CODE' use16
 	extern @hud_wipe$qv:proc
 	extern @HUD_STATIC_HALFHEARTS_PUT$QUC:proc
 	extern @HUD_STATIC_BOMBS_PUT$QUC:proc
+	@HUD_STATIC_ROUNDS_WON_PUT$QUC procdesc pascal near \
+		pid:word
 HUD_STAT_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA12	proc near
-
-@@rounds		= word ptr -2
-arg_0		= byte ptr  4
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	di, di
-		cmp	[bp+arg_0], 0
-		jnz	short loc_BA25
-		mov	si, 2
-		jmp	short loc_BA28
-; ---------------------------------------------------------------------------
-
-loc_BA25:
-		mov	si, 2Ah	; '*'
-
-loc_BA28:
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		mov	al, _players[bx].rounds_won
-		mov	ah, 0
-		mov	[bp+@@rounds], ax
-		jmp	short loc_BA50
-; ---------------------------------------------------------------------------
-
-loc_BA3D:
-		call	gaiji_putca pascal, si, (1 shl 16) + 9, TX_WHITE
-		add	si, 2
-		inc	di
-
-loc_BA50:
-		cmp	di, [bp+@@rounds]
-		jl	short loc_BA3D
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_BA12	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2746,8 +2700,7 @@ sub_BAE0	proc far
 loc_BAE8:
 		call	@hud_static_halfhearts_put$quc pascal, si
 		call	@hud_static_bombs_put$quc pascal, si
-		push	si
-		call	sub_BA12
+		call	@hud_static_rounds_won_put$quc pascal, si
 		push	si
 		call	sub_BA91
 		inc	si
@@ -3509,8 +3462,7 @@ loc_C159:
 		mov	_round_or_result_frame, 0
 		mov	al, 1
 		sub	al, _pid_PID_current
-		push	ax
-		call	sub_BA12
+		call	@hud_static_rounds_won_put$quc pascal, ax
 		jmp	short loc_C1E1
 ; ---------------------------------------------------------------------------
 

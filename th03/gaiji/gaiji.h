@@ -12,6 +12,11 @@ typedef enum {
 	gs_HEART_FULL,
 	gs_HEART_HALF,
 	gs_BOMB,
+	gs_BOMB_UNUSED,
+
+	// https://en.wikipedia.org/wiki/Comedy_and_tragedy_masks
+	// Just a ● in MIKOFT.BFT, but that one is unused.
+	gs_THALIA,
 
 	gc_P1_TOP_1 = 0x12,
 	gc_P1_TOP_2 = 0x13,

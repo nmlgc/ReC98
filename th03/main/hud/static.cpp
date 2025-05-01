@@ -87,3 +87,21 @@ void pascal hud_static_bombs_put(pid_t pid)
 	// In case we lost a single bomb on this frame… Very clever!
 	gaiji_putca(x, y, g_SP, TX_WHITE);
 }
+
+void pascal near hud_static_rounds_won_put(pid_t pid)
+{
+	tram_x_t x;
+	int i = 0;
+	if(pid == 0) {
+		x = playfield_tram_x(0, 0);
+	} else {
+		x = playfield_tram_x(1, 0);
+	}
+
+	int rounds_won = players[pid].rounds_won;
+	while(i < rounds_won) {
+		gaiji_putca(x, PLAYFIELD_TRAM_TOP, gs_THALIA, TX_WHITE);
+		x += GAIJI_TRAM_W;
+		i++;
+	}
+}
