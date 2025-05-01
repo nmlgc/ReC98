@@ -1,6 +1,7 @@
 #include "th03/main/hud/static.hpp"
 #include "th03/main/player/stuff.hpp"
 #include "th03/gaiji/gaiji.h"
+#include "th03/resident.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 
 void hud_wipe(void)
@@ -102,6 +103,18 @@ void pascal near hud_static_rounds_won_put(pid_t pid)
 	while(i < rounds_won) {
 		gaiji_putca(x, PLAYFIELD_TRAM_TOP, gs_THALIA, TX_WHITE);
 		x += GAIJI_TRAM_W;
+		i++;
+	}
+}
+
+void near hud_static_story_lives_put(void)
+{
+	int i = 0;
+	tram_x_t x = playfield_tram_x(0, (PLAYFIELD_W - GAIJI_W));
+	int lives = resident->story_lives;
+	while(i < lives) {
+		gaiji_putca(x, (PLAYFIELD_TRAM_TOP + 1), gs_YINYANG, TX_WHITE);
+		x -= GAIJI_TRAM_W;
 		i++;
 	}
 }

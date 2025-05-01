@@ -2595,45 +2595,10 @@ HUD_STAT_TEXT segment byte public 'CODE' use16
 	extern @HUD_STATIC_BOMBS_PUT$QUC:proc
 	@HUD_STATIC_ROUNDS_WON_PUT$QUC procdesc pascal near \
 		pid:word
+	@hud_static_story_lives_put$qv procdesc near
 HUD_STAT_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA5B	proc near
-
-@@lives		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	si, si
-		mov	di, 24h	; '$'
-		les	bx, _resident
-		assume es:nothing
-		mov	al, es:[bx+resident_t.story_lives]
-		mov	ah, 0
-		mov	[bp+@@lives], ax
-		jmp	short loc_BA88
-; ---------------------------------------------------------------------------
-
-loc_BA75:
-		call	gaiji_putca pascal, di, (2 shl 16) + 2, TX_WHITE
-		sub	di, 2
-		inc	si
-
-loc_BA88:
-		cmp	si, [bp+@@lives]
-		jl	short loc_BA75
-		pop	di
-		pop	si
-		leave
-		retn
-sub_BA5B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2711,7 +2676,7 @@ loc_BAFC:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jnz	short loc_BB0F
-		call	sub_BA5B
+		call	@hud_static_story_lives_put$qv
 
 loc_BB0F:
 		pop	si
@@ -6070,7 +6035,7 @@ loc_D56B:
 		les	bx, _resident
 		assume es:nothing
 		inc	es:[bx+resident_t.story_lives]
-		call	sub_BA5B
+		call	@hud_static_story_lives_put$qv
 		inc	byte_220DC
 		cmp	byte_220DC, 2
 		jnz	short locret_D5A0
