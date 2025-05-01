@@ -27,6 +27,10 @@ include th03/sprites/main_s16.inc
 include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
+GAUGE_ATTACK_LEVEL_MIN = 1
+GAUGE_ATTACK_LEVEL_MAX = 16
+BOSS_ATTACK_LEVEL_MAX = 16
+
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
@@ -624,10 +628,10 @@ loc_9BC5:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
 		inc	al
-		mov	byte_202B6, al
+		mov	_gauge_attack_level[0], al
 		mov	al, es:[bx+resident_t.story_stage]
 		inc	al
-		mov	byte_202B7, al
+		mov	_gauge_attack_level[1], al
 		mov	al, _score_p1[6]
 		mov	byte_220DC, al
 		cmp	byte_220DC, 2
@@ -686,8 +690,8 @@ loc_9C51:
 		mov	ax, word ptr [bp+var_6]
 		mov	_p1.cpu_safety_frames, ax
 		mov	_p2.cpu_safety_frames, ax
-		mov	byte_202B6, 1
-		mov	byte_202B7, 1
+		mov	_gauge_attack_level[0], GAUGE_ATTACK_LEVEL_MIN
+		mov	_gauge_attack_level[1], GAUGE_ATTACK_LEVEL_MIN
 		mov	byte_220DC, -1
 		mov	_cpu_hit_damage_additional, 0
 		push	3
@@ -722,9 +726,9 @@ loc_9CAB:
 		mov	fp_1E6EA, offset sub_9AD6
 		mov	byte_23AF8, 40h
 		mov	byte_23E3C, 0
-		mov	byte_1F39E, 8
-		mov	byte_202B6, 9
-		mov	byte_202B7, 9
+		mov	_boss_attack_level, 8
+		mov	_gauge_attack_level[0], 9
+		mov	_gauge_attack_level[1], 9
 
 loc_9CD0:
 		mov	fp_1FBC0, offset sub_B4A3
@@ -1088,11 +1092,11 @@ loc_9FFA:
 		sub	ax, dx
 		sar	ax, 1
 		add	al, byte_207E3
-		mov	byte_1F39E, al
+		mov	_boss_attack_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	loc_A0E7
-		inc	byte_202B6
-		inc	byte_202B7
+		inc	_gauge_attack_level[0]
+		inc	_gauge_attack_level[1]
 		jmp	loc_A0E7
 ; ---------------------------------------------------------------------------
 
@@ -1106,7 +1110,7 @@ loc_9FFA:
 		mov	dl, byte_207E3
 		add	dl, dl
 		add	al, dl
-		mov	byte_1F39E, al
+		mov	_boss_attack_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_A0E7
 		jmp	short loc_A0A2
@@ -1124,15 +1128,15 @@ loc_9FFA:
 		add	dl, dl
 		add	al, dl
 		add	al, 2
-		mov	byte_1F39E, al
+		mov	_boss_attack_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_A0E7
 
 loc_A0A2:
-		mov	al, byte_202B6
+		mov	al, _gauge_attack_level[0]
 		add	al, 2
-		mov	byte_202B6, al
-		mov	al, byte_202B7
+		mov	_gauge_attack_level[0], al
+		mov	al, _gauge_attack_level[1]
 		add	al, 2
 		jmp	short loc_A0E4
 ; ---------------------------------------------------------------------------
@@ -1146,17 +1150,17 @@ loc_A0A2:
 		add	dl, dl
 		add	al, dl
 		add	al, 8
-		mov	byte_1F39E, al
+		mov	_boss_attack_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_A0E7
-		mov	al, byte_202B6
+		mov	al, _gauge_attack_level[0]
 		add	al, 4
-		mov	byte_202B6, al
-		mov	al, byte_202B7
+		mov	_gauge_attack_level[0], al
+		mov	al, _gauge_attack_level[1]
 		add	al, 4
 
 loc_A0E4:
-		mov	byte_202B7, al
+		mov	_gauge_attack_level[1], al
 
 loc_A0E7:
 		cmp	byte_23AF8, 80h
@@ -1164,19 +1168,19 @@ loc_A0E7:
 		mov	byte_23AF8, 7Fh
 
 loc_A0F3:
-		cmp	byte_1F39E, 10h
+		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
 		jbe	short loc_A0FF
-		mov	byte_1F39E, 10h
+		mov	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
 
 loc_A0FF:
-		cmp	byte_202B6, 10h
+		cmp	_gauge_attack_level[0], GAUGE_ATTACK_LEVEL_MAX
 		jbe	short loc_A10B
-		mov	byte_202B6, 10h
+		mov	_gauge_attack_level[0], GAUGE_ATTACK_LEVEL_MAX
 
 loc_A10B:
-		cmp	byte_202B7, 10h
+		cmp	_gauge_attack_level[1], GAUGE_ATTACK_LEVEL_MAX
 		jbe	short loc_A117
-		mov	byte_202B7, 10h
+		mov	_gauge_attack_level[1], GAUGE_ATTACK_LEVEL_MAX
 
 loc_A117:
 		mov	byte_1DB9E, -1
@@ -2837,7 +2841,7 @@ arg_0		= word ptr  6
 
 loc_BAA2:
 		mov	bx, [bp+arg_0]
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		mov	ah, 0
 		mov	si, ax
 		push	di
@@ -2847,7 +2851,7 @@ loc_BAA2:
 		push	TX_GREEN
 		call	gaiji_putca
 		add	di, 22h	; '"'
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	si, ax
 		cmp	si, 10h
@@ -4964,7 +4968,7 @@ loc_CADF:
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		jmp	short loc_CB60
 ; ---------------------------------------------------------------------------
 
@@ -4974,7 +4978,7 @@ loc_CB47:
 		lea	ax, [si+13h]
 		push	ax
 		push	0Fh
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 
 loc_CB60:
 		mov	ah, 0
@@ -7048,9 +7052,9 @@ loc_DC64:
 		mov	bx, ax
 		mov	byte ptr [bx+393Ch], 5
 		mov	word ptr [si+1Ah], 400h
-		cmp	byte_1F39E, 10h
+		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
 		jnb	short loc_DCBC
-		inc	byte_1F39E
+		inc	_boss_attack_level
 
 loc_DCBC:
 		add	word_21434, 2800h
@@ -7079,7 +7083,7 @@ loc_DCDA:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D56h], 10h
+		cmp	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
 		jnb	short loc_DD2B
 		jmp	short loc_DD20
 ; ---------------------------------------------------------------------------
@@ -7094,14 +7098,14 @@ loc_DCFE:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D56h], 10h
+		cmp	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
 		jnb	short loc_DD2B
 
 loc_DD20:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D56h]
+		inc	_gauge_attack_level[bx]
 
 loc_DD2B:
 		mov	al, [si+6]
@@ -8618,9 +8622,9 @@ loc_F4F6:
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+1DCAh], 0
-		cmp	byte_1F39E, 10h
+		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
 		jnb	short locret_F510
-		inc	byte_1F39E
+		inc	_boss_attack_level
 
 locret_F510:
 		leave
@@ -8910,7 +8914,7 @@ sub_F72D	proc near
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_pid_other, al
-		cmp	byte_1F39E, 8
+		cmp	_boss_attack_level, 8
 		jnb	short loc_F768
 		mov	al, byte_1F3A0
 		jmp	short loc_F795
@@ -9029,24 +9033,24 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_F887
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, al
 		add	al, 32h	; '2'
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, al
 		add	al, 18h
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 20h	; ' '
 		mov	byte_1F3A1, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 0Ah
 		mov	byte_1F3A2, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 16h
 		mov	byte_1F3A3, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 16h
 		mov	byte_1F3A4, al
 
@@ -9751,32 +9755,32 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_FF2B
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 20h	; ' '
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	al, 2
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 20h	; ' '
 		mov	byte_1F3A1, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, al
 		mov	dl, 40h
 		sub	dl, al
 		mov	byte_1F3A2, dl
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 28h	; '('
 		mov	byte_1F3A3, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		shl	al, 2
 		add	al, 40h
 		mov	byte_1F3A4, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 36h	; '6'
 		mov	byte_1F3A5, al
 
@@ -10623,31 +10627,31 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_10761
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 40h
 		mov	byte_1F3A1, al
 		mov	al, 12h
-		sub	al, byte_1F39E
+		sub	al, _boss_attack_level
 		mov	byte_1F3A2, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		shl	al, 2
 		add	al, 50h	; 'P'
 		mov	byte_1F3A3, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -11613,7 +11617,7 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_11083
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 5
 		cwd
@@ -11621,24 +11625,24 @@ var_4		= word ptr -4
 		mov	dl, 5
 		sub	dl, al
 		mov	byte_1F39F, dl
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 18h
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, al
 		add	al, 28h	; '('
 		mov	byte_1F3A1, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 8
 		cwd
 		idiv	bx
 		add	al, 4
 		mov	byte_1F3A2, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 10h
 		mov	byte_1F3A3, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 10h
 		mov	byte_1F3A4, al
 
@@ -12369,21 +12373,21 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_116F6
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, al
 		add	al, 32h	; '2'
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 10
 		cwd
 		idiv	bx
 		add	al, 4
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 30h	; '0'
 		mov	byte_1F3A1, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -13223,42 +13227,42 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_11EC0
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 3
 		cwd
 		idiv	bx
 		add	al, 6
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F3A1, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 20h	; ' '
 		mov	byte_1F3A2, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 18h
 		mov	byte_1F3A3, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -13266,7 +13270,7 @@ var_4		= word ptr -4
 		mov	dl, 20h	; ' '
 		sub	dl, al
 		mov	byte_1F3A4, dl
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -13830,7 +13834,7 @@ loc_1239D:
 		mov	al, byte_1F3A1
 		mov	byte_23E42, al
 		call	sub_17730
-		cmp	byte_1F39E, 8
+		cmp	_boss_attack_level, 8
 		jb	short loc_12423
 		mov	byte_23E4E, 1
 		mov	byte_23E45, 23h ; '#'
@@ -14162,10 +14166,10 @@ var_2		= byte ptr -2
 		call	sub_F402
 		or	al, al
 		jz	short loc_12700
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 30h	; '0'
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -14173,20 +14177,20 @@ var_2		= byte ptr -2
 		mov	dl, 6
 		sub	dl, al
 		mov	byte_1F3A0, dl
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 34h	; '4'
 		mov	byte_1F3A1, al
 		mov	al, 20h	; ' '
-		sub	al, byte_1F39E
+		sub	al, _boss_attack_level
 		mov	byte_1F3A2, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, al
 		add	al, 38h	; '8'
 		mov	byte_1F3A3, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 10h
 		mov	byte_1F3A4, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -15194,28 +15198,28 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_1304F
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 18h
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F3A1, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -15223,16 +15227,16 @@ var_4		= word ptr -4
 		add	al, 14h
 		mov	byte_1F3A2, al
 		mov	al, 20h	; ' '
-		sub	al, byte_1F39E
+		sub	al, _boss_attack_level
 		mov	byte_1F3A3, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 18h
 		mov	byte_1F3A4, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 40h
 		mov	byte_1F3A5, al
 
@@ -15955,21 +15959,21 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_136AB
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	al, 8
 		mov	byte_1F3A0, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -15977,9 +15981,9 @@ var_4		= word ptr -4
 		add	al, 1Ch
 		mov	byte_1F3A1, al
 		mov	al, 20h	; ' '
-		sub	al, byte_1F39E
+		sub	al, _boss_attack_level
 		mov	byte_1F3A2, al
-		mov	al, byte_1F39E
+		mov	al, _boss_attack_level
 		add	al, 40h
 		mov	byte_1F3A3, al
 
@@ -17774,7 +17778,7 @@ loc_146C6:
 		mov	ah, 0
 		mov	dl, 30h	; '0'
 		mov	bx, ax
-		sub	dl, [bx+2D56h]
+		sub	dl, _gauge_attack_level[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -18709,7 +18713,7 @@ loc_14E51:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 20h	; ' '
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -18720,7 +18724,7 @@ loc_14E51:
 		mov	ah, 0
 		mov	dl, 20h	; ' '
 		mov	bx, ax
-		sub	dl, [bx+2D56h]
+		sub	dl, _gauge_attack_level[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -19763,7 +19767,7 @@ loc_15719:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 26h	; '&'
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -19773,7 +19777,7 @@ loc_15719:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, al
 		add	al, 18h
 		mov	dl, _pid_current
@@ -21450,9 +21454,9 @@ arg_2		= word ptr  6
 		mov	bx, ax
 		mov	byte ptr [bx+4B3Eh], 0
 		add	word_21434, 1400h
-		cmp	byte_1F39E, 10h
+		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
 		jnb	short loc_16656
-		inc	byte_1F39E
+		inc	_boss_attack_level
 
 loc_16656:
 		cmp	byte_1DB9E, -1
@@ -21502,21 +21506,21 @@ loc_1667D:
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 3
 		mov	dl, cl
 		mov	dh, 0
 		mov	bx, dx
-		mov	[bx+2D56h], al
+		mov	_gauge_attack_level[bx], al
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D56h], 10h
+		cmp	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
 		jbe	short loc_166EE
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D56h], 10h
+		mov	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
 
 loc_166EE:
 		mov	al, cl
@@ -22414,7 +22418,7 @@ loc_16DE0:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 18h
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -22424,7 +22428,7 @@ loc_16DE0:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 20h	; ' '
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -31396,7 +31400,7 @@ loc_1B4A3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -32082,7 +32086,7 @@ loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 0Eh
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -32092,7 +32096,7 @@ loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 1Ch
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -32783,7 +32787,7 @@ loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -32798,7 +32802,7 @@ loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 30h	; '0'
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -33225,7 +33229,7 @@ loc_1C2F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -33839,7 +33843,7 @@ loc_1C75F:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -33854,7 +33858,7 @@ loc_1C75F:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D56h]
+		mov	al, _gauge_attack_level[bx]
 		add	al, 30h	; '0'
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -35194,7 +35198,8 @@ byte_1F355	db ?
 word_1F356	dw ?
 byte_1F358	db ?
 		db 69 dup(?)
-byte_1F39E	db ?
+public _boss_attack_level
+_boss_attack_level	db ?
 byte_1F39F	db ?
 byte_1F3A0	db ?
 byte_1F3A1	db ?
@@ -35297,8 +35302,8 @@ p2_202A8	dd ?
 p1_202AC	dd ?
 p2_202B0	dd ?
 		db 2 dup(?)
-byte_202B6	db ?
-byte_202B7	db ?
+public _gauge_attack_level
+_gauge_attack_level	db PLAYER_COUNT dup(?)
 		db 786 dup(?)
 word_205CA	dw ?
 byte_205CC	db ?
