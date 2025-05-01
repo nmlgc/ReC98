@@ -57,3 +57,33 @@ void pascal hud_static_halfhearts_put(pid_t pid)
 		halfheart_i += 2;
 	}
 }
+
+// ZUN bloat: The simple horizontal gaiji_putca() loop in all of the functions
+// below could have been moved out into a separate function.
+
+void pascal hud_static_bombs_put(pid_t pid)
+{
+	tram_x_t x;
+	int i = 0;
+	int bombs;
+	tram_y_t y;
+	tram_cell_amount_t step;
+	if(pid == 0) {
+		x = playfield_tram_x(0, (PLAYFIELD_W - GAIJI_W));
+		step = -GAIJI_TRAM_W;
+	} else {
+		x = playfield_tram_x(1, 0);
+		step = +GAIJI_TRAM_W;
+	}
+	y = ((PLAYFIELD_BOTTOM - GLYPH_H) / GLYPH_H);
+
+	bombs = players[pid].bombs;
+	while(i < bombs) {
+		gaiji_putca(x, y, gs_BOMB, TX_WHITE);
+		x += step;
+		i++;
+	}
+
+	// In case we lost a single bomb on this frame… Very clever!
+	gaiji_putca(x, y, g_SP, TX_WHITE);
+}

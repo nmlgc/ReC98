@@ -2592,63 +2592,10 @@ HITCIRC_TEXT ends
 HUD_STAT_TEXT segment byte public 'CODE' use16
 	extern @hud_wipe$qv:proc
 	extern @HUD_STATIC_HALFHEARTS_PUT$QUC:proc
+	extern @HUD_STATIC_BOMBS_PUT$QUC:proc
 HUD_STAT_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B9AB	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-@@bombs		= word ptr -2
-@@pid		= byte ptr  6
-
-		enter	6, 0
-		push	si
-		push	di
-		xor	di, di
-		cmp	[bp+@@pid], 0
-		jnz	short loc_B9C3
-		mov	si, 24h	; '$'
-		mov	[bp+var_6], 0FFFEh
-		jmp	short loc_B9CB
-; ---------------------------------------------------------------------------
-
-loc_B9C3:
-		mov	si, 2Ah	; '*'
-		mov	[bp+var_6], 2
-
-loc_B9CB:
-		mov	[bp+var_4], 17h
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		mov	al, _players[bx].bombs
-		mov	ah, 0
-		mov	[bp+@@bombs], ax
-		jmp	short loc_B9F8
-; ---------------------------------------------------------------------------
-
-loc_B9E5:
-		call	gaiji_putca pascal, si, [bp+var_4], (7 shl 16) + TX_WHITE
-		add	si, [bp+var_6]
-		inc	di
-
-loc_B9F8:
-		cmp	di, [bp+@@bombs]
-		jl	short loc_B9E5
-		call	gaiji_putca pascal, si, [bp+var_4], (0CFh shl 16) + TX_WHITE
-		pop	di
-		pop	si
-		leave
-		retf	2
-sub_B9AB	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2798,8 +2745,7 @@ sub_BAE0	proc far
 
 loc_BAE8:
 		call	@hud_static_halfhearts_put$quc pascal, si
-		push	si
-		call	sub_B9AB
+		call	@hud_static_bombs_put$quc pascal, si
 		push	si
 		call	sub_BA12
 		push	si
@@ -7472,7 +7418,7 @@ player_bomb	proc near
 		dec	[si+player_stuff_t.bombs]
 		mov	[si+player_stuff_t.invincibility_time], BOMB_FRAMES
 		push	word ptr _pid_PID_current
-		nopcall	sub_B9AB
+		nopcall	@hud_static_bombs_put$quc
 		jmp	short loc_E0EF
 ; ---------------------------------------------------------------------------
 
