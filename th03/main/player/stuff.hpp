@@ -1,9 +1,17 @@
+/// Player stuff
+/// ------------
+/// A random and incomplete collection of per-player state. The game contains
+/// a lot more subsystems that store per-player data, so this file should only
+/// declare functions that are defined within the one translation unit that
+/// focuses on operating on this structure.
+
+#include "th03/main/player/ch_shot.hpp"
+#include "th03/main/player/gauge.hpp"
 #include "th03/main/player/shot.hpp"
 #include "th03/main/chars/speed.hpp"
 #include "th03/main/collmap.hpp"
 #include "th03/main/playfld.hpp"
 #include "th03/hardware/input.h"
-#include "th01/math/subpixel.hpp"
 
 #define HALFHEARTS_MAX 10
 
@@ -16,29 +24,7 @@
 #define SPELL_AUTOFIRE_FRAMES 128
 #define CHARGE_AT_AVAIL_RING_SIZE 64
 
-// Gauge
-// -----
-
-#define GAUGE_MAX (0xFF << 4)
-
-typedef uint16_t gauge_t;
-typedef uint8_t gauge_perbyte_t;
-
-void pascal near gauge_avail_add(pid_t pid, unsigned char charge);
-// -----
-
-// Charge Shots
-// ------------
-
-typedef void (far pascal *near chargeshot_add_func_t)(
-	Subpixel center_x, Subpixel center_y
-);
-
-extern farfunc_t_near chargeshot_update[PLAYER_COUNT];
-extern farfunc_t_near chargeshot_render[PLAYER_COUNT];
-// ------------
-
-struct player_t {
+struct player_stuff_t {
 	PlayfieldPoint center;
 	bool is_hit;
 	uint8_t unused_1; // ZUN bloat
@@ -99,18 +85,8 @@ struct player_t {
 	uint8_t padding[6];
 };
 
-extern pid_t pid_current;
-extern pid_t pid_other;
-
-// ZUN bloat: Doubly redundant: The player ID is already covered by
-// [pid_current], while [so_attack] can be easily calculated from that ID.
-extern union {
-	unsigned char current;
-	unsigned char so_attack; // sprite16_offset_t
-} pid;
-
-// Currently updated instance.
-extern player_t near *player_cur;
+// Currently updated stuff instance.
+extern player_stuff_t near *player_cur;
 
 // Point of the last detected collision, on the top edge of the player's
 // hitbox. Pretends to be at subpixel resolution, but is only ever set to

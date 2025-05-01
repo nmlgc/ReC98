@@ -700,12 +700,12 @@ loc_9C70:
 ; ---------------------------------------------------------------------------
 
 loc_9C7C:
-		mov	[di+player_t.rounds_won], 0
-		mov	[di+player_t.gauge_avail], ((1 shl 6) shl 4)
-		mov	[di+player_t.combo_hits_max], 0
-		mov	[di+player_t.combo_bonus_max], 0
+		mov	[di+player_stuff_t.rounds_won], 0
+		mov	[di+player_stuff_t.gauge_avail], ((1 shl 6) shl 4)
+		mov	[di+player_stuff_t.combo_hits_max], 0
+		mov	[di+player_stuff_t.combo_bonus_max], 0
 		inc	si
-		add	di, size player_t
+		add	di, size player_stuff_t
 
 loc_9C93:
 		cmp	si, PLAYER_COUNT
@@ -804,23 +804,23 @@ loc_9D85:
 		mov	di, ax
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed_base.aligned.x8], al
+		mov	[di+player_stuff_t.speed_base.aligned.x8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed_base.aligned.y8], al
+		mov	[di+player_stuff_t.speed_base.aligned.y8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed_base.diagonal.x8], al
+		mov	[di+player_stuff_t.speed_base.diagonal.x8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.speed_base.diagonal.y8], al
+		mov	[di+player_stuff_t.speed_base.diagonal.y8], al
 		inc	[bp+var_8]
 		mov	bx, [bp+var_8]
 		mov	al, [bx]
-		mov	[di+player_t.gauge_charge_speed], al
+		mov	[di+player_stuff_t.gauge_charge_speed], al
 		mov	bx, [bp+var_2]
 		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_9E23
@@ -1197,25 +1197,25 @@ loc_A148:
 		les	bx, _resident
 		add	bx, di
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted]
-		mov	[si+player_t.playchar_paletted], al
+		mov	[si+player_stuff_t.playchar_paletted], al
 		mov	bx, word ptr _resident
 		add	bx, di
 		mov	al, es:[bx+resident_t.RESIDENT_is_cpu]
-		mov	[si+player_t.is_cpu], al
-		mov	[si+player_t.is_hit], 0
-		mov	[si+player_t.PLAYER_unused_1], 0
-		mov	[si+player_t.invincibility_time], ROUND_START_INVINCIBILITY_FRAMES
-		mov	[si+player_t.is_hit], 0
-		mov	[si+player_t.shot_mode], SM_1_PAIR
-		mov	[si+player_t.halfhearts], HALFHEARTS_MAX
-		mov	[si+player_t.knockback_time], 0
-		mov	[si+player_t.move_lock_time], 0
-		mov	[si+player_t.knockback_active], 0
-		mov	[si+player_t.center.x], ((PLAYFIELD_W / 2) shl 4)
-		mov	[si+player_t.center.y], ((PLAYFIELD_H - 32) shl 4)
-		mov	[si+player_t.gauge_charged], 0
-		mov	[si+player_t.shot_active], SA_ENABLED
-		mov	[si+player_t.miss_damage_next], 1
+		mov	[si+player_stuff_t.is_cpu], al
+		mov	[si+player_stuff_t.is_hit], 0
+		mov	[si+player_stuff_t.PLAYER_unused_1], 0
+		mov	[si+player_stuff_t.invincibility_time], ROUND_START_INVINCIBILITY_FRAMES
+		mov	[si+player_stuff_t.is_hit], 0
+		mov	[si+player_stuff_t.shot_mode], SM_1_PAIR
+		mov	[si+player_stuff_t.halfhearts], HALFHEARTS_MAX
+		mov	[si+player_stuff_t.knockback_time], 0
+		mov	[si+player_stuff_t.move_lock_time], 0
+		mov	[si+player_stuff_t.knockback_active], 0
+		mov	[si+player_stuff_t.center.x], ((PLAYFIELD_W / 2) shl 4)
+		mov	[si+player_stuff_t.center.y], ((PLAYFIELD_H - 32) shl 4)
+		mov	[si+player_stuff_t.gauge_charged], 0
+		mov	[si+player_stuff_t.shot_active], SA_ENABLED
+		mov	[si+player_stuff_t.miss_damage_next], 1
 		mov	[bp+@@i], 0
 		jmp	short loc_A1BD
 ; ---------------------------------------------------------------------------
@@ -1226,21 +1226,21 @@ loc_A1A8:
 		shl	al, 6
 		add	al, 3Fh	; '?'
 		mov	bx, [bp+@@i]
-		mov	[bx+si+player_t.cpu_charge_at_avail_ring], al
+		mov	[bx+si+player_stuff_t.cpu_charge_at_avail_ring], al
 		inc	[bp+@@i]
 
 loc_A1BD:
 		cmp	[bp+@@i], CHARGE_AT_AVAIL_RING_SIZE
 		jl	short loc_A1A8
-		mov	[si+player_t.cpu_charge_at_avail_ring_p], 0
-		mov	[si+player_t.bombs], 2
-		mov	byte ptr [si+player_t.lose_anim_time], 0
-		mov	byte ptr [si+player_t.hyper_active], 0
-		mov	word ptr [si+player_t.cpu_frame], 0
-		mov	byte ptr [si+player_t.gauge_attacks_fired], 0
-		mov	byte ptr [si+player_t.boss_attacks_fired], 0
-		mov	byte ptr [si+player_t.boss_attacks_reversed], 0
-		mov	byte ptr [si+player_t.boss_panics_fired], 0
+		mov	[si+player_stuff_t.cpu_charge_at_avail_ring_p], 0
+		mov	[si+player_stuff_t.bombs], 2
+		mov	byte ptr [si+player_stuff_t.lose_anim_time], 0
+		mov	byte ptr [si+player_stuff_t.hyper_active], 0
+		mov	word ptr [si+player_stuff_t.cpu_frame], 0
+		mov	byte ptr [si+player_stuff_t.gauge_attacks_fired], 0
+		mov	byte ptr [si+player_stuff_t.boss_attacks_fired], 0
+		mov	byte ptr [si+player_stuff_t.boss_attacks_reversed], 0
+		mov	byte ptr [si+player_stuff_t.boss_panics_fired], 0
 		mov	byte ptr [di+2D54h], 0
 		mov	bx, di
 		add	bx, bx
@@ -1248,7 +1248,7 @@ loc_A1BD:
 		mov	_damage_all_enemies_on[di], 0
 		mov	byte ptr [di+798h], 0
 		inc	di
-		add	si, size player_t
+		add	si, size player_stuff_t
 
 loc_A206:
 		cmp	di, PLAYER_COUNT
@@ -6448,11 +6448,11 @@ hyper_standby	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_1_PAIR
-		cmp	[bx+player_t.hyper_active], 0
+		mov	[bx+player_stuff_t.shot_mode], SM_1_PAIR
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jz	short loc_D807
-		mov	ax, [bx+player_t.hyper_func]
-		mov	[bx+player_t.hyper], ax
+		mov	ax, [bx+player_stuff_t.hyper_func]
+		mov	[bx+player_stuff_t.hyper], ax
 
 loc_D807:
 		pop	bp
@@ -6468,16 +6468,16 @@ hyper_reimu	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D81D
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D81D:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_REIMU_HYPER
+		mov	[bx+player_stuff_t.shot_mode], SM_REIMU_HYPER
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (2 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6503,17 +6503,17 @@ hyper_mima	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D85B
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D85B:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_2_PAIRS
-		mov	[bx+player_t.shot_active], SA_BLOCKED_FOR_THIS_FRAME
+		mov	[bx+player_stuff_t.shot_mode], SM_2_PAIRS
+		mov	[bx+player_stuff_t.shot_active], SA_BLOCKED_FOR_THIS_FRAME
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (2 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6539,16 +6539,16 @@ hyper_marisa	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D89D
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D89D:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SA_DISABLED
+		mov	[bx+player_stuff_t.shot_mode], SA_DISABLED
 		call	sub_14340
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (-1 shl 4)
@@ -6575,20 +6575,20 @@ hyper_ellen	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D8E0
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D8E0:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_1_PAIR
+		mov	[bx+player_stuff_t.shot_mode], SM_1_PAIR
 		test	byte ptr _round_frame, 3
 		jnz	short loc_D8F9
-		push	[bx+player_t.center.x]
-		push	[bx+player_t.center.y]
+		push	[bx+player_stuff_t.center.x]
+		push	[bx+player_stuff_t.center.y]
 		call	sub_1B6CA
 
 loc_D8F9:
@@ -6605,16 +6605,16 @@ hyper_kotohime	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D90F
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D90F:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_4_PAIRS
+		mov	[bx+player_stuff_t.shot_mode], SM_4_PAIRS
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (2 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6640,16 +6640,16 @@ hyper_chiyuri	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D94D
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D94D:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_4_PAIRS
+		mov	[bx+player_stuff_t.shot_mode], SM_4_PAIRS
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (2 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6675,16 +6675,16 @@ hyper_yumemi	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D98B
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D98B:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_4_PAIRS
+		mov	[bx+player_stuff_t.shot_mode], SM_4_PAIRS
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (2 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6710,16 +6710,16 @@ hyper_kana	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_D9C9
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_D9C9:
 		mov	bx, _player_cur
-		mov	[bx+player_t.shot_mode], SM_4_PAIRS
+		mov	[bx+player_stuff_t.shot_mode], SM_4_PAIRS
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (2 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6745,9 +6745,9 @@ hyper_rikako	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _player_cur
-		cmp	[bx+player_t.hyper_active], 0
+		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_DA0C
-		mov	[bx+player_t.hyper], offset hyper_standby
+		mov	[bx+player_stuff_t.hyper], offset hyper_standby
 		call	sub_1C4B4
 		pop	bp
 		retn
@@ -6755,7 +6755,7 @@ hyper_rikako	proc near
 
 loc_DA0C:
 		mov	bx, _player_cur
-		cmp	[bx+player_t.gauge_avail], (250 shl 4)
+		cmp	[bx+player_stuff_t.gauge_avail], (250 shl 4)
 		jbe	short loc_DA21
 		call	rikako_1C497 pascal, word ptr [bx], word ptr [bx+2]
 
@@ -6822,13 +6822,13 @@ loc_DA81:
 		jz	loc_DE4F
 		cmp	byte ptr [si+1Fh], 0
 		jnz	loc_DE45
-		mov	al, [si+player_t.speed_base.aligned.x8]
+		mov	al, [si+player_stuff_t.speed_base.aligned.x8]
 		mov	_player_speed_base.aligned.x8, al
-		mov	al, [si+player_t.speed_base.aligned.y8]
+		mov	al, [si+player_stuff_t.speed_base.aligned.y8]
 		mov	_player_speed_base.aligned.y8, al
-		mov	al, [si+player_t.speed_base.diagonal.x8]
+		mov	al, [si+player_stuff_t.speed_base.diagonal.x8]
 		mov	_player_speed_base.diagonal.x8, al
-		mov	al, [si+player_t.speed_base.diagonal.y8]
+		mov	al, [si+player_stuff_t.speed_base.diagonal.y8]
 		mov	_player_speed_base.diagonal.y8, al
 		call	word ptr [si+64h]
 		cmp	byte ptr [si+11h], 0
@@ -7295,9 +7295,9 @@ _player_render	proc near
 		push	si
 		push	di
 		mov	si, [bp+@@player]
-		cmp	[si+player_t.lose_anim_time], 0
+		cmp	[si+player_stuff_t.lose_anim_time], 0
 		jz	short loc_DEB2
-		cmp	[si+player_t.lose_anim_time], -1
+		cmp	[si+player_stuff_t.lose_anim_time], -1
 		jz	short loc_DF12
 		push	si
 		call	sub_C248
@@ -7305,24 +7305,24 @@ _player_render	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DEB2:
-		cmp	[si+player_t.patnum_glow], 0
+		cmp	[si+player_stuff_t.patnum_glow], 0
 		jnz	short loc_DF12
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 32
-		push	[si+player_t.center.x]	; x
+		push	[si+player_stuff_t.center.x]	; x
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax	; pid
 		nopcall	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
-		mov	ax, [si+player_t.center.y]
+		mov	ax, [si+player_stuff_t.center.y]
 		sar	ax, 4
 		add	ax, -16
 		mov	[bp+@@top], ax
-		mov	al, [si+player_t.patnum_movement]
+		mov	al, [si+player_stuff_t.patnum_movement]
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 2844h
@@ -7546,33 +7546,33 @@ player_bomb	proc near
 		mov	bx, ax
 		cmp	_bomb_state[bx], BOMB_INACTIVE
 		jnz	short @@ret
-		cmp	[si+player_t.hyper_active], 0
+		cmp	[si+player_stuff_t.hyper_active], 0
 		jnz	short @@ret
-		cmp	[si+player_t.bombs], 0
+		cmp	[si+player_stuff_t.bombs], 0
 		jz	short loc_E0BF
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	_bomb_state[bx], BOMB_PREPARING
-		dec	[si+player_t.bombs]
-		mov	[si+player_t.invincibility_time], BOMB_FRAMES
+		dec	[si+player_stuff_t.bombs]
+		mov	[si+player_stuff_t.invincibility_time], BOMB_FRAMES
 		push	word ptr _pid_PID_current
 		nopcall	sub_B9AB
 		jmp	short loc_E0EF
 ; ---------------------------------------------------------------------------
 
 loc_E0BF:
-		cmp	[si+player_t.gauge_avail], GAUGE_MAX
+		cmp	[si+player_stuff_t.gauge_avail], GAUGE_MAX
 		jb	short @@ret
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	_damage_all_enemies_on[bx], 1
 		call	snd_se_play pascal, 7
-		mov	al, [si+player_t.playchar_paletted]
-		mov	[si+player_t.hyper_active], al
-		push	[si+player_t.center.x]
-		push	[si+player_t.center.y]
+		mov	al, [si+player_stuff_t.playchar_paletted]
+		mov	[si+player_stuff_t.hyper_active], al
+		push	[si+player_stuff_t.center.x]
+		push	[si+player_stuff_t.center.y]
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax
@@ -7899,15 +7899,15 @@ loc_E4A2:
 		mov	di, ax
 		cmp	_round_or_result_frame, 1
 		jnz	loc_E5AC
-		mov	al, [di+player_t.combo_hits_max]
+		mov	al, [di+player_stuff_t.combo_hits_max]
 		mov	_win_combo_hits_max, al
-		mov	al, [di+player_t.gauge_attacks_fired]
+		mov	al, [di+player_stuff_t.gauge_attacks_fired]
 		mov	_win_gauge_attacks_fired, al
-		mov	al, [di+player_t.boss_attacks_fired]
+		mov	al, [di+player_stuff_t.boss_attacks_fired]
 		mov	_win_boss_attacks_fired, al
-		mov	al, [di+player_t.boss_attacks_reversed]
+		mov	al, [di+player_stuff_t.boss_attacks_reversed]
 		mov	_win_boss_attacks_reversed, al
-		mov	al, [di+player_t.boss_panics_fired]
+		mov	al, [di+player_stuff_t.boss_panics_fired]
 		mov	_win_boss_panics_fired, al
 		movzx	eax, _win_combo_hits_max
 		imul	eax, 1000
@@ -8126,13 +8126,13 @@ var_8		= word ptr -8
 		shl	ax, 7
 		add	ax, offset _players
 		mov	si, ax
-		mov	ax, [si+player_t.center.y]
+		mov	ax, [si+player_stuff_t.center.y]
 		mov	[bp+@@top], ax
-		cmp	[si+player_t.shot_mode], SM_NONE
+		cmp	[si+player_stuff_t.shot_mode], SM_NONE
 		jz	loc_E83B
-		cmp	[si+player_t.shot_mode], SM_4_PAIRS
+		cmp	[si+player_stuff_t.shot_mode], SM_4_PAIRS
 		jnz	short loc_E76D
-		mov	ax, [si+player_t.center.x]
+		mov	ax, [si+player_stuff_t.center.x]
 		add	ax, (-64 shl 4)
 		mov	[bp+@@left], ax
 		mov	[bp+var_8], 0
@@ -8140,9 +8140,9 @@ var_8		= word ptr -8
 ; ---------------------------------------------------------------------------
 
 loc_E76D:
-		cmp	[si+player_t.shot_mode], SM_2_PAIRS
+		cmp	[si+player_stuff_t.shot_mode], SM_2_PAIRS
 		jnz	short loc_E782
-		mov	ax, [si+player_t.center.x]
+		mov	ax, [si+player_stuff_t.center.x]
 		add	ax, (-32 shl 4)
 		mov	[bp+@@left], ax
 		mov	[bp+var_8], 2
@@ -8150,11 +8150,11 @@ loc_E76D:
 ; ---------------------------------------------------------------------------
 
 loc_E782:
-		cmp	[si+player_t.shot_mode], SM_1_PAIR
+		cmp	[si+player_stuff_t.shot_mode], SM_1_PAIR
 		jz	short loc_E7B3
-		cmp	[si+player_t.shot_mode], SM_REIMU_HYPER
+		cmp	[si+player_stuff_t.shot_mode], SM_REIMU_HYPER
 		jnz	short loc_E7C0
-		mov	ax, [si+player_t.center.x]
+		mov	ax, [si+player_stuff_t.center.x]
 		add	ax, (-24 shl 4)
 		mov	[bp+@@left], ax
 		sub	[bp+@@top], (1 shl 4)
@@ -8167,7 +8167,7 @@ loc_E782:
 		call	sub_14B0A
 
 loc_E7B3:
-		mov	ax, [si+player_t.center.x]
+		mov	ax, [si+player_stuff_t.center.x]
 		add	ax, (-16 shl 4)
 		mov	[bp+@@left], ax
 		mov	[bp+var_8], 3
@@ -16883,11 +16883,11 @@ loc_13F9A:
 		cmp	byte ptr es:[bx], 8
 		jnz	short loc_13FD6
 		mov	bx, [bp+@@player]
-		mov	ax, [bx+player_t.center.y]
+		mov	ax, [bx+player_stuff_t.center.y]
 		add	ax, (-32 shl 4)
 		cmp	[di+4],	ax
 		jl	loc_1423E	; default
-		mov	ax, [bx+player_t.center.y]
+		mov	ax, [bx+player_stuff_t.center.y]
 		add	ax, (32 shl 4)
 		cmp	[di+4],	ax
 		jg	loc_1423E	; default
@@ -16899,11 +16899,11 @@ loc_13FD6:
 		cmp	byte ptr es:[bx], 9
 		jnz	loc_1423E	; default
 		mov	bx, [bp+@@player]
-		mov	ax, [bx+player_t.center.x]
+		mov	ax, [bx+player_stuff_t.center.x]
 		add	ax, (-16 shl 4)
 		cmp	[di+2],	ax
 		jl	loc_1423E	; default
-		mov	ax, [bx+player_t.center.x]
+		mov	ax, [bx+player_stuff_t.center.x]
 		add	ax, (16 shl 4)
 		cmp	[di+2],	ax
 		jg	loc_1423E	; default
@@ -20382,18 +20382,18 @@ loc_15D04:
 
 loc_15D07:
 		mov	[si+combo_t.bonus], dx
-		mov	al, [di+player_t.combo_hits_max]
+		mov	al, [di+player_stuff_t.combo_hits_max]
 		mov	[bp+var_5], al
 		cmp	[bp+var_5], cl
 		jnb	short loc_15D18
-		mov	[di+player_t.combo_hits_max], cl
+		mov	[di+player_stuff_t.combo_hits_max], cl
 
 loc_15D18:
-		mov	ax, [di+player_t.combo_bonus_max]
+		mov	ax, [di+player_stuff_t.combo_bonus_max]
 		mov	[bp+var_8], ax
 		cmp	[bp+var_8], dx
 		jnb	short loc_15D26
-		mov	[di+player_t.combo_bonus_max], dx
+		mov	[di+player_stuff_t.combo_bonus_max], dx
 
 loc_15D26:
 		cmp	cl, COMBO_HIT_CAP
@@ -28316,8 +28316,8 @@ arg_2		= word ptr  8
 
 loc_19DFA:
 		mov	word_2028A, si
-		push	[di+player_t.center.x]
-		push	[di+player_t.center.y]
+		push	[di+player_stuff_t.center.x]
+		push	[di+player_stuff_t.center.y]
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		push	word ptr _pid_current
@@ -33533,14 +33533,14 @@ loc_1C537:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, [bp+@@player]
-		mov	dx, [bx+player_t.center.x]
+		mov	dx, [bx+player_stuff_t.center.x]
 		mov	bx, ax
 		mov	[bx+3930h], dx
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, [bp+@@player]
-		mov	dx, [bx+player_t.center.y]
+		mov	dx, [bx+player_stuff_t.center.y]
 		mov	bx, ax
 		mov	[bx+3934h], dx
 

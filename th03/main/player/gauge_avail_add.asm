@@ -12,16 +12,16 @@ gauge_avail_add	proc near
 	shl	ax, 7
 	add	ax, offset _players
 	mov	si, ax
-	cmp	[si+player_t.hyper_active], 0
+	cmp	[si+player_stuff_t.hyper_active], 0
 	jnz	short @@ret
-	cmp	[si+gauge_avail], GAUGE_MAX
+	cmp	[si+player_stuff_t.gauge_avail], GAUGE_MAX
 	jnb	short @@ret
 	mov	al, [bp+@@charge]
 	mov	ah, 0
-	add	[si+gauge_avail], ax
-	cmp	[si+gauge_avail], GAUGE_MAX
+	add	[si+player_stuff_t.gauge_avail], ax
+	cmp	[si+player_stuff_t.gauge_avail], GAUGE_MAX
 	jbe	short @@ret
-	mov	[si+gauge_avail], GAUGE_MAX
+	mov	[si+player_stuff_t.gauge_avail], GAUGE_MAX
 
 @@ret:
 	pop	si

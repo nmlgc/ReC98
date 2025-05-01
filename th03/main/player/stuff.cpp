@@ -1,8 +1,8 @@
 #pragma option -G
 
 #include "decomp.hpp"
-#include "th03/common.h"
-#include "th03/main/player/player.hpp"
+#include "th03/main/player/cur.hpp"
+#include "th03/main/player/stuff.hpp"
 
 // Enforces signed 8-bit comparisons in one place. MODDERS: Just remove these.
 inline int8_t collmap_byte_x_min(void) { return 0; }
@@ -34,7 +34,7 @@ void near pascal player_hittest(collmap_tile_amount_t hitbox_size)
 	collmap_tile_amount_t tile_top_;
 	unsigned char tile_bottom_; // collmap_tile_amount_t
 
-	player_t near &player = *player_cur;
+	player_stuff_t near &player = *player_cur;
 	collmap_tile_amount_t tile_w_remaining;
 
 	if((player.invincibility_time != 0) || player.hyper_active) {
