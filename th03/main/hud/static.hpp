@@ -16,3 +16,7 @@ void near hud_static_story_lives_put(void);
 
 // Renders the gauge and boss attack levels.
 void pascal hud_static_gauge_levels_put(pid2 pid);
+
+// Renders all of the above for both players. (Except, of course, the Story
+// Mode lives because they only apply to P1.)
+void hud_static_put(void);

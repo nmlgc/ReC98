@@ -902,7 +902,7 @@ loc_9E24:
 		graph_showpage 1
 		call	_snd_se_reset
 		nopcall	@hud_wipe$qv
-		nopcall	sub_BAE0
+		nopcall	@hud_static_put$qv
 		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		kajacall	KAJA_SONG_PLAY
 		pop	di
@@ -1294,7 +1294,7 @@ sub_A21F	proc near
 		call	_snd_se_reset
 		nopcall	@hud_wipe$qv
 		nopcall	sub_A38E
-		nopcall	sub_BAE0
+		nopcall	@hud_static_put$qv
 		pop	bp
 		retn
 sub_A21F	endp
@@ -2597,43 +2597,10 @@ HUD_STAT_TEXT segment byte public 'CODE' use16
 		pid:word
 	@hud_static_story_lives_put$qv procdesc near
 	extern @HUD_STATIC_GAUGE_LEVELS_PUT$QI:proc
+	extern @hud_static_put$qv:proc
 HUD_STAT_TEXT ends
 
 PLAYER_M_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BAE0	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BAFC
-; ---------------------------------------------------------------------------
-
-loc_BAE8:
-		call	@hud_static_halfhearts_put$quc pascal, si
-		call	@hud_static_bombs_put$quc pascal, si
-		call	@hud_static_rounds_won_put$quc pascal, si
-		call	@hud_static_gauge_levels_put$qi pascal, si
-		inc	si
-
-loc_BAFC:
-		cmp	si, 2
-		jl	short loc_BAE8
-		les	bx, _resident
-		cmp	es:[bx+resident_t.game_mode], GM_STORY
-		jnz	short loc_BB0F
-		call	@hud_static_story_lives_put$qv
-
-loc_BB0F:
-		pop	si
-		pop	bp
-		retf
-sub_BAE0	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

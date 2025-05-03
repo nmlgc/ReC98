@@ -143,3 +143,16 @@ void pascal hud_static_gauge_levels_put(pid2 pid)
 	}
 	gaiji_putca(x, (PLAYFIELD_BOTTOM / GLYPH_H), (gpd_1 + level), TX_RED);
 }
+
+void hud_static_put(void)
+{
+	for(int i = 0; i < PLAYER_COUNT; i++) {
+		hud_static_halfhearts_put(i);
+		hud_static_bombs_put(i);
+		hud_static_rounds_won_put(i);
+		hud_static_gauge_levels_put(i);
+	}
+	if(resident->game_mode == GM_STORY) {
+		hud_static_story_lives_put();
+	}
+}
