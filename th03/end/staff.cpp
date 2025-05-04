@@ -1,7 +1,26 @@
 #include "th03/sprites/flake.h"
+#include "th01/math/subpixel.hpp"
 #include "platform/x86real/flags.hpp"
 #include "x86real.h"
 #include <stdlib.h>
+
+// State
+// -----
+
+struct flake_t {
+	bool alive;
+	int8_t padding_1; // ZUN bloat: Could have squeezed [cel] in there.
+	Subpixel left;
+	Subpixel top;
+	SPPoint velocity;
+	uint16_t cel;
+	int8_t padding_2[4]; // ZUN bloat
+};
+
+static const unsigned int FLAKE_COUNT = 80;
+
+extern flake_t flakes[FLAKE_COUNT];
+// -----
 
 void pascal near flake_put(screen_x_t left, screen_y_t top, int cel)
 {

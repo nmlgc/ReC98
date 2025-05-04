@@ -1403,32 +1403,35 @@ sub_BB51	proc near
 		retn
 sub_BB51	endp
 
+FLAKE_W = 8
+FLAKE_H = 8
+FLAKE_CELS = 4
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BB66	proc near
+public @flakes_reset$qv
+@flakes_reset$qv proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	ax, ax
 		jmp	short loc_BB78
 ; ---------------------------------------------------------------------------
 
 loc_BB71:
-		mov	byte ptr [si], 0
+		mov	[si+flake_t.FLAKE_alive], 0
 		inc	ax
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BB78:
-		cmp	ax, 50h	; 'P'
+		cmp	ax, FLAKE_COUNT
 		jl	short loc_BB71
 		pop	si
 		pop	bp
 		retn
-sub_BB66	endp
+@flakes_reset$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1443,37 +1446,37 @@ sub_BB80	proc near
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	di, di
 		jmp	loc_BC1A
 ; ---------------------------------------------------------------------------
 
 loc_BB8E:
-		cmp	byte ptr [si], 0
+		cmp	[si+flake_t.FLAKE_alive], 0
 		jnz	loc_BC16
 		mov	ax, di
 		shl	ax, 3
 		cmp	ax, word_10BB2
 		jg	short loc_BC16
-		mov	byte ptr [si], 1
+		mov	[si+flake_t.FLAKE_alive], 1
 		test	di, 3
 		jz	short loc_BBBE
 		call	IRand
-		mov	bx, (632 shl 4)
+		mov	bx, ((RES_X - FLAKE_W) shl 4)
 		cwd
 		idiv	bx
-		mov	[si+2],	dx
-		mov	word ptr [si+4], 0
+		mov	[si+flake_t.FLAKE_left], dx
+		mov	[si+flake_t.FLAKE_top], 0
 		jmp	short loc_BBD1
 ; ---------------------------------------------------------------------------
 
 loc_BBBE:
-		mov	word ptr [si+2], (632 shl 4)
+		mov	[si+flake_t.FLAKE_left], ((RES_X - FLAKE_W) shl 4)
 		call	IRand
-		mov	bx, (392 shl 4)
+		mov	bx, ((RES_Y - FLAKE_H) shl 4)
 		cwd
 		idiv	bx
-		mov	[si+4],	dx
+		mov	[si+flake_t.FLAKE_top],	dx
 
 loc_BBD1:
 		call	IRand
@@ -1483,19 +1486,19 @@ loc_BBD1:
 		add	dl, 50h
 		mov	[bp+@@angle], dl
 		call	IRand
-		mov	bx, 40h
+		mov	bx, (4 shl 4)
 		cwd
 		idiv	bx
-		add	dl, 30h	; '0'
+		add	dl, (3 shl 4)
 		mov	[bp+@@length], dl
 		call	IRand
-		and	ax, 3
-		mov	[si+0Ah], ax
+		and	ax, (FLAKE_CELS - 1)
+		mov	[si+flake_t.FLAKE_cel], ax
 		push	ds
-		lea	ax, [si+6]
+		lea	ax, [si+flake_t.FLAKE_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+8]
+		lea	ax, [si+flake_t.FLAKE_velocity.y]
 		push	ax
 		push	word ptr [bp+@@angle]
 		mov	al, [bp+@@length]
@@ -1505,7 +1508,7 @@ loc_BBD1:
 
 loc_BC16:
 		inc	di
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BC1A:
 		mov	al, byte_106B0
@@ -1527,31 +1530,31 @@ sub_BC29	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	dx, dx
 		jmp	short loc_BC63
 ; ---------------------------------------------------------------------------
 
 loc_BC34:
-		cmp	byte ptr [si], 0
+		cmp	[si+flake_t.FLAKE_alive], 0
 		jz	short loc_BC5F
-		mov	byte ptr [si], 1
-		mov	ax, [si+6]
-		add	[si+2],	ax
-		mov	ax, [si+8]
-		add	[si+4],	ax
-		cmp	word ptr [si+2], 0
+		mov	[si+flake_t.FLAKE_alive], 1
+		mov	ax, [si+flake_t.FLAKE_velocity.x]
+		add	[si+flake_t.FLAKE_left], ax
+		mov	ax, [si+flake_t.FLAKE_velocity.y]
+		add	[si+flake_t.FLAKE_top],	ax
+		cmp	[si+flake_t.FLAKE_left], 0
 		jg	short loc_BC53
-		add	word ptr [si+2], 2780h
+		add	[si+flake_t.FLAKE_left], ((RES_X - FLAKE_W) shl 4)
 
 loc_BC53:
-		cmp	word ptr [si+4], 1880h
+		cmp	[si+flake_t.FLAKE_top], ((RES_Y - FLAKE_H) shl 4)
 		jl	short loc_BC5F
-		sub	word ptr [si+4], 1880h
+		sub	[si+flake_t.FLAKE_top], ((RES_Y - FLAKE_H) shl 4)
 
 loc_BC5F:
 		inc	dx
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BC63:
 		mov	al, byte_106B0
@@ -1573,26 +1576,26 @@ sub_BC6F	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	di, di
 		jmp	short loc_BC98
 ; ---------------------------------------------------------------------------
 
 loc_BC7B:
-		cmp	byte ptr [si], 0
+		cmp	[si+flake_t.FLAKE_alive], 0
 		jz	short loc_BC94
-		mov	ax, [si+2]
+		mov	ax, [si+flake_t.FLAKE_left]
 		sar	ax, 4
 		push	ax	; left
-		mov	ax, [si+4]
+		mov	ax, [si+flake_t.FLAKE_top]
 		sar	ax, 4
 		push	ax	; top
-		push	word ptr [si+0Ah]	; cel
+		push	[si+flake_t.FLAKE_cel]	; cel
 		call	@flake_put$qiii
 
 loc_BC94:
 		inc	di
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BC98:
 		mov	al, byte_106B0
@@ -2464,7 +2467,7 @@ loc_C4D8:
 		call	cdg_load_single_noalpha pascal, 9, ds, offset aStf10_cdg, 0
 		call	cdg_load_single_noalpha pascal, 10, ds, offset aStf2_cdg, 0
 		call	cdg_load_single_noalpha pascal, 11, ds, offset aStf12_cdg, 0
-		call	sub_BB66
+		call	@flakes_reset$qv
 		mov	word_10BB2, 0
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
@@ -2937,7 +2940,23 @@ _hi	scoredat_section_t <?>
 include th03/hiscore/regist[bss].asm
 		db 2 dup(?)
 byte_106B0	db ?
-		db 1281 dup(?)
+	evendata
+
+flake_t struc
+	FLAKE_alive   	db ?
+	              	db ?
+	FLAKE_left    	dw ?
+	FLAKE_top     	dw ?
+	FLAKE_velocity	Point <?>
+	FLAKE_cel     	dw ?
+		db 4 dup(?)
+flake_t ends
+
+FLAKE_COUNT = 80
+
+public _flakes
+_flakes	flake_t FLAKE_COUNT dup(<?>)
+
 word_10BB2	dw ?
 byte_10BB4	db ?
 byte_10BB5	db ?
