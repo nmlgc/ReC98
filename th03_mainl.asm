@@ -1703,19 +1703,19 @@ arg_0		= word ptr  4
 		mov	ax, word_10BB2
 		cmp	ax, word_10BBE
 		jg	loc_BEC1
-		push	140h
+		push	(RES_X / 2)
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		call	cdg_unput_for_upwards_motion_e_8
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+27D8h]
+		mov	ax, _stf_center_y_on_page[bx]
 		cmp	ax, word_10BC0
 		jle	short loc_BE66
 		mov	al, _page_back
@@ -1723,12 +1723,12 @@ arg_0		= word ptr  4
 		add	ax, ax
 		mov	dx, word_10BBC
 		mov	bx, ax
-		sub	[bx+27D8h], dx
+		sub	_stf_center_y_on_page[bx], dx
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+27D8h]
+		mov	ax, _stf_center_y_on_page[bx]
 		cmp	ax, word_10BC0
 		jge	short loc_BE66
 		mov	al, _page_back
@@ -1736,7 +1736,7 @@ arg_0		= word ptr  4
 		add	ax, ax
 		mov	dx, word_10BC0
 		mov	bx, ax
-		mov	[bx+27D8h], dx
+		mov	_stf_center_y_on_page[bx], dx
 
 loc_BE66:
 		mov	ax, word_10BBE
@@ -1769,12 +1769,12 @@ loc_BE84:
 		mov	byte_10BC7, 1
 
 loc_BEA7:
-		push	320
+		push	(RES_X / 2)
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		push	si
 		call	cdg_put_dissolve_e_8
@@ -1806,19 +1806,19 @@ arg_0		= word ptr  4
 		jg	loc_BF78
 		cmp	word_10BB2, 0A0h
 		jge	short loc_BF57
-		push	140h
+		push	(RES_X / 2)
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		call	cdg_unput_for_upwards_motion_e_8
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		dec	word ptr [bx+27D8h]
+		dec	_stf_center_y_on_page[bx]
 		mov	ax, word_10BB2
 		mov	bx, 20
 		cwd
@@ -1842,12 +1842,12 @@ loc_BF18:
 		mov	byte_10BC7, 1
 
 loc_BF3B:
-		push	320
+		push	(RES_X / 2)
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		push	si
 		call	cdg_put_dissolve_e_8
@@ -1924,13 +1924,13 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 108h
+		mov	_stf_center_y_on_page[bx], 264
 		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 107h
+		mov	_stf_center_y_on_page[bx], 263
 		jmp	short loc_C00E
 ; ---------------------------------------------------------------------------
 
@@ -1938,18 +1938,18 @@ loc_BFE3:
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, 118h
+		mov	dx, 280
 		sub	dx, word_10BC4
 		mov	bx, ax
-		mov	[bx+27D8h], dx
+		mov	_stf_center_y_on_page[bx], dx
 		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
-		mov	dx, 118h
+		mov	dx, 280
 		sub	dx, word_10BC4
 		mov	bx, ax
-		mov	[bx+27D8h], dx
+		mov	_stf_center_y_on_page[bx], dx
 
 loc_C00E:
 		mov	word_10BB2, 0
@@ -2011,21 +2011,21 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 108h
+		mov	_stf_center_y_on_page[bx], 264
 		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 107h
+		mov	_stf_center_y_on_page[bx], 263
 		jmp	short loc_C0D6
 ; ---------------------------------------------------------------------------
 
 loc_C0C9:
-		mov	ax, 118h
+		mov	ax, 280
 		sub	ax, word_10BC4
-		mov	word_10BC8, ax
-		mov	word_10BCA, ax
+		mov	_stf_center_y_on_page[0 * word], ax
+		mov	_stf_center_y_on_page[1 * word], ax
 
 loc_C0D6:
 		mov	word_10BB2, 0
@@ -2141,21 +2141,21 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 108h
+		mov	_stf_center_y_on_page[bx], 264
 		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 107h
+		mov	_stf_center_y_on_page[bx], 263
 		jmp	short loc_C237
 ; ---------------------------------------------------------------------------
 
 loc_C22A:
-		mov	ax, 118h
+		mov	ax, 280
 		sub	ax, word_10BC4
-		mov	word_10BC8, ax
-		mov	word_10BCA, ax
+		mov	_stf_center_y_on_page[0 * word], ax
+		mov	_stf_center_y_on_page[1 * word], ax
 
 loc_C237:
 		mov	word_10BB2, 0
@@ -2185,7 +2185,7 @@ loc_C25D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+27D8h]
+		mov	ax, _stf_center_y_on_page[bx]
 		mov	word_10BC2, ax
 		pop	bp
 		retn	6
@@ -2954,7 +2954,7 @@ flake_t ends
 
 FLAKE_COUNT = 80
 
-public _flakes, _page_back
+public _flakes, _page_back, _stf_center_y_on_page
 _flakes	flake_t FLAKE_COUNT dup(<?>)
 
 word_10BB2	dw ?
@@ -2969,8 +2969,7 @@ word_10BC2	dw ?
 word_10BC4	dw ?
 byte_10BC6	db ?
 byte_10BC7	db ?
-word_10BC8	dw ?
-word_10BCA	dw ?
+_stf_center_y_on_page dw 2 dup(?)
 _rem_credits	db ?
 		db 5 dup(?)
 byte_10BD2	db ?

@@ -22,6 +22,7 @@ static const unsigned int FLAKE_COUNT = 80;
 extern flake_t flakes[FLAKE_COUNT];
 
 extern page_t page_back;
+extern screen_y_t stf_center_y_on_page[2]; // Oh look, it's the TH02 approach!
 // -----
 
 void pascal near flake_put(screen_x_t left, screen_y_t top, int cel)
