@@ -1,4 +1,5 @@
 #include "th03/sprites/flake.h"
+#include "th03/score.hpp"
 #include "th01/math/subpixel.hpp"
 #include "platform/x86real/flags.hpp"
 #include "x86real.h"
@@ -23,6 +24,7 @@ extern flake_t flakes[FLAKE_COUNT];
 
 extern page_t page_back;
 extern screen_y_t stf_center_y_on_page[2]; // Oh look, it's the TH02 approach!
+extern score9_lebcd_t score;
 // -----
 
 void pascal near flake_put(screen_x_t left, screen_y_t top, int cel)

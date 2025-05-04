@@ -2199,7 +2199,7 @@ sub_C1FD	endp
 sub_C288	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@digits	= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -2222,20 +2222,20 @@ var_2		= word ptr -2
 		call	graph_putsa_fx
 		mov	si, 408
 		mov	[bp+var_4], 0
-		mov	[bp+var_2], 8
+		mov	[bp+@@digits], SCORE_DIGITS
 		jmp	short loc_C319
 ; ---------------------------------------------------------------------------
 
 loc_C2D5:
-		mov	bx, [bp+var_2]
-		mov	al, [bx+27DCh]
+		mov	bx, [bp+@@digits]
+		mov	al, _score[bx]
 		mov	ah, 0
 		mov	di, ax
 		cmp	[bp+var_4], 0
 		jnz	short loc_C2F7
 		or	di, di
 		jz	short loc_C2F7
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@digits]
 		shl	ax, 3
 		sub	si, ax
 		mov	[bp+var_4], 1
@@ -2252,12 +2252,12 @@ loc_C2F7:
 		add	si, 16
 
 loc_C316:
-		dec	[bp+var_2]
+		dec	[bp+@@digits]
 
 loc_C319:
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@digits], 0
 		jg	short loc_C2D5
-		mov	al, _rem_credits
+		mov	al, continues_used
 		mov	ah, 0
 		mov	di, ax
 		push	si
@@ -2377,7 +2377,7 @@ loc_C44B:
 		les	bx, _resident
 		mov	al, 3
 		sub	al, es:[bx+resident_t.rem_credits]
-		mov	_rem_credits, al
+		mov	continues_used, al
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		mov	ah, 0
 		dec	ax
@@ -2389,7 +2389,7 @@ loc_C44B:
 		mov	_rank, al
 		mov	al, es:[bx+resident_t.skill]
 		mov	_skill, al
-		mov	al, byte_10BD3
+		mov	al, _score[7]
 		mov	ah, 0
 		cmp	ax, 3
 		jz	short loc_C48B
@@ -2399,7 +2399,7 @@ loc_C44B:
 ; ---------------------------------------------------------------------------
 
 loc_C48B:
-		mov	al, byte_10BD2
+		mov	al, _score[6]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -2409,7 +2409,7 @@ loc_C48B:
 		mov	_skill, al
 
 loc_C49E:
-		mov	al, byte_10BD2
+		mov	al, _score[6]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -2419,14 +2419,14 @@ loc_C49E:
 		mov	_skill, al
 
 loc_C4B1:
-		cmp	byte_10BD3, 5
+		cmp	_score[7], 5
 		jb	short loc_C4C0
 		mov	al, _skill
 		add	al, 15
 		mov	_skill, al
 
 loc_C4C0:
-		cmp	byte_10BD4, 0
+		cmp	_score[8], 0
 		jz	short loc_C4CC
 		mov	_skill, 100
 
@@ -2954,7 +2954,7 @@ flake_t ends
 
 FLAKE_COUNT = 80
 
-public _flakes, _page_back, _stf_center_y_on_page
+public _flakes, _page_back, _stf_center_y_on_page, _score
 _flakes	flake_t FLAKE_COUNT dup(<?>)
 
 word_10BB2	dw ?
@@ -2970,12 +2970,9 @@ word_10BC4	dw ?
 byte_10BC6	db ?
 byte_10BC7	db ?
 _stf_center_y_on_page dw 2 dup(?)
-_rem_credits	db ?
-		db 5 dup(?)
-byte_10BD2	db ?
-byte_10BD3	db ?
-byte_10BD4	db ?
-		db ?
+continues_used label byte
+_score db (1 + SCORE_DIGITS) dup(?)
+	evendata
 _rank	db ?
 playchar_10BD7	db ?
 _skill	db ?
