@@ -26,7 +26,7 @@ include th03/formats/scoredat.inc
 	extern __ctype:byte
 	extern _execl:proc
 
-group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, STAFF_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -1075,7 +1075,7 @@ REGIST_TEXT segment byte public 'CODE' use16
 	@regist_name_enter$qv procdesc near
 REGIST_TEXT ends
 
-mainl_03_TEXT	segment	byte public 'CODE' use16
+STAFF_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1376,58 +1376,11 @@ loc_BA66:
 		retn
 sub_B972	endp
 
+	@FLAKE_PUT$QIII procdesc pascal near \
+		left:word, top:word, cel:word
+STAFF_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA8A	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 0A62h
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	cx, [bp+arg_4]
-		; Hack (and cx, 7)
-		db 081h
-		db 0e1h
-		db 007h
-		db 000h
-		mov	bx, 8
-
-loc_BAC0:
-		mov	ax, [si]
-		ror	ax, cl
-		or	es:[di], ax
-		add	di, 50h	; 'P'
-		add	si, 2
-		dec	bx
-		jnz	short loc_BAC0
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_BA8A	endp
-
+mainl_03_TEXT segment byte public 'CODE' use16
 include th03/formats/cdg_unput_upwards.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1630,12 +1583,12 @@ loc_BC7B:
 		jz	short loc_BC94
 		mov	ax, [si+2]
 		sar	ax, 4
-		push	ax
+		push	ax	; left
 		mov	ax, [si+4]
 		sar	ax, 4
-		push	ax
-		push	word ptr [si+0Ah]
-		call	sub_BA8A
+		push	ax	; top
+		push	word ptr [si+0Ah]	; cel
+		call	@flake_put$qiii
 
 loc_BC94:
 		inc	di
@@ -2883,70 +2836,7 @@ aOver_m		db 'over.m',0
 		db 0
 off_EE4E	dd a@00ed_txt
 					; "@00ED.TXT"
-		db  3Ch	; <
-		db    0
-		db  7Eh	; ~
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  3Ch	; <
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Ch	; <
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  3Ch	; <
-		db    0
-		db  3Ch	; <
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th03/sprites/flake.asp
 include th03/formats/cdg_put_dissolve[data].asm
 
 aVERDICT_PLAYCHARS label dword

@@ -578,6 +578,10 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 
 local th03_sprites = Sprites({
 	{ "th03/sprites/score.bmp", "asm", "sSCORE_FONT", 8, 8, "-u" },
+
+	-- ZUN bloat: Investing 32 bytes just so that the individual rows can be
+	-- loaded with a 16-bit `MOV`…
+	{ "th03/sprites/flake.bmp", "asm", "sFLAKE", 16, 8 },
 })
 
 th03:zungen("bin/th03/zun.com", {
@@ -650,10 +654,11 @@ th03:branch(MODEL_LARGE):link("main", {
 th03:branch(MODEL_LARGE, { cflags = "-DBINARY='L'" }):link("mainl", {
 	"th03/cfg_lres.cpp",
 	"th03/mainl_sc.cpp",
-	"th03_mainl.asm",
+	{ "th03_mainl.asm", extra_inputs = th03_sprites["flake"] },
 	"th03/cutscene.cpp",
 	"th03/scoredat.cpp",
 	"th03/regist.cpp",
+	"th03/staff.cpp",
 	"th01/vplanset.cpp",
 	"th02/snd_mode.c",
 	"th02/snd_pmdr.c",
