@@ -1675,10 +1675,10 @@ loc_BCFE:
 		cmp	vsync_Count1, 0
 		jz	short loc_BCFE
 		mov	vsync_Count1, 0
-		graph_showpage byte_10BB4
+		graph_showpage _page_back
 		mov	al, 1
-		sub	al, byte_10BB4
-		mov	byte_10BB4, al
+		sub	al, _page_back
+		mov	_page_back, al
 		graph_accesspage al
 		pop	bp
 		retn
@@ -1704,34 +1704,34 @@ arg_0		= word ptr  4
 		cmp	ax, word_10BBE
 		jg	loc_BEC1
 		push	140h
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
 		call	cdg_unput_for_upwards_motion_e_8
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+27D8h]
 		cmp	ax, word_10BC0
 		jle	short loc_BE66
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_10BBC
 		mov	bx, ax
 		sub	[bx+27D8h], dx
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+27D8h]
 		cmp	ax, word_10BC0
 		jge	short loc_BE66
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_10BC0
@@ -1770,7 +1770,7 @@ loc_BE84:
 
 loc_BEA7:
 		push	320
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1807,14 +1807,14 @@ arg_0		= word ptr  4
 		cmp	word_10BB2, 0A0h
 		jge	short loc_BF57
 		push	140h
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
 		call	cdg_unput_for_upwards_motion_e_8
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1843,7 +1843,7 @@ loc_BF18:
 
 loc_BF3B:
 		push	320
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1920,12 +1920,12 @@ arg_4		= word ptr  8
 		mov	si, [bp+arg_4]
 		cmp	word_10BBC, 2
 		jnz	short loc_BFE3
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+27D8h], 108h
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
@@ -1935,14 +1935,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_BFE3:
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, 118h
 		sub	dx, word_10BC4
 		mov	bx, ax
 		mov	[bx+27D8h], dx
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
@@ -2007,12 +2007,12 @@ arg_4		= word ptr  8
 		mov	si, [bp+arg_4]
 		cmp	word_10BBC, 2
 		jnz	short loc_C0C9
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+27D8h], 108h
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
@@ -2075,7 +2075,7 @@ loc_C12A:
 		mov	di, 7
 
 loc_C14A:
-		cmp	byte_10BB4, 0
+		cmp	_page_back, 0
 		jnz	short loc_C155
 		dec	word_10BC2
 
@@ -2137,12 +2137,12 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		cmp	word_10BBC, 2
 		jnz	short loc_C22A
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+27D8h], 108h
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
@@ -2181,7 +2181,7 @@ loc_C25D:
 		call	sub_BCA5
 		or	ax, ax
 		jz	short loc_C25D
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -2472,7 +2472,7 @@ loc_C4D8:
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
-		mov	byte_10BB4, 0
+		mov	_page_back, 0
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		kajacall	KAJA_SONG_PLAY
@@ -2550,10 +2550,10 @@ loc_C735:
 		or	ax, ax
 		jz	short loc_C735
 		mov	al, 1
-		sub	al, byte_10BB4
+		sub	al, _page_back
 		graph_accesspage al
 		call	sub_C288
-		graph_accesspage byte_10BB4
+		graph_accesspage _page_back
 		call	sub_C288
 		mov	word_10BB2, 0
 		xor	di, di
@@ -2954,11 +2954,11 @@ flake_t ends
 
 FLAKE_COUNT = 80
 
-public _flakes
+public _flakes, _page_back
 _flakes	flake_t FLAKE_COUNT dup(<?>)
 
 word_10BB2	dw ?
-byte_10BB4	db ?
+_page_back	db ?
 byte_10BB5	db ?
 byte_10BB6	db ?
 		db 5 dup(?)

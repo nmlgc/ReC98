@@ -20,6 +20,8 @@ struct flake_t {
 static const unsigned int FLAKE_COUNT = 80;
 
 extern flake_t flakes[FLAKE_COUNT];
+
+extern page_t page_back;
 // -----
 
 void pascal near flake_put(screen_x_t left, screen_y_t top, int cel)
