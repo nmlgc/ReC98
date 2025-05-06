@@ -413,12 +413,12 @@ sub_990C	endp
 sub_9A2C	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@dec_bgm_fn	= word ptr -2
 
 		enter	4, 0
 		push	si
-		mov	si, 3A3h
-		mov	[bp+var_2], 3AAh
+		mov	si, offset _PLAYCHAR_BGM_FN
+		mov	[bp+@@dec_bgm_fn], offset aDec_m
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	@pi_palette_apply$qi pascal, 0
@@ -577,7 +577,7 @@ loc_9BFB:
 loc_9C1E:
 		push	SND_LOAD_SONG
 		push	ds
-		push	[bp+var_2]
+		push	[bp+@@dec_bgm_fn]
 
 loc_9C25:
 		call	_snd_load
@@ -665,12 +665,11 @@ sub_9CB1	endp
 
 sub_9D20	proc near
 
-var_E		= byte ptr -0Eh
-var_D		= byte ptr -0Dh
+@@fn	= byte ptr -(2 + SHOT_FN_SIZE)
 var_2		= word ptr -2
 arg_0		= word ptr  4
 
-		enter	0Eh, 0
+		enter	(2 + SHOT_FN_SIZE), 0
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
@@ -679,12 +678,12 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_9D2D:
-		mov	al, [si+116h]
-		mov	[bp+si+var_E], al
+		mov	al, _SHOT_FN[si]
+		mov	[bp+si+@@fn], al
 		inc	si
 
 loc_9D35:
-		cmp	si, 0Ch
+		cmp	si, SHOT_FN_SIZE
 		jl	short loc_9D2D
 		les	bx, _resident
 		add	bx, di
@@ -697,20 +696,20 @@ loc_9D35:
 		mov	bx, 10
 		cwd
 		idiv	bx
-		add	al, [bp+var_E]
-		mov	[bp+var_E], al
+		add	al, [bp+@@fn]
+		mov	[bp+@@fn], al
 		mov	ax, [bp+var_2]
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
 
 loc_9D65:
-		mov	al, [bp+var_D]
+		mov	al, [bp+@@fn + 1]
 		add	al, byte ptr [bp+var_2]
-		mov	[bp+var_D], al
+		mov	[bp+@@fn + 1], al
 		push	di
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@fn]
 		push	ax
 		call	sub_9CB1
 		pop	di
@@ -1113,7 +1112,7 @@ loc_B76E:
 		sub	ax, dx
 		sar	ax, 1
 		shl	ax, 3
-		add	ax, 92Eh
+		add	ax, offset _REGI_PLAYCHAR
 		mov	di, ax
 		mov	cx, (SCOREDAT_NAME_LEN - 1)
 		jmp	short loc_B79C
@@ -2686,11 +2685,9 @@ CHAR_NAME		dd NAME_REIMU		; "   îéóÌÅ@ËÀñ≤"
 		dd NAME_YUMEMI		; " Å@â™çËÅ@ñ≤î¸"
 word_E502	dw offset aSt_cd2
 word_E504	dw offset aStnx1_pi
-a0016_pi	db '0016.pi',0
-		db    0
-		db    0
-		db    0
-		db    0
+public _SHOT_FN
+_SHOT_FN db '0016.pi', 0, 0, 0, 0, 0
+SHOT_FN_SIZE = ($ - _SHOT_FN)
 a00sl_cd2	db '00sl.cd2',0
 a02sl_cd2	db '02sl.cd2',0
 a04sl_cd2	db '04sl.cd2',0
@@ -2737,7 +2734,8 @@ aLogo1_rgb	db 'logo1.rgb',0
 aSt_cd2		db 'st.cd2',0
 aStnx1_pi	db 'stnx1.pi',0
 aStnx0_pi	db 'stnx0.pi',0
-a00mm_m		db '00mm.m',0
+public _PLAYCHAR_BGM_FN
+_PLAYCHAR_BGM_FN	db '00mm.m',0
 aDec_m		db 'dec.m',0
 aEn2_pi		db 'EN2.pi',0
 aEnemy00_pi	db 'ENEMY00.pi',0
