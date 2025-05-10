@@ -271,7 +271,7 @@ static int memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
 static void saveout_write_c_type(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx) {
     if (t->output_type == REC98_OUT_CPP)
         fprintf(sctx->fp,"const dot_rect_t(%d, %d) %s",sctx->bytesperrow * 8,t->sprite_height,t->output_symname != NULL ? t->output_symname : "untitled");
-    else if (t->output_type == REC98_OUT_CPP)
+    else if (t->output_type == REC98_OUT_C)
         fprintf(sctx->fp,"const unsigned char %s",t->output_symname != NULL ? t->output_symname : "untitled");
 
     if (t->flags & PRESHIFT_OUTER)
