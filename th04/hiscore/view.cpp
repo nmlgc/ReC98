@@ -86,14 +86,10 @@ static const screen_y_t RANK_TOP = (RES_Y - (GLYPH_H / 2) - GLYPH_H);
 
 scoredat_section_t hi;
 scoredat_section_t hi2;
-static uint8_t scoredat_unused; // ZUN bloat
 
 unsigned char rank;
 unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
 bool extra_unlocked;
-#if (GAME == 4)
-int8_t unused[48]; // ZUN bloat
-#endif
 /// -----
 
 // ZUN bloat: The main difference between the TH04 and TH05 implementations is

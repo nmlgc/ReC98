@@ -14,13 +14,11 @@ inline char sel_ring_end() {
 }
 
 char sel = 1;
-int8_t sel_padding = 0;
 
 #include "th02/shiftjis/m_char.cpp"
 
 char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
-long unused[2]; // ZUN bloat
 
 void copy_pic_back(int sel, int highlight)
 {

@@ -88,15 +88,12 @@ static const screen_y_t STATS_TOP = (PIC_TOP + PIC_H + 16);
 static bool input_locked[PLAYER_COUNT] = { false, false };
 
 static unsigned char curve_cycle;
-static int8_t padding_1; // ZUN bloat
 resident_t far* resident; // ZUN bloat: Why is this here?
 static playchar_t sel[PLAYER_COUNT];
 static bool sel_confirmed[PLAYER_COUNT];
 static page_t page_shown;
-static int8_t padding_2; // ZUN bloat
 func_t_near input_mode; // ZUN bloat: Why is this here?
 static unsigned int fadeout_frames;
-static int16_t curve_unused; // ZUN bloat
 static int curve_trail_count;
 static unsigned char playchars_available;
 /// -----
@@ -166,7 +163,6 @@ void near select_init_and_load(void)
 	snd_load("select.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 
-	curve_unused = 200;
 	random_seed = resident->rand;
 
 	text_clear();

@@ -531,7 +531,6 @@ bool main_input_allowed;
 bool option_input_allowed;
 
 int8_t in_option; // ACTUAL TYPE: bool
-static int8_t padding; // ZUN bloat
 menu_put_func_t menu_put;
 // -------
 

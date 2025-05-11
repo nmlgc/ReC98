@@ -41,9 +41,7 @@ static const screen_x_t YUUKA_LEFT = 400;
 static const vram_y_t YUUKA_TOP = 224;
 
 unsigned char playchar_menu_sel;
-static uint8_t unused_1; // ZUN bloat
 unsigned char playchar_menu_rank;
-static uint8_t unused_0[4]; // ZUN bloat
 bool extra_playable_with[PLAYCHAR_COUNT];
 bool selectable_with[PLAYCHAR_COUNT];
 
