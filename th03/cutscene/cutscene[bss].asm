@@ -11,10 +11,6 @@ else
 endif
 _box_bg	dd ?
 _fast_forward	db ?
-
-if (GAME ge 4)
-	db 60 dup(?)
-endif
 	evendata
 
 public _cursor, _text_interval, _text_col, _text_fx

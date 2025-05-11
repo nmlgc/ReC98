@@ -135,13 +135,6 @@ static const screen_x_t CMT_COMMENT_RIGHT = (CMT_COMMENT_LEFT + CMT_LINE_W);
 static const screen_x_t CMT_COMMENT_BOTTOM = (CMT_COMMENT_TOP + CMT_COMMENT_H);
 // -----------
 
-// ZUN bloat
-#if (GAME == 5)
-static int8_t unused[104];
-#elif (GAME == 4)
-static int8_t unused[56];
-#endif
-
 // Polygon state
 // -------------
 
@@ -179,7 +172,6 @@ page_t music_page_accessed;
 #if (GAME >= 4)
 // The initial comment is displayed immediately, without a fade-in animation.
 bool cmt_shown_initial;
-static int8_t unused_byte; // ZUN bloat
 #endif
 // ---------------
 

@@ -108,8 +108,6 @@ extern Planar<dots16_t> far *box_bg;
 extern bool fast_forward;
 
 #if (GAME == 5)
-static int8_t unused[60]; // ZUN bloat
-
 // String-to-color map
 // -------------------
 // Used to automatically change the text color whenever a specific Shift-JIS
@@ -128,7 +126,6 @@ colmap_t colmap;
 #undef extern
 extern unsigned char colmap_count;
 #define extern
-static int8_t padding; // ZUN bloat
 /// -------------------
 #endif
 
