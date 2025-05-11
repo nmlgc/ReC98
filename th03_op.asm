@@ -52,7 +52,6 @@ include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
-include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_polygon_c.asm
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
