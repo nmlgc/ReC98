@@ -560,6 +560,12 @@ void main_update_and_render(void)
 			case 4:
 				text_clear();
 				musicroom_menu();
+
+				graph_accesspage(1);
+				GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
+				palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
+				graph_copy_page(0);
+				graph_accesspage(0);
 				initialized = false;
 				break;
 			case 5:

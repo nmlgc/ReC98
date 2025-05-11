@@ -25,9 +25,6 @@
 #include "th01/hardware/grppsafx.h"
 #include "th02/snd/snd.h"
 #endif
-#if (GAME >= 3)
-#include "th03/formats/cdg.h"
-#endif
 #include "th02/op/m_music.hpp"
 #if (GAME == 5)
 #include "th01/math/clamp.hpp"
@@ -736,18 +733,6 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	cmt_shown_initial = false;
 #endif
 
-	// ZUN bloat: The call site would have been a better place for this.
-#if (GAME >= 4)
-	cdg_free_all();
-	text_clear();
-#elif (GAME == 3)
-	for(int i = 0; i < CDG_SLOT_COUNT; i++) {
-		cdg_free(i);
-	}
-	super_free();
-	text_clear();
-#endif
-
 	music_page_accessed = 1;
 
 	palette_settone(0);
@@ -1024,21 +1009,10 @@ controls:
 	// purple in the original images, not black.
 	// Since [PaletteTone] also stays at 100, this clear call is not as useless
 	// as it seems. The alternative of setting all other colors to color #0
-	// would even cause additional tearing at the pi_palette_apply() call
-	// below, which is sandwiched between the expensive calls to pi_load() and
-	// pi_put_8() and negates any palette tricks.
+	// would even cause additional tearing with TH02's call site code: Its
+	// pi_palette_apply() call is sandwiched between the expensive calls to
+	// pi_load() and pi_put_8(), which would negate any palette tricks.
 	graph_accesspage(0);
 	graph_clear();
-
-	graph_accesspage(1);
-
-#if (GAME == 2)
-	// ZUN bloat: The call site would have been a better place for this.
-	GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
-	palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
-	graph_copy_page(0);
-#endif
-
-	graph_accesspage(0);
 #endif
 }

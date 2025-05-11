@@ -16,6 +16,7 @@
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/hardware/input.h"
+#include "th03/formats/cdg.h"
 #include "th03/formats/cfg_impl.hpp"
 #include "th03/core/initexit.h"
 #include "th03/gaiji/gaiji.h"
@@ -668,6 +669,11 @@ void near main_update_and_render(void)
 			return_from_other_screen_to_main(in_this_menu, input_allowed);
 			return;
 		case MC_MUSICROOM:
+			{for(int i = 0; i < CDG_SLOT_COUNT; i++) {
+				cdg_free(i);
+			}}
+			super_free();
+			text_clear();
 			musicroom_menu();
 			return_from_other_screen_to_main(in_this_menu, input_allowed);
 			return;
