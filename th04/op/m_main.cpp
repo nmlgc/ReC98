@@ -117,12 +117,8 @@ const vc2 COL_DESC     = ((GAME == 5) ?  9 : V_WHITE);
 // Globals
 // -------
 
-#if (GAME == 5)
-static int8_t unused = 0; // ZUN bloat
-#endif
 int8_t menu_sel = 0;
 bool quit = false;
-int8_t main_menu_unused_1 = 1;
 const shiftjis_t* MENU_DESC[] = MENU_DESCRIPTIONS;
 resident_t far *resident;
 int8_t in_option; // ACTUAL TYPE: bool
@@ -342,8 +338,6 @@ void near main_update_and_render(void)
 	static bool input_allowed;
 
 	if(!initialized) {
-		main_menu_unused_1 = 0;
-
 		// ZUN bloat: Way too wide.
 		menu_init(
 			initialized,

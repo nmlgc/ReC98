@@ -25,11 +25,9 @@ static const unsigned char gbcRANKS[4][8] = {
 const shiftjis_t *SHOTTYPES[SHOTTYPE_COUNT] = HISCORE_SHOTTYPES;
 int logo_step = 0;
 char need_op_h_bft = 1;
-int8_t need_op_h_bft_padding = 0;
 
 scoredat_section_t hi;
 char extra_unlocked;
-int8_t extra_unlocked_padding;
 unsigned int score_duration;
 
 #include "th02/formats/scoredat/load.cpp"
