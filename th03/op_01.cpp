@@ -25,6 +25,7 @@
 #include "th03/op/m_main.hpp"
 #include "th03/op/m_select.hpp"
 #include <conio.h>
+#include <mem.h>
 #include <stddef.h>
 #include <process.h>
 
@@ -158,15 +159,9 @@ void near cfg_save_exit(void)
 }
 /// ---------------------------
 
-#define resident_reset_scores(i) { \
-	/* ZUN bloat: Very unsafe. */ \
-	for(i = 0; i < (PLAYER_COUNT * SCORE_DIGITS); i++) { \
-		resident->score_last[0].digits[i] = 0; \
-	} \
-}
-
 bool near switch_to_mainl(void)
 {
+	memset(resident->score_last, 0, sizeof(resident->score_last));
 	cfg_save();
 
 	// ZUN landmine: The system's previous gaiji should be restored *after*
@@ -274,7 +269,6 @@ bool near story_menu(void)
 		resident->story_opponents[8].v++;
 	}
 
-	resident_reset_scores(stage);
 	resident->rem_credits = 3;
 	resident->op_animation_fast = false;
 	resident->skill = (70 + (resident->rank * 25));
@@ -371,7 +365,6 @@ bool near vs_menu(void)
 		}
 	}
 
-	resident_reset_scores(sel);
 	return switch_to_mainl();
 }
 
@@ -413,10 +406,7 @@ void near start_demo(void)
 	);
 
 	resident->rand = RAND[resident->demo_num - 1];
-	int i;
-	resident_reset_scores(i);
 	palette_black_out(1);
-
 	switch_to_mainl();
 }
 
@@ -455,8 +445,6 @@ bool near score_menu(void)
 	resident->story_stage = STAGE_NONE;
 	resident->show_score_menu = true;
 	resident->game_mode = GM_NONE;
-	int i;
-	resident_reset_scores(i);
 	return switch_to_mainl();
 }
 
