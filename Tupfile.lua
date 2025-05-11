@@ -486,7 +486,9 @@ th02:zungen("bin/th02/zun.com", {
 	{ "ZUNSOFT", th01_zunsoft },
 })
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	"th02/op_01.cpp",
 	"th02/exit_dos.cpp",
 	"th02/zunerror.cpp",
@@ -561,7 +563,9 @@ obj = {
 }
 th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
 	"th02_maine.asm",
 	"th02/grppsafx.cpp",
@@ -610,7 +614,9 @@ th03:zungen("bin/th03/zun.com", {
 	})}
 })
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	"th03/op_01.cpp",
 	"th03_op.asm",
 	"th03/op_music.cpp",
@@ -670,7 +676,9 @@ obj = {
 }
 th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	"th03/cfg_lres.cpp",
 	"th03/mainl_sc.cpp",
 	{ "th03_mainl.asm", extra_inputs = th03_sprites["flake"] },
@@ -727,7 +735,9 @@ local th04_zuncom = th04:zungen("obj/th04/zuncom.bin", {
 })
 th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	"th04/op_main.cpp",
 	"th04_op.asm",
 	"th02/vplanset.cpp",
@@ -769,7 +779,9 @@ obj = {
 }
 th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	{ "th04_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -839,7 +851,9 @@ obj = {
 }
 th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	"th04/maine_e.cpp",
 	{ "th04_maine_master.asm", o = "mainem.obj" },
 	"th04/score_d.cpp",
@@ -899,7 +913,9 @@ local th05_zuncom = th05:zungen("obj/th05/zuncom.bin", {
 })
 th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	"th05/op_main.cpp",
 	"th05_op.asm",
 	"th03/hfliplut.asm",
@@ -945,7 +961,9 @@ obj = {
 }
 th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	{ "th05_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -1029,7 +1047,9 @@ obj = {
 }
 th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 
-obj = {
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	"th05/maine_e.cpp",
 	{ "th05_maine_master.asm", o = "mainem.obj" },
 	"th05/score_d.cpp",
