@@ -297,7 +297,7 @@ void near extras_put(void)
 }
 
 // Q8.8 fixed-point
-typedef int freq_t;
+typedef uint16_t freq_t;
 static const freq_t FREQ_FACTOR = (1 << 8);
 
 // Plots a variant of a Lissajous curve, but with angles calculated as
@@ -318,35 +318,50 @@ void pascal near curve_put(
 	freq_t freq_y
 )
 {
-	screen_y_t x;
-	screen_y_t y;
 	unsigned int angle_base;
 	for(angle_base = 0x00; angle_base < 0x100; angle_base++) {
 		// ZUN bloat: The game original game runs this loop body 4,096 times
 		// per rendered frame, magnifying every suboptimal implementation
-		// choice. On an i486/Pentium, ZUN wastes:
-		//
-		// • ≥36 / 58 cycles by dividing by [FREQ_FACTOR] instead of
-		//   right-shifting*,
-		// • ≥42 / 16 cycles by not inlining grcg_pset(), and
-		// • ≥100 / 40 cycles by not inlining polar().
-		//
-		// Total waste for all points: ≥729,088 / 466,944 cycles.
-		//
-		// *) Despite [freq_x] and [freq_y] only ever holding unsigned values,
-		//    the result of multiplying them by the offset angle will overflow
-		//    into negative numbers. Thus, this code is affected by the
-		//    inaccuracy for negative sine and cosine values documented in
-		//    th01/math/polar.hpp. If it weren't, this category would waste
-		//    ≥42 / 64 cycles instead.
-		unsigned char angle;
-		angle = (angle_base + angle_offset_x);
-		angle = ((angle * freq_x) / FREQ_FACTOR);
-		x = polar_x_fast((RES_X / 2), radius, angle);
+		// choice. On an i486/Pentium, ZUN wastes ≥42 / 16 cycles by not
+		// inlining grcg_pset().
+		// Total waste for all points: ≥172,032 / 65,536 cycles.
 
-		angle = (angle_base + angle_offset_y);
-		angle = ((angle * freq_y) / FREQ_FACTOR);
-		y = polar_y_fast((RES_Y / 2), radius, angle);
+		// It might not look like it, but this code is indeed affected by the
+		// inaccuracy for negative sine and cosine values documented in
+		// th01/math/polar.hpp, as the result of multiplying the offset angle
+		// with [freq_x] or [freq_y] can overflow into negative numbers. To
+		// retain the exact pixels, we must ensure that
+		// 1) angle + offset is truncated to 8 bits, and
+		// 2) [scaled_angle] / [FREQ_FACTOR] rounds toward zero despite
+		//    shifting.
+		int scaled_angle;
+
+		// Calculate Y first, since the coordinate can fall outside of VRAM.
+		// If that happens, we don't even have to calculate X.
+		scaled_angle = (
+			static_cast<unsigned char>(angle_base + angle_offset_y) * freq_y
+		);
+		if(scaled_angle < 0) {
+			// Casting avoids an unnecessary register spill here...
+			scaled_angle += static_cast<int>(FREQ_FACTOR - 1);
+		}
+		screen_y_t y = polar_y_fast(
+			(RES_Y / 2), radius, (scaled_angle / FREQ_FACTOR)
+		);
+		if(static_cast<uscreen_x_t>(y) >= RES_Y) {
+			continue;
+		}
+
+		scaled_angle = (
+			static_cast<unsigned char>(angle_base + angle_offset_x) * freq_x
+		);
+		if(scaled_angle < 0) {
+			// Casting avoids an unnecessary register spill here...
+			scaled_angle += static_cast<int>(FREQ_FACTOR - 1);
+		}
+		screen_x_t x = polar_x_fast(
+			(RES_X / 2), radius, (scaled_angle / FREQ_FACTOR)
+		);
 
 		grcg_pset(x, y);
 	}
