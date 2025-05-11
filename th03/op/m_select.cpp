@@ -138,10 +138,6 @@ void near select_cdg_load_part2_of_4(void)
 
 void near select_cdg_load_part3_of_4(void)
 {
-	// ZUN bloat: Redundant, PID 0 always has to select a character before the
-	// game shows the image in this slot.
-	cdg_load_single((CDG_PIC_SELECTED + 0), PLAYCHAR_PIC_FN[PLAYCHAR_REIMU], 0);
-
 	static_assert(PLAYCHAR_COUNT >= 6);
 	for(int i = 3; i < 6; i++) {
 		cdg_load_single((CDG_PIC + i), PLAYCHAR_PIC_FN[i], 0);
@@ -579,8 +575,6 @@ inline bool select_cancel(void) {
 // ensure that the palette applies to the entire frame. Plotting the curves
 // takes a while, and doing this afterward all but ensures palette tearing.
 #define select_fadeout_render(quit_label) { \
-	text_clear(); /* ZUN bloat: No point to this one. */ \
-	\
 	/** \
 	 * ZUN quirk: Should have maybe been `>` rather than `>=`. Since \
 	 * [fadeout_frames] is technically off-by-one (frame 0 is the last frame \
@@ -632,10 +626,6 @@ inline bool select_cancel(void) {
 bool near select_1p_vs_2p_menu(void)
 {
 	select_init_and_load();
-
-	// ZUN bloat: Redundant, already done in select_init_and_load().
-	text_clear();
-
 	sel_init_vs();
 
 	if(resident->key_mode == KM_KEY_KEY) {

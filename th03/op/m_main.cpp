@@ -50,7 +50,6 @@ void near op_animate(void)
 	egc_shift_left_all(SHIFT_DELTA);
 
 	Palettes[COL_BG].set(0x00, 0x00, 0x00);
-	palette_show(); // ZUN bloat: Redundant
 	Palettes[COL_SHADOW].set(0x00, 0x00, 0x00);
 	palette_show();
 	pi_free(0);
@@ -67,7 +66,6 @@ void near op_animate(void)
 		Palettes[COL_BG].c.r = brightness;
 		Palettes[COL_BG].c.g = brightness;
 		Palettes[COL_BG].c.b = brightness;
-		palette_show(); // ZUN bloat: Redundant
 		if(brightness <= 0x80) {
 			Palettes[COL_SHADOW].c.r = brightness;
 			Palettes[COL_SHADOW].c.g = brightness;
@@ -157,7 +155,6 @@ void near op_fadein_animate(void)
 	graph_accesspage(0);
 	pi_palette_apply(0);
 	pi_put_8(0, 0, 0);
-	graph_accesspage(0); // ZUN bloat: Redundant
 	pi_free(0);
 
 	select_cdg_load_part1_of_4();

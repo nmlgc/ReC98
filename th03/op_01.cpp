@@ -165,7 +165,8 @@ void near cfg_save_exit(void)
 	} \
 }
 
-inline bool switch_to_mainl(bool opwin_free) {
+bool near switch_to_mainl(void)
+{
 	cfg_save();
 
 	// ZUN landmine: The system's previous gaiji should be restored *after*
@@ -174,9 +175,6 @@ inline bool switch_to_mainl(bool opwin_free) {
 	gaiji_restore();
 
 	snd_kaja_func(KAJA_SONG_STOP, 0);
-	if(opwin_free) {
-		super_free(); // ZUN bloat: Process termination will do this anyway.
-	}
 
 	// ZUN landmine: The screen clearing done in this function will almost
 	// certainly not run within VBLANK.
@@ -228,7 +226,6 @@ bool near story_menu(void)
 		return true;
 	}
 
-retry_opponent_selection:
 	// ACTUAL TYPE: playchar_t
 	int stage7_opponent = STAGE7_OPPONENT_FOR[
 		resident->playchar_paletted[0].char_id_16()
@@ -277,18 +274,11 @@ retry_opponent_selection:
 		resident->story_opponents[8].v++;
 	}
 
-	// ZUN bloat: This can never happen.
-	for(stage = 0; stage < STAGE_COUNT; stage++) {
-		if(resident->story_opponents[stage].char_id_16() >= PLAYCHAR_COUNT) {
-			goto retry_opponent_selection;
-		}
-	}
-
 	resident_reset_scores(stage);
 	resident->rem_credits = 3;
 	resident->op_animation_fast = false;
 	resident->skill = (70 + (resident->rank * 25));
-	return switch_to_mainl(false);
+	return switch_to_mainl();
 }
 
 inline tram_y_t choice_tram_y(unsigned int line) {
@@ -382,7 +372,7 @@ bool near vs_menu(void)
 	}
 
 	resident_reset_scores(sel);
-	return switch_to_mainl(false);
+	return switch_to_mainl();
 }
 
 void near start_demo(void)
@@ -427,7 +417,7 @@ void near start_demo(void)
 	resident_reset_scores(i);
 	palette_black_out(1);
 
-	switch_to_mainl(false);
+	switch_to_mainl();
 }
 
 void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
@@ -467,7 +457,7 @@ bool near score_menu(void)
 	resident->game_mode = GM_NONE;
 	int i;
 	resident_reset_scores(i);
-	return switch_to_mainl(true);
+	return switch_to_mainl();
 }
 
 /// The menu
@@ -653,7 +643,6 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 }
 
 #define menu_init(in_this_menu, input_allowed, choice_count, put) { \
-	input_allowed = false; /* ZUN bloat: Redundant */ \
 	for(int i = 0; i < choice_count; i++) { \
 		put(i, ((menu_sel == i) ? TX_WHITE : TX_BLACK)); \
 	} \
@@ -749,8 +738,6 @@ void near main_update_and_render(void)
 			snd_kaja_func(KAJA_SONG_STOP, 0); \
 			snd_active = false; \
 		} \
-		/* ZUN bloat: Already done at the call site. */ \
-		option_choice_put(menu_sel, TX_WHITE); \
 	} \
 }
 
