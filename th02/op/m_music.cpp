@@ -2,6 +2,7 @@
 #include "planar.h"
 #include "libs/master.lib/master.hpp"
 #include "game/coords.hpp"
+#include "th01/math/polar.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/musiccmt.hpp"
@@ -25,9 +26,6 @@
 #endif
 #if (GAME >= 3)
 #include "th03/formats/cdg.h"
-#include "th03/math/polar.hpp"
-#else
-#include "th01/math/polar.hpp"
 #endif
 #include "th02/op/m_music.hpp"
 #if (GAME == 5)
@@ -334,13 +332,8 @@ void pascal near polygon_build(
 
 	for(i = 0; i < point_count; i++) {
 		unsigned char point_angle = (((i << 8) / point_count) + plus_angle);
-#if (GAME >= 3)
-		points[i].x = polar_x(center_x, radius, point_angle);
-		points[i].y = polar_y(center_y.pixel, radius, point_angle);
-#else
 		points[i].x = polar_x_fast(center_x, radius, point_angle);
 		points[i].y = polar_y_fast(center_y.pixel, radius, point_angle);
-#endif
 	}
 	points[i].x = points[0].x;
 	points[i].y = points[0].y;
