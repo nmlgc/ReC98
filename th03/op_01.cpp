@@ -694,21 +694,6 @@ void near main_update_and_render(void)
 	#undef input_allowed
 }
 
-#define snd_flip() { \
-	if(!snd_sel_disabled) { \
-		if(resident->bgm_mode == SND_BGM_OFF) { \
-			resident->bgm_mode = SND_BGM_FM; \
-			snd_kaja_func(KAJA_SONG_STOP, 0); \
-			snd_determine_mode(); \
-			snd_kaja_func(KAJA_SONG_PLAY, 0); \
-		} else { \
-			resident->bgm_mode = SND_BGM_OFF; \
-			snd_kaja_func(KAJA_SONG_STOP, 0); \
-			snd_active = false; \
-		} \
-	} \
-}
-
 inline void return_from_option_to_main(bool& option_initialized) {
 	option_initialized = false;
 	menu_sel = MC_OPTION;
@@ -734,36 +719,32 @@ void near option_update_and_render(void)
 	}
 	menu_update_vertical(input_sp, OC_COUNT);
 
-	// ZUN bloat: Could have been deduplicated.
-	if(input_sp & INPUT_RIGHT) {
+	if(input_sp & (INPUT_LEFT | INPUT_RIGHT)) {
+		int8_t delta = ((input_sp & INPUT_LEFT) ? -1 : +1);
 		switch(menu_sel) {
 		case OC_RANK:
-			ring_inc_range(resident->rank, RANK_EASY, RANK_LUNATIC);
+			ring_step(resident->rank, delta, RANK_EASY, RANK_LUNATIC);
 			break;
 		case OC_BGM:
-			snd_flip();
+			if(!snd_sel_disabled) {
+				if(resident->bgm_mode == SND_BGM_OFF) {
+					resident->bgm_mode = SND_BGM_FM;
+					snd_kaja_func(KAJA_SONG_STOP, 0);
+					snd_determine_mode();
+					snd_kaja_func(KAJA_SONG_PLAY, 0);
+				} else {
+					resident->bgm_mode = SND_BGM_OFF;
+					snd_kaja_func(KAJA_SONG_STOP, 0);
+					snd_active = false;
+				}
+			}
 			break;
 		case OC_KEY_MODE:
-			ring_inc_range(resident->key_mode, KM_KEY_KEY, KM_KEY_JOY);
+			ring_step(resident->key_mode, delta, KM_KEY_KEY, KM_KEY_JOY);
 			break;
 		}
 		option_choice_put(menu_sel, TX_WHITE);
 	}
-	if(input_sp & INPUT_LEFT) {
-		switch(menu_sel) {
-		case OC_RANK:
-			ring_dec_range(resident->rank, RANK_EASY, RANK_LUNATIC);
-			break;
-		case OC_BGM:
-			snd_flip();
-			break;
-		case OC_KEY_MODE:
-			ring_dec_range(resident->key_mode, KM_KEY_KEY, KM_KEY_JOY);
-			break;
-		}
-		option_choice_put(menu_sel, TX_WHITE);
-	}
-
 	if((input_sp & INPUT_OK) || (input_sp & INPUT_SHOT)) {
 		if(menu_sel == OC_QUIT) {
 			return_from_option_to_main(in_this_menu);
