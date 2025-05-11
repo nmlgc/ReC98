@@ -8,6 +8,7 @@
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
+#include "th01/math/polar.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/bfnt.h"
@@ -20,7 +21,6 @@ extern "C" {
 #include "th03/formats/scoredat.hpp"
 #include "th03/gaiji/gaiji.h"
 #include "th03/hardware/input.h"
-#include "th03/math/polar.hpp"
 #include "th03/shiftjis/fns.hpp"
 #include "th03/snd/snd.h"
 #include "th03/sprites/op_cdg.hpp"
@@ -347,11 +347,11 @@ void pascal near curve_put(
 		unsigned char angle;
 		angle = (angle_base + angle_offset_x);
 		angle = ((angle * freq_x) / FREQ_FACTOR);
-		x = polar_x((RES_X / 2), radius, angle);
+		x = polar_x_fast((RES_X / 2), radius, angle);
 
 		angle = (angle_base + angle_offset_y);
 		angle = ((angle * freq_y) / FREQ_FACTOR);
-		y = polar_y((RES_Y / 2), radius, angle);
+		y = polar_y_fast((RES_Y / 2), radius, angle);
 
 		grcg_pset(x, y);
 	}

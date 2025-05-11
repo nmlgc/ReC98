@@ -652,7 +652,6 @@ obj += {
 	"th03/input_s.cpp",
 	"th03/pi_load.cpp",
 	"th03/pi_put.cpp",
-	"th03/polar.cpp",
 	"th03/snd_kaja.cpp",
 }
 th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
