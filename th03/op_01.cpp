@@ -225,10 +225,12 @@ bool near story_menu(void)
 		return true;
 	}
 
+	const PlaycharPalettedOptional p1_playchar_paletted = (
+		resident->playchar_paletted[0]
+	);
+
 	// ACTUAL TYPE: playchar_t
-	int stage7_opponent = STAGE7_OPPONENT_FOR[
-		resident->playchar_paletted[0].char_id_16()
-	];
+	int stage7_opponent = STAGE7_OPPONENT_FOR[p1_playchar_paletted.char_id()];
 	irand_init(resident->rand);
 
 	for(stage = 0; stage < 6; stage++) {
@@ -240,39 +242,20 @@ bool near story_menu(void)
 			);
 		} while(opponent_seen[candidate] || (stage7_opponent == candidate));
 		opponent_seen[candidate] = true;
+		resident->story_opponents[stage].v = TO_OPTIONAL_PALETTED(candidate);
+	}
+	resident->story_opponents[6].v = TO_OPTIONAL_PALETTED(stage7_opponent);
+	resident->story_opponents[7].set(PLAYCHAR_CHIYURI);
+	resident->story_opponents[8].set(PLAYCHAR_YUMEMI);
 
-		// ZUN bloat: Should not change types.
-		#define candidate_paletted candidate
-		candidate_paletted = TO_OPTIONAL_PALETTED(candidate);
-		resident->story_opponents[stage].v = candidate_paletted;
-
-		// ZUN bloat: All of these palette swaps could have been done in a
-		// single loop at the end.
-		if(candidate_paletted == resident->playchar_paletted[0].v) {
-			resident->story_opponents[stage].v = (candidate_paletted + 1);
+	// Select alternate palette on collision
+	for(stage = 0; stage < STAGE_COUNT; stage++) {
+		if(resident->story_opponents[stage].v == p1_playchar_paletted.v) {
+			resident->story_opponents[stage].v++;
 		}
-		#undef candidate_paletted
 	}
 
 	resident->playchar_paletted[1] = resident->story_opponents[0];
-	resident->story_opponents[6].v = TO_OPTIONAL_PALETTED(stage7_opponent);
-
-	// ZUN bloat: Palette swaps...
-	resident->story_opponents[7].set(PLAYCHAR_CHIYURI);
-	if(
-		resident->playchar_paletted[0].v ==
-		TO_OPTIONAL_PALETTED(PLAYCHAR_CHIYURI)
-	) {
-		resident->story_opponents[7].v++;
-	}
-	resident->story_opponents[8].set(PLAYCHAR_YUMEMI);
-	if(
-		resident->playchar_paletted[0].v ==
-		TO_OPTIONAL_PALETTED(PLAYCHAR_YUMEMI)
-	) {
-		resident->story_opponents[8].v++;
-	}
-
 	resident->rem_credits = 3;
 	resident->op_animation_fast = false;
 	resident->skill = (70 + (resident->rank * 25));
@@ -299,7 +282,7 @@ bool near select_vs_menu(vs_mode_t mode)
 
 void near start_demo(void)
 {
-	static const int8_t PAIRINGS[DEMO_COUNT * PLAYER_COUNT] = {
+	static const int8_t PAIRINGS[DEMO_COUNT][PLAYER_COUNT] = {
 		TO_OPTIONAL_PALETTED(PLAYCHAR_MIMA),
 		TO_OPTIONAL_PALETTED(PLAYCHAR_REIMU),
 
@@ -322,19 +305,12 @@ void near start_demo(void)
 	// Critically important to guarantee deterministic demos!
 	resident->story_stage = 0;
 
+	unsigned int pairing_id = (resident->demo_num - 1);
 	resident->game_mode = GM_DEMO;
 	resident->show_score_menu = false;
-
-	// ZUN bloat: A two-dimensional array would have been more readable and
-	// would have generated better code.
-	resident->playchar_paletted[0].v = (
-		PAIRINGS[((resident->demo_num - 1) * PLAYER_COUNT) + 0]
-	);
-	resident->playchar_paletted[1].v = (
-		PAIRINGS[((resident->demo_num - 1) * PLAYER_COUNT) + 1]
-	);
-
-	resident->rand = RAND[resident->demo_num - 1];
+	resident->playchar_paletted[0].v = PAIRINGS[pairing_id][0];
+	resident->playchar_paletted[1].v = PAIRINGS[pairing_id][1];
+	resident->rand = RAND[pairing_id];
 	palette_black_out(1);
 	switch_to_mainl();
 }
