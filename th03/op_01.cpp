@@ -482,11 +482,11 @@ char LABEL_RANK[] = { g_str_3(gp_Rank), '\0' };
 char LABEL_MUSIC[] = { g_str_4(gp_Music), '\0' };
 char LABEL_KEYCONFIG[] = { g_str_6(gp_KeyConfig), '\0' };
 
-// ZUN bloat: Unused.
+// ZUN bloat: Unused, but looks like a gaiji version of the space string below.
+// Since that is the only call to text_putsa() in this binary, using this one
+// would have also removed the need to link in that function.
 char UNUSED_SPACES[5] = { g_SP, g_SP, g_SP, g_SP, '\0' };
 
-// ZUN bloat: Centering these would have removed both the need for arithmetic
-// and the space string.
 char VALUE_EASY[] = { g_str_3(gp_Easy), '\0' };
 char VALUE_NORMAL[] = { g_str_4(gp_Normal), '\0' };
 char VALUE_HARD[] = { g_str_3(gp_Hard), '\0' };
