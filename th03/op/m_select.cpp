@@ -94,7 +94,7 @@ static playchar_t sel[PLAYER_COUNT];
 static bool sel_confirmed[PLAYER_COUNT];
 static page_t page_shown;
 static int8_t padding_2; // ZUN bloat
-static farfunc_t_near input_mode; // ZUN bloat: Why is this here?
+func_t_near input_mode; // ZUN bloat: Why is this here?
 static unsigned int fadeout_frames;
 static int16_t curve_unused; // ZUN bloat
 static int curve_trail_count;

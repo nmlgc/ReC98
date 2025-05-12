@@ -26,9 +26,9 @@ void pascal near midboss_score_bonus(unsigned int units);
 // Callbacks. *_func() functions are "activated" by setting the regular
 // function once the midboss battle starts.
 extern nearfunc_t_near midboss_invalidate;
-extern  farfunc_t_near midboss_update;
+extern     func_t_near midboss_update;
 extern nearfunc_t_near midboss_render;
-extern  farfunc_t_near midboss_update_func;
+extern     func_t_near midboss_update_func;
 extern nearfunc_t_near midboss_render_func;
 
 void midboss_reset(void);

@@ -22,7 +22,7 @@ extern SubpixelLength8 near* std_scroll_speed; // Within [std_seg]
 extern void near* std_enemy_scripts[STD_ENEMY_SCRIPT_COUNT]; // Within [std_seg]
 extern void* std_ip;
 
-extern farfunc_t_near stage_vm;
+extern func_t_near stage_vm;
 
 // Calls std_free(), then loads and allocates a new [std_seg] by reading the
 // .STD file for the current stage (TH04: [resident->stage_ascii], TH05:

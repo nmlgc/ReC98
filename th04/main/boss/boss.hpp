@@ -55,12 +55,12 @@ void pascal near boss_score_bonus(unsigned int units);
 
 // Callbacks. *_func() functions are "activated" by setting the regular
 // function once the boss battle starts.
-extern  farfunc_t_near boss_update;
+extern     func_t_near boss_update;
 extern nearfunc_t_near boss_fg_render;
 
 // Also responsible to set [bg_render_bombing_func] to the
 // [boss_bg_render_func]!
-extern  farfunc_t_near boss_update_func;
+extern     func_t_near boss_update_func;
 
 extern nearfunc_t_near boss_bg_render_func;
 extern nearfunc_t_near boss_fg_render_func;
