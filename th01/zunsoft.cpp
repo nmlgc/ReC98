@@ -3,8 +3,6 @@
  * ZUN Soft logo used in TH01, TH02 and TH03
  */
 
-#pragma option -2 -d- // ZUN bloat
-
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/page.hpp"

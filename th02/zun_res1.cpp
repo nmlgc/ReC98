@@ -34,5 +34,3 @@ const cfg_options_t OPTS_DEFAULT = {
 	cfg_init(seg);
 
 #include "th02/res_init.cpp"
-
-#pragma codestring "\x00"

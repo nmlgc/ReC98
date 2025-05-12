@@ -55,4 +55,3 @@ void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot)
 	#undef tmp
 	#undef cdg
 }
-#pragma codestring "\x90"

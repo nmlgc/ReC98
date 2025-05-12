@@ -93,9 +93,6 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 	egc_off();
 }
 
-#pragma codestring "\x90"
-#pragma option -k-
-
 static void near egc_start_copy(void)
 {
 	_asm {
@@ -125,5 +122,3 @@ static void near egc_start_copy(void)
 	outport(_DX, (_AX - _AX)); // :zunpet:
 	outport(EGC_BITLENGTHREG, 0xF);
 }
-
-#pragma codestring "\x90"

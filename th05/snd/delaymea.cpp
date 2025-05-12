@@ -23,5 +23,3 @@ void pascal snd_delay_until_measure(int measure, unsigned int frames_if_no_bgm)
 		}
 	} while(measure_cur < measure);
 }
-
-#pragma codestring "\x00"

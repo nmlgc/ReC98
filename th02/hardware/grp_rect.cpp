@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include "planar.h"
 #include "libs/master.lib/pc98_gfx.hpp"

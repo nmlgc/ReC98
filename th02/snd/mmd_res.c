@@ -1,4 +1,4 @@
-#pragma option -WX -zCSHARED -k-
+#pragma option -zCSHARED -k-
 
 #include "x86real.h"
 #include "th02/snd/snd.h"
@@ -13,10 +13,7 @@ bool16 snd_mmd_resident(void)
 		snd_midi_active = true;
 #endif
 		snd_midi_possible = true;
-		// Enforced by the -WX code generation. Just replace these two lines
-		// with `return true`.
-		_AX = true;
-		_asm { retf; }
+		return true;
 	}
 #if (GAME <= 3)
 	snd_midi_possible = false;

@@ -144,8 +144,6 @@ extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 #endif
 // -----
 
-#pragma option -a2
-
 // Function ordering fails
 // -----------------------
 

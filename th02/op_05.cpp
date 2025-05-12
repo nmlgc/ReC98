@@ -1,5 +1,3 @@
-#pragma option -2 // ZUN bloat
-
 #include "planar.h"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"

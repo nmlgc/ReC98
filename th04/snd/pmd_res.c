@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -k-
+#pragma option -zCSHARED
 
 #include "x86real.h"
 #include "th04/snd/snd.h"

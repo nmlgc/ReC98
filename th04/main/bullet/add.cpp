@@ -266,10 +266,6 @@ void near bullets_add_special_fixedspeed(void)
 #define last_bullet_in_group(group_i) \
 	(group_i >= (bullet_template.count - 1))
 
-// Necessary to compile the switch statement in bullet_velocity_and_angle_set()
-// to a binary search. Strangely, it's not used for the functions above?
-#pragma option -G
-
 // Sets the bullet template's velocity for bullet #[group_i] in the template's
 // current group, as well as [group_i_absolute_angle]. Returns true if this
 // was the last bullet for this group.

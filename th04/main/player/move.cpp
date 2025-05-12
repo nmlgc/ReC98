@@ -3,8 +3,6 @@
 #include "th04/main/player/player.hpp"
 #include "th04/main/player/move.hpp"
 
-#pragma option -a2
-
 inline void move(int direction_x, int direction_y) {
 	if((direction_x != 0) && (direction_y != 0)) {
 		player_pos.velocity.x.v = (direction_x * playchar_speed_diagonal);

@@ -1,5 +1,3 @@
-#pragma option -k-
-
 #include "th03/formats/cfg_impl.hpp"
 
 resident_t __seg* near cfg_load_resident_ptr(void)
@@ -10,4 +8,3 @@ resident_t __seg* near cfg_load_resident_ptr(void)
 
 	return cfg_load_and_set_resident_dos(cfg, CFG_FN);
 }
-#pragma codestring "\x90"
