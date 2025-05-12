@@ -27,8 +27,6 @@
 #include "th02/op/menu.hpp"
 #include "th02/op/m_music.hpp"
 
-#pragma option -2 -a2
-
 char menu_sel = 0;
 bool in_option = false;
 bool quit = false;
@@ -394,8 +392,6 @@ void start_extra(void)
 	start_exec();
 }
 
-#pragma option -d-
-
 #include "th02/gaiji/ranks_c.c"
 
 // ZUN bloat: Fixed-size strings ruin any chance of automatically centering
@@ -434,8 +430,6 @@ const unsigned char gbcBGM_MODE[3][5] = {
 };
 
 #include "th02/shiftjis/op_main.hpp"
-
-#pragma option -d
 
 void pascal near main_put_shadow(void)
 {

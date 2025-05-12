@@ -2,7 +2,7 @@
 // --------------------------------------------------------------------------
 // ZUN bloat: Can be fully replaced with the regular implementation.
 
-#pragma option -zCSCORE_TEXT -k-
+#pragma option -zCSCORE_TEXT
 
 #include "th04/main/hiscore.hpp"
 #include "th04/formats/scoredat/scoredat.hpp"
@@ -199,8 +199,6 @@ void near hiscore_continue_enter(void)
 		hiscore_continue_enter_raw();
 	}
 }
-
-#pragma codestring "\x90"
 
 void near hiscore_load(void)
 {

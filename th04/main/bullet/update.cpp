@@ -1,5 +1,3 @@
-#pragma option -G
-
 #include "libs/master.lib/master.hpp"
 #include "th01/math/overlap.hpp"
 #include "th04/math/vector.hpp"
@@ -52,8 +50,6 @@ static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 24;
 inline void bullet_update_patnum(bullet_t near &bullet) {
 }
 #endif
-
-#pragma option -a2
 
 #define bullet_velocity_set_from_angle_and_speed(bullet) \
 	vector2_near(bullet.pos.velocity, bullet.angle, bullet.speed_cur)

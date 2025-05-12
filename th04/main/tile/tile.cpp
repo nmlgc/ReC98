@@ -14,8 +14,6 @@
 #define render_all_time tile_render_all_time
 extern uint8_t render_all_time;
 
-#pragma option -k-
-
 inline void tiles_invalidate_set_all(uint32_t value)
 {
 	// ZUN bloat: memset(halftiles_dirty, value, sizeof(halftiles_dirty));
@@ -33,14 +31,10 @@ void near tiles_invalidate_reset(void)
 	tiles_invalidate_set_all(false);
 }
 
-#pragma codestring "\x90"
-
 void near tiles_invalidate_all(void)
 {
 	tiles_invalidate_set_all(true);
 }
-
-#pragma option -k.
 
 void pascal near tiles_render(void)
 {

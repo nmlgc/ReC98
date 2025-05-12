@@ -1,6 +1,6 @@
 // Second TH05 .PI C++ translation unit.
 
-#pragma option -zCSHARED -2 -k-
+#pragma option -zCSHARED
 
 #include <stddef.h>
 #include "th05/formats/pi.hpp"
@@ -41,8 +41,6 @@ void near pi_mask_setup_egc_and_advance(void)
 	#undef mask_ptr
 }
 
-#pragma option -k
-
 int DEFCONV pi_load(int slot, const char *fn)
 {
 	_DI = slot;
@@ -81,8 +79,6 @@ void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot)
 	pi_put_impl(slot, rowloop_func);
 	#undef rowloop_func
 }
-
-#pragma codestring "\x90"
 
 void pascal pi_put_quarter_8(
 	screen_x_t left, vram_y_t top, int slot, int quarter

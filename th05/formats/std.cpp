@@ -5,7 +5,7 @@
 /// lookup array – see tiles_fill_initial() for details. The rest of the format
 /// is identical to TH04.
 
-#pragma option -zPmain_01 -k-
+#pragma option -zPmain_01
 
 #include "th04/formats/std.hpp"
 #include "th04/main/hud/overlay.hpp"
@@ -139,5 +139,3 @@ void near std_free(void)
 		std_seg = nullptr;
 	}
 }
-
-#pragma codestring "\x90"

@@ -3,9 +3,6 @@
  * Code segment #4 of TH02's MAINE.EXE
  */
 
-// Required to ensure the correct order of strings in `th02/score.c`?!
-#pragma option -d-
-
 #include "th02/hiscore/regist.cpp"
 
 #include "th02/score.c"
