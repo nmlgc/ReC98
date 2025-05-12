@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -Z-
+#pragma option -zCSHARED
 
 #include "libs/master.lib/master.hpp"
 #include "th02/snd/impl.hpp"

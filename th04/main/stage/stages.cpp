@@ -1,5 +1,3 @@
-#pragma option -3 -Z
-
 #include "x86real.h"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"

@@ -49,5 +49,3 @@ void pascal pi_put_quarter_masked_8(
 	pi_put_quarter_impl(slot, quarter, rowloop_func);
 	#undef rowloop_func
 }
-
-#pragma codestring "\x90"

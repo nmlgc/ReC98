@@ -1,8 +1,6 @@
 #include "th04/main/bullet/bullet.hpp"
 #include "th05/sprites/main_pat.h"
 
-#pragma option -k-
-
 unsigned int pascal near bullet_patnum_for_angle(
 	unsigned int patnum_base, unsigned char angle
 )
@@ -19,4 +17,3 @@ unsigned int pascal near bullet_patnum_for_angle(
 
 	return (patnum_base + (angle / ANGLE_PER_SPRITE));
 }
-#pragma codestring "\x90"

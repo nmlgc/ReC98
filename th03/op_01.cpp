@@ -575,8 +575,6 @@ void pascal near main_choice_put(int sel, tram_atrb2 atrb)
 	}
 }
 
-#pragma option -a2
-
 void pascal near option_choice_put(int sel, tram_atrb2 atrb)
 {
 	enum {

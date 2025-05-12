@@ -1,6 +1,3 @@
-#pragma option -2 // ZUN bloat
-#pragma codestring "\x00"
-
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"

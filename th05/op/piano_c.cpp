@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -k-
+#pragma option -zCSHARED
 
 #include "libs/kaja/kaja.h"
 #include "libs/master.lib/pc98_gfx.hpp"

@@ -21,8 +21,6 @@
 #include "th04/shiftjis/m_main.hpp"
 #include "th04/sprites/op_cdg.hpp"
 
-#pragma option -a2
-
 enum main_choice_t {
 	MC_GAME,
 	MC_EXTRA,

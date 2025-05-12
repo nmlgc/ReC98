@@ -9,4 +9,3 @@ unsigned char pascal near player_angle_from(
 		iatan2((player_pos.cur.y - y), (player_pos.cur.x - x)) + plus_angle
 	);
 }
-#pragma codestring "\x90"

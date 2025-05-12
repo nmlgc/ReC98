@@ -1,8 +1,6 @@
 // 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT and initializes the high score
 // lists.
 
-#pragma option -O- -k- -2
-
 #include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
 #include "th02/formats/scoredat/scoredat.hpp"
@@ -71,9 +69,6 @@ remove:
 	file_delete(SCOREDAT_FN_PTR);
 	return 1;
 }
-
-#pragma codestring "\x90"
-#pragma option -O -k
 
 // Slightly differs from the same function in MAIN.EXE and MAINE.EXE!
 // ZUN bloat: Needlessly micro-optimized. Seriously, I wasted half a week

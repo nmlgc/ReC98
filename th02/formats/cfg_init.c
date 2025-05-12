@@ -1,5 +1,3 @@
-#pragma option -2 // ZUN bloat
-
 #include <dos.h>
 
 void cfg_init(resident_t __seg *resident_seg)

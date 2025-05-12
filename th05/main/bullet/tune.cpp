@@ -1,7 +1,5 @@
 // Well, at least the decompilable parts...
 
-#pragma option -k-
-
 #include "th04/main/playperf.hpp"
 #include "th04/main/bullet/bullet.hpp"
 
@@ -26,15 +24,11 @@ void pascal near tune_for_playperf(void)
 	}
 }
 
-#pragma codestring "\x90"
-
 void pascal near bullet_template_tune_easy(void)
 {
 	tune_for_playperf();
 	tune_for_easy();
 }
-
-#pragma codestring "\x90"
 
 void pascal near bullet_template_tune_normal(void)
 {
@@ -47,14 +41,8 @@ void pascal near bullet_template_tune_hard(void)
 	tune_for_hard();
 }
 
-#pragma codestring "\x90"
-
 void pascal near bullet_template_tune_lunatic(void)
 {
 	tune_for_playperf();
 	tune_for_lunatic();
 }
-
-#pragma codestring "\x90"
-
-#pragma option -k.

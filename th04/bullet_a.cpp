@@ -10,5 +10,4 @@
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/gather.hpp"
 
-#pragma option -a2
 #include "th04/main/bullet/add.cpp"

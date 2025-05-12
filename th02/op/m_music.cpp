@@ -1,7 +1,3 @@
-#if (GAME == 2)
-#pragma option -2 // ZUN bloat
-#endif
-
 #include <mem.h>
 #include "planar.h"
 #include "libs/master.lib/master.hpp"

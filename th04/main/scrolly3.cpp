@@ -1,5 +1,3 @@
-#pragma option -k- -G
-
 #include "th04/main/scroll.hpp"
 
 #define roll(y) \
@@ -28,4 +26,3 @@ vram_y_t pascal near scroll_subpixel_y_to_vram_always(subpixel_t y)
 	ret = roll(ret);
 	return ret;
 }
-#pragma codestring "\x90"

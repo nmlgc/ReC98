@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -k-
+#pragma option -zCSHARED
 
 #include <mem.h>
 #include "decomp.hpp"
@@ -60,7 +60,6 @@ void bgimage_put(void)
 	} while(!FLAGS_ZERO);
 	_asm { pop 	ds; }
 }
-#pragma codestring "\x90"
 
 void bgimage_free(void)
 {

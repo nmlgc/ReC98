@@ -4,8 +4,6 @@
  * required in order to run TH04.
  */
 
-#pragma option -2 // ZUN bloat
-
 #include <stddef.h>
 #include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
