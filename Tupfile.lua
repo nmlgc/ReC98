@@ -376,7 +376,6 @@ local th01_sprites = Sprites({
 	-- So, we're forced to manually unroll them…
 	{ "th01/sprites/laser_s.bmp", "cpp", "sSHOOTOUT_LASER", 16, 8 },
 
-	{ "th01/sprites/mousecur.bmp", "cpp", "sMOUSE_CURSOR", 16, 16 },
 	{ "th01/sprites/pellet.bmp", "cpp", "sPELLET", 8, 8, "-pshf inner" },
 	{ "th01/sprites/pellet_c.bmp", "cpp", "sPELLET_CLOUD", 16, 16 },
 	{ "th01/sprites/pillar.bmp", "cpp", "sPILLAR", 32, 8 },
@@ -413,7 +412,7 @@ obj += {
 	"th01/regist.cpp",
 	"th01/resstuff.cpp",
 	"th01/tram_x16.cpp",
-	{ "th01/vsync.cpp", extra_inputs = th01_sprites["mousecur"] },
+	"th01/vsync.cpp",
 	"th01/ztext.cpp",
 	"th01/op_01.cpp",
 	"th01/input.cpp",

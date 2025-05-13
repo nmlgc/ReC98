@@ -49,19 +49,11 @@ enum grx_rle_t {
 
 // Loading
 // -------
-// All of these load the file with the given [fn] into the given [slot],
-// automatically freeing any previously loaded image in there, and return 0
-// on success or 1 on failure.
 
 // Loads the [n]th GRX image, with all of its planar streams, from a .GRZ
-// file.
+// file [fn] into the given [slot], automatically freeing any previously loaded
+// image in there. Returns 0 on success or 1 on failure.
 int grz_load_single(unsigned int slot, const char *fn, int n);
-
-// Loads the given .GRX file, with all of its planar streams.
-int grx_load(unsigned int slot, const char *fn);
-
-// Loads only the RLE stream of the given .GRX file.
-int grx_load_noplanar(unsigned int slot, const char *fn);
 // -------
 
 // Display
@@ -69,14 +61,6 @@ int grx_load_noplanar(unsigned int slot, const char *fn);
 
 // Equivalent to grz_put_stream(slot, 0);
 void grx_put(unsigned int slot);
-
-// Displays the planar stream with the given number of the image loaded into
-// the given GRX [slot].
-void grx_put_stream(unsigned int slot, int planar_stream);
-
-// Renders only the RLE stream in the given [col] via the GRCG, using a 0xFF
-// pattern for every 8 dots to be displayed.
-void grx_put_col(unsigned int slot, vc_t col);
 // -------
 
 // Frees both the RLE and any planar streams in the given GRX [slot].

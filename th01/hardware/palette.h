@@ -8,17 +8,6 @@ extern Palette4 z_Palettes;
 
 // Calls z_palette_set_show() for all colors in [pal].
 void z_palette_set_all_show(const Palette4& pal);
-
-// Fades each hardware palette color from the given RGB value to its respective
-// value in z_Palettes, blocking [step_ms] milliseconds at each of the 16 fade
-// steps. If [keep] is nonzero for a specific color number, that color is
-// excluded from the fade calculation and will stay at its [z_Palettes] value
-// throughout the function.
-void z_palette_fade_from(
-	svc_comp_t from_r, svc_comp_t from_g, svc_comp_t from_b,
-	vc2 keep[COLOR_COUNT],
-	unsigned int step_ms
-);
 #endif
 
 // Sets the given hardware [col] to the given RGB value.
@@ -33,17 +22,13 @@ void z_palette_set_show(vc2 col, svc_comp2 r, svc_comp2 g, svc_comp2 b);
 // Sets all hardware colors to #000, without touching z_Palettes.
 void z_palette_black(void);
 
-// Sets all hardware colors to #FFF, without touching z_Palettes.
-void z_palette_white(void);
-
 // Fades all hardware colors from #000 or #FFF to their value in z_Palettes.
 void z_palette_black_in(void);
 void z_palette_white_in(void);
 
-// Fades all hardware colors from their value in z_Palettes to #000 or #FFF,
+// Fades all hardware colors from their value in z_Palettes to #000,
 // without modifying z_Palettes.
 void z_palette_black_out(void);
-void z_palette_white_out(void);
 
 #define z_Palettes_set_func_and_show(tmp_col, tmp_comp, func) { \
 	palette_foreach(tmp_col, tmp_comp, func); \

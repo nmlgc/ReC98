@@ -169,16 +169,6 @@ void items_bomb_render(void)
 	}
 }
 
-// Unused.
-void items_bomb_unput(void)
-{
-	for(int i = 0; i < ITEM_BOMB_COUNT; i++) {
-		if(item_is_visible(items_bomb[i])) {
-			ptn_sloppy_unput_16(items_bomb[i].left, items_bomb[i].top);
-		}
-	}
-}
-
 void items_bomb_reset(void)
 {
 	items_bomb[0].flag = IF_FREE;
@@ -341,16 +331,6 @@ void items_point_render(void)
 	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
 		if(item_is_visible(items_point[i])) {
 			ptn_put_8(items_point[i].left, items_point[i].top, PTN_ITEM_POINT);
-		}
-	}
-}
-
-// Unused.
-void items_point_unput(void)
-{
-	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
-		if(item_is_visible(items_point[i])) {
-			ptn_sloppy_unput_16(items_point[i].left, items_point[i].top);
 		}
 	}
 }
