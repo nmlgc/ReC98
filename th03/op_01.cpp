@@ -310,7 +310,7 @@ bool near vs_menu(void)
 	// character selection.
 	if(resident->game_mode < GM_VS) {
 		text_clear();
-		box_main_to_submenu_animate();
+		box_animate(MAIN_W, SUBMENU_W);
 
 		sel = VS_1P_CPU;
 		vs_choice_put(VS_1P_CPU, TX_WHITE);
@@ -425,19 +425,8 @@ void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
 			frame_delay(1);
 		}
 	}
-
 	super_put(BOX_LEFT, BOX_TOP, OPWIN_LEFT);
-
-	// ZUN bloat: Should maybe be merged with the two others in `m_main.cpp`.
-	{for(
-		screen_x_t right_left = (BOX_LEFT + OPWIN_W);
-		right_left < (BOX_MAIN_RIGHT - OPWIN_STEP_W);
-		right_left += OPWIN_STEP_W
-	) {
-		box_column16_unput(right_left);
-		super_put(right_left, BOX_TOP, OPWIN_RIGHT);
-		frame_delay(1);
-	}}
+	box_animate((OPWIN_W + OPWIN_STEP_W), MAIN_W);
 }
 
 bool near score_menu(void)
@@ -661,7 +650,7 @@ void near main_update_and_render(void)
 	if(!in_this_menu) {
 		text_clear();
 		if(!in_main) {
-			box_submenu_to_main_animate();
+			box_animate(SUBMENU_W, MAIN_W);
 		}
 		in_main = false; // ZUN bloat: Why is this set here, and now?
 		menu_init(in_this_menu, input_allowed, MC_COUNT, main_choice_put);
@@ -742,7 +731,7 @@ void near option_update_and_render(void)
 
 	if(!in_this_menu) {
 		text_clear();
-		box_main_to_submenu_animate();
+		box_animate(MAIN_W, SUBMENU_W);
 		menu_init(in_this_menu, input_allowed, OC_COUNT, option_choice_put);
 	}
 
