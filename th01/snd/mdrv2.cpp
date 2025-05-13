@@ -118,20 +118,6 @@ void mdrv2_bgm_fade_out_nonblock(void)
 	}
 }
 
-void mdrv2_bgm_fade_out_block(void)
-{
-	if(mdrv2_active) {
-		mdrv2_call(MDRV2_MFADE_OUT_BLOCK);
-	}
-}
-
-void mdrv2_bgm_fade_in(void)
-{
-	if(mdrv2_active) {
-		mdrv2_call(MDRV2_MFADE_IN);
-	}
-}
-
 int mdrv2_enable_if_board_installed(void)
 {
 	mdrv2_active = mdrv2_call(MDRV2_CHECK_BOARD);

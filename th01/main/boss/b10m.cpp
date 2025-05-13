@@ -319,12 +319,6 @@ void yuugenmagan_setup(void)
 	hud_hp_first_redwhite = HP_PHASE_7_END;
 }
 
-void unused_formula(int a, int b, int& ret)
-{
-	double delta = (b - a);
-	ret = ((delta * isqrt(3)) / 2.0f);
-}
-
 void yuugenmagan_free(void)
 {
 	yuugenmagan_ent_free();
