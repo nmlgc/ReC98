@@ -169,29 +169,28 @@ void near op_fadein_animate(void)
 	}
 }
 
-void near box_main_to_submenu_animate(void)
+void pascal near box_animate(pixel_t w_cur, pixel_t w_target)
 {
-	for(
-		screen_x_t right_left = (BOX_MAIN_RIGHT - OPWIN_STEP_W);
-		right_left < (BOX_SUBMENU_RIGHT - OPWIN_STEP_W);
-		right_left += OPWIN_STEP_W
-	) {
-		box_column16_unput(right_left);
-		super_put(right_left, BOX_TOP, OPWIN_RIGHT);
-		frame_delay(1);
-	}
-}
+	pixel_t step;
+	pixel_t put_offset;
 
-void near box_submenu_to_main_animate(void)
-{
-	for(
-		screen_x_t right_left = (BOX_SUBMENU_RIGHT - OPWIN_W);
-		right_left >= (BOX_MAIN_RIGHT - OPWIN_W);
-		right_left -= OPWIN_STEP_W
-	) {
-		box_column16_unput(right_left + OPWIN_STEP_W);
-		super_put(right_left, BOX_TOP, OPWIN_RIGHT);
+	if(w_target == w_cur) {
+		return;
+	} else if(w_target > w_cur) {
+		step = +OPWIN_STEP_W;
+		put_offset = 0;
+	} else {
+		step = -OPWIN_STEP_W;
+		put_offset = -OPWIN_STEP_W;
+	}
+	screen_x_t right_left = (BOX_LEFT + w_cur - OPWIN_STEP_W);
+	screen_x_t right_target = (BOX_LEFT + w_target - OPWIN_STEP_W + put_offset);
+
+	while(right_left != right_target) {
+		box_column16_unput(right_left);
+		super_put((right_left + put_offset), BOX_TOP, OPWIN_RIGHT);
 		frame_delay(1);
+		right_left += step;
 	}
 }
 

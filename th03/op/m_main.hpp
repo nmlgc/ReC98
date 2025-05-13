@@ -21,9 +21,9 @@ static const screen_x_t BOX_SUBMENU_RIGHT = (BOX_LEFT + SUBMENU_W);
 // VRAM page 1. Returns with page 0 as the accessed page.
 void pascal near box_column16_unput(uscreen_x_t left);
 
-// Shows the animation that changes the size of the box.
-void near box_main_to_submenu_animate(void);
-void near box_submenu_to_main_animate(void);
+// Animates the box from its current width of [w_cur] to a width of [w_target].
+// Does nothing if both values are identical.
+void pascal near box_animate(pixel_t w_cur, pixel_t w_target);
 
 // Shows either the long (shifting kanji and flashing) or short (just fading)
 // title animation. Both of these return with the title image blitted to both
