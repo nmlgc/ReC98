@@ -191,7 +191,6 @@ bool near story_menu(void)
 		),
 	};
 
-	// ZUN bloat: Could have been local.
 	static bool opponent_seen[RANDOM_OPPONENT_COUNT] = { false };
 
 	// ACTUAL TYPE: playchar_t
