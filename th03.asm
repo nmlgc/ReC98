@@ -123,7 +123,6 @@ include libs/master.lib/soundio.asm
 include libs/master.lib/text_clear.asm
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/txesc.asm
-include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
