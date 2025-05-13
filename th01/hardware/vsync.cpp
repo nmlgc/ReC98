@@ -6,36 +6,18 @@
 #pragma warn -aus
 
 #include "x86real.h"
-#include "pc98.h"
 #include "th01/hardware/vsync.hpp"
 
 extern bool vsync_initialized = false;
-extern bool16 vsync_callback_is_set = false;
-
-// Unused mouse cursor (?!)
-// -------------------
-
-// (These meanings are just a guess.)
-static screen_x_t MOUSE_MIN_X = 0;
-static screen_y_t MOUSE_MIN_Y = 0;
-static screen_x_t MOUSE_MAX_X = (RES_X - 1);
-static screen_x_t MOUSE_MAX_Y = (RES_Y - 1);
-static int8_t mouse_unused = 0;
-#include "th01/sprites/mousecur.csp"
-// -------------------
 
 volatile int z_vsync_Count1;
 volatile int z_vsync_Count2;
 static void interrupt (*vsync_callback_old)(...);
-static void (*vsync_callback)(void);
 
 static void interrupt vsync_intfunc(...)
 {
 	z_vsync_Count1++;
 	z_vsync_Count2++;
-	if(vsync_callback_is_set) {
-		vsync_callback();
-	}
 	outportb(0x00, 0x20); // End of Interrupt
 	outportb(0x64, 0); // VSync interrupt trigger
 }
@@ -78,16 +60,4 @@ void z_vsync_wait(void)
 	do {
 		_AL = inportb(0x60);
 	} while((_AL & 0x20) == 0);
-}
-
-void vsync_callback_set(void (*vsync_callback_new)())
-{
-	vsync_callback_is_set = false;
-	vsync_callback = vsync_callback_new;
-	vsync_callback_is_set = true;
-}
-
-void vsync_callback_clear(void)
-{
-	vsync_callback_is_set = false;
 }

@@ -15,22 +15,6 @@ static uint8_t* rle_streams[GRX_COUNT];
 // ZUN bloat: Actually a Planar<dots8_t*>, but used like a dots8_t* everywhere.
 static dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
 
-void grx_put_stream(unsigned int slot, int planar_stream)
-{
-	if(planar_stream_count[slot] > planar_stream) {
-		planar_stream_id = planar_stream;
-		grx_put(slot);
-		planar_stream_id = 0;
-	}
-}
-
-void grx_put_col(unsigned int slot, vc_t col)
-{
-	grx_col = (col + 1);
-	grx_put(slot);
-	grx_col = 0;
-}
-
 void grx_put(unsigned int slot)
 {
 	uint8_t command;
@@ -125,49 +109,6 @@ union headers_t {
 	grx_header_t grx;
 	int8_t space[100];
 };
-
-int grx_load(unsigned int slot, const char *fn)
-{
-	uint16_t rle_size;
-	uint16_t planar_size;
-
-	if(!file_ropen(fn)) {
-		return 1;
-	}
-	headers_t* h = new headers_t[1];
-	grx_header_read(h->grx, slot);
-
-	rle_size = h->grx.rle_stream_size;
-	planar_size = h->grx.planar_stream_size;
-
-	int i;
-	rle_stream_new(slot, rle_size);
-	planar_streams_new(slot, h->grx.planar_stream_count, planar_size);
-
-	rle_stream_read(slot, rle_size);
-	planar_streams_read(slot, h->grx.planar_stream_count, planar_size);
-	delete[] h;
-	file_close();
-	return 0;
-}
-
-int grx_load_noplanar(unsigned int slot, const char *fn)
-{
-	uint16_t rle_size;
-
-	if(!file_ropen(fn)) {
-		return 1;
-	}
-	headers_t* h = new headers_t[1];
-	grx_header_read(h->grx, slot);
-	rle_size = h->grx.rle_stream_size;
-
-	rle_stream_new(slot, rle_size);
-	rle_stream_read(slot, rle_size);
-	delete[] h;
-	file_close();
-	return 0;
-}
 
 void grx_free(unsigned int slot)
 {

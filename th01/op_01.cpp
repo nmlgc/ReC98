@@ -26,35 +26,6 @@
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/op.hpp"
 
-// Unused. The only thing on the main menu with this color is the "1996 ZUN"
-// text at the bottom... probably part of an effect that we never got to see.
-void snap_col_4(void)
-{
-	static dots8_t* columns[ROW_SIZE];
-	register vram_x_t x;
-	register screen_y_t y;
-	vram_offset_t vram_offset;
-
-	for(x = 0; x < ROW_SIZE; x++) {
-		columns[x] = new dots8_t[RES_Y];
-	}
-	grcg_setcolor_tcr(4);
-	page_access(1);
-
-	for(x = 0; x < ROW_SIZE; x++) {
-		y = 0;
-		vram_offset = x;
-		while(y < RES_Y) {
-			columns[x][y] = VRAM_CHUNK(B, vram_offset, 8);
-			y++;
-			vram_offset += ROW_SIZE;
-		}
-	}
-
-	grcg_off_func();
-	page_access(0);
-}
-
 /// REIIDEN.CFG loading and saving
 /// ------------------------------
 

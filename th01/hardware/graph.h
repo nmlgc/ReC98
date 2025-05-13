@@ -16,9 +16,8 @@ void z_graph_hide(void);
 /// Pages
 /// -----
 
-// Fills the entire active page with hardware color 0 or the given [col].
+// Fills the entire active page with hardware color 0.
 void z_graph_clear(void);
-void z_graph_clear_col(svc_t col);
 
 // Fills page #0 with hardware color 0.
 void z_graph_clear_0(void);
@@ -44,14 +43,6 @@ void z_grcg_boxfill(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
 );
 /// ----
-
-/// Points
-/// ------
-
-void z_grcg_pset(screen_x_t x, vram_y_t y, vc2 col);
-// Returns the color value at the given point on the current VRAM page.
-int z_graph_readdot(screen_x_t x, vram_y_t y);
-/// ------
 
 /// Restorable line drawing
 /// -----------------------
@@ -87,11 +78,6 @@ void graph_r_line_patterned(
 // lines ending at ((RES_X - 1), 0).
 void graph_r_line_unput(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
-);
-
-// Draws the outline of a rectangle.
-void graph_r_box(
-	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
 );
 
 // Draws lines in the given [col] from each of the given points to the next

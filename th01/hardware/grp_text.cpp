@@ -30,20 +30,11 @@ void graph_putsa_fx(
 	int weight = fx_weight_from(col_and_fx);
 	pixel_t spacing = fx_spacing_from(col_and_fx);
 	bool16 clear_bg = (col_and_fx & FX_CLEAR_BG);
-	bool16 underline = (col_and_fx & FX_UNDERLINE);
 	bool16 reverse = (col_and_fx & FX_REVERSE);
 
 	if(clear_bg) {
 		pixel_t w = text_extent_fx(col_and_fx, str);
-		if(underline) {
-			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H + 1), 0);
-			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
-		} else {
-			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
-		}
-	} else if(underline) {
-		pixel_t w = text_extent_fx(col_and_fx, str);
-		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
+		z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
 	}
 
 	GRCG grcg(GC_RMW);

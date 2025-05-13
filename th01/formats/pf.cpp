@@ -204,8 +204,3 @@ void arc_file_free(void)
 {
 	delete[] file_data;
 }
-
-int arc_file_size(void)
-{
-	return file_pf->orgsize;
-}
