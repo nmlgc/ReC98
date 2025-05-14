@@ -3,14 +3,12 @@
 #define X(width) \
 	void write_##width##(seg_t plane_seg, const void far* sprite) \
 	{ \
-		stationary_impl( \
-			plane_seg, sprite, displaced, d_write, dots##width##_t \
-		); \
+		stationary_impl(plane_seg, sprite, d_##width, 0x80, 0); \
 	} \
 	\
 	void or_##width##(seg_t plane_seg, const void far* sprite) \
 	{ \
-		stationary_impl(plane_seg, sprite, displaced, d_or, dots##width##_t); \
+		stationary_impl(plane_seg, sprite, d_##width, 0x00, 0); \
 	} \
 
 	FOREACH_WIDTH
