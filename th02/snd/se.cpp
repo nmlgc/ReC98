@@ -39,7 +39,7 @@ inline void driver_play(unsigned char &se) {
 
 void DEFCONV snd_se_play(int new_se)
 {
-	register int se = snd_get_param(new_se);
+	register int se = new_se;
 	if(!snd_se_active()) {
 		return;
 	}
