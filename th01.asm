@@ -22,10 +22,12 @@ include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/resdata.asm
+include libs/master.lib/dos_filesize.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_ropen.asm
+include libs/master.lib/file_size.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_seek.asm
