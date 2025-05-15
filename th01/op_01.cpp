@@ -70,23 +70,22 @@ void cfg_load(void)
 {
 	cfg_t cfg_in;
 	bool read_failure = false;
-	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, "rb") ) == nullptr) {
+	if(!file_ropen(CFG_FN)) {
 use_defaults:
 		read_failure = true;
 	}
 	if(!read_failure) {
-		fread(&cfg_in, 1, sizeof(cfg_in), fp);
+		file_read(&cfg_in, sizeof(cfg_in));
 		if(memcmp(cfg_in.id, CFG_ID, sizeof(cfg_in.id))) {
-			fclose(fp);
+			file_close();
 			goto use_defaults;
 		}
 		opts.rank = cfg_in.opts.rank;
 		opts.bgm_mode = cfg_in.opts.bgm_mode;
 		opts.credit_bombs = cfg_in.opts.credit_bombs;
 		opts.credit_lives_extra = cfg_in.opts.credit_lives_extra;
-		fclose(fp);
+		file_close();
 	} else {
 		opts.rank = CFG_RANK_DEFAULT;
 		opts.bgm_mode = CFG_BGM_MODE_DEFAULT;
@@ -97,20 +96,12 @@ use_defaults:
 
 void cfg_save(void)
 {
-	bool write_failure = false;
-	FILE* fp;
-
-	if(( fp = fopen(CFG_FN, "wb") ) == nullptr) {
-		write_failure = true;
+	if(!file_create(CFG_FN)) {
+		return;
 	}
-	if(!write_failure) {
-		fputs(CFG_ID, fp);
-		fputc(opts.rank, fp);
-		fputc(opts.bgm_mode, fp);
-		fputc(opts.credit_bombs, fp);
-		fputc(opts.credit_lives_extra, fp);
-		fclose(fp);
-	}
+	file_write(CFG_ID, sizeof(CFG_ID) - 1);
+	file_write(&opts, sizeof(opts));
+	file_close();
 }
 /// ------------------------------
 
