@@ -19,60 +19,25 @@
 void near std_load(void)
 {
 	extern char std_fn[];
-
-	// Storing the file size in the data segment (and thus, the same segment as
-	// [std_fn]) is very convenient, as we don't have to overwrite DS for the
-	// INT 21h, AH=3Fh call...
-	extern uint16_t std_size_in_data_segment;
-
-	// ZUN bloat: …except that we still need to copy the value onto the stack
-	// to access it while DS is pointing to [std_seg].
 	uint16_t std_size;
 
 	#define enemy_scripts_remaining _DL
 	#define enemy_script_p reinterpret_cast<void near * near*>(_BX)
 
-	_asm { push ds; }
 	std_free();
 
 	std_fn[3] = ('0' + stage_id);
 
-	// DOS file open
-	_DX = FP_OFF(std_fn);
-	_AX = 0x3D00;
-	geninterrupt(0x21);
-	_BX = _AX;
+	file_ropen(std_fn);
 	// ZUN landmine: No error handling
 
-	// DOS file read (into DS:DX)
-	_DX = FP_OFF(&std_size_in_data_segment);
-	_AH = 0x3F;
-	_CX = sizeof(std_size_in_data_segment);
-	geninterrupt(0x21);
+	file_read(&std_size, sizeof(std_size));
+	std_seg = reinterpret_cast<uint8_t __seg *>(hmem_allocbyte(std_size));
+	file_read(std_seg, std_size);
+	file_close();
 
-	// hmem_allocbyte() already preserves BX, but it's nice to have that intent
-	// separately spelled out.
-	_asm { push bx; }
-	{
-		std_size = std_size_in_data_segment;
-		_ES = _DS = reinterpret_cast<uint16_t>(std_seg) = (
-			reinterpret_cast<uint16_t>(hmem_allocbyte(std_size))
-		);
-		_DI = 0;
-	}
-	_asm { pop bx; }
-
-	// DOS file read (into DS:DX)
-	_DX = _DI;
-	_AH = 0x3F;
-	_CX = std_size;
-	geninterrupt(0x21);
-
-	// DOS file close
-	_AH = 0x3E;
-	geninterrupt(0x21);
-	_asm { pop ds; }
-
+	_ES = FP_SEG(std_seg);
+	_DI = 0;
 	stage_title = reinterpret_cast<shiftjis_t far *>(MK_FP(_ES, _DI));
 
 	// ZUN landmine: Should clear the direction flag to ensure that this

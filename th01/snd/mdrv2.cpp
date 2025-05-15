@@ -4,12 +4,11 @@
  */
 
 #include <dos.h>
-#include <fcntl.h>
-#include <io.h>
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
 #include "platform/x86real/spawn.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/snd/mdrv2.h"
 
 #define MDRV2_FN "MDRV98.COM"
@@ -62,8 +61,8 @@ bool16 mdrv2_resident(void)
 void near mdrv2_load(const char *fn, char func)
 {
 	if(mdrv2_active) {
-		int handle = open(fn, (O_BINARY | O_RDONLY));	// opens a DOS handle
-		int length = filelength(handle);
+		file_ropen(fn);
+		int length = file_size();
 		seg_t block_seg;
 		uint16_t block_off;
 		void far *block;
@@ -72,18 +71,9 @@ void near mdrv2_load(const char *fn, char func)
 		block_seg = FP_SEG(block);
 		block_off = FP_OFF(block);
 
-		_asm {
-			push	ds
-			mov	ax, 0x3F00
-			mov	bx, handle
-			mov	cx, length
-			mov	ds, block_seg
-			mov	dx, block_off
-		}
-		geninterrupt(0x21);
-		_asm { pop	ds; }
+		file_read(block, length);
+		file_close();
 
-		close(handle);
 		_asm {
 			push	ds
 			mov	ah, func
