@@ -1,33 +1,4 @@
-#include "x86real.h"
-#include "platform/x86real/pc98/blitter.hpp"
-
-blit_state_t blit_state;
-
-// Supported widths
-// ----------------
-// Refer to blitter_body() for the register allocation.
-
-#define FOREACH_WIDTH \
-	X(8) \
-	X(16) \
-
-// We want to use a pseudoregister for optimal code generation, but Turbo C++
-// 4.0J insists on seeing the template type in the function arguments. So, we
-// just pass a dummy value we never actually use.
-template <class RowDots> inline void single_write(RowDots *) {
-	*((RowDots __es *)(_DI)) = *((RowDots __ds *)(_SI));
-}
-
-template <class RowDots> inline void single_or(RowDots *) {
-	*((RowDots __es *)(_DI)) |= *((RowDots __ds *)(_SI));
-}
-// ----------------
-
-// Row blitters
-// ------------
-
-#define row(func_single, type) \
-	func_single(reinterpret_cast<type *>(0)); _SI += _DX; _DI += ROW_SIZE;
+#include "platform/x86real/pc98/blit_low.hpp"
 
 #define X(width) \
 	void write_##width##(seg_t plane_seg, const void far* sprite) \
@@ -43,7 +14,7 @@ template <class RowDots> inline void single_or(RowDots *) {
 	FOREACH_WIDTH
 #undef X
 
-// Non-`const` because BLITPERF wants to patch these.
+blit_state_t blit_state;
 Blitter BLITTER_FUNCS[] = {
 	{ nullptr, nullptr }, // We want this array to be 1-based
 	#define X(width) \
@@ -52,7 +23,6 @@ Blitter BLITTER_FUNCS[] = {
 		FOREACH_WIDTH
 	#undef X
 };
-// ------------
 
 // Initialization
 // --------------

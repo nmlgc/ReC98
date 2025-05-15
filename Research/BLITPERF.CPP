@@ -1,7 +1,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "platform/x86real/pc98/blitter.hpp"
+#include "platform/x86real/pc98/blit_low.hpp"
 #include "platform/x86real/pc98/font.hpp"
 #include "platform/x86real/pc98/graph.hpp"
 #include "platform/x86real/pc98/grcg.hpp"

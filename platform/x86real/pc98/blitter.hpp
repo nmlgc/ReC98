@@ -10,13 +10,6 @@ struct Blitter {
 	blit_func_t or;
 };
 
-// Internals
-// ---------
-// Mainly here because BLITPERF needs access to them to implement custom
-// blitters.
-
-static const upixel_t UNROLL_H = 8;
-
 struct blit_state_t {
 	vram_offset_t vo;
 
@@ -35,37 +28,6 @@ struct blit_state_t {
 };
 
 extern blit_state_t blit_state;
-
-#define blitter_body(plane_seg, sprite, func_row, row_p1, row_p2) { \
-	register int16_t loops_unrolled = blit_state.loops_unrolled; \
-	_SI = FP_OFF(sprite); \
-	_SI += blit_state.sprite_offset; \
-	_DI = blit_state.vo; \
-	_DX = blit_state.sprite_w; \
-	_BX = blit_state.loops_remainder; \
-	\
-	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
-	/* [blit_state] can't be accessed anymore beyond this point! */ \
-	_asm { push ds; } \
-	_DS = FP_SEG(sprite); \
-	_ES = plane_seg; \
-	\
-	static_assert(UNROLL_H == 8); \
-	switch(_BX) { \
-	case 0: do { func_row(row_p1, row_p2) \
-	case 7:      func_row(row_p1, row_p2) \
-	case 6:      func_row(row_p1, row_p2) \
-	case 5:      func_row(row_p1, row_p2) \
-	case 4:      func_row(row_p1, row_p2) \
-	case 3:      func_row(row_p1, row_p2) \
-	case 2:      func_row(row_p1, row_p2) \
-	case 1:      func_row(row_p1, row_p2) \
-	/*       */} while(--loops_unrolled > 0); \
-	} \
-	\
-	_asm { pop ds; } \
-}
-// ---------
 
 // Initialization
 // --------------
