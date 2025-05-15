@@ -413,11 +413,6 @@ void near polygons_update_and_render(void)
 	}
 }
 
-// ZUN bloat
-#if ((GAME == 3) || (GAME == 4))
-#define frame_delay frame_delay_2
-#endif
-
 void near music_update_render_and_flip(void)
 {
 	nopoly_B_put();
