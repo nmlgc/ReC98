@@ -1060,8 +1060,10 @@ for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
 	})
 	cfg:link(("ifshf" .. cpu_str), {
 		-- Bypass `PreviousOutputForSource` by explicitly building each unit.
-		cfg:build_uncached({ "Research/blitperf/if_shift.cpp", extra_inputs = {
+		cfg:build_uncached({ "Research/blitperf/blitperf.cpp", extra_inputs = {
 			research_sprites["blitperf"],
+		} }),
+		cfg:build_uncached({ "Research/blitperf/if_shift.cpp", extra_inputs = {
 			th01_sprites["pellet"],
 		} }),
 		cfg:build_uncached("platform/x86real/noexcept.cpp"),
