@@ -1058,13 +1058,10 @@ for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
 		obj_root = (cpu_str .. "/"),
 		cflags = string.format("-DCPU=%d%s", t[1], t[2]),
 	})
-	cfg:link(("ifshf" .. cpu_str), {
-		-- Bypass `PreviousOutputForSource` by explicitly building each unit.
+	-- Bypass `PreviousOutputForSource` by explicitly building each unit.
+	local obj = {
 		cfg:build_uncached({ "Research/blitperf/blitperf.cpp", extra_inputs = {
 			research_sprites["blitperf"],
-		} }),
-		cfg:build_uncached({ "Research/blitperf/if_shift.cpp", extra_inputs = {
-			th01_sprites["pellet"],
 		} }),
 		cfg:build_uncached("platform/x86real/noexcept.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/blitter.cpp"),
@@ -1073,7 +1070,14 @@ for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
 		cfg:build_uncached("platform/x86real/pc98/grcg.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/palette.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/vsync.cpp"),
-	})
+	}
+
+	local if_shift = {
+		cfg:build_uncached({ "Research/blitperf/if_shift.cpp", extra_inputs = {
+			th01_sprites["pellet"],
+		} }),
+	}
+	cfg:link(("ifshf" .. cpu_str), tup_append_assignment(if_shift, obj))
 end
 -- --------
 
