@@ -31,12 +31,12 @@ const uint8_t DONT_CHECK_HIGH = 0x2;
 #define DEFINE_CHECKED(func, check) \
 	void write_16_##func(seg_t plane_seg, const void far* sprite) \
 	{ \
-		stationary_impl(plane_seg, sprite, checked, check, =); \
+		stationary_impl(plane_seg, sprite, 16, checked, check, =);\
 	} \
 	\
 	void or_16_##func(seg_t plane_seg, const void far* sprite) \
 	{ \
-		stationary_impl(plane_seg, sprite, checked, check, |=); \
+		stationary_impl(plane_seg, sprite, 16, checked, check, |=); \
 	}
 
 DEFINE_CHECKED(check_first, DONT_CHECK_HIGH);
@@ -45,12 +45,12 @@ DEFINE_CHECKED(check_both, 0);
 
 void movs_8(seg_t plane_seg, const void far* sprite)
 {
-	march_impl(plane_seg, sprite, u_8, 8, X86::R_AX);
+	march_impl(plane_seg, sprite, 8, u_8, X86::R_AX);
 }
 
 void movs_16(seg_t plane_seg, const void far* sprite)
 {
-	march_impl(plane_seg, sprite, u_16, 16, X86::R_AX);
+	march_impl(plane_seg, sprite, 16, u_16, X86::R_AX);
 }
 
 void naive_write(
