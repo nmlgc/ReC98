@@ -1048,7 +1048,7 @@ research_cfg:link("holdkey", {
 })
 
 local research_sprites = Sprites({
-	{ "Research/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 }
+	{ "Research/blitperf/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 }
 })
 
 -- Must be an ordered table to retain the order for `build_dumb.bat`.
@@ -1058,9 +1058,9 @@ for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
 		obj_root = (cpu_str .. "/"),
 		cflags = string.format("-DCPU=%d%s", t[1], t[2]),
 	})
-	cfg:link(("blit" .. cpu_str), {
+	cfg:link(("ifshf" .. cpu_str), {
 		-- Bypass `PreviousOutputForSource` by explicitly building each unit.
-		cfg:build_uncached({ "Research/blitperf.cpp", extra_inputs = {
+		cfg:build_uncached({ "Research/blitperf/if_shift.cpp", extra_inputs = {
 			research_sprites["blitperf"],
 			th01_sprites["pellet"],
 		} }),

@@ -11,7 +11,7 @@
 #include "platform/x86real/pc98/vsync.hpp"
 #include "th01/main/entity.hpp"
 #include "th01/sprites/pellet.csp"
-#include "Research/blitperf.csp"
+#include "Research/blitperf/blitperf.csp"
 
 static const pixel_t SPRITE_W = 8;
 static const pixel_t SPRITE_H = 8;
@@ -25,7 +25,7 @@ typedef dot_rect_t(16, SPRITE_H) sprite_rect_t;
 #define _(x) __(x)
 #define __(x) #x
 
-const char BANNER[] = "PC-98 blitting benchmark (" _(CPU) " build, " __DATE__ " " __TIME__ ")";
+const char BANNER[] = "PC-98 blitting check/shift benchmark (" _(CPU) " build, " __DATE__ " " __TIME__ ")";
 
 #undef _
 #undef __
