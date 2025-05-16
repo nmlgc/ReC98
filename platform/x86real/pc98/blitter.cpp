@@ -3,12 +3,14 @@
 #define X(width) \
 	void write_##width##(seg_t plane_seg, const void far* sprite) \
 	{ \
-		blitter_body(plane_seg, sprite, row, single_write, dots##width##_t); \
+		stationary_impl( \
+			plane_seg, sprite, displaced, d_write, dots##width##_t \
+		); \
 	} \
 	\
 	void or_##width##(seg_t plane_seg, const void far* sprite) \
 	{ \
-		blitter_body(plane_seg, sprite, row, single_or, dots##width##_t); \
+		stationary_impl(plane_seg, sprite, displaced, d_or, dots##width##_t); \
 	} \
 
 	FOREACH_WIDTH

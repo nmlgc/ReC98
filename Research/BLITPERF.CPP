@@ -45,22 +45,20 @@ void banner_put(void)
 const uint8_t DONT_CHECK_LOW  = 0x1;
 const uint8_t DONT_CHECK_HIGH = 0x2;
 
-#define checked_row(dc, op) \
+#define checked(dc, op) \
 	_AX = *reinterpret_cast<dots16_t __ds *>(_SI); \
 	if((dc & DONT_CHECK_LOW)  || _AL) { *((dots8_t __es *)(_DI + 0)) op _AL; } \
 	if((dc & DONT_CHECK_HIGH) || _AH) { *((dots8_t __es *)(_DI + 1)) op _AH; } \
-	_SI += _DX; \
-	_DI += ROW_SIZE;
 
 #define DEFINE_CHECKED(func, check) \
 	void write_16_##func(seg_t plane_seg, const void far* sprite) \
 	{ \
-		blitter_body(plane_seg, sprite, checked_row, check, =); \
+		stationary_impl(plane_seg, sprite, checked, check, =); \
 	} \
 	\
 	void or_16_##func(seg_t plane_seg, const void far* sprite) \
 	{ \
-		blitter_body(plane_seg, sprite, checked_row, check, |=); \
+		stationary_impl(plane_seg, sprite, checked, check, |=); \
 	}
 
 DEFINE_CHECKED(check_first, DONT_CHECK_HIGH);
