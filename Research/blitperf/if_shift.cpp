@@ -9,7 +9,6 @@
 
 static const pixel_t SPRITE_W = 8;
 static const pixel_t SPRITE_H = 8;
-static const vc_t SPRITE_COL = 2;
 typedef dot_rect_t(16, SPRITE_H) sprite_rect_t;
 
 const char BANNER[] = "PC-98 blitting check/shift benchmark (" _(CPU) " build, " __DATE__ " " __TIME__ ")";
@@ -67,7 +66,8 @@ void naive_write(
 	vram_offset_t vo = blit_state.vo;
 	vram_byte_amount_t stride = (ROW_SIZE - vram_w);
 
-	GRCGStaticColor<SPRITE_COL> grcg(GC_RMW);
+	GRCG grcg(GC_RMW);
+	grcg.setcolor(t.opt[OPT_SPRITE_COL].val);
 	for(pixel_t y = 0; y < h; y++) {
 		for(vram_byte_amount_t x = 0; x < vram_w; x++) {
 			pokeb(plane_seg, vo, sprite_p[x]);
