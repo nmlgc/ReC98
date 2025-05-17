@@ -30,6 +30,19 @@ template <class RowDots> inline void d_or(RowDots *) {
 	func_single(reinterpret_cast<type *>(0))
 // -----------------------------
 
+// String unit manipulation
+// ------------------------
+// Uses individual MOVS instructions. Only supports `write`.
+
+inline void u_8(void) {
+	__emit__(0xA4); // MOVSB
+}
+
+inline void u_16(void) {
+	__emit__(0xA5); // MOVSW
+}
+// ------------------------
+
 // Stationary rows
 // ---------------
 // SI and DI stay constant throughout the memory manipulation of each row.
@@ -64,6 +77,50 @@ template <class RowDots> inline void d_or(RowDots *) {
 	_asm { pop ds; } \
 }
 // ---------------
+
+// Marching rows
+// -------------
+// SI and DI are adjusted for every byte written. The end of each row has to
+// add the difference.
+
+inline void march_advance(uint16_t width) {
+	__emit__(0x03, 0xF2); // ADD SI, DX
+
+	// ADD DI, (ROW_SIZE - (width / BYTE_DOTS))
+	__emit__(0x83, 0xC7, static_cast<uint8_t>(ROW_SIZE - (width / BYTE_DOTS)));
+}
+
+#define march_impl(plane_seg, sprite, func, width) { \
+	register int16_t loops_unrolled = blit_state.loops_unrolled; \
+	_SI = FP_OFF(sprite); \
+	_SI += blit_state.sprite_offset; \
+	_DI = blit_state.vo; \
+	_DX = blit_state.sprite_w; \
+	_DX -= (width / BYTE_DOTS); \
+	_BX = blit_state.loops_remainder; \
+	__emit__(0xFC); /* CLD */ \
+	\
+	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
+	/* [blit_state] can't be accessed anymore beyond this point! */ \
+	_asm { push ds; } \
+	_DS = FP_SEG(sprite); \
+	_ES = plane_seg; \
+	\
+	static_assert(UNROLL_H == 8); \
+	switch(_BX) { \
+	case 0: do { func(); march_advance(width); \
+	case 7:      func(); march_advance(width); \
+	case 6:      func(); march_advance(width); \
+	case 5:      func(); march_advance(width); \
+	case 4:      func(); march_advance(width); \
+	case 3:      func(); march_advance(width); \
+	case 2:      func(); march_advance(width); \
+	case 1:      func(); march_advance(width); \
+	/*       */} while(--loops_unrolled > 0); \
+	} \
+	_asm { pop ds; } \
+}
+// -------------
 
 // Non-`const` because BLITPERF wants to patch these.
 extern Blitter BLITTER_FUNCS[];

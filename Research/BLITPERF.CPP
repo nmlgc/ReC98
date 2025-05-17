@@ -65,39 +65,14 @@ DEFINE_CHECKED(check_first, DONT_CHECK_HIGH);
 DEFINE_CHECKED(check_second, DONT_CHECK_LOW);
 DEFINE_CHECKED(check_both, 0);
 
-// That assignment to DX might have an impact, who knows!1!!
-#define movs_body(ins, size, plane_seg, sprite) { \
-	register int16_t loops_unrolled = blit_state.loops_unrolled; \
-	_SI = FP_OFF(sprite); \
-	_SI += blit_state.sprite_offset; \
-	_DI = blit_state.vo; \
-	_BX = blit_state.loops_remainder; \
-	_asm { push ds; } \
-	_DS = FP_SEG(sprite); \
-	_ES = plane_seg; \
-	static_assert(UNROLL_H == 8); \
-	switch(_BX) { \
-	case 0: do { asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	case 7:      asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	case 6:      asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	case 5:      asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	case 4:      asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	case 3:      asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	case 2:      asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	case 1:      asm { ins }; _SI += (2 - size);_DI += (ROW_SIZE - size); \
-	/*       */} while(--loops_unrolled > 0); \
-	} \
-	_asm { pop ds; } \
+void movs_8(seg_t plane_seg, const void far* sprite)
+{
+	march_impl(plane_seg, sprite, u_8, 8);
 }
 
-void movsb(seg_t plane_seg, const void far* sprite)
+void movs_16(seg_t plane_seg, const void far* sprite)
 {
-	movs_body(movsb, sizeof(uint8_t), plane_seg, sprite);
-}
-
-void movsw(seg_t plane_seg, const void far* sprite)
-{
-	movs_body(movsw, sizeof(uint16_t), plane_seg, sprite);
+	march_impl(plane_seg, sprite, u_16, 16);
 }
 
 void naive_write(
@@ -473,8 +448,8 @@ int __cdecl main(int argc, const char *argv[])
 	t.run(false);
 
 	puts("Unchecked, MOVS:");
-	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = movsb;
-	BLITTER_FUNCS[16 / BYTE_DOTS].write = movsw;
+	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = movs_8;
+	BLITTER_FUNCS[16 / BYTE_DOTS].write = movs_16;
 	t.run(true);
 	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = orig_dots8_write;
 
