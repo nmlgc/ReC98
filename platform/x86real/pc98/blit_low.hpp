@@ -254,15 +254,44 @@ inline void unroll_setup(upixel_t width) {
 // Uses MOV instructions with displacements for wider sprites. Supports both
 // `write` and `or`.
 
-inline void d_8(uint8_t op, uint8_t) {
-	__emit__(0x8A, 0x04); // MOV AL, [SI]
-	__emit__(0x26, (op + 0x08), 0x05); // op ES:DI, AL
+inline uint8_t d_8(uint8_t op, uint8_t p) {
+	if(p == 0) {
+		__emit__(0x8A, 0x04); // MOV AL, [SI]
+		__emit__(0x26, (op + 0x08), 0x05); // op ES:[DI], AL
+	} else {
+		__emit__(0x8A, 0x44, p); // MOV AL, [SI+p]
+		__emit__(0x26, (op + 0x08), 0x45, p); // op ES:[DI+p], AL
+	}
+	return (p + 1);
 }
 
-inline void d_16(uint8_t op, uint8_t) {
-	__emit__(0x8B, 0x04); // MOV AX, [SI]
-	__emit__(0x26, (op + 0x09), 0x05); // op ES:DI, AX
+inline uint8_t d_16(uint8_t op, uint8_t p) {
+	if(p == 0) {
+		__emit__(0x8B, 0x04); // MOV AX, [SI]
+		__emit__(0x26, (op + 0x09), 0x05); // op ES:[DI], AX
+	} else {
+		__emit__(0x8B, 0x44, p); // MOV AX, [SI+p]
+		__emit__(0x26, (op + 0x09), 0x45, p); // op ES:[DI+p], AX
+	}
+	return (p + 2);
 }
+
+inline uint8_t d_32(uint8_t op, uint8_t p) {
+#if (CPU == 386)
+	if(p == 0) {
+		__emit__(0x66, 0x8B, 0x04); // MOV EAX, [SI]
+		__emit__(0x66, 0x26, (op + 0x09), 0x05); // op ES:[DI], EAX
+	} else {
+		__emit__(0x66, 0x8B, 0x44, p); // MOV EAX, [SI+p]
+		__emit__(0x66, 0x26, (op + 0x09), 0x45, p); // op ES:[DI+p], EAX
+	}
+	return (p + 4);
+#else
+	return d_16(op, d_16(op, p));
+#endif
+}
+
+recurse_impl_all(d)
 // -----------------------------
 
 // String unit manipulation
@@ -340,5 +369,36 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 }
 // -------------
 
+// Instantiation
+// -------------
+// The `*_impl_*` macros define the respective blitter in-place, using static
+// class method syntax to allow the macro to be used both outside and inside of
+// functions. The `*_use_*` methods both define and active that blitter.
+// TODO: We really should pre-compile all implementations into a static
+// library, using a single translation unit per function. Then, we can just
+// regularly declare the functions here and remove the `*_impl_*` macros.
+
+#define blitter_impl_displaced_op(prefix, op, width) \
+	struct Displaced##prefix##width { static void __fastcall blit(seg_t) { \
+		stationary_impl(_AX, sprite, width, d_##width, op, 0); \
+	} };
+
+#define blitter_impl_displaced_write(width) \
+	blitter_impl_displaced_op(RW, 0x80, width);
+
+#define blitter_impl_displaced_or(width) \
+	blitter_impl_displaced_op(RO, 0x00, width);
+
+#define blitter_use_displaced_write(width) { \
+	blitter_impl_displaced_write(width); \
+	BLITTER_FUNCS[width / BYTE_DOTS].write = DisplacedRW##width::blit; \
+}
+
+#define blitter_use_displaced_or(width) { \
+	blitter_impl_displaced_or(width); \
+	BLITTER_FUNCS[width / BYTE_DOTS].or = DisplacedRO##width::blit; \
+}
+
 // Non-`const` because BLITPERF wants to patch these.
 extern Blitter BLITTER_FUNCS[];
+// -------------
