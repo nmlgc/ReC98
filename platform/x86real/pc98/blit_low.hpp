@@ -50,16 +50,16 @@ inline void u_16(void) {
 // SI and DI stay constant throughout the memory manipulation of each row.
 
 inline void stationary_next(void) {
-	__emit__(0x03, 0xF2); // ADD SI, DX
+	__emit__(0x03, 0xF1); // ADD SI, CX
 	__emit__(0x83, 0xC7, ROW_SIZE); // ADD DI, ROW_SIZE
 }
 
 #define stationary_impl(plane_seg, sprite, func, row_p1, row_p2) { \
-	register int16_t loops_unrolled = blit_state.loops_unrolled; \
+	_DX = blit_state.loops_unrolled; \
 	_SI = FP_OFF(sprite); \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
-	_DX = blit_state.sprite_w; \
+	_CX = blit_state.sprite_w; \
 	_BX = blit_state.loops_remainder; \
 	\
 	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
@@ -78,7 +78,7 @@ inline void stationary_next(void) {
 	case 3:      func(row_p1, row_p2); stationary_next(); \
 	case 2:      func(row_p1, row_p2); stationary_next(); \
 	case 1:      func(row_p1, row_p2); stationary_next(); \
-	/*       */} while(--loops_unrolled > 0); \
+	/*       */} while(--static_cast<int16_t>(_DX) > 0); \
 	} \
 	\
 	__emit__(0x1F); /* POP DS */ \
@@ -91,19 +91,19 @@ inline void stationary_next(void) {
 // add the difference.
 
 inline void march_advance(uint16_t width) {
-	__emit__(0x03, 0xF2); // ADD SI, DX
+	__emit__(0x03, 0xF1); // ADD SI, CX
 
 	// ADD DI, (ROW_SIZE - (width / BYTE_DOTS))
 	__emit__(0x83, 0xC7, static_cast<uint8_t>(ROW_SIZE - (width / BYTE_DOTS)));
 }
 
 #define march_impl(plane_seg, sprite, func, width) { \
-	register int16_t loops_unrolled = blit_state.loops_unrolled; \
+	_DX = blit_state.loops_unrolled; \
 	_SI = FP_OFF(sprite); \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
-	_DX = blit_state.sprite_w; \
-	_DX -= (width / BYTE_DOTS); \
+	_CX = blit_state.sprite_w; \
+	_CX -= (width / BYTE_DOTS); \
 	_BX = blit_state.loops_remainder; \
 	__emit__(0xFC); /* CLD */ \
 	\
@@ -123,7 +123,7 @@ inline void march_advance(uint16_t width) {
 	case 3:      func(); march_advance(width); \
 	case 2:      func(); march_advance(width); \
 	case 1:      func(); march_advance(width); \
-	/*       */} while(--loops_unrolled > 0); \
+	/*       */} while(--static_cast<int16_t>(_DX) > 0); \
 	} \
 	__emit__(0x1F); /* POP DS */ \
 }
