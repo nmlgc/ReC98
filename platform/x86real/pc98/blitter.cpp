@@ -3,25 +3,9 @@
 
 extern LTRB<vram_x_t, screen_y_t> GrpClip;
 
-#define X(width) \
-	void __fastcall write_##width##(seg_t /* _AX */) \
-	{ \
-		stationary_impl(_AX, width, d_##width, 0x80, 0); \
-	} \
-
-	FOREACH_WIDTH
-#undef X
-
 blit_state_t blit_state;
 blit_source_t blit_source;
-Blitter BLITTER_FUNCS[] = {
-	{ nullptr }, // We want this array to be 1-based
-	#define X(width) \
-		{ write_##width },
-
-		FOREACH_WIDTH
-	#undef X
-};
+Blitter BLITTER_FUNCS[ROW_SIZE + 1];
 
 // Initialization
 // --------------

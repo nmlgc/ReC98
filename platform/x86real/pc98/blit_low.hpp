@@ -12,6 +12,7 @@
 #include "x86real.h"
 
 #pragma warn -ccc
+#pragma warn -inl
 #pragma warn -rch
 
 // Row unrolling via Duff's Device
@@ -156,10 +157,6 @@ inline void unroll_setup(upixel_t width) {
 #define unroll_632 unroll_1
 #define unroll_640 unroll_1
 // -------------------------------
-
-#define FOREACH_WIDTH \
-	X(8) \
-	X(16) \
 
 // Recursion rules for blitting wide sprites with unit instructions
 // ----------------------------------------------------------------
@@ -549,12 +546,12 @@ inline void march_advance(
 
 #define blitter_impl_displaced_op(prefix, op, width) \
 	struct Displaced##prefix##width { static void __fastcall blit(seg_t) { \
-		stationary_impl(_AX, sprite, width, d_##width, op, 0); \
+		stationary_impl(_AX, width, d_##width, op, 0); \
 	} };
 
 #define blitter_impl_march_op(prefix, func, skip_w_reg, width) \
 	struct March##prefix##width { static void __fastcall blit(seg_t) { \
-		march_impl(width, func##_##width, skip_w_reg, false); \
+		march_impl(_AX, width, func##_##width, skip_w_reg, false); \
 	} };
 
 #define blitter_impl_displaced_write(width) \

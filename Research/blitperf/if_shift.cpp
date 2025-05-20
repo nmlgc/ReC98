@@ -57,16 +57,6 @@ DEFINE_CHECKED(check_first, DONT_CHECK_HIGH);
 DEFINE_CHECKED(check_second, DONT_CHECK_LOW);
 DEFINE_CHECKED(check_both, 0);
 
-void __fastcall movs_8(seg_t /* _AX */)
-{
-	march_impl(_AX, 8, u_8, X86::R_AX, false);
-}
-
-void __fastcall movs_16(seg_t /* _AX */)
-{
-	march_impl(_AX, 16, u_16, X86::R_AX, false);
-}
-
 void __fastcall naive_write(seg_t plane_seg, vram_byte_amount_t vram_w)
 {
 	const dots8_t far* sprite_p = (
@@ -220,19 +210,20 @@ void test_main(void)
 	}
 	blitter_set_source_region(0, 0, SPRITE_STRIDE, SPRITE_H, SPRITE_STRIDE);
 
-	extern Blitter BLITTER_FUNCS[];
+	palette_show(PALETTE_DEFAULT);
+
+	puts("Unchecked, MOV:");
+	blitter_use_displaced_write(8);
+	blitter_use_displaced_write(16);
+	run(or_8, or_16);
+
 	void (__fastcall *orig_dots8_write)(seg_t) = (
 		BLITTER_FUNCS[ 8 / BYTE_DOTS].write
 	);
 
-	palette_show(PALETTE_DEFAULT);
-
-	puts("Unchecked, MOV:");
-	run(or_8, or_16);
-
 	puts("Unchecked, MOVS:");
-	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = movs_8;
-	BLITTER_FUNCS[16 / BYTE_DOTS].write = movs_16;
+	blitter_use_march_unit(8);
+	blitter_use_march_unit(16);
 	run();
 	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = orig_dots8_write;
 
