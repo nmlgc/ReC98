@@ -56,6 +56,7 @@ struct X86 {
 
 	enum Reg16 {
 		R_AX = 0,
+		R_CX = 1,
 		R_DX = 2,
 		R_BX = 3,
 		R_SI = 6,

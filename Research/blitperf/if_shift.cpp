@@ -45,12 +45,12 @@ DEFINE_CHECKED(check_both, 0);
 
 void movs_8(seg_t plane_seg, const void far* sprite)
 {
-	march_impl(plane_seg, sprite, u_8, 8);
+	march_impl(plane_seg, sprite, u_8, 8, X86::R_AX);
 }
 
 void movs_16(seg_t plane_seg, const void far* sprite)
 {
-	march_impl(plane_seg, sprite, u_16, 16);
+	march_impl(plane_seg, sprite, u_16, 16, X86::R_AX);
 }
 
 void naive_write(

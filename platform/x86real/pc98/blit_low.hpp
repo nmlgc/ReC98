@@ -8,7 +8,11 @@
 ///   the core memory manipulation functions.
 
 #include "platform/x86real/pc98/blitter.hpp"
+#include "codegen.hpp"
 #include "x86real.h"
+
+#pragma warn -ccc
+#pragma warn -rch
 
 #define FOREACH_WIDTH \
 	X(8) \
@@ -102,20 +106,25 @@ inline void stationary_next(void) {
 // SI and DI are adjusted for every byte written. The end of each row has to
 // add the difference.
 
-inline void march_advance(uint16_t width) {
-	__emit__(0x03, 0xF1); // ADD SI, CX
+inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
+	__emit__(0x03, (0xF0 + skip_w_reg)); // ADD SI, [skip_w_reg]
 
 	// ADD DI, (ROW_SIZE - (width / BYTE_DOTS))
 	__emit__(0x83, 0xC7, static_cast<uint8_t>(ROW_SIZE - (width / BYTE_DOTS)));
 }
 
-#define march_impl(plane_seg, sprite, func, width) { \
+#define march_impl(plane_seg, sprite, func, width, skip_w_reg) { \
 	unroll_setup(8); /* Must come first because it uses CL on 8086. */ \
 	_SI = FP_OFF(sprite); \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
-	_CX = blit_state.sprite_w; \
-	_CX -= (width / BYTE_DOTS); \
+	if(skip_w_reg == X86::R_AX) { \
+		_AX = blit_state.sprite_w; \
+		_AX -= (width / BYTE_DOTS); \
+	} else if(skip_w_reg == X86::R_CX) { \
+		_CX = blit_state.sprite_w; \
+		_CX -= (width / BYTE_DOTS); \
+	} \
 	__emit__(0xFC); /* CLD */ \
 	\
 	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
@@ -125,14 +134,14 @@ inline void march_advance(uint16_t width) {
 	_ES = plane_seg; \
 	\
 	switch(_BX) { \
-	case 0: do { func(); march_advance(width); \
-	case 7:      func(); march_advance(width); \
-	case 6:      func(); march_advance(width); \
-	case 5:      func(); march_advance(width); \
-	case 4:      func(); march_advance(width); \
-	case 3:      func(); march_advance(width); \
-	case 2:      func(); march_advance(width); \
-	case 1:      func(); march_advance(width); \
+	case 0: do { func(); march_advance(width, skip_w_reg); \
+	case 7:      func(); march_advance(width, skip_w_reg); \
+	case 6:      func(); march_advance(width, skip_w_reg); \
+	case 5:      func(); march_advance(width, skip_w_reg); \
+	case 4:      func(); march_advance(width, skip_w_reg); \
+	case 3:      func(); march_advance(width, skip_w_reg); \
+	case 2:      func(); march_advance(width, skip_w_reg); \
+	case 1:      func(); march_advance(width, skip_w_reg); \
 	/*       */} while(--static_cast<int16_t>(_DX) > 0); \
 	} \
 	__emit__(0x1F); /* POP DS */ \
