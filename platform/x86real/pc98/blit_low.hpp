@@ -298,13 +298,27 @@ recurse_impl_all(d)
 // ------------------------
 // Uses individual MOVS instructions. Only supports `write`.
 
-inline void u_8(uint8_t, uint8_t) {
+inline uint8_t u_8(uint8_t, uint8_t) {
 	__emit__(0xA4); // MOVSB
+	return 0;
 }
 
-inline void u_16(uint8_t, uint8_t) {
+inline uint8_t u_16(uint8_t, uint8_t) {
 	__emit__(0xA5); // MOVSW
+	return 0;
 }
+
+inline uint8_t u_32(uint8_t, uint8_t) {
+#if (CPU == 386)
+	__emit__(0x66, 0xA5); // MOVSD
+#else
+	u_16(0, 0);
+	u_16(0, 0);
+#endif
+	return 0;
+}
+
+recurse_impl_all(u)
 // ------------------------
 
 // Stationary rows
@@ -339,7 +353,9 @@ inline void stationary_next(void) {
 // add the difference.
 
 inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
-	__emit__(0x03, (0xF0 + skip_w_reg)); // ADD SI, [skip_w_reg]
+	if(width != RES_X) {
+		__emit__(0x03, (0xF0 + skip_w_reg)); // ADD SI, [skip_w_reg]
+	}
 
 	// ADD DI, (ROW_SIZE - (width / BYTE_DOTS))
 	__emit__(0x83, 0xC7, static_cast<uint8_t>(ROW_SIZE - (width / BYTE_DOTS)));
@@ -351,12 +367,14 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 	_SI = blit_source.dots_start.part.off; \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
-	if(skip_w_reg == X86::R_AX) { \
-		_AX = blit_source.stride; \
-		_AX -= (width / BYTE_DOTS); \
-	} else if(skip_w_reg == X86::R_CX) { \
-		_CX = blit_source.stride; \
-		_CX -= (width / BYTE_DOTS); \
+	if(width != RES_X) { \
+		if(skip_w_reg == X86::R_AX) { \
+			_AX = blit_source.stride; \
+			_AX -= (width / BYTE_DOTS); \
+		} else if(skip_w_reg == X86::R_CX) { \
+			_CX = blit_source.stride; \
+			_CX -= (width / BYTE_DOTS); \
+		} \
 	} \
 	__emit__(0xFC); /* CLD */ \
 	\
@@ -383,6 +401,11 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 		stationary_impl(_AX, sprite, width, d_##width, op, 0); \
 	} };
 
+#define blitter_impl_march_op(prefix, func, skip_w_reg, width) \
+	struct March##prefix##width { static void __fastcall blit(seg_t) { \
+		march_impl(width, func##_##width, skip_w_reg); \
+	} };
+
 #define blitter_impl_displaced_write(width) \
 	blitter_impl_displaced_op(RW, 0x80, width);
 
@@ -397,6 +420,17 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 #define blitter_use_displaced_or(width) { \
 	blitter_impl_displaced_or(width); \
 	BLITTER_FUNCS[width / BYTE_DOTS].or = DisplacedRO##width::blit; \
+}
+
+#define blitter_impl_march(prefix, func, width) \
+	blitter_impl_march_op(prefix, func, X86::R_AX, width);
+
+#define blitter_impl_march_unit(width) \
+	blitter_impl_march(UW, u, width); \
+
+#define blitter_use_march_unit(width) { \
+	blitter_impl_march_unit(width); \
+	BLITTER_FUNCS[width / BYTE_DOTS].write = MarchUW##width::blit; \
 }
 
 // Non-`const` because BLITPERF wants to patch these.
