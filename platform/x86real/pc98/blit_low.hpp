@@ -321,6 +321,148 @@ inline uint8_t u_32(uint8_t, uint8_t) {
 recurse_impl_all(u)
 // ------------------------
 
+// String manipulation
+// -------------------
+// REP MOVS. Only supports `write`.
+
+inline uint16_t s(uint16_t width, uint16_t) {
+#if (CPU == 386)
+	if(width >= 64) {
+		_CX = (width / 32);
+		__emit__(0xF3); // REP
+	}
+	if(width >= 32) {
+		__emit__(0x66, 0xA5); // MOVSD
+	}
+	if(width & 16) {
+		__emit__(0xA5); // MOVSW
+	}
+#else
+	if(width >= 32) {
+		_CX = (width / 16);
+		__emit__(0xF3); // REP
+	}
+	if(width >= 16) {
+		__emit__(0xA5); // MOVSW
+	}
+#endif
+	if(width & 8) {
+		__emit__(0xA4); // MOVSB
+	}
+	return 0;
+}
+
+inline uint16_t s_8(uint16_t, uint16_t)   { return s(  8, 0); }
+inline uint16_t s_16(uint16_t, uint16_t)  { return s( 16, 0); }
+inline uint16_t s_24(uint16_t, uint16_t)  { return s( 24, 0); }
+inline uint16_t s_32(uint16_t, uint16_t)  { return s( 32, 0); }
+inline uint16_t s_40(uint16_t, uint16_t)  { return s( 40, 0); }
+inline uint16_t s_48(uint16_t, uint16_t)  { return s( 48, 0); }
+inline uint16_t s_56(uint16_t, uint16_t)  { return s( 56, 0); }
+inline uint16_t s_64(uint16_t, uint16_t)  { return s( 64, 0); }
+inline uint16_t s_72(uint16_t, uint16_t)  { return s( 72, 0); }
+inline uint16_t s_80(uint16_t, uint16_t)  { return s( 80, 0); }
+inline uint16_t s_88(uint16_t, uint16_t)  { return s( 88, 0); }
+inline uint16_t s_96(uint16_t, uint16_t)  { return s( 96, 0); }
+inline uint16_t s_104(uint16_t, uint16_t) { return s(104, 0); }
+inline uint16_t s_112(uint16_t, uint16_t) { return s(112, 0); }
+inline uint16_t s_120(uint16_t, uint16_t) { return s(120, 0); }
+inline uint16_t s_128(uint16_t, uint16_t) { return s(128, 0); }
+inline uint16_t s_136(uint16_t, uint16_t) { return s(136, 0); }
+inline uint16_t s_144(uint16_t, uint16_t) { return s(144, 0); }
+inline uint16_t s_152(uint16_t, uint16_t) { return s(152, 0); }
+inline uint16_t s_160(uint16_t, uint16_t) { return s(160, 0); }
+inline uint16_t s_168(uint16_t, uint16_t) { return s(168, 0); }
+inline uint16_t s_176(uint16_t, uint16_t) { return s(176, 0); }
+inline uint16_t s_184(uint16_t, uint16_t) { return s(184, 0); }
+inline uint16_t s_192(uint16_t, uint16_t) { return s(192, 0); }
+inline uint16_t s_200(uint16_t, uint16_t) { return s(200, 0); }
+inline uint16_t s_208(uint16_t, uint16_t) { return s(208, 0); }
+inline uint16_t s_216(uint16_t, uint16_t) { return s(216, 0); }
+inline uint16_t s_224(uint16_t, uint16_t) { return s(224, 0); }
+inline uint16_t s_232(uint16_t, uint16_t) { return s(232, 0); }
+inline uint16_t s_240(uint16_t, uint16_t) { return s(240, 0); }
+inline uint16_t s_248(uint16_t, uint16_t) { return s(248, 0); }
+inline uint16_t s_256(uint16_t, uint16_t) { return s(256, 0); }
+inline uint16_t s_264(uint16_t, uint16_t) { return s(264, 0); }
+inline uint16_t s_272(uint16_t, uint16_t) { return s(272, 0); }
+inline uint16_t s_280(uint16_t, uint16_t) { return s(280, 0); }
+inline uint16_t s_288(uint16_t, uint16_t) { return s(288, 0); }
+inline uint16_t s_296(uint16_t, uint16_t) { return s(296, 0); }
+inline uint16_t s_304(uint16_t, uint16_t) { return s(304, 0); }
+inline uint16_t s_312(uint16_t, uint16_t) { return s(312, 0); }
+inline uint16_t s_320(uint16_t, uint16_t) { return s(320, 0); }
+inline uint16_t s_328(uint16_t, uint16_t) { return s(328, 0); }
+inline uint16_t s_336(uint16_t, uint16_t) { return s(336, 0); }
+inline uint16_t s_344(uint16_t, uint16_t) { return s(344, 0); }
+inline uint16_t s_352(uint16_t, uint16_t) { return s(352, 0); }
+inline uint16_t s_360(uint16_t, uint16_t) { return s(360, 0); }
+inline uint16_t s_368(uint16_t, uint16_t) { return s(368, 0); }
+inline uint16_t s_376(uint16_t, uint16_t) { return s(376, 0); }
+inline uint16_t s_384(uint16_t, uint16_t) { return s(384, 0); }
+inline uint16_t s_392(uint16_t, uint16_t) { return s(392, 0); }
+inline uint16_t s_400(uint16_t, uint16_t) { return s(400, 0); }
+inline uint16_t s_408(uint16_t, uint16_t) { return s(408, 0); }
+inline uint16_t s_416(uint16_t, uint16_t) { return s(416, 0); }
+inline uint16_t s_424(uint16_t, uint16_t) { return s(424, 0); }
+inline uint16_t s_432(uint16_t, uint16_t) { return s(432, 0); }
+inline uint16_t s_440(uint16_t, uint16_t) { return s(440, 0); }
+inline uint16_t s_448(uint16_t, uint16_t) { return s(448, 0); }
+inline uint16_t s_456(uint16_t, uint16_t) { return s(456, 0); }
+inline uint16_t s_464(uint16_t, uint16_t) { return s(464, 0); }
+inline uint16_t s_472(uint16_t, uint16_t) { return s(472, 0); }
+inline uint16_t s_480(uint16_t, uint16_t) { return s(480, 0); }
+inline uint16_t s_488(uint16_t, uint16_t) { return s(488, 0); }
+inline uint16_t s_496(uint16_t, uint16_t) { return s(496, 0); }
+inline uint16_t s_504(uint16_t, uint16_t) { return s(504, 0); }
+inline uint16_t s_512(uint16_t, uint16_t) { return s(512, 0); }
+inline uint16_t s_520(uint16_t, uint16_t) { return s(520, 0); }
+inline uint16_t s_528(uint16_t, uint16_t) { return s(528, 0); }
+inline uint16_t s_536(uint16_t, uint16_t) { return s(536, 0); }
+inline uint16_t s_544(uint16_t, uint16_t) { return s(544, 0); }
+inline uint16_t s_552(uint16_t, uint16_t) { return s(552, 0); }
+inline uint16_t s_560(uint16_t, uint16_t) { return s(560, 0); }
+inline uint16_t s_568(uint16_t, uint16_t) { return s(568, 0); }
+inline uint16_t s_576(uint16_t, uint16_t) { return s(576, 0); }
+inline uint16_t s_584(uint16_t, uint16_t) { return s(584, 0); }
+inline uint16_t s_592(uint16_t, uint16_t) { return s(592, 0); }
+inline uint16_t s_600(uint16_t, uint16_t) { return s(600, 0); }
+inline uint16_t s_608(uint16_t, uint16_t) { return s(608, 0); }
+inline uint16_t s_616(uint16_t, uint16_t) { return s(616, 0); }
+inline uint16_t s_624(uint16_t, uint16_t) { return s(624, 0); }
+inline uint16_t s_632(uint16_t, uint16_t) { return s(632, 0); }
+
+inline void s_640(void) {
+#if (CPU == 386)
+	// _CX = ((640 / 32) * _AX)
+	_CX = _AX;
+	_CX <<= 4;
+	_AX <<= 2;
+	_CX += _AX;
+
+	__emit__(0xF3, 0x66, 0xA5); // REP MOVSD
+#elif (CPU == 286)
+	// _CX = ((640 / 16) * _AX)
+	_CX = _AX;
+	_CX <<= 5;
+	_AX <<= 3;
+	_CX += _AX;
+
+	__emit__(0xF3, 0xA5); // REP MOVSW
+#else
+	// 8086 needs CL for the shift amount, so we need to use an extra register
+	// for the above calculation.
+	_DX = _AX;
+	_DX <<= 5;
+	_AX <<= 3;
+	_CX = _AX;
+	_CX += _DX;
+
+	__emit__(0xF3, 0xA5); // REP MOVSW
+#endif
+}
+// -------------------
+
 // Stationary rows
 // ---------------
 // SI and DI stay constant throughout the memory manipulation of each row.
@@ -431,6 +573,36 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 #define blitter_use_march_unit(width) { \
 	blitter_impl_march_unit(width); \
 	BLITTER_FUNCS[width / BYTE_DOTS].write = MarchUW##width::blit; \
+}
+
+#define blitter_impl_march_string(width) \
+	blitter_impl_march_op(SW, s, X86::R_AX, width); \
+
+#define blitter_impl_march_string_640() \
+	struct MarchSW640 { static void __fastcall blit(seg_t /* _AX */) { \
+		_ES = _AX; /* First __fastcall parameter */ \
+		_SI = blit_source.dots_start.part.off; \
+		_SI += blit_state.sprite_offset; \
+		_DI = blit_state.vo; \
+		_AX = blit_state.h_clipped; \
+		__emit__(0xFC); /* CLD */ \
+		\
+		/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
+		/* [blit_state] can't be accessed anymore beyond this point! */ \
+		__emit__(0x1E); /* PUSH DS */ \
+		_DS = blit_source.dots_start.part.seg; \
+		s_640(); \
+		__emit__(0x1F); /* POP DS */ \
+	} };
+
+#define blitter_use_march_string(width) { \
+	blitter_impl_march_string(width); \
+	BLITTER_FUNCS[width / BYTE_DOTS].write = MarchSW##width::blit; \
+}
+
+#define blitter_use_march_string_640() { \
+	blitter_impl_march_string_640(); \
+	BLITTER_FUNCS[640 / BYTE_DOTS].write = MarchSW640::blit; \
 }
 
 // Non-`const` because BLITPERF wants to patch these.
