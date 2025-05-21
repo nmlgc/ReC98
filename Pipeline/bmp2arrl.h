@@ -84,9 +84,9 @@ struct rec98_bmp2arr_task {
     char*           input_bmp;
     char*           output_symname;     /* what to name the symbol */
     char*           output_file;
-    unsigned char   output_type;
-    unsigned char   sprite_width;       /* 8, 16, or 32 */
+    unsigned int    sprite_width;
     unsigned char   sprite_height;      /* according to list, either 4, 8, or 16 */
+    unsigned char   output_type;
     unsigned char   flags;              /* see flag list above */
 
     /* error of the last operation */

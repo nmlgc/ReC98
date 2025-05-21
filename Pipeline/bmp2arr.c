@@ -97,7 +97,7 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
                     return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "sh");
 
                 tsk->sprite_height = atoi(a);
-                if (tsk->sprite_height < 1 || tsk->sprite_height > 32)
+                if (tsk->sprite_height < 1 || tsk->sprite_height > 40)
                     return bmp2arr_error_set(tsk, INVALID_SPRITE_HEIGHT);
             }
             else if (!strcmp(a,"u")) {
