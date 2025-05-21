@@ -115,4 +115,20 @@ const Blitter __ds* __fastcall blitter_init_clip(
 	#undef _CX
 	#undef _AX
 }
+
+const Blitter __ds& __fastcall blitter_init_noclip(
+	vram_x_t /* _AX */, vram_y_t /* _DX */
+)
+{
+	_BX = _AX;
+	_AX = _DX;
+	_DX <<= 6;
+	_AX <<= 4;
+	_AX += _DX;
+	_AX += _BX;
+	blit_state.vo = _AX;
+	blit_state.sprite_offset = blit_source.offset;
+	blit_state.h_clipped = blit_source.h;
+	return BLITTER_FUNCS[blit_source.w];
+}
 // --------------

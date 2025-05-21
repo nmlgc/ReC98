@@ -47,4 +47,8 @@ extern blit_state_t blit_state;
 // VRAM offset, cutting it to the clipping region set with Grp_SetClip().
 // Returns a blitter if the sprite is visible, or a `nullptr` if it isn't.
 const Blitter __ds* __fastcall blitter_init_clip(vram_x_t left, vram_y_t top);
+
+// Sets up blitting of the previously configured sprite region at the given
+// VRAM offset. Always returns a blitter.
+const Blitter __ds& __fastcall blitter_init_noclip(vram_x_t left, vram_y_t top);
 // --------------
