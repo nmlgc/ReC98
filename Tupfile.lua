@@ -219,7 +219,7 @@ local bmp2arr = pipeline_tool_cfg:link("bmp2arr", {
 
 ---@class BMPShape
 ---@field [1] string Input .BMP file
----@field [2] "asm" | "cpp" Output format
+---@field [2] "asm" | "c" | "cpp" Output format
 ---@field [3] string Symbol
 ---@field [4] integer Width
 ---@field [5] integer Height
@@ -1048,7 +1048,8 @@ research_cfg:link("holdkey", {
 })
 
 local research_sprites = Sprites({
-	{ "Research/blitperf/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 }
+	{ "Research/blitperf/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 },
+	{ "Research/blitperf/wide.bmp", "c", "sWIDE", 640, 40 },
 })
 
 -- Must be an ordered table to retain the order for `build_dumb.bat`.
@@ -1079,6 +1080,14 @@ for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
 		} }),
 	}
 	cfg:link(("ifshf" .. cpu_str), tup_append_assignment(if_shift, obj))
+
+	local wide = {
+		cfg:build_uncached({ "Research/blitperf/wide.cpp", extra_inputs = {
+			research_sprites["wide"],
+		} }),
+		cfg:build_uncached({ "Research/blitperf/wide_b.cpp" }),
+	}
+	cfg:link(("wide" .. cpu_str), tup_append_assignment(wide, obj))
 end
 -- --------
 
