@@ -10,11 +10,25 @@
 #include "platform/x86real/pc98/blitter.hpp"
 #include "x86real.h"
 
-static const upixel_t UNROLL_H = 8;
-
 #define FOREACH_WIDTH \
 	X(8) \
 	X(16) \
+
+// Row unrolling via Duff's Device
+// -------------------------------
+
+inline void unroll_setup(upixel_t unroll_h) {
+	_DX = blit_state.h_clipped; \
+	_BX = _DX;
+	_DX += (unroll_h - 1);
+
+	// Generates better code than using /=...
+	if(unroll_h == 8) {
+		_DX >>= 3;
+	}
+	_BX &= (unroll_h - 1);
+}
+// -------------------------------
 
 // Displaced memory manipulation
 // -----------------------------
@@ -55,12 +69,11 @@ inline void stationary_next(void) {
 }
 
 #define stationary_impl(plane_seg, sprite, func, row_p1, row_p2) { \
-	_DX = blit_state.loops_unrolled; \
+	unroll_setup(8); /* Must come first because it uses CL on 8086. */ \
 	_SI = FP_OFF(sprite); \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
 	_CX = blit_state.sprite_w; \
-	_BX = blit_state.loops_remainder; \
 	\
 	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
 	/* [blit_state] can't be accessed anymore beyond this point! */ \
@@ -68,7 +81,6 @@ inline void stationary_next(void) {
 	_DS = FP_SEG(sprite); \
 	_ES = plane_seg; \
 	\
-	static_assert(UNROLL_H == 8); \
 	switch(_BX) { \
 	case 0: do { func(row_p1, row_p2); stationary_next(); \
 	case 7:      func(row_p1, row_p2); stationary_next(); \
@@ -98,13 +110,12 @@ inline void march_advance(uint16_t width) {
 }
 
 #define march_impl(plane_seg, sprite, func, width) { \
-	_DX = blit_state.loops_unrolled; \
+	unroll_setup(8); /* Must come first because it uses CL on 8086. */ \
 	_SI = FP_OFF(sprite); \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
 	_CX = blit_state.sprite_w; \
 	_CX -= (width / BYTE_DOTS); \
-	_BX = blit_state.loops_remainder; \
 	__emit__(0xFC); /* CLD */ \
 	\
 	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
@@ -113,7 +124,6 @@ inline void march_advance(uint16_t width) {
 	_DS = FP_SEG(sprite); \
 	_ES = plane_seg; \
 	\
-	static_assert(UNROLL_H == 8); \
 	switch(_BX) { \
 	case 0: do { func(); march_advance(width); \
 	case 7:      func(); march_advance(width); \

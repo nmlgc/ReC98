@@ -60,15 +60,12 @@ void naive_write(
 	const dots8_t far* sprite_p = (
 		reinterpret_cast<const dots8_t far *>(sprite) + blit_state.sprite_offset
 	);
-	const pixel_t h = (
-		(blit_state.loops_unrolled * UNROLL_H) + blit_state.loops_remainder
-	);
 	vram_offset_t vo = blit_state.vo;
 	vram_byte_amount_t stride = (ROW_SIZE - vram_w);
 
 	GRCG grcg(GC_RMW);
 	grcg.setcolor(t.opt[OPT_SPRITE_COL].val);
-	for(pixel_t y = 0; y < h; y++) {
+	for(pixel_t y = 0; y < blit_state.h_clipped; y++) {
 		for(vram_byte_amount_t x = 0; x < vram_w; x++) {
 			pokeb(plane_seg, vo, sprite_p[x]);
 			vo++;

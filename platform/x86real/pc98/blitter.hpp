@@ -21,10 +21,7 @@ struct blit_state_t {
 	// blitted width if the sprite is clipped.
 	vram_byte_amount_t sprite_w;
 
-	// 16-bit because it gets loaded into BX anyway.
-	pixel_t loops_remainder;
-
-	int16_t loops_unrolled;
+	upixel_t h_clipped;
 };
 
 extern blit_state_t blit_state;

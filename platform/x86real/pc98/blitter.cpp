@@ -39,12 +39,6 @@ Blitter BLITTER_FUNCS[] = {
 	blit_state.sprite_offset = 0; \
 	blit_state.vo = (vram_offset_shift(0, top) + left);
 
-#define init_wh(w, rows) { \
-	blit_state.sprite_w = w; \
-	blit_state.loops_unrolled = ((rows + (UNROLL_H - 1)) / UNROLL_H); \
-	blit_state.loops_remainder = (rows % UNROLL_H); \
-}
-
 const Blitter __ds* blitter_init_clip_lrtb(
 	vram_x_t left, vram_y_t top, vram_byte_amount_t w, pixel_t h
 )
@@ -81,7 +75,8 @@ const Blitter __ds* blitter_init_clip_lrtb(
 		blit_state.vo += left;
 		ret = &BLITTER_FUNCS[w];
 	}
-	init_wh(w, rows);
+	blit_state.sprite_w = w;
+	blit_state.h_clipped = rows;
 	return ret;
 }
 
@@ -90,7 +85,8 @@ const Blitter __ds* blitter_init_clip_b(
 )
 {
 	pixel_t rows = clip_b(rows, top, h, left);
-	init_wh(w, rows);
+	blit_state.sprite_w = w;
+	blit_state.h_clipped = rows;
 	return &BLITTER_FUNCS[w];
 }
 // --------------
