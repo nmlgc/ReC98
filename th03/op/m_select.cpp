@@ -143,12 +143,13 @@ void near select_cdg_load_part3_of_4(void)
 	}
 }
 
-#define select_cdg_load_part4_of_4() { \
-	static_assert(PLAYCHAR_COUNT <= 9); \
-	for(int i = 6; i < 9; i++) { \
-		cdg_load_single((CDG_PIC + i), PLAYCHAR_PIC_FN[i], 0); \
-	} \
-} \
+void near select_cdg_load_part4_of_4(void)
+{
+	static_assert(PLAYCHAR_COUNT <= 9);
+	for(int i = 6; i < 9; i++) {
+		cdg_load_single((CDG_PIC + i), PLAYCHAR_PIC_FN[i], 0);
+	}
+}
 
 void near select_init_and_load(void)
 {
@@ -225,41 +226,36 @@ void near story_sel_pics_put(void)
 	cdg_put_8(P2_LEFT, PIC_TOP, (CDG_PIC_SELECTED + 1));
 }
 
-#define stat_star_row_put(pid, row_top, stat_i, star_i, star_left) { \
-	star_i = 5; \
-	star_left = (((pid == 0) ? P1_LEFT : P2_LEFT) + STATS_W - 20); \
-	while(PLAYCHAR_STATS[sel[pid]][stat_i] < star_i) { \
-		grcg_boxfill( \
-			star_left, \
-			row_top, \
-			(star_left + STAT_STAR_W - 1), \
-			(row_top + STAT_STAR_H -1) \
-		); \
-		star_i--; \
-		star_left -= STAT_STAR_PADDED_W; \
-	} \
+void pascal near stat_star_row_put(pid_t pid, screen_y_t row_top, int stat_i)
+{
+	int star_i = 5;
+	screen_x_t star_left = (((pid == 0) ? P1_LEFT : P2_LEFT) + STATS_W - 20);
+	while(PLAYCHAR_STATS[sel[pid]][stat_i] < star_i) {
+		grcg_boxfill(
+			star_left,
+			row_top,
+			(star_left + STAT_STAR_W - 1),
+			(row_top + STAT_STAR_H -1)
+		);
+		star_i--;
+		star_left -= STAT_STAR_PADDED_W;
+	}
 }
 
 void near stats_put(void)
 {
-	int stat_i;
-	int star_i;
-	screen_x_t star_left;
-
 	cdg_put_noalpha_8(P1_LEFT, STATS_TOP, CDG_STATS);
 	if(resident->game_mode != GM_STORY) {
 		cdg_put_noalpha_8(P2_LEFT, STATS_TOP, CDG_STATS);
 	}
 
 	grcg_setcolor(GC_RMW, 14);
-	stat_i = 0;
 	screen_y_t row_top = (STATS_TOP + 11);
-	while(stat_i < STAT_COUNT) {
-		stat_star_row_put(0, row_top, stat_i, star_i, star_left);
+	for(int stat_i = 0; stat_i < STAT_COUNT; stat_i++) {
+		stat_star_row_put(0, row_top, stat_i);
 		if(resident->game_mode != GM_STORY) {
-			stat_star_row_put(1, row_top, stat_i, star_i, star_left);
+			stat_star_row_put(1, row_top, stat_i);
 		}
-		stat_i++;
 		row_top += STAT_STAR_H;
 	}
 
@@ -356,42 +352,49 @@ void pascal near curve_put(
 	}
 }
 
-#define select_curves_put(offset, freq_x, freq_y, freq_other) { \
-	/** \
-	 * ZUN quirk: A diameter of (220 × 2) = 440 pixels is larger than the \
-	 * vertical resolution, thus cutting off several pixels. \
-	 */ \
-	curve_put( \
-		(curve_cycle - (offset * 2)), \
-		((curve_cycle * 2) - (offset * 4)), \
-		220, \
-		freq_other, \
-		freq_y \
-	); \
-	/** \
-	 * ZUN quirk: Halving the Y angle offset restricts this smaller curve to \
-	 * only the first half of the sine oscillation. This is fine as long as we \
-	 * don't subtract the trail [offset]. But once we do, the resulting Y \
-	 * offset wraps around into the other half of the oscillation at \
-	 * \
-	 * 	([curve_cycle] ≤ ([curve_trail_count] * 2)) \
-	 * \
-	 * This causes the discontinuity between the start and end of the cycle \
-	 * as the trailing curves during the first [curve_trail_count] frames \
-	 * appear flipped compared to their counterparts at the end of the cycle. \
-	 * Removing the division would be the easiest fix here; the second-easiest \
-	 * fix would be to restrict the subtraction to the first half of the \
-	 * oscillation: \
-	 * \
-	 * 	(((curve_cycle / 2) - offset) & 0x7F) \
-	 */ \
-	curve_put( \
-		((0x00 - curve_cycle) + (offset * 2)), \
-		((curve_cycle - (offset * 2)) / 2), /* ZUN bloat: Multiply out */ \
-		120, \
-		freq_x, \
-		freq_other \
-	); \
+struct curve_freqs_t {
+	freq_t x;
+	freq_t y;
+	freq_t other;
+};
+
+void pascal near select_curves_put(
+	unsigned char offset, const curve_freqs_t& freqs
+)
+{
+	// ZUN quirk: A diameter of (220 × 2) = 440 pixels is larger than the
+	// vertical resolution, thus cutting off several pixels.
+	curve_put(
+		(curve_cycle - (offset * 2)),
+		((curve_cycle * 2) - (offset * 4)),
+		220,
+		freqs.other,
+		freqs.y
+	);
+
+	// ZUN quirk: Halving the Y angle offset restricts this smaller curve to
+	// only the first half of the sine oscillation. This is fine as long as we
+	// don't subtract the trail [offset]. But once we do, the resulting Y
+	// offset wraps around into the other half of the oscillation at
+	//
+	// 	([curve_cycle] ≤ ([curve_trail_count] * 2))
+	//
+	// This causes the discontinuity between the start and end of the cycle
+	// as the trailing curves during the first [curve_trail_count] frames
+	// appear flipped compared to their counterparts at the end of the cycle.
+	// Removing the division would be the easiest fix here; the second-easiest
+	// fix would be to restrict the subtraction to the first half of the
+	// oscillation:
+	//
+	// 	(((curve_cycle / 2) - offset) & 0x7F)
+	//
+	curve_put(
+		((0x00 - curve_cycle) + (offset * 2)),
+		((curve_cycle / 2) - offset),
+		120,
+		freqs.x,
+		freqs.other
+	);
 }
 
 // Desmos plot of the full effect:
@@ -399,35 +402,24 @@ void pascal near curve_put(
 // 	https://www.desmos.com/calculator/sstcw9ru5x?invertedColors=true
 void near select_curves_update_and_render(void)
 {
-	freq_t freq_other;
 	int trail_count_half;
-	freq_t freq_y;
-	freq_t freq_x;
 	int i;
 
-	// ZUN bloat: Should be a dedicated variable.
-	#define cycle_triangle freq_other
-
-	cycle_triangle = curve_cycle;
+	freq_t cycle_triangle = curve_cycle;
 	if(cycle_triangle >= 0x80) {
 		cycle_triangle = (0x100 - cycle_triangle);
 	}
 
-	// ZUN bloat: {
-	// 	freq_other = (FREQ_FACTOR + (1 * cycle_triangle));
-	// 	freq_x = (FREQ_FACTOR + (2 * cycle_triangle));
-	// 	freq_y = ((2 * FREQ_FACTOR) + (2 * cycle_triangle));
-	// }
-	freq_other = cycle_triangle;
-	freq_x = (FREQ_FACTOR + freq_other + freq_other);
-	freq_other += FREQ_FACTOR;
-	freq_y = (freq_other + freq_other);
+	curve_freqs_t freqs;
+	freqs.other = (FREQ_FACTOR + (1 * cycle_triangle));
+	freqs.x = (FREQ_FACTOR + (2 * cycle_triangle));
+	freqs.y = ((2 * FREQ_FACTOR) + (2 * cycle_triangle));
 
 	// ZUN quirk: Maybe these should be blitted in the opposite order? Due to
 	// the different colors, this causes the trailing curves to appear on top
 	// of the main one.
 	grcg_setcolor(GC_RMW, 6);
-	select_curves_put(0, freq_x, freq_y, freq_other);
+	select_curves_put(0, freqs);
 
 	grcg_setcolor(GC_RMW, 5);
 	trail_count_half = (curve_trail_count / 2);
@@ -435,18 +427,16 @@ void near select_curves_update_and_render(void)
 		trail_count_half++;
 	}
 	for(i = 1; i <= trail_count_half; i++) {
-		select_curves_put(i, freq_x, freq_y, freq_other);
+		select_curves_put(i, freqs);
 	}
 
 	grcg_setcolor(GC_RMW, 1);
 	for(i = (trail_count_half + 1); i <= curve_trail_count; i++) {
-		select_curves_put(i, freq_x, freq_y, freq_other);
+		select_curves_put(i, freqs);
 	}
 
 	grcg_off();
 	curve_cycle += 0x02;
-
-	#undef cycle_triangle
 }
 
 void pascal near cursor_put(pid2 pid, vc_t col)
@@ -462,44 +452,31 @@ void pascal near cursor_put(pid2 pid, vc_t col)
 	graph_gaiji_puts(left, (top + GLYPH_H), GAIJI_W, g_CURSOR_BOTTOM[pid], col);
 }
 
-inline void cursor_put_p1(void) {
-	cursor_put(0, (sel_confirmed[0] ? V_WHITE :  8));
-}
-inline void cursor_put_p2(void) {
-	cursor_put(1, (sel_confirmed[1] ? V_WHITE : 10));
-}
+void pascal near select_confirm(pid_t pid, bool palette_id)
+{
+	playchar_t playchar = sel[pid];
+	resident->playchar_paletted[pid].set(playchar, palette_id);
+	palette_white_in(1);
 
-#define select_confirm(pid, palette_id, swap_func) { \
-	int playchar = sel[pid]; \
-	resident->playchar_paletted[pid].v = ( \
-		TO_OPTIONAL_PALETTED(playchar) + palette_id \
-	); \
-	palette_white_in(1); \
-	\
-	static_assert(PLAYER_COUNT == 2); \
-	if(sel_confirmed[1 - pid] && ( \
-		resident->playchar_paletted[0].v == resident->playchar_paletted[1].v \
-	)) { \
-		swap_func; \
-		cdg_load_single( \
-			(CDG_PIC_SELECTED + pid), PLAYCHAR_PIC_FN[playchar], !palette_id \
-		); \
-	} else { \
-		cdg_load_single( \
-			(CDG_PIC_SELECTED + pid), PLAYCHAR_PIC_FN[playchar], palette_id \
-		); \
-	} \
-	\
-	static_assert(PLAYER_COUNT == 2); \
-	if(sel_confirmed[1 - pid]) { \
-		/**
-		 * ZUN bloat: Should only be done in the main function, see the \
-		 * comment there. \
-		 */ \
-		fadeout_frames = 0; \
-	} \
-	sel_confirmed[pid] = true; \
-	input_locked[pid] = true; \
+	static_assert(PLAYER_COUNT == 2);
+	if(sel_confirmed[1 - pid] && (
+		resident->playchar_paletted[0].v == resident->playchar_paletted[1].v
+	)) {
+		palette_id ^= 1;
+		resident->playchar_paletted[pid].set(playchar, palette_id);
+	}
+	cdg_load_single(
+		(CDG_PIC_SELECTED + pid), PLAYCHAR_PIC_FN[playchar], palette_id
+	);
+
+	static_assert(PLAYER_COUNT == 2);
+	if(sel_confirmed[1 - pid]) {
+		// ZUN bloat: Should only be done in the main function, see the comment
+		// there.
+		fadeout_frames = 0;
+	}
+	sel_confirmed[pid] = true;
+	input_locked[pid] = true;
 }
 
 void pascal near select_update_player(input_t input, pid2 pid)
@@ -523,10 +500,10 @@ void pascal near select_update_player(input_t input, pid2 pid)
 		input_locked[pid] = true;
 	}
 	if(input & INPUT_SHOT) {
-		select_confirm(pid, 0, resident->playchar_paletted[pid].v++);
+		select_confirm(pid, 0);
 	}
 	if(input & INPUT_BOMB) {
-		select_confirm(pid, 1, resident->playchar_paletted[pid].v--);
+		select_confirm(pid, 1);
 	}
 }
 
