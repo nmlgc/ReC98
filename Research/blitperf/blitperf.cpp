@@ -1,6 +1,7 @@
 /// Basic code shared among all blitting benchmark tests
 /// ----------------------------------------------------
 
+#include <dos.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -85,6 +86,18 @@ void Test::run(bool grcg)
 
 		skip_locked = skip_pressed;
 		page_back ^= 1;
+	}
+
+	if(vsync_count_32 == opt[OPT_DURATION].val) {
+		printf(
+"\n"
+"\n"
+"\xEB\xA2 Sprite count is too low to meaningfully benchmark this system.\n"
+"Please re-run as:\n"
+"\n"
+"    %s /%c [number greater than %u]\n",
+		_argv[0], opt[OPT_SPRITE_COUNT].cmd_c, opt[OPT_SPRITE_COUNT].val);
+		exit(1);
 	}
 }
 
