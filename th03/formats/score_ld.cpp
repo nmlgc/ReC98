@@ -11,7 +11,8 @@ bool16 pascal near scoredat_load_and_decode(rank_t rank)
 #endif
 {
 	if(!file_exist(SCOREDAT_FN_PTR)) {
-		// Unnecessary, since scoredat_recreate() would also create the file?
+		// scoredat_recreate() uses file_append(), which fails if the file
+		// doesn't exist yet.
 		file_create(SCOREDAT_FN_PTR);
 		file_close();
 
