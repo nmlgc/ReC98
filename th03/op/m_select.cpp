@@ -4,6 +4,7 @@
 #pragma option -zPgroup_01
 
 #include "th03/op/m_select.hpp"
+#include "platform/grp_mono.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
@@ -311,6 +312,7 @@ static const freq_t FREQ_FACTOR = (1 << 8);
 // allowing the natural overflow of 8-bit angles to create interesting splits
 // along the curve.
 void pascal near curve_put(
+	GrpMono& gm,
 	unsigned char angle_offset_x,
 	unsigned char angle_offset_y,
 	pixel_t radius,
@@ -320,12 +322,6 @@ void pascal near curve_put(
 {
 	unsigned int angle_base;
 	for(angle_base = 0x00; angle_base < 0x100; angle_base++) {
-		// ZUN bloat: The game original game runs this loop body 4,096 times
-		// per rendered frame, magnifying every suboptimal implementation
-		// choice. On an i486/Pentium, ZUN wastes ≥42 / 16 cycles by not
-		// inlining grcg_pset().
-		// Total waste for all points: ≥172,032 / 65,536 cycles.
-
 		// It might not look like it, but this code is indeed affected by the
 		// inaccuracy for negative sine and cosine values documented in
 		// th01/math/polar.hpp, as the result of multiplying the offset angle
@@ -363,7 +359,7 @@ void pascal near curve_put(
 			(RES_X / 2), radius, (scaled_angle / FREQ_FACTOR)
 		);
 
-		grcg_pset(x, y);
+		gm.draw_point_noclip(x, y);
 	}
 }
 
@@ -374,12 +370,13 @@ struct curve_freqs_t {
 };
 
 void pascal near select_curves_put(
-	unsigned char offset, const curve_freqs_t& freqs
+	GrpMono& gm, unsigned char offset, const curve_freqs_t& freqs
 )
 {
 	// ZUN quirk: A diameter of (220 × 2) = 440 pixels is larger than the
 	// vertical resolution, thus cutting off several pixels.
 	curve_put(
+		gm,
 		(curve_cycle - (offset * 2)),
 		((curve_cycle * 2) - (offset * 4)),
 		220,
@@ -404,6 +401,7 @@ void pascal near select_curves_put(
 	// 	(((curve_cycle / 2) - offset) & 0x7F)
 	//
 	curve_put(
+		gm,
 		((0x00 - curve_cycle) + (offset * 2)),
 		((curve_cycle / 2) - offset),
 		120,
@@ -433,24 +431,24 @@ void near select_curves_update_and_render(void)
 	// ZUN quirk: Maybe these should be blitted in the opposite order? Due to
 	// the different colors, this causes the trailing curves to appear on top
 	// of the main one.
-	grcg_setcolor(GC_RMW, 6);
-	select_curves_put(0, freqs);
+	GrpMono gm;
+	gm.set_color_static(6);
+	select_curves_put(gm, 0, freqs);
 
-	grcg_setcolor(GC_RMW, 5);
+	gm.set_color_static(5);
 	trail_count_half = (curve_trail_count / 2);
 	if(curve_trail_count & 1) {
 		trail_count_half++;
 	}
 	for(i = 1; i <= trail_count_half; i++) {
-		select_curves_put(i, freqs);
+		select_curves_put(gm, i, freqs);
 	}
 
-	grcg_setcolor(GC_RMW, 1);
+	gm.set_color_static(1);
 	for(i = (trail_count_half + 1); i <= curve_trail_count; i++) {
-		select_curves_put(i, freqs);
+		select_curves_put(gm, i, freqs);
 	}
 
-	grcg_off();
 	curve_cycle += 0x02;
 }
 

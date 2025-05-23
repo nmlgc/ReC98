@@ -53,7 +53,6 @@ include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_polygon_c.asm
-include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm

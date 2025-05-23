@@ -1,9 +1,9 @@
 #include "libs/master.lib/master.hpp"
-#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/grcg.hpp"
 #include "th01/main/particle.hpp"
+#include "platform/grp_mono.hpp"
 
 CParticles Particles;
 
@@ -147,12 +147,20 @@ void CParticles::unput_update_render(particle_origin_t origin, vc_t col)
 	}
 
 	// Render
-	grcg_setcolor(GC_RMW, col);
+	GrpMono gm;
+	gm.set_color(col);
 	for(i = 0; i < PARTICLE_COUNT; i++) {
 		if(!alive[i]) {
 			continue;
 		}
-		grcg_pset(x[i].to_pixel(), y[i].to_pixel());
+		screen_x_t screen_x = x[i].to_pixel();
+		if(static_cast<uscreen_x_t>(screen_x) >= RES_X) {
+			continue;
+		}
+		screen_x_t screen_y = y[i].to_pixel();
+		if(static_cast<uscreen_y_t>(screen_y) >= RES_Y) {
+			continue;
+		}
+		gm.draw_point_noclip(screen_x, screen_y);
 	}
-	grcg_off();
 }
