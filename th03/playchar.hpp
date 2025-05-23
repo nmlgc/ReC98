@@ -76,6 +76,10 @@ struct far PlaycharPalettedOptional {
 	void set(playchar_t playchar) {
 		v = TO_OPTIONAL_PALETTED(playchar);
 	}
+
+	void set(const playchar_t& playchar, const bool& palette_id) {
+		v = (TO_OPTIONAL_PALETTED(playchar) + palette_id);
+	}
 };
 
 #endif /* TH03_PLAYCHAR_HPP */
