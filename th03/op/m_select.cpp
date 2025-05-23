@@ -4,7 +4,6 @@
 #pragma option -zPgroup_01
 
 #include "th03/op/m_select.hpp"
-#include "decomp.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
@@ -450,14 +449,6 @@ void near select_curves_update_and_render(void)
 	#undef cycle_triangle
 }
 
-inline void select_base_render(void near (*pics_put)()) {
-	select_curves_update_and_render();
-	pics_put();
-	stats_put();
-	names_put();
-	extras_put();
-}
-
 void pascal near cursor_put(pid2 pid, vc_t col)
 {
 	// ZUN bloat: `* NAME_W` would have done the job.
@@ -539,81 +530,6 @@ void pascal near select_update_player(input_t input, pid2 pid)
 	}
 }
 
-inline void select_input_sense(void) {
-	// ZUN bloat: Already part of all four possible [input_mode]s.
-	input_reset_sense_key_held();
-
-	input_mode();
-}
-
-inline bool select_cancel(void) {
-	// ZUN bloat: palette_settone(0) is a more performant way to achieve the
-	// same without raising any questions about whether this targets the
-	// correct VRAM page.
-	graph_accesspage(0);
-	graph_clear();
-	graph_showpage(0);
-
-	// Redundant in the released game, but makes sense for clearing potential
-	// debug output.
-	text_clear();
-
-	select_free();
-	snd_kaja_func(KAJA_SONG_STOP, 0);
-	return true;
-}
-
-// ZUN landmine: Should be done at the beginning of select_base_render() to
-// ensure that the palette applies to the entire frame. Plotting the curves
-// takes a while, and doing this afterward all but ensures palette tearing.
-#define select_fadeout_render(quit_label) { \
-	/** \
-	 * ZUN quirk: Should have maybe been `>` rather than `>=`. Since \
-	 * [fadeout_frames] is technically off-by-one (frame 0 is the last frame \
-	 * of palette_white_in()), this sets the palette tone to 104 on frame #15. \
-	 */ \
-	if(fadeout_frames >= 16) { \
-		palette_settone(200 - (fadeout_frames * 6)); \
-	} \
-	if(fadeout_frames > 32) { \
-		goto quit_label; \
-	} \
-	optimization_barrier(); \
-}
-
-#define select_wait_flip_and_clear_vram() { \
-	while(vsync_Count1 < 3) { \
-	} \
-	/** \
-	 * ZUN landmine: We're not waiting for VSync if the code took longer than \
-	 * 3 VSync events, ensuring screen tearing in this case. \
-	 */ \
-	\
-	if((vsync_Count1 > 4) && (curve_trail_count > 1)) { \
-		curve_trail_count--; \
-	} \
-	vsync_Count1 = 0; \
-	graph_accesspage(page_shown); \
-	page_shown = (1 - page_shown); \
-	graph_showpage(page_shown); \
-	\
-	/**
-	 * ZUN bloat: Slower than graph_clear(), which uses the GRCG's TDW \
-	 * mode and a single REP STOS instruction. \
-	 */ \
-	grcg_setcolor(GC_RMW, 0); \
-	grcg_boxfill_8(0, 0, (RES_X - 1), (RES_Y - 1)); \
-	grcg_off(); \
-	\
-	/** \
-	 * ZUN bloat: Doing this in the fade-out branch would have avoided the \
-	 * need to reset it for the beginning of the animation. \
-	 */ \
-	fadeout_frames++; \
-	\
-	resident->rand++; \
-}
-
 bool near select_menu(select_mode_t mode)
 {
 	pid_t sp_pid = 0;
@@ -645,14 +561,20 @@ bool near select_menu(select_mode_t mode)
 
 	fadeout_frames = 0;
 	while(1) {
-		select_base_render(
-			(mode == SM_STORY) ? story_sel_pics_put : vs_sel_pics_put
-		);
-		cursor_put_p1();
-		if((mode == SM_VS_2P) || ((mode == SM_VS_CPU) && sel_confirmed[0])) {
-			cursor_put_p2();
+		select_curves_update_and_render();
+		if(mode == SM_STORY) {
+			story_sel_pics_put();
+		} else {
+			vs_sel_pics_put();
 		}
-		select_input_sense();
+		stats_put();
+		names_put();
+		extras_put();
+		cursor_put(0, (sel_confirmed[0] ? V_WHITE : 8));
+		if((mode == SM_VS_2P) || ((mode == SM_VS_CPU) && sel_confirmed[0])) {
+			cursor_put(1, (sel_confirmed[1] ? V_WHITE : 10));
+		}
+		input_mode();
 		switch(mode) {
 		case SM_STORY:
 			select_update_player(input_sp, 0);
@@ -667,7 +589,20 @@ bool near select_menu(select_mode_t mode)
 		}
 
 		if(input_sp & INPUT_CANCEL) {
-			return select_cancel();
+			// ZUN bloat: palette_settone(0) is a more performant way to
+			// achieve the same without raising any questions about whether
+			// this targets the correct VRAM page.
+			graph_accesspage(0);
+			graph_clear();
+			graph_showpage(0);
+
+			// Redundant in the released game, but makes sense for clearing
+			// potential debug output.
+			text_clear();
+
+			select_free();
+			snd_kaja_func(KAJA_SONG_STOP, 0);
+			return true;
 		}
 
 		// ZUN quirk: Prevents selection from moving on to P2 before frame
@@ -682,11 +617,44 @@ bool near select_menu(select_mode_t mode)
 		}
 
 		if(sel_confirmed[0] && sel_confirmed[1]) {
-			select_fadeout_render(done);
+			// ZUN landmine: Should be done at the beginning of the loop to
+			// ensure that the palette applies to the entire frame. Plotting
+			// the curves takes a while, and doing this afterward all but
+			// ensures palette tearing.
+
+			// ZUN quirk: Should have maybe been `>` rather than `>=`. Since
+			// [fadeout_frames] is technically off-by-one (frame 0 is the last
+			// frame of palette_white_in()), this sets the palette tone to 104
+			// on frame #15.
+			if(fadeout_frames >= 16) {
+				palette_settone(200 - (fadeout_frames * 6));
+			}
+			if(fadeout_frames > 32) {
+				break;
+			}
 		}
-		select_wait_flip_and_clear_vram();
+
+		while(vsync_Count1 < 3) {
+		}
+		// ZUN landmine: We're not waiting for VSync if the code took longer
+		// than 3 VSync events, ensuring screen tearing in this case.
+
+		if((vsync_Count1 > 4) && (curve_trail_count > 1)) {
+			curve_trail_count--;
+		}
+		vsync_Count1 = 0;
+		graph_accesspage(page_shown);
+		page_shown = (1 - page_shown);
+		graph_showpage(page_shown);
+
+		graph_clear();
+
+		// ZUN bloat: Doing this in the fade-out branch would have avoided the
+		// need to reset it for the beginning of the animation.
+		fadeout_frames++;
+
+		resident->rand++;
 	}
-done:
 	select_free();
 	return false;
 }
