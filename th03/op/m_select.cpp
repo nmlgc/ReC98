@@ -539,14 +539,6 @@ void pascal near select_update_player(input_t input, pid2 pid)
 	}
 }
 
-inline void sel_init_vs(void) {
-	static_assert(PLAYER_COUNT == 2);
-	sel[0] = resident->playchar_paletted[0].char_id();
-	sel[1] = resident->playchar_paletted[1].char_id();
-	sel_confirmed[0] = false;
-	sel_confirmed[1] = false;
-}
-
 inline void select_input_sense(void) {
 	// ZUN bloat: Already part of all four possible [input_mode]s.
 	input_reset_sense_key_held();
@@ -622,100 +614,74 @@ inline bool select_cancel(void) {
 	resident->rand++; \
 }
 
-// ZUN bloat: These three could have been merged into a single function.
-bool near select_1p_vs_2p_menu(void)
+bool near select_menu(select_mode_t mode)
 {
+	pid_t sp_pid = 0;
+	unsigned int p1_quirk_frames = 0;
+
 	select_init_and_load();
-	sel_init_vs();
 
-	if(resident->key_mode == KM_KEY_KEY) {
-		input_mode = input_mode_key_vs_key;
-	} else if(resident->key_mode == KM_JOY_KEY) {
-		input_mode = input_mode_joy_vs_key;
-	} else {
-		input_mode = input_mode_key_vs_joy;
+	for(int player = 0; player < PLAYER_COUNT; player++) {
+		sel[player] = resident->playchar_paletted[player].char_id();
+		sel_confirmed[player] = false;
 	}
+	input_mode = input_mode_interface;
 
-	// ZUN quirk: Not used in the other modes, and completely unnecessary.
-	frame_delay(16);
+	if(mode == SM_STORY) {
+		sel[0] = PLAYCHAR_REIMU;
+		sel_confirmed[1] = true;
+	} else if(mode == SM_VS_2P) {
+		if(resident->key_mode == KM_KEY_KEY) {
+			input_mode = input_mode_key_vs_key;
+		} else if(resident->key_mode == KM_JOY_KEY) {
+			input_mode = input_mode_joy_vs_key;
+		} else {
+			input_mode = input_mode_key_vs_joy;
+		}
+
+		// ZUN quirk: Not used in the other modes, and completely unnecessary.
+		frame_delay(16);
+	}
 
 	fadeout_frames = 0;
 	while(1) {
-		select_base_render(vs_sel_pics_put);
+		select_base_render(
+			(mode == SM_STORY) ? story_sel_pics_put : vs_sel_pics_put
+		);
 		cursor_put_p1();
-		cursor_put_p2();
+		if((mode == SM_VS_2P) || ((mode == SM_VS_CPU) && sel_confirmed[0])) {
+			cursor_put_p2();
+		}
 		select_input_sense();
-		select_update_player(input_mp_p1, 0);
-		select_update_player(input_mp_p2, 1);
+		switch(mode) {
+		case SM_STORY:
+			select_update_player(input_sp, 0);
+			break;
+		case SM_VS_CPU:
+			select_update_player(input_sp, sp_pid);
+			break;
+		case SM_VS_2P:
+			select_update_player(input_mp_p1, 0);
+			select_update_player(input_mp_p2, 1);
+			break;
+		}
 
 		if(input_sp & INPUT_CANCEL) {
 			return select_cancel();
 		}
+
+		// ZUN quirk: Prevents selection from moving on to P2 before frame
+		// #13? This is a delay for its own sake; input locking already
+		// takes care of the one functional side effect it could have had.
+		if((mode == SM_VS_CPU) && (sp_pid == 0)) {
+			if(sel_confirmed[0] && (p1_quirk_frames > 12)) {
+				sp_pid = 1;
+				continue;
+			}
+			p1_quirk_frames++;
+		}
+
 		if(sel_confirmed[0] && sel_confirmed[1]) {
-			select_fadeout_render(done);
-		}
-		select_wait_flip_and_clear_vram();
-	}
-done:
-	select_free();
-	return false;
-}
-
-bool near select_vs_cpu_menu(void)
-{
-	select_init_and_load();
-	sel_init_vs();
-	input_mode = input_mode_interface;
-	for(int pid_cur = 0; pid_cur < PLAYER_COUNT; pid_cur++) {
-		fadeout_frames = 0;
-		while(1) {
-			select_base_render(vs_sel_pics_put);
-			select_input_sense();
-			cursor_put_p1();
-			if(sel_confirmed[0]) {
-				cursor_put_p2();
-			}
-			select_update_player(input_sp, pid_cur);
-
-			if(input_sp & INPUT_CANCEL) {
-				return select_cancel();
-			}
-
-			// ZUN quirk: Prevents selection from moving on to P2 before frame
-			// #13? This is a delay for its own sake; input locking already
-			// takes care of the one functional side effect it could have had.
-			if((pid_cur == 0) && sel_confirmed[0] && (fadeout_frames > 12)) {
-				break;
-			}
-			if((pid_cur != 0) && sel_confirmed[1]) {
-				select_fadeout_render(done);
-			}
-			select_wait_flip_and_clear_vram();
-		}
-done:
-	}
-	select_free();
-	return false;
-}
-
-bool near select_story_menu(void)
-{
-	select_init_and_load();
-	sel[0] = PLAYCHAR_REIMU;
-	sel_confirmed[0] = false;
-	sel_confirmed[1] = true;
-	input_mode = input_mode_interface;
-	fadeout_frames = 0;
-	while(1) {
-		select_base_render(story_sel_pics_put);
-		cursor_put_p1();
-		select_input_sense();
-		select_update_player(input_sp, 0);
-
-		if(input_sp & INPUT_CANCEL) {
-			return select_cancel();
-		}
-		if(sel_confirmed[0]) {
 			select_fadeout_render(done);
 		}
 		select_wait_flip_and_clear_vram();

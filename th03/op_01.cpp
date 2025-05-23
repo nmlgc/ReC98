@@ -217,7 +217,7 @@ bool near story_menu(void)
 	resident->show_score_menu = false;
 	resident->playchar_paletted[1].v = -1;
 
-	if(select_story_menu()) {
+	if(select_menu(SM_STORY)) {
 		return true;
 	}
 
@@ -352,17 +352,9 @@ bool near vs_menu(void)
 	resident->game_mode = (GM_VS + sel);
 	resident->show_score_menu = false;
 
-	// ZUN bloat: Could be compressed into a single branch.
-	if(sel == VS_1P_2P) {
-		if(select_1p_vs_2p_menu()) {
-			resident->game_mode = GM_NONE;
-			return true;
-		}
-	} else {
-		if(select_vs_cpu_menu()) {
-			resident->game_mode = GM_NONE;
-			return true;
-		}
+	if(select_menu((sel == VS_1P_2P) ? SM_VS_2P : SM_VS_CPU)) {
+		resident->game_mode = GM_NONE;
+		return true;
 	}
 
 	return switch_to_mainl();
