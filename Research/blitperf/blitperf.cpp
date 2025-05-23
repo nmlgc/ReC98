@@ -92,7 +92,7 @@ Test t = {{
 	// The sprite cap must be defined in the test itself.
 	{ 's', "Sprite count", 2000, 1, 0 },
 
-	{ 'd', "Frames per test", 100, 1, 999 },
+	{ 'd', "Frames per test", 100, 2, 999 },
 	{ 'c', "GRCG sprite color", 2, 0x1, 0xF },
 }};
 
