@@ -691,6 +691,10 @@ bool near select_vs_cpu_menu(void)
 			if(input_sp & INPUT_CANCEL) {
 				return select_cancel();
 			}
+
+			// ZUN quirk: Prevents selection from moving on to P2 before frame
+			// #13? This is a delay for its own sake; input locking already
+			// takes care of the one functional side effect it could have had.
 			if((pid_cur == 0) && sel_confirmed[0] && (fadeout_frames > 12)) {
 				break;
 			}
