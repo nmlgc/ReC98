@@ -5,6 +5,7 @@
 
 #include "th03/op/m_select.hpp"
 #include "platform/grp_mono.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
@@ -154,26 +155,27 @@ void near select_cdg_load_part4_of_4(void)
 
 void near select_init_and_load(void)
 {
-	vsync_Count1 = 0;
-
 	snd_kaja_func(KAJA_SONG_STOP, 0);
 	snd_load("select.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 
 	random_seed = resident->rand;
 
+	// We come here with page 0 accessed. Clear the other one for a clean
+	// transition.
+	page_access(1);
+	graph_clear();
+	frame_delay(1);
+
+	palette_settone(0);
+	page_show(1);
+	page_access(0);
+	page_shown = 1;
 	text_clear();
+
 	super_free();
 	super_entry_bfnt("chname.bft");
-
-	// ZUN landmine: Does nothing to avoid this happening mid-frame and causing
-	// tearing.
-	graph_accesspage(0);	graph_clear();
-	graph_accesspage(1);	graph_clear();
-	graph_showpage(0);
-	page_shown = 0;
-
-	palette_entry_rgb_show("TLSL.RGB");
+	palette_entry_rgb("TLSL.RGB");
 	select_cdg_load_part4_of_4();
 
 	// ZUN bug: Is this supposed to be long enough for the player to release
@@ -184,6 +186,7 @@ void near select_init_and_load(void)
 	// The menu needs [input_locked] anyway; why isn't it set here?!
 	while(vsync_Count1 < 30) {
 	}
+	palette_100();
 
 	// ZUN bug: [vsync_Count1] is not reset after the loop above. This causes
 	// the menu functions to only actually render 8 trailing curves on their
@@ -551,6 +554,7 @@ bool near select_menu(select_mode_t mode)
 
 	fadeout_frames = 0;
 	while(1) {
+		graph_clear();
 		select_curves_update_and_render();
 		if(mode == SM_STORY) {
 			story_sel_pics_put();
@@ -636,8 +640,6 @@ bool near select_menu(select_mode_t mode)
 		graph_accesspage(page_shown);
 		page_shown = (1 - page_shown);
 		graph_showpage(page_shown);
-
-		graph_clear();
 
 		// ZUN bloat: Doing this in the fade-out branch would have avoided the
 		// need to reset it for the beginning of the animation.
