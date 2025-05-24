@@ -625,6 +625,7 @@ th03:zungen("bin/th03/zun.com", {
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.vblank
 obj += {
 	"th03/op_01.cpp",
 	"th03_op.asm",
