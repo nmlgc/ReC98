@@ -177,21 +177,11 @@ void near select_init_and_load(void)
 	palette_entry_rgb("TLSL.RGB");
 	select_cdg_load_part4_of_4();
 
-	// ZUN bug: Is this supposed to be long enough for the player to release
-	// the Shot key that might have entered this menu? If that was the intent,
-	// the menu functions should properly lock input until the player released
-	// that key. Keep holding the Shot key for more than 30 frames and the
-	// menus will still confirm the initial selection on their first frame.
-	// The menu needs [input_locked] anyway; why isn't it set here?!
-	while(vsync_Count1 < 30) {
-	}
 	palette_100();
 
-	// ZUN bug: [vsync_Count1] is not reset after the loop above. This causes
-	// the menu functions to only actually render 8 trailing curves on their
-	// first iteration: The first call to select_wait_flip_and_clear_vram()
-	// will then think that the frame took longer than 30 VSync interrupts to
-	// render and will consequently always decrement the count to 7.
+	// ZUN bug: Since we wait 30 frames on the first loop, we're only ever
+	// going to actually see 8 trailing curves on the first iteration. At its
+	// end, this count is decremented because 30 > 4.
 	curve_trail_count = 8;
 
 	playchars_available = playchars_available_load();
@@ -530,6 +520,14 @@ bool near select_menu(select_mode_t mode)
 	}
 	input_mode = input_mode_interface;
 
+	// ZUN bug: Is this supposed to be long enough for the player to release
+	// the Shot key that might have entered this menu? If that was the intent,
+	// the menu functions should properly lock input until the player released
+	// that key. Keep holding the Shot key for more than 30 frames and the
+	// menus will still confirm the initial selection on their first frame.
+	// The menu needs [input_locked] anyway; why isn't it set here?!
+	unsigned int vsyncs_per_loop = 30;
+
 	if(mode == SM_STORY) {
 		sel[0] = PLAYCHAR_REIMU;
 		sel_confirmed[1] = true;
@@ -542,8 +540,15 @@ bool near select_menu(select_mode_t mode)
 			input_mode = input_mode_key_vs_joy;
 		}
 
-		// ZUN quirk: Not used in the other modes, and completely unnecessary.
-		frame_delay(16);
+		// ZUN quirk: Completely unnecessary.
+		vsyncs_per_loop += 16;
+	}
+
+	// This copy of the delay loop is necessary to delay input processing
+	// during the initial delay time. Note how we *don't* reset [vsync_Count1]
+	// to 0 to preserve the intended trail count subtraction on the first
+	// iteration.
+	while(vsync_Count1 < vsyncs_per_loop) {
 	}
 
 	unsigned int fadeout_frames = 0;
@@ -610,13 +615,26 @@ bool near select_menu(select_mode_t mode)
 			break;
 		}
 
-		while(vsync_Count1 < 3) {
+		const unsigned int frame_duration = vsync_Count1;
+		while(vsync_Count1 < vsyncs_per_loop) {
 		}
-		// ZUN landmine: We're not waiting for VSync if the code took longer
-		// than 3 VSync events, ensuring screen tearing in this case.
 
 		if((vsync_Count1 > 4) && (curve_trail_count > 1)) {
 			curve_trail_count--;
+		}
+
+		// If we went straight past the loop above, we're still in the middle
+		// of a frame. So, wait until the next VSync, then cut this additional
+		// frame from the next loop to maintain the original timing… *unless*
+		// we're on the very first iteration (where [vsyncs_per_loop] ≥ 30)
+		// where this case is expected. Very relevant if we consider that
+		// palette_white_in() increments [vsync_Count1] during its whole
+		// blocking runtime!
+		if(frame_duration == vsync_Count1) {
+			frame_delay(1);
+			vsyncs_per_loop = ((vsyncs_per_loop >= 30) ? 3 : 2);
+		} else {
+			vsyncs_per_loop = 3;
 		}
 
 		vsync_Count1 = 0;
