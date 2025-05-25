@@ -3,7 +3,7 @@
 #include "planar.h"
 #include "platform/x86real/pc98/grcg.hpp"
 
-void GRCG::setcolor(vc_t col)
+void GRCG::set_color(vc_t col)
 {
 	// By shifting each successive bit of [col] into the carry flag and using
 	// tile_register_from_carry(), we get the minimum of three instructions

@@ -19,7 +19,7 @@ svc_t COL_CLEAR = 0;
 void graph_clear(void)
 {
 	GRCG grcg(GC_TDW);
-	grcg.setcolor(COL_CLEAR);
+	grcg.set_color(COL_CLEAR);
 	_ES = SEG_PLANE_B;
 	_DI = 0;
 #if (CPU == 386)
@@ -76,7 +76,7 @@ void Test::run(bool grcg)
 
 		if(grcg) {
 			GRCG grcg(GC_RMW);
-			grcg.setcolor(opt[OPT_SPRITE_COL].val);
+			grcg.set_color(opt[OPT_SPRITE_COL].val);
 			test_render();
 		} else {
 			test_render();

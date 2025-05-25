@@ -37,7 +37,7 @@ struct GRCG {
 		_outportb_(0x7C, (mode | plane_mask));
 	}
 
-	void settile(
+	void set_tile(
 		const dots8_t& b, const dots8_t& r, const dots8_t& g, const dots8_t& e
 	) {
 		outportb(0x7E, b);
@@ -46,7 +46,7 @@ struct GRCG {
 		outportb(0x7E, e);
 	}
 
-	void setcolor(vc_t col);
+	void set_color(vc_t col);
 
 	~GRCG() {
 		_outportb_(0x7C, GC_OFF);

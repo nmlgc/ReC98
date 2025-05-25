@@ -67,7 +67,7 @@ void __fastcall naive_write(seg_t plane_seg, vram_byte_amount_t vram_w)
 	vram_byte_amount_t stride = (ROW_SIZE - vram_w);
 
 	GRCG grcg(GC_RMW);
-	grcg.setcolor(t.opt[OPT_SPRITE_COL].val);
+	grcg.set_color(t.opt[OPT_SPRITE_COL].val);
 	for(pixel_t y = 0; y < blit_state.h_clipped; y++) {
 		for(vram_byte_amount_t x = 0; x < vram_w; x++) {
 			pokeb(plane_seg, vo, sprite_p[x]);
