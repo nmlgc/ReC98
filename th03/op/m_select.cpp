@@ -234,7 +234,7 @@ void near story_sel_pics_put(void)
 	cdg_put_8(P2_LEFT, PIC_TOP, (CDG_PIC_SELECTED + 1));
 }
 
-#define stat_star_row_put(pid, row_top, star_i, star_left) { \
+#define stat_star_row_put(pid, row_top, stat_i, star_i, star_left) { \
 	star_i = 5; \
 	star_left = (((pid == 0) ? P1_LEFT : P2_LEFT) + STATS_W - 20); \
 	while(PLAYCHAR_STATS[sel[pid]][stat_i] < star_i) { \
@@ -264,9 +264,9 @@ void near stats_put(void)
 	stat_i = 0;
 	screen_y_t row_top = (STATS_TOP + 11);
 	while(stat_i < STAT_COUNT) {
-		stat_star_row_put(0, row_top, star_i, star_left);
+		stat_star_row_put(0, row_top, stat_i, star_i, star_left);
 		if(resident->game_mode != GM_STORY) {
-			stat_star_row_put(1, row_top, star_i, star_left);
+			stat_star_row_put(1, row_top, stat_i, star_i, star_left);
 		}
 		stat_i++;
 		row_top += STAT_STAR_H;

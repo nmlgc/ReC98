@@ -216,7 +216,7 @@ template <int SnakeCount> struct Snakes {
 #define snakes_unput_update_render(tmp_i, tmp_j, tmp_angle) \
 	for(tmp_i = 0; tmp_i < snakes.count(); tmp_i++) { \
 		/* Snake update */ \
-		if(snakes.left[i][0] == -PIXEL_NONE) { \
+		if(snakes.left[tmp_i][0] == -PIXEL_NONE) { \
 			continue; \
 		} \
 		/* The last trail sprite is the only one we have to unblit here. */ \
@@ -231,7 +231,7 @@ template <int SnakeCount> struct Snakes {
 		/* Render…? Before update? */ \
 		for(tmp_j = (SNAKE_TRAIL_COUNT - 2); tmp_j >= 1; tmp_j--) { \
 			shape8x8_diamond_put( \
-				snakes.left[tmp_i][tmp_j], snakes.top[i][tmp_j], 9 \
+				snakes.left[tmp_i][tmp_j], snakes.top[tmp_i][tmp_j], 9 \
 			); \
 		} \
 		shape8x8_diamond_put( \
@@ -274,8 +274,10 @@ template <int SnakeCount> struct Snakes {
 
 #define snakes_unput_all(snakes, tmp_i, tmp_j) \
 	for(tmp_i = 0; tmp_i < snakes.count(); tmp_i++) { \
-		for(j = 0; j < SNAKE_TRAIL_COUNT; j++) { \
-			shape8x8_sloppy_unput(snakes.left[i][j], snakes.top[i][j]); \
+		for(tmp_j = 0; tmp_j < SNAKE_TRAIL_COUNT; tmp_j++) { \
+			shape8x8_sloppy_unput( \
+				snakes.left[tmp_i][tmp_j], snakes.top[tmp_i][tmp_j] \
+			); \
 		} \
 	}
 // ------
