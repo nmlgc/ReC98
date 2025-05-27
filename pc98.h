@@ -177,6 +177,11 @@ template <class RGBType> struct Palette {
 typedef RGB<svc_comp_t, 16> RGB4;
 typedef Palette<RGB4> Palette4;
 
+// master.lib and .PI palettes use twice the bits per RGB component for more
+// toning precision.
+typedef RGB<uint8_t, 256> RGB8;
+typedef Palette<RGB8> Palette8;
+
 #define palette_foreach(tmp_col, tmp_comp, func) { \
 	for(tmp_col = 0; tmp_col < COLOR_COUNT; tmp_col++) { \
 		for(tmp_comp = 0; tmp_comp < COMPONENT_COUNT; tmp_comp++) { \

@@ -8,15 +8,6 @@
 #include "pc98.h"
 #include "x86real.h"
 
-// Types
-// -----
-
-// master.lib palettes use twice the bits per RGB component for more
-// toning precision
-typedef RGB<uint8_t, 256> RGB8;
-typedef Palette<RGB8> Palette8;
-/// -----
-
 /// Original functions
 /// ------------------
 
