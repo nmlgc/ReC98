@@ -203,7 +203,7 @@ void MASTER_RET respal_free(void);
 
 // Incremented by 1 on every VSync interrupt. Can be manually reset to 0 to
 // simplify frame delay loops.
-extern __cdecl volatile unsigned int vsync_Count1, vsync_Count2;
+extern volatile unsigned int __cdecl vsync_Count1, vsync_Count2;
 
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);
