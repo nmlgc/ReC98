@@ -299,9 +299,9 @@ end
 -- Third-party libraries
 -- ---------------------
 
-local piloadc = Config:branch({ aflags = "/ml" }):build({
-	"libs/piloadc/piloadc.asm"
-})[1]
+local piload_cfg = Config:branch({ aflags = "/ml" })
+local piloadc = piload_cfg:build({ "libs/piloadc/piloadc.asm" })
+local piloadm = piload_cfg:build({ "libs/piloadc/piloadm.asm" })
 local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 	{ "libs/sprite16/sprite16.asm", o = "th03/zunsp.obj" }
 })[1]
@@ -1045,6 +1045,16 @@ local research_cfg = optimized_cfg:branch(Subdir("Research/"), MODEL_SMALL)
 research_cfg:link("holdkey", {
 	"Research/holdkey.c",
 	"bin/masters.lib",
+})
+
+research_cfg:branch({ cflags = "-DCPU=386" }):link("pi_bench", {
+	"Research/pi_bench.cpp",
+	research_cfg:build_uncached("platform/x86real/noexcept.cpp"),
+	research_cfg:build_uncached("platform/x86real/pc98/blitter.cpp"),
+	research_cfg:build_uncached("platform/x86real/pc98/grp_clip.cpp"),
+	"platform/x86real/pc98/graph.cpp",
+	"bin/masters.lib",
+	piloadm,
 })
 
 local research_sprites = Sprites({
