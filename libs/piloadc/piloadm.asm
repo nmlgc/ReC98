@@ -1,6 +1,6 @@
 ; ReC98 fork of PiLoad. The full list of changes:
+; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
 ; • Removed the default palette
-; • The format ID is 'NZ', rather than 'iP'. (Lol)
 ; ----------------------------------------------------------------------------
 
 ;//////////////////////////////////////////////////////////////////////////////
@@ -304,8 +304,11 @@ piload0:
 	call	fread
 	mov	si,bx
 	lodsw
-	cmp	ax,'NZ'	;ID check
+	mov	cx,ax
 	mov	ax,-31
+	cmp	cx,'iP'	;ID check
+	jz	pilop
+	cmp	cx,'NZ'
 	jz	pilop
 error:	ret
 pilop:
