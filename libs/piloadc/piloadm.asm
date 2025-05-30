@@ -1,8 +1,6 @@
-; The only change in ZUN's fork: The format ID is 'NZ', rather than 'iP'. Lol.
-
-; For compatibility with later TASM versions, "segcs movsw" has also been
-; spelled out to what it's actually supposed to mean.
-; 	(movs word ptr es:[di], word ptr cs:[si])
+; ReC98 fork of PiLoad. The full list of changes:
+; • Removed the default palette
+; • The format ID is 'NZ', rather than 'iP'. (Lol)
 ; ----------------------------------------------------------------------------
 
 ;//////////////////////////////////////////////////////////////////////////////
@@ -69,10 +67,6 @@ buffer	=	160h+line*(lin+2)
 parasize =	buffer
 	.code
 	locals
-dftpal	db	0,0,0,	0,0,07h,	7h,0,0,		7h,0,7h
-	db	0,7h,0,	0,7h,7h,	7h,7h,0,	7h,7h,7h
-	db	0,0,0,	0,0,0fh,	0fh,0,0,	0fh,0,0fh
-	db	0,0fh,0,0,0fh,0fh,	0fh,0fh,0,	0fh,0fh,0fh
 spreg	dw	?
 dsseg	dw	?
 
@@ -445,15 +439,8 @@ codee:
 	shr	al,4
 	stosb
 	loop	@@lop1
-	mov	bx,si
-	jmp	short	palend
 nopalet:
 	mov	bx,si
-	mov	si,offset dftpal
-	mov	di,PaletteBuff
-	mov	cx,12
-rep	movs word ptr es:[di], word ptr cs:[si]
-palend:
 	test	option,1
 	jz	@@skip
 	call	palset
