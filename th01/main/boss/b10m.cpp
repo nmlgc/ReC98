@@ -283,9 +283,6 @@ void yuugenmagan_load(void)
 
 void yuugenmagan_setup(void)
 {
-	svc2 col;
-	int comp;
-
 	grp_palette_load_show("boss2.grp");
 	boss_palette_snap();
 
@@ -295,7 +292,7 @@ void yuugenmagan_setup(void)
 	eye_southeast.set_image(C_HIDDEN);
 	eye_north    .set_image(C_HIDDEN);
 
-	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
+	boss_post_defeat_palette = z_Palettes;
 
 	// These exactly correspond to the yellow boxes in BOSS2.GRP.
 	eye_west     .pos_set(     EYE_WEST_LEFT, EYE_LATERAL_TOP);
