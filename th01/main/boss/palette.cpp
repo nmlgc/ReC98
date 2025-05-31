@@ -7,9 +7,7 @@ Palette4 boss_post_defeat_palette;
 
 void boss_palette_snap(void)
 {
-	svc2 col;
-	int comp;
-	palette_copy(boss_palette, z_Palettes, col, comp);
+	boss_palette = z_Palettes;
 }
 
 void boss_palette_show(void)

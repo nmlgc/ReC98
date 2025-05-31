@@ -140,12 +140,9 @@ static union {
 
 void mima_load(void)
 {
-	svc2 col;
-	int comp;
-
 	mima_ent_load();
 	grp_palette_load_show("boss3.grp");
-	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
+	boss_post_defeat_palette = z_Palettes;
 	void mima_setup(void);
 	mima_setup();
 	ptn_new(

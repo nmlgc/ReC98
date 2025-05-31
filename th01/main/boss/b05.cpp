@@ -134,13 +134,10 @@ static union {
 
 void singyoku_load(void)
 {
-	svc2 col;
-	int comp;
-
 	singyoku_ent_load();
 
 	grp_palette_load_show("boss1.grp");
-	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
+	boss_post_defeat_palette = z_Palettes;
 	stage_palette_set(boss_post_defeat_palette);
 
 	void singyoku_setup(void);
