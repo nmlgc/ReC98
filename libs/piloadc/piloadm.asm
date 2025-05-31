@@ -1,6 +1,6 @@
 ; ReC98 fork of PiLoad. The full list of changes:
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
-; • Removed the default palette
+; • Removed all palette and tone setting code
 ; • Removed the Pascal entry points (might restore them if other PC-98 homebrew
 ;   developers actually need them)
 ; • Slightly optimized VRAM transfer by jumping over the GRCG shutdown when
@@ -51,7 +51,7 @@ x_pos	=	word ptr ds:[130h]
 y_pos	=	word ptr ds:[132h]
 x_wid	=	word ptr ds:[134h]
 y_wid	=	word ptr ds:[136h]
-tone	=	byte ptr ds:[138h]
+tone	=	byte ptr ds:[138h] ; unused
 option	=	byte ptr ds:[139h]
 tcol	=	byte ptr ds:[13ah]
 flg800	=	byte ptr ds:[13bh]
@@ -65,18 +65,17 @@ yscroll	=	word ptr ds:[148h] ; unused
 y_wid2	=	word ptr ds:[14ah]
 x_wid2	=	word ptr ds:[14ch]
 ;bfseg	=	word ptr ds:[14eh]
-tonetbl	=	150h
-gbuff	=	160h
-buffer	=	160h+line*(lin+2)
+gbuff	=	150h
+buffer	=	150h+line*(lin+2)
 parasize =	buffer
 	.code
 	locals
 spreg	dw	?
 dsseg	dw	?
 
-	public	_PiLoad,_ToneSet
+	public	_PiLoad
 _PiLoad	proc	near
-	arg		nam:word,buf,bufsiz,x,y,ton,opt:word
+	arg		nam:word,buf,bufsiz,x,y,opt:word
 	push	bp
 	mov	bp,sp
 	push	si
@@ -96,7 +95,6 @@ _PiLoad	proc	near
 	sub	si,ax
 	mov	bx,x
 	mov	cx,y
-	mov	di,ton
 	mov	ax,opt
 	call	piload0
 	pop	ds
@@ -106,26 +104,9 @@ _PiLoad	proc	near
 	ret
 _PiLoad	endp
 
-_ToneSet	proc	near
-	mov	bx,sp
-	push	ds
-	push	si
-	push	di
-	mov	ax,dsseg
-	mov	ds,ax
-	mov	es,ax
-	mov	al,ss:[bx+2]
-	mov	tone,al
-	call	palset
-	pop	di
-	pop	si
-	pop	ds
-	ret
-_ToneSet	endp
-
-	public	_PiLoadL,_ToneSetL
+	public	_PiLoadL
 _PiLoadL	proc	far
-	arg		nam:dword,buf:dword,bufsiz,x,y,ton,opt:word
+	arg		nam:dword,buf:dword,bufsiz,x,y,opt:word
 	push	bp
 	mov	bp,sp
 	push	si
@@ -143,7 +124,6 @@ _PiLoadL	proc	far
 	sub	si,ax
 	mov	bx,x
 	mov	cx,y
-	mov	di,ton
 	mov	ax,opt
 	call	piload0
 	pop	ds
@@ -153,26 +133,9 @@ _PiLoadL	proc	far
 	retf
 _PiLoadL	endp
 
-_ToneSetL	proc	far
-	mov	bx,sp
-	push	ds
-	push	si
-	push	di
-	mov	ax,dsseg
-	mov	ds,ax
-	mov	es,ax
-	mov	al,ss:[bx+4]
-	mov	tone,al
-	call	palset
-	pop	di
-	pop	si
-	pop	ds
-	retf
-_ToneSetL	endp
-
 	public	_PiLoadC
 _PiLoadC	proc	near
-	arg		nam:dword,buf:dword,bufsiz,x,y,ton,opt:word
+	arg		nam:dword,buf:dword,bufsiz,x,y,opt:word
 	push	bp
 	mov	bp,sp
 	push	si
@@ -190,7 +153,6 @@ _PiLoadC	proc	near
 	sub	si,ax
 	mov	bx,x
 	mov	cx,y
-	mov	di,ton
 	mov	ax,opt
 	call	piload0
 	pop	ds
@@ -206,7 +168,6 @@ _PiLoadC	endp
 ;		si	= size(paragraph)
 ;		bx	= x
 ;		cx	= y
-;		di	= tone
 ;		al	= option
 ;		ah	= tcol
 	public	piload0
@@ -219,8 +180,6 @@ piload0:
 	mov	x_pos,bx
 	mov	y_pos,cx
 	mov	word ptr option,ax
-	mov	ax,di
-	mov	tone,al
 
 	xor	ax,ax
 	mov	flg800,al
@@ -391,10 +350,6 @@ codee:
 	loop	@@lop1
 nopalet:
 	mov	bx,si
-	test	option,1
-	jz	@@skip
-	call	palset
-@@skip:
 	call	maketbl
 	mov	dh,1
 	mov	di,gbuff
@@ -969,80 +924,6 @@ fin:
 	call	fclose
 	mov	sp,spreg
 	xor	ax,ax
-	ret
-
-;	パレット設定
-
-;	in	al=tone	[PaletteBuff]=palet
-
-mul38	dw	0,38,76,114,152,190,228,266,304,342,380,418,456,494,532,570
-mul75	dw	0,75,150,225,300,375,450,525,600,675,750,825,900,975,1050,1125
-mul15	dw	0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225
-palset:
-	push	bx
-	mov	bl,tone
-	mov	bh,100
-	mov	di,tonetbl
-	xor	cx,cx
-@@plop:
-	mov	al,cl
-	mul	bl
-	div	bh
-	stosb
-	inc	cl
-	cmp	cl,16
-	jnz	@@plop
-
-	mov	si,PaletteBuff
-	mov	bx,tonetbl
-	mov	cx,16
-	xor	ah,ah
-	test	option,16
-	jnz	@@lop2
-@@lop:				;通常
-	mov	al,ah
-	out	0a8h,al	;palet	no
-	lodsb
-	xlat	[bx]
-	out	0ach,al	;red
-	lodsb
-	xlat	[bx]
-	out	0aah,al	;green
-	lodsb
-	xlat	[bx]
-	out	0aeh,al	;blue
-	inc	ah
-	loop	@@lop
-	pop	bx
-	ret
-@@lop2:				;NOTE用
-	mov	al,16
-	sub	al,cl
-	out	0a8h,al	;palet	no
-	mov	dx,64
-	lodsb
-	shl1	al
-	mov	di,ax
-	add	dx,mul38[di]
-	lodsb
-	shl1	al
-	mov	di,ax
-	add	dx,mul75[di]
-	lodsb
-	shl1	al
-	mov	di,ax
-	add	dx,mul15[di]
-	mov	al,7
-	sub	al,dh
-	xlat	[bx]
-	mov	dl,al
-	irp	port,<0aeh,0ach,0aah>
-	shr	dl,1
-	sbb	al,al
-	out	port,al
-	endm
-	loop	@@lop2
-	pop	bx
 	ret
 
 	end
