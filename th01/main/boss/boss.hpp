@@ -70,8 +70,6 @@ enum boss_id_t {
 	BID_ELIS,
 	BID_SARIEL,
 	BID_KONNGARA,
-
-	_boss_id_t_FORCE_INT16 = 0x7FFF
 };
 
 static const pixel_t SINGYOKU_W = 96;
