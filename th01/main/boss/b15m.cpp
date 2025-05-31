@@ -20,7 +20,6 @@
 #include "th01/main/player/player.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/defeat.hpp"
-#include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -545,21 +544,12 @@ void elis_load(void)
 	grc_load(GRC_SLOT_BOSS_1, "boss5_gr.grc");
 	ptn_new(PTN_SLOT_BG_ENT, ((GIRL_W / PTN_W) * (GIRL_H / PTN_H)));
 	Missiles.load(PTN_SLOT_MISSILE);
-
-	// ZUN bloat: Since we come here shortly after process startup, this
-	// unnecessarily captures the initial default state of [z_Palettes].
-	// The actual palette is captured later on in elis_main().
-	boss_palette_snap();
-
 	void elis_setup(void);
 	elis_setup();
 }
 
 void elis_setup(void)
 {
-	svc2 col;
-	int comp;
-
 	ent_still_or_wave.pos_set(BASE_LEFT, BASE_TOP);
 
 	// ZUN bloat: These two are redundant, as they're synced with
@@ -583,7 +573,6 @@ void elis_setup(void)
 	hud_hp_first_redwhite = HP_PHASE_3_END;
 
 	random_seed = frame_rand;
-	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
 }
 
 void elis_free(void)
@@ -1870,7 +1859,6 @@ void elis_main(void)
 			trails.top[sphere_i][0] = head_top; \
 		}
 
-		boss_palette_snap();
 		girl_bg_snap(1);
 
 		// Trailing rotation
