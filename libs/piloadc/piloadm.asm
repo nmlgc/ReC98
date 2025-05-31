@@ -3,6 +3,8 @@
 ; • Removed the default palette
 ; • Removed the Pascal entry points (might restore them if other PC-98 homebrew
 ;   developers actually need them)
+; • Slightly optimized VRAM transfer by jumping over the GRCG shutdown when
+;   blitting without a transparent color
 ; ----------------------------------------------------------------------------
 
 ;//////////////////////////////////////////////////////////////////////////////
@@ -872,12 +874,13 @@ xlop:
 	or	al,ah
 	stosb
 	dec	cx
-	jz	xend
+	jz	xend_grcg
 	jmp	xlop
 
-xend:
+xend_grcg:
 	xor	al,al
 	out	7ch,al
+xend:
 	mov	cx,x_wid2
 	and	cx,7
 	jz	ext
