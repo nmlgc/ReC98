@@ -12,7 +12,6 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/grp.h"
 #include "th01/sprites/pellet.h"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
@@ -283,16 +282,11 @@ void yuugenmagan_load(void)
 
 void yuugenmagan_setup(void)
 {
-	grp_palette_load_show("boss2.grp");
-	boss_palette_snap();
-
 	eye_west     .set_image(C_HIDDEN);
 	eye_east     .set_image(C_HIDDEN);
 	eye_southwest.set_image(C_HIDDEN);
 	eye_southeast.set_image(C_HIDDEN);
 	eye_north    .set_image(C_HIDDEN);
-
-	boss_post_defeat_palette = z_Palettes;
 
 	// These exactly correspond to the yellow boxes in BOSS2.GRP.
 	eye_west     .pos_set(     EYE_WEST_LEFT, EYE_LATERAL_TOP);

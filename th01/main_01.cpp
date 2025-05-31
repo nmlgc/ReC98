@@ -32,6 +32,7 @@
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/shot.hpp"
 #include "th01/main/boss/entity_a.hpp"
+#include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/card.hpp"
@@ -143,6 +144,16 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 			grp_put(bg_fn, GPF_PALETTE_SHOW);
 		}
 		stage_palette_set(z_Palettes);
+		if(boss_id != BID_NONE) {
+			boss_palette_snap();
+			if((boss_id == BID_ELIS) || (boss_id == BID_KIKURI)) {
+				vc_t col;
+				uint8_t comp;
+				palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
+			} else {
+				boss_post_defeat_palette = z_Palettes;
+			}
+		}
 
 		// Copy the raw background image to page 1, so that
 		// stageobjs_init_and_render() can snap the correct backgrounds.
