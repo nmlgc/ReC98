@@ -1,5 +1,7 @@
 ; ReC98 fork of PiLoad. The full list of changes:
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
+; • [PaletteBuff] now receives the original 8-bit palette from the file's
+;   header instead of getting shifted down to 4 bits
 ; • Removed all palette and tone setting code
 ; • Removed the Pascal entry points (might restore them if other PC-98 homebrew
 ;   developers actually need them)
@@ -341,13 +343,9 @@ codee:
 
 	test	bl,080h	;palet	check
 	jnz	nopalet
-	mov	cx,48
+	mov	cx,((16 * 3) / 2)
 	mov	di,PaletteBuff
-@@lop1:
-	lodsb
-	shr	al,4
-	stosb
-	loop	@@lop1
+	rep	movsw
 nopalet:
 	mov	bx,si
 	call	maketbl
