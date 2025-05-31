@@ -56,6 +56,8 @@ int rem_lives = 4;
 unsigned long frame_rand;
 // ------------------------------------------------------------
 
+boss_id_t boss_id = BID_NONE;
+
 struct {
 	// Specifies whether PTN_SLOT_STG contains the full set of sprites required
 	// for card-flipping stages (`false`), or the trimmed-down version for boss
@@ -209,8 +211,6 @@ void error_resident_invalid(void)
 {
 	printf(ERROR_RESIDENT_INVALID);
 }
-
-int8_t boss_id = BID_NONE; // ACTUAL TYPE: boss_id_t
 
 void boss_free(void)
 {
@@ -400,12 +400,13 @@ int main_main(int, const char *[])
 			break;
 
 		case ((1 * STAGES_PER_SCENE) + BOSS_STAGE):
-			boss_id = (BID_YUUGENMAGAN + route);
 			if(route == ROUTE_MAKAI) {
+				boss_id = BID_YUUGENMAGAN;
 				strcpy(bgm_fn, "LEGEND.mdt");
 				strcpy(grp_fn, "boss2.grp");
 				yuugenmagan_load();
 			} else {
+				boss_id = BID_MIMA;
 				strcpy(bgm_fn, "LEGEND.mdt");
 				strcpy(grp_fn, "boss3.grp");
 				mima_load();
@@ -414,13 +415,14 @@ int main_main(int, const char *[])
 			break;
 
 		case ((2 * STAGES_PER_SCENE) + BOSS_STAGE):
-			boss_id = (BID_KIKURI + (ROUTE_JIGOKU - route));
 			if(route == ROUTE_JIGOKU) {
+				boss_id = BID_KIKURI;
 				strcpy(bgm_fn, "kami.mdt");
 				strcpy(grp_fn, "boss4.grp");
 				kikuri_load();
 				clear_vram_page_0 = true;
 			} else {
+				boss_id = BID_ELIS;
 				strcpy(bgm_fn, "kami2.mdt");
 				strcpy(grp_fn, "boss5.grp");
 				elis_load();
@@ -429,14 +431,14 @@ int main_main(int, const char *[])
 			break;
 
 		case ((3 * STAGES_PER_SCENE) + BOSS_STAGE):
-			boss_id = (BID_SARIEL + route);
-
 			// ZUN bloat: Both bosses have their own BGM playback calls.
 			if(route == ROUTE_MAKAI) {
+				boss_id = BID_SARIEL;
 				strcpy(bgm_fn, "tensi.mdt");
 				sariel_load_and_init();
 				clear_vram_page_0 = true;
 			} else {
+				boss_id = BID_KONNGARA;
 				strcpy(bgm_fn, "alice.mdt");
 				konngara_init();
 				clear_vram_page_0 = false;
@@ -464,14 +466,14 @@ int main_main(int, const char *[])
 
 		stage_num = (stage_id + 1);
 
-		if((boss_id != BID_SARIEL) && (boss_id != BID_KONNGARA)) {
-			stage_entrance(
-				(stage_id % STAGES_PER_SCENE), grp_fn, clear_vram_page_0
-			);
-		} else if(boss_id == BID_KONNGARA) {
+		if(boss_id == BID_KONNGARA) {
 			konngara_load_and_entrance(0);
 		} else if(boss_id == BID_SARIEL) {
 			sariel_entrance(0);
+		} else {
+			stage_entrance(
+				(stage_id % STAGES_PER_SCENE), grp_fn, clear_vram_page_0
+			);
 		}
 
 		timer_init_for((stage_num - 1), route);
