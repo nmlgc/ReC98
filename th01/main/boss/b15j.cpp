@@ -169,11 +169,6 @@ void kikuri_load(void)
 
 	pellet_interlace = true;
 
-	// ZUN bloat: Since we come here shortly after process startup, this
-	// unnecessarily captures the initial default state of [z_Palettes].
-	// The actual palette is captured later on in kikuri_main().
-	boss_palette_snap();
-
 	for(i = 0; i < TEAR_COUNT; i++) {
 		tear_anim_frame[i] = 0;
 	}
@@ -185,9 +180,6 @@ void kikuri_load(void)
 
 void kikuri_setup(void)
 {
-	svc2 col;
-	int comp;
-
 	boss_phase = 0;
 	boss_phase_frame = 0;
 
@@ -195,8 +187,6 @@ void kikuri_setup(void)
 	boss_hp = HP_TOTAL;
 	hud_hp_first_white = HP_PHASE_2_END;
 	hud_hp_first_redwhite = HP_PHASE_5_END;
-
-	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
 }
 
 void kikuri_free(void)
@@ -936,8 +926,6 @@ void kikuri_main(void)
 		boss_phase_frame = 0;
 		y = 0;
 		hit.invincible = false;
-
-		boss_palette_snap();
 
 		// MODDERS: Loop over [flash_colors] instead.
 		z_palette_set_show( 2, RGB4::max(), RGB4::max(), RGB4::max());

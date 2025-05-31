@@ -12,14 +12,12 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/grp.h"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/pillar.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
-#include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -141,8 +139,6 @@ static union {
 void mima_load(void)
 {
 	mima_ent_load();
-	grp_palette_load_show("boss3.grp");
-	boss_post_defeat_palette = z_Palettes;
 	void mima_setup(void);
 	mima_setup();
 	ptn_new(
@@ -342,12 +338,16 @@ void mima_vertical_sprite_transition_broken(void)
 
 void mima_setup(void)
 {
-	boss_palette_snap();
 	ent_still.set_image(0);
 	ent_anim.set_image(C_METEOR);
 
-	// Since we always come here with VRAM fully set to color #0, this is
-	// always a flash from white back to color #0 in boss3.grp.
+	// We always come here with VRAM fully set to color #0 and #000 in that
+	// hardware palette slot. In the original game, this call flashes from
+	// white back to color #0 in boss3.grp, but for cleanup reasons, we haven't
+	// loaded that palette on this branch yet. Thus, this call always flashes
+	// to black, as ZUN intended.
+	// (Even *if* you modded color #0 in that file, it would look very weird to
+	// already see it at this point, before the entrance animation.)
 	z_palette_white_in();
 
 	ent_still.pos_set((PLAYFIELD_CENTER_X - (MIMA_W / 2)), PLAYFIELD_TOP);
@@ -1221,8 +1221,6 @@ void mima_main(void)
 		boss_phase = 1;
 		phase.pattern_cur = 0;
 		initial_hp_rendered = false;
-		stage_palette_set(z_Palettes);
-		boss_palette_snap();
 
 		// Doing some static initialization that wouldn't have been necessary
 		// if this function was coded properly...

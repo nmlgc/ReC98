@@ -10,7 +10,6 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/grp.h"
 #include "th01/sprites/pellet.h"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
@@ -135,18 +134,12 @@ static union {
 void singyoku_load(void)
 {
 	singyoku_ent_load();
-
-	grp_palette_load_show("boss1.grp");
-	boss_post_defeat_palette = z_Palettes;
-	stage_palette_set(boss_post_defeat_palette);
-
 	void singyoku_setup(void);
 	singyoku_setup();
 }
 
 void singyoku_setup(void)
 {
-	boss_palette_snap();
 	z_palette_set_all_show(z_Palettes);
 
 	ent.pos_set(PLAYFIELD_RIGHT, PLAYFIELD_TOP, 32);
