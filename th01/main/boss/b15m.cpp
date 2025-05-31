@@ -571,7 +571,12 @@ void elis_load(void)
 	grc_load(GRC_SLOT_BOSS_1, "boss5_gr.grc");
 	ptn_new(PTN_SLOT_BG_ENT, ((GIRL_W / PTN_W) * (GIRL_H / PTN_H)));
 	Missiles.load(PTN_SLOT_MISSILE);
+
+	// ZUN bloat: Since we come here shortly after process startup, this
+	// unnecessarily captures the initial default state of [z_Palettes].
+	// The actual palette is captured later on in elis_main().
 	boss_palette_snap();
+
 	void elis_setup(void);
 	elis_setup();
 

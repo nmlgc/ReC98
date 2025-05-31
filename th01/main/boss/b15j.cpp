@@ -178,6 +178,10 @@ void kikuri_load(void)
 
 	pellet_interlace = true;
 	Pellets.unknown_seven = 7;
+
+	// ZUN bloat: Since we come here shortly after process startup, this
+	// unnecessarily captures the initial default state of [z_Palettes].
+	// The actual palette is captured later on in kikuri_main().
 	palette_copy(boss_palette, z_Palettes, i, j); // = boss_palette_snap
 
 	for(i = 0; i < TEAR_COUNT; i++) {
