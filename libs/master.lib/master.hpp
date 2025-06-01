@@ -208,6 +208,7 @@ extern volatile unsigned int __cdecl vsync_Count1, vsync_Count2;
 
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);
+void MASTER_RET vsync_wait(void);
 // -----
 #ifdef __cplusplus
 }
