@@ -1,6 +1,8 @@
 ; ReC98 fork of PiLoad. The full list of changes:
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
 ; • Removed the default palette
+; • Removed the Pascal entry points (might restore them if other PC-98 homebrew
+;   developers actually need them)
 ; ----------------------------------------------------------------------------
 
 ;//////////////////////////////////////////////////////////////////////////////
@@ -69,63 +71,6 @@ parasize =	buffer
 	locals
 spreg	dw	?
 dsseg	dw	?
-
-	public	PiLoad,ToneSet
-PiLoad	proc	near
-opt	=	word ptr [bp+4]
-ton	=	word ptr [bp+6]
-y	=	word ptr [bp+8]
-x	=	word ptr [bp+10]
-bufsiz	=	word ptr [bp+12]
-buf	=	dword ptr [bp+14]
-nam	=	dword ptr [bp+18]
-	push	bp
-	mov	bp,sp
-	push	ds
-	lds	dx,nam
-	mov	ax,word ptr buf
-	add	ax,15
-	shr	ax,4
-	add	ax,word ptr buf+2
-	mov	es,ax
-	cld
-	mov	si,dx
-	xor	dx,dx
-	mov	di,dx
-	lodsb
-	xor	ch,ch
-	mov	cl,al
-	rep	movsb
-	xor	al,al
-	stosb
-	push	es
-	pop	ds
-	mov	si,bufsiz
-	mov	ax,word ptr buf
-	and	ax,15
-	sub	si,ax
-	mov	bx,x
-	mov	cx,y
-	mov	di,ton
-	mov	ax,opt
-	call	piload0
-	pop	ds
-	pop	bp
-	ret	16
-PiLoad	endp
-
-ToneSet	proc	near
-	mov	bx,sp
-	push	ds
-	mov	ax,dsseg
-	mov	ds,ax
-	mov	es,ax
-	mov	al,ss:[bx+2]
-	mov	tone,al
-	call	palset
-	pop	ds
-	ret	2
-ToneSet	endp
 
 	public	_PiLoad,_ToneSet
 _PiLoad	proc	near
