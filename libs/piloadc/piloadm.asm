@@ -78,6 +78,20 @@ parasize =	buffer
 spreg	dw	?
 dsseg	dw	?
 
+; Segment-aligns the data buffer address (BX:CX) and size (SI) received from
+; the entry point. Thrashes AX.
+buf_align proc near
+	mov	ax,cx
+	add	ax,15
+	shr	ax,4
+	add	ax,bx
+	mov	ds,ax
+	mov	ax,cx
+	and	ax,15
+	sub	si,ax
+	ret
+buf_align endp
+
 	public	_PiLoad
 _PiLoad	proc	near
 	arg		nam:word,buf,bufsiz,x,y,opt:word
@@ -89,15 +103,9 @@ _PiLoad	proc	near
 	mov	bx,ds
 	mov	es,bx
 	mov	dx,nam
-	mov	ax,buf
-	add	ax,15
-	shr	ax,4
-	add	ax,bx
-	mov	ds,ax
+	mov	cx,buf
 	mov	si,bufsiz
-	mov	ax,buf
-	and	ax,15
-	sub	si,ax
+	call	buf_align
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
@@ -118,15 +126,10 @@ _PiLoadL	proc	far
 	push	di
 	push	ds
 	les	dx,nam
-	mov	ax,word ptr buf
-	add	ax,15
-	shr	ax,4
-	add	ax,word ptr buf+2
-	mov	ds,ax
+	mov	bx,word ptr buf+2
+	mov	cx,word ptr buf
 	mov	si,bufsiz
-	mov	ax,word ptr buf
-	and	ax,15
-	sub	si,ax
+	call	buf_align
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
@@ -147,15 +150,10 @@ _PiLoadC	proc	near
 	push	di
 	push	ds
 	les	dx,nam
-	mov	ax,word ptr buf
-	add	ax,15
-	shr	ax,4
-	add	ax,word ptr buf+2
-	mov	ds,ax
+	mov	bx,word ptr buf+2
+	mov	cx,word ptr buf
 	mov	si,bufsiz
-	mov	ax,word ptr buf
-	and	ax,15
-	sub	si,ax
+	call	buf_align
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
