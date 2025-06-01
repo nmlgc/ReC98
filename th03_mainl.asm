@@ -2367,7 +2367,7 @@ loc_C43C:
 		assume es:nothing
 		add	bx, si
 		mov	al, es:[bx+resident_t.pid_winner]
-		mov	[si+27DCh], al
+		mov	_score[si], al
 		inc	si
 
 loc_C44B:
