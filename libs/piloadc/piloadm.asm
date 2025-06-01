@@ -79,6 +79,7 @@ parasize =	buffer
 	locals
 spreg	dw	?
 dsseg	dw	?
+trans_func	dw	?
 read_func	label dword
 read_func_off	dw	?
 read_func_seg	dw	?
@@ -193,6 +194,9 @@ piblit0:
 	mov	x_pos,bx
 	mov	y_pos,cx
 	mov	word ptr option,ax
+
+	mov	ax,offset gtrans
+	mov	trans_func,ax
 
 	mov	ax,-8
 	cmp	si,parasize+18+48
@@ -371,7 +375,7 @@ bit0:
 	db	81h,0ffh;cmp di,nn
 bufend4	dw	?
 	jnz	while1
-	call	gtrans
+	call	trans
 ;	jmp	while1
 while1:
 	get1bit	8
@@ -435,14 +439,14 @@ cjmp02:
 	jc	noplop
 	xor	bp,bp
 	jmp	while1
-cjmp01:	call	gtrans
+cjmp01:	call	trans
 	jmp	cjmp02
 
 jmp2:
 	sub	cx,ax
 	xchg	cx,ax
 	rep	movsw
-	call	gtrans
+	call	trans
 	sub	si,line4
 	jmp	short jmp1
 
@@ -453,7 +457,7 @@ lop0:
 	cmp	di,bufend
 	loopnz	lop0
 	jnz	jmp1
-	call	gtrans
+	call	trans
 	sub	si,line4
 	jcxz	jmp1
 	jmp	short	lop0
@@ -609,8 +613,7 @@ fread:
 	mov	sp,spreg
 	ret
 
-;	gbuffからlinライン分表示(gbuff->VRAM)
-gtrans:
+trans proc near
 	pusha
 	push	es
 	mov	si,bufend
@@ -621,6 +624,15 @@ gtrans:
 	rep	movsw
 	mov	si,di
 	mov	cx,lin
+	call	trans_func
+	pop	es
+	popa
+	mov	di,bufbgn
+	retn
+trans endp
+
+;	gbuffからlinライン分表示(gbuff->VRAM)
+gtrans:
 ylop:
 	push	cx
 	mov	di,vadr
@@ -774,16 +786,12 @@ ext:
 	dec	y_wid2
 	jz	fin
 	dec	cx
-	jz	ext2
+	jz	gtrans_ret
 	jmp	ylop
-ext2:
-	pop	es
-	popa
-	mov	di,bufbgn
-	ret
 fin:
 	mov	sp,spreg
 	xor	ax,ax
+gtrans_ret:
 	ret
 
 	end
