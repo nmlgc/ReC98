@@ -1,5 +1,7 @@
 ; ReC98 fork of PiLoad. The full list of changes:
-; • Renamed the entry point to `PiBlit`
+; • Renamed the original direct-to-VRAM loading entry point to `PiBlit`
+; • Added a new `PiLoad` entry point that loads to a newly allocated 4-plane
+;   buffer
 ; • Input data is now provided through a read callback
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
 ; • [PaletteBuff] now receives the original 8-bit palette from the file's
@@ -68,10 +70,10 @@ fhandle	=	word ptr ds:[140h] ; unused
 bufbgn	=	word ptr ds:[142h]
 bufend	=	word ptr ds:[144h]
 bufsize	=	word ptr ds:[146h]
-yscroll	=	word ptr ds:[148h] ; unused
-y_wid2	=	word ptr ds:[14ah]
-x_wid2	=	word ptr ds:[14ch]
-;bfseg	=	word ptr ds:[14eh]
+y_wid2	=	word ptr ds:[148h]
+x_wid2	=	word ptr ds:[14ah]
+out_p	=	word ptr ds:[14ch] ; segment of first output bitplane
+psize	=	word ptr ds:[14eh] ; plane size in paragraphs
 gbuff	=	150h
 buffer	=	150h+line*(lin+2)
 parasize =	buffer
@@ -174,6 +176,118 @@ _PiBlitC	proc	near
 	ret
 _PiBlitC	endp
 
+	public _PiLoadHeader
+_PiLoadHeader proc near
+	arg	buf,bufsiz:word,reader:word,opt:byte
+	push	bp
+	mov	bp,sp
+	push	si
+	push	di
+	push	ds
+	mov	bx,ds
+	mov	cx,buf
+	mov	si,bufsiz
+	call	buf_align
+	xor	bx,bx
+	mov	es,bx
+	mov	dx,reader
+	mov	al,opt
+	call	piloadheader0
+	pop	ds
+	pop	di
+	pop	si
+	pop	bp
+	ret
+_PiLoadHeader endp
+
+	public _PiLoadHeaderL
+_PiLoadHeaderL proc far
+	arg	buf:dword,bufsiz:word,reader:dword,opt:byte
+	push	bp
+	mov	bp,sp
+	push	si
+	push	di
+	push	ds
+	mov	bx,word ptr buf+2
+	mov	cx,word ptr buf
+	mov	si,bufsiz
+	call	buf_align
+	les	dx,reader
+	mov	al,opt
+	call	piloadheader0
+	pop	ds
+	pop	di
+	pop	si
+	pop	bp
+	retf
+_PiLoadHeaderL endp
+
+	public _PiLoadHeaderC
+_PiLoadHeaderC proc near
+	arg	buf:dword,bufsiz:word,reader:word,opt:byte
+	push	bp
+	mov	bp,sp
+	push	si
+	push	di
+	push	ds
+	mov	bx,word ptr buf+2
+	mov	cx,word ptr buf
+	mov	si,bufsiz
+	call	buf_align
+	xor	bx,bx
+	mov	es,bx
+	mov	dx,reader
+	mov	al,opt
+	call	piloadheader0
+	pop	ds
+	pop	di
+	pop	si
+	pop	bp
+	ret
+_PiLoadHeaderC endp
+
+	public _PiLoadPlanes
+_PiLoadPlanes proc near
+	arg	plane_B:word,buf,bufsiz:word
+	push	bp
+	mov	bp,sp
+	push	si
+	push	di
+	push	ds
+	mov	bx,ds
+	mov	cx,buf
+	mov	si,bufsiz
+	call	buf_align
+	mov	ax,plane_B
+	call	piloadplanes0
+	pop	ds
+	pop	di
+	pop	si
+	pop	bp
+	ret
+_PiLoadPlanes endp
+
+	public _PiLoadPlanesL
+_PiLoadPlanesL proc far
+	arg	plane_B:word,buf:dword,bufsiz:word
+	push	bp
+	mov	bp,sp
+	push	si
+	push	di
+	push	ds
+	mov	bx,word ptr buf+2
+	mov	cx,word ptr buf
+	mov	si,bufsiz
+	call	buf_align
+	mov	ax,plane_B
+	call	piloadplanes0
+	pop	ds
+	pop	di
+	pop	si
+	pop	bp
+	retf
+_PiLoadPlanesL endp
+
 
 ;	in	es:dx	= read_func
 ;		ds:0	= buff
@@ -186,18 +300,31 @@ _PiBlitC	endp
 error0:
 	ret
 piblit0:
+	mov	x_pos,bx
+	mov	y_pos,cx
+	mov	word ptr option,ax
+	mov	ax,offset gtrans
+	mov	trans_func,ax
+	jmp	start
+
+;	in	es:dx	= read_func
+;		ds:0	= buff
+;		si	= size(paragraph)
+;		al	= option
+	public	piloadheader0
+piloadheader0:
+	mov	x_pos,0
+	mov	y_pos,0
+	mov	option,al
+	mov	ax,offset mtrans
+	mov	trans_func,ax
+
+start:
 	cld
 	mov	spreg,sp
 	mov	dsseg,ds
 	mov	read_func_off,dx
 	mov	read_func_seg,es
-	mov	x_pos,bx
-	mov	y_pos,cx
-	mov	word ptr option,ax
-
-	mov	ax,offset gtrans
-	mov	trans_func,ax
-
 	mov	ax,-8
 	cmp	si,parasize+18+48
 	jb	error0
@@ -339,6 +466,50 @@ codee:
 	mov	di,PaletteBuff
 	rep	movsw
 nopalet:
+	cmp	trans_func,offset gtrans
+	je	skip_alloc
+
+@@check_width:
+	; Width has to be a multiple of 8.
+	mov	ax,x_wid
+	test	ax,7
+	jz	@@valid_width
+	mov	ax,-32
+	jmp	error
+
+@@valid_width:
+	; 1bpp width × height has to fit within a segment minus 16 bytes…
+	shr	ax,3
+	mov	bx,y_wid
+	mul	bx
+	jnc	@@alloc
+	mov	ax,-32
+	jmp	error
+
+@@alloc:
+	; …because we paragraph-align the bitplanes for easier handling.
+	add	ax,0fh
+	shr	ax,4
+	mov	psize,ax
+	mov	cx,4
+	mul	cx
+	mov	si_resume,si
+	ret
+
+;	in	ax	= plane_B
+;		ds:0	= buff
+	public	piloadplanes0
+piloadplanes0:
+	cld
+	mov	spreg,sp
+	mov	dsseg,ds
+	mov	out_p,ax
+	mov	bx,ds
+	mov	es,bx
+	db	0BEh	;mov si,nn
+si_resume	dw	?
+
+skip_alloc:
 	mov	bx,si
 	call	maketbl
 	mov	dh,1
@@ -793,6 +964,68 @@ fin:
 	xor	ax,ax
 gtrans_ret:
 	ret
+
+;	Transfer [CX] lines from [gbuff] to the allocated buffer
+mtrans proc near
+	mov	bp,psize
+	mov	di,vadr
+@@ylop:
+	push	cx
+	mov	cx,x_wid
+	shr	cx,3
+@@xlop:
+	rept	4
+	lodsw
+	shl1	al
+	rcl1	bl
+	shl1	ah
+	rcl1	bl
+	shl1	al
+	rcl1	bh
+	shl1	ah
+	rcl1	bh
+	shl1	al
+	rcl1	dl
+	shl1	ah
+	rcl1	dl
+	shl1	al
+	rcl1	dh
+	shl1	ah
+	rcl1	dh
+	endm
+	mov	ax,out_p
+	mov	es,ax
+	mov	es:[di],dh
+	add	ax,bp
+	mov	es,ax
+	mov	es:[di],dl
+	add	ax,bp
+	mov	es,ax
+	mov	es:[di],bh
+	add	ax,bp
+	mov	es,ax
+	mov	al,bl
+	stosb
+	dec	cx
+	jz	@@xend
+	jmp	@@xlop
+
+@@xend:
+	pop	cx
+	dec	y_wid2
+	jz	@@fin
+	dec	cx
+	jz	@@ext2
+	jmp	@@ylop
+
+@@ext2:
+	mov	vadr,di
+	ret
+@@fin:
+	mov	sp,spreg
+	xor	ax,ax
+	ret
+mtrans endp
 
 	end
 
