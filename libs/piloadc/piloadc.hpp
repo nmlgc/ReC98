@@ -10,6 +10,7 @@
 #define PILOAD_ERR_NO_PI -31
 #define PILOAD_ERR_NOT_SUPPORTED -32
 
+// Small / Tiny model
 extern "C" int __cdecl near PiLoad(
 	const char __ds *name,
 	void __ds *buff,
@@ -19,6 +20,8 @@ extern "C" int __cdecl near PiLoad(
 	int tone,
 	int option
 );
+
+// Large / Huge model
 extern "C" int __cdecl far PiLoadL(
 	const char far *name,
 	void far *buff,
@@ -28,6 +31,8 @@ extern "C" int __cdecl far PiLoadL(
 	int tone,
 	int option
 );
+
+// Compact model
 extern "C" int __cdecl near PiLoadC(
 	const char far *name,
 	void far *buff,

@@ -27,12 +27,6 @@ C,Pascalから同じ様に呼び出すことができます。
 
 piloadc.obj
 -------------------------------------------------------------------------------
-small/tinyモデル
- int	PiLoad(char *name,char *buff,int Size,int X,int Y,int tone,int option)
-compact   モデル
- int	PiLoadC(char *name,char *buff,int Size,int X,int Y,int tone,int option)
-large/hugeモデル
- int	PiLoadL(char *name,char *buff,int Size,int X,int Y,int tone,int option)
 PASCAL
  function PiLoad( name:string; var buff; Size,X,Y,tone,option:integer):integer;
 
@@ -82,10 +76,7 @@ procedure ToneSet(tone:integer)	pascal
 -------------------------------------------------------------------------------
 Ｃでの使い方
 
-(1)ソース中で関数のプロトタイプ宣言をする
-int	PiLoad(char *name,char *buff,int Size,int X,int Y,int tone,int option);
-
-(2)piloadc.objをリンクする
+piloadc.objをリンクする
 MS-C	A>CL  <組み込みたいファイル.c> piload.obj
 TurboC	A>TCC <組み込みたいファイル.c> piload.obj
 
