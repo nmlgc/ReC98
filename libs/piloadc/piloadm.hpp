@@ -8,7 +8,7 @@
 // [read_func] returns the number of bytes actually read.
 
 // Small / Tiny model
-extern "C" int __cdecl near PiLoad(
+extern "C" int __cdecl near PiBlit(
 	void __ds *buff,
 	uint16_t Size,
 	int X,
@@ -18,7 +18,7 @@ extern "C" int __cdecl near PiLoad(
 );
 
 // Large / Huge model
-extern "C" int __cdecl far PiLoadL(
+extern "C" int __cdecl far PiBlitL(
 	void far *buff,
 	uint16_t Size,
 	int X,
@@ -28,7 +28,7 @@ extern "C" int __cdecl far PiLoadL(
 );
 
 // Compact model
-extern "C" int __cdecl near PiLoadC(
+extern "C" int __cdecl near PiBlitC(
 	void far *buff,
 	uint16_t Size,
 	int X,

@@ -1,4 +1,5 @@
 ; ReC98 fork of PiLoad. The full list of changes:
+; • Renamed the entry point to `PiBlit`
 ; • Input data is now provided through a read callback
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
 ; • [PaletteBuff] now receives the original 8-bit palette from the file's
@@ -96,8 +97,8 @@ buf_align proc near
 	ret
 buf_align endp
 
-	public	_PiLoad
-_PiLoad	proc	near
+	public	_PiBlit
+_PiBlit	proc	near
 	arg		buf,bufsiz,x,y,opt:word,reader:word
 	push	bp
 	mov	bp,sp
@@ -114,16 +115,16 @@ _PiLoad	proc	near
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
-	call	piload0
+	call	piblit0
 	pop	ds
 	pop	di
 	pop	si
 	pop	bp
 	ret
-_PiLoad	endp
+_PiBlit	endp
 
-	public	_PiLoadL
-_PiLoadL	proc	far
+	public	_PiBlitL
+_PiBlitL	proc	far
 	arg		buf:dword,bufsiz,x,y,opt:word,reader:dword
 	push	bp
 	mov	bp,sp
@@ -138,16 +139,16 @@ _PiLoadL	proc	far
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
-	call	piload0
+	call	piblit0
 	pop	ds
 	pop	di
 	pop	si
 	pop	bp
 	retf
-_PiLoadL	endp
+_PiBlitL	endp
 
-	public	_PiLoadC
-_PiLoadC	proc	near
+	public	_PiBlitC
+_PiBlitC	proc	near
 	arg		buf:dword,bufsiz,x,y,opt:word,reader:word
 	push	bp
 	mov	bp,sp
@@ -164,13 +165,13 @@ _PiLoadC	proc	near
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
-	call	piload0
+	call	piblit0
 	pop	ds
 	pop	di
 	pop	si
 	pop	bp
 	ret
-_PiLoadC	endp
+_PiBlitC	endp
 
 
 ;	in	es:dx	= read_func
@@ -180,10 +181,10 @@ _PiLoadC	endp
 ;		cx	= y
 ;		al	= option
 ;		ah	= tcol
-	public	piload0
+	public	piblit0
 error0:
 	ret
-piload0:
+piblit0:
 	cld
 	mov	spreg,sp
 	mov	dsseg,ds
