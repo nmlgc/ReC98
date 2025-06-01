@@ -65,6 +65,15 @@ void MASTER_RET js_end(void);
 int MASTER_RET js_sense(void);
 // --------
 
+// super.lib error codes
+// ---------------------
+
+#define NoError 0            	/* 正常終了 */
+#define FileNotFound -2      	/* ファイル名が見つからない */
+#define InsufficientMemory -8	/* メモリ不足 */
+#define InvalidData -13      	/* 無効なデータ */
+// ---------------------
+
 // Keyboard
 // --------
 
