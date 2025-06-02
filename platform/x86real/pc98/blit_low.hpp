@@ -204,7 +204,7 @@ inline void stationary_next(void) {
 	_SI = FP_OFF(sprite); \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
-	_CX = blit_state.sprite_w; \
+	_CX = blit_source.stride; \
 	\
 	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
 	/* [blit_state] can't be accessed anymore beyond this point! */ \
@@ -234,10 +234,10 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
 	if(skip_w_reg == X86::R_AX) { \
-		_AX = blit_state.sprite_w; \
+		_AX = blit_source.stride; \
 		_AX -= (width / BYTE_DOTS); \
 	} else if(skip_w_reg == X86::R_CX) { \
-		_CX = blit_state.sprite_w; \
+		_CX = blit_source.stride; \
 		_CX -= (width / BYTE_DOTS); \
 	} \
 	__emit__(0xFC); /* CLD */ \

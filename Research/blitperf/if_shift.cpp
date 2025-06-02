@@ -9,6 +9,9 @@
 
 static const pixel_t SPRITE_W = 8;
 static const pixel_t SPRITE_H = 8;
+static const vram_byte_amount_t SPRITE_STRIDE = (
+	(SPRITE_W + PRESHIFT) / BYTE_DOTS
+);
 typedef dot_rect_t(16, SPRITE_H) sprite_rect_t;
 
 const char BANNER[] = "PC-98 blitting check/shift benchmark (" _(CPU) " build, " __DATE__ " " __TIME__ ")";
@@ -70,7 +73,7 @@ void naive_write(
 			pokeb(plane_seg, vo, sprite_p[x]);
 			vo++;
 		}
-		sprite_p += blit_state.sprite_w;
+		sprite_p += blit_source.stride;
 		vo += stride;
 	}
 }
@@ -158,10 +161,7 @@ void test_render(void)
 	entity_topleft_t *sprite_p = sprites;
 	for(uint16_t i = 0; i < t.opt[OPT_SPRITE_COUNT].val; i++) {
 		const Blitter __ds* b = blitter_init_clip_lrtb(
-			(sprite_p->left >> BYTE_BITS),
-			sprite_p->top,
-			((SPRITE_W + PRESHIFT) / BYTE_DOTS),
-			SPRITE_H
+			(sprite_p->left >> BYTE_BITS), sprite_p->top
 		);
 		if(b) {
 			test_func(b, sprite_p->left);
@@ -200,6 +200,7 @@ void test_main(void)
 		sprite_p->top = ((rand() % (RES_Y + (SPRITE_H * 2))) - SPRITE_H);
 		sprite_p++;
 	}
+	blitter_set_source_region(0, 0, SPRITE_STRIDE, SPRITE_H, SPRITE_STRIDE);
 
 	extern Blitter BLITTER_FUNCS[];
 	blit_func_t orig_dots8_write = BLITTER_FUNCS[ 8 / BYTE_DOTS].write;

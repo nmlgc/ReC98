@@ -15,6 +15,7 @@
 #undef X
 
 blit_state_t blit_state;
+blit_source_t blit_source;
 Blitter BLITTER_FUNCS[] = {
 	{ nullptr, nullptr }, // We want this array to be 1-based
 	#define X(width) \
@@ -27,66 +28,83 @@ Blitter BLITTER_FUNCS[] = {
 // Initialization
 // --------------
 
-#define clip_b(rows, top, h, left) \
-	/* Sneaky! That's how we can pretend this is an actual function that */ \
-	/* returns a value. */ \
-	(RES_Y - top); \
-	if(rows <= 0) { \
-		return nullptr; \
-	} else if(rows > h) { \
-		rows = h; \
-	} \
-	blit_state.sprite_offset = 0; \
-	blit_state.vo = (vram_offset_shift(0, top) + left);
+#define _AX static_cast<int>(_AX)
+#define _DX static_cast<int>(_DX)
 
-const Blitter __ds* blitter_init_clip_lrtb(
-	vram_x_t left, vram_y_t top, vram_byte_amount_t w, pixel_t h
-)
+const Blitter __ds* blitter_init_clip_lrtb(vram_x_t left, vram_y_t top)
 {
-	const Blitter __ds* ret;
-	pixel_t rows;
-
 	// Top and bottom edges
 	if(top < 0) {
+		register pixel_t h = blit_source.h;
 		if(top <= -h) {
 			return nullptr;
 		}
-		blit_state.sprite_offset = (-top * w);
-		rows = (h + top);
+		blit_state.h_clipped = (h + top);
+		blit_state.sprite_offset = (
+			blit_source.offset - (top * blit_source.stride)
+		);
 		blit_state.vo = 0;
 	} else {
-		rows = clip_b(rows, top, h, 0);
+		_DX = RES_Y;
+		_DX -= top;
+		_AX = blit_source.h;
+		if(_DX < _AX) {
+			if(_DX <= 0) {
+				return nullptr;
+			}
+			blit_state.h_clipped = _DX;
+			blit_state.sprite_offset = blit_source.offset;
+			blit_state.vo = vram_offset_shift_fast(0, top);
+		} else {
+			blit_state.h_clipped = _AX;
+			blit_state.sprite_offset = blit_source.offset;
+			blit_state.vo = vram_offset_shift_fast(0, top);
+		}
 	}
 
 	// Left and right edges
 	if(left < 0) {
+		register pixel_t w = blit_source.w;
 		if(left <= -w) {
 			return nullptr;
 		}
 		blit_state.sprite_offset -= left;
-		ret = &BLITTER_FUNCS[-left];
-	} else if(left > (ROW_SIZE - w)) {
-		if(left >= ROW_SIZE) {
-			return nullptr;
-		}
-		blit_state.vo += left;
-		ret = &BLITTER_FUNCS[ROW_SIZE - left];
+		return &BLITTER_FUNCS[w + left];
 	} else {
-		blit_state.vo += left;
-		ret = &BLITTER_FUNCS[w];
+		_DX = ROW_SIZE;
+		_DX -= left;
+		_AX = blit_source.w;
+		if(_DX < _AX) {
+			if(_DX <= 0) {
+				return nullptr;
+			}
+			blit_state.vo += left;
+			return &BLITTER_FUNCS[_DX];
+		} else {
+			blit_state.vo += left;
+			return &BLITTER_FUNCS[_AX];
+		}
 	}
-	blit_state.sprite_w = w;
-	blit_state.h_clipped = rows;
-	return ret;
 }
 
-const Blitter __ds* blitter_init_clip_b(
-	vram_x_t left, vram_y_t top, vram_byte_amount_t w, pixel_t h
-)
+const Blitter __ds* blitter_init_clip_b(vram_x_t left, vram_y_t top)
 {
-	pixel_t rows = clip_b(rows, top, h, left);
-	blit_state.sprite_w = w;
-	blit_state.h_clipped = rows;
-	return &BLITTER_FUNCS[w];
+	_DX = RES_Y;
+	_DX -= top;
+	_AX = blit_source.h;
+	if(_DX < _AX) {
+		if(_DX <= 0) {
+			return nullptr;
+		}
+		blit_state.h_clipped = _DX;
+	} else {
+		blit_state.h_clipped = _AX;
+	}
+	blit_state.sprite_offset = blit_source.offset;
+	blit_state.vo = vram_offset_shift_fast(left, top);
+	return &BLITTER_FUNCS[blit_source.w];
 }
+
+#undef _DX
+#undef _AX
 // --------------
