@@ -4,6 +4,7 @@
 #pragma option -zPop_01
 #include "th04/formats/scoredat/recreate.cpp"
 #include "th04/hiscore/score_ld.cpp"
+#include "platform/grp_surf.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/bfnt.h"
@@ -418,7 +419,7 @@ void near regist_view_menu(void)
 	palette_black_out(1);
 	pi_free(0);
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+	GrpSurface_BlitBackgroundPI(&Palettes, MENU_MAIN_BG_FN);
 	graph_copy_page(0);
 	palette_black_in(1);
 

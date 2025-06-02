@@ -6,6 +6,7 @@
 #pragma option -zPop_01
 
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "platform/grp_surf.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
@@ -16,7 +17,6 @@
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
 #include "th05/hardware/input.h"
-#include "th05/formats/pi.hpp"
 
 #pragma option -a2
 
@@ -156,7 +156,7 @@ void near playchar_menu_put_initial(void)
 
 	palette_settone(0);
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, "slb1.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "slb1.pi");
 	graph_copy_page(0);
 	bgimage_snap();
 

@@ -1,7 +1,8 @@
 #include <mem.h>
 #include "planar.h"
+#include "platform/grp_surf.hpp"
 #include "libs/master.lib/master.hpp"
-#include "game/coords.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/polar.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -30,7 +31,6 @@
 #include "th02/op/m_music.hpp"
 #if (GAME == 5)
 #include "th01/math/clamp.hpp"
-#include "th05/formats/pi.hpp"
 #include "th05/op/piano.hpp"
 #include "th05/shiftjis/fns.hpp"
 #include "th05/shiftjis/music.hpp"
@@ -38,7 +38,6 @@
 int game_sel = (GAME_COUNT - 1);
 const int TRACK_COUNT[GAME_COUNT] = { 14, 18, 24, 28, 23 };
 #else
-#include "th02/formats/pi.h"
 #if (GAME == 4)
 #include "th04/shiftjis/music.hpp"
 #elif (GAME == 3)
@@ -762,10 +761,11 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	graph_accesspage(1);
 
 #if (GAME >= 4)
-	pi_fullres_load_palette_apply_put_free(0, "music.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "music.pi");
 #else
-	pi_fullres_load_palette_apply_put_free(0, "op3.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "op3.pi");
 #endif
+	palette_show();
 
 #if (GAME == 5)
 	piano_setup_and_put_initial();
@@ -1034,7 +1034,7 @@ controls:
 
 #if (GAME == 2)
 	// ZUN bloat: The call site would have been a better place for this.
-	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+	GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
 	palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 	graph_copy_page(0);
 #endif

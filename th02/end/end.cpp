@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include "planar.h"
+#include "platform/grp_surf.hpp"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/egc.h"
 
 // ZUN bloat: Needed for code generation reasons in the single graph_putsa_fx()
@@ -17,7 +19,6 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/end.hpp"
-#include "th02/formats/pi.h"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
 #include "th02/snd/snd.h"
@@ -414,7 +415,7 @@ void near end_to_staffroll_animate(void)
 void pascal near end_pics_load_palette_show(const char *fn)
 {
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, fn);
+	GrpSurface_BlitBackgroundPI(&Palettes, fn);
 }
 
 void pascal near end_line_type(int line, int frames_per_kanji = 6)
@@ -876,7 +877,8 @@ void near staffroll_and_verdict_animate(void)
 	snd_delay_until_measure(13);
 
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, "ed06.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "ed06.pi");
+	palette_show();
 	graph_accesspage(0);
 	staffroll_rotrect_and_put_pic_animate(0x04, 0, 0x29);
 	staffroll_text_clear();
@@ -894,7 +896,7 @@ void near staffroll_and_verdict_animate(void)
 	staffroll_rotrect_and_put_pic_animate(0x04, 3, 0x29);
 
 	graph_accesspage(1);
-	pi_fullres_load_put_free(CUTSCENE_PIC_SLOT, "ed07.pi"); // Unchanged palette
+	GrpSurface_BlitBackgroundPI(nullptr, "ed07.pi");
 	graph_accesspage(0);
 	snd_delay_until_measure(25);
 
@@ -918,13 +920,11 @@ void near staffroll_and_verdict_animate(void)
 	staffroll_rotrect_and_put_pic_animate(0x08, 3, -0x17);
 
 	graph_accesspage(1);
-	pi_load(CUTSCENE_PIC_SLOT, "ed08.pi");
-	pi_put_8(0, 0, CUTSCENE_PIC_SLOT);
+	GrpSurface_BlitBackgroundPI(&Palettes, "ed08.pi");
 	graph_accesspage(0);
 	snd_delay_until_measure(41);
 
-	pi_palette_apply(CUTSCENE_PIC_SLOT);
-	pi_free(CUTSCENE_PIC_SLOT);
+	palette_show();
 	staffroll_rotrect_and_put_pic_animate(-0x08, 0, -0x17);
 	snd_delay_until_measure(45);
 
@@ -960,7 +960,7 @@ void near staffroll_and_verdict_animate(void)
 	};
 
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, "ED09.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "ED09.pi");
 	graph_copy_page(0);
 	palette_black_in(4);
 	frame_delay(100);

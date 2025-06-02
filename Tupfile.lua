@@ -298,7 +298,7 @@ end
 -- ---------------------
 
 local piload_cfg = Config:branch({ aflags = "/ml" })
-local piloadm = piload_cfg:build({ "libs/piloadc/piloadm.asm" })
+local piloadm = piload_cfg:build({ "libs/piloadc/piloadm.asm" })[1]
 local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 	{ "libs/sprite16/sprite16.asm", o = "th03/zunsp.obj" }
 })[1]
@@ -310,13 +310,17 @@ local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 
 ---@param bundles { [string]: string[] }
 ---@param config Config
----@param inputs string[]
+---@param inputs_c string[] Newly compiled C inputs
+---@param inputs_asm string[] Previously compiled ASM inputs
 ---@return { [string]: string[] }
-function BuildAndBundlePlatform(bundles, config, inputs)
+function BuildAndBundlePlatform(bundles, config, inputs_c, inputs_asm)
 	local ret = {}
 	local objs = {}
-	for _, input in ipairs(inputs) do
+	for _, input in ipairs(inputs_c) do
 		objs[tup.base(input)] = config:build_uncached(input)
+	end
+	for _, input in ipairs(inputs_asm) do
+		objs[tup.base(input)] = input
 	end
 	for bundle, srcs in pairs(bundles) do
 		ret[bundle] = {}
@@ -338,11 +342,12 @@ local platform_bundles = {
 	cutscene = { "cutscene" },
 	libc_debloat = { "noexcept" },
 	spawn = { "doserror", "spawn" },
+	surf = { "piloadm", "blitter", "grp_clip", "grp_surf" },
 	th01 = { "noexcept", "blitter", "egc", "font", "grcg", "grp_clip" },
 	vblank = { "vblank" },
 }
 local platform_objs = BuildAndBundlePlatform(
-	platform_bundles, platform_cfg, platform_src
+	platform_bundles, platform_cfg, platform_src, { piloadm }
 )
 -- --------------
 
@@ -493,6 +498,7 @@ th02:zungen("bin/th02/zun.com", {
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += platform_objs.vblank
 obj += {
 	"th02/op_01.cpp",
@@ -574,6 +580,7 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 obj = {}
 obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += {
 	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
 	"th02_maine.asm",
@@ -629,6 +636,7 @@ th03:zungen("bin/th03/zun.com", {
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += platform_objs.vblank
 obj += {
 	"th03/op_01.cpp",
@@ -694,6 +702,7 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 obj = {}
 obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += {
 	"th03/cfg_lres.cpp",
 	"th03/mainl_sc.cpp",
@@ -757,6 +766,7 @@ th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += {
 	"th04/op_main.cpp",
 	"th04_op.asm",
@@ -880,6 +890,7 @@ th04:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }):link(
 obj = {}
 obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += {
 	"th04/maine_e.cpp",
 	{ "th04_maine_master.asm", o = "mainem.obj" },
@@ -944,6 +955,7 @@ th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += {
 	"th05/op_main.cpp",
 	"th05_op.asm",
@@ -1084,6 +1096,7 @@ th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }):link(
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.surf
 obj += {
 	"th05/maine_e.cpp",
 	{ "th05_maine_master.asm", o = "mainem.obj" },

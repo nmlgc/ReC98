@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <process.h>
 #include "libs/master.lib/master.hpp"
+#include "platform/grp_surf.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"
@@ -107,15 +108,6 @@ void text_wipe(void)
 {
 	text_clear();
 	text_fillca(' ', TX_BLACK | TX_REVERSE);
-}
-
-void pascal near pi_load_put_8_free_to(const char near *fn, char page)
-{
-	pi_load(0, fn);
-	graph_accesspage(page);
-	pi_palette_apply(0);
-	pi_put_8(0, 0, 0);
-	pi_free(0);
 }
 
 /// Coordinates
@@ -244,8 +236,12 @@ void op_animate(void)
 
 	text_wipe();
 	snd_load("huuma.efc", SND_LOAD_SE);
-	pi_load_put_8_free_to(MENU_MAIN_BG_FN, 1);
-	pi_load_put_8_free_to("op.pi", 0);
+
+	graph_accesspage(1);
+	GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
+	graph_accesspage(0);
+	GrpSurface_BlitBackgroundPI(&Palettes, "op.pi");
+
 	pi_load(0, "opa.pi");
 	pi_load(1, "opb.pi");
 	pi_load(2, "opc.pi");
@@ -536,9 +532,7 @@ void main_update_and_render(void)
 
 				graph_accesspage(1);
 				graph_showpage(0);
-				pi_load(0, MENU_MAIN_BG_FN);
-				pi_put_8(0, 0, 0);
-				pi_free(0);
+				GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
 				palette_entry_rgb(MENU_MAIN_PALETTE_FN);
 
 				// These 19 frames have been removed from the end of

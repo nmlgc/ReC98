@@ -21,6 +21,7 @@ BINARY = 'E'
 include ReC98.inc
 include th02/th02.inc
 
+	extern @GRPSURFACE_BLITBACKGROUNDPI$QN29%PALETTE$T16%RGB$TUC$II$256%%NXC:proc
 	extern _execl:proc
 
 maine_01 group END_TEXT, maine_01_TEXT
@@ -139,19 +140,12 @@ public @extra_unlock_animate$qv
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_B07D
-		call	@pi_load$qinxc c, 0, offset aAll_pi, ds
-		call	@pi_palette_apply$qi stdcall, 0
-		pop	cx
-		call	@pi_put_8$qiii c, 0, large 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aAll_pi
 		push	2
 		call	palette_black_in
 		call	@frame_delay$qi pascal, 150
-		call	@pi_load$qinxc c, 0, offset aBut_pi, ds
-		call	@pi_palette_apply$qi stdcall, 0
-		pop	cx
-		call	@pi_put_8$qiii c, 0, large 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aBut_pi
+		call	palette_show
 		call	@key_delay$qv
 		push	5
 		call	palette_black_out
@@ -174,19 +168,12 @@ sub_B07F	proc far
 		jz	loc_B115
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	@pi_load$qinxc c, 0, offset aAll_pi, ds
-		call	@pi_palette_apply$qi stdcall, 0
-		pop	cx
-		call	@pi_put_8$qiii c, 0, large 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aAll_pi
 		push	2
 		call	palette_black_in
 		call	@frame_delay$qi pascal, 150
-		call	@pi_load$qinxc c, 0, offset aExtra_pi, ds
-		call	@pi_palette_apply$qi stdcall, 0
-		pop	cx
-		call	@pi_put_8$qiii c, 0, large 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aExtra_pi
+		call	palette_show
 		call	@key_delay$qv
 		push	5
 		call	palette_black_out
@@ -296,15 +283,12 @@ maine_01_TEXT	ends
 
 SHARED	segment	word public 'CODE' use16
 	extern @key_delay$qv:proc
-	extern @pi_load$qinxc:proc
 	extern @FRAME_DELAY$QI:proc
 	extern @game_exit$qv:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
 	extern _snd_pmd_resident:proc
 	extern @game_init_main$qv:proc
-	extern @pi_palette_apply$qi:proc
-	extern @pi_put_8$qiii:proc
 SHARED	ends
 
 ; ===========================================================================

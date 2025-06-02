@@ -9,6 +9,7 @@
 
 #include <conio.h>
 #include <string.h>
+#include "platform/grp_surf.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th01/hardware/egc.h"
@@ -319,7 +320,7 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 
 inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+	GrpSurface_BlitBackgroundPI(&Palettes, MENU_MAIN_BG_FN);
 	graph_copy_page(0); // switches the accessed page back to 0
 
 	// ZUN landmine: After loading and blitting, we're certainly in the middle

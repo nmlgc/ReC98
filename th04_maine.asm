@@ -22,6 +22,8 @@ include ReC98.inc
 include th04/th04.inc
 include th04/hardware/grppsafx.inc
 
+	extern @GRPSURFACE_BLITBACKGROUNDPI$QN29%PALETTE$T16%RGB$TUC$II$256%%NXC:proc
+
 group_01 group maine_01_TEXT, SCORE_TEXT
 
 ; ===========================================================================
@@ -708,10 +710,7 @@ public @staffroll_animate$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aSff1_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aSff1_pi
 		call	graph_copy_page pascal, 0
 		call	_bgimage_snap
 		kajacall	KAJA_SONG_STOP
@@ -746,10 +745,7 @@ public @staffroll_animate$qv
 		call	palette_black_out
 		call	cdg_free_all
 		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aSff2_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aSff2_pi
 		call	graph_copy_page pascal, 0
 		call	_bgimage_snap
 		push	4
@@ -1662,10 +1658,7 @@ public @verdict_animate$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aUde_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aUde_pi
 		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
@@ -2367,10 +2360,7 @@ var_4		= word ptr -4
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aHi01_pi
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum2_bft ; "scnum2.bft"
 		les	bx, _resident
@@ -2857,9 +2847,6 @@ SCORE_TEXT	ends
 SHARED segment byte public 'CODE' use16
 include th02/snd/snd.inc
 	extern @FRAME_DELAY$QI:proc
-	extern @PI_PALETTE_APPLY$QI:proc
-	extern @PI_PUT_8$QIII:proc
-	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
@@ -2963,6 +2950,9 @@ aName		db 'name',0
 	.data?
 
 	extern _resident:dword
+
+	; libs/master.lib/pal[bss].asm
+	extern Palettes:byte:48
 
 	; libs/master.lib/vs[bss].asm
 	extern vsync_Count1:word

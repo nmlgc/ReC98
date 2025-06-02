@@ -253,14 +253,7 @@ public @zunsoft_animate$qv
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	@pi_load$qinxc pascal, 0, ds, offset _zun00_pi
-	call	@pi_palette_apply$qi pascal, 0
-	call	@pi_put_8$qiii pascal, large 0, 0
-if GAME eq 5
-	call	@pi_free$qi pascal, 0
-else
-	freePISlotLarge	0
-endif
+	call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset _zun00_pi
 	push	0
 	call	graph_copy_page
 	call	_bgimage_snap

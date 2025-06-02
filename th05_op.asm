@@ -30,10 +30,7 @@ include th05/th05.inc
 	extern @POLAR$QIII:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern @PI_LOAD$QINXC:proc
-	extern @PI_PUT_8$QIII:proc
-	extern @PI_PALETTE_APPLY$QI:proc
-	extern @PI_FREE$QI:proc
+	extern @GRPSURFACE_BLITBACKGROUNDPI$QN29%PALETTE$T16%RGB$TUC$II$256%%NXC:proc
 	extern @input_reset_sense_held$qv:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 

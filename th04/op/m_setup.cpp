@@ -1,13 +1,13 @@
+#include "platform/grp_surf.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
 #include "th05/resident.hpp"
-#include "th05/formats/pi.hpp"
 #else
 #include "th04/resident.hpp"
-#include "th03/formats/pi.hpp"
 #endif
 #include "th04/hardware/grppsafx.h"
 #include "th04/hardware/input.h"
@@ -313,7 +313,7 @@ void near setup_menu(void)
 	palette_settone(0);
 	super_entry_bfnt("mswin.bft");
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, "ms.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "ms.pi");
 	graph_copy_page(0);
 	palette_black_in(1);
 

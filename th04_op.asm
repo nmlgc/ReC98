@@ -23,9 +23,7 @@ include th02/snd/snd.inc
 include th04/th04.inc
 
 	extern @FRAME_DELAY$QI:proc
-	extern @PI_PALETTE_APPLY$QI:proc
-	extern @PI_PUT_8$QIII:proc
-	extern @PI_LOAD$QINXC:proc
+	extern @GRPSURFACE_BLITBACKGROUNDPI$QN29%PALETTE$T16%RGB$TUC$II$256%%NXC:proc
 	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc

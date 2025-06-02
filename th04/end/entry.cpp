@@ -4,7 +4,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/cdg.h"
 #if (GAME == 4)
-#include "th03/formats/pi.hpp"
+#include "platform/grp_surf.hpp"
 #include "th04/hardware/input.h"
 #endif
 #include "th03/formats/cfg_impl.hpp"
@@ -79,7 +79,7 @@ static void congratulations_animate(rank_t rank)
 
 	palette_settone(0);
 	graph_accesspage(0);
-	pi_fullres_load_palette_apply_put_free(0, pic_fn);
+	GrpSurface_BlitBackgroundPI(&Palettes, pic_fn);
 	palette_black_in(1);
 	input_wait_for_change(0);
 	palette_black_out(4);

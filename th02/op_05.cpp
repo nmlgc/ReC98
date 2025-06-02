@@ -9,6 +9,7 @@
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
+#include "platform/grp_surf.hpp"
 
 inline char sel_ring_end() {
 	return SHOTTYPE_COUNT - 1;
@@ -117,7 +118,7 @@ void pascal shottype_menu_init(void)
 	vblank_run(vblank_palette_black_and_tram_wipe);
 
 	graph_accesspage(0);
-	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "TSELECT.pi");
 	graph_copy_page(1);
 	graph_accesspage(0);
 	if(resident->stage != 5) {

@@ -7,6 +7,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/v_colors.hpp"
 #include "th01/hardware/grcg.hpp"
+#include "platform/grp_surf.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 
 void near main_cdg_load(void)
@@ -102,8 +103,10 @@ void near op_animate(void)
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	}
 
+	Palette8 target_palette;
+
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+	GrpSurface_BlitBackgroundPI(&target_palette, MENU_MAIN_BG_FN);
 	graph_copy_page(0);
 
 	// Black-and-white fade-in
@@ -144,7 +147,7 @@ void near op_animate(void)
 	while(frame < FADE_DURATION){
 		for(col = 1; col < COLOR_COUNT; col++) {
 			for(comp = 0; comp < COMPONENT_COUNT; comp++) {
-				if(pi_headers[0].palette[col].v[comp] < Palettes[col].v[comp]) {
+				if(target_palette[col].v[comp] < Palettes[col].v[comp]) {
 					Palettes[col].v[comp] = white_point;
 				}
 			}
@@ -158,5 +161,6 @@ void near op_animate(void)
 	#undef col
 	#undef frame
 
-	pi_palette_apply(0);
+	Palettes = target_palette;
+	palette_show();
 }

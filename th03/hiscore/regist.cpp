@@ -2,13 +2,14 @@
 
 #include "th03/hiscore/regist.hpp"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "platform/grp_surf.hpp"
 #include "game/input.hpp"
 #include "th01/hardware/grppsafx.h"
 #include "th02/hardware/frmdelay.h"
 #include "th03/common.h"
 #include "th03/resident.hpp"
 #include "th03/formats/cdg.h"
-#include "th03/formats/pi.hpp"
 #include "th03/hardware/input.h"
 #include "th03/snd/snd.h"
 #include "th03/shiftjis/regist.hpp"
@@ -94,7 +95,7 @@ void near regist_load_and_put_initial_both(void)
 	graph_accesspage(0);
 	graph_showpage(0);
 
-	pi_fullres_load_palette_apply_put_free(0, regib_pi);
+	GrpSurface_BlitBackgroundPI(&Palettes, regib_pi);
 
 	// Kind of assumes that we only show this screen once for the lifetime of
 	// the process.
@@ -571,10 +572,10 @@ void near regist_menu(void)
 	// Over image when we're in view-only mode and are about to quit back to
 	// the main menu anyway.
 	if(resident->rem_credits && (resident->story_stage != STAGE_ALL)) {
-		pi_fullres_load_palette_apply_put_free(0, conti_pi);
+		GrpSurface_BlitBackgroundPI(&Palettes, conti_pi);
 		cdg_load_all(0, conti_cd2);
 	} else {
-		pi_fullres_load_palette_apply_put_free(0, GAMEOVER_BG_FN);
+		GrpSurface_BlitBackgroundPI(&Palettes, GAMEOVER_BG_FN);
 		snd_delay_until_volume(-1);
 		snd_kaja_func(KAJA_SONG_STOP, 0);
 	}

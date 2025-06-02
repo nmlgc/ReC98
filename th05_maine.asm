@@ -23,6 +23,8 @@ include th05/th05.inc
 include th01/math/subpixel.inc
 include th04/hardware/grppsafx.inc
 
+	extern @GRPSURFACE_BLITBACKGROUNDPI$QN29%PALETTE$T16%RGB$TUC$II$256%%NXC:proc
+
 group_01 group CUTSCENE_TEXT, maine_01_TEXT, SCORE_TEXT, maine_01__TEXT
 
 ; ===========================================================================
@@ -1697,10 +1699,7 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aHi01_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		call	@pi_free$qi pascal, 0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aHi01_pi
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt pascal, ds, offset aSctm0_bft ; "sctm0.bft"
@@ -3326,10 +3325,7 @@ public @verdict_animate$qv
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aUde_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		call	@pi_free$qi pascal, 0
+		call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset aUde_pi
 		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
@@ -5826,10 +5822,6 @@ include th02/snd/snd.inc
 	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern @PI_LOAD$QINXC:proc
-	extern @PI_PUT_8$QIII:proc
-	extern @PI_PALETTE_APPLY$QI:proc
-	extern @PI_FREE$QI:proc
 	extern @input_reset_sense_held$qv:proc
 	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern _snd_bgm_measure:proc
