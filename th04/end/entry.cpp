@@ -70,22 +70,21 @@ void near end_animate(void)
 	cutscene_script_free();
 }
 
-#define congratulations_animate(pic_fn) { \
-	/* \
-	 * ZUN bloat: The hardware palette is entirely black when we get here, and \
-	 * we don't flip any pages, so the picture could have been just blitted to \
-	 * VRAM page #0. \
-	 * (Would have also been nice to add a palette_settone(0) call here, as an \
-	 * assert() of sorts.) \
-	 */ \
-	graph_accesspage(1); \
-	pi_fullres_load_palette_apply_put_free(0, pic_fn); \
-	graph_copy_page(0); \
-	\
-	palette_black_in(1); \
-	input_wait_for_change(0); \
-	palette_black_out(4); \
+#if (GAME == 4)
+static void congratulations_animate(rank_t rank)
+{
+	char* pic_fn = "CONG00.pi";
+	pic_fn[4] = resident->playchar_ascii;
+	pic_fn[5] = ('0' + rank);
+
+	palette_settone(0);
+	graph_accesspage(0);
+	pi_fullres_load_palette_apply_put_free(0, pic_fn);
+	palette_black_in(1);
+	input_wait_for_change(0);
+	palette_black_out(4);
 }
+#endif
 
 inline void delay_then_regist_menu(void) {
 #if (GAME == 4)
@@ -96,17 +95,9 @@ inline void delay_then_regist_menu(void) {
 
 void main(void)
 {
-#if (GAME == 4)
-	char* congratulations_pic_fn = "CONG00.pi";
-#endif
-
 	if(!cfg_load_resident_ptr()) {
 		return;
 	}
-
-#if (GAME == 4)
-	congratulations_pic_fn[4] = resident->playchar_ascii;
-#endif
 
 	mem_assign_paras = (336000 >> 4);
 	game_init_main(OP_AND_END_PF_FN);
@@ -140,8 +131,7 @@ void main(void)
 		if(
 			(resident->end_sequence == ES_GOOD) || (resident->rank == RANK_EASY)
 		) {
-			congratulations_pic_fn[5] += resident->rank;
-			congratulations_animate(congratulations_pic_fn);
+			congratulations_animate(static_cast<rank_t>(resident->rank));
 		}
 		snd_kaja_func(KAJA_SONG_FADE, 4);
 #endif
@@ -154,9 +144,7 @@ void main(void)
 		delay_then_regist_menu();
 #else
 		delay_then_regist_menu();
-		congratulations_pic_fn[5] = ('0' + RANK_EXTRA);
-		palette_settone(0);
-		congratulations_animate(congratulations_pic_fn);
+		congratulations_animate(RANK_EXTRA);
 		verdict_animate();
 #endif
 	} else { // resident->end_sequence == ES_SCORE
