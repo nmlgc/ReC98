@@ -83,7 +83,7 @@ int MASTER_RET gaiji_entry_bfnt(const char MASTER_PTR *filename);
 #define graph_accesspage(p) \
 	outportb(0xA6, p)
 
-extern unsigned graph_VramZoom;
+extern unsigned __cdecl graph_VramZoom;
 
 void MASTER_RET graph_400line(void);
 void MASTER_RET graph_200line(int tail);
@@ -222,9 +222,9 @@ void MASTER_RET palette_show(void);
 		sizeof(Palette8) \
 	);
 
-extern Palette8 Palettes;
+extern Palette8 __cdecl Palettes;
 
-extern unsigned int PaletteTone;
+extern unsigned int __cdecl PaletteTone;
 
 int MASTER_RET palette_entry_rgb(const char MASTER_PTR *);
 void MASTER_RET palette_black_in(unsigned speed);

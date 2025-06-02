@@ -97,7 +97,7 @@ void MASTER_RET smem_release(void __seg* memseg);
 // Machine identification
 // ----------------------
 
-extern const unsigned Machine_State;
+extern const unsigned __cdecl Machine_State;
 
 unsigned MASTER_RET get_machine(void);
 
@@ -165,8 +165,8 @@ int MASTER_RET file_delete(const char MASTER_PTR *filename);
 // Packfiles
 // ---------
 
-extern unsigned char pfkey; // 復号化キー
-extern unsigned bbufsiz;    // バッファサイズ
+extern unsigned char __cdecl pfkey; // 復号化キー
+extern unsigned __cdecl bbufsiz;    // バッファサイズ
 
 void MASTER_RET pfstart(const unsigned char MASTER_PTR *parfile);
 void MASTER_RET pfend(void);
