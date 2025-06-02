@@ -134,8 +134,6 @@ include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
-include libs/master.lib/respal_exist.asm
-include libs/master.lib/respal_free.asm
 include libs/master.lib/pfint21.asm
 include libs/master.lib/js_start.asm
 include libs/master.lib/draw_trapezoid.asm
@@ -2981,7 +2979,6 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
 include th02/formats/pfopen[data].asm
 include libs/master.lib/bgm_timerhook[data].asm

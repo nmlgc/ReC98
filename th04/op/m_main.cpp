@@ -502,7 +502,6 @@ int main_op(int, const char *[])
 	int idle_frames = 0;
 
 	text_clear();
-	respal_create(); // ZUN bloat: These games don't use resident palettes.
 	mem_assign_paras = (340768 >> 4);
 	if(game_init_op(OP_AND_END_PF_FN)) {
 		dos_puts2(MEMORY_INSUFFICIENT);
@@ -601,7 +600,6 @@ int main_op(int, const char *[])
 #endif
 	text_clear();
 	game_exit_to_dos();
-	respal_free(); // ZUN bloat: These games don't use resident palettes.
 
 	return 0;
 }

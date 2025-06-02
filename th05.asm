@@ -135,8 +135,6 @@ include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/super_convert_tiny.asm
 include libs/master.lib/super_put_tiny_small.asm
-include libs/master.lib/respal_exist.asm
-include libs/master.lib/respal_free.asm
 include libs/master.lib/js_start.asm
 include libs/master.lib/draw_trapezoid.asm
 include libs/master.lib/js_sense.asm
@@ -5938,7 +5936,6 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
