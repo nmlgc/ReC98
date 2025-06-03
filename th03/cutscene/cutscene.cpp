@@ -374,7 +374,7 @@ void pascal near box_1_to_0_masked(box_mask_t mask)
 	egc_temp_t tmp;
 
 	for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {
-		egc_setup_copy_masked(BOX_MASKS[mask][y & 3]);
+		outport(EGC_MASKREG, BOX_MASKS[mask][y & 3]);
 
 		vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
 		pixel_t x = 0;
