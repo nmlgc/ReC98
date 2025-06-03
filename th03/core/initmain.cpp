@@ -6,8 +6,7 @@
 #include "th03/core/initexit.h"
 
 #if (GAME <= 3)
-#include "th03/mem.h"
-#define mem_assign_paras MEM_ASSIGN_PARAS_MAIN
+#define mem_assign_paras (288000 >> 4)
 #endif
 
 int pascal game_init_main(const unsigned char *pf_fn)

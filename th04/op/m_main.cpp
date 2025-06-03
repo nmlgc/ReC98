@@ -1,10 +1,8 @@
 #if (GAME == 5)
-#include "th05/mem.h"
 #include "th05/op/start.cpp"
 #include "th05/shiftjis/fns.hpp"
 #else
 #include "th03/shiftjis/fnshared.hpp"
-#include "th04/mem.h"
 #include "th04/op/start.cpp"
 #include "th04/shiftjis/fns.hpp"
 #endif
@@ -566,7 +564,7 @@ void main(void)
 
 	text_clear();
 	respal_create(); // ZUN bloat: These games don't use resident palettes.
-	mem_assign_paras = MEM_ASSIGN_PARAS_OP;
+	mem_assign_paras = (336000 >> 4);
 	if(game_init_op(OP_AND_END_PF_FN)) {
 		dos_puts2(MEMORY_INSUFFICIENT);
 		getch();
@@ -615,7 +613,7 @@ void main(void)
 	// 1) Separate clear data loading from sprite loading (as any sane coder
 	//    would do), and load the sprites inside regist_view_menu()
 	// 2) Call this function before op_animate() and either bump or remove the
-	//    memory limit of OP.EXE (MEM_ASSIGN_PARAS_OP) accordingly to reserve
+	//    memory limit of OP.EXE ([mem_assign_paras]) accordingly to reserve
 	//    enough room in conventional RAM for both these sprites and all title
 	//    animation cels
 	cleardata_and_regist_view_sprites_load();

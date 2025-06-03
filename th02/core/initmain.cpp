@@ -2,12 +2,11 @@
 
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/vplanset.h"
-#include "th02/mem.h"
 #include "th02/formats/pf.hpp"
 
 int game_init_main(void)
 {
-	if(mem_assign_dos(MEM_ASSIGN_PARAS_MAIN)) {
+	if(mem_assign_dos(288000 >> 4)) {
 		return 1;
 	}
 	vram_planes_set();

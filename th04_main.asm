@@ -288,7 +288,7 @@ _envp		= dword	ptr  0Ch
 		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short loc_AB86
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
+		mov	_mem_assign_paras, (320000 shr 4)
 		call	@game_init_main$qnxuc pascal, ds, offset aUmx
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]

@@ -17,13 +17,11 @@
 #include "th04/hiscore/regist.hpp"
 #if (GAME == 5)
 #include "th04/shiftjis/fnshared.hpp"
-#include "th05/mem.h"
 #include "th05/resident.hpp"
 #include "th05/shiftjis/fns.hpp"
 #include "th05/end/allcast.hpp"
 #else
 #include "th03/shiftjis/fnshared.hpp"
-#include "th04/mem.h"
 #include "th04/resident.hpp"
 #include "th04/shiftjis/fns.hpp"
 #endif
@@ -110,7 +108,7 @@ void main(void)
 	congratulations_pic_fn[4] = resident->playchar_ascii;
 #endif
 
-	mem_assign_paras = MEM_ASSIGN_PARAS_MAINE;
+	mem_assign_paras = (336000 >> 4);
 	game_init_main(OP_AND_END_PF_FN);
 #if (GAME == 4)
 	gaiji_backup();

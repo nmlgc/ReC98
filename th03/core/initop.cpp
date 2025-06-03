@@ -6,8 +6,7 @@
 #include "th03/core/initexit.h"
 
 #if (GAME <= 3)
-#include "th03/mem.h"
-#define mem_assign_paras MEM_ASSIGN_PARAS_OP
+#define mem_assign_paras (352000 >> 4)
 #endif
 
 int game_init_op(const unsigned char *pf_fn)
