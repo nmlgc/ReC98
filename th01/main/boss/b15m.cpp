@@ -9,7 +9,6 @@
 #include "th01/math/dir.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/vector.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egcwave.hpp"

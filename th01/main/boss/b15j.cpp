@@ -7,7 +7,6 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grpinv32.hpp"

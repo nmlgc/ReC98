@@ -11,7 +11,6 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/egcrows.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/hardware/text.h"

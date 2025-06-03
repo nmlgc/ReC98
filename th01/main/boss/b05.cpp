@@ -7,7 +7,6 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/math/vector.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"

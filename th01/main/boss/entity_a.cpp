@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "decomp.hpp"
 #include "th01/math/wave.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
 #include "th01/formats/pf.hpp"

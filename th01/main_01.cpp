@@ -12,7 +12,6 @@
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/core/resstuff.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
