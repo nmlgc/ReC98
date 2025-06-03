@@ -1,5 +1,4 @@
 include th04/chars.inc
-include th04/mem.inc
 include th04/shared.inc
 include th04/gaiji/gaiji.inc
 include th02/v_colors.inc

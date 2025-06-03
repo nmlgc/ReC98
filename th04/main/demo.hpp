@@ -1,6 +1,13 @@
 #include "platform.h"
 #include <stddef.h>
 
+#if (GAME == 5)
+#define DEMO_N 5000 /* ZUN symbol [MAGNet2010] */
+#define DEMO_N_EXTRA (DEMO_N * 4)
+#else
+#define DEMO_N 4000 /* ZUN symbol [MAGNet2010] */
+#endif
+
 // Properly declared, DEMO?.REC uses this structure:
 template <size_t Frames> struct REC {
 	input_replay_t input[Frames];

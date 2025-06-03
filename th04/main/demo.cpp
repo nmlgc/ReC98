@@ -5,10 +5,8 @@
 #include "th04/main/frames.h"
 #include "th04/main/demo.hpp"
 #if (GAME == 5)
-#include "th05/mem.h"
 #include "th05/resident.hpp"
 #else
-#include "th04/mem.h"
 #include "th04/resident.hpp"
 #endif
 

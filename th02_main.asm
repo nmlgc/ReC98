@@ -1984,6 +1984,8 @@ EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
+DEMO_N = 7000 ; ZUN symbol [MAGNet2010]
+
 ; Attributes: bp-based frame
 public demo_load
 demo_load	proc far

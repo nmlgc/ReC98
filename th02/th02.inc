@@ -1,5 +1,3 @@
-include th02/mem.inc
-
 include th02/hardware/input.inc
 include th02/math/randring.inc
 include th02/gaiji/gaiji.inc
