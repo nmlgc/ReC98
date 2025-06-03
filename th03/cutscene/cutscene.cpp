@@ -243,7 +243,7 @@ void near cutscene_script_free(void)
 #if (GAME == 5)
 #include "th01/hardware/egc.h"
 
-#define pic_copy_to_other(left, top) { \
+#define pic_copy_1_to_0(left, top) { \
 	egc_copy_rect_1_to_0_16(left, top, CUTSCENE_PIC_W, CUTSCENE_PIC_H); \
 }
 
@@ -253,10 +253,10 @@ void pascal near pic_put_both_masked(
 {
 	graph_accesspage(1);
 	pi_put_quarter_masked_8(left, top, CUTSCENE_PIC_SLOT, quarter, mask_id);
-	pic_copy_to_other(left, top);
+	pic_copy_1_to_0(left, top);
 }
 #else
-void pascal near pic_copy_to_other(screen_x_t left, vram_y_t top)
+void pascal near pic_copy_1_to_0(screen_x_t left, vram_y_t top)
 {
 	vram_offset_t vo = vram_offset_shift(left, top);
 	pixel_t y;
@@ -272,11 +272,8 @@ void pascal near pic_copy_to_other(screen_x_t left, vram_y_t top)
 		vram_x = 0;
 		while(vram_x < CUTSCENE_PIC_VRAM_W) {
 			egc_temp_t tmp;
-
-			// ZUN bloat: Remember that the call site temporarily switched
-			// the visible page to page 1, and blitted the image to page 0.
-			graph_accesspage(0);	tmp = egc_chunk(vo);
-			graph_accesspage(1);	egc_chunk(vo) = tmp;
+			graph_accesspage(1);	tmp = egc_chunk(vo);
+			graph_accesspage(0);	egc_chunk(vo) = tmp;
 
 			vram_x += EGC_REGISTER_SIZE;
 			vo += EGC_REGISTER_SIZE;
@@ -285,11 +282,6 @@ void pascal near pic_copy_to_other(screen_x_t left, vram_y_t top)
 		vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
 	}
 	egc_off();
-
-	// ZUN bloat: All blitting operations in this module access the
-	// intended page before they blit. That's why preliminary state
-	// changes like this one are completely redundant, thankfully.
-	graph_accesspage(0);
 }
 
 void pascal near pic_put_both_masked(
@@ -306,10 +298,7 @@ void pascal near pic_put_both_masked(
 
 	pi_buffer_p_init_quarter(row_p, CUTSCENE_PIC_SLOT, quarter);
 
-	// ZUN bloat: See the call site.
-	graph_showpage(1);
 	vram_offset_t vo = vram_offset_shift(left, top);
-	graph_accesspage(0);
 	for(pixel_t y = 0; y < CUTSCENE_PIC_H; y++) {
 		// This actually is much faster than clearing the masked pixels using
 		// the GRCG and doing an unaccelerated 4-plane VRAM OR. See the
@@ -331,8 +320,7 @@ void pascal near pic_put_both_masked(
 		pi_buffer_p_offset(row_p, PI_W, 0);
 		pi_buffer_p_normalize(row_p);
 	}
-	graph_showpage(0);
-	pic_copy_to_other(left, top);
+	pic_copy_1_to_0(left, top);
 }
 
 #define box_bg_snap_func(p, vo) { \
@@ -586,11 +574,6 @@ script_ret_t pascal near script_op(unsigned char c)
 #if (GAME == 5)
 		graph_accesspage(1);
 		bgimage_put_rect_16(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
-
-		// ZUN bloat: All blitting operations in this module access the
-		// intended page before they blit. That's why preliminary state
-		// changes like this one are completely redundant, thankfully.
-		graph_accesspage(0);
 #else
 		// High-level overview, point 2)
 		graph_accesspage(1);	box_bg_put();
@@ -821,42 +804,8 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_param_read_number_first(p1);
 #if (GAME == 5)
 			frame_delay(1);
-			graph_showpage(0);
-			graph_accesspage(1);
-#else
-			// ZUN bloat: Why did ZUN temporarily switch foreground and
-			// background pages for the duration of this command?! Not only is
-			// it completely unnecessary, it's also downright harmful. If these
-			// lines didn't exist, the entire cutscene system would have been
-			// both much easier to understand *and* more performant:
-			//
-			// • The intent for both VRAM pages would have been crystal clear:
-			//   Page 0 is always shown and contains the actively displayed
-			//   picture and text, and page 1 is used for temporarily storing
-			//   pixels that are later crossfaded onto page 0. Through their
-			//   mere existence, these lines suggest a more complex interplay
-			//   between the two pages, which doesn't actually exist.
-			// • TH03 wouldn't have needed to render text and gaiji to both
-			//   VRAM pages.
-			// • (Technically, TH03 wouldn't have even needed [box_bg] as a
-			//   result, but that was a decent investment regardless –
-			//   inter-page blitting is horribly slow no matter how you do it.
-			//   Also, this buffer does become necessary in TH04 – see point 2)
-			//   in the high-level overview)
-			// • If \vp didn't exist (it's not used by the original scripts
-			//   anyway), the entire system would have only needed a single
-			//   graph_showpage(0) call at the start of cutscene_animate().
-			//
-			// ZUN landmine: Since TH04 renders text to VRAM page 1, calling \=
-			// or \== in the middle of a string of text temporarily shows any
-			// text rendered since the last box_1_to_0_animate() call if any of
-			// the following blit operations spends more than one frame with
-			// page 1 visible. In practice, this only happens on very
-			// underclocked systems far below the game's target of 66 MHz, but
-			// it's a landmine nonetheless.
-			graph_showpage(1);
-			graph_accesspage(0);
 #endif
+			graph_accesspage(1);
 			if(p1 < CUTSCENE_QUARTER_COUNT) {
 				pi_put_quarter_8(
 					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
@@ -882,27 +831,15 @@ script_ret_t pascal near script_op(unsigned char c)
 					frame_delay(p2);
 				}
 			}
-#if (GAME == 5)
 			graph_accesspage(1);
 			pi_put_quarter_8(
 				CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
 			);
+#if (GAME == 5)
 			frame_delay(1); // ZUN quirk
-#else
-			// ZUN bloat: See above.
-			// ZUN landmine: See above.
-			graph_showpage(1);
-			graph_accesspage(0);
-
-			pi_put_quarter_8(
-				CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
-			);
 #endif
 		}
-#if (GAME <= 4)
-		graph_showpage(0); // ZUN bloat: See above.
-#endif
-		pic_copy_to_other(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+		pic_copy_1_to_0(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
 		break;
 
 	case 'm':
@@ -963,6 +900,8 @@ void near cutscene_animate(void)
 #if (GAME == 3)
 	speedup_cycle = 0;
 #endif
+
+	graph_showpage(0);
 
 	// Necessary because scripts can (and do) show multiple text boxes on the
 	// initially black background.
@@ -1038,7 +977,6 @@ void near cutscene_animate(void)
 				script_param_read_number_first(gaiji, gs_NOTES);
 				break;
 			}
-			graph_showpage(0);
 			graph_accesspage(1);
 
 			// Still ignoring [text_fx].
@@ -1066,21 +1004,13 @@ void near cutscene_animate(void)
 		}
 #endif
 
-#if (GAME >= 4)
-		graph_showpage(0);
 		graph_accesspage(1);
+#if (GAME >= 4)
 		graph_putsa_fx(cursor.x, cursor.y, text_col, kanji.byte);
 #else
-		graph_accesspage(1);
 		graph_putsa_fx(cursor.x, cursor.y, (text_col | text_fx), kanji.byte);
 		graph_accesspage(0);
 		graph_putsa_fx(cursor.x, cursor.y, (text_col | text_fx), kanji.byte);
-#endif
-#if (GAME == 5)
-		// ZUN bloat: All blitting operations in this module access the
-		// intended page before they blit. That's why preliminary state
-		// changes like this one are completely redundant, thankfully.
-		graph_accesspage(0);
 #endif
 		cursor_advance_and_animate();
 
