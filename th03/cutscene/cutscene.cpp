@@ -14,9 +14,6 @@
 #include <stddef.h>
 #include "game/cutscene.hpp"
 #include "libs/master.lib/master.hpp"
-#if (GAME >= 4)
-#include "th01/hardware/grcg.hpp" // ZUN bloat
-#endif
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/sprites/pi_mask.hpp"
@@ -481,11 +478,6 @@ void pascal near box_1_to_0_masked(box_mask_t mask)
 
 void near box_1_to_0_animate(void)
 {
-	// ZUN bloat: box_1_to_0_masked() switches the accessed page anyway.
-#if (GAME == 5)
-	graph_accesspage(0);
-#endif
-
 	egc_start_copy();
 	if(!fast_forward) {
 		for(int i = BOX_MASK_0; i < BOX_MASK_COPY; i++) {
@@ -531,9 +523,7 @@ void pascal near box_wait_animate(int frames_to_wait)
 
 		if(
 			(frames_to_wait <= 0) ||
-			(key_det & INPUT_OK) ||
-			(key_det & INPUT_SHOT) ||
-			(key_det & INPUT_CANCEL)
+			(key_det & (INPUT_OK | INPUT_SHOT | INPUT_CANCEL))
 		) {
 			return;
 		}
@@ -555,16 +545,6 @@ void pascal near box_wait_animate(int frames_to_wait)
 // Called with [script_p] at the character past [c].
 script_ret_t pascal near script_op(unsigned char c)
 {
-	// ZUN bloat: Needed for code generation reasons. The structure of the
-	// conditional branches below ensures that the `return`s have no actual
-	// effect, so this block can just be deleted.
-#if (GAME == 5)
-	#define palette_black_in(x)  palette_black_in(x);  return CONTINUE;
-	#define palette_black_out(x) palette_black_out(x); return CONTINUE;
-	#define palette_white_in(x)  palette_white_in(x);  return CONTINUE;
-	#define palette_white_out(x) palette_white_out(x); return CONTINUE;
-#endif
-
 	int i;
 	int p1;
 	int p2;
@@ -620,10 +600,7 @@ script_ret_t pascal near script_op(unsigned char c)
 
 	case 'c':
 #if (GAME == 5)
-		// ZUN bloat: Doesn't matter for either '=' or digits.
-		c = tolower(*script_p);
-
-		if(c == '=') {
+		if(*script_p == '=') {
 			goto colmap_add;
 		}
 #endif
@@ -668,9 +645,6 @@ script_ret_t pascal near script_op(unsigned char c)
 					} else {
 						input_wait_for_ok(p1);
 					}
-#endif
-#if (GAME == 5) // ZUN bloat
-					return CONTINUE;
 #endif
 				}
 			} else {
@@ -731,10 +705,6 @@ script_ret_t pascal near script_op(unsigned char c)
 			// parameter would overflow into the function and not make this a
 			// fade. (The regular snd_kaja_func() behaves this way.)
 			snd_kaja_interrupt((KAJA_SONG_FADE << 8) + p1);
-
-#if (GAME <= 4) // ZUN bloat: `break` or `return`, pick one!
-			return CONTINUE;
-#endif
 		}
 		break;
 
@@ -979,9 +949,6 @@ void near cutscene_animate(void)
 {
 	extern ShiftJISKanji near CUTSCENE_KANJI[];
 
-#if (GAME == 5)
-	int gaiji;
-#endif
 	unsigned char c;
 	uint8_t speedup_cycle;
 
@@ -1015,10 +982,6 @@ void near cutscene_animate(void)
 			fast_forward = false;
 		}
 
-#if (GAME == 5) // ZUN bloat: Should be part of the colmap loop.
-		int i = 0;
-#endif
-
 		// Same iteration code as in TH04's dialog system.
 		c = *(script_p++);
 		if(str_sep_control_or_space(c)) {
@@ -1036,6 +999,7 @@ void near cutscene_animate(void)
 
 #if (GAME == 5)
 		if(c == '@') {
+			int gaiji;
 			c = tolower(*script_p);
 			script_p++;
 			switch(c) {
@@ -1081,7 +1045,6 @@ void near cutscene_animate(void)
 			graph_gaiji_putc(cursor.x, cursor.y, gaiji, text_col);
 
 			cursor_advance_and_animate();
-			i = 1; // ZUN bloat
 			continue;
 		}
 #endif
@@ -1094,7 +1057,7 @@ void near cutscene_animate(void)
 
 #if (GAME == 5)
 		if(cursor.x == BOX_LEFT) {
-			for(i = 0; i < colmap_count; i++) {
+			for(int i = 0; i < colmap_count; i++) {
 				if(colmap.keys[i][0].t == kanji.t) {
 					text_col = colmap.values[i];
 					break;
@@ -1120,9 +1083,6 @@ void near cutscene_animate(void)
 		graph_accesspage(0);
 #endif
 		cursor_advance_and_animate();
-#if (GAME == 5)
-		i = 1; // ZUN bloat
-#endif
 
 		// High-level overview, point 3)
 #if (GAME == 3)
