@@ -33,31 +33,31 @@ const uint8_t DONT_CHECK_HIGH = 0x2;
 	if((dc & DONT_CHECK_HIGH) || _AH) { *((dots8_t __es *)(_DI + 1)) op _AH; } \
 
 #define DEFINE_CHECKED(func, check) \
-	void write_16_##func(seg_t plane_seg) \
+	void __fastcall write_16_##func(seg_t /* _AX */) \
 	{ \
-		stationary_impl(plane_seg, 16, checked, check, =);\
+		stationary_impl(_AX, 16, checked, check, =);\
 	} \
 	\
-	void or_16_##func(seg_t plane_seg) \
+	void __fastcall or_16_##func(seg_t /* _AX */) \
 	{ \
-		stationary_impl(plane_seg, 16, checked, check, |=); \
+		stationary_impl(_AX, 16, checked, check, |=); \
 	}
 
 DEFINE_CHECKED(check_first, DONT_CHECK_HIGH);
 DEFINE_CHECKED(check_second, DONT_CHECK_LOW);
 DEFINE_CHECKED(check_both, 0);
 
-void movs_8(seg_t plane_seg)
+void __fastcall movs_8(seg_t /* _AX */)
 {
-	march_impl(plane_seg, 8, u_8, X86::R_AX);
+	march_impl(_AX, 8, u_8, X86::R_AX);
 }
 
-void movs_16(seg_t plane_seg)
+void __fastcall movs_16(seg_t /* _AX */)
 {
-	march_impl(plane_seg, 16, u_16, X86::R_AX);
+	march_impl(_AX, 16, u_16, X86::R_AX);
 }
 
-void naive_write(seg_t plane_seg, vram_byte_amount_t vram_w)
+void __fastcall naive_write(seg_t plane_seg, vram_byte_amount_t vram_w)
 {
 	const dots8_t far* sprite_p = (
 		reinterpret_cast<const dots8_t far *>(blit_source.dots_start.fp) +
@@ -78,12 +78,12 @@ void naive_write(seg_t plane_seg, vram_byte_amount_t vram_w)
 	}
 }
 
-void naive_write_8(seg_t plane_seg)
+void __fastcall naive_write_8(seg_t plane_seg)
 {
 	naive_write(plane_seg, sizeof(dots8_t));
 }
 
-void naive_write_16(seg_t plane_seg)
+void __fastcall naive_write_16(seg_t plane_seg)
 {
 	naive_write(plane_seg, sizeof(dots16_t));
 }
@@ -206,7 +206,9 @@ void test_main(void)
 	blitter_set_source_region(0, 0, SPRITE_STRIDE, SPRITE_H, SPRITE_STRIDE);
 
 	extern Blitter BLITTER_FUNCS[];
-	blit_func_t orig_dots8_write = BLITTER_FUNCS[ 8 / BYTE_DOTS].write;
+	void (__fastcall *orig_dots8_write)(seg_t) = (
+		BLITTER_FUNCS[ 8 / BYTE_DOTS].write
+	);
 
 	palette_show(PALETTE_DEFAULT);
 

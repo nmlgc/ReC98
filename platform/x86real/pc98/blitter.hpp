@@ -3,11 +3,9 @@
 
 #include "planar.h"
 
-typedef void (* blit_func_t)(seg_t plane_seg);
-
 struct Blitter {
-	blit_func_t write;
-	blit_func_t or;
+	void (__fastcall *write)(seg_t plane_seg);
+	void (__fastcall *or)(seg_t plane_seg);
 };
 
 // Persistent state that defines the region of the blitted sprite.

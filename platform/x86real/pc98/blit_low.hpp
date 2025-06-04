@@ -200,6 +200,7 @@ inline void stationary_next(void) {
 }
 
 #define stationary_impl(plane_seg, width, func, row_p1, row_p2) { \
+	_ES = plane_seg; /* First __fastcall parameter */ \
 	unroll_setup(width); /* Must come first because it uses CL on 8086. */ \
 	_SI = blit_source.dots_start.part.off; \
 	_SI += blit_state.sprite_offset; \
@@ -210,7 +211,6 @@ inline void stationary_next(void) {
 	/* [blit_state] can't be accessed anymore beyond this point! */ \
 	__emit__(0x1E); /* PUSH DS */ \
 	_DS = blit_source.dots_start.part.seg; \
-	_ES = plane_seg; \
 	unroll_##width(func, stationary_next(), row_p1, row_p2); \
 	__emit__(0x1F); /* POP DS */ \
 }
@@ -229,6 +229,7 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 }
 
 #define march_impl(plane_seg, width, func, skip_w_reg) { \
+	_ES = plane_seg; /* First __fastcall parameter */ \
 	unroll_setup(width); /* Must come first because it uses CL on 8086. */ \
 	_SI = blit_source.dots_start.part.off; \
 	_SI += blit_state.sprite_offset; \
@@ -246,7 +247,6 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 	/* [blit_state] can't be accessed anymore beyond this point! */ \
 	__emit__(0x1E); /* PUSH DS */ \
 	_DS = blit_source.dots_start.part.seg; \
-	_ES = plane_seg; \
 	unroll_##width(func, march_advance(width, skip_w_reg), 0, 0); \
 	__emit__(0x1F); /* POP DS */ \
 }
