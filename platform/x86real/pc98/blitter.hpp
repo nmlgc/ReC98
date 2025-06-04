@@ -3,7 +3,7 @@
 
 #include "planar.h"
 
-typedef void (* blit_func_t)(seg_t plane_seg, const void far* sprite);
+typedef void (* blit_func_t)(seg_t plane_seg);
 
 struct Blitter {
 	blit_func_t write;
@@ -12,6 +12,14 @@ struct Blitter {
 
 // Persistent state that defines the region of the blitted sprite.
 struct blit_source_t {
+	// Start of the sprite's bitplane
+	union {
+		struct {
+			uint16_t off;
+			seg_t seg;
+		} part;
+		const void far *fp;
+	} dots_start;
 	vram_byte_amount_t stride;
 	uint16_t offset; // Byte offset to the top-left pixel to be blitted
 	vram_byte_amount_t w;

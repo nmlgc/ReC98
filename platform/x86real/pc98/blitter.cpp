@@ -4,14 +4,14 @@
 extern LTRB<vram_x_t, screen_y_t> GrpClip;
 
 #define X(width) \
-	void write_##width##(seg_t plane_seg, const void far* sprite) \
+	void write_##width##(seg_t plane_seg) \
 	{ \
-		stationary_impl(plane_seg, sprite, width, d_##width, 0x80, 0); \
+		stationary_impl(plane_seg, width, d_##width, 0x80, 0); \
 	} \
 	\
-	void or_##width##(seg_t plane_seg, const void far* sprite) \
+	void or_##width##(seg_t plane_seg) \
 	{ \
-		stationary_impl(plane_seg, sprite, width, d_##width, 0x00, 0); \
+		stationary_impl(plane_seg, width, d_##width, 0x00, 0); \
 	} \
 
 	FOREACH_WIDTH

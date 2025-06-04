@@ -33,36 +33,35 @@ const uint8_t DONT_CHECK_HIGH = 0x2;
 	if((dc & DONT_CHECK_HIGH) || _AH) { *((dots8_t __es *)(_DI + 1)) op _AH; } \
 
 #define DEFINE_CHECKED(func, check) \
-	void write_16_##func(seg_t plane_seg, const void far* sprite) \
+	void write_16_##func(seg_t plane_seg) \
 	{ \
-		stationary_impl(plane_seg, sprite, 16, checked, check, =);\
+		stationary_impl(plane_seg, 16, checked, check, =);\
 	} \
 	\
-	void or_16_##func(seg_t plane_seg, const void far* sprite) \
+	void or_16_##func(seg_t plane_seg) \
 	{ \
-		stationary_impl(plane_seg, sprite, 16, checked, check, |=); \
+		stationary_impl(plane_seg, 16, checked, check, |=); \
 	}
 
 DEFINE_CHECKED(check_first, DONT_CHECK_HIGH);
 DEFINE_CHECKED(check_second, DONT_CHECK_LOW);
 DEFINE_CHECKED(check_both, 0);
 
-void movs_8(seg_t plane_seg, const void far* sprite)
+void movs_8(seg_t plane_seg)
 {
-	march_impl(plane_seg, sprite, 8, u_8, X86::R_AX);
+	march_impl(plane_seg, 8, u_8, X86::R_AX);
 }
 
-void movs_16(seg_t plane_seg, const void far* sprite)
+void movs_16(seg_t plane_seg)
 {
-	march_impl(plane_seg, sprite, 16, u_16, X86::R_AX);
+	march_impl(plane_seg, 16, u_16, X86::R_AX);
 }
 
-void naive_write(
-	seg_t plane_seg, const void far* sprite, vram_byte_amount_t vram_w
-)
+void naive_write(seg_t plane_seg, vram_byte_amount_t vram_w)
 {
 	const dots8_t far* sprite_p = (
-		reinterpret_cast<const dots8_t far *>(sprite) + blit_state.sprite_offset
+		reinterpret_cast<const dots8_t far *>(blit_source.dots_start.fp) +
+		blit_state.sprite_offset
 	);
 	vram_offset_t vo = blit_state.vo;
 	vram_byte_amount_t stride = (ROW_SIZE - vram_w);
@@ -79,21 +78,23 @@ void naive_write(
 	}
 }
 
-void naive_write_8(seg_t plane_seg, const void far* sprite)
+void naive_write_8(seg_t plane_seg)
 {
-	naive_write(plane_seg, sprite, sizeof(dots8_t));
+	naive_write(plane_seg, sizeof(dots8_t));
 }
 
-void naive_write_16(seg_t plane_seg, const void far* sprite)
+void naive_write_16(seg_t plane_seg)
 {
-	naive_write(plane_seg, sprite, sizeof(dots16_t));
+	naive_write(plane_seg, sizeof(dots16_t));
 }
 // ----------------------------
 
 // Blitting methods tested
 // -----------------------
 
-inline void rotate(sprite_rect_t& shifted, screen_x_t& left) {
+sprite_rect_t shifted;
+
+inline void rotate(screen_x_t& left) {
 	_CX = left;
 	_CX &= (BYTE_DOTS - 1);
 	static_assert(SPRITE_H == 8);
@@ -109,32 +110,33 @@ inline void rotate(sprite_rect_t& shifted, screen_x_t& left) {
 
 void near grcg_blit_preshifted(const Blitter __ds* b, screen_x_t left)
 {
-	b->write(SEG_PLANE_B, &sPELLET[0][left & (BYTE_DOTS - 1)]);
+	blit_source.dots_start.fp = &sPELLET[0][left & (BYTE_DOTS - 1)];
+	b->write(SEG_PLANE_B);
 }
 
 void near grcg_rotate_and_blit(const Blitter __ds* b, screen_x_t left)
 {
-	sprite_rect_t shifted;
-	rotate(shifted, left);
-	b->write(SEG_PLANE_B, &shifted);
+	blit_source.dots_start.fp = &shifted;
+	rotate(left);
+	b->write(SEG_PLANE_B);
 }
 
 void near raw_blit_preshifted(const Blitter __ds* b, screen_x_t left)
 {
-	const sprite_rect_t& sprite = sPELLET[0][left & (BYTE_DOTS - 1)];
-	b->or(SEG_PLANE_B, &sprite);
-	b->or(SEG_PLANE_R, &sprite);
-	b->or(SEG_PLANE_G, &sprite);
-	b->or(SEG_PLANE_E, &sprite);
+	blit_source.dots_start.fp = &sPELLET[0][left & (BYTE_DOTS - 1)];
+	b->or(SEG_PLANE_B);
+	b->or(SEG_PLANE_R);
+	b->or(SEG_PLANE_G);
+	b->or(SEG_PLANE_E);
 }
 
 void near raw_rotate_and_blit(const Blitter __ds* b, screen_x_t left)
 {
-	sprite_rect_t shifted;
-	rotate(shifted, left); b->or(SEG_PLANE_B, &shifted);
-	rotate(shifted, left); b->or(SEG_PLANE_R, &shifted);
-	rotate(shifted, left); b->or(SEG_PLANE_G, &shifted);
-	rotate(shifted, left); b->or(SEG_PLANE_E, &shifted);
+	blit_source.dots_start.fp = &shifted;
+	rotate(left); b->or(SEG_PLANE_B);
+	rotate(left); b->or(SEG_PLANE_R);
+	rotate(left); b->or(SEG_PLANE_G);
+	rotate(left); b->or(SEG_PLANE_E);
 }
 // -----------------------
 

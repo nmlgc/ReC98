@@ -199,9 +199,9 @@ inline void stationary_next(void) {
 	__emit__(0x83, 0xC7, ROW_SIZE); // ADD DI, ROW_SIZE
 }
 
-#define stationary_impl(plane_seg, sprite, width, func, row_p1, row_p2) { \
+#define stationary_impl(plane_seg, width, func, row_p1, row_p2) { \
 	unroll_setup(width); /* Must come first because it uses CL on 8086. */ \
-	_SI = FP_OFF(sprite); \
+	_SI = blit_source.dots_start.part.off; \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
 	_CX = blit_source.stride; \
@@ -209,7 +209,7 @@ inline void stationary_next(void) {
 	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
 	/* [blit_state] can't be accessed anymore beyond this point! */ \
 	__emit__(0x1E); /* PUSH DS */ \
-	_DS = FP_SEG(sprite); \
+	_DS = blit_source.dots_start.part.seg; \
 	_ES = plane_seg; \
 	unroll_##width(func, stationary_next(), row_p1, row_p2); \
 	__emit__(0x1F); /* POP DS */ \
@@ -228,9 +228,9 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 	__emit__(0x83, 0xC7, static_cast<uint8_t>(ROW_SIZE - (width / BYTE_DOTS)));
 }
 
-#define march_impl(plane_seg, sprite, width, func, skip_w_reg) { \
+#define march_impl(plane_seg, width, func, skip_w_reg) { \
 	unroll_setup(width); /* Must come first because it uses CL on 8086. */ \
-	_SI = FP_OFF(sprite); \
+	_SI = blit_source.dots_start.part.off; \
 	_SI += blit_state.sprite_offset; \
 	_DI = blit_state.vo; \
 	if(skip_w_reg == X86::R_AX) { \
@@ -245,7 +245,7 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
 	/* [blit_state] can't be accessed anymore beyond this point! */ \
 	__emit__(0x1E); /* PUSH DS */ \
-	_DS = FP_SEG(sprite); \
+	_DS = blit_source.dots_start.part.seg; \
 	_ES = plane_seg; \
 	unroll_##width(func, march_advance(width, skip_w_reg), 0, 0); \
 	__emit__(0x1F); /* POP DS */ \
