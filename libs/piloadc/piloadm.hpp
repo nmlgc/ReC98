@@ -5,6 +5,8 @@
 
 #include "libs/piloadc/piloadc.hpp"
 
+static const int PILOAD_OPT_LINESKIP = 0x80;
+
 // [read_func] returns the number of bytes actually read.
 
 // Small / Tiny model

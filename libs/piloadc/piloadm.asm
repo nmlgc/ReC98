@@ -3,6 +3,7 @@
 ; • Added a new `PiLoad` entry point that loads to a newly allocated 4-plane
 ;   buffer
 ; • Input data is now provided through a read callback
+; • Added support for skipping odd-numbered lines (Bit 7 in [option])
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
 ; • [PaletteBuff] now receives the original 8-bit palette from the file's
 ;   header instead of getting shifted down to 4 bits
@@ -457,6 +458,10 @@ codee:
 	mov	cx,ax
 	lodsw
 	xchg	ah,al
+	test	option,80h
+	jz	@@store_height
+	shr	ax,1
+@@store_height:
 	mov	y_wid,ax
 	mov	y_wid2,ax
 
@@ -795,6 +800,10 @@ trans proc near
 	rep	movsw
 	mov	si,di
 	mov	cx,lin
+	test	option,80h
+	jz	@@no_lineskip
+	mov	cx,(lin / 2)
+@@no_lineskip:
 	call	trans_func
 	pop	es
 	popa
@@ -952,6 +961,10 @@ xend:
 	out	7ch,al
 
 ext:
+	test	option,80h
+	jz	@@no_lineskip
+	add	si,x_wid
+@@no_lineskip:
 	pop	cx
 	add	vadr,80
 	dec	y_wid2
@@ -1011,6 +1024,10 @@ mtrans proc near
 	jmp	@@xlop
 
 @@xend:
+	test	option,80h
+	jz	@@no_lineskip
+	add	si,x_wid
+@@no_lineskip:
 	pop	cx
 	dec	y_wid2
 	jz	@@fin
