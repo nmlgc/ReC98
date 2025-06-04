@@ -475,7 +475,7 @@ th02:zungen("bin/th02/zun.com", {
 	}) },
 	{ "ZUNSOFT", th01_zunsoft },
 })
-th02:branch(MODEL_LARGE):link("op", {
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th02/op_01.cpp",
 	"th02/exit_dos.cpp",
 	"th02/zunerror.cpp",
@@ -623,7 +623,7 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th03/hfliplut.asm",
 	"th02/frmdely2.cpp",
 })
-th03:branch(MODEL_LARGE):link("main", {
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
 	"th03/playfld.cpp",
 	"th03/cfg_lres.cpp",

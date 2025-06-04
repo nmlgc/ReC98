@@ -16,6 +16,8 @@
 		.386
 		.model use16 large _TEXT
 
+BINARY = 'E'
+
 include ReC98.inc
 include th03/th03.inc
 include th01/hardware/grppsafx.inc

@@ -16,6 +16,8 @@
 		.386
 		.model use16 large _TEXT
 
+BINARY = 'M'
+
 include ReC98.inc
 include th02/gaiji/boldfont.inc
 include th03/arg_bx.inc
