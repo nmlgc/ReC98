@@ -75,7 +75,7 @@ int grp_put_palette_show(const char *fn)
 		option = PILOAD_OPT_COLORKEY(15);
 	}
 	if(flag_grp_put == true) {
-		ret = PiLoad(fn, grp_buf, GRP_BUFFER_SIZE, 0, 0, 100, option);
+		ret = PiLoadL(fn, grp_buf, GRP_BUFFER_SIZE, 0, 0, 100, option);
 	}
 	if(flag_palette_show == true) {
 		grp_palette_load_show_sane(fn);
