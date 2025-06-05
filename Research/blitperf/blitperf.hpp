@@ -39,6 +39,7 @@ struct Test {
 };
 
 extern const Palette4 PALETTE_DEFAULT;
+extern svc_t COL_CLEAR; // Set to -1 to disable per-frame VRAM clearing.
 extern Test t;
 
 // To be defined by the specific test

@@ -14,9 +14,12 @@
 #include "platform/x86real/pc98/vsync.hpp"
 #include "Research/blitperf/blitperf.csp"
 
+svc_t COL_CLEAR = 0;
+
 void graph_clear(void)
 {
-	GRCGStaticColor<static_cast<vc_t>(0)> grcg(GC_TDW);
+	GRCG grcg(GC_TDW);
+	grcg.setcolor(COL_CLEAR);
 	_ES = SEG_PLANE_B;
 	_DI = 0;
 #if (CPU == 386)
@@ -58,7 +61,9 @@ void Test::run(bool grcg)
 		page_show(1 - page_back);
 		page_access(page_back);
 
-		graph_clear();
+		if(COL_CLEAR >= 0) {
+			graph_clear();
+		}
 
 		if(grcg) {
 			GRCG grcg(GC_RMW);
