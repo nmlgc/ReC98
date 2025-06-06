@@ -25,6 +25,14 @@ struct Option {
 	uint16_t val;
 	uint16_t min;
 	uint16_t max;
+
+	void remove(void) {
+		cmd_c = '\0';
+	}
+
+	bool exists(void) const {
+		return (cmd_c != '\0');
+	}
 };
 
 struct Test {

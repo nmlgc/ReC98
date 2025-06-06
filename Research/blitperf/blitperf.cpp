@@ -196,25 +196,28 @@ int __cdecl main(int argc, const char *argv[])
 				banner_put();
 				printf("Usage: %s", argv[0]);
 				{for(int i = 0; i < OPT_COUNT; i++) {
-					printf(" [/%c %d]", t.opt[i].cmd_c, t.opt[i].val);
+					const Option& o = t.opt[i];
+					if(o.exists()) {
+						printf(" [/%c %d]", o.cmd_c, o.val);
+					}
 				}}
 				puts("\n");
 				{for(int i = 0; i < OPT_COUNT; i++) {
-					printf(
-						"\t/%c\t%s (%u-%u)\n",
-						t.opt[i].cmd_c,
-						t.opt[i].desc,
-						t.opt[i].min,
-						t.opt[i].max
-					);
+					const Option& o = t.opt[i];
+					if(o.exists()) {
+						printf(
+							"\t/%c\t%s (%u-%u)\n", o.cmd_c, o.desc, o.min, o.max
+						);
+					}
 				}}
 				return 0;
 			}
 
 			cur_opt = nullptr;
 			{for(int i = 0; i < OPT_COUNT; i++) {
-				if(tolower(cur_arg[1]) == tolower(t.opt[i].cmd_c)) {
-					cur_opt = &t.opt[i];
+				Option& o = t.opt[i];
+				if(o.exists() && (tolower(cur_arg[1]) == tolower(o.cmd_c))) {
+					cur_opt = &o;
 				}
 			}}
 			if(cur_opt == nullptr) {
@@ -226,10 +229,19 @@ int __cdecl main(int argc, const char *argv[])
 
 	printf("%s", "\x1B*");
 	banner_put();
+
+	bool opt_first = true;
 	{for(int i = 0; i < OPT_COUNT; i++) {
-		printf("%s%s: %u", ((i >= 1) ? ", " : ""), t.opt[i].desc, t.opt[i].val);
+		const Option& o = t.opt[i];
+		if(o.exists()) {
+			printf("%s%s: %u", (opt_first ? "" : ", "), o.desc, o.val);
+			opt_first = false;
+		}
 	}}
-	puts("\nCall with /? for options, hold Q to quit, or TAB to skip to the next test.\n");
+	if(!opt_first) {
+		puts("");
+	}
+	puts("Call with /? for options, hold Q to quit, or TAB to skip to the next test.\n");
 
 	graph_show_16color_400line();
 	vsync_init();
