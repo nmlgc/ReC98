@@ -40,6 +40,7 @@ struct blit_state_t {
 	// clipped at the left or top edge of VRAM.
 	uint16_t sprite_offset;
 
+	vram_byte_amount_t w_clipped;
 	upixel_t h_clipped;
 };
 

@@ -87,6 +87,7 @@ const Blitter __ds* __fastcall blitter_init_clip(
 		}
 		blit_state.sprite_offset -= sprite_left;
 		blit_state.vo += _CX;
+		blit_state.w_clipped = _AX;
 		return &BLITTER_FUNCS[_AX];
 	} else {
 		_DX = GrpClip.right;
@@ -97,9 +98,11 @@ const Blitter __ds* __fastcall blitter_init_clip(
 				return nullptr;
 			}
 			blit_state.vo += sprite_left;
+			blit_state.w_clipped = _DX;
 			return &BLITTER_FUNCS[_DX];
 		} else {
 			blit_state.vo += sprite_left;
+			blit_state.w_clipped = _AX;
 			return &BLITTER_FUNCS[_AX];
 		}
 	}
@@ -124,6 +127,7 @@ const Blitter __ds& __fastcall blitter_init_noclip(
 	blit_state.vo = _AX;
 	blit_state.sprite_offset = blit_source.offset;
 	blit_state.h_clipped = blit_source.h;
+	blit_state.w_clipped = blit_source.w;
 	return BLITTER_FUNCS[blit_source.w];
 }
 // --------------
