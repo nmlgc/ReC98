@@ -41,7 +41,7 @@ Blitter BLITTER_FUNCS[] = {
 
 #define init_wh(w, rows) { \
 	blit_state.sprite_w = w; \
-	blit_state.loops_unrolled = (rows / UNROLL_H); \
+	blit_state.loops_unrolled = ((rows + (UNROLL_H - 1)) / UNROLL_H); \
 	blit_state.loops_remainder = (rows % UNROLL_H); \
 }
 
