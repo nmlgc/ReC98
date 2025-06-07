@@ -24,6 +24,16 @@ void (* test_func)(const Blitter __ds*, screen_x_t);
 // Low-level blitter variations
 // ----------------------------
 
+void __fastcall or_8(seg_t /* _AX */)
+{
+	stationary_impl(_AX, 8, d_8, 0x00, 0);
+}
+
+void __fastcall or_16(seg_t /* _AX */)
+{
+	stationary_impl(_AX, 16, d_16, 0x00, 0);
+}
+
 const uint8_t DONT_CHECK_LOW  = 0x1;
 const uint8_t DONT_CHECK_HIGH = 0x2;
 
@@ -124,19 +134,19 @@ void near grcg_rotate_and_blit(const Blitter __ds* b, screen_x_t left)
 void near raw_blit_preshifted(const Blitter __ds* b, screen_x_t left)
 {
 	blit_source.dots_start.fp = &sPELLET[0][left & (BYTE_DOTS - 1)];
-	b->or(SEG_PLANE_B);
-	b->or(SEG_PLANE_R);
-	b->or(SEG_PLANE_G);
-	b->or(SEG_PLANE_E);
+	b->write(SEG_PLANE_B);
+	b->write(SEG_PLANE_R);
+	b->write(SEG_PLANE_G);
+	b->write(SEG_PLANE_E);
 }
 
 void near raw_rotate_and_blit(const Blitter __ds* b, screen_x_t left)
 {
 	blit_source.dots_start.fp = &shifted;
-	rotate(left); b->or(SEG_PLANE_B);
-	rotate(left); b->or(SEG_PLANE_R);
-	rotate(left); b->or(SEG_PLANE_G);
-	rotate(left); b->or(SEG_PLANE_E);
+	rotate(left); b->write(SEG_PLANE_B);
+	rotate(left); b->write(SEG_PLANE_R);
+	rotate(left); b->write(SEG_PLANE_G);
+	rotate(left); b->write(SEG_PLANE_E);
 }
 // -----------------------
 
@@ -173,7 +183,10 @@ void test_render(void)
 	}
 }
 
-void run(bool grcg_only)
+void run(
+	void (__fastcall *or_8)(seg_t) = nullptr,
+	void (__fastcall *or_16)(seg_t) = nullptr
+)
 {
 	/*  */printf("\xEB\x9F" "   GRCG preshifted ");
 	test_func = grcg_blit_preshifted;
@@ -182,7 +195,9 @@ void run(bool grcg_only)
 	printf(", runtime-shifted ");
 	test_func = grcg_rotate_and_blit;
 	t.run(true);
-	if(!grcg_only) {
+	if(or_8) {
+		BLITTER_FUNCS[ 8 / BYTE_DOTS].write = or_8;
+		BLITTER_FUNCS[16 / BYTE_DOTS].write = or_16;
 		printf("\n\xEB\x9F" "4-plane preshifted ");
 		test_func = raw_blit_preshifted;
 		t.run(false);
@@ -213,33 +228,30 @@ void test_main(void)
 	palette_show(PALETTE_DEFAULT);
 
 	puts("Unchecked, MOV:");
-	run(false);
+	run(or_8, or_16);
 
 	puts("Unchecked, MOVS:");
 	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = movs_8;
 	BLITTER_FUNCS[16 / BYTE_DOTS].write = movs_16;
-	run(true);
+	run();
 	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = orig_dots8_write;
 
 	puts("Checking first byte:");
 	BLITTER_FUNCS[16 / BYTE_DOTS].write = write_16_check_first;
-	BLITTER_FUNCS[16 / BYTE_DOTS].or = or_16_check_first;
-	run(false);
+	run(or_8, or_16_check_first);
 
 	puts("Checking second byte:");
 	BLITTER_FUNCS[16 / BYTE_DOTS].write = write_16_check_second;
-	BLITTER_FUNCS[16 / BYTE_DOTS].or = or_16_check_second;
-	run(false);
+	run(or_8, or_16_check_second);
 
 	puts("Checking both bytes:");
 	BLITTER_FUNCS[16 / BYTE_DOTS].write = write_16_check_both;
-	BLITTER_FUNCS[16 / BYTE_DOTS].or = or_16_check_both;
-	run(false);
+	run(or_8, or_16_check_both);
 
 	puts("Unchecked, unbatched, naive pure C implementation (no explicit register use):");
 	BLITTER_FUNCS[ 8 / BYTE_DOTS].write = naive_write_8;
 	BLITTER_FUNCS[16 / BYTE_DOTS].write = naive_write_16;
-	run(true);
+	run();
 }
 // ---------
 
