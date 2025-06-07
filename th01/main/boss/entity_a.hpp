@@ -1,6 +1,6 @@
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/player/orb.hpp"
-#include "th01/math/area.hpp"
+#include "game/coords.hpp"
 #include "game/pf.h"
 
 /// Entities
@@ -20,8 +20,8 @@ public:
 	screen_y_t prev_top;
 	vram_byte_amount_t vram_w;
 	pixel_t h;
-	Area<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
-	Area<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
+	LRTB<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
+	LRTB<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
 
 	// Never actually read outside of the functions that set them...
 	pixel_t prev_delta_y;

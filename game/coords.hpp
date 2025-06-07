@@ -15,3 +15,8 @@ union space_changing_point_t {
 	SPPoint sp;
 	screen_point_t pixel;
 };
+
+template <class TX, class TY> struct LRTB {
+	TX left, right;
+	TY top, bottom;
+};
