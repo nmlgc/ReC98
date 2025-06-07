@@ -494,21 +494,30 @@ inline void stationary_next(void) {
 // SI and DI are adjusted for every byte written. The end of each row has to
 // add the difference.
 
-inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
+inline void march_advance(
+	uint16_t width, X86::Reg16 skip_w_reg, bool offscreen
+) {
 	if(width != RES_X) {
 		__emit__(0x03, (0xF0 + skip_w_reg)); // ADD SI, [skip_w_reg]
 	}
-
-	// ADD DI, (ROW_SIZE - (width / BYTE_DOTS))
-	__emit__(0x83, 0xC7, static_cast<uint8_t>(ROW_SIZE - (width / BYTE_DOTS)));
+	if(!offscreen) {
+		// ADD DI, (ROW_SIZE - (width / BYTE_DOTS))
+		__emit__(
+			0x83, 0xC7, static_cast<uint8_t>(ROW_SIZE - (width / BYTE_DOTS))
+		);
+	}
 }
 
-#define march_impl(plane_seg, width, func, skip_w_reg) { \
+#define march_impl(plane_seg, width, func, skip_w_reg, offscreen) { \
 	_ES = plane_seg; /* First __fastcall parameter */ \
 	unroll_setup(width); /* Must come first because it uses CL on 8086. */ \
 	_SI = blit_source.dots_start.part.off; \
 	_SI += blit_state.sprite_offset; \
-	_DI = blit_state.vo; \
+	if(offscreen) { \
+		_DI = vram_offset_shift(0, RES_Y); \
+	} else { \
+		_DI = blit_state.vo; \
+	} \
 	if(width != RES_X) { \
 		if(skip_w_reg == X86::R_AX) { \
 			_AX = blit_source.stride; \
@@ -524,7 +533,7 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 	/* [blit_state] can't be accessed anymore beyond this point! */ \
 	__emit__(0x1E); /* PUSH DS */ \
 	_DS = blit_source.dots_start.part.seg; \
-	unroll_##width(func, march_advance(width, skip_w_reg), 0, 0); \
+	unroll_##width(func, march_advance(width, skip_w_reg, offscreen), 0, 0); \
 	__emit__(0x1F); /* POP DS */ \
 }
 // -------------
@@ -545,7 +554,7 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 
 #define blitter_impl_march_op(prefix, func, skip_w_reg, width) \
 	struct March##prefix##width { static void __fastcall blit(seg_t) { \
-		march_impl(width, func##_##width, skip_w_reg); \
+		march_impl(width, func##_##width, skip_w_reg, false); \
 	} };
 
 #define blitter_impl_displaced_write(width) \
@@ -570,9 +579,19 @@ inline void march_advance(uint16_t width, X86::Reg16 skip_w_reg) {
 #define blitter_impl_march_unit(width) \
 	blitter_impl_march(UW, u, width); \
 
+#define blitter_impl_march_unit_offscreen(width) \
+	struct MarchUWO##width { static void __fastcall blit(seg_t) { \
+		march_impl(_AX, width, u_##width, X86::R_AX, true); \
+	} };
+
 #define blitter_use_march_unit(width) { \
 	blitter_impl_march_unit(width); \
 	BLITTER_FUNCS[width / BYTE_DOTS].write = MarchUW##width::blit; \
+}
+
+#define blitter_use_march_unit_offscreen(width) { \
+	blitter_impl_march_unit_offscreen(width); \
+	BLITTER_FUNCS[width / BYTE_DOTS].write_offscreen = MarchUWO##width::blit; \
 }
 
 #define blitter_impl_march_string(width) \

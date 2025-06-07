@@ -59,12 +59,12 @@ DEFINE_CHECKED(check_both, 0);
 
 void __fastcall movs_8(seg_t /* _AX */)
 {
-	march_impl(_AX, 8, u_8, X86::R_AX);
+	march_impl(_AX, 8, u_8, X86::R_AX, false);
 }
 
 void __fastcall movs_16(seg_t /* _AX */)
 {
-	march_impl(_AX, 16, u_16, X86::R_AX);
+	march_impl(_AX, 16, u_16, X86::R_AX, false);
 }
 
 void __fastcall naive_write(seg_t plane_seg, vram_byte_amount_t vram_w)

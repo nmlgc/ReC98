@@ -5,6 +5,7 @@
 
 struct Blitter {
 	void (__fastcall *write)(seg_t plane_seg);
+	void (__fastcall *write_offscreen)(seg_t plane_seg);
 };
 
 // Persistent state that defines the region of the blitted sprite.
