@@ -49,7 +49,9 @@ extern blit_state_t blit_state;
 // invalid state.
 
 // Checks all 4 edges of VRAM.
-const Blitter __ds* blitter_init_clip_lrtb(vram_x_t left, vram_y_t top);
+const Blitter __ds* __fastcall blitter_init_clip_lrtb(
+	vram_x_t left, vram_y_t top
+);
 
 // Checks the bottom edge of VRAM.
 const Blitter __ds* blitter_init_clip_b(vram_x_t left, vram_y_t top);
