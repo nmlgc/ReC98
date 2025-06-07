@@ -206,7 +206,16 @@ void pascal near box_column16_unput(uscreen_x_t left)
 	register dots16_t px_e;
 
 	_AX = (left / BYTE_DOTS);
+
+	// ZUN bloat: ZUN offsets the segment pointer to the top row of the box
+	// below, so this should have been the height rather than the bottom
+	// coordinate. As a result, this code accesses the 256 rows below the box
+	// as well and reaches 240 rows below the bottom of VRAM. For the G and E
+	// segments at 0xB800 and 0xE000, these writes even reach into the adjacent
+	// user and system ROM segments, causing DOSBox-X to throw a barrage of CPU
+	// write errors. :zunpet:
 	_DI = vram_offset_shift(0, (BOX_BOTTOM - 1));
+
 	_DI += _AX;
 	_ES = vram_segment(B, 0, BOX_TOP);
 	do {
