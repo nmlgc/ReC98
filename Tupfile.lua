@@ -1068,6 +1068,7 @@ for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
 		cfg:build_uncached("platform/x86real/pc98/font.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/graph.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/grcg.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/grp_clip.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/palette.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/vsync.cpp"),
 	}

@@ -20,3 +20,8 @@ template <class TX, class TY> struct LRTB {
 	TX left, right;
 	TY top, bottom;
 };
+
+template <class TX, class TY> struct LTRB {
+	TX left, top;
+	TY right, bottom;
+};

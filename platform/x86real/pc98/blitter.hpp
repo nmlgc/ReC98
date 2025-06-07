@@ -42,17 +42,9 @@ extern blit_state_t blit_state;
 
 // Initialization
 // --------------
-// All of these set up blitting of the previously configured sprite region at
-// the given VRAM offset, cutting it at the indicated VRAM boundaries and
-// assuming that it does not touch the others. If the sprite would be cut to a
-// width or height of 0, they return a `nullptr` and leave the blitter in an
-// invalid state.
 
-// Checks all 4 edges of VRAM.
-const Blitter __ds* __fastcall blitter_init_clip_lrtb(
-	vram_x_t left, vram_y_t top
-);
-
-// Checks the bottom edge of VRAM.
-const Blitter __ds* blitter_init_clip_b(vram_x_t left, vram_y_t top);
+// Sets up blitting of the previously configured sprite region at the given
+// VRAM offset, cutting it to the clipping region set with Grp_SetClip().
+// Returns a blitter if the sprite is visible, or a `nullptr` if it isn't.
+const Blitter __ds* __fastcall blitter_init_clip(vram_x_t left, vram_y_t top);
 // --------------

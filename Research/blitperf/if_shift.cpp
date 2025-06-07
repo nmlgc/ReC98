@@ -4,6 +4,7 @@
 #include "platform/x86real/pc98/blit_low.hpp"
 #include "platform/x86real/pc98/grcg.hpp"
 #include "platform/x86real/pc98/palette.hpp"
+#include "platform/grp_clip.hpp"
 #include "th01/main/entity.hpp"
 #include "th01/sprites/pellet.csp"
 
@@ -160,7 +161,7 @@ void test_render(void)
 {
 	entity_topleft_t *sprite_p = sprites;
 	for(uint16_t i = 0; i < t.opt[OPT_SPRITE_COUNT].val; i++) {
-		const Blitter __ds* b = blitter_init_clip_lrtb(
+		const Blitter __ds* b = blitter_init_clip(
 			(sprite_p->left >> BYTE_BITS), sprite_p->top
 		);
 		if(b) {
