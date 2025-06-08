@@ -4,6 +4,9 @@
 // scope, and provide the optimal instructions for both dynamic and statically
 // known tiles and colors.
 
+#ifndef PLATFORM_X86REAL_PC98_GRCG_HPP
+#define PLATFORM_X86REAL_PC98_GRCG_HPP
+
 #include "planar.h"
 #include "x86real.h"
 
@@ -71,3 +74,5 @@ struct GRCG {
 		_outportb_(0x7C, GC_OFF);
 	}
 };
+
+#endif /* PLATFORM_X86REAL_PC98_GRCG_HPP */
