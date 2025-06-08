@@ -25,7 +25,7 @@ const shiftjis_t* MUSIC_CHOICES[] = {
 	"No.20 " TH04_20,
 	"No.21 " TH04_21,
 	"No.22 " TH04_22,
-	"                                  ", // ZUN bloat
+	"",
 	"      " TH04_QT,
 };
 

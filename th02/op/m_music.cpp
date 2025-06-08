@@ -555,9 +555,6 @@ inline void cmt_unput(void) {
 
 void near cmt_unput_both_animate(void)
 {
-	// ZUN bloat: Not related to unblitting.
-	graph_putsa_fx_func = FX_WEIGHT_BOLD;
-
 	cmt_unput();
 	music_update_render_and_flip();
 	cmt_unput();
@@ -570,19 +567,6 @@ void pascal near cmt_load_unput_and_put_both_animate(int track)
 	}
 	cmt_load(track);
 
-	// ZUN bloat: These calls are never needed. Either we're rendering the
-	// first track and there's nothing to be unblitted, or we already unblitted
-	// the previous track title and comment in the call above.
-	// In fact, they have no effect at all, which is why TH05 can put these
-	// nonsensical coordinates and ZUN never noticed anything.
-	nopoly_B_put();
-	bgimage_put_rect_16(
-		CMT_TITLE_LEFT,
-		((GAME == 5) ? 64 : CMT_TITLE_TOP),
-		(RES_X - CMT_TITLE_LEFT),
-		((GAME == 5) ? 256 : (CMT_LINES * GLYPH_H))
-	);
-
 	if(cmt_shown_initial) {
 		cmt_fadein_both_animate();
 	} else {
@@ -591,11 +575,6 @@ void pascal near cmt_load_unput_and_put_both_animate(int track)
 		music_update_render_and_flip();
 		cmt_put();
 	}
-
-	// ZUN bloat: Redundant; music_update_render_and_flip() runs almost
-	// immediately after this function on every code path, and this is the
-	// first thing that function does.
-	nopoly_B_put();
 }
 #else
 void near cmt_bg_free(void)
@@ -737,12 +716,6 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 
 	palette_settone(0);
 	graph_showpage(0);
-
-	// ZUN bloat: We copy page 1 to page 0 below anyway. The hardware palette
-	// is also entirely black, so no one will ever see a difference.
-	graph_accesspage(0);
-	graph_clear();
-
 	graph_accesspage(1);
 
 #if (GAME >= 4)
@@ -914,7 +887,7 @@ controls:
 		}
 #endif
 	skip_processing_of_left_and_right:
-		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+		if(key_det & (INPUT_SHOT | INPUT_OK)) {
 			if(music_sel != SEL_QUIT) {
 #if (GAME >= 4)
 				snd_kaja_func(KAJA_SONG_FADE, 32);

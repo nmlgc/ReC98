@@ -18,9 +18,6 @@ const shiftjis_t* LABEL_DOWN   = "             ------ ¥ ------       ";
 // ZUN bug: TH03's list is the only one that correctly aligns this label.
 #define LABEL_QUIT "ƒ^ƒCƒgƒ‹‚É–ß‚é"
 
-// ZUN bloat
-const shiftjis_t* LABEL_UNUSED = "             ----------------       ";
-
 const shiftjis_t* LABEL_GAME[GAME_COUNT] = {
 	"   ‘æ‚P’e@“Œ•ûèËˆÙ“`  Arrange ver  ",
 	"   ‘æ‚Q’e@“Œ•û••–‚˜^  Special MIX  ",
