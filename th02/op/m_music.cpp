@@ -523,7 +523,8 @@ void near cmt_fadein_both_animate(void)
 	cmt_put();
 }
 
-inline void cmt_unput(void) {
+void cmt_unput(void)
+{
 	enum {
 		W = (RES_X - CMT_TITLE_LEFT), // ZUN bloat: [CMT_LINE_W] is enough.
 	};
@@ -655,9 +656,8 @@ void pascal near tracklist_unput_and_put_both_animate(int sel)
 	tracklist_put(sel);
 }
 
-inline void track_unput_and_put_both_animate(
-	const uint8_t& sel_prev, const uint8_t& sel_new
-) {
+void track_unput_and_put_both_animate(uint8_t sel_prev, uint8_t sel_new)
+{
 	track_unput_or_put(sel_prev, false);
 	track_unput_or_put(sel_new, true);
 	music_update_render_and_flip();
@@ -665,7 +665,8 @@ inline void track_unput_and_put_both_animate(
 	track_unput_or_put(sel_new, true);
 }
 
-inline void game_switch(void) {
+void game_switch(void)
+{
 	music_sel = 0;
 	track_playing = 0;
 	track_id_at_top = 0;
