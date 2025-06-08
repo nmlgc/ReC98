@@ -486,44 +486,30 @@ void pascal near cmt_load(int track)
 	}
 }
 
-// ZUN bloat: TH05 has the most straightforward version of this code.
-#define cmt_put_macro(fx) \
-	graph_putsa_fx( \
-		CMT_TITLE_LEFT, CMT_TITLE_TOP, (COL_CMT_TRACK | fx), cmt[0].c \
-	); \
-	for(int line = 1; line < CMT_LINES; line++) { \
-		if((GAME >= 4) && (cmt[line].c[0] == ';')) { \
-			continue; \
-		} \
-		graph_putsa_fx( \
-			CMT_COMMENT_LEFT, \
-			((line + ((CMT_COMMENT_TOP - 1) / GLYPH_H)) * GLYPH_H), \
-			(COL_CMT_COMMENT | fx), \
-			cmt[line].c \
-		); \
-	}
-
-#if (GAME >= 4)
 void near cmt_put(void)
 {
-#if (GAME == 5)
-	graph_putsa_fx(CMT_TITLE_LEFT, CMT_TITLE_TOP, COL_CMT_TRACK, cmt[0].c);
+#if (GAME >= 4)
+	static const int16_t FX = 0;
+#else
+	static const int16_t FX = FX_WEIGHT_HEAVY;
+#endif
+	graph_putsa_fx(
+		CMT_TITLE_LEFT, CMT_TITLE_TOP, (COL_CMT_TRACK | FX), cmt[0].c
+	);
 	const cmt_line_t near* cmt_p = &cmt[1];
-	int line = 1;
 	screen_y_t top = CMT_COMMENT_TOP;
-	while(line < CMT_LINES) {
-		if(cmt_p->c[0] != ';') {
-			graph_putsa_fx(CMT_COMMENT_LEFT, top, COL_CMT_COMMENT, cmt_p->c);
+	for(int line = 1; line < CMT_LINES; line++) {
+		if(!((GAME >= 4) && (cmt_p->c[0] == ';'))) {
+			graph_putsa_fx(
+				CMT_COMMENT_LEFT, top, (COL_CMT_COMMENT | FX), cmt_p->c
+			);
 		}
-		line++;
 		top += GLYPH_H;
 		cmt_p++;
 	}
-#else
-	cmt_put_macro(0);
-#endif
 }
 
+#if (GAME >= 4)
 void near cmt_fadein_both_animate(void)
 {
 	int func; // ACTUAL TYPE: graph_putsa_fx_func_t
@@ -600,7 +586,7 @@ void pascal near cmt_load_unput_and_put(int track)
 
 	nopoly_B_put();
 	cmt_unput();
-	cmt_put_macro(FX_WEIGHT_HEAVY);
+	cmt_put();
 
 	// Update [nopoly_B] to match the B plane of the comment we just blitted
 	// into the respective area. Since this buffer is reblitted every frame,
