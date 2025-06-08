@@ -356,25 +356,11 @@ void near music_update_render_and_flip(void)
 	}
 #endif
 
-	// This is the correct position for a VSync delay. frame_delay() returns
-	// immediately after a VSync interrupt and at the beginning of the vertical
-	// blanking interval, which is the safest point to flip pages.
-#if (GAME == 5)
 	frame_delay(1);
-#endif
 
 	graph_showpage(music_page_accessed);
 	music_page_accessed = (1 - music_page_accessed);
 	graph_accesspage(music_page_accessed);
-
-	// ZUN landmine: Waiting for VSync *after* flipping, however, means that we
-	// almost certainly *don't* flip within the vertical blanking interval, but
-	// somewhere *within* a frame while the beam is still traveling across the
-	// screen. This ensures a tearing line on all but the fastest PC-98
-	// systems, with the pixels above always being one frame behind.
-#if (GAME <= 4)
-	frame_delay(1);
-#endif
 }
 
 void pascal near cmt_load(int track)
