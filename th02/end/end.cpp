@@ -459,7 +459,7 @@ inline void end_load_and_start_animate(const char* text_fn) {
 	end_load(text_fn);
 	snd_load("end1.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
-	palette_black();
+	palette_settone(0);
 	end_pics_load_palette_show("ed01.pi");
 	palette_black_in(2);
 	frame_delay(40);

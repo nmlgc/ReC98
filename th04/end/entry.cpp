@@ -77,7 +77,7 @@ void near end_animate(void)
 	 * ZUN bloat: The hardware palette is entirely black when we get here, and \
 	 * we don't flip any pages, so the picture could have been just blitted to \
 	 * VRAM page #0. \
-	 * (Would have also been nice to add a palette_black() call here, as an \
+	 * (Would have also been nice to add a palette_settone(0) call here, as an \
 	 * assert() of sorts.) \
 	 */ \
 	graph_accesspage(1); \
@@ -157,7 +157,7 @@ void main(void)
 #else
 		delay_then_regist_menu();
 		congratulations_pic_fn[5] = ('0' + RANK_EXTRA);
-		palette_black();
+		palette_settone(0);
 		congratulations_animate(congratulations_pic_fn);
 		verdict_animate();
 #endif

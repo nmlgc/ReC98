@@ -203,12 +203,6 @@ void MASTER_RET palette_show(void);
 #define palette_100() \
 	palette_settone(100)
 
-#define palette_black() \
-	palette_settone(0)
-
-#define palette_white() \
-	palette_settone(200)
-
 #define palette_set(col, r, g, b) (\
 	Palettes[col].v[0] = (uint8_t)(r), \
 	Palettes[col].v[1] = (uint8_t)(g), \

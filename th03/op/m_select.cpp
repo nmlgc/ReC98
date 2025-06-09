@@ -560,9 +560,9 @@ inline void select_input_sense(void) {
 }
 
 inline bool select_cancel(void) {
-	// ZUN bloat: palette_black() is a more performant way to achieve the same
-	// without raising any questions about whether this targets the correct
-	// VRAM page.
+	// ZUN bloat: palette_settone(0) is a more performant way to achieve the
+	// same without raising any questions about whether this targets the
+	// correct VRAM page.
 	graph_accesspage(0);
 	graph_clear();
 	graph_showpage(0);

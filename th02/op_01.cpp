@@ -135,7 +135,7 @@ void op_animate(void)
 	pi_load(0, "opa.pi");
 	pi_load(1, "opb.pi");
 	pi_load(2, "opc.pi");
-	palette_white();
+	palette_settone(200);
 
 	for(door_x = 0; door_x < 40; door_x++) {
 		for(door_y = 0; door_y < 25; door_y++) {
@@ -166,7 +166,7 @@ void op_animate(void)
 	frame_delay(18);
 	title_flash();
 
-	palette_white();
+	palette_settone(200);
 	graph_accesspage(1);
 
 	graph_gaiji_putc(548, 384, gs_COPYRIGHT, 0);

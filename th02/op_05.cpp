@@ -135,7 +135,7 @@ void pascal shottype_menu_init(void)
 			graph_putsa_fx(432, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
-	palette_black();
+	palette_settone(0);
 	graph_accesspage(0);
 	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
 	graph_copy_page(1);

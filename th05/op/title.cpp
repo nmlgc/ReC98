@@ -48,7 +48,7 @@ void near op_animate(void)
 		}
 	} page;
 
-	palette_black();
+	palette_settone(0);
 	pi_load(0, "op2a.pi");
 	pi_load(1, "op2b.pi");
 	pi_load(2, "op2c.pi");

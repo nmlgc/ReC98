@@ -443,7 +443,7 @@ void near shottype_menu_put_initial(void)
 
 void near playchar_menu_put_initial(void)
 {
-	palette_black();
+	palette_settone(0);
 	pi_load(0, "slb1.pi");
 	graph_accesspage(1);
 	graph_showpage(0);
@@ -528,7 +528,7 @@ bool16 near playchar_menu(void)
 						: SHOTTYPE_B;
 
 					graph_accesspage(1);
-					palette_white();
+					palette_settone(200);
 					pi_put_8(0, 0, 0);
 					shottype_menu_put_initial();
 					graph_copy_page(0);

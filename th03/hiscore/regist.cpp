@@ -86,7 +86,7 @@ void near regist_load_and_put_initial(void)
 	extern const char regi2_bft[];
 	extern const char regi1_bft[];
 
-	palette_black();
+	palette_settone(0);
 	graph_accesspage(0);
 	graph_showpage(0);
 

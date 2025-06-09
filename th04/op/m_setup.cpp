@@ -310,7 +310,7 @@ void near setup_se_menu(void)
 
 void near setup_menu(void)
 {
-	palette_black();
+	palette_settone(0);
 	super_entry_bfnt("mswin.bft");
 	graph_accesspage(1);
 	pi_fullres_load_palette_apply_put_free(0, "ms.pi");

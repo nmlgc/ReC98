@@ -783,7 +783,7 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 
 	music_page = 1;
 
-	palette_black();
+	palette_settone(0);
 	graph_showpage(0);
 
 	// ZUN bloat: We copy page 1 to page 0 below anyway. The hardware palette

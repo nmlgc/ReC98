@@ -400,7 +400,7 @@ void near regist_view_menu(void)
 		}
 		if((key_det & INPUT_LEFT) && (rank != RANK_EASY)) {
 			rank--;
-			palette_black();
+			palette_settone(0);
 #if (GAME == 4)
 			hiscore_scoredat_load_both();
 #endif
@@ -409,7 +409,7 @@ void near regist_view_menu(void)
 		}
 		if((key_det & INPUT_RIGHT) && (rank < RANK_EXTRA)) {
 			rank++;
-			palette_black();
+			palette_settone(0);
 #if (GAME == 4)
 			hiscore_scoredat_load_both();
 #endif

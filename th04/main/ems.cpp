@@ -141,7 +141,7 @@ void near eyecatch_animate(void)
 	} else {
 		cdg_load_single_noalpha(CDG_EYECATCH, eyename, 0);
 	}
-	palette_black();
+	palette_settone(0);
 	cdg_put_noalpha_8(
 		(PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (EYECATCH_W / 2)),
 		(PLAYFIELD_TOP + (PLAYFIELD_H / 2) - (EYECATCH_H / 2)),
