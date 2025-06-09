@@ -21,15 +21,13 @@ BINARY = 'O'
 include ReC98.inc
 include th04/th04.inc
 
-op_01 group OP_SETUP_TEXT, op_01_TEXT
+op_01 group OP_SETUP_TEXT
 
 ; ===========================================================================
 
 _TEXT	segment	word public 'CODE' use16
 	extern PALETTE_BLACK_IN:proc
 	extern PALETTE_BLACK_OUT:proc
-	extern GRCG_BYTEBOXFILL_X:proc
-	extern GRCG_SETCOLOR:proc
 	extern GRAPH_CLEAR:proc
 	extern GRAPH_COPY_PAGE:proc
 	extern GRAPH_PI_FREE:proc
@@ -50,204 +48,6 @@ OP_SETUP_TEXT segment byte public 'CODE' use16
 
 include th04/zunsoft.asm
 OP_SETUP_TEXT ends
-
-op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @op_animate$qv
-@op_animate$qv	proc near
-
-@@page		= byte ptr -4
-var_3		= byte ptr -3
-@@component		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_accesspage 1
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		GRCG_OFF_CLOBBERING dx
-		call	graph_copy_page pascal, 0
-		call	@pi_load$qinxc pascal, 0, ds, offset aOp5b_pi
-		call	@pi_load$qinxc pascal, 1, ds, offset aOp4b_pi
-		call	@pi_load$qinxc pascal, 2, ds, offset aOp3b_pi
-		call	@pi_load$qinxc pascal, 3, ds, offset aOp2b_pi
-		call	@pi_load$qinxc pascal, 4, ds, offset aOp1b_pi
-		call	@pi_load$qinxc pascal, 5, ds, offset aOp0b_pi
-		call	@pi_palette_apply$qi pascal, 0
-		push	4
-		call	palette_black_in
-		graph_showpage 0
-		graph_accesspage 1
-		xor	si, si
-		mov	[bp+var_3], 0
-		mov	di, 100
-		mov	[bp+@@page], 0
-		jmp	short loc_CDC4
-; ---------------------------------------------------------------------------
-
-loc_CD7A:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_CDB0
-		cmp	[bp+var_3], 6
-		jnb	short loc_CDB0
-		pushd	38
-		mov	al, [bp+var_3]
-		mov	ah, 0
-		push	ax
-		call	@pi_put_8$qiii
-		inc	[bp+var_3]
-		graph_accesspage [bp+@@page]
-		mov	al, 1
-		sub	al, [bp+@@page]
-		mov	[bp+@@page], al
-		graph_showpage al
-
-loc_CDB0:
-		mov	PaletteTone, di
-		call	far ptr	palette_show
-		add	di, 2
-		call	@frame_delay$qi pascal, 1
-		inc	si
-
-loc_CDC4:
-		cmp	si, 1Ch
-		jl	short loc_CD7A
-		mov	PaletteTone, 200
-		call	far ptr	palette_show
-		graph_showpage 0
-		graph_accesspage al
-		freePISlotLarge	0
-		freePISlotLarge	1
-		freePISlotLarge	2
-		freePISlotLarge	3
-		freePISlotLarge	4
-		freePISlotLarge	5
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 0
-		jnz	short loc_CE50
-		call	snd_load pascal, ds, offset aOp_1, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-
-loc_CE50:
-		graph_accesspage 1
-		call	@pi_load$qinxc pascal, 0, ds, offset aOp1_pi_1
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
-		call	graph_copy_page pascal, 0
-		xor	si, si
-		jmp	short loc_CEAA
-; ---------------------------------------------------------------------------
-
-loc_CE8B:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	Palettes[bx].r, 255
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	Palettes[bx].g, 255
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	Palettes[bx].b, 255
-		inc	si
-
-loc_CEAA:
-		cmp	si, COLOR_COUNT
-		jl	short loc_CE8B
-		call	far ptr	palette_show
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		xor	si, si
-		mov	[bp+var_3], 240
-		jmp	short loc_CEE8
-; ---------------------------------------------------------------------------
-
-loc_CEC7:
-		mov	al, [bp+var_3]
-		mov	Palettes[0 * size rgb_t].r, al
-		mov	Palettes[0 * size rgb_t].g, al
-		mov	Palettes[0 * size rgb_t].b, al
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		inc	si
-		mov	al, [bp+var_3]
-		add	al, -16
-		mov	[bp+var_3], al
-
-loc_CEE8:
-		cmp	si, 15
-		jl	short loc_CEC7
-		xor	si, si
-		mov	[bp+var_3], 252
-		jmp	short loc_CF4E
-; ---------------------------------------------------------------------------
-
-loc_CEF5:
-		mov	di, 1
-		jmp	short loc_CF34
-; ---------------------------------------------------------------------------
-
-loc_CEFA:
-		mov	[bp+@@component], 0
-		jmp	short loc_CF2D
-; ---------------------------------------------------------------------------
-
-loc_CF01:
-		mov	bx, di
-		imul	bx, size rgb_t
-		add	bx, [bp+@@component]
-		mov	al, _pi_headers._palette[bx]
-		mov	bx, di
-		imul	bx, size rgb_t
-		add	bx, [bp+@@component]
-		cmp	al, Palettes[bx].r
-		jnb	short loc_CF2A
-		mov	bx, di
-		imul	bx, size rgb_t
-		add	bx, [bp+@@component]
-		mov	al, [bp+var_3]
-		mov	Palettes[bx].r, al
-
-loc_CF2A:
-		inc	[bp+@@component]
-
-loc_CF2D:
-		cmp	[bp+@@component], size rgb_t
-		jl	short loc_CF01
-		inc	di
-
-loc_CF34:
-		cmp	di, COLOR_COUNT
-		jl	short loc_CEFA
-		call	far ptr	palette_show
-		call	@frame_delay$qi pascal, 1
-		inc	si
-		mov	al, [bp+var_3]
-		add	al, -4
-		mov	[bp+var_3], al
-
-loc_CF4E:
-		cmp	si, 63
-		jl	short loc_CEF5
-		call	@pi_palette_apply$qi pascal, 0
-		pop	di
-		pop	si
-		leave
-		retn
-@op_animate$qv	endp
-
-	_playchar_menu procdesc near
-op_01_TEXT ends
 
 ; ===========================================================================
 
@@ -280,17 +80,6 @@ SHARED	ends
 	extern _CosTable8:word:256
 
 include th04/zunsoft[data].asm
-
-public _SL_CD2
-_SL_CD2 	db 'sl.cd2',0
-aOp5b_pi	db 'op5b.pi',0
-aOp4b_pi	db 'op4b.pi',0
-aOp3b_pi	db 'op3b.pi',0
-aOp2b_pi	db 'op2b.pi',0
-aOp1b_pi	db 'op1b.pi',0
-aOp0b_pi	db 'op0b.pi',0
-aOp_1		db 'op',0
-aOp1_pi_1	db 'op1.pi',0
 
 	.data?
 
