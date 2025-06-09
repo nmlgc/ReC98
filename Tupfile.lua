@@ -744,6 +744,7 @@ th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th04/score_db.cpp",
 	"th04/score_e.cpp",
 	"th04/hi_view.cpp",
+	"th04/op_title.cpp",
 	"th04_op.asm",
 	"th04/m_char.cpp",
 })

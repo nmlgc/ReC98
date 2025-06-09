@@ -20,7 +20,6 @@ BINARY = 'O'
 
 include ReC98.inc
 include th04/th04.inc
-include th04/sprites/op_cdg.inc
 
 op_01 group OP_SETUP_TEXT, op_01_TEXT
 
@@ -53,35 +52,6 @@ include th04/zunsoft.asm
 OP_SETUP_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @main_cdg_load$qv
-@main_cdg_load$qv	proc near
-		push	bp
-		mov	bp, sp
-		call	cdg_load_all pascal, CDG_NUMERAL, ds, offset aSft1_cd2
-		call	cdg_load_all pascal, CDG_MAIN, ds, offset aSft2_cd2
-		call	cdg_load_all pascal, CDG_CURSOR, ds, offset aCar_cd2
-		call	cdg_load_all_noalpha pascal, 40, ds, offset aSl_cd2
-		pop	bp
-		retn
-@main_cdg_load$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @main_cdg_free$qv
-@main_cdg_free$qv	proc near
-		push	bp
-		mov	bp, sp
-		call	cdg_free_all
-		pop	bp
-		retn
-@main_cdg_free$qv	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -298,9 +268,6 @@ include th02/snd/snd.inc
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
-	extern CDG_LOAD_ALL_NOALPHA:proc
-	extern CDG_LOAD_ALL:proc
-	extern CDG_FREE_ALL:proc
 SHARED	ends
 
 	.data
@@ -314,10 +281,8 @@ SHARED	ends
 
 include th04/zunsoft[data].asm
 
-aSft1_cd2	db 'sft1.cd2',0
-aSft2_cd2	db 'sft2.cd2',0
-aCar_cd2	db 'car.cd2',0
-aSl_cd2		db 'sl.cd2',0
+public _SL_CD2
+_SL_CD2 	db 'sl.cd2',0
 aOp5b_pi	db 'op5b.pi',0
 aOp4b_pi	db 'op4b.pi',0
 aOp3b_pi	db 'op3b.pi',0

@@ -20,7 +20,6 @@ BINARY = 'O'
 
 include ReC98.inc
 include th05/th05.inc
-include th04/sprites/op_cdg.inc
 
 op_01 group OP_SETUP_TEXT
 

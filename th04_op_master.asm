@@ -3,7 +3,7 @@
 
 include ReC98.inc
 
-op_01 group OP_SETUP_TEXT, op_01_TEXT
+op_01 group OP_SETUP_TEXT, OP_TITLE_TEXT, op_01_TEXT
 
 _TEXT segment word public 'CODE' use16
 	assume cs:_TEXT
@@ -131,6 +131,9 @@ OP_MUSIC_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 SCORE_TEXT ends
+
+OP_TITLE_TEXT segment byte public 'CODE' use16
+OP_TITLE_TEXT ends
 
 op_01_TEXT segment byte public 'CODE' use16
 op_01_TEXT ends
