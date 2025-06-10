@@ -1,3 +1,5 @@
+#pragma option -zPop_01
+
 #include "platform/grp_surf.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
@@ -225,64 +227,63 @@ void near se_help_put(void)
 	}
 }
 
-#define setup_submenu( \
-	sel, \
-	caption, \
-	choice_count, \
-	choice_default, \
-	choice_put, \
-	help_put, \
-	increment_input \
-) { \
-	window_animate(CAPTION_LEFT, CAPTION_TOP, CAPTION_W, 1, singleline); \
-	graph_putsa_fx(CAPTION_LEFT, CAPTION_TOP, V_WHITE, caption); \
-	\
-	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, dropdown); \
-	for(sel = 0; sel < choice_count; sel++) { \
-		choice_put( \
-			sel, ((sel == choice_default) ? COL_ACTIVE : COL_INACTIVE) \
-		); \
-	} \
-	\
-	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, dropdown); \
-	help_put(); \
-	\
-	sel = choice_default; \
-	while(1) { \
-		input_wait_for_change(0); \
-		frame_delay(1); \
-		if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) { \
-			break; \
-		} \
-		if(key_det & increment_input) { \
-			choice_put(sel, COL_INACTIVE); \
-			if(sel == (choice_count - 1)) { \
-				sel = 0; \
-			} else { \
-				sel++; \
-			} \
-			choice_put(sel, COL_ACTIVE); \
-		} \
-		if(key_det & (~increment_input & (INPUT_UP | INPUT_DOWN))) { \
-			choice_put(sel, COL_INACTIVE); \
-			if(sel == 0) { \
-				sel = (choice_count - 1); \
-			} else { \
-				sel--; \
-			} \
-			choice_put(sel, COL_ACTIVE); \
-		} \
-	} \
-	\
-	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, rollup); \
-	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, rollup); \
+unsigned int pascal near setup_submenu(
+	const shiftjis_t *caption,
+	unsigned int choice_count,
+	unsigned int choice_default,
+	void (pascal near *near choice_put)(int, vc2),
+	void (near *near help_put)(void),
+	input_t increment_input
+)
+{
+	uint8_t sel;
+	window_animate(CAPTION_LEFT, CAPTION_TOP, CAPTION_W, 1, singleline);
+	graph_putsa_fx(CAPTION_LEFT, CAPTION_TOP, V_WHITE, caption);
+
+	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, dropdown);
+	for(sel = 0; sel < choice_count; sel++) {
+		choice_put(
+			sel, ((sel == choice_default) ? COL_ACTIVE : COL_INACTIVE)
+		);
+	}
+
+	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, dropdown);
+	help_put();
+
+	sel = choice_default;
+	while(1) {
+		input_wait_for_change(0);
+		frame_delay(1);
+		if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) {
+			break;
+		}
+		if(key_det & increment_input) {
+			choice_put(sel, COL_INACTIVE);
+			if(sel == (choice_count - 1)) {
+				sel = 0;
+			} else {
+				sel++;
+			}
+			choice_put(sel, COL_ACTIVE);
+		}
+		if(key_det & (~increment_input & (INPUT_UP | INPUT_DOWN))) {
+			choice_put(sel, COL_INACTIVE);
+			if(sel == 0) {
+				sel = (choice_count - 1);
+			} else {
+				sel--;
+			}
+			choice_put(sel, COL_ACTIVE);
+		}
+	}
+	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, rollup);
+	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, rollup);
+	return sel;
 }
 
 void near setup_bgm_menu(void)
 {
-	int sel;
-	setup_submenu(
-		sel,
+	int sel = setup_submenu(
 		SETUP_BGM_CAPTION,
 		SND_BGM_MODE_COUNT,
 		SND_BGM_FM86,
@@ -295,9 +296,7 @@ void near setup_bgm_menu(void)
 
 void near setup_se_menu(void)
 {
-	int sel;
-	setup_submenu(
-		sel,
+	int sel = setup_submenu(
 		SETUP_SE_CAPTION,
 		SND_SE_MODE_COUNT,
 		SND_SE_FM,
