@@ -69,7 +69,6 @@ static const screen_x_t HELP_TOP = CHOICE_TOP;
 
 typedef int mswin_tile_amount_t;
 
-static Palette8 palette_unused; // ZUN bloat
 struct {
 	mswin_tile_amount_t w;
 	mswin_tile_amount_t h;
@@ -114,11 +113,10 @@ void pascal near window_rollup_put(screen_x_t left, screen_y_t bottom_tile_top)
 	super_put(left, bottom_tile_top, MSWIN_RIGHT_BOTTOM);
 }
 
-void pascal near dropdown(screen_x_t left, screen_y_t top_)
+void pascal near dropdown(screen_x_t left, screen_y_t top)
 {
 	mswin_tile_amount_t i;
 	screen_x_t tile_left = left;
-	screen_y_t top = top_; // ZUN bloat
 
 	super_put(tile_left, top, MSWIN_LEFT_TOP);
 	tile_left += MSWIN_W;
@@ -166,13 +164,14 @@ void pascal near rollup(screen_x_t left, screen_y_t top)
 	}
 }
 
-inline void window_animate(
+void pascal near window_animate(
 	screen_x_t content_left,
 	screen_y_t content_top,
 	pixel_t content_w,
 	int content_lines,
 	void (near pascal *near animate_func)(screen_x_t, screen_y_t)
-) {
+)
+{
 	window.w = (window_w_for_content_w(content_w) / MSWIN_W);
 	if(content_lines != 1) {
 		window.h = (
@@ -210,33 +209,16 @@ void pascal near se_choice_put(int se_mode, vc2 col)
 	graph_putsa_fx(CHOICE_LEFT, top, col, str);
 }
 
-// ZUN bloat: Could have been inlined into setup_submenu().
-void near bgm_help_put(void)
-{
-	screen_y_t top = HELP_TOP;
-	for(int i = 0; i < HELP_LINES; (i++, top += GLYPH_H)) {
-		graph_putsa_fx(HELP_LEFT, top, V_WHITE, BGM_HELP[i]);
-	}
-}
-
-void near se_help_put(void)
-{
-	screen_y_t top = HELP_TOP;
-	for(int i = 0; i < HELP_LINES; (i++, top += GLYPH_H)) {
-		graph_putsa_fx(HELP_LEFT, top, V_WHITE, SE_HELP[i]);
-	}
-}
-
 unsigned int pascal near setup_submenu(
 	const shiftjis_t *caption,
 	unsigned int choice_count,
 	unsigned int choice_default,
 	void (pascal near *near choice_put)(int, vc2),
-	void (near *near help_put)(void),
+	shiftjis_t *near help[HELP_LINES],
 	input_t increment_input
 )
 {
-	uint8_t sel;
+	unsigned int sel;
 	window_animate(CAPTION_LEFT, CAPTION_TOP, CAPTION_W, 1, singleline);
 	graph_putsa_fx(CAPTION_LEFT, CAPTION_TOP, V_WHITE, caption);
 
@@ -248,13 +230,17 @@ unsigned int pascal near setup_submenu(
 	}
 
 	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, dropdown);
-	help_put();
+
+	screen_y_t top = HELP_TOP;
+	for(int i = 0; i < HELP_LINES; (i++, top += GLYPH_H)) {
+		graph_putsa_fx(HELP_LEFT, top, V_WHITE, help[i]);
+	}
 
 	sel = choice_default;
 	while(1) {
 		input_wait_for_change(0);
 		frame_delay(1);
-		if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) {
+		if(key_det & (INPUT_OK | INPUT_SHOT)) {
 			break;
 		}
 		if(key_det & increment_input) {
@@ -281,32 +267,6 @@ unsigned int pascal near setup_submenu(
 	return sel;
 }
 
-void near setup_bgm_menu(void)
-{
-	int sel = setup_submenu(
-		SETUP_BGM_CAPTION,
-		SND_BGM_MODE_COUNT,
-		SND_BGM_FM86,
-		bgm_choice_put,
-		bgm_help_put,
-		INPUT_UP
-	);
-	resident->bgm_mode = sel;
-}
-
-void near setup_se_menu(void)
-{
-	int sel = setup_submenu(
-		SETUP_SE_CAPTION,
-		SND_SE_MODE_COUNT,
-		SND_SE_FM,
-		se_choice_put,
-		se_help_put,
-		INPUT_DOWN
-	);
-	resident->se_mode = sel;
-}
-
 void near setup_menu(void)
 {
 	palette_settone(0);
@@ -316,11 +276,26 @@ void near setup_menu(void)
 	graph_copy_page(0);
 	palette_black_in(1);
 
-	setup_bgm_menu();
+	resident->bgm_mode = setup_submenu(
+		SETUP_BGM_CAPTION,
+		SND_BGM_MODE_COUNT,
+		SND_BGM_FM86,
+		bgm_choice_put,
+		BGM_HELP,
+		INPUT_UP
+	);
 	frame_delay(1); // ZUN quirk: Already done after every rollup frame.
 
 	graph_copy_page(0);
-	setup_se_menu();
+
+	resident->se_mode = setup_submenu(
+		SETUP_SE_CAPTION,
+		SND_SE_MODE_COUNT,
+		SND_SE_FM,
+		se_choice_put,
+		SE_HELP,
+		INPUT_DOWN
+	);
 	palette_black_out(1);
 
 	super_free();
