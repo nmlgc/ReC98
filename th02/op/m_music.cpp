@@ -146,10 +146,14 @@ static const unsigned int POLYGONS_RENDERED = (
 
 bool polygons_initialized = false;
 
-static polygon_point_t center[POLYGON_COUNT];
-static polygon_point_t velocity[POLYGON_COUNT];
-static unsigned char angle[POLYGON_COUNT];
-static unsigned char angle_speed[POLYGON_COUNT];
+struct polygon_t {
+	polygon_point_t center;
+	polygon_point_t velocity;
+	unsigned char angle;
+	unsigned char angle_speed;
+};
+
+polygon_t polygons[POLYGON_COUNT];
 // -------------
 
 // Selection state
@@ -309,63 +313,63 @@ void near nopoly_B_put(void)
 #endif
 }
 
-void pascal near polygon_init(int i)
+void pascal near polygon_init(polygon_t near& p)
 {
-	if(velocity[i].x == 0) {
-		velocity[i].x = 1;
+	if(p.velocity.x == 0) {
+		p.velocity.x = 1;
 	}
-	velocity[i].y.v = (to_sp(2.0f) + TO_SP(irand() & 3));
-	angle[i] = irand();
-	angle_speed[i] = (0x04 - (irand() & 0x07));
-	if(angle_speed[i] == 0x00) {
-		angle_speed[i] = 0x04;
+	p.velocity.y.v = (to_sp(2.0f) + TO_SP(irand() & 3));
+	p.angle = irand();
+	p.angle_speed = (0x04 - (irand() & 0x07));
+	if(p.angle_speed == 0x00) {
+		p.angle_speed = 0x04;
 	}
 }
 
 void near polygons_update_and_render(void)
 {
 	unsigned int i;
+	polygon_t near *p;
 	if(!polygons_initialized) {
-		for(i = 0; i < POLYGONS_RENDERED; i++) {
+		for((p = polygons, i = 0); i < POLYGONS_RENDERED; (i++, p++)) {
 			// Carefully preserving the original order of irand() calls...
-			center[i].x = (irand() % RES_X);
-			center[i].y.v = (irand() % to_sp(RES_Y));
-			velocity[i].x = (4 - (irand() & 7));
-			polygon_init(i);
+			p->center.x = (irand() % RES_X);
+			p->center.y.v = (irand() % to_sp(RES_Y));
+			p->velocity.x = (4 - (irand() & 7));
+			polygon_init(*p);
 		}
 
 		// ZUN quirk: This is never reset.
 		polygons_initialized = true;
 	}
-	for(i = 0; i < POLYGONS_RENDERED; i++) {
+	for((p = polygons, i = 0); i < POLYGONS_RENDERED; (i++, p++)) {
 		unsigned int j;
 		screen_point_t points[10];
-		const unsigned char plus_angle = angle[i];
-		const screen_x_t center_x = center[i].x;
-		const screen_y_t center_y = center[i].y.to_pixel();
+		const screen_x_t center_x = p->center.x;
+		const screen_y_t center_y = p->center.y.to_pixel();
 		const pixel_t radius = (((i % 4) * 16) + 64);
 		const int point_count = ((i / 4) + 3);
 		for(j = 0; j < point_count; j++) {
-			unsigned char point_angle = (((j << 8) / point_count) + plus_angle);
+			unsigned char point_angle = (((j << 8) / point_count) + p->angle);
 			points[j].x = polar_x_fast(center_x, radius, point_angle);
 			points[j].y = polar_y_fast(center_y, radius, point_angle);
 		}
 		points[j] = points[0];
 
-		center[i].x += velocity[i].x;
-		center[i].y.v += velocity[i].y.v;
-		angle[i] += angle_speed[i];
-		if((center[i].x <= 0) || (center[i].x >= (RES_X - 1))) {
-			velocity[i].x *= -1;
+		p->center.x += p->velocity.x;
+		p->center.y.v += p->velocity.y.v;
+		p->angle += p->angle_speed;
+		if((p->center.x <= 0) || (p->center.x >= (RES_X - 1))) {
+			p->velocity.x *= -1;
 		}
 
 		// Enough to cover the maximum possible radius of 96.
-		if(center[i].y >= to_sp(RES_Y + 100.0f)) {
+		if(p->center.y >= to_sp(RES_Y + 100.0f)) {
 			// Carefully preserving the original order of irand() calls...
-			center[i].x = (irand() % RES_X);
-			center[i].y.set(-100.0f);
-			velocity[i].x = (8 - (irand() & 15));
-			polygon_init(i);
+			p->center.x = (irand() % RES_X);
+			p->center.y.set(-100.0f);
+			p->velocity.x = (8 - (irand() & 15));
+			polygon_init(*p);
 		}
 
 		grcg_polygon_c(points, point_count);
