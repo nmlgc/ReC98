@@ -2959,10 +2959,6 @@ aName		db 'name',0
 	; th02/hardware/vram_planes[bss].asm
 	extern _VRAM_PLANE_B:dword
 
-	; th02/formats/pi_slots[bss].asm
-	extern _pi_buffers:dword:6
-	extern _pi_headers:PiHeader:6
-
 include th02/snd/load[bss].asm
 include th04/mem[bss].asm
 include th04/hardware/input[bss].asm

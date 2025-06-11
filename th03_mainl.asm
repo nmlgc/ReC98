@@ -26,6 +26,11 @@ include th03/formats/scoredat.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @PI_LOAD_LINESKIP$QINXC:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_FREE$QI:proc
 
 group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, STAFF_TEXT, mainl_03_TEXT
 
@@ -80,9 +85,6 @@ include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_gaiji_putc.asm
-include libs/master.lib/graph_pi_free.asm
-include libs/master.lib/graph_pi_load_pack.asm
-include libs/master.lib/graph_pack_put_8.asm
 include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/graph_show.asm
 include libs/master.lib/iatan2.asm
@@ -95,7 +97,6 @@ include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 include libs/master.lib/palette_entry_rgb.asm
-include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
 include libs/master.lib/soundio.asm
@@ -125,7 +126,6 @@ include libs/master.lib/js_sense.asm
 		db 0
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
-include libs/master.lib/graph_pack_put_8_noclip.asm
 _TEXT		ends
 
 ; ===========================================================================
@@ -486,8 +486,8 @@ loc_9A8E:
 		call	sub_9D20
 		push	1
 		call	sub_9D20
-		call	@pi_load$qinxc pascal, 0, ds, offset aEn2_pi
-		call	@pi_put_interlace_8$qiii pascal, large 280, 0
+		call	@pi_load_lineskip$qinxc pascal, 0, ds, offset aEn2_pi
+		call	@pi_put_8$qiii pascal, large 280, 0
 		freePISlotLarge	0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
@@ -537,10 +537,10 @@ loc_9BB7:
 		push	offset aEnemy04_pi ; "ENEMY04.pi"
 
 loc_9BBD:
-		call	@pi_load$qinxc
+		call	@pi_load_lineskip$qinxc
 
 loc_9BC2:
-		call	@pi_put_interlace_8$qiii pascal, large 304, 0
+		call	@pi_put_8$qiii pascal, large 304, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
@@ -641,18 +641,18 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_4]
-		call	@pi_load$qinxc pascal, 0, large [bp+arg_0]
+		call	@pi_load_lineskip$qinxc pascal, 0, large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 320
-		call	@pi_put_interlace_8$qiii pascal, ax, (200 shl 16)
+		call	@pi_put_8$qiii pascal, ax, (200 shl 16)
 		freePISlotLarge	0
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 'e'
 		mov	byte ptr es:[bx+3], 'x'
-		call	@pi_load$qinxc pascal, 0, word ptr [bp+arg_0+2], bx
+		call	@pi_load_lineskip$qinxc pascal, 0, word ptr [bp+arg_0+2], bx
 		mov	ax, si
 		imul	ax, 320
-		call	@pi_put_interlace_8$qiii pascal, ax, (208 shl 16)
+		call	@pi_put_8$qiii pascal, ax, (208 shl 16)
 		freePISlotLarge	0
 		pop	si
 		pop	bp
@@ -2422,9 +2422,6 @@ include th02/snd/snd.inc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
 	extern @FRAME_DELAY$QI:proc
-	extern @PI_PALETTE_APPLY$QI:proc
-	extern @PI_PUT_8$QIII:proc
-	extern @PI_PUT_INTERLACE_8$QIII:proc
 	extern _snd_se_reset:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern @GAME_INIT_MAIN$QNXUC:proc
@@ -2435,7 +2432,6 @@ include th02/snd/snd.inc
 	extern @game_exit_from_mainl_to_main$qv:proc
 	extern @GRAPH_PUTSA_FX$QIIINXUC:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
-	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
@@ -2732,7 +2728,6 @@ include th02/snd/load[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th03/hardware/input[bss].asm
 include th03/formats/cdg[bss].asm
-include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
 include th03/cutscene/cutscene[bss].asm
 public _resident

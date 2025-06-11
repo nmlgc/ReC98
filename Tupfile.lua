@@ -341,6 +341,7 @@ platform_src += tup.glob("platform/x86real/pc98/*.cpp")
 local platform_bundles = {
 	cutscene = { "cutscene" },
 	libc_debloat = { "noexcept" },
+	pi_surf = { "pi_surf" },
 	spawn = { "doserror", "spawn" },
 	surf = { "piloadm", "bgimage", "blitter", "grp_clip", "grp_surf" },
 	th01 = { "noexcept", "blitter", "egc", "font", "grcg", "grp_clip" },
@@ -498,6 +499,7 @@ th02:zungen("bin/th02/zun.com", {
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.pi_surf
 obj += platform_objs.surf
 obj += platform_objs.vblank
 obj += {
@@ -517,8 +519,6 @@ obj += {
 	"th02/grppsafx.cpp",
 	"th02/initop.cpp",
 	"th02/input_rs.cpp",
-	"th02/pi_load.cpp",
-	"th02/pi_put.cpp",
 	"th02/snd_dlym.cpp",
 	"th02/snd_kaja.cpp",
 	"th02/snd_load.cpp",
@@ -597,8 +597,6 @@ obj += {
 	"th02/initmain.cpp",
 	"th02/input_rs.cpp",
 	"th02/keydelay.cpp",
-	"th02/pi_load.cpp",
-	"th02/pi_put.cpp",
 	"th02/snd_dlym.cpp",
 	"th02/snd_kaja.cpp",
 	"th02/snd_load.cpp",
@@ -636,6 +634,7 @@ th03:zungen("bin/th03/zun.com", {
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.pi_surf
 obj += platform_objs.surf
 obj += platform_objs.vblank
 obj += {
@@ -663,8 +662,6 @@ obj += {
 	"th03/initop.cpp",
 	"th03/inp_m_w.cpp",
 	"th03/input_s.cpp",
-	"th03/pi_load.cpp",
-	"th03/pi_put.cpp",
 	"th03/snd_kaja.cpp",
 }
 th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
@@ -702,6 +699,7 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 obj = {}
 obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
+obj += platform_objs.pi_surf
 obj += platform_objs.surf
 obj += {
 	"th03/cfg_lres.cpp",
@@ -731,9 +729,6 @@ obj += {
 	"th03/inp_m_w.cpp",
 	"th03/inp_wait.cpp",
 	"th03/input_s.cpp",
-	"th03/pi_load.cpp",
-	"th03/pi_put_i.cpp",
-	"th03/pi_put.cpp",
 	"th03/snd_dlym.cpp",
 	"th03/snd_kaja.cpp",
 	"th03/snd_se.cpp",
@@ -766,6 +761,7 @@ th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.pi_surf
 obj += platform_objs.surf
 obj += platform_objs.vblank
 obj += {
@@ -787,8 +783,6 @@ obj += {
 	"th02/snd_se_r.cpp",
 	"th02/vplanset.cpp",
 	"th03/hfliplut.asm",
-	"th03/pi_load.cpp",
-	"th03/pi_put.cpp",
 	"th04/bgimage.cpp",
 	"th04/cdg_load.asm",
 	"th04/cdg_p_na.cpp",
@@ -905,8 +899,6 @@ obj += {
 	"th02/snd_se_r.cpp",
 	"th02/vplanset.cpp",
 	"th03/hfliplut.asm",
-	"th03/pi_load.cpp",
-	"th03/pi_put.cpp",
 	"th03/sprites/pi_mask.cpp",
 	"th04/bgimage.cpp",
 	"th04/bgimager.asm",
@@ -993,10 +985,6 @@ obj += {
 	"th05/input_s.asm",
 	"th05/musicp_a.asm",
 	"th05/musicp_c.cpp",
-	"th05/pi_asm_1.asm",
-	"th05/pi_asm_2.asm",
-	"th05/pi_cpp_1.cpp",
-	"th05/pi_cpp_2.cpp",
 	"th05/snd_dlym.cpp",
 	"th05/snd_kaja.cpp",
 	"th05/snd_load.cpp",
@@ -1128,10 +1116,6 @@ obj += {
 	"th05/initmain.cpp",
 	"th05/inp_h_w.cpp",
 	"th05/input_s.asm",
-	"th05/pi_asm_1.asm",
-	"th05/pi_asm_2.asm",
-	"th05/pi_cpp_1.cpp",
-	"th05/pi_cpp_2.cpp",
 	"th05/snd_dlym.cpp",
 	"th05/snd_kaja.cpp",
 	"th05/snd_load.cpp",

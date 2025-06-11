@@ -84,8 +84,6 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
-include libs/master.lib/graph_pi_free.asm
-include libs/master.lib/graph_pi_load_pack.asm
 include libs/master.lib/graph_show.asm
 include libs/master.lib/graph_start.asm
 include libs/master.lib/js_end.asm
@@ -99,7 +97,6 @@ include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
-include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
 include libs/master.lib/soundio.asm
@@ -137,7 +134,6 @@ include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
 include libs/master.lib/bgm_init_finish.asm
 include libs/master.lib/bgm_stop_sound.asm
-include libs/master.lib/graph_pack_put_8_noclip.asm
 include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_gaiji_putc.asm
 include libs/master.lib/pfint21.asm
@@ -216,8 +212,6 @@ include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th05/op/piano[bss].asm
 include th02/snd/load[bss].asm
-include th05/formats/pi_put_masked[bss].asm
-include th05/formats/pi_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm

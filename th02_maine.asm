@@ -23,6 +23,10 @@ include th02/th02.inc
 
 	extern @GRPSURFACE_BLITBACKGROUNDPI$QN29%PALETTE$T16%RGB$TUC$II$256%%NXC:proc
 	extern _execl:proc
+	extern @PI_LOAD$QINXC:proc
+	extern @PI_PALETTE_APPLY$QI:proc
+	extern @PI_PUT_8$QIII:proc
+	extern @PI_FREE$QI:proc
 
 maine_01 group END_TEXT, maine_01_TEXT
 
@@ -79,9 +83,6 @@ include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_gaiji_putc.asm
 include libs/master.lib/graph_gaiji_puts.asm
-include libs/master.lib/graph_pi_free.asm
-include libs/master.lib/graph_pi_load_pack.asm
-include libs/master.lib/graph_pack_put_8.asm
 include libs/master.lib/key_sense.asm
 include libs/master.lib/over_put_8.asm
 include libs/master.lib/palette_show.asm
@@ -91,7 +92,6 @@ include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/palette_entry_rgb.asm
-include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
 include libs/master.lib/text_clear.asm
@@ -345,7 +345,6 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include th02/hardware/vram_planes[bss].asm
-include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/snd/snd[bss].asm

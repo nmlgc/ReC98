@@ -13,12 +13,10 @@
 #if (GAME == 5)
 #include "th05/resident.hpp"
 #include "th05/hardware/input.h"
-#include "th05/formats/pi.hpp"
 #include "th05/op/op.hpp"
 #else
 #include "th04/resident.hpp"
 #include "th04/hardware/input.h"
-#include "th03/formats/pi.hpp"
 #include "th04/op/op.hpp"
 #endif
 

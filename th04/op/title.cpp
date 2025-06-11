@@ -3,7 +3,7 @@
 #include "th04/snd/snd.h"
 #include "th04/shiftjis/fnshared.hpp"
 #include "th04/resident.hpp"
-#include "th03/formats/pi.hpp"
+#include "th02/formats/pi.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/v_colors.hpp"
 #include "th01/hardware/grcg.hpp"
