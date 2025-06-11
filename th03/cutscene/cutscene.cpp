@@ -96,7 +96,7 @@ extern unsigned char far *script;
 #define script_p script
 #endif
 
-extern Planar<dots16_t>* box_bg;
+extern Planar<dots16_t> far *box_bg;
 
 // Skips any delays during the cutscene if `true`.
 extern bool fast_forward;

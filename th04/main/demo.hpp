@@ -22,7 +22,7 @@ template <size_t Frames> struct REC {
 // as anything more semantic than a meaningless buffer of bytes would just add
 // a lot of unneeded complexity to the one function that reads from this
 // buffer.
-extern uint8_t *DemoBuf; /* ZUN symbol [MAGNet2010] */
+extern uint8_t far *DemoBuf; /* ZUN symbol [MAGNet2010] */
 
 #define demo_end() { \
 	HMem<uint8_t>::free(DemoBuf); \

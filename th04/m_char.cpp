@@ -131,7 +131,7 @@ unsigned char shottype_menu_sel;
 // followed by the left one.
 // Actually a Planar<dots8_t>* (storing the 8 dots for all 4 planes before
 // moving to the next byte), but used like a dots8_t* everywhere.
-dots8_t *raise_bg[PLAYCHAR_COUNT];
+dots8_t far *raise_bg[PLAYCHAR_COUNT];
 
 bool selectable_with[PLAYCHAR_COUNT][SHOTTYPE_COUNT];
 // -----
@@ -204,7 +204,7 @@ void near pascal raise_bg_put(playchar_t playchar_lowered)
 	vram_byte_amount_t x;
 	pixel_t y;
 	vram_offset_t vo_row;
-	dots8_t *playchar_bg;
+	dots8_t far *playchar_bg;
 	vram_offset_t vo;
 
 	if(playchar_lowered == PLAYCHAR_REIMU) {

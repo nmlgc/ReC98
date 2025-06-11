@@ -572,7 +572,7 @@ extern nearfunc_t_near overlay2;
 extern unsigned char titles_frame;
 extern unsigned long overlay_popup_bonus;
 #if (GAME == 5)
-extern shiftjis_t *stage_title;
-extern shiftjis_t *stage_bgm_title;
-extern shiftjis_t *boss_bgm_title;
+extern shiftjis_t far *stage_title;
+extern shiftjis_t far *stage_bgm_title;
+extern shiftjis_t far *boss_bgm_title;
 #endif

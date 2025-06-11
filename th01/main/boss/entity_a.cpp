@@ -213,29 +213,29 @@ void CBossEntity::put_1line(
 	}
 }
 void pascal near vram_snap_masked(
-	dots16_t &dst, dots8_t plane[], vram_offset_t vram_offset, dots16_t mask
+	dots16_t far &dst, dots8_t far *plane, vram_offset_t vo, dots16_t mask
 )
 {
-	dst = (reinterpret_cast<dots16_t &>(plane[vram_offset]) & mask);
+	dst = (reinterpret_cast<dots16_t far &>(plane[vo]) & mask);
 }
 
 void pascal near vram_put_bg_fg(
-	sdots16_t fg, dots8_t plane[], vram_offset_t vram_offset, sdots16_t bg_masked
+	sdots16_t fg, dots8_t far *plane, vram_offset_t vo, sdots16_t bg_masked
 )
 {
-	reinterpret_cast<dots16_t &>(plane[vram_offset]) = (fg | bg_masked);
+	reinterpret_cast<dots16_t far &>(plane[vo]) = (fg | bg_masked);
 }
 
 void pascal near vram_put_unaligned_bg_fg(
 	sdots16_t fg,
-	dots8_t plane[],
-	vram_offset_t vram_offset,
+	dots8_t far *plane,
+	vram_offset_t vo,
 	dots16_t bg_masked,
 	char first_bit
 )
 {
 	sdots16_t fg_shifted = (fg >> first_bit) + (fg << (16 - first_bit));
-	reinterpret_cast<dots16_t &>(plane[vram_offset]) = (fg_shifted | bg_masked);
+	reinterpret_cast<dots16_t far &>(plane[vo]) = (fg_shifted | bg_masked);
 }
 
 #define vram_snap_masked_planar(dst, vram_offset, mask) \

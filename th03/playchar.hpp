@@ -55,8 +55,9 @@ struct PlaycharPaletted {
 #define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
 
 // Like PlaycharPaletted, but with all IDs shifted up by 1 to reserve 0 for "no
-// character".
-struct PlaycharPalettedOptional {
+// character". Must be `far` because the resident structure contains some
+// fields of this type.
+struct far PlaycharPalettedOptional {
 	unsigned char v;
 
 	int filename_id() const {

@@ -37,7 +37,7 @@ bool16 end_init(void)
 	int i;
 	resident_t __seg *seg = ResData<resident_t>::exist(RES_ID);
 	if(seg) {
-		resident_t* resident = seg;
+		resident_t far *resident = seg;
 		if(resident->end_flag != ES_NONE) {
 			score = resident->score;
 			continues_total = 0;
@@ -72,7 +72,7 @@ bool16 end_resident_clear(void)
 	int i;
 	resident_t __seg *seg = ResData<resident_t>::exist(RES_ID);
 	if(seg) {
-		resident_t* resident = seg;
+		resident_t far *resident = seg;
 		resident->score = 0;
 		resident->continues_total = 0;
 		resident->end_flag = ES_NONE;

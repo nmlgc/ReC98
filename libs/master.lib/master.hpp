@@ -225,7 +225,7 @@ template<class T> struct HMem {
 		));
 	}
 
-	static void free(T *&block) {
+	static void free(T far *&block) {
 		hmem_free(reinterpret_cast<void __seg *>(block));
 	}
 

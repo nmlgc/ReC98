@@ -195,7 +195,7 @@ static int8_t unused_byte; // ZUN bloat
 #if (GAME >= 3)
 dots8_t __seg* nopoly_B;
 #else
-dots8_t* nopoly_B;
+dots8_t far *nopoly_B;
 #endif
 
 // ZUN bloat: Unused in TH04 and TH05 which use the bgimage system for that,
@@ -300,7 +300,7 @@ void near nopoly_B_snap(void)
 {
 	nopoly_B = HMem<dots8_t>::alloc(PLANE_SIZE);
 	for(vram_offset_t p = 0; p < PLANE_SIZE; p += int(sizeof(dots32_t))) {
-		*reinterpret_cast<dots32_t *>(nopoly_B + p) = VRAM_CHUNK(B, p, 32);
+		*reinterpret_cast<dots32_t far *>(nopoly_B + p) = VRAM_CHUNK(B, p, 32);
 	}
 }
 

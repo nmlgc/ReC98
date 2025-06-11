@@ -155,7 +155,7 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 )
 
 #define VRAM_CHUNK(plane, offset, bit_count) \
-	*(dots##bit_count##_t *)(VRAM_PLANE_##plane + offset)
+	*(dots##bit_count##_t far *)(VRAM_PLANE_##plane + offset)
 
 #define VRAM_SNAP(dst, plane, offset, bit_count) \
 	dst = VRAM_CHUNK(plane, offset, bit_count);
@@ -235,7 +235,7 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 
 #define grcg_put_8(offset, src) \
 	/* Nope, pokeb() doesn't generate the same code */ \
-	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, offset)) = src
+	*reinterpret_cast<dots8_t far *>(MK_FP(SEG_PLANE_B, offset)) = src
 
 // EGC
 // ---

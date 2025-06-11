@@ -127,7 +127,7 @@ int8_t menu_sel = 0;
 bool quit = false;
 int8_t main_menu_unused_1 = 1;
 const shiftjis_t* MENU_DESC[] = MENU_DESCRIPTIONS;
-resident_t* resident;
+resident_t far *resident;
 int8_t in_option; // ACTUAL TYPE: bool
 menu_unput_and_put_func_t menu_unput_and_put;
 // -------

@@ -20,7 +20,7 @@ extern SubpixelLength8 near* std_scroll_speed; // Within [std_seg]
 
 // TODO: Put the exact types once we RE'd them.
 extern void near* std_enemy_scripts[STD_ENEMY_SCRIPT_COUNT]; // Within [std_seg]
-extern void* std_ip;
+extern void far *std_ip;
 
 extern func_t_near stage_vm;
 

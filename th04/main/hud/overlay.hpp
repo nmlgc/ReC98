@@ -76,9 +76,9 @@ inline void overlay_popup_show(popup_id_t popup_new) {
 
 extern unsigned char bgm_title_id;	// only used in TH04
 #if (GAME == 5)
-extern shiftjis_t *stage_title;
-extern shiftjis_t *stage_bgm_title;
-extern shiftjis_t *boss_bgm_title;
+extern shiftjis_t far *stage_title;
+extern shiftjis_t far *stage_bgm_title;
+extern shiftjis_t far *boss_bgm_title;
 #endif
 
 void near overlay_titles_invalidate(void);

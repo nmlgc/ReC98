@@ -1002,7 +1002,7 @@ int z_respal_get_show(void)
 	int i;
 	respal_t __seg *respal_seg = z_respal_exist();
 	if(respal_seg) {
-		grb_t *respal = respal_seg->pal;
+		grb_t far *respal = respal_seg->pal;
 		for(i = 0; i < COLOR_COUNT; i++) {
 			z_palette_set_show(i, respal->r, respal->g, respal->b);
 			respal++;
@@ -1017,7 +1017,7 @@ int z_respal_set(void)
 	int i;
 	respal_t __seg *respal_seg = z_respal_exist();
 	if(respal_seg) {
-		grb_t *respal = respal_seg->pal;
+		grb_t far *respal = respal_seg->pal;
 		for(i = 0; i < COLOR_COUNT; i++) {
 			respal->g = z_Palettes[i].c.g;
 			respal->r = z_Palettes[i].c.r;
