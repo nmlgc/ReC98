@@ -309,19 +309,17 @@ void near nopoly_B_put(void)
 #endif
 }
 
-#define polygon_init(i, center_y, velocity_x) { \
-	center[i].x = (irand() % RES_X); \
-	center[i].y.v = center_y; \
-	velocity[i].x = velocity_x; \
-	if(velocity[i].x == 0) { \
-		velocity[i].x = 1; \
-	} \
-	velocity[i].y.v = (to_sp(2.0f) + TO_SP(irand() & 3)); \
-	angle[i] = irand(); \
-	angle_speed[i] = (0x04 - (irand() & 0x07)); \
-	if(angle_speed[i] == 0x00) { \
-		angle_speed[i] = 0x04; \
-	} \
+void pascal near polygon_init(int i)
+{
+	if(velocity[i].x == 0) {
+		velocity[i].x = 1;
+	}
+	velocity[i].y.v = (to_sp(2.0f) + TO_SP(irand() & 3));
+	angle[i] = irand();
+	angle_speed[i] = (0x04 - (irand() & 0x07));
+	if(angle_speed[i] == 0x00) {
+		angle_speed[i] = 0x04;
+	}
 }
 
 void near polygons_update_and_render(void)
@@ -329,7 +327,11 @@ void near polygons_update_and_render(void)
 	unsigned int i;
 	if(!polygons_initialized) {
 		for(i = 0; i < POLYGONS_RENDERED; i++) {
-			polygon_init(i, (irand() % to_sp(RES_Y)), (4 - (irand() & 7)));
+			// Carefully preserving the original order of irand() calls...
+			center[i].x = (irand() % RES_X);
+			center[i].y.v = (irand() % to_sp(RES_Y));
+			velocity[i].x = (4 - (irand() & 7));
+			polygon_init(i);
 		}
 
 		// ZUN quirk: This is never reset.
@@ -359,7 +361,11 @@ void near polygons_update_and_render(void)
 
 		// Enough to cover the maximum possible radius of 96.
 		if(center[i].y >= to_sp(RES_Y + 100.0f)) {
-			polygon_init(i, to_sp(-100.0f), (8 - (irand() & 15)));
+			// Carefully preserving the original order of irand() calls...
+			center[i].x = (irand() % RES_X);
+			center[i].y.set(-100.0f);
+			velocity[i].x = (8 - (irand() & 15));
+			polygon_init(i);
 		}
 
 		grcg_polygon_c(points, point_count);
