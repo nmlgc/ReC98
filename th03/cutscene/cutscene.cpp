@@ -305,8 +305,9 @@ void pascal near pic_put_both_masked(
 	vram_offset_t vo = vram_offset_shift(left, top);
 	graph_accesspage(0);
 	for(pixel_t y = 0; y < CUTSCENE_PIC_H; y++) {
-		// This might actually be faster than clearing the masked pixels using
-		// the GRCG and doing an unaccelerated 4-plane VRAM OR.
+		// This actually is much faster than clearing the masked pixels using
+		// the GRCG and doing an unaccelerated 4-plane VRAM OR. See the
+		// `Research/blitperf/xfade` example for a benchmark.
 		graph_pack_put_8_noclip(0, TEMP_ROW, row_p, CUTSCENE_PIC_W);
 		egc_start_copy();
 		egc_setup_copy_masked(PI_MASKS[mask_id][y % PI_MASK_COUNT]);

@@ -1098,6 +1098,16 @@ for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
 		cfg:build_uncached({ "Research/blitperf/wide_b.cpp" }),
 	}
 	cfg:link(("wide" .. cpu_str), tup_append_assignment(wide, obj))
+
+	local masked = {
+		piloadm,
+		cfg:build_uncached({ "Research/blitperf/xfade.cpp"}),
+		cfg:build_uncached({ "Research/blitperf/xfade_b.cpp"}),
+		cfg:build_uncached({ "platform/x86real/pc98/egc.cpp"}),
+		cfg:build_uncached({ "platform/x86real/pc98/grp_surf.cpp"}),
+		"bin/masters.lib",
+	}
+	cfg:link(("xfade" .. cpu_str), tup_append_assignment(masked, obj))
 end
 -- --------
 
