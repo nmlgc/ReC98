@@ -146,9 +146,6 @@ static const unsigned int POLYGONS_RENDERED = (
 
 bool polygons_initialized = false;
 
-// ZUN bloat: Could have been local to polygons_update_and_render().
-static screen_point_t points[10];
-
 static polygon_point_t center[POLYGON_COUNT];
 static polygon_point_t velocity[POLYGON_COUNT];
 static unsigned char angle[POLYGON_COUNT];
@@ -312,29 +309,6 @@ void near nopoly_B_put(void)
 #endif
 }
 
-void pascal near polygon_build(
-	screen_point_t near* points,
-	screen_x_t center_x,
-	space_changing_pixel_t center_y,
-	pixel_t radius,
-	int point_count,
-	unsigned char plus_angle
-)
-{
-	int i;
-
-	// ZUN bloat: center_y.pixel = center_y.sp.to_pixel();
-	center_y.sp.v >>= SUBPIXEL_BITS;
-
-	for(i = 0; i < point_count; i++) {
-		unsigned char point_angle = (((i << 8) / point_count) + plus_angle);
-		points[i].x = polar_x_fast(center_x, radius, point_angle);
-		points[i].y = polar_y_fast(center_y.pixel, radius, point_angle);
-	}
-	points[i].x = points[0].x;
-	points[i].y = points[0].y;
-}
-
 #define polygon_init(i, center_y, velocity_x) { \
 	center[i].x = (irand() % RES_X); \
 	center[i].y.v = center_y; \
@@ -350,13 +324,9 @@ void pascal near polygon_build(
 	} \
 }
 
-inline int polygon_vertex_count(int polygon_index) {
-	return ((polygon_index / 4) + 3);
-}
-
 void near polygons_update_and_render(void)
 {
-	int i;
+	unsigned int i;
 	if(!polygons_initialized) {
 		for(i = 0; i < POLYGONS_RENDERED; i++) {
 			polygon_init(i, (irand() % to_sp(RES_Y)), (4 - (irand() & 7)));
@@ -366,14 +336,20 @@ void near polygons_update_and_render(void)
 		polygons_initialized = true;
 	}
 	for(i = 0; i < POLYGONS_RENDERED; i++) {
-		polygon_build(
-			points,
-			center[i].x,
-			reinterpret_cast<space_changing_pixel_t &>(center[i].y),
-			(((i & 3) * 16) + 64),
-			polygon_vertex_count(i),
-			angle[i]
-		);
+		unsigned int j;
+		screen_point_t points[10];
+		const unsigned char plus_angle = angle[i];
+		const screen_x_t center_x = center[i].x;
+		const screen_y_t center_y = center[i].y.to_pixel();
+		const pixel_t radius = (((i % 4) * 16) + 64);
+		const int point_count = ((i / 4) + 3);
+		for(j = 0; j < point_count; j++) {
+			unsigned char point_angle = (((j << 8) / point_count) + plus_angle);
+			points[j].x = polar_x_fast(center_x, radius, point_angle);
+			points[j].y = polar_y_fast(center_y, radius, point_angle);
+		}
+		points[j] = points[0];
+
 		center[i].x += velocity[i].x;
 		center[i].y.v += velocity[i].y.v;
 		angle[i] += angle_speed[i];
@@ -386,7 +362,7 @@ void near polygons_update_and_render(void)
 			polygon_init(i, to_sp(-100.0f), (8 - (irand() & 15)));
 		}
 
-		grcg_polygon_c(points, polygon_vertex_count(i));
+		grcg_polygon_c(points, point_count);
 	}
 }
 
