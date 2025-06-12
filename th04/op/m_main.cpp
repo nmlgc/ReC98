@@ -126,27 +126,30 @@ int8_t in_option; // ACTUAL TYPE: bool
 menu_unput_and_put_func_t menu_unput_and_put;
 // -------
 
-#define command_put(top, slot) { \
-	cdg_put_nocolors_8(COMMAND_LEFT, top, slot); \
+void pascal near command_put(screen_y_t top, int slot)
+{
+	cdg_put_nocolors_8(COMMAND_LEFT, top, slot);
 }
 
 inline void option_label_put(option_choice_t sel, op_cdg_slot_t slot) {
 	cdg_put_nocolors_8(OPTION_LABEL_LEFT, option_choice_top(sel), slot);
 }
 
-#define option_value_put(sel, cdg_value) { \
-	cdg_put_nocolors_8(OPTION_VALUE_LEFT, option_choice_top(sel), cdg_value); \
+void pascal near option_value_put(option_choice_t sel, int cdg_value)
+{
+	cdg_put_nocolors_8(OPTION_VALUE_LEFT, option_choice_top(sel), cdg_value);
 }
 
-#define desc_unput_and_put(desc_id) { \
-	egc_copy_rect_1_to_0_16(0, DESC_TOP, RES_X, GLYPH_H); \
-	graph_putsa_fx_func = FX_WEIGHT_BOLD; \
-	graph_putsa_fx( \
-		(RES_X - GLYPH_FULL_W - (strlen(MENU_DESC[desc_id]) * GLYPH_HALF_W)), \
-		DESC_TOP, \
-		COL_DESC, \
-		MENU_DESC[desc_id] \
-	); \
+void pascal near desc_unput_and_put(int desc_id)
+{
+	egc_copy_rect_1_to_0_16(0, DESC_TOP, RES_X, GLYPH_H);
+	graph_putsa_fx_func = FX_WEIGHT_BOLD;
+	graph_putsa_fx(
+		(RES_X - GLYPH_FULL_W - (strlen(MENU_DESC[desc_id]) * GLYPH_HALF_W)),
+		DESC_TOP,
+		COL_DESC,
+		MENU_DESC[desc_id]
+	);
 }
 
 void pascal near main_unput_and_put(int sel, vc2 col)
@@ -294,28 +297,27 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	snd_se_play_force(1);
 }
 
-#define menu_init( \
-	initialized, \
-	input_allowed, \
-	choice_count, \
-	unput_and_put, \
-	other_left, \
-	other_w, \
-	other_bottom \
-) { \
-	input_allowed = false; \
-	\
-	/* ZUN bloat: Excessively wide and tall. */ \
-	egc_copy_rect_1_to_0_16( \
-		other_left, MENU_TOP, (other_w + 32), (other_bottom + 24 - MENU_TOP) \
-	); \
-	\
-	for(int i = 0; i < choice_count; i++) { \
-		unput_and_put(i, ((menu_sel == i) ? COL_ACTIVE : COL_INACTIVE)); \
-	} \
-	menu_unput_and_put = unput_and_put; \
-	initialized = true; \
-	input_allowed = false; /* ZUN bloat: Already done above. */ \
+void pascal near menu_init(
+	bool near& initialized,
+	bool near& input_allowed,
+	int choice_count,
+	menu_unput_and_put_func_t unput_and_put,
+	screen_x_t other_left,
+	pixel_t other_w,
+	screen_y_t other_bottom
+) {
+	input_allowed = false;
+
+	// ZUN bloat: Excessively wide and tall.
+	egc_copy_rect_1_to_0_16(
+		other_left, MENU_TOP, (other_w + 32), (other_bottom + 24 - MENU_TOP)
+	);
+
+	for(int i = 0; i < choice_count; i++) {
+		unput_and_put(i, ((menu_sel == i) ? COL_ACTIVE : COL_INACTIVE));
+	}
+	menu_unput_and_put = unput_and_put;
+	initialized = true;
 }
 
 inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
@@ -403,9 +405,10 @@ void near main_update_and_render(void)
 	}
 }
 
-#define snd_redetermine_modes_and_reload_se() { \
-	snd_determine_modes(resident->bgm_mode, resident->se_mode); \
-	snd_load(SE_FN, SND_LOAD_SE); \
+void snd_redetermine_modes_and_reload_se()
+{
+	snd_determine_modes(resident->bgm_mode, resident->se_mode);
+	snd_load(SE_FN, SND_LOAD_SE);
 }
 
 inline void snd_redetermine_modes_and_restart_bgm(bool also_reload_se) {
