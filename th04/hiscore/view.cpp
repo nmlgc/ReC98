@@ -323,9 +323,8 @@ void pascal near place_put(int place)
 
 void near rank_render(void)
 {
-	// ZUN bloat: The palette is not page-dependent...
-	graph_accesspage(1);	pi_palette_apply(0);	pi_put_8(0, 0, 0);
-	graph_accesspage(0);	pi_palette_apply(0);	pi_put_8(0, 0, 0);
+	pi_palette_apply(0);
+	pi_put_8(0, 0, 0);
 
 #if (GAME == 5)
 	for(playchar2 pc = PLAYCHAR_REIMU; pc < PLAYCHAR_COUNT; pc++) {
@@ -418,9 +417,8 @@ void near regist_view_menu(void)
 	snd_kaja_func(KAJA_SONG_FADE, 1);
 	palette_black_out(1);
 	pi_free(0);
-	graph_accesspage(1);
+	graph_accesspage(0);
 	GrpSurface_BlitBackgroundPI(&Palettes, MENU_MAIN_BG_FN);
-	graph_copy_page(0);
 	palette_black_in(1);
 
 	do {
