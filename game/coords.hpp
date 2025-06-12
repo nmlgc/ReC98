@@ -16,6 +16,13 @@ union space_changing_point_t {
 	screen_point_t pixel;
 };
 
+template <class Coord> struct LTWH {
+	Coord left;
+	Coord top;
+	Coord w;
+	Coord h;
+};
+
 template <class TX, class TY> struct LRTB {
 	TX left, right;
 	TY top, bottom;
