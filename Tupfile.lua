@@ -190,6 +190,7 @@ end
 
 -- Additional generally good compilation flags. Should be used for all code
 -- that does not need to match the original binaries.
+local SEMIOPTIM = { cflags = "-G -k- -x- -DCPU=386" }
 local optimized_cfg = Config:branch({ cflags = "-G -k- -p -x-" })
 
 -- Pipeline
@@ -593,7 +594,9 @@ obj += {
 	"th02/snd_pmdr.c",
 	"th02/vplanset.cpp",
 }
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", obj)
+th02:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='E'" }):link(
+	"maine", obj
+)
 -- ----
 
 -- TH03
@@ -721,7 +724,9 @@ obj += {
 	"th03/snd_se.cpp",
 	"th03/vector.cpp",
 }
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='L'" }):link("mainl", obj)
+th03:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='L'" }):link(
+	"mainl", obj
+)
 -- ----
 
 -- TH04
@@ -787,7 +792,7 @@ obj += {
 	"th04/snd_se.cpp",
 	"th04/vector.cpp",
 }
-th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+th04:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='O'" }):link("op", obj)
 
 obj = {}
 obj += platform_objs.libc_debloat
@@ -861,7 +866,9 @@ obj += {
 	"th04/snd_se.cpp",
 	"th04/vector.cpp",
 }
-th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
+th04:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }):link(
+	"main", obj
+)
 
 obj = {}
 obj += platform_objs.libc_debloat
@@ -975,7 +982,7 @@ obj += {
 	"th05/snd_load.cpp",
 	"th05/vector.cpp",
 }
-th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='O'" }):link("op", obj)
 
 obj = {}
 obj += platform_objs.libc_debloat
@@ -1063,7 +1070,9 @@ obj += {
 	"th05/snd_load.cpp",
 	"th05/vector.cpp",
 }
-th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
+th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }):link(
+	"main", obj
+)
 
 obj = {}
 obj += platform_objs.libc_debloat
@@ -1106,7 +1115,9 @@ obj += {
 	"th05/snd_load.cpp",
 	"th05/vector.cpp",
 }
-th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", obj)
+th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='E'" }):link(
+	"maine", obj
+)
 -- ----
 
 -- Research
