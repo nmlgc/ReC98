@@ -308,9 +308,8 @@ void pascal near menu_init(
 ) {
 	input_allowed = false;
 
-	// ZUN bloat: Excessively wide and tall.
 	egc_copy_rect_1_to_0_16(
-		other_left, MENU_TOP, (other_w + 32), (other_bottom + 24 - MENU_TOP)
+		other_left, MENU_TOP, other_w, (other_bottom - MENU_TOP)
 	);
 
 	for(int i = 0; i < choice_count; i++) {
@@ -341,14 +340,13 @@ void near main_update_and_render(void)
 	static bool input_allowed;
 
 	if(!initialized) {
-		// ZUN bloat: Way too wide.
 		menu_init(
 			initialized,
 			input_allowed,
 			MC_COUNT,
 			main_unput_and_put,
-			(MENU_OPTION_LEFT - 32),
-			(MENU_OPTION_W + 64),
+			MENU_OPTION_LEFT,
+			MENU_OPTION_W,
 			option_choice_top(OC_COUNT)
 		);
 	}
