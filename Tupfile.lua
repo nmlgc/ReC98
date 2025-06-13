@@ -789,7 +789,6 @@ obj += {
 	"th03/pi_load.cpp",
 	"th03/pi_put.cpp",
 	"th04/bgimage.cpp",
-	"th04/bgimager.asm",
 	"th04/cdg_load.asm",
 	"th04/cdg_p_na.cpp",
 	"th04/cdg_p_nc.asm",

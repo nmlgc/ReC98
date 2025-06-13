@@ -1,6 +1,5 @@
 #include <mem.h>
-#include "planar.h"
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/polar.hpp"
@@ -18,7 +17,6 @@
 #endif
 #if (GAME >= 4)
 #include "th01/hardware/grcg.hpp"
-#include "th04/hardware/bgimage.hpp"
 #include "th04/hardware/grppsafx.h"
 #include "th04/snd/snd.h"
 #else
@@ -108,7 +106,6 @@ inline int16_t track_fx(vc_t col) {
 #endif
 
 static const pixel_t CMT_LINE_W = (CMT_LINE_LENGTH * GLYPH_HALF_W);
-static const vram_byte_amount_t CMT_LINE_VRAM_W = (CMT_LINE_W / BYTE_DOTS);
 static const pixel_t CMT_COMMENT_H = (CMT_COMMENT_LINES * GLYPH_H);
 
 static const screen_x_t CMT_TITLE_LEFT = (
@@ -116,17 +113,22 @@ static const screen_x_t CMT_TITLE_LEFT = (
 	/*   (GAME == 2) */ ((RES_X / 2) - (CMT_LINE_W / 2))
 );
 static const screen_y_t CMT_TITLE_TOP = ((GAME == 5) ? 32 : 64);
-static const screen_x_t CMT_TITLE_RIGHT = (CMT_TITLE_LEFT + CMT_LINE_W);
-static const screen_y_t CMT_TITLE_BOTTOM = (CMT_TITLE_TOP + GLYPH_H);
 
 static const screen_x_t CMT_COMMENT_LEFT = (RES_X - GLYPH_FULL_W - CMT_LINE_W);
 #if (GAME == 5)
 static const screen_y_t CMT_COMMENT_TOP = (PIANO_BOTTOM + 8);
 #else
-static const screen_y_t CMT_COMMENT_TOP = CMT_TITLE_BOTTOM;
+static const screen_y_t CMT_COMMENT_TOP = (CMT_TITLE_TOP + GLYPH_H);
 #endif
-static const screen_x_t CMT_COMMENT_RIGHT = (CMT_COMMENT_LEFT + CMT_LINE_W);
-static const screen_x_t CMT_COMMENT_BOTTOM = (CMT_COMMENT_TOP + CMT_COMMENT_H);
+
+#if (GAME != 4)
+const LTWH<upixel_t> CMT_TITLE = {
+	CMT_TITLE_LEFT, CMT_TITLE_TOP, CMT_LINE_W, GLYPH_H,
+};
+const LTWH<upixel_t> CMT_COMMENT = {
+	CMT_COMMENT_LEFT, CMT_COMMENT_TOP, CMT_LINE_W, CMT_COMMENT_H,
+};
+#endif
 // -----------
 
 // Polygon state
@@ -180,10 +182,6 @@ dots8_t __seg* nopoly_B;
 #else
 dots8_t far *nopoly_B;
 #endif
-
-// ZUN bloat: Unused in TH04 and TH05 which use the bgimage system for that,
-// but still present in the binary.
-Planar<dots8_t far *> cmt_bg;
 // -----------
 
 struct cmt_line_t {
@@ -223,7 +221,7 @@ void pascal near track_unput_or_put(uint8_t track_sel, bool16 put)
 		grcg_vline(TRACKLIST_RIGHT, top, bottom);
 		grcg_off();
 	} else {
-		bgimage_put_rect_16(TRACKLIST_LEFT, top, TRACKLIST_W, GLYPH_H);
+		bgimage.write_bg_region(TRACKLIST_LEFT, top, TRACKLIST_W, GLYPH_H);
 	}
 	if(track_sel == track_playing) {
 		col = COL_TRACKLIST_SELECTED;
@@ -407,44 +405,6 @@ void near music_update_render_and_flip(void)
 #endif
 }
 
-#if (GAME <= 3)
-#define cmt_bg_blit_planar(cmt_bg_p, vo, x, dst, dst_p, src, src_p) \
-	size_t cmt_bg_p = 0; \
-	screen_y_t y; \
-	for(y = CMT_TITLE_TOP; y < CMT_TITLE_BOTTOM; y++) { \
-		for(x = CMT_TITLE_LEFT; x < CMT_TITLE_RIGHT; x += 32) { \
-			vo = vram_offset_shift(x, y); \
-			*(dots32_t *)(dst[0] + dst_p) = *(dots32_t *)(src[0] + src_p); \
-			*(dots32_t *)(dst[1] + dst_p) = *(dots32_t *)(src[1] + src_p); \
-			*(dots32_t *)(dst[2] + dst_p) = *(dots32_t *)(src[2] + src_p); \
-			*(dots32_t *)(dst[3] + dst_p) = *(dots32_t *)(src[3] + src_p); \
-			cmt_bg_p += sizeof(dots32_t); \
-		} \
-	} \
-	for(y = CMT_COMMENT_TOP; y < CMT_COMMENT_BOTTOM; y++) { \
-		for(x = CMT_COMMENT_LEFT; x < CMT_COMMENT_RIGHT; x += 32) { \
-			vo = vram_offset_shift(x, y); \
-			*(dots32_t *)(dst[0] + dst_p) = *(dots32_t *)(src[0] + src_p); \
-			*(dots32_t *)(dst[1] + dst_p) = *(dots32_t *)(src[1] + src_p); \
-			*(dots32_t *)(dst[2] + dst_p) = *(dots32_t *)(src[2] + src_p); \
-			*(dots32_t *)(dst[3] + dst_p) = *(dots32_t *)(src[3] + src_p); \
-			cmt_bg_p += sizeof(dots32_t); \
-		} \
-	}
-
-void near cmt_bg_snap(void)
-{
-	screen_x_t x;
-	vram_offset_t vo;
-	for(int i = 0; i < PLANE_COUNT; i++) {
-		cmt_bg[i] = HMem<dots8_t>::alloc(
-			(GLYPH_H * CMT_LINE_VRAM_W) + (CMT_COMMENT_H * CMT_LINE_VRAM_W)
-		);
-	}
-	cmt_bg_blit_planar(cmt_bg_p, vo, x, cmt_bg, cmt_bg_p, VRAM_PLANE, vo);
-}
-#endif
-
 void pascal near cmt_load(int track)
 {
 #if (GAME == 5)
@@ -463,6 +423,18 @@ void pascal near cmt_load(int track)
 	for(int i = 0; i < CMT_LINES; i++) {
 		cmt[i].c[CMT_LINE_LENGTH] = '\0';
 	}
+}
+
+void near cmt_unput(void)
+{
+#if (GAME == 4)
+	bgimage.write_bg_region(
+		CMT_TITLE_LEFT, CMT_TITLE_TOP, CMT_LINE_W, (CMT_LINES * GLYPH_H)
+	);
+#else
+	bgimage.write(CMT_TITLE_LEFT, CMT_TITLE_TOP, &CMT_TITLE);
+	bgimage.write(CMT_COMMENT_LEFT, CMT_COMMENT_TOP, &CMT_COMMENT);
+#endif
 }
 
 void near cmt_put(void)
@@ -502,20 +474,6 @@ void near cmt_fadein_both_animate(void)
 	cmt_put();
 }
 
-void cmt_unput(void)
-{
-#if (GAME == 5)
-	bgimage_put_rect_16(CMT_TITLE_LEFT, CMT_TITLE_TOP, CMT_LINE_W, GLYPH_H);
-	bgimage_put_rect_16(
-		CMT_COMMENT_LEFT, CMT_COMMENT_TOP, CMT_LINE_W, CMT_COMMENT_H
-	);
-#else
-	bgimage_put_rect_16(
-		CMT_TITLE_LEFT, CMT_TITLE_TOP, CMT_LINE_W, (CMT_LINES * GLYPH_H)
-	);
-#endif
-}
-
 void near cmt_unput_both_animate(void)
 {
 	cmt_unput();
@@ -540,21 +498,6 @@ void pascal near cmt_load_unput_and_put_both_animate(int track)
 	}
 }
 #else
-void near cmt_bg_free(void)
-{
-	HMem<dots8_t>::free(cmt_bg.B);
-	HMem<dots8_t>::free(cmt_bg.R);
-	HMem<dots8_t>::free(cmt_bg.G);
-	HMem<dots8_t>::free(cmt_bg.E);
-}
-
-void near cmt_unput(void)
-{
-	screen_x_t x;
-	vram_offset_t vo;
-	cmt_bg_blit_planar(cmt_bg_p, vo, x, VRAM_PLANE, vo, cmt_bg, cmt_bg_p);
-}
-
 void pascal near cmt_load_unput_and_put(int track)
 {
 	// ZUN bloat: This function is called once per VRAM page, but we only need
@@ -623,12 +566,12 @@ inline void music_input_sense(void) {
 #if (GAME == 5)
 void pascal near tracklist_unput_and_put_both_animate(int sel)
 {
-	bgimage_put_rect_16(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
-	bgimage_put_rect_16(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
+	bgimage.write_bg_region(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
+	bgimage.write_bg_region(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
 	tracklist_put(sel);
 	music_update_render_and_flip();
-	bgimage_put_rect_16(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
-	bgimage_put_rect_16(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
+	bgimage.write_bg_region(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
+	bgimage.write_bg_region(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
 	tracklist_put(sel);
 }
 
@@ -682,16 +625,15 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	graph_accesspage(1);
 
 #if (GAME >= 4)
-	GrpSurface_BlitBackgroundPI(&Palettes, "music.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "music.pi");
 #else
-	GrpSurface_BlitBackgroundPI(&Palettes, "op3.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "op3.pi");
 #endif
-	palette_show();
+	bgimage.write(0, 0);
 
 #if (GAME == 5)
 	piano_setup_and_put_initial();
 	nopoly_B_snap();
-	bgimage_snap();
 	tracklist_put(music_sel);
 #else
 	music_sel = track_playing;
@@ -701,10 +643,6 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	tracklist_put_both(music_sel);
 #endif
 	graph_copy_page(0);
-
-#if (GAME == 4)
-	bgimage_snap();
-#endif
 	graph_accesspage(1);
 	graph_showpage(0);
 
@@ -719,7 +657,6 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 #elif (GAME == 4)
 	cmt_load_unput_and_put_both_animate(track_playing);
 #else
-	cmt_bg_snap();
 	graph_accesspage(1);	cmt_load_unput_and_put(track_playing);
 	graph_accesspage(0);	cmt_load_unput_and_put(track_playing);
 #endif
@@ -923,22 +860,20 @@ controls:
 		music_update_render_and_flip();
 	}
 
+	bgimage.free();
 #if (GAME == 5)
 	pfend();
 	pfstart(OP_AND_END_PF_FN);
 #endif
+	nopoly_B_free();
 #if (GAME >= 4)
 	snd_kaja_func(KAJA_SONG_FADE, 16);
-	nopoly_B_free();
 	graph_showpage(0);
 	graph_accesspage(0);
 	palette_black_out(1);
-	bgimage_free();
 	snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 #else
-	nopoly_B_free();
-	cmt_bg_free();
 	graph_showpage(0);
 
 	// ZUN quirk: graph_clear() sets all of VRAM to hardware color #0, which is

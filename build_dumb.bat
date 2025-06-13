@@ -148,14 +148,12 @@ echo th04/snd_se.cpp  th04/vector.cpp>>obj\batch013.@c
 tcc @obj/batch013.@c
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_op.asm obj\th04\op.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_op2.asm obj\th04\op2.obj
-tasm32 /m /mx /kh32768 /t /dGAME=4 th04\bgimager.asm obj\th04\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_load.asm obj\th04\cdg_load.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_p_nc.asm obj\th04\cdg_p_nc.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_put.asm obj\th04\cdg_put.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\grppsafx.asm obj\th04\grppsafx.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\input_s.asm obj\th04\input_s.obj
-echo -c -s -E c0l.obj obj\platform\noexcept.obj obj\piloadm.obj obj\platform\bgimage.obj obj\platform\blitter.obj obj\platform\grp_clip.obj obj\platform\grp_surf.obj obj\th04\op_main.obj obj\th04\op.obj obj\th04\op2.obj obj\th04\op_setup.obj obj\th04\zunsoft.obj obj\th04\op_music.obj obj\th04\score_db.obj obj\th04\score_e.obj obj\th04\hi_view.obj obj\th04\op_title.obj obj\th04\m_char.obj obj\th02\exit_dos.obj obj\th02\frmdelay.obj obj\th02\snd_se_r.obj obj\th02\vplanset.obj obj\th03\hfliplut.obj obj\th03\pi_load.obj obj\th03\pi_put.obj obj\th04\bgimage.obj obj\th04\bgimager.obj obj\th04\cdg_load.obj obj\th04\cdg_p_na.obj obj\th04\cdg_p_nc.obj obj\th04\cdg_put.obj obj\th04\egcrect.obj obj\th04\exit.obj obj\th04\grppsafx.obj obj\th04\initop.obj obj\th04\input_s.obj obj\th04\input_w.obj obj\th04\snd_dlym.obj obj\th04\snd_kaja.obj obj\th04\snd_load.obj obj\th04\snd_mmdr.obj obj\th04\snd_mode.obj obj\th04\snd_pmdr.obj obj\th04\snd_se.obj obj\th04\vector.obj, bin\th04\op.exe, obj\th04\op.map>obj\th04\op.@l
-echo emu.lib mathl.lib cl.lib>>obj\th04\op.@l
+echo -c -s -E c0l.obj obj\platform\noexcept.obj obj\piloadm.obj obj\platform\bgimage.obj obj\platform\blitter.obj obj\platform\grp_clip.obj obj\platform\grp_surf.obj obj\th04\op_main.obj obj\th04\op.obj obj\th04\op2.obj obj\th04\op_setup.obj obj\th04\zunsoft.obj obj\th04\op_music.obj obj\th04\score_db.obj obj\th04\score_e.obj obj\th04\hi_view.obj obj\th04\op_title.obj obj\th04\m_char.obj obj\th02\exit_dos.obj obj\th02\frmdelay.obj obj\th02\snd_se_r.obj obj\th02\vplanset.obj obj\th03\hfliplut.obj obj\th03\pi_load.obj obj\th03\pi_put.obj obj\th04\bgimage.obj obj\th04\cdg_load.obj obj\th04\cdg_p_na.obj obj\th04\cdg_p_nc.obj obj\th04\cdg_put.obj obj\th04\egcrect.obj obj\th04\exit.obj obj\th04\grppsafx.obj obj\th04\initop.obj obj\th04\input_s.obj obj\th04\input_w.obj obj\th04\snd_dlym.obj obj\th04\snd_kaja.obj obj\th04\snd_load.obj obj\th04\snd_mmdr.obj obj\th04\snd_mode.obj obj\th04\snd_pmdr.obj obj\th04\snd_se.obj obj\th04\vector.obj, bin\th04\op.exe, obj\th04\op.map, emu.lib mathl.lib cl.lib>obj\th04\op.@l
 tlink @obj\th04\op.@l
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_main.asm obj\th04\main.obj
 echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=4  -ml  -G  -k-  -x-  -DCPU=386  -DBINARY='M'  -nobj/th04/  th04/slowdown.cpp  th04/demo.cpp  th04/ems.cpp  th04/tile_set.cpp  th04/std.cpp  th04/circle.cpp  th04/tile.cpp  th04/playfld.cpp  th04/midboss4.cpp  th04/f_dialog.cpp  th04/dialog.cpp  th04/boss_exp.cpp  th04/stages.cpp  th04/player_m.cpp  th04/player_p.cpp  th04/hud_ovrl.cpp  th04/cfg_lres.cpp  th04/checkerb.cpp  th04/mb_inv.cpp  th04/boss_bd.cpp  th04/score_rm.cpp>obj\batch014.@c
@@ -173,6 +171,7 @@ echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=4  -ml  -DBINARY='E'  -nobj/th04/  th0
 tcc @obj/batch015.@c
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_maine_master.asm obj\th04\mainem.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04_maine.asm obj\th04\maine.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04\bgimager.asm obj\th04\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_p_pl.asm obj\th04\cdg_p_pl.obj
 echo -c -s -E c0l.obj obj\platform\cutscene.obj obj\platform\noexcept.obj obj\piloadm.obj obj\platform\bgimage.obj obj\platform\blitter.obj obj\platform\grp_clip.obj obj\platform\grp_surf.obj obj\th04\maine_e.obj obj\th04\mainem.obj obj\th04\score_d.obj obj\th04\score_e.obj obj\th04\hi_end.obj obj\th04\maine.obj obj\th04\cutscene.obj obj\th04\staff.obj obj\th02\frmdelay.obj obj\th02\snd_se_r.obj obj\th02\vplanset.obj obj\th03\hfliplut.obj obj\th03\pi_load.obj obj\th03\pi_put.obj obj\th03\pi_mask.obj obj\th04\bgimage.obj obj\th04\bgimager.obj obj\th04\cdg_load.obj obj\th04\cdg_p_pl.obj obj\th04\cdg_put.obj obj\th04\exit.obj obj\th04\grppsafx.obj obj\th04\initmain.obj obj\th04\input_s.obj obj\th04\input_w.obj obj\th04\snd_dlym.obj obj\th04\snd_kaja.obj obj\th04\snd_load.obj obj\th04\snd_mmdr.obj obj\th04\snd_mode.obj obj\th04\snd_pmdr.obj obj\th04\snd_se.obj obj\th04\vector.obj, bin\th04\maine.exe, obj\th04\maine.map, emu.lib mathl.lib cl.lib>obj\th04\maine.@l
 tlink @obj\th04\maine.@l
