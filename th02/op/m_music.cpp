@@ -203,40 +203,33 @@ int track_count_cur;
 void pascal near track_unput_or_put(uint8_t track_sel, bool16 put)
 {
 	enum {
-		CURSOR_LEFT = TRACKLIST_LEFT,
-		CURSOR_RIGHT = (CURSOR_LEFT + TRACKLIST_W),
-		CURSOR_TOP = TRACKLIST_TOP,
-		CURSOR_BOTTOM = (TRACKLIST_TOP + GLYPH_H - 1),
+		TRACKLIST_RIGHT = (TRACKLIST_LEFT + TRACKLIST_W),
 	};
 
 	const shiftjis_t* choice;
 	vc_t col = COL_TRACKLIST;
 
-	// ZUN bloat: The code could have been a lot simpler if [TRACKLIST_TOP] was
-	// added here rather than just before graph_putsa_fx(). Then, [top] could
-	// have been a `screen_y_t`.
-	pixel_t top = ((track_sel - track_id_at_top) * GLYPH_H);
+	screen_y_t top = ((track_sel - track_id_at_top) * GLYPH_H);
 	if((top < 0) || (top >= TRACKLIST_H)) {
 		return;
 	}
+	top += TRACKLIST_TOP;
+	const screen_y_t bottom = (top + GLYPH_H - 1);
 	if(put) {
 		grcg_setcolor(GC_RMW, COL_TRACKLIST);
-		grcg_hline(CURSOR_LEFT, CURSOR_RIGHT, (CURSOR_TOP + top));
-		grcg_hline(CURSOR_LEFT, CURSOR_RIGHT, (CURSOR_BOTTOM + top));
-		grcg_vline(CURSOR_LEFT, (CURSOR_TOP + top), (CURSOR_BOTTOM + top));
-		grcg_vline(CURSOR_RIGHT, (CURSOR_TOP + top), (CURSOR_BOTTOM + top));
+		grcg_hline(TRACKLIST_LEFT, TRACKLIST_RIGHT, top);
+		grcg_hline(TRACKLIST_LEFT, TRACKLIST_RIGHT, bottom);
+		grcg_vline(TRACKLIST_LEFT, top, bottom);
+		grcg_vline(TRACKLIST_RIGHT, top, bottom);
 		grcg_off();
 	} else {
-		// ZUN bloat: Blitting [TRACKLIST_W] pixels starting at
-		// [TRACKLIST_LEFT] is enough.
-		bgimage_put_rect_16(0, (CURSOR_TOP + top), 320, GLYPH_H);
+		bgimage_put_rect_16(TRACKLIST_LEFT, top, TRACKLIST_W, GLYPH_H);
 	}
 	if(track_sel == track_playing) {
 		col = COL_TRACKLIST_SELECTED;
 	}
 
 	choice = MUSIC_CHOICES[game_sel][track_sel];
-	top += TRACKLIST_TOP;
 	graph_putsa_fx(TRACKLIST_LEFT, top, col, choice);
 }
 
@@ -511,17 +504,14 @@ void near cmt_fadein_both_animate(void)
 
 void cmt_unput(void)
 {
-	enum {
-		W = (RES_X - CMT_TITLE_LEFT), // ZUN bloat: [CMT_LINE_W] is enough.
-	};
 #if (GAME == 5)
-	bgimage_put_rect_16(CMT_TITLE_LEFT, CMT_TITLE_TOP, W, GLYPH_H);
+	bgimage_put_rect_16(CMT_TITLE_LEFT, CMT_TITLE_TOP, CMT_LINE_W, GLYPH_H);
 	bgimage_put_rect_16(
-		CMT_COMMENT_LEFT, CMT_COMMENT_TOP, W, (CMT_COMMENT_LINES * GLYPH_H)
+		CMT_COMMENT_LEFT, CMT_COMMENT_TOP, CMT_LINE_W, CMT_COMMENT_H
 	);
 #else
 	bgimage_put_rect_16(
-		CMT_TITLE_LEFT, CMT_TITLE_TOP, W, (CMT_LINES * GLYPH_H)
+		CMT_TITLE_LEFT, CMT_TITLE_TOP, CMT_LINE_W, (CMT_LINES * GLYPH_H)
 	);
 #endif
 }
