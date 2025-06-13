@@ -285,6 +285,7 @@ void MASTER_RET graph_pack_put_8_noclip(
 #define PLANE_INTEN 0xffc7
 
 extern unsigned super_patnum;
+extern void __seg *super_buffer;
 extern unsigned super_patdata[SUPER_MAXPAT];
 extern unsigned super_patsize[SUPER_MAXPAT];
 
