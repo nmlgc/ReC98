@@ -1,5 +1,6 @@
 #include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
+#include "th03/sprites/pi_mask.hpp"
 #include "th04/op/op.hpp"
 #include "th04/shiftjis/fnshared.hpp"
 #include "th05/formats/pi.hpp"

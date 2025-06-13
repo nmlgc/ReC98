@@ -2884,7 +2884,6 @@ SHARED ends
 include th03/snd/se_state[data].asm
 include th04/hardware/bgimage[data].asm
 include th03/formats/cdg[data].asm
-include th03/formats/pi_put_masked[data].asm
 include th03/cutscene/cutscene[data].asm
 aSff1_pi	db 'sff1.pi',0
 aStaff		db 'staff',0

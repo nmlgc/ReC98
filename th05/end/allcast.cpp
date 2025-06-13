@@ -5,6 +5,7 @@
 #include "th05/formats/pi.hpp"
 #include "th05/playchar.h"
 #include "th05/resident.hpp"
+#include "th03/sprites/pi_mask.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th01/hardware/grcg.hpp"
 #include "game/cutscene.hpp"

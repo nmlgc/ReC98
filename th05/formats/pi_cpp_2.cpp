@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include "th05/formats/pi.hpp"
 #include "th05/formats/pi_impl.hpp"
+#include "th03/sprites/pi_mask.hpp"
 #include "game/cutscene.hpp"
 
 extern dots16_t near *pi_mask_ptr;

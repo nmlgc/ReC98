@@ -738,6 +738,7 @@ obj += {
 	"th03/snd_dlym.cpp",
 	"th03/snd_kaja.cpp",
 	"th03/snd_se.cpp",
+	"th03/sprites/pi_mask.cpp",
 	"th03/vector.cpp",
 }
 th03:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='L'" }):link(
@@ -909,6 +910,7 @@ obj += {
 	"th03/pi_load.cpp",
 	"th03/pi_put_q.cpp",
 	"th03/pi_put.cpp",
+	"th03/sprites/pi_mask.cpp",
 	"th04/bgimage.cpp",
 	"th04/bgimager.asm",
 	"th04/cdg_load.asm",
@@ -975,6 +977,7 @@ obj += {
 	"th02/frmdelay.cpp",
 	"th02/snd_se_r.cpp",
 	"th03/hfliplut.asm",
+	"th03/sprites/pi_mask.cpp",
 	"th04/bgimage.cpp",
 	"th04/cdg_load.asm",
 	"th04/cdg_p_na.cpp",
@@ -1113,6 +1116,7 @@ obj += {
 	"th02/frmdelay.cpp",
 	"th02/snd_se_r.cpp",
 	"th03/hfliplut.asm",
+	"th03/sprites/pi_mask.cpp",
 	"th04/bgimage.cpp",
 	"th04/cdg_load.asm",
 	"th04/cdg_p_na.cpp",

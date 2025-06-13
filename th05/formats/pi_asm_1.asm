@@ -7,7 +7,7 @@
 include pc98.inc
 include libs/master.lib/master.inc
 
-	extrn _PI_MASKS:word
+	extrn PI_MASKS:word
 	extrn _pi_mask_ptr:word
 	extrn _pi_mask_y:word
 	extrn _pi_put_masked_vram_offset:word
@@ -30,7 +30,7 @@ public @PI_PUT_MASKED_8_ROWLOOP$QIIIUI
 TEMP_ROW = RES_Y
 
 	shl	@@mask_id, 3	; *= PI_MASK_H * word
-	add	@@mask_id, offset _PI_MASKS
+	add	@@mask_id, offset PI_MASKS
 	mov	_pi_mask_ptr, @@mask_id
 	mov	bp, sp
 	mov	dx, @@left

@@ -19,6 +19,7 @@
 #endif
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
+#include "th03/sprites/pi_mask.hpp"
 #if (GAME == 5)
 #include "th05/hardware/input.h"
 #include "th05/formats/pi.hpp"

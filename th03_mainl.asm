@@ -2585,7 +2585,6 @@ include th03/formats/cdg[data].asm
 include th03/snd/se_priority[data].asm
 a0		db  '0',0
 aOver_pi	db 'over.pi',0
-include th03/formats/pi_put_masked[data].asm
 public _CUTSCENE_KANJI
 _CUTSCENE_KANJI	db  '  ', 0
 	even
