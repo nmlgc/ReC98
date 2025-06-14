@@ -3,9 +3,90 @@
 
 extern LTRB<vram_x_t, screen_y_t> GrpClip;
 
+// Generic default blitter
+// -----------------------
+
+// Abusing the fact that we're never going to blit (127 × 8) pixels...
+inline void def_rep_setup(void) {
+	_BH = _BL;
+#if (CPU >= 386)
+	_BL >>= 2;
+#else
+	_BL >>= 1;
+#endif
+}
+
+#if (CPU == 386)
+#define def_s_dwords_or_words() { \
+	__emit__(0xF3, 0x66, 0xA5); /* REP MOVSD */ \
+	if(_BH & 2) { \
+		__emit__(0xA5); /* MOVSW */ \
+	} \
+}
+#else
+#define def_s_dwords_or_words() { \
+	__emit__(0xF3, 0xA5); /* REP MOVSW */ \
+}
+#endif
+
+#define def_impl(name, offscreen) \
+	void __fastcall name(seg_t /* _AX */) \
+	{ \
+		_ES = _AX; /* First __fastcall parameter */ \
+		_BX = blit_state.w_clipped; \
+		_AX = blit_source.stride; \
+		_AX -= _BX; \
+		def_rep_setup(); \
+		_SI = blit_source.dots_start.part.off; \
+		_SI += blit_state.sprite_offset; \
+		_DI = (offscreen ? vram_offset_shift(0, RES_Y) : blit_state.vo); \
+		_DX = blit_state.h_clipped; \
+		asm cld; \
+		asm push ds; \
+		_DS = blit_source.dots_start.part.seg; \
+		_CX = 0; \
+		do { \
+			_CL = _BL; \
+			def_s_dwords_or_words(); \
+			if(_BH & 1) { \
+				asm movsb; \
+			} \
+			_SI += _AX; \
+			if(!offscreen) { \
+				_CL = _BH; \
+				_DI -= _CX; \
+				_DI += ROW_SIZE; \
+			} \
+		} while(--static_cast<int16_t>(_DX) > 0); \
+		asm pop ds; \
+	}
+
+def_impl(write_def, false);
+def_impl(write_offscreen_def, true);
+// -----------------------
+
 blit_state_t blit_state;
 blit_source_t blit_source;
+
+// Dynamic initialization saves code lines and keeps the binary small.
 Blitter BLITTER_FUNCS[ROW_SIZE + 1];
+
+void blitter_funcs_init(void)
+{
+	Blitter near *p = &BLITTER_FUNCS[1];
+	for(vram_byte_amount_t i = 0; i < ROW_SIZE; (i++, p++)) {
+		// The program might have added its own `#pragma startup` function that
+		// could have ended up before this one in the `_INIT_` segment.
+		if(!p->write) {
+			p->write = write_def;
+		}
+		if(!p->write_offscreen) {
+			p->write_offscreen = write_offscreen_def;
+		}
+	}
+};
+
+#pragma startup blitter_funcs_init
 
 // Initialization
 // --------------
