@@ -28,18 +28,12 @@ static const pixel_t CLEARED_H = 16;
 static const pixel_t RAISE_W = 8;
 static const pixel_t RAISE_H = 8;
 
-static const screen_x_t REIMU_LEFT = 16;
-static const vram_y_t REIMU_TOP = 48;
-
-static const screen_x_t MARISA_LEFT = 272;
-static const vram_y_t MARISA_TOP = 48;
-
-static const screen_x_t MIMA_LEFT = 160;
-static const vram_y_t MIMA_TOP = 224;
-
-static const screen_x_t YUUKA_LEFT = 400;
-static const vram_y_t YUUKA_TOP = 224;
-
+static const screen_point_t PLAYCHAR_TOPLEFT[PLAYCHAR_COUNT] = {
+	{  16,  48 }, // Reimu
+	{ 272,  48 }, // Marisa
+	{ 160, 224 }, // Mima
+	{ 400, 224 }, // Yuuka
+};
 unsigned char playchar_menu_sel;
 unsigned char playchar_menu_rank;
 bool extra_playable_with[PLAYCHAR_COUNT];
@@ -49,47 +43,18 @@ bool selectable_with[PLAYCHAR_COUNT];
 
 void pascal near pic_darken(unsigned char playchar)
 {
-	vram_offset_t vram_offset;
-
-	switch(playchar) {
-	case PLAYCHAR_REIMU:
-		vram_offset = vram_offset_shift(REIMU_LEFT, REIMU_TOP);
-		break;
-	case PLAYCHAR_MARISA:
-		vram_offset = vram_offset_shift(MARISA_LEFT, MARISA_TOP);
-		break;
-	case PLAYCHAR_MIMA:
-		vram_offset = vram_offset_shift(MIMA_LEFT, MIMA_TOP);
-		break;
-	case PLAYCHAR_YUUKA:
-		vram_offset = vram_offset_shift(YUUKA_LEFT, YUUKA_TOP);
-		break;
-	}
+	const screen_point_t topleft = PLAYCHAR_TOPLEFT[playchar];
+	vram_offset_t vram_offset = vram_offset_shift(topleft.x, topleft.y);
 	darken(vram_offset, PIC_W, PIC_H, 1);
 }
 
 void pascal near pic_put(bool16 darkened)
 {
-	screen_x_t pic_left;
-	vram_y_t pic_top;
-	screen_x_t cleared_left;
-	vram_y_t cleared_top;
-
-	#define set_coords(left, top) \
-		pic_left = left; \
-		pic_top = top; \
-		cleared_left = (left + (PIC_W - CLEARED_W)); \
-		cleared_top = (top + (PIC_H - CLEARED_H));
-
-	switch(playchar_menu_sel) {
-	case PLAYCHAR_REIMU: 	set_coords(REIMU_LEFT, REIMU_TOP);  	break;
-	case PLAYCHAR_MARISA:	set_coords(MARISA_LEFT, MARISA_TOP);	break;
-	case PLAYCHAR_MIMA:  	set_coords(MIMA_LEFT, MIMA_TOP);    	break;
-	case PLAYCHAR_YUUKA: 	set_coords(YUUKA_LEFT, YUUKA_TOP);  	break;
-	}
-
-	#define pic_raised_left (pic_left - RAISE_W)
-	#define pic_raised_top  (pic_top  - RAISE_H)
+	const screen_point_t pic_topleft = PLAYCHAR_TOPLEFT[playchar_menu_sel];
+	const screen_x_t cleared_left = (pic_topleft.x + PIC_W - CLEARED_W);
+	const screen_y_t cleared_top  = (pic_topleft.y + PIC_H - CLEARED_H);
+	const screen_x_t pic_raised_left = (pic_topleft.x - RAISE_W);
+	const screen_y_t pic_raised_top  = (pic_topleft.y - RAISE_H);
 
 	if(!darkened) {
 		// Pic
@@ -107,15 +72,15 @@ void pascal near pic_put(bool16 darkened)
 		grcg_setcolor(GC_RMW, 1);
 		grcg_boxfill_8(
 			(pic_raised_left + PIC_W),
-			pic_top,
-			(pic_left + PIC_W - 1),
+			pic_topleft.y,
+			(pic_topleft.x + PIC_W - 1),
 			(pic_raised_top + PIC_H - 1)
 		);
 		grcg_boxfill_8(
-			pic_left,
+			pic_topleft.x,
 			(pic_raised_top + PIC_H),
-			(pic_left + PIC_W - 1),
-			(pic_top + PIC_H - 1)
+			(pic_topleft.x + PIC_W - 1),
+			(pic_topleft.y + PIC_H - 1)
 		);
 		grcg_off();
 
@@ -128,13 +93,16 @@ void pascal near pic_put(bool16 darkened)
 	} else {
 		// Raised area of the highlighted pic
 		bgimage_put_rect_16(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
-		bgimage_put_rect_16(pic_raised_left, pic_top, RAISE_W, PIC_H);
+		bgimage_put_rect_16(pic_raised_left, pic_topleft.y, RAISE_W, PIC_H);
 
 		// Pic
 		if(selectable_with[playchar_menu_sel]) {
-			cdg_put_noalpha_8(pic_left, pic_top, (CDG_PIC + playchar_menu_sel));
+			cdg_put_noalpha_8(
+				pic_topleft.x, pic_topleft.y, (CDG_PIC + playchar_menu_sel));
 		} else {
-			cdg_put_noalpha_8(pic_left, pic_top, CDG_PIC_NOT_CLEARED);
+			cdg_put_noalpha_8(
+				pic_topleft.x, pic_topleft.y, CDG_PIC_NOT_CLEARED
+			);
 		}
 
 		// "Cleared!!" sprite
@@ -144,10 +112,6 @@ void pascal near pic_put(bool16 darkened)
 
 		pic_darken(playchar_menu_sel);
 	}
-
-	#undef set_coords
-	#undef pic_raised_top
-	#undef pic_raised_left
 }
 
 void near playchar_menu_put_initial(void)
