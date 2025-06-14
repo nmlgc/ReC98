@@ -88,7 +88,6 @@ void near op_animate(void)
 	// Flash
 	palette_settone(200);
 	graph_showpage(0);
-	graph_accesspage(0); // ZUN bloat: Redundant, we switch to page 1 below
 
 	// ZUN bloat: Should have looped over [SLIDE_CEL_COUNT].
 	pi_free(0);
@@ -114,7 +113,6 @@ void near op_animate(void)
 	for(col = 0; col < COLOR_COUNT; col++) {
 		Palettes[col].set(0xFF, 0xFF, 0xFF);
 	}
-	palette_show(); // ZUN bloat: Redundant
 	palette_settone(100);
 	#undef col
 
