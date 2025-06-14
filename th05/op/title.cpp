@@ -36,16 +36,13 @@ void near op_animate(void)
 	};
 
 	struct {
-		// ZUN bloat: One variable is enough...
-		page_t show;
 		page_t access;
 
 		void wait_and_flip(void) {
 			frame_delay(1);
 			graph_accesspage(access);
-			graph_showpage(show);
-			access = show;
-			show = (1 - show);
+			access ^= 1;
+			graph_showpage(access);
 		}
 	} page;
 
@@ -59,19 +56,13 @@ void near op_animate(void)
 	pi_load(6, "op2g.pi");
 	pi_load(7, "op2h.pi");
 
-	// ZUN bloat: Changed again below, and the palette is black anyway.
-	graph_accesspage(0);
-	graph_showpage(0);
-
 	// Not the same as graph_clear(), which uses hardware palette color #0.
 	grcg_setcolor(GC_RMW, 1);
 	graph_accesspage(1);	grcg_boxfill_8(0, 0, (RES_X - 1), (RES_Y - 1));
 	graph_accesspage(0);	grcg_boxfill_8(0, 0, (RES_X - 1), (RES_Y - 1));
 	grcg_off();
-	graph_copy_page(1); // ZUN bloat: You've just cleared both pages...
 
 	page.access = 1;
-	page.show = 0;
 
 	graph_accesspage(0);
 
@@ -96,11 +87,6 @@ void near op_animate(void)
 	{for(int i = 1; i < ROLL_CELS; i++) {
 		pi_free(i);
 	}}
-
-	// ZUN bloat: The loop above already blitted the animation to both pages.
-	// Full page copies are quite slow on PC-98, and this might take longer
-	// than one frame.
-	graph_copy_page(1);
 
 	if(resident->demo_num == 0) {
 		snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
