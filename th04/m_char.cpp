@@ -76,8 +76,10 @@ static const pixel_t BOX_ROUND = 8;
 // Player character selection
 // --------------------------
 
-static const screen_x_t REIMU_LEFT = 48;
-static const screen_x_t MARISA_LEFT = 336;
+static const screen_x_t PLAYCHAR_LEFT[PLAYCHAR_COUNT] = {
+	 48, // Reimu
+	336, // Marisa
+};
 static const screen_y_t PLAYCHAR_TOP = 52;
 
 inline screen_x_t playchar_title_left(screen_x_t playchar_left) {
@@ -125,12 +127,7 @@ bool selectable_with[PLAYCHAR_COUNT][SHOTTYPE_COUNT];
 
 void near pascal raise_bg_put(playchar_t playchar_lowered)
 {
-	upixel_t left;
-	if(playchar_lowered == PLAYCHAR_REIMU) {
-		left = (REIMU_LEFT - RAISE_W);
-	} else {
-		left = (MARISA_LEFT - RAISE_W);
-	}
+	const upixel_t left = (PLAYCHAR_LEFT[playchar_lowered] - RAISE_W);
 	bgimage.write_bg_region(left, (PLAYCHAR_TOP - RAISE_H), PIC_W, RAISE_H);
 	bgimage.write_bg_region(left, (PLAYCHAR_TOP - RAISE_H), RAISE_W, PIC_H);
 }
@@ -139,25 +136,13 @@ void near pascal raise_bg_put(playchar_t playchar_lowered)
 
 void near pascal pic_darken(playchar_t playchar)
 {
-	vram_offset_t vo;
-
-	if(playchar == PLAYCHAR_REIMU) {
-		vo = vram_offset_shift(REIMU_LEFT, PLAYCHAR_TOP);
-	} else {
-		vo = vram_offset_shift(MARISA_LEFT, PLAYCHAR_TOP);
-	}
+	vram_offset_t vo = vram_offset_shift(PLAYCHAR_LEFT[playchar], PLAYCHAR_TOP);
 	darken(vo, PIC_W, PIC_H, 1);
 }
 
-#define playchar_title_left_for(left, playchar) \
-	switch(playchar) { \
-	case PLAYCHAR_REIMU:  left = playchar_title_left(REIMU_LEFT);  break; \
-	case PLAYCHAR_MARISA: left = playchar_title_left(MARISA_LEFT); break; \
-	}
-
 void near pascal playchar_titles_put(int sel)
 {
-	screen_x_t left;
+	screen_x_t left = playchar_title_left(PLAYCHAR_LEFT[sel]);
 	vram_y_t top;
 
 	#define put(left, top, col, playchar) \
@@ -172,13 +157,12 @@ void near pascal playchar_titles_put(int sel)
 		);
 
 	// Selected character
-	playchar_title_left_for(left, sel);
 	top = PLAYCHAR_TITLE_TOP;
 	put(left, top, COL_SELECTED, sel);
 
 	// Other character
 	sel = (PLAYCHAR_MARISA - sel);
-	playchar_title_left_for(left, sel);
+	left = playchar_title_left(PLAYCHAR_LEFT[sel]);
 	put(left, top, COL_NOT_SELECTED, sel);
 
 	#undef put
@@ -186,11 +170,8 @@ void near pascal playchar_titles_put(int sel)
 
 void near pascal playchar_title_box_put(int playchar)
 {
-	screen_x_t left;
-	vram_y_t top;
-
-	playchar_title_left_for(left, playchar);
-	top = PLAYCHAR_TITLE_TOP;
+	screen_x_t left = playchar_title_left(PLAYCHAR_LEFT[playchar]);
+	vram_y_t top = PLAYCHAR_TITLE_TOP;
 
 	grcg_setcolor(GC_RMW, COL_SHADOW);
 	box_shadow_put(left, top, PLAYCHAR_TITLE_W, PLAYCHAR_TITLE_H, BOX_ROUND);
@@ -199,28 +180,19 @@ void near pascal playchar_title_box_put(int playchar)
 	grcg_off();
 }
 
-inline void pic_put_for(
-	playchar_t playchar_sel, screen_x_t sel_left, screen_x_t other_left
-) {
-	cdg_put_noalpha_8(
-		(sel_left - RAISE_W), (PLAYCHAR_TOP - RAISE_H), (CDG_PIC + playchar_sel)
-	);
-	raise_bg_put(playchar_other(playchar_sel));
-	cdg_put_noalpha_8(
-		other_left, PLAYCHAR_TOP, (CDG_PIC + playchar_other(playchar_sel))
-	);
-	pic_darken(playchar_other(playchar_sel));
-	dropshadow_put((sel_left - RAISE_W), (PLAYCHAR_TOP - RAISE_H));
-	playchar_titles_put(playchar_sel);
-}
-
 void near pic_put(void)
 {
-	if(playchar_menu_sel == PLAYCHAR_REIMU) {
-		pic_put_for(PLAYCHAR_REIMU, REIMU_LEFT, MARISA_LEFT);
-	} else {
-		pic_put_for(PLAYCHAR_MARISA, MARISA_LEFT, REIMU_LEFT);
-	}
+	const playchar_t sel = playchar_menu_sel;
+	const playchar_t other = playchar_other(sel);
+	const screen_x_t sel_left = (PLAYCHAR_LEFT[sel] - RAISE_W);
+	const screen_x_t other_left = PLAYCHAR_LEFT[other];
+
+	cdg_put_noalpha_8(sel_left, (PLAYCHAR_TOP - RAISE_H), (CDG_PIC + sel));
+	raise_bg_put(other);
+	cdg_put_noalpha_8(other_left, PLAYCHAR_TOP, (CDG_PIC + other));
+	pic_darken(other);
+	dropshadow_put(sel_left, (PLAYCHAR_TOP - RAISE_H));
+	playchar_titles_put(sel);
 }
 
 #define shottype_title_top_and_clearflag_for(top, clearflag, shottype) \
