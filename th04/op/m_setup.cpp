@@ -1,9 +1,8 @@
 #pragma option -zPop_01
 
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
-#include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
@@ -86,7 +85,7 @@ void pascal near window_dropdown_put(
 	screen_x_t left, screen_y_t bottom_tile_top
 )
 {
-	egc_copy_rect_1_to_0_16(left, bottom_tile_top, window.pixel_w(), MSWIN_H);
+	bgimage.write_bg_region(left, bottom_tile_top, window.pixel_w(), MSWIN_H);
 
 	super_put(left, bottom_tile_top, MSWIN_MIDDLE_LEFT);
 	super_put(left, (bottom_tile_top + DROP_SPEED), MSWIN_LEFT_BOTTOM);
@@ -101,7 +100,7 @@ void pascal near window_dropdown_put(
 
 void pascal near window_rollup_put(screen_x_t left, screen_y_t bottom_tile_top)
 {
-	egc_copy_rect_1_to_0_16(
+	bgimage.write_bg_region(
 		left, (bottom_tile_top + DROP_SPEED), window.pixel_w(), MSWIN_H
 	);
 
@@ -137,7 +136,7 @@ void pascal near dropdown(screen_x_t left, screen_y_t top)
 
 void pascal near singleline(screen_x_t left, screen_y_t top)
 {
-	egc_copy_rect_1_to_0_16(left, top, window.pixel_w(), (MSWIN_H * 2));
+	bgimage.write_bg_region(left, top, window.pixel_w(), (MSWIN_H * 2));
 
 	super_put(left, (top + (0 * MSWIN_H)), MSWIN_LEFT_TOP);
 	super_put(left, (top + (1 * MSWIN_H)), MSWIN_LEFT_BOTTOM);
@@ -271,9 +270,9 @@ void near setup_menu(void)
 {
 	palette_settone(0);
 	super_entry_bfnt("mswin.bft");
-	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(&Palettes, "ms.pi");
-	graph_copy_page(0);
+	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, "ms.pi");
+	bgimage.write(0, 0);
 	palette_black_in(1);
 
 	resident->bgm_mode = setup_submenu(
@@ -286,7 +285,7 @@ void near setup_menu(void)
 	);
 	frame_delay(1); // ZUN quirk: Already done after every rollup frame.
 
-	graph_copy_page(0);
+	bgimage.write(0, 0);
 
 	resident->se_mode = setup_submenu(
 		SETUP_SE_CAPTION,
@@ -299,4 +298,5 @@ void near setup_menu(void)
 	palette_black_out(1);
 
 	super_free();
+	bgimage.free();
 }
