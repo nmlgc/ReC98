@@ -6,11 +6,10 @@
 #pragma option -zPop_01
 
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
-#include "th04/hardware/bgimage.hpp"
 #include "th04/op/clear.hpp"
 #include "th04/op/impl.hpp"
 #include "th04/sprites/op_cdg.hpp"
@@ -88,8 +87,10 @@ void pascal near pic_put(int sel, bool16 darkened)
 		}
 	} else {
 		// Raised area of the highlighted pic
-		bgimage_put_rect_16(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
-		bgimage_put_rect_16(pic_raised_left, pic_topleft.y, RAISE_W, PIC_H);
+		bgimage.write_bg_region(
+			pic_raised_left, pic_raised_top, PIC_W, RAISE_H
+		);
+		bgimage.write_bg_region(pic_raised_left, pic_topleft.y, RAISE_W, PIC_H);
 
 		// Pic
 		cdg_put_noalpha_8(pic_topleft.x, pic_topleft.y, pic_slot);
@@ -108,8 +109,8 @@ void near playchar_menu_put_initial(void)
 	palette_settone(0);
 	graph_accesspage(1);
 	graph_showpage(0);
-	GrpSurface_BlitBackgroundPI(&Palettes, "slb1.pi");
-	bgimage_snap();
+	GrpSurface_LoadPI(bgimage, &Palettes, "slb1.pi");
+	bgimage.write(0, 0);
 
 	for(int i = PLAYCHAR_REIMU; i < PLAYCHAR_COUNT; i++) {
 		pic_put(i, (i != playchar_menu_sel));
@@ -172,13 +173,13 @@ bool16 near playchar_menu(void)
 					snd_se_play_force(11);
 					resident->playchar = playchar_menu_sel;
 					palette_black_out(1);
-					bgimage_free();
+					bgimage.free();
 					return false;
 				}
 			}
 			if(key_det & INPUT_CANCEL) {
 				palette_black_out(1);
-				bgimage_free();
+				bgimage.free();
 				return true;
 			}
 			input_prev = key_det;
