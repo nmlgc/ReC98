@@ -1052,12 +1052,13 @@ local research_sprites = Sprites({
 })
 
 -- Must be an ordered table to retain the order for `build_dumb.bat`.
-for _, t in pairs({ { "8086", " -1-" }, { "286", " -2" }, { "386", "" } }) do
+for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
+	local cpu_str = string.format("%03d", t[1])
 	local cfg = research_cfg:branch({
-		obj_root = (t[1] .. "/"),
-		cflags = string.format("-DCPU=%s%s", t[1], t[2]),
+		obj_root = (cpu_str .. "/"),
+		cflags = string.format("-DCPU=%d%s", t[1], t[2]),
 	})
-	cfg:link(("blit" .. t[1]), {
+	cfg:link(("blit" .. cpu_str), {
 		-- Bypass `PreviousOutputForSource` by explicitly building each unit.
 		cfg:build_uncached({ "Research/blitperf.cpp", extra_inputs = {
 			research_sprites["blitperf"],

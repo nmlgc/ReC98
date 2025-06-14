@@ -13,9 +13,9 @@ mkdir bin\th05 %STDERR_IGNORE%
 mkdir obj %STDERR_IGNORE%
 mkdir obj\Pipeline %STDERR_IGNORE%
 mkdir obj\Research %STDERR_IGNORE%
+mkdir obj\Research\086 %STDERR_IGNORE%
 mkdir obj\Research\286 %STDERR_IGNORE%
 mkdir obj\Research\386 %STDERR_IGNORE%
-mkdir obj\Research\8086 %STDERR_IGNORE%
 mkdir obj\th01 %STDERR_IGNORE%
 mkdir obj\th02 %STDERR_IGNORE%
 mkdir obj\th03 %STDERR_IGNORE%
@@ -237,10 +237,10 @@ tcc @obj/batch021.@c
 echo -c -s c0s.obj obj\Research\holdkey.obj, bin\Research\holdkey.exe, obj\Research\holdkey.map, bin\masters.lib emu.lib maths.lib cs.lib>obj\Research\holdkey.@l
 tlink @obj\Research\holdkey.@l
 bin\Pipeline\bmp2arr.com -q -i Research/blitperf.bmp -o Research/blitperf.csp -sym sBLITPERF -of cpp -sw 16 -sh 16
-echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=8086  -1-  -nobj/Research/8086/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch022.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=86  -1-  -nobj/Research/086/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch022.@c
 tcc @obj/batch022.@c
-echo -c -s c0s.obj obj\Research\8086\blitperf.obj obj\Research\8086\noexcept.obj obj\Research\8086\blitter.obj obj\Research\8086\font.obj obj\Research\8086\graph.obj obj\Research\8086\grcg.obj obj\Research\8086\palette.obj obj\Research\8086\vsync.obj, bin\Research\blit8086.exe, obj\Research\8086\blit8086.map, emu.lib maths.lib cs.lib>obj\Research\8086\blit8086.@l
-tlink @obj\Research\8086\blit8086.@l
+echo -c -s c0s.obj obj\Research\086\blitperf.obj obj\Research\086\noexcept.obj obj\Research\086\blitter.obj obj\Research\086\font.obj obj\Research\086\graph.obj obj\Research\086\grcg.obj obj\Research\086\palette.obj obj\Research\086\vsync.obj, bin\Research\blit086.exe, obj\Research\086\blit086.map, emu.lib maths.lib cs.lib>obj\Research\086\blit086.@l
+tlink @obj\Research\086\blit086.@l
 echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -ms  -DCPU=286  -2  -nobj/Research/286/  Research/blitperf.cpp  platform/x86real/noexcept.cpp  platform/x86real/pc98/blitter.cpp  platform/x86real/pc98/font.cpp  platform/x86real/pc98/graph.cpp  platform/x86real/pc98/grcg.cpp  platform/x86real/pc98/palette.cpp  platform/x86real/pc98/vsync.cpp>obj\batch023.@c
 tcc @obj/batch023.@c
 echo -c -s c0s.obj obj\Research\286\blitperf.obj obj\Research\286\noexcept.obj obj\Research\286\blitter.obj obj\Research\286\font.obj obj\Research\286\graph.obj obj\Research\286\grcg.obj obj\Research\286\palette.obj obj\Research\286\vsync.obj, bin\Research\blit286.exe, obj\Research\286\blit286.map, emu.lib maths.lib cs.lib>obj\Research\286\blit286.@l
