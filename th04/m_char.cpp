@@ -108,12 +108,6 @@ static const pixel_t SHOTTYPE_CHOOSE_W = (
 	(SHOTTYPE_CHOOSE_LEN * GLYPH_HALF_W) + SHOTTYPE_CHOOSE_PADDING_LEFT
 );
 static const pixel_t SHOTTYPE_TITLE_W = (SHOTTYPE_TITLE_LEN * GLYPH_HALF_W);
-
-inline vram_y_t shottype_title_top(shottype_t shottype) {
-	return (SHOTTYPE_BOX_TOP + (
-		shottype * (GLYPH_H + (SHOTTYPE_BOX_PADDING_Y * 2))
-	));
-}
 // -------------------
 
 // State
@@ -140,32 +134,22 @@ void near pascal pic_darken(playchar_t playchar)
 	darken(vo, PIC_W, PIC_H, 1);
 }
 
-void near pascal playchar_titles_put(int sel)
+void near pascal playchar_titles_put(void)
 {
-	screen_x_t left = playchar_title_left(PLAYCHAR_LEFT[sel]);
-	vram_y_t top;
-
-	#define put(left, top, col, playchar) \
-		graph_putsa_fx( \
-			(left + BOX_ROUND), (top + BOX_ROUND), col, PLAYCHAR_TITLE[sel][0] \
-		); \
-		graph_putsa_fx( \
-			(left + BOX_ROUND), \
-			((top + BOX_ROUND) + (GLYPH_H * 2)), \
-			col, \
-			PLAYCHAR_TITLE[sel][1] \
+	for(int playchar = 0; playchar < PLAYCHAR_COUNT; playchar++) {
+		const screen_x_t left = playchar_title_left(
+			PLAYCHAR_LEFT[playchar] + BOX_ROUND
 		);
-
-	// Selected character
-	top = PLAYCHAR_TITLE_TOP;
-	put(left, top, COL_SELECTED, sel);
-
-	// Other character
-	sel = (PLAYCHAR_MARISA - sel);
-	left = playchar_title_left(PLAYCHAR_LEFT[sel]);
-	put(left, top, COL_NOT_SELECTED, sel);
-
-	#undef put
+		screen_y_t top = (PLAYCHAR_TITLE_TOP + BOX_ROUND);
+		const vc_t col = ((playchar == playchar_menu_sel)
+			? COL_SELECTED
+			: COL_NOT_SELECTED
+		);
+		for(int line = 0; line < 2; line++) {
+			graph_putsa_fx(left, top, col, PLAYCHAR_TITLE[playchar][line]);
+			top += (GLYPH_H * 2);
+		}
+	}
 }
 
 void near pascal playchar_title_box_put(int playchar)
@@ -192,57 +176,35 @@ void near pic_put(void)
 	cdg_put_noalpha_8(other_left, PLAYCHAR_TOP, (CDG_PIC + other));
 	pic_darken(other);
 	dropshadow_put(sel_left, (PLAYCHAR_TOP - RAISE_H));
-	playchar_titles_put(sel);
+	playchar_titles_put();
 }
 
-#define shottype_title_top_and_clearflag_for(top, clearflag, shottype) \
-	switch(shottype) { \
-	case SHOTTYPE_A: \
-		top = shottype_title_top(SHOTTYPE_A); \
-		clearflag = SCOREDAT_CLEARED_A; \
-		break; \
-	case SHOTTYPE_B: \
-		top = shottype_title_top(SHOTTYPE_B); \
-		clearflag = SCOREDAT_CLEARED_B; \
-		break; \
-	}
-
-void near pascal shottype_titles_put(int sel)
+void near pascal shottype_titles_put(void)
 {
-	vram_y_t top;
-	screen_x_t left;
+	static const uint8_t CLEAR_FLAGS[SHOTTYPE_COUNT] = {
+		SCOREDAT_CLEARED_A, SCOREDAT_CLEARED_B,
+	};
 	int rank = ((resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank);
-	uint8_t clearflag;
-
-	#define put(left, top, clearflag, rank, col) \
-		if(cleared_with[playchar_menu_sel][rank] & clearflag) { \
-			graph_putsa_fx_func = FX_WEIGHT_NORMAL; \
-			graph_putsa_fx( \
-				(left - GLYPH_HALF_W), \
-				(top + SHOTTYPE_BOX_PADDING_Y), \
-				COL_SELECTED, \
-				SHOTTYPE_CLEARED \
-			); \
-			graph_putsa_fx_func = FX_WEIGHT_BOLD; \
-		} \
-		graph_putsa_fx( \
-			(left + GLYPH_HALF_W), \
-			(top + SHOTTYPE_BOX_PADDING_Y), \
-			col, \
-			SHOTTYPE_TITLE[playchar_menu_sel][sel] \
+	screen_y_t top = (SHOTTYPE_BOX_TOP + SHOTTYPE_BOX_PADDING_Y);
+	for(int shottype = 0; shottype < SHOTTYPE_COUNT; shottype++) {
+		if(cleared_with[playchar_menu_sel][rank] & CLEAR_FLAGS[shottype]) {
+			graph_putsa_fx_func = FX_WEIGHT_NORMAL;
+			graph_putsa_fx(
+				(SHOTTYPE_TITLE_LEFT - GLYPH_HALF_W),
+				top,
+				COL_SELECTED,
+				SHOTTYPE_CLEARED
+			);
+			graph_putsa_fx_func = FX_WEIGHT_BOLD;
+		}
+		graph_putsa_fx(
+			(SHOTTYPE_TITLE_LEFT + GLYPH_HALF_W),
+			top,
+			((shottype == shottype_menu_sel) ? COL_SELECTED : COL_NOT_SELECTED),
+			SHOTTYPE_TITLE[playchar_menu_sel][shottype]
 		);
-
-	// Selected shot type
-	shottype_title_top_and_clearflag_for(top, clearflag, sel);
-	left = SHOTTYPE_TITLE_LEFT;
-	put(left, top, clearflag, rank, COL_SELECTED);
-
-	// Other shot type
-	sel = (SHOTTYPE_B - sel);
-	shottype_title_top_and_clearflag_for(top, clearflag, sel);
-	put(left, top, clearflag, rank, COL_NOT_SELECTED);
-
-	#undef put
+		top += (GLYPH_H + (SHOTTYPE_BOX_PADDING_Y * 2));
+	}
 }
 
 void near shottype_title_box_put(void)
@@ -281,18 +243,12 @@ void near shottype_title_box_put(void)
 
 void near shottype_menu_put_initial(void)
 {
-	if(playchar_menu_sel == PLAYCHAR_REIMU) {
-		cdg_put_noalpha_8(
-			SHOTTYPE_PIC_LEFT, SHOTTYPE_PIC_TOP, (CDG_PIC + PLAYCHAR_REIMU)
-		);
-	} else {
-		cdg_put_noalpha_8(
-			SHOTTYPE_PIC_LEFT, SHOTTYPE_PIC_TOP, (CDG_PIC + PLAYCHAR_MARISA)
-		);
-	}
+	cdg_put_noalpha_8(
+		SHOTTYPE_PIC_LEFT, SHOTTYPE_PIC_TOP, (CDG_PIC + playchar_menu_sel)
+	);
 	dropshadow_put(SHOTTYPE_PIC_LEFT, SHOTTYPE_PIC_TOP);
 	shottype_title_box_put();
-	shottype_titles_put(shottype_menu_sel);
+	shottype_titles_put();
 }
 
 void near playchar_menu_put_initial(void)
@@ -408,7 +364,7 @@ bool16 near playchar_menu(void)
 						shottype_menu_sel = (1 - shottype_menu_sel);
 					}
 					graph_accesspage(1);
-					shottype_titles_put(shottype_menu_sel);
+					shottype_titles_put();
 					sync_pages_and_delay();
 					snd_se_play_force(1);
 				}
