@@ -48,25 +48,21 @@ void pascal near pic_darken(unsigned char playchar)
 	darken(vram_offset, PIC_W, PIC_H, 1);
 }
 
-void pascal near pic_put(bool16 darkened)
+void pascal near pic_put(int sel, bool16 darkened)
 {
-	const screen_point_t pic_topleft = PLAYCHAR_TOPLEFT[playchar_menu_sel];
+	const screen_point_t pic_topleft = PLAYCHAR_TOPLEFT[sel];
 	const screen_x_t cleared_left = (pic_topleft.x + PIC_W - CLEARED_W);
 	const screen_y_t cleared_top  = (pic_topleft.y + PIC_H - CLEARED_H);
 	const screen_x_t pic_raised_left = (pic_topleft.x - RAISE_W);
 	const screen_y_t pic_raised_top  = (pic_topleft.y - RAISE_H);
+	const int pic_slot = (selectable_with[sel]
+		? (CDG_PIC + sel)
+		: CDG_PIC_NOT_CLEARED
+	);
 
 	if(!darkened) {
 		// Pic
-		if(selectable_with[playchar_menu_sel]) {
-			cdg_put_noalpha_8(
-				pic_raised_left, pic_raised_top, (CDG_PIC + playchar_menu_sel)
-			);
-		} else {
-			cdg_put_noalpha_8(
-				pic_raised_left, pic_raised_top, CDG_PIC_NOT_CLEARED
-			);
-		}
+		cdg_put_noalpha_8(pic_raised_left, pic_raised_top, pic_slot);
 
 		// Drop shadow
 		grcg_setcolor(GC_RMW, 1);
@@ -85,7 +81,7 @@ void pascal near pic_put(bool16 darkened)
 		grcg_off();
 
 		// "Cleared!!" sprite
-		if(cleared_with[playchar_menu_sel][playchar_menu_rank]) {
+		if(cleared_with[sel][playchar_menu_rank]) {
 			cdg_put_8(
 				(cleared_left - RAISE_W), (cleared_top - RAISE_H), CDG_CLEARED
 			);
@@ -96,45 +92,29 @@ void pascal near pic_put(bool16 darkened)
 		bgimage_put_rect_16(pic_raised_left, pic_topleft.y, RAISE_W, PIC_H);
 
 		// Pic
-		if(selectable_with[playchar_menu_sel]) {
-			cdg_put_noalpha_8(
-				pic_topleft.x, pic_topleft.y, (CDG_PIC + playchar_menu_sel));
-		} else {
-			cdg_put_noalpha_8(
-				pic_topleft.x, pic_topleft.y, CDG_PIC_NOT_CLEARED
-			);
-		}
+		cdg_put_noalpha_8(pic_topleft.x, pic_topleft.y, pic_slot);
 
 		// "Cleared!!" sprite
-		if(cleared_with[playchar_menu_sel][playchar_menu_rank]) {
+		if(cleared_with[sel][playchar_menu_rank]) {
 			cdg_put_8(cleared_left, cleared_top, CDG_CLEARED);
 		}
 
-		pic_darken(playchar_menu_sel);
+		pic_darken(sel);
 	}
 }
 
 void near playchar_menu_put_initial(void)
 {
-	int selected = playchar_menu_sel;
-
 	palette_settone(0);
 	graph_accesspage(1);
+	graph_showpage(0);
 	GrpSurface_BlitBackgroundPI(&Palettes, "slb1.pi");
-	graph_copy_page(0);
 	bgimage_snap();
 
-	graph_accesspage(1);
-	graph_showpage(0);
-
-	int i = PLAYCHAR_REIMU;
-	playchar_menu_sel = PLAYCHAR_REIMU;
-	while(i < PLAYCHAR_COUNT) {
-		pic_put(playchar_menu_sel != selected ? true : false);
-		i++;
-		playchar_menu_sel++;
+	for(int i = PLAYCHAR_REIMU; i < PLAYCHAR_COUNT; i++) {
+		pic_put(i, (i != playchar_menu_sel));
 	}
-	playchar_menu_sel = selected;
+
 	graph_copy_page(0);
 	palette_black_in(1);
 }
@@ -143,9 +123,9 @@ inline void near on_directional_input(uint8_t sel_xorval) {
 	snd_se_play_force(1);
 
 	graph_accesspage(1);
-	pic_put(true);
+	pic_put(playchar_menu_sel, true);
 	playchar_menu_sel ^= sel_xorval;
-	pic_put(false);
+	pic_put(playchar_menu_sel, false);
 	sync_pages_and_delay();
 }
 
