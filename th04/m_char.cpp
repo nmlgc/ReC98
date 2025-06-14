@@ -267,7 +267,6 @@ void near playchar_menu_put_initial(void)
 
 inline bool16 near playchar_menu_leave(bool16 retval) {
 	palette_black_out(1);
-	bgimage.free();
 	return retval;
 }
 
@@ -375,7 +374,6 @@ bool16 near playchar_menu(void)
 					return playchar_menu_leave(false);
 				}
 				if(key_det & INPUT_CANCEL) {
-					bgimage.free();
 					break;
 				}
 				input_prev = key_det;

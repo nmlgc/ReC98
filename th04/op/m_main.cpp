@@ -9,10 +9,9 @@
 
 #include <conio.h>
 #include <string.h>
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grcg.hpp"
-#include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
 #include "th02/op/menu.hpp"
 #include "th02/op/m_music.hpp"
@@ -142,7 +141,7 @@ void pascal near option_value_put(option_choice_t sel, int cdg_value)
 
 void pascal near desc_unput_and_put(int desc_id)
 {
-	egc_copy_rect_1_to_0_16(0, DESC_TOP, RES_X, GLYPH_H);
+	bgimage.write_bg_region(0, DESC_TOP, RES_X, GLYPH_H);
 	graph_putsa_fx_func = FX_WEIGHT_BOLD;
 	graph_putsa_fx(
 		(RES_X - GLYPH_FULL_W - (strlen(MENU_DESC[desc_id]) * GLYPH_HALF_W)),
@@ -158,7 +157,7 @@ void pascal near main_unput_and_put(int sel, vc2 col)
 	if((sel == MC_EXTRA) && !extra_unlocked) {
 		col = COL_LOCKED;
 	}
-	egc_copy_rect_1_to_0_16(MENU_MAIN_LEFT, top, MENU_MAIN_W, LABEL_H);
+	bgimage.write_bg_region(MENU_MAIN_LEFT, top, MENU_MAIN_W, LABEL_H);
 	grcg_setcolor(GC_RMW, col);
 	command_put(top, (CDG_MAIN + sel));
 	grcg_off();
@@ -182,7 +181,7 @@ void pascal near option_unput_and_put(int sel, vc2 col)
 		top = option_choice_top(OC_QUIT);
 	}
 
-	egc_copy_rect_1_to_0_16(MENU_OPTION_LEFT, top, MENU_OPTION_W, LABEL_H);
+	bgimage.write_bg_region(MENU_OPTION_LEFT, top, MENU_OPTION_W, LABEL_H);
 	grcg_setcolor(GC_RMW, col);
 
 	switch(sel) {
@@ -285,7 +284,7 @@ void pascal near menu_init(
 ) {
 	input_allowed = false;
 
-	egc_copy_rect_1_to_0_16(
+	bgimage.write_bg_region(
 		other_left, MENU_TOP, other_w, (other_bottom - MENU_TOP)
 	);
 
@@ -300,9 +299,9 @@ void pascal near return_from_other_screen_to_main(
 	bool near& main_initialized, int sel
 )
 {
-	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(&Palettes, MENU_MAIN_BG_FN);
-	graph_copy_page(0); // switches the accessed page back to 0
+	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, MENU_MAIN_BG_FN);
+	bgimage.write(0, 0);
 
 	// ZUN landmine: After loading and blitting, we're certainly in the middle
 	// of a frame, where a sudden change to the hardware palette ensures
@@ -543,7 +542,7 @@ void main(void)
 
 	text_clear();
 	respal_create(); // ZUN bloat: These games don't use resident palettes.
-	mem_assign_paras = (336000 >> 4);
+	mem_assign_paras = (340768 >> 4);
 	if(game_init_op(OP_AND_END_PF_FN)) {
 		dos_puts2(MEMORY_INSUFFICIENT);
 		getch();

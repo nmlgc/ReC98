@@ -7,7 +7,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/v_colors.hpp"
 #include "th01/hardware/grcg.hpp"
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 
 void near main_cdg_load(void)
@@ -105,8 +105,9 @@ void near op_animate(void)
 	Palette8 target_palette;
 
 	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(&target_palette, MENU_MAIN_BG_FN);
-	graph_copy_page(0);
+	GrpSurface_LoadPI(bgimage, &target_palette, MENU_MAIN_BG_FN);
+	graph_accesspage(1);	bgimage.write(0, 0);
+	graph_accesspage(0);	bgimage.write(0, 0);
 
 	// Black-and-white fade-in
 	#define col i
@@ -136,7 +137,7 @@ void near op_animate(void)
 	#undef brightness
 	#undef frame
 
-	// Fade to the .PI palette. Note how we already freed the PI above!
+	// Fade to the .PI palette
 	#define frame i
 	#define col j
 	#define white_point k

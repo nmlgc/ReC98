@@ -173,13 +173,11 @@ bool16 near playchar_menu(void)
 					snd_se_play_force(11);
 					resident->playchar = playchar_menu_sel;
 					palette_black_out(1);
-					bgimage.free();
 					return false;
 				}
 			}
 			if(key_det & INPUT_CANCEL) {
 				palette_black_out(1);
-				bgimage.free();
 				return true;
 			}
 			input_prev = key_det;

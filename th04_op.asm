@@ -232,8 +232,6 @@ include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
 include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
-public _egcrect_w
-_egcrect_w	dw ?
 include th04/formats/cdg[bss].asm
 	extern _resident:dword
 include th04/zunsoft[bss].asm

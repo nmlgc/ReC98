@@ -1,3 +1,4 @@
+#include "game/bgimage.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/sprites/pi_mask.hpp"
@@ -83,8 +84,7 @@ void near op_animate(void)
 		palette_settone((100 - ROLL_DURATION) + frame);
 	}}
 
-	// The pi_load() call below automatically does this for slot 0.
-	{for(int i = 1; i < ROLL_CELS; i++) {
+	{for(int i = 0; i < ROLL_CELS; i++) {
 		pi_free(i);
 	}}
 
@@ -93,7 +93,7 @@ void near op_animate(void)
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	}
 
-	pi_load(0, MENU_MAIN_BG_FN);
+	GrpSurface_LoadPI(bgimage, &Palettes, MENU_MAIN_BG_FN);
 
 	// ZUN bug: This one starts with a screen tearing landmine caused by slow
 	// .PI blitting onto the shown page. However, it then turns out that shown
@@ -114,21 +114,21 @@ void near op_animate(void)
 	{for(int frame = 0; frame < FADE_DURATION; frame++) {
 		// Blit to both pages
 		if((frame % FADE_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
-			pi_put_masked_8(0, 0, 0, (frame / FADE_FRAMES_PER_CEL));
+			bgimage.or_masked(
+				0, 0, &PI_MASKS[frame / FADE_FRAMES_PER_CEL][0], PI_MASK_H
+			);
 		}
 		page.wait_and_flip();
 	}}
 
 	// Blit the original, unmasked image
-	graph_accesspage(1);
+	graph_accesspage(0);
 	graph_showpage(0);
 
 	// Doing this might have been better before the masked blitting loop. But
 	// if the palettes of the roll animation images and the final title image
 	// don't match up, there will be a sudden jump *somewhere*.
-	pi_palette_apply(0);
+	palette_show();
 
-	pi_put_8(0, 0, 0);
-	pi_free(0);
-	graph_copy_page(0); // ZUN bloat: Slower than a second call to pi_put_8()!
+	bgimage.write(0, 0);
 }

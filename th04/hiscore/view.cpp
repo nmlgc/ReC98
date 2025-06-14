@@ -369,9 +369,9 @@ void near regist_view_menu(void)
 
 	snd_kaja_func(KAJA_SONG_FADE, 1);
 	palette_black_out(1);
-	bgimage.free();
 	graph_accesspage(0);
-	GrpSurface_BlitBackgroundPI(&Palettes, MENU_MAIN_BG_FN);
+	GrpSurface_LoadPI(bgimage, &Palettes, MENU_MAIN_BG_FN);
+	bgimage.write(0, 0);
 	palette_black_in(1);
 
 	do {
