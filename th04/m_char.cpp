@@ -81,10 +81,8 @@ static const pixel_t BOX_ROUND = 8;
 // --------------------------
 
 static const screen_x_t REIMU_LEFT = 48;
-static const vram_y_t REIMU_TOP = 52;
-
 static const screen_x_t MARISA_LEFT = 336;
-static const vram_y_t MARISA_TOP = 52;
+static const screen_y_t PLAYCHAR_TOP = 52;
 
 inline screen_x_t playchar_title_left(screen_x_t playchar_left) {
 	return (playchar_left + 32);
@@ -166,8 +164,8 @@ void near raise_bg_allocate_and_snap(void)
 	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
 	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
 
-	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  REIMU_TOP));
-	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));
+	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  PLAYCHAR_TOP));
+	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, PLAYCHAR_TOP));
 
 	// Top edge
 	y = 0;
@@ -208,10 +206,10 @@ void near pascal raise_bg_put(playchar_t playchar_lowered)
 	vram_offset_t vo;
 
 	if(playchar_lowered == PLAYCHAR_REIMU) {
-		vo_row = raise(vram_offset_shift(REIMU_LEFT, REIMU_TOP));
+		vo_row = raise(vram_offset_shift(REIMU_LEFT, PLAYCHAR_TOP));
 		playchar_bg = raise_bg[PLAYCHAR_REIMU];
 	} else {
-		vo_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));
+		vo_row = raise(vram_offset_shift(MARISA_LEFT, PLAYCHAR_TOP));
 		playchar_bg = raise_bg[PLAYCHAR_MARISA];
 	}
 
@@ -245,9 +243,9 @@ void near pascal pic_darken(playchar_t playchar)
 	vram_offset_t vo;
 
 	if(playchar == PLAYCHAR_REIMU) {
-		vo = vram_offset_shift(REIMU_LEFT, REIMU_TOP);
+		vo = vram_offset_shift(REIMU_LEFT, PLAYCHAR_TOP);
 	} else {
-		vo = vram_offset_shift(MARISA_LEFT, MARISA_TOP);
+		vo = vram_offset_shift(MARISA_LEFT, PLAYCHAR_TOP);
 	}
 	darken(vo, PIC_W, PIC_H, 1);
 }
@@ -307,34 +305,26 @@ void near pascal playchar_title_box_put(int playchar)
 }
 
 inline void pic_put_for(
-	playchar_t playchar_sel,
-	screen_x_t sel_left,
-	vram_y_t sel_top,
-	screen_x_t other_left,
-	vram_y_t other_top
+	playchar_t playchar_sel, screen_x_t sel_left, screen_x_t other_left
 ) {
 	cdg_put_noalpha_8(
-		(sel_left - RAISE_W), (sel_top - RAISE_H), (CDG_PIC + playchar_sel)
+		(sel_left - RAISE_W), (PLAYCHAR_TOP - RAISE_H), (CDG_PIC + playchar_sel)
 	);
 	raise_bg_put(playchar_other(playchar_sel));
 	cdg_put_noalpha_8(
-		other_left, other_top, (CDG_PIC + playchar_other(playchar_sel))
+		other_left, PLAYCHAR_TOP, (CDG_PIC + playchar_other(playchar_sel))
 	);
 	pic_darken(playchar_other(playchar_sel));
-	dropshadow_put((sel_left - RAISE_W), (sel_top - RAISE_H));
+	dropshadow_put((sel_left - RAISE_W), (PLAYCHAR_TOP - RAISE_H));
 	playchar_title_put(playchar_sel);
 }
 
 void near pic_put(void)
 {
 	if(playchar_menu_sel == PLAYCHAR_REIMU) {
-		pic_put_for(
-			PLAYCHAR_REIMU, REIMU_LEFT, REIMU_TOP, MARISA_LEFT, MARISA_TOP
-		);
+		pic_put_for(PLAYCHAR_REIMU, REIMU_LEFT, MARISA_LEFT);
 	} else {
-		pic_put_for(
-			PLAYCHAR_MARISA, MARISA_LEFT, MARISA_TOP, REIMU_LEFT, REIMU_TOP
-		);
+		pic_put_for(PLAYCHAR_MARISA, MARISA_LEFT, REIMU_LEFT);
 	}
 }
 
