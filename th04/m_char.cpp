@@ -121,7 +121,7 @@ inline vram_y_t shottype_title_top(shottype_t shottype) {
 // State
 // -----
 
-unsigned char playchar_menu_sel;
+playchar_t playchar_menu_sel;
 unsigned char shottype_menu_sel;
 
 // Stores the top and left edges of the background that would be covered by
@@ -491,12 +491,12 @@ bool16 near playchar_menu(void)
 			if(input_prev == INPUT_NONE) {
 				if((key_det & INPUT_LEFT) || (key_det & INPUT_RIGHT)) {
 					snd_se_play_force(1);
-					playchar_menu_sel = (1 - playchar_menu_sel);
+					playchar_menu_sel = playchar_other(playchar_menu_sel);
 					if(
 						!selectable_with[playchar_menu_sel][SHOTTYPE_A] &&
 						!selectable_with[playchar_menu_sel][SHOTTYPE_B]
 					) {
-						playchar_menu_sel = (1 - playchar_menu_sel);
+						playchar_menu_sel = playchar_other(playchar_menu_sel);
 					}
 					graph_accesspage(1);
 					pic_put();
