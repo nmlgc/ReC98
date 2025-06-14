@@ -6,10 +6,10 @@
 #pragma option -zCop_01_TEXT
 
 #include <stddef.h>
+#include "game/bgimage.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th03/formats/pi.hpp"
 #include "th04/common.h"
 #include "th04/formats/scoredat/scoredat.hpp"
 #include "th04/resident.hpp"
@@ -35,10 +35,6 @@ static const vc2 COL_SHADOW = 1;
 
 static const pixel_t RAISE_W = 8;
 static const pixel_t RAISE_H = 8;
-
-static const vram_byte_amount_t RAISE_BG_SIZE = (
-	(((PIC_W * RAISE_H) + (RAISE_W * PIC_H)) / BYTE_DOTS) * PLANE_COUNT
-);
 
 inline vram_offset_t raise(vram_offset_t vram_offset) {
 	return (vram_offset - vram_offset_shift(RAISE_W, RAISE_H));
@@ -124,116 +120,19 @@ inline vram_y_t shottype_title_top(shottype_t shottype) {
 playchar_t playchar_menu_sel;
 unsigned char shottype_menu_sel;
 
-// Stores the top and left edges of the background that would be covered by
-// raising the pic of the given character. The top edge is stored first,
-// followed by the left one.
-// Actually a Planar<dots8_t>* (storing the 8 dots for all 4 planes before
-// moving to the next byte), but used like a dots8_t* everywhere.
-dots8_t far *raise_bg[PLAYCHAR_COUNT];
-
 bool selectable_with[PLAYCHAR_COUNT][SHOTTYPE_COUNT];
 // -----
 
-#define raise_bg_snap_and_advance(p, plane, vo_reimu, vo_marisa) \
-	VRAM_SNAP( raise_bg[PLAYCHAR_REIMU][p], plane, vo_reimu,  8); \
-	VRAM_SNAP(raise_bg[PLAYCHAR_MARISA][p], plane, vo_marisa, 8); \
-	p++;
-
-#define raise_bg_snap_and_advance_planar(p, vo_reimu, vo_marisa) \
-	raise_bg_snap_and_advance(p, B, vo_reimu, vo_marisa); \
-	raise_bg_snap_and_advance(p, R, vo_reimu, vo_marisa); \
-	raise_bg_snap_and_advance(p, G, vo_reimu, vo_marisa); \
-	raise_bg_snap_and_advance(p, E, vo_reimu, vo_marisa); \
-
-#define raise_bg_put_and_advance_planar(vo, p) \
-	VRAM_PUT(B, vo, *(p++), 8); \
-	VRAM_PUT(R, vo, *(p++), 8); \
-	VRAM_PUT(G, vo, *(p++), 8); \
-	VRAM_PUT(E, vo, *(p++), 8);
-
-void near raise_bg_allocate_and_snap(void)
-{
-	size_t raise_bg_p;
-	vram_offset_t vo_reimu_row;
-	pixel_t y;
-	vram_byte_amount_t x;
-	vram_offset_t vo_reimu;
-	vram_offset_t vo_marisa_row;
-	vram_offset_t vo_marisa;
-
-	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
-	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
-
-	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  PLAYCHAR_TOP));
-	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, PLAYCHAR_TOP));
-
-	// Top edge
-	y = 0;
-	raise_bg_p = 0;
-	while(y < RAISE_H) {
-		x = 0;
-		vo_reimu = vo_reimu_row;
-		vo_marisa = vo_marisa_row;
-		while(x < (PIC_W / BYTE_DOTS)) {
-			raise_bg_snap_and_advance_planar(raise_bg_p, vo_reimu, vo_marisa);
-			x++;
-			vo_reimu++;
-			vo_marisa++;
-		}
-		y++;
-		vo_reimu_row  += ROW_SIZE;
-		vo_marisa_row += ROW_SIZE;
-	}
-
-	// Left edge
-	y = 0;
-	while(y < PIC_H) {
-		raise_bg_snap_and_advance_planar(
-			raise_bg_p, vo_reimu_row, vo_marisa_row
-		);
-		y++;
-		vo_reimu_row  += ROW_SIZE;
-		vo_marisa_row += ROW_SIZE;
-	}
-}
-
 void near pascal raise_bg_put(playchar_t playchar_lowered)
 {
-	vram_byte_amount_t x;
-	pixel_t y;
-	vram_offset_t vo_row;
-	dots8_t far *playchar_bg;
-	vram_offset_t vo;
-
+	upixel_t left;
 	if(playchar_lowered == PLAYCHAR_REIMU) {
-		vo_row = raise(vram_offset_shift(REIMU_LEFT, PLAYCHAR_TOP));
-		playchar_bg = raise_bg[PLAYCHAR_REIMU];
+		left = (REIMU_LEFT - RAISE_W);
 	} else {
-		vo_row = raise(vram_offset_shift(MARISA_LEFT, PLAYCHAR_TOP));
-		playchar_bg = raise_bg[PLAYCHAR_MARISA];
+		left = (MARISA_LEFT - RAISE_W);
 	}
-
-	// Top edge
-	for(y = 0; y < RAISE_H; y++, vo_row += ROW_SIZE) {
-		x = 0;
-		vo = vo_row;
-		while(x < (PIC_W / BYTE_DOTS)) {
-			raise_bg_put_and_advance_planar(vo, playchar_bg);
-			x++;
-			vo++;
-		}
-	}
-
-	// Left edge
-	for(y = 0; y < PIC_H; y++, vo_row += ROW_SIZE) {
-		raise_bg_put_and_advance_planar(vo_row, playchar_bg);
-	}
-}
-
-void near raise_bg_free(void)
-{
-	HMem<dots8_t>::free(raise_bg[PLAYCHAR_REIMU]);
-	HMem<dots8_t>::free(raise_bg[PLAYCHAR_MARISA]);
+	bgimage.write_bg_region(left, (PLAYCHAR_TOP - RAISE_H), PIC_W, RAISE_H);
+	bgimage.write_bg_region(left, (PLAYCHAR_TOP - RAISE_H), RAISE_W, PIC_H);
 }
 
 #include "th04/op/darken.cpp"
@@ -427,12 +326,10 @@ void near shottype_menu_put_initial(void)
 void near playchar_menu_put_initial(void)
 {
 	palette_settone(0);
-	pi_load(0, "slb1.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "slb1.pi");
 	graph_accesspage(1);
 	graph_showpage(0);
-	pi_palette_apply(0);
-	pi_put_8(0, 0, 0);
-	raise_bg_allocate_and_snap();
+	bgimage.write(0, 0);
 	playchar_title_box_put(PLAYCHAR_REIMU);
 	playchar_title_box_put(PLAYCHAR_MARISA);
 	pic_put();
@@ -442,8 +339,7 @@ void near playchar_menu_put_initial(void)
 
 inline bool16 near playchar_menu_leave(bool16 retval) {
 	palette_black_out(1);
-	raise_bg_free();
-	pi_free(0);
+	bgimage.free();
 	return retval;
 }
 
@@ -512,7 +408,7 @@ bool16 near playchar_menu(void)
 
 					graph_accesspage(1);
 					palette_settone(200);
-					pi_put_8(0, 0, 0);
+					bgimage.write(0, 0);
 					shottype_menu_put_initial();
 					graph_copy_page(0);
 					palette_white_in(1);
@@ -551,8 +447,7 @@ bool16 near playchar_menu(void)
 					return playchar_menu_leave(false);
 				}
 				if(key_det & INPUT_CANCEL) {
-					raise_bg_free();
-					pi_free(0);
+					bgimage.free();
 					break;
 				}
 				input_prev = key_det;
