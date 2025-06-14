@@ -296,7 +296,10 @@ void pascal near menu_init(
 	initialized = true;
 }
 
-inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
+void pascal near return_from_other_screen_to_main(
+	bool near& main_initialized, int sel
+)
+{
 	graph_accesspage(1);
 	GrpSurface_BlitBackgroundPI(&Palettes, MENU_MAIN_BG_FN);
 	graph_copy_page(0); // switches the accessed page back to 0
