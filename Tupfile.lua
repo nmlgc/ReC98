@@ -708,7 +708,7 @@ local th04_zuncom = th04:zungen("obj/th04/zuncom.bin", {
 th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
 th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th04/op_main.cpp",
-	{ "th04_op_master.asm", o = "opm.obj" },
+	"th04_op.asm",
 	"th01/vplanset.cpp",
 	"th02/frmdely1.cpp",
 	"th03/pi_put.cpp",
@@ -745,7 +745,6 @@ th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th04/score_e.cpp",
 	"th04/hi_view.cpp",
 	"th04/op_title.cpp",
-	"th04_op.asm",
 	"th04/m_char.cpp",
 })
 th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
@@ -876,7 +875,7 @@ local th05_zuncom = th05:zungen("obj/th05/zuncom.bin", {
 th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
 th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th05/op_main.cpp",
-	{ "th05_op_master.asm", o = "opm.obj" },
+	"th05_op.asm",
 	"th03/hfliplut.asm",
 	"th04/snd_pmdr.c",
 	"th04/snd_mmdr.c",
@@ -916,7 +915,6 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th05/score_db.cpp",
 	"th05/score_e.cpp",
 	"th05/hi_view.cpp",
-	"th05_op.asm",
 	"th05/m_char.cpp",
 })
 th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
