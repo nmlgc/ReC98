@@ -18,10 +18,8 @@ void near op_animate(void);
 
 void near regist_view_menu(void);
 
-// Initializes the game clear/extra unlock variables from the score file, and
-// loads the sprites used for the viewing mode of the score name registration
-// menu.
-void near cleardata_and_regist_view_sprites_load(void);
+// Initializes the game clear/extra unlock variables from the score file.
+void near cleardata_load(void);
 
 // Shows the player character / shot type selection menu, writing the
 // selection to [resident]. Returns whether to start the game (false) or

@@ -394,7 +394,7 @@ void near regist_view_menu(void)
 }
 
 #if (GAME == 5)
-void near cleardata_and_regist_view_sprites_load(void)
+void near cleardata_load(void)
 {
 	extra_unlocked = false;
 	for(int playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
@@ -415,14 +415,10 @@ void near cleardata_and_regist_view_sprites_load(void)
 			rank++;
 		}
 	}
-
-	// See the call site for why these load calls absolutely don't belong here.
 	rank = resident->rank;
-	super_entry_bfnt("scnum.bft");
-	super_entry_bfnt("hi_m.bft");
 }
 #else
-void near cleardata_and_regist_view_sprites_load(void)
+void near cleardata_load(void)
 {
 	rank = RANK_EASY;
 	while(rank < RANK_COUNT) {
@@ -446,10 +442,6 @@ void near cleardata_and_regist_view_sprites_load(void)
 		}
 		rank++;
 	}
-
-	// See the call site for why these load calls absolutely don't belong here.
 	rank = resident->rank;
-	super_entry_bfnt("scnum.bft");
-	super_entry_bfnt("hi_m.bft");
 }
 #endif
