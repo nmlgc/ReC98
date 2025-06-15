@@ -4,7 +4,7 @@
 #pragma option -zPop_01
 #include "th04/formats/scoredat/recreate.cpp"
 #include "th04/hiscore/score_ld.cpp"
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/bfnt.h"
@@ -284,8 +284,7 @@ void pascal near place_put(
 
 void near rank_render(void)
 {
-	pi_palette_apply(0);
-	pi_put_8(0, 0, 0);
+	bgimage.write(0, 0);
 
 	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
 #if (GAME == 5)
@@ -332,7 +331,7 @@ void near regist_view_menu(void)
 #if (GAME == 4)
 	hiscore_scoredat_load_both();
 #endif
-	pi_load(0, HISCORE_BG_FN);
+	GrpSurface_LoadPI(bgimage, &Palettes, HISCORE_BG_FN);
 	rank_render();
 	palette_black_in(1);
 
@@ -370,7 +369,7 @@ void near regist_view_menu(void)
 
 	snd_kaja_func(KAJA_SONG_FADE, 1);
 	palette_black_out(1);
-	pi_free(0);
+	bgimage.free();
 	graph_accesspage(0);
 	GrpSurface_BlitBackgroundPI(&Palettes, MENU_MAIN_BG_FN);
 	palette_black_in(1);
