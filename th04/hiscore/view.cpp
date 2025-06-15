@@ -193,18 +193,11 @@ void pascal near stage_put(
 	screen_x_t left, screen_y_t top, int gaiji // ACTUAL TYPE: gaiji_th04_t
 )
 {
-	// ZUN bloat: Reassigning [gaiji] would have been simpler.
-	if(gaiji != g_NONE) {
-		graph_gaiji_putc((left + 2), (top + 2), gaiji, COL_SHADOW);
-		graph_gaiji_putc((left + 0), (top + 0), gaiji, COL_STAGE);
-	} else {
-		graph_gaiji_putc(
-			(left + 2), (top + 2), g_HISCORE_STAGE_EMPTY, COL_SHADOW
-		);
-		graph_gaiji_putc(
-			(left + 0), (top + 0), g_HISCORE_STAGE_EMPTY, COL_STAGE
-		);
+	if(gaiji == g_NONE) {
+		gaiji = g_HISCORE_STAGE_EMPTY;
 	}
+	graph_gaiji_putc((left + 2), (top + 2), gaiji, COL_SHADOW);
+	graph_gaiji_putc((left + 0), (top + 0), gaiji, COL_STAGE);
 }
 
 #define name_put_shadowed(left, top, str, col_fg) { \
@@ -304,20 +297,18 @@ void pascal near place_put(playchar2 playchar, int place)
 
 void pascal near place_put(int place)
 {
-	// ZUN bloat: Again, no need to duplicate the entire function just for
-	// different Y positions and name colors.
+	vc_t col;
+	screen_y_t top;
 	if(place == 0) {
-		names_put(TABLE_TOP, COL_NAME_FIRST, place);
-		scores_put(TABLE_TOP, 0);
-		stages_put(TABLE_TOP, place);
+		col = COL_NAME_FIRST;
+		top = TABLE_TOP;
 	} else {
-		screen_y_t top = (
-			TABLE_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H)
-		);
-		names_put(top, COL_NAME, place);
-		scores_put(top, place);
-		stages_put(top, place);
+		col = COL_NAME;
+		top = (TABLE_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H));
 	}
+	names_put(top, col, place);
+	scores_put(top, place);
+	stages_put(top, place);
 }
 #endif
 
@@ -334,12 +325,9 @@ void near rank_render(void)
 		}
 	}
 #else
-	// ZUN bloat: No need to move calls out of the loop.
-	place_put(0);
-	for(int place = 1; place < (SCOREDAT_PLACES - 1); place++) {
+	for(int place = 0; place < SCOREDAT_PLACES; place++) {
 		place_put(place);
 	}
-	place_put(SCOREDAT_PLACES - 1);
 #endif
 
 	static_assert(RANK_W == (2 * BFNT_ASSUMED_MAX_W));
@@ -387,11 +375,7 @@ void near regist_view_menu(void)
 		input_reset_sense_interface();
 		frame_delay(1);
 
-		// ZUN bloat: Testing twice for [INPUT_OK].
-		if(
-			(key_det & INPUT_OK) || (key_det & INPUT_SHOT) ||
-			(key_det & INPUT_CANCEL) || (key_det & INPUT_OK)
-		) {
+		if(key_det & (INPUT_OK | INPUT_SHOT | INPUT_CANCEL)) {
 			break;
 		}
 		if((key_det & INPUT_LEFT) && (rank != RANK_EASY)) {
@@ -444,6 +428,7 @@ void near cleardata_and_regist_view_sprites_load(void)
 {
 	extra_unlocked = false;
 	for(int playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
+		extra_playable_with[playchar] = false;
 		rank = RANK_EASY;
 		while(rank < RANK_COUNT) {
 			if(hiscore_scoredat_load_for(playchar)) {
@@ -455,6 +440,7 @@ void near cleardata_and_regist_view_sprites_load(void)
 			}
 			if(rank < RANK_EXTRA) {
 				extra_unlocked |= cleared_with[playchar][rank];
+				extra_playable_with[playchar] |= cleared_with[playchar][rank];
 			}
 			rank++;
 		}
@@ -464,16 +450,6 @@ void near cleardata_and_regist_view_sprites_load(void)
 	rank = resident->rank;
 	super_entry_bfnt("scnum.bft");
 	super_entry_bfnt("hi_m.bft");
-
-	// ZUN bloat: Integrate into the upper loop
-	for(playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
-		extra_playable_with[playchar] = (
-			cleared_with[playchar][RANK_EASY] |
-			cleared_with[playchar][RANK_NORMAL] |
-			cleared_with[playchar][RANK_HARD] |
-			cleared_with[playchar][RANK_LUNATIC]
-		);
-	}
 }
 #else
 // ZUN bloat: Same as the TH05 version, just with Reimu and Marisa spelled out
