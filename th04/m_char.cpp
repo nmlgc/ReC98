@@ -256,35 +256,31 @@ void near pascal pic_darken(playchar_t playchar)
 	case PLAYCHAR_MARISA: left = playchar_title_left(MARISA_LEFT); break; \
 	}
 
-void near pascal playchar_title_put(int playchar_sel)
+void near pascal playchar_titles_put(int sel)
 {
-	int playchar = playchar_sel;
 	screen_x_t left;
 	vram_y_t top;
 
 	#define put(left, top, col, playchar) \
 		graph_putsa_fx( \
-			(left + BOX_ROUND), \
-			(top + BOX_ROUND), \
-			col, \
-			PLAYCHAR_TITLE[playchar][0] \
+			(left + BOX_ROUND), (top + BOX_ROUND), col, PLAYCHAR_TITLE[sel][0] \
 		); \
 		graph_putsa_fx( \
 			(left + BOX_ROUND), \
 			((top + BOX_ROUND) + (GLYPH_H * 2)), \
 			col, \
-			PLAYCHAR_TITLE[playchar][1] \
+			PLAYCHAR_TITLE[sel][1] \
 		);
 
 	// Selected character
-	playchar_title_left_for(left, playchar);
+	playchar_title_left_for(left, sel);
 	top = PLAYCHAR_TITLE_TOP;
-	put(left, top, COL_SELECTED, playchar);
+	put(left, top, COL_SELECTED, sel);
 
 	// Other character
-	playchar = (PLAYCHAR_MARISA - playchar);
-	playchar_title_left_for(left, playchar);
-	put(left, top, COL_NOT_SELECTED, playchar);
+	sel = (PLAYCHAR_MARISA - sel);
+	playchar_title_left_for(left, sel);
+	put(left, top, COL_NOT_SELECTED, sel);
 
 	#undef put
 }
@@ -316,7 +312,7 @@ inline void pic_put_for(
 	);
 	pic_darken(playchar_other(playchar_sel));
 	dropshadow_put((sel_left - RAISE_W), (PLAYCHAR_TOP - RAISE_H));
-	playchar_title_put(playchar_sel);
+	playchar_titles_put(playchar_sel);
 }
 
 void near pic_put(void)
@@ -340,15 +336,12 @@ void near pic_put(void)
 		break; \
 	}
 
-void near pascal shottype_title_put(int shottype_sel)
+void near pascal shottype_titles_put(int sel)
 {
 	vram_y_t top;
-	int shottype = shottype_sel;
 	screen_x_t left;
-	int rank;
+	int rank = ((resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank);
 	uint8_t clearflag;
-
-	rank = (resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank;
 
 	#define put(left, top, clearflag, rank, col) \
 		if(cleared_with[playchar_menu_sel][rank] & clearflag) { \
@@ -365,17 +358,17 @@ void near pascal shottype_title_put(int shottype_sel)
 			(left + GLYPH_HALF_W), \
 			(top + SHOTTYPE_BOX_PADDING_Y), \
 			col, \
-			SHOTTYPE_TITLE[playchar_menu_sel][shottype] \
+			SHOTTYPE_TITLE[playchar_menu_sel][sel] \
 		);
 
 	// Selected shot type
-	shottype_title_top_and_clearflag_for(top, clearflag, shottype);
+	shottype_title_top_and_clearflag_for(top, clearflag, sel);
 	left = SHOTTYPE_TITLE_LEFT;
 	put(left, top, clearflag, rank, COL_SELECTED);
 
 	// Other shot type
-	shottype = (SHOTTYPE_B - shottype);
-	shottype_title_top_and_clearflag_for(top, clearflag, shottype);
+	sel = (SHOTTYPE_B - sel);
+	shottype_title_top_and_clearflag_for(top, clearflag, sel);
 	put(left, top, clearflag, rank, COL_NOT_SELECTED);
 
 	#undef put
@@ -428,7 +421,7 @@ void near shottype_menu_put_initial(void)
 	}
 	dropshadow_put(SHOTTYPE_PIC_LEFT, SHOTTYPE_PIC_TOP);
 	shottype_title_box_put();
-	shottype_title_put(shottype_menu_sel);
+	shottype_titles_put(shottype_menu_sel);
 }
 
 void near playchar_menu_put_initial(void)
@@ -547,7 +540,7 @@ bool16 near playchar_menu(void)
 						shottype_menu_sel = (1 - shottype_menu_sel);
 					}
 					graph_accesspage(1);
-					shottype_title_put(shottype_menu_sel);
+					shottype_titles_put(shottype_menu_sel);
 					sync_pages_and_delay();
 					snd_se_play_force(1);
 				}
