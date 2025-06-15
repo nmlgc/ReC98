@@ -6,10 +6,9 @@
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 
 inline char sel_ring_end() {
 	return SHOTTYPE_COUNT - 1;
@@ -32,21 +31,21 @@ void copy_pic_back(int sel, int highlight)
 			case 1: x = 224; y = 224; break;
 			case 2: x = 432; y = 128; break;
 		}
-		graph_copy_rect_1_to_0_16(x, y, 16, 144);
-		graph_copy_rect_1_to_0_16(x, y, 192, 10);
+		bgimage.write_bg_region(x, y, 16, 144);
+		bgimage.write_bg_region(x, y, 192, 10);
 	} else {
 		switch(sel) {
 			case 0: x = 208; y = 136; break;
 			case 1: x = 416; y = 232; break;
 			case 2: x = 624; y = 136; break;
 		}
-		graph_copy_rect_1_to_0_16(x, y, 16, 144);
+		bgimage.write_bg_region(x, y, 16, 144);
 		switch(sel) {
 			case 0: x =  24; y = 272; break;
 			case 1: x = 232; y = 368; break;
 			case 2: x = 440; y = 272; break;
 		}
-		graph_copy_rect_1_to_0_16(x, y, 192, 8);
+		bgimage.write_bg_region(x, y, 192, 8);
 	}
 }
 
@@ -117,10 +116,9 @@ void pascal shottype_menu_init(void)
 
 	vblank_run(vblank_palette_black_and_tram_wipe);
 
+	GrpSurface_LoadPI(bgimage, &Palettes, "TSELECT.pi");
 	graph_accesspage(0);
-	GrpSurface_BlitBackgroundPI(&Palettes, "TSELECT.pi");
-	graph_copy_page(1);
-	graph_accesspage(0);
+	bgimage.write(0, 0);
 	if(resident->stage != 5) {
 		draw_cleared_for(cleared_game_with);
 	} else {
@@ -198,6 +196,7 @@ void pascal shottype_menu(void)
 			input_delay = 0;
 		}
 	} while(1);
+	bgimage.free();
 	pi_free(0);
 	pi_free(1);
 	pi_free(2);
