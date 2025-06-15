@@ -93,10 +93,6 @@ unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
 bool extra_unlocked;
 /// -----
 
-// ZUN bloat: The main difference between the TH04 and TH05 implementations is
-// that TH04 explicitly spells out its two characters while TH05 sanely loops
-// over its four. The `debloated` branch would also migrate TH04 to loops.
-
 #define digit_at(section, place, digit) ( \
 	((section.score.g_score[place].digits[digit]) - gb_0) \
 )
@@ -154,34 +150,25 @@ void pascal near score_put(screen_x_t left, screen_y_t top, int place)
 	digit_put((SCORE_LEFT + rel_left + (playchar * COLUMN_W)), top, digit); \
 }
 
-#define digit8_put(playchar, top, section, place) { \
-	static_assert(SCORE_DIGITS == 8); \
-	if(digit_at(section, place, 7) >= 10) { \
-		digit_put_for( \
-			playchar, (-1 * DIGIT_W), top, (digit_at(section, place, 7) / 10) \
-		); \
-	} \
-}
-
-void pascal near scores_put(screen_y_t top, int place)
+void pascal near score_put(
+	int playchar, const scoredat_section_t& section, screen_y_t top, int place
+)
 {
 	int digit;
 	pixel_t rel_left = DIGIT_W;
 
-	digit8_put(PLAYCHAR_REIMU,  top, hi,  place);
-	digit8_put(PLAYCHAR_MARISA, top, hi2, place);
-
-	// ZUN bloat: Could have been part of the lower loop.
-	digit_put_for(PLAYCHAR_REIMU,  0, top, (digit_at(hi,  place, 7) % 10));
-	digit_put_for(PLAYCHAR_MARISA, 0, top, (digit_at(hi2, place, 7) % 10));
+	static_assert(SCORE_DIGITS == 8);
+	if(digit_at(section, place, 7) >= 10) {
+		digit_put_for(
+			playchar, (-1 * DIGIT_W), top, (digit_at(section, place, 7) / 10)
+		);
+	}
+	digit_put_for(playchar, 0, top, (digit_at(section, place, 7) % 10));
 
 	digit = (SCORE_DIGITS - 2);
 	while(digit >= 0) {
 		digit_put_for(
-			PLAYCHAR_REIMU,  rel_left, top, digit_at(hi,  place, digit)
-		);
-		digit_put_for(
-			PLAYCHAR_MARISA, rel_left, top, digit_at(hi2, place, digit)
+			playchar, rel_left, top, digit_at(section, place, digit)
 		);
 		digit--;
 		rel_left += DIGIT_W;
@@ -265,37 +252,9 @@ void pascal near place_put(playchar2 playchar, int place)
 	stage_put((left + (STAGE_LEFT - NAME_LEFT)), top, hi.score.g_stage[place]);
 }
 #else
-// ZUN bug: Leaves the second column with 4 fewer pixels of padding between
-// name and score. (Which translates to 0 pixels in case of a 9th score digit.)
-#define names_put(top, col_fg, place) { \
-	name_put_shadowed( \
-		(NAME_LEFT + (PLAYCHAR_REIMU * (COLUMN_W + 4))), \
-		top, \
-		reinterpret_cast<const char far *>(hi.score.g_name[place]), \
-		col_fg \
-	); \
-	name_put_shadowed( \
-		(NAME_LEFT + (PLAYCHAR_MARISA * (COLUMN_W + 4))), \
-		top, \
-		reinterpret_cast<const char far *>(hi2.score.g_name[place]), \
-		col_fg \
-	); \
-}
-
-#define stages_put(top, place) { \
-	stage_put( \
-		(STAGE_LEFT + (PLAYCHAR_REIMU * COLUMN_W)), \
-		top, \
-		hi.score.g_stage[place] \
-	); \
-	stage_put( \
-		(STAGE_LEFT + (PLAYCHAR_MARISA * COLUMN_W)), \
-		top, \
-		hi2.score.g_stage[place] \
-	); \
-}
-
-void pascal near place_put(int place)
+void pascal near place_put(
+	int playchar, int place, const scoredat_section_t& section
+)
 {
 	vc_t col;
 	screen_y_t top;
@@ -306,9 +265,20 @@ void pascal near place_put(int place)
 		col = COL_NAME;
 		top = (TABLE_TOP + PLACE_1_PADDING_BOTTOM + (place * GLYPH_H));
 	}
-	names_put(top, col, place);
-	scores_put(top, place);
-	stages_put(top, place);
+
+	// ZUN bug: Leaves the second column with 4 fewer pixels of padding between
+	// name and score. (Which translates to 0 pixels in case of a 9th score
+	// digit.)
+	name_put_shadowed(
+		(NAME_LEFT + (playchar * (COLUMN_W + 4))),
+		top,
+		reinterpret_cast<const char far *>(section.score.g_name[place]),
+		col
+	);
+	score_put(playchar, section, top, place);
+	stage_put(
+		(STAGE_LEFT + (playchar * COLUMN_W)), top, section.score.g_stage[place]
+	);
 }
 #endif
 
@@ -317,18 +287,18 @@ void near rank_render(void)
 	pi_palette_apply(0);
 	pi_put_8(0, 0, 0);
 
+	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
 #if (GAME == 5)
-	for(playchar2 pc = PLAYCHAR_REIMU; pc < PLAYCHAR_COUNT; pc++) {
 		hiscore_scoredat_load_for(pc);
 		for(int place = 0; place < SCOREDAT_PLACES; place++) {
 			place_put(pc, place);
 		}
-	}
 #else
-	for(int place = 0; place < SCOREDAT_PLACES; place++) {
-		place_put(place);
-	}
+		for(int place = 0; place < SCOREDAT_PLACES; place++) {
+			place_put(pc, place, ((pc == PLAYCHAR_REIMU) ? hi : hi2));
+		}
 #endif
+	}
 
 	static_assert(RANK_W == (2 * BFNT_ASSUMED_MAX_W));
 	#define RANK_HALF_W (RANK_W / 2)
@@ -452,8 +422,6 @@ void near cleardata_and_regist_view_sprites_load(void)
 	super_entry_bfnt("hi_m.bft");
 }
 #else
-// ZUN bloat: Same as the TH05 version, just with Reimu and Marisa spelled out
-// instead of looped over.
 void near cleardata_and_regist_view_sprites_load(void)
 {
 	rank = RANK_EASY;
@@ -461,19 +429,20 @@ void near cleardata_and_regist_view_sprites_load(void)
 		if(hiscore_scoredat_load_both()) {
 			break;
 		}
-		cleared_with[PLAYCHAR_REIMU][rank] = hi.score.cleared;
-		cleared_with[PLAYCHAR_MARISA][rank] = hi2.score.cleared;
-		if(cleared_with[PLAYCHAR_REIMU][rank] > SCOREDAT_CLEARED_BOTH) {
-			cleared_with[PLAYCHAR_REIMU][rank] = false;
-		}
-		if(cleared_with[PLAYCHAR_MARISA][rank] > SCOREDAT_CLEARED_BOTH) {
-			cleared_with[PLAYCHAR_MARISA][rank] = false;
-		}
-		if(rank != RANK_EASY) {
-			extra_unlocked |= (
-				cleared_with[PLAYCHAR_REIMU][rank] |
-				cleared_with[PLAYCHAR_MARISA][rank]
-			);
+
+		scoredat_t near *sd = &hi.score;
+		for(int playchar = 0; playchar < PLAYCHAR_COUNT; playchar++) {
+			unsigned char near* cleared = &cleared_with[playchar][rank];
+			*cleared = sd->cleared;
+			if(*cleared > SCOREDAT_CLEARED_BOTH) {
+				*cleared = false;
+			}
+			if(rank != RANK_EASY) {
+				extra_unlocked |= *cleared;
+			}
+
+			static_assert(PLAYCHAR_COUNT == 2);
+			sd = &hi2.score;
 		}
 		rank++;
 	}
