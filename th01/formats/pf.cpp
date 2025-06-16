@@ -193,9 +193,18 @@ void arc_file_get(uint8_t *buf, size_t size)
 	}
 }
 
-void arc_file_seek(int8_t pos)
+size_t arc_file_seek(int pos, int dir)
 {
+	if(dir == SEEK_CUR) {
+		pos += file_pos;
+	}
+	if(pos < 0) {
+		pos = 0;
+	} else if(pos > file_pf->orgsize) {
+		pos = file_pf->orgsize;
+	}
 	file_pos = pos;
+	return pos;
 }
 
 void arc_file_free(void)
