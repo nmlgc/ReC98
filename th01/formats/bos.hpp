@@ -26,35 +26,16 @@ struct bos_image_t {
 	dots8_t *alpha;
 };
 
-// Shared loading subfunctions
-// ---------------------------
+// In-game metadata structure
+struct BOS {
+	uvram_byte_amount_8_t vram_w;
+	uint8_t bos_image_count;
+	pixel_t h;
 
-// Separate function to work around the `Condition is always true/false` and
-// `Unreachable code` warnings
-inline void bos_header_load_palette(Palette4 &pal, bool load) {
-	if(load) {
-		arc_file_get_far(pal);
-	} else {
-		arc_file_seek(sizeof(SpriteFormatHeader<bos_header_t>));
-	}
-}
-
-#define bos_header_load(that, plane_size, fn, needlessly_load_the_palette) \
-	union { \
-		bos_header_t outer; \
-		Palette4 pal; \
-		int8_t space[50]; \
-	} header; \
-	\
-	arc_file_load(fn); \
-	\
-	arc_file_get_far(header.outer); \
-	that->vram_w = header.outer.vram_w; \
-	that->h = header.outer.h; \
-	that->bos_image_count = header.outer.inner.image_count; \
-	plane_size = (that->vram_w * that->h); \
-	bos_header_load_palette(header.pal, needlessly_load_the_palette);
-// ---------------------------
+	// Loads a .BOS file into the given image slot array. Returns the size of a
+	// single bitplane.
+	vram_byte_amount_t load(bos_image_t *image_first, const char fn[PF_FN_LEN]);
+};
 
 /// Shared blitting subfunctions
 /// ----------------------------
@@ -87,10 +68,5 @@ inline vram_y_t vram_intended_y_for(
 	vram_unput_masked_emptyopt(G, offset, bit_count, mask, tmp_dots); \
 	vram_unput_masked_emptyopt(E, offset, bit_count, mask, tmp_dots);
 /// ----------------------------
-
-/// All functions that operate on this format are implemented redundantly for
-/// both CBossEntity, CBossAnim, and CPlayerAnim with their own respective
-/// entity arrays.
-/// ---------------------------------------------------------------------
 
 #endif /* TH01_FORMATS_BOS_HPP */

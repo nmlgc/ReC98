@@ -417,6 +417,7 @@ obj += {
 	"th01/op_01.cpp",
 	"th01/input.cpp",
 	"th01/main_01.cpp",
+	"th01/bos.cpp",
 	"th01/ptn.cpp",
 	"th01/grz.cpp",
 	{ "th01/main_09.cpp", extra_inputs = th01_sprites["pellet_c"] },
