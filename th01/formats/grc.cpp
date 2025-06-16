@@ -13,7 +13,7 @@ int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 	} header;
 
 	arc_file_load(fn);
-	arc_file_seek(offsetof(grc_header_t, vram_w));
+	arc_file_seek(offsetof(grc_header_t, vram_w), SEEK_SET);
 	arc_file_get_near(grc_images[slot].vram_w);
 	arc_file_get_near(grc_images[slot].h);
 
