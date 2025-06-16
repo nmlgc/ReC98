@@ -12,25 +12,12 @@ CPlayerAnim player_48x32;
 
 int CPlayerAnim::load(const char fn[PF_FN_LEN])
 {
-	vram_byte_amount_t plane_size;
+	const vram_byte_amount_t plane_size = BOS::load(images, fn);
 	vram_byte_amount_t bos_p;
-
-	bos_header_load(this, plane_size, fn, false);
 
 	// MODDERS: [bos_image_count] must be < [PLAYER_ANIM_IMAGES_PER_SLOT]
 	bos_image_t *bos = images;
 	for(int i = 0; bos_image_count > i; i++) {
-		bos->alpha = new dots8_t[plane_size];
-		bos->planes.B = new dots8_t[plane_size];
-		bos->planes.R = new dots8_t[plane_size];
-		bos->planes.G = new dots8_t[plane_size];
-		bos->planes.E = new dots8_t[plane_size];
-		arc_file_get(bos->alpha, plane_size);
-		arc_file_get(bos->planes.B, plane_size);
-		arc_file_get(bos->planes.R, plane_size);
-		arc_file_get(bos->planes.G, plane_size);
-		arc_file_get(bos->planes.E, plane_size);
-
 		for(bos_p = 0; bos_p < plane_size; bos_p++) {
 			const dots8_t negated_alpha = ~bos->alpha[bos_p];
 			bos->alpha[bos_p] = negated_alpha;
@@ -41,7 +28,6 @@ int CPlayerAnim::load(const char fn[PF_FN_LEN])
 		}
 		bos++;
 	}
-	arc_file_free();
 	return 0;
 }
 

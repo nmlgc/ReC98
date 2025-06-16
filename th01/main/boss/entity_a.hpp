@@ -1,7 +1,7 @@
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/player/orb.hpp"
+#include "th01/formats/bos.hpp"
 #include "game/coords.hpp"
-#include "game/pf.h"
 
 /// Entities
 /// --------
@@ -12,17 +12,14 @@
 
 // An individual entity rendered with sprites from a .BOS file. May or may not
 // be animated, and may or may not have a hitbox for collision with the Orb.
-class CBossEntity {
+class CBossEntity : public BOS {
 public:
 	screen_x_t cur_left;
 	screen_y_t cur_top;
 	screen_x_t prev_left;
 	screen_y_t prev_top;
-	vram_byte_amount_t vram_w;
-	pixel_t h;
 	LRTB<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
 	LRTB<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
-	int bos_image_count;
 
 protected:
 	int bos_image;
@@ -313,13 +310,10 @@ extern CBossEntity boss_entity_4;
 // exchange for the alpha plane being pre-negated at load time? No idea why.
 // That 1-instruction negation is certainly not what makes the original code
 // slow.
-class CBossAnim {
+class CBossAnim : public BOS {
 public:
 	screen_x_t left;
 	screen_y_t top;
-	vram_byte_amount_t vram_w;
-	pixel_t h;
-	unsigned char bos_image_count;
 	unsigned char bos_image;
 	unsigned char bos_slot;
 

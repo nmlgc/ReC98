@@ -24,13 +24,6 @@ struct bos_word_t {
 	bos_word_image_t image[BOS_IMAGES_PER_SLOT];
 };
 
-#define bos_image_new(image, plane_size) \
-	image.alpha = new dots16_t[plane_size / 2]; \
-	image.planes.B = new dots16_t[plane_size / 2]; \
-	image.planes.R = new dots16_t[plane_size / 2]; \
-	image.planes.G = new dots16_t[plane_size / 2]; \
-	image.planes.E = new dots16_t[plane_size / 2];
-
 // Always assigning a nullptr to [ptr], for a change...
 #define bos_image_ptr_free(ptr) \
 	if(ptr) { \
@@ -43,29 +36,23 @@ struct bos_word_t {
 /// --------
 
 bos_word_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
-bool bos_header_only = false;
 
 int CBossEntity::load(const char fn[PF_FN_LEN], int slot)
 {
-	int plane_size;
+	// Very evil pointer casting ahead...
+	static_assert(sizeof(bos_word_image_t) == sizeof(bos_image_t));
+	static_assert(
+		offsetof(bos_word_image_t, planes) == offsetof(bos_image_t, planes)
+	);
+	static_assert(
+		offsetof(bos_word_image_t, alpha) == offsetof(bos_image_t, alpha)
+	);
 
-	bos_header_load(this, plane_size, fn, true);
-	if(!bos_header_only) {
-		bos_entity_free(slot);
-		for(int i = 0; bos_image_count > i; i++) {
-			#define img bos_entity_images[slot].image[i]
-			bos_image_new(img, plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.alpha), plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.B), plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.R), plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.G), plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.E), plane_size);
-			#undef img
-		}
-	}
-
+	bos_entity_free(slot);
 	bos_slot = slot;
-	arc_file_free();
+	BOS::load(
+		reinterpret_cast<bos_image_t *>(bos_entity_images[slot].image), fn
+	);
 	return 0;
 }
 
@@ -449,28 +436,27 @@ bos_word_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
 
 int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 {
-	int plane_size;
+	// Very evil pointer casting ahead...
+	static_assert(sizeof(bos_word_image_t) == sizeof(bos_image_t));
+	static_assert(
+		offsetof(bos_word_image_t, planes) == offsetof(bos_image_t, planes)
+	);
+	static_assert(
+		offsetof(bos_word_image_t, alpha) == offsetof(bos_image_t, alpha)
+	);
 
-	bos_header_load(this, plane_size, fn, true);
-	if(!bos_header_only) {
-		bos_anim_free(slot);
-		for(int i = 0; bos_image_count > i; i++) {
-			#define img bos_anim_images[slot].image[i]
-			bos_image_new(img, plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.alpha), plane_size);
-			for(int bos_p = 0; bos_p < (plane_size / 2); bos_p++) {
-				img.alpha[bos_p] = ~img.alpha[bos_p];
-			}
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.B), plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.R), plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.G), plane_size);
-			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.E), plane_size);
-			#undef img
-		}
-	}
-
+	bos_word_image_t *bos = bos_anim_images[slot].image;
+	bos_anim_free(slot);
 	bos_slot = slot;
-	arc_file_free();
+	const int plane_size_half = (
+		BOS::load(reinterpret_cast<bos_image_t *>(bos), fn) / 2
+	);
+	for(int i = 0; bos_image_count > i; i++) {
+		for(int bos_p = 0; bos_p < plane_size_half; bos_p++) {
+			bos->alpha[bos_p] = ~bos->alpha[bos_p];
+		}
+		bos++;
+	}
 	return 0;
 }
 
