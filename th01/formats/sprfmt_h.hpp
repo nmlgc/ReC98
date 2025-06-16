@@ -1,3 +1,6 @@
+#ifndef TH01_FORMATS_SPRFMT_H_HPP
+#define TH01_FORMATS_SPRFMT_H_HPP
+
 #include "pc98.h"
 
 // Header structures for multi-sprite formats. Used for .BOS and .GRC.
@@ -14,3 +17,5 @@ template <class Outer> struct SpriteFormatHeader {
 	Palette4 pal;
 };
 #pragma pack(pop)
+
+#endif /* TH01_FORMATS_SPRFMT_H_HPP */

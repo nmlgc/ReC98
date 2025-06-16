@@ -1,6 +1,9 @@
 /// Uncompressed, 5-plane, 16-color + alpha, arbitrary-size sprite format
 /// ---------------------------------------------------------------------
 
+#ifndef TH01_FORMATS_BOS_HPP
+#define TH01_FORMATS_BOS_HPP
+
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/hardware/graph.h"
@@ -89,3 +92,5 @@ inline vram_y_t vram_intended_y_for(
 /// both CBossEntity, CBossAnim, and CPlayerAnim with their own respective
 /// entity arrays.
 /// ---------------------------------------------------------------------
+
+#endif /* TH01_FORMATS_BOS_HPP */
