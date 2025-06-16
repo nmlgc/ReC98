@@ -5,11 +5,8 @@ static const int PLAYER_ANIM_IMAGES_PER_SLOT = 32;
 // Collection of up to [PLAYER_ANIM_IMAGES_PER_SLOT] player animation sprites
 // from a .BOS file, with a consistent byte-aligned / 8w×h size. Used for
 // sprites with a width ≠ [PTN_W] or a height ≠ [PTN_H].
-class CPlayerAnim {
+class CPlayerAnim : public BOS {
 	bos_image_t images[PLAYER_ANIM_IMAGES_PER_SLOT];
-	vram_byte_amount_t vram_w;
-	pixel_t h;
-	int bos_image_count;
 
 public:
 	// Loads all images from the .BOS file with the given [fn] inside the
