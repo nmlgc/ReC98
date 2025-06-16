@@ -7,8 +7,8 @@
 vram_byte_amount_t BOS::load(bos_image_t *image, const char fn[PF_FN_LEN])
 {
 	bos_header_t header;
-	arc_file_load(fn);
-	arc_file_get_far(header);
+	arc_file_open(fn);
+	arc_file_read_far(header);
 	arc_file_seek(sizeof(Palette4), SEEK_CUR); // Skip over the palette
 
 	vram_w = header.vram_w;
@@ -23,14 +23,14 @@ vram_byte_amount_t BOS::load(bos_image_t *image, const char fn[PF_FN_LEN])
 		image->planes.G = new dots8_t[plane_size];
 		image->planes.E = new dots8_t[plane_size];
 
-		arc_file_get(image->alpha, plane_size);
-		arc_file_get(image->planes.B, plane_size);
-		arc_file_get(image->planes.R, plane_size);
-		arc_file_get(image->planes.G, plane_size);
-		arc_file_get(image->planes.E, plane_size);
+		arc_file_read(image->alpha, plane_size);
+		arc_file_read(image->planes.B, plane_size);
+		arc_file_read(image->planes.R, plane_size);
+		arc_file_read(image->planes.G, plane_size);
+		arc_file_read(image->planes.E, plane_size);
 
 		image++;
 	}
-	arc_file_free();
+	arc_file_close();
 	return plane_size;
 }
