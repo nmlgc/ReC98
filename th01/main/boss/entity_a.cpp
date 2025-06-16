@@ -36,15 +36,6 @@ struct bos_word_t {
 		delete[] ptr; \
 	} \
 	ptr = nullptr;
-
-#define bos_free(slot_ptr) \
-	for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) { \
-		bos_image_ptr_free(slot_ptr.image[image].alpha); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.B); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.R); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.G); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.E); \
-	}
 // ---------------
 
 /// Entities
