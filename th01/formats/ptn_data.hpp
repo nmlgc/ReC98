@@ -19,7 +19,8 @@ struct ptn_file_image_t {
 };
 
 // In-memory per-image structure
-struct ptn_t : public ptn_file_image_t {
+struct ptn_t {
+	Planar<ptn_plane_t> planes;
 	ptn_plane_t alpha; // Derived from color #15 at load time
 };
 
