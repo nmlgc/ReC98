@@ -11,10 +11,10 @@
 
 static const int FILE_COUNT = 64;
 
-#define PF_TYPE_COMPRESSED "\x95\x95" // "封" in Shift-JIS
+static const uint16_t PF_TYPE_COMPRESSED = 0x9595; // "封" in Shift-JIS
 
 struct pf_header_t {
-	uint8_t type[2]; // PF_TYPE_COMPRESSED if RLE-compressed
+	uint16_t type; // PF_TYPE_COMPRESSED if RLE-compressed
 	int8_t aux; // Always 3, unused
 	char fn[PF_FN_LEN];
 	int32_t packsize;
@@ -52,7 +52,7 @@ void arc_load(const char fn[PF_FN_LEN])
 	file_read(arc_pfs, (sizeof(pf_header_t) * FILE_COUNT));
 	file_close();
 	for(i = 0; i < FILE_COUNT; i++) {
-		if(arc_pfs[i].type[0] == 0) {
+		if(static_cast<uint8_t>(arc_pfs[i].type) == 0) {
 			break;
 		}
 		for(c = 0; c < PF_FN_LEN; c++) {
@@ -148,8 +148,6 @@ void near unrle(size_t output_size)
 
 void arc_file_load(const char fn[PF_FN_LEN])
 {
-	const uint8_t rle_type[] = PF_TYPE_COMPRESSED;
-
 	cur_file_id = 0;
 	for(int i = 0; i < arc_pf_count; i++) {
 		if(at_pos_of(fn)) {
@@ -164,11 +162,7 @@ void arc_file_load(const char fn[PF_FN_LEN])
 
 	file_ropen(arc_fn);
 	file_seek(file_pf->offset, SEEK_SET);
-	if((file_pf->type[0] == rle_type[0]) && (file_pf->type[1] == rle_type[1])) {
-		file_compressed = true;
-	} else {
-		file_compressed = false;
-	}
+	file_compressed = (file_pf->type == PF_TYPE_COMPRESSED);
 	file_pos = 0;
 	file_data = new uint8_t[file_pf->orgsize];
 	if(file_compressed) {
