@@ -36,6 +36,10 @@ char arc_fn[PF_FN_LEN];
 size_t file_pos;
 size_t cache_bytes_read;
 
+uint8_t rle_runs;
+uint8_t rle_next_byte;
+uint8_t rle_run_byte;
+
 void arc_load(const char fn[PF_FN_LEN])
 {
 	int i;
@@ -91,19 +95,18 @@ void near crapt(uint8_t *buf, size_t size)
 	}
 }
 
+void near cache_refill(void)
+{
+	file_read(cache.data(), cache.count());
+	cache_bytes_read = 0;
+}
+
 uint8_t near cache_next(void)
 {
-	uint8_t b;
-	if(cache_bytes_read == 0) {
-		file_read(cache.data(), cache.count());
-	}
-	b = cache[cache_bytes_read];
-	b ^= arc_key;
-	cache_bytes_read++;
 	if(cache_bytes_read >= cache.count()) {
-		cache_bytes_read = 0;
+		cache_refill();
 	}
-	return b;
+	return (cache[cache_bytes_read++] ^ arc_key);
 }
 
 void near unrle(size_t output_size)
@@ -125,24 +128,31 @@ void near unrle(size_t output_size)
 	//               • 0 more
 
 	size_t bytes_written = 0;
-	uint8_t run_byte;
-	uint8_t next_byte = cache_next();
-	uint8_t runs = 0;
-
 	while(bytes_written < output_size) {
-		file_data[bytes_written++] = next_byte;
+		file_data[bytes_written++] = rle_next_byte;
 
-		if(runs == 0) {
+		if(rle_runs == 0) {
 			// Literal mode
-			run_byte = next_byte;
-			next_byte = cache_next();
-			if(run_byte == next_byte) {
-				runs = cache_next();
+			rle_run_byte = rle_next_byte;
+			rle_next_byte = cache_next();
+			if(rle_run_byte == rle_next_byte) {
+				rle_runs = cache_next();
 			}
 		} else {
 			// Run mode
-			runs--;
+			rle_runs--;
 		}
+	}
+}
+
+void near arc_file_rewind(void)
+{
+	file_seek(file_pf->offset, SEEK_SET);
+	file_pos = 0;
+	if(file_compressed) {
+		cache_refill();
+		rle_runs = 0;
+		rle_next_byte = cache_next();
 	}
 }
 
@@ -161,12 +171,10 @@ void arc_file_load(const char fn[PF_FN_LEN])
 	file_pf = &arc_pfs[cur_file_id];
 
 	file_ropen(arc_fn);
-	file_seek(file_pf->offset, SEEK_SET);
 	file_compressed = (file_pf->type == PF_TYPE_COMPRESSED);
-	file_pos = 0;
+	arc_file_rewind();
 	file_data = new uint8_t[file_pf->orgsize];
 	if(file_compressed) {
-		cache_bytes_read = 0;
 		unrle(file_pf->orgsize);
 	} else {
 		file_read(file_data, file_pf->packsize);
