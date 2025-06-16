@@ -30,6 +30,9 @@ typedef int vram_dword_amount_t;
 typedef unsigned int uvram_byte_amount_t;
 typedef unsigned int uvram_word_amount_t;
 typedef unsigned int uvram_dword_amount_t;
+typedef uint8_t uvram_byte_amount_8_t;
+typedef uint8_t uvram_word_amount_8_t;
+typedef uint8_t uvram_dword_amount_8_t;
 
 // VRAM heights. Different from `pixel_t` in 200-line mode.
 typedef int vram_h_t;
