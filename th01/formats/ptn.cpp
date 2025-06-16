@@ -37,8 +37,8 @@ ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn)
 	int image_count;
 	ptn_t *ptn;
 
-	arc_file_load(fn);
-	arc_file_get_far(header);
+	arc_file_open(fn);
+	arc_file_read_far(header);
 
 	image_count = header.image_count;
 	// MODDERS:
@@ -59,7 +59,7 @@ ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn)
 	ptn = ptn_images[slot];
 	for(i = 0; i < image_count; i++, ptn++) {
 		arc_file_seek(sizeof(((ptn_file_image_t *)(0))->unused_zero), SEEK_CUR);
-		arc_file_get_far(ptn->planes);
+		arc_file_read_far(ptn->planes);
 		for(y = 0; y < PTN_H; y++) {
 			ptn->alpha[y] = ptn_alpha_from(
 				ptn->planes.B[y],
@@ -69,7 +69,7 @@ ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn)
 			);
 		}
 	}
-	arc_file_free();
+	arc_file_close();
 	return PE_OK;
 }
 
