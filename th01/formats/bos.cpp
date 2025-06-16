@@ -9,9 +9,7 @@ vram_byte_amount_t BOS::load(bos_image_t *image, const char fn[PF_FN_LEN])
 	bos_header_t header;
 	arc_file_load(fn);
 	arc_file_get_far(header);
-
-	// Skip over the palette
-	arc_file_seek(sizeof(SpriteFormatHeader<bos_header_t>));
+	arc_file_seek(sizeof(Palette4), SEEK_CUR); // Skip over the palette
 
 	vram_w = header.vram_w;
 	h = header.h;
