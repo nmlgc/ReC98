@@ -6,29 +6,22 @@ grc_t grc_images[GRC_SLOT_COUNT];
 
 int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 {
-	union {
-		spriteformat_header_inner_t inner;
-		Palette4 pal;
-		int8_t space[50];
-	} header;
+	spriteformat_header_inner_t header;
 
 	arc_file_load(fn);
 	arc_file_seek(offsetof(grc_header_t, vram_w), SEEK_SET);
 	arc_file_get_near(grc_images[slot].vram_w);
 	arc_file_get_near(grc_images[slot].h);
 
-	arc_file_get_far(header.inner);
-	grc_images[slot].image_count = header.inner.image_count;
+	arc_file_get_far(header);
+	grc_images[slot].image_count = header.image_count;
 	// MODDERS:
-	/* if(
-		header.inner.image_count < 0 ||
-		header.inner.image_count > GRC_IMAGES_PER_SLOT
-	) {
+	/* if(header.image_count < 0 || header.image_count > GRC_IMAGES_PER_SLOT) {
 		return 1;
 	} */
 
 	size_t image_size = (grc_images[slot].vram_w * grc_images[slot].h);
-	arc_file_get_far(header.pal); // yeah, should have been a seek
+	arc_file_seek(sizeof(Palette4), SEEK_CUR);
 
 	for(int image = 0; grc_images[slot].image_count > image; image++) {
 		if(grc_images[slot].dots[image]) {
