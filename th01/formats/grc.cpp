@@ -8,12 +8,12 @@ int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 {
 	spriteformat_header_inner_t header;
 
-	arc_file_load(fn);
+	arc_file_open(fn);
 	arc_file_seek(offsetof(grc_header_t, vram_w), SEEK_SET);
-	arc_file_get_near(grc_images[slot].vram_w);
-	arc_file_get_near(grc_images[slot].h);
+	arc_file_read_near(grc_images[slot].vram_w);
+	arc_file_read_near(grc_images[slot].h);
 
-	arc_file_get_far(header);
+	arc_file_read_far(header);
 	grc_images[slot].image_count = header.image_count;
 	// MODDERS:
 	/* if(header.image_count < 0 || header.image_count > GRC_IMAGES_PER_SLOT) {
@@ -28,9 +28,9 @@ int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 			delete[] grc_images[slot].dots[image];
 		}
 		grc_images[slot].dots[image] = new dots8_t[image_size];
-		arc_file_get(grc_images[slot].dots[image], image_size);
+		arc_file_read(grc_images[slot].dots[image], image_size);
 	}
-	arc_file_free();
+	arc_file_close();
 	return 0;
 }
 
