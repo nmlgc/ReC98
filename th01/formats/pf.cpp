@@ -5,11 +5,11 @@
 #include <ctype.h>
 #include "libs/master.lib/master.hpp"
 #include "th01/formats/pf.hpp"
+#include "platform/array.hpp"
 
 #undef arc_file_get
 
 static const int FILE_COUNT = 64;
-static const size_t CACHE_SIZE = 0x100;
 
 #define PF_TYPE_COMPRESSED "\x95\x95" // "封" in Shift-JIS
 
@@ -31,7 +31,7 @@ bool file_compressed;
 uint8_t arc_key;
 
 uint8_t *file_data;
-uint8_t *cache;
+Array<uint8_t, 0x100> cache;
 char arc_fn[PF_FN_LEN];
 size_t file_pos;
 size_t cache_bytes_read;
@@ -95,12 +95,12 @@ uint8_t near cache_next(void)
 {
 	uint8_t b;
 	if(cache_bytes_read == 0) {
-		file_read(cache, CACHE_SIZE);
+		file_read(cache.data(), cache.count());
 	}
 	b = cache[cache_bytes_read];
 	b ^= arc_key;
 	cache_bytes_read++;
-	if(cache_bytes_read >= CACHE_SIZE) {
+	if(cache_bytes_read >= cache.count()) {
 		cache_bytes_read = 0;
 	}
 	return b;
@@ -172,10 +172,8 @@ void arc_file_load(const char fn[PF_FN_LEN])
 	file_pos = 0;
 	file_data = new uint8_t[file_pf->orgsize];
 	if(file_compressed) {
-		cache = new uint8_t[CACHE_SIZE];
 		cache_bytes_read = 0;
 		unrle(file_pf->orgsize);
-		delete[] cache;
 	} else {
 		file_read(file_data, file_pf->packsize);
 		crapt(file_data, file_pf->packsize);
