@@ -4,6 +4,7 @@
 #pragma option -zPgroup_01
 
 #include "th03/op/m_select.hpp"
+#include "game/bgimage.hpp"
 #include "platform/grp_mono.hpp"
 #include "platform/vblank.hpp"
 #include "platform/x86real/pc98/page.hpp"
@@ -155,6 +156,8 @@ void near select_cdg_load_part4_of_4(void)
 
 void near select_init_and_load(void)
 {
+	bgimage.free(); // We need the memory
+
 	snd_kaja_func(KAJA_SONG_STOP, 0);
 	snd_load("select.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);

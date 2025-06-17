@@ -7,6 +7,7 @@
 #include "th03/op/m_select.hpp"
 #include "th03/shiftjis/fns.hpp"
 #include "libs/master.lib/master.hpp"
+#include "game/bgimage.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "platform/x86real/flags.hpp"
 #include "platform/vblank.hpp"
@@ -55,7 +56,8 @@ void near op_animate(void)
 	palette_show();
 	pi_free(0);
 
-	pi_load(0, MENU_MAIN_BG_FN);
+	Palette8 bgimage_palette;
+	GrpSurface_LoadPI(bgimage, &bgimage_palette, MENU_MAIN_BG_FN);
 	graph_showpage(1);
 
 	// Fade in and move. These values do actually represent the X position of
@@ -110,8 +112,8 @@ void near op_animate(void)
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 	graph_showpage(0);
 	graph_accesspage(0);
-	pi_palette_apply(0);
-	pi_put_8(0, 0, 0);
+	Palettes = bgimage_palette;
+	bgimage.write(0, 0);
 	frame_delay(1);
 
 	palette_settone(100);
@@ -125,11 +127,6 @@ void near op_animate(void)
 		frame_delay(1);
 	}
 
-	graph_accesspage(1);
-	pi_put_8(0, 0, 0);
-	graph_accesspage(0);
-	pi_free(0);
-
 	select_cdg_load_part1_of_4();
 }
 
@@ -140,7 +137,7 @@ void near op_fadein_animate(void)
 
 	title_load_opwin_and_bgm();
 
-	pi_load(0, MENU_MAIN_BG_FN);
+	GrpSurface_LoadPI(bgimage, &Palettes, MENU_MAIN_BG_FN);
 	graph_showpage(0);
 
 	// This function is called either on startup (where we haven't loaded any
@@ -148,13 +145,8 @@ void near op_fadein_animate(void)
 	// Room (both of which free all .CDG sprites).
 	select_cdg_load_part3_of_4();
 
-	graph_accesspage(1);
-	pi_put_8(0, 0, 0);
-
 	graph_accesspage(0);
-	pi_palette_apply(0);
-	pi_put_8(0, 0, 0);
-	pi_free(0);
+	bgimage.write(0, 0);
 
 	select_cdg_load_part1_of_4();
 
@@ -184,44 +176,9 @@ void pascal near box_animate(pixel_t w_cur, pixel_t w_target)
 	screen_x_t right_target = (BOX_LEFT + w_target - OPWIN_STEP_W + put_offset);
 
 	while(right_left != right_target) {
-		box_column16_unput(right_left);
+		bgimage.write_bg_region(right_left, BOX_TOP, (OPWIN_STEP_W * 2), BOX_H);
 		super_put((right_left + put_offset), BOX_TOP, OPWIN_RIGHT);
 		frame_delay(1);
 		right_left += step;
 	}
-}
-
-void pascal near box_column16_unput(uscreen_x_t left)
-{
-	register dots16_t px_b;
-	register dots16_t px_g;
-	register dots16_t px_r;
-	register dots16_t px_e;
-
-	_AX = (left / BYTE_DOTS);
-
-	// ZUN bloat: ZUN offsets the segment pointer to the top row of the box
-	// below, so this should have been the height rather than the bottom
-	// coordinate. As a result, this code accesses the 256 rows below the box
-	// as well and reaches 240 rows below the bottom of VRAM. For the G and E
-	// segments at 0xB800 and 0xE000, these writes even reach into the adjacent
-	// user and system ROM segments, causing DOSBox-X to throw a barrage of CPU
-	// write errors. :zunpet:
-	_DI = vram_offset_shift(0, (BOX_BOTTOM - 1));
-
-	_DI += _AX;
-	_ES = vram_segment(B, 0, BOX_TOP);
-	do {
-		page_access(1);
-		/*                              */	px_b = _peek_(_ES, _DI);
-		_ES = vram_segment(R, 0, BOX_TOP);	px_r = _peek_(_ES, _DI);
-		_ES = vram_segment(G, 0, BOX_TOP);	px_g = _peek_(_ES, _DI);
-		_ES = vram_segment(E, 0, BOX_TOP);	px_e = _peek_(_ES, _DI);
-		page_access(_AL ^= _AL);
-		/*                              */	_poke_(_ES, _DI, px_e);
-		_ES = vram_segment(G, 0, BOX_TOP);	_poke_(_ES, _DI, px_g);
-		_ES = vram_segment(R, 0, BOX_TOP);	_poke_(_ES, _DI, px_r);
-		_ES = vram_segment(B, 0, BOX_TOP);	_poke_(_ES, _DI, px_b);
-		_DI -= ROW_SIZE;
-	} while(!FLAGS_CARRY);
 }

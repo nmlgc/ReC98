@@ -767,9 +767,6 @@ controls:
 		music_update_render_and_flip();
 	}
 
-#if (GAME == 3)
-	bgimage.free();
-#endif
 	nopoly_B.free();
 
 #if (GAME == 5)
