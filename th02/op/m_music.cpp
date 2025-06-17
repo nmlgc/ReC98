@@ -190,8 +190,8 @@ static int8_t unused_byte; // ZUN bloat
 // Backgrounds
 // -----------
 
-// B plane of the background image as loaded from the .PI file, without any
-// polygons drawn on top of it.
+// Persistent intended contents of the B plane, without any polygons drawn on
+// top of it.
 #if (GAME >= 3)
 dots8_t __seg* nopoly_B;
 #else

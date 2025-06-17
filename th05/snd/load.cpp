@@ -58,8 +58,7 @@ void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 		/* TODO: Replace with the decompiled expressions
 		* 	snd_kaja_func(KAJA_SONG_STOP, 0);
 		* 	_BX = (snd_bgm_mode << 2);
-		* Since snd_kaja_interrupt() is undecompilable, this can never work
-		* with the original translation unit structure. */
+		* This can never work with the original translation unit structure. */
 		asm {
 			push	(KAJA_SONG_STOP shl 8);
 			push	cs;

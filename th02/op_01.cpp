@@ -41,9 +41,9 @@ unsigned char demo_num;
 resident_t __seg *resident_seg;
 menu_put_func_t menu_put;
 
-// Apparently, declaring variables with `extern` before definining them for
-// real within the same compilation unit causes Turbo C++ to emit *everything*
-// in a different order... really, I couldn't make this up.
+// Apparently, declaring variables with `extern` before defining them for real
+// within the same compilation unit causes Turbo C++ to emit *everything* in a
+// different order... really, I couldn't make this up.
 extern char extra_unlocked;
 extern unsigned int score_duration;
 

@@ -83,4 +83,4 @@ enum regi_patnum_t {
 	ascii1, ascii2, ascii3, ascii4, ascii5, ascii6, ascii7, ascii8 \
 ) \
 	REGI(ascii1), REGI(ascii2), REGI(ascii3), REGI(ascii4), \
-	REGI(ascii15, REGI(ascii6), REGI(ascii7), REGI(ascii8)
+	REGI(ascii5), REGI(ascii6), REGI(ascii7), REGI(ascii8)

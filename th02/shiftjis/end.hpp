@@ -1,8 +1,8 @@
 #include "pc98.h"
 
-// ZUN bloat: String alignment consistencies are deliberate and match where the
-// strings appear on screen relative to each other. Would be easier to use the
-// same left coordinate for all of them.
+// ZUN bloat: String alignment inconsistencies are deliberate and match where
+// the strings appear on screen relative to each other. Would be easier to use
+// the same left coordinate for all of them.
 
 #define STAFFROLL_TITLE    	  "••–‚˜^@@‚r‚s‚`‚e‚e"
 #define STAFFROLL_PROGRAM  	"ƒvƒƒOƒ‰ƒ€@@@‚y‚t‚m"

@@ -9,8 +9,8 @@
 #define FACE_TILE_STRIDE 16
 
 // The 20 faces are arranged by placing a 5×4 grid of 3×3 tiles on the left
-// side of a 16×12 grid. This results in the inner (face_col, face_row) values
-// for the outer .MPN tile IDs:
+// side of a 16×12 grid. This results in these inner (face_col, face_row)
+// values for the outer .MPN tile IDs:
 //
 //    012 345 678 9AB CDE F
 //   ┌───────────────────┐

@@ -17,7 +17,7 @@
 	while(i < (sizeof(scoredat_section_t) - 1)) { \
 		uint8_t tmp; \
 		scoredat_decode_byte_at( \
-			(reinterpret_cast<uint8_t *>(&section) + i),  \
+			(reinterpret_cast<uint8_t *>(&section) + i), \
 			tmp, \
 			section.key1, \
 			section.key2 \

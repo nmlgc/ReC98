@@ -430,8 +430,8 @@ void near select_curves_update_and_render(void)
 	freq_y = (freq_other + freq_other);
 
 	// ZUN quirk: Maybe these should be blitted in the opposite order? Due to
-	// the different colors, this causes the trailing curves appear on top of
-	// the main one.
+	// the different colors, this causes the trailing curves to appear on top
+	// of the main one.
 	grcg_setcolor(GC_RMW, 6);
 	select_curves_put(0, freq_x, freq_y, freq_other);
 

@@ -264,9 +264,7 @@ void verdict_row_1_to_0_animate(
 	for(int mask = 0; mask < VERDICT_MASK_COUNT; mask++) {
 		for(i = 0; i < len; i++) {
 			verdict_kanji_1_to_0_masked(
-				(left + (i * GLYPH_FULL_W)),
-				top,
-				&sVERDICT_MASKS[mask][0]
+				(left + (i * GLYPH_FULL_W)), top, &sVERDICT_MASKS[mask][0]
 			);
 		}
 		frame_delay(10);
@@ -822,7 +820,7 @@ inline void staffroll_text_put(
 ) {
 	graph_putsa_fx(
 		(STAFFROLL_TEXT_LEFT + additional_left),
-		(STAFFROLL_TEXT_TOP + pixel_t((row * GLYPH_H))),
+		(STAFFROLL_TEXT_TOP + pixel_t(row * GLYPH_H)),
 		(V_WHITE | FX_WEIGHT_BOLD),
 		str
 	);
@@ -886,7 +884,7 @@ void near staffroll_and_verdict_animate(void)
 			GAME_VERSION
 		);
 		frame_delay(1);
-		i += VELOCITY;
+		endft_top += VELOCITY;
 	}
 	#undef endft_top
 	// ---------------------------------------------------------------------

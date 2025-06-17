@@ -6101,10 +6101,10 @@ SHARED ends
 
 	.data
 
-	; libs/master/pal[data].mas
+	; libs/master/pal[data].asm
 	extern PaletteTone:word
 
-	; libs/master/rand[data].mas
+	; libs/master/rand[data].asm
 	extern random_seed:dword
 
 	; th04/hardware/grppsafx.asm

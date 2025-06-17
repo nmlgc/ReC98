@@ -44,7 +44,7 @@ extern scoredat_section_t hi2;
 
 /// Functions
 /// ---------
-// All of those write to and read from [hi], except where mentioned otherwise.
+/// All of those write to and read from [hi], except where mentioned otherwise.
 
 // Decoding and encoding
 #if (BINARY == 'M') && (GAME == 4)
