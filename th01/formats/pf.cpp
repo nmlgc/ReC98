@@ -25,7 +25,6 @@ struct pf_header_t {
 
 pf_header_t *arc_pfs;
 pf_header_t *file_pf;
-int cur_file_id;
 int arc_pf_count;
 bool file_compressed;
 uint8_t arc_key;
@@ -73,17 +72,21 @@ void arc_free(void)
 	delete[] arc_pfs;
 }
 
-bool16 near at_pos_of(const char fn[PF_FN_LEN])
+bool near arc_file_lookup(const char fn[PF_FN_LEN])
 {
-	for(int i = 0; i < PF_FN_LEN; i++) {
-		if(arc_pfs[cur_file_id].fn[i] != toupper(fn[i])) {
-			return false;
-		}
-		if(fn[i] == '\0') {
-			return true;
+	file_pf = arc_pfs;
+	for(int file_i = 0; file_i < arc_pf_count; (file_i++, file_pf++)) {
+		for(int i = 0; i < PF_FN_LEN; i++) {
+			if(file_pf->fn[i] != toupper(fn[i])) {
+				break;
+			}
+			if(fn[i] == '\0') {
+				return false;
+			}
 		}
 	}
-	return false;
+	file_pf = nullptr;
+	return true;
 }
 
 // Get it? En*crap*tion?
@@ -157,23 +160,15 @@ void near arc_file_rewind(void)
 	}
 }
 
-void arc_file_open(const char fn[PF_FN_LEN])
+bool arc_file_open(const char fn[PF_FN_LEN])
 {
-	cur_file_id = 0;
-	for(int i = 0; i < arc_pf_count; i++) {
-		if(at_pos_of(fn)) {
-			break;
-		}
-		cur_file_id++;
+	if(arc_file_lookup(fn)) {
+		return true;
 	}
-
-	// ZUN landmine: Will access the array out of bounds if the file doesn't
-	// exist.
-	file_pf = &arc_pfs[cur_file_id];
-
 	file_ropen(arc_fn);
 	file_compressed = (file_pf->type == PF_TYPE_COMPRESSED);
 	arc_file_rewind();
+	return false;
 }
 
 size_t arc_file_read(uint8_t *buf, size_t size)
