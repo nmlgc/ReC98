@@ -72,15 +72,15 @@ void arc_free(void)
 	delete[] arc_pfs;
 }
 
-bool near arc_file_lookup(const char fn[PF_FN_LEN])
+bool near arc_file_lookup(const char fn_uppercase[PF_FN_LEN])
 {
 	file_pf = arc_pfs;
 	for(int file_i = 0; file_i < arc_pf_count; (file_i++, file_pf++)) {
 		for(int i = 0; i < PF_FN_LEN; i++) {
-			if(file_pf->fn[i] != toupper(fn[i])) {
+			if(file_pf->fn[i] != fn_uppercase[i]) {
 				break;
 			}
-			if(fn[i] == '\0') {
+			if(fn_uppercase[i] == '\0') {
 				return false;
 			}
 		}
@@ -162,7 +162,23 @@ void near arc_file_rewind(void)
 
 bool arc_file_open(const char fn[PF_FN_LEN])
 {
-	if(arc_file_lookup(fn)) {
+	// Uppercase the filename once
+	char fn_uppercase[PF_FN_LEN];
+	int i;
+	for(i = 0; i < PF_FN_LEN; i++) {
+		char c = fn[i];
+		if(c == '\0') {
+			break;
+		}
+		unsigned char c_small_delta;
+		if((c_small_delta = (c - 'a')) < 26) {
+			c = ('A' + c_small_delta);
+		}
+		fn_uppercase[i] = c;
+	}
+	fn_uppercase[i] = '\0';
+
+	if(arc_file_lookup(fn_uppercase)) {
 		return true;
 	}
 	file_ropen(arc_fn);
