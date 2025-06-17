@@ -17,10 +17,8 @@ void arc_load(const char fn[PF_FN_LEN]);
 // Frees all internal buffers allocated during arc_load().
 void arc_free();
 
-// Opens the archive file previously loaded with arc_load() using master.lib's
-// file_ropen(), looks up a packed file with the given name, and opens it for
-// decompression or decryption.
-void arc_file_open(const char fn[PF_FN_LEN]);
+// Read the implementation, a comment would just spell out every line.
+bool arc_file_open(const char fn[PF_FN_LEN]);
 
 // Reads [size] bytes from the current position within the currently loaded
 // packed file into [buf]. Stops at the end of file and returns the number of
