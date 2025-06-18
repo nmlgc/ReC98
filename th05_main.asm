@@ -898,7 +898,7 @@ loc_B3C5:
 
 loc_B3CA:
 		nopcall	@tiles_activate$qv
-		mov	_pellet_bottom_col, GC_RG
+		mov	_pellet_bottom_col, 9
 		mov	al, _stage_id
 		mov	ah, 0
 		mov	bx, ax
@@ -1610,7 +1610,7 @@ sub_C73A	proc near
 		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 16, 0
 		call	sub_CEC2
 		call	@reimu_stars_update_and_render$qv
-		mov	_circles_color, GC_RG
+		mov	_circles_color, 9
 		cmp	_bomb_frame, 64
 		ja	short loc_C777
 		mov	al, _bomb_frame
@@ -1813,7 +1813,7 @@ loc_C8E4:
 		idiv	bx
 		add	ax, PLAYFIELD_TOP
 		mov	[bp+@@y], ax
-		mov	ah, GC_BRG
+		mov	ah, 8
 		call	@grcg_setcolor_direct_raw$qv
 		mov	ax, [si+marisa_laser_t.BA_radius]
 		cwd
@@ -1829,7 +1829,7 @@ loc_C8E4:
 		push	ax
 		push	[bp+@@y]
 		call	grcg_boxfill
-		mov	ah, GC_RG
+		mov	ah, 9
 		call	@grcg_setcolor_direct_raw$qv
 		dec	[bp+var_6]
 		mov	ax, [bp+@@x]
@@ -2086,7 +2086,7 @@ sub_CB30	proc near
 		call	grcg_vline pascal, (209 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		call	grcg_vline pascal, (238 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (238 shl 16) or 336, PLAYFIELD_BOTTOM - 1
-		mov	ah, GC_BI
+		mov	ah, 6
 		call	@grcg_setcolor_direct_raw$qv
 		call	grcg_vline pascal, (208 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (208 shl 16) or 336, PLAYFIELD_BOTTOM - 1
@@ -2250,7 +2250,7 @@ sub_CD1C	proc near
 		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 16, 0
 		call	sub_CFBA
 		call	yuuka_heart_update_and_render
-		mov	_circles_color, GC_RG
+		mov	_circles_color, 9
 		cmp	_bomb_frame, 64
 		ja	short loc_CD59
 		mov	al, _bomb_frame
@@ -3075,7 +3075,7 @@ sub_EACE	proc near
 		mov	_palette_changed, 0
 		mov	_bullet_zap_active, 0
 		mov	_stage_graze, 0
-		mov	_circles_color, GC_R
+		mov	_circles_color, 13
 		call	grc_setclip pascal, large (PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		push	offset _hitshots
 		push	size _hitshots / 4
@@ -17968,7 +17968,7 @@ sub_1EA14	proc near
 		jnz	short loc_1EA2E
 		mov	_boss_statebyte[14], 40h
 		mov	_boss_statebyte[13], 0
-		mov	_pellet_bottom_col, GC_I
+		mov	_pellet_bottom_col, 7
 
 loc_1EA2E:
 		mov	ax, _boss_phase_frame
@@ -19089,7 +19089,7 @@ loc_1F51A:
 		call	exalice_phase_next pascal, (ET_VERTICAL shl 16) or 0
 
 loc_1F523:
-		mov	_pellet_bottom_col, GC_RG
+		mov	_pellet_bottom_col, 9
 		mov	patnum_2CE64, 200
 		inc	_boss_statebyte[9]
 		jmp	loc_1F666

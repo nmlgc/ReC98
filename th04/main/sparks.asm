@@ -48,7 +48,7 @@ public _sparks_render
 _sparks_render proc near
 	push	si
 	push	di
-	mov	ah, GC_BR
+	mov	ah, 12
 	call	@grcg_setcolor_direct_raw$qv
 	mov	ax, GRAM_400
 	mov	es, ax

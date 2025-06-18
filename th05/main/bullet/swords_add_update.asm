@@ -10,7 +10,7 @@ swords_add proc near
 	call	@playperf_speedtune
 	mov	ah, 0
 	mov	[bp+@@speed], ax
-	mov	_circles_color, GC_RG
+	mov	_circles_color, 9
 	mov	si, offset swords
 	mov	di, 1
 	jmp	short @@next
