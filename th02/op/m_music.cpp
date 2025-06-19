@@ -166,10 +166,6 @@ uint8_t track_playing = 0;
 #endif
 uint8_t music_sel;
 page_t music_page_accessed;
-#if (GAME >= 4)
-// The initial comment is displayed immediately, without a fade-in animation.
-bool cmt_shown_initial;
-#endif
 // ---------------
 
 // Backgrounds
@@ -483,19 +479,9 @@ void near cmt_unput_both_animate(void)
 
 void pascal near cmt_load_unput_and_put_both_animate(int track)
 {
-	if(cmt_shown_initial) {
-		cmt_unput_both_animate();
-	}
+	cmt_unput_both_animate();
 	cmt_load(track);
-
-	if(cmt_shown_initial) {
-		cmt_fadein_both_animate();
-	} else {
-		cmt_shown_initial = true;
-		cmt_put();
-		music_update_render_and_flip();
-		cmt_put();
-	}
+	cmt_fadein_both_animate();
 }
 #else
 void pascal near cmt_unput_and_put(void)
@@ -608,10 +594,7 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	enum {
 		SEL_QUIT = (TRACK_COUNT + 1),
 	};
-#endif
-
-#if (GAME >= 4)
-	cmt_shown_initial = false;
+	music_sel = track_playing;
 #endif
 
 	music_page_accessed = 1;
@@ -628,12 +611,12 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	bgimage.write(0, 0);
 
 #if (GAME == 5)
+	pfend();
+	pfstart("music.dat");
 	piano_setup_and_put_initial();
 	nopoly_B_snap();
 	tracklist_put(music_sel);
 #else
-	music_sel = track_playing;
-
 	// ZUN bloat: We copy pages below anyway, this doesn't need to be blitted
 	// to both.
 	tracklist_put_both(music_sel);
@@ -646,14 +629,12 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	nopoly_B_snap();
 #endif
 
-#if (GAME == 5)
-	pfend();
-	pfstart("music.dat");
-	cmt_load_unput_and_put_both_animate(music_sel);
-#elif (GAME == 4)
-	cmt_load_unput_and_put_both_animate(track_playing);
-#else
 	cmt_load(track_playing);
+#if (GAME >= 4)
+	cmt_put();
+	music_update_render_and_flip();
+	cmt_put();
+#else
 	graph_accesspage(1);	cmt_unput_and_put();
 	graph_accesspage(0);	cmt_unput_and_put();
 #endif
