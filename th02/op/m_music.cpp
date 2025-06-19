@@ -498,12 +498,8 @@ void pascal near cmt_load_unput_and_put_both_animate(int track)
 	}
 }
 #else
-void pascal near cmt_load_unput_and_put(int track)
+void pascal near cmt_unput_and_put(void)
 {
-	// ZUN bloat: This function is called once per VRAM page, but we only need
-	// to load the track once.
-	cmt_load(track);
-
 	nopoly_B_put();
 	cmt_unput();
 	cmt_put();
@@ -657,8 +653,9 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 #elif (GAME == 4)
 	cmt_load_unput_and_put_both_animate(track_playing);
 #else
-	graph_accesspage(1);	cmt_load_unput_and_put(track_playing);
-	graph_accesspage(0);	cmt_load_unput_and_put(track_playing);
+	cmt_load(track_playing);
+	graph_accesspage(1);	cmt_unput_and_put();
+	graph_accesspage(0);	cmt_unput_and_put();
 #endif
 
 	// ZUN landmine: After all the loading and blitting, we're certainly in the
@@ -831,9 +828,10 @@ controls:
 #endif
 				snd_kaja_func(KAJA_SONG_PLAY, 0);
 				track_playing = music_sel;
-				cmt_load_unput_and_put(music_sel);
+				cmt_load(music_sel);
+				cmt_unput_and_put();
 				music_update_render_and_flip();
-				cmt_load_unput_and_put(music_sel);
+				cmt_unput_and_put();
 #endif
 			} else {
 				break;
