@@ -173,11 +173,7 @@ page_t music_page_accessed;
 
 // Persistent intended contents of the B plane, without any polygons drawn on
 // top of it.
-#if (GAME >= 3)
-dots8_t __seg* nopoly_B;
-#else
-dots8_t far *nopoly_B;
-#endif
+GrpSurface_M1 nopoly_B;
 // -----------
 
 struct cmt_line_t {
@@ -270,34 +266,12 @@ void pascal near tracklist_put_both(uint8_t sel)
 
 void near nopoly_B_snap(void)
 {
-	nopoly_B = HMem<dots8_t>::alloc(PLANE_SIZE);
-	for(vram_offset_t p = 0; p < PLANE_SIZE; p += int(sizeof(dots32_t))) {
-		*reinterpret_cast<dots32_t far *>(nopoly_B + p) = VRAM_CHUNK(B, p, 32);
-	}
-}
-
-void near nopoly_B_free(void)
-{
-	HMem<dots8_t>::free(nopoly_B);
+	nopoly_B.snap(0, 0, PL_B);
 }
 
 void near nopoly_B_put(void)
 {
-#if (GAME >= 3)
-	// ZUN bloat: This doesn't even compile to a 32-wide memcpy().
-	asm { push ds; }
-	_ES = SEG_PLANE_B;
-	_AX = FP_SEG(nopoly_B);
-	_DS = _AX;
-	__memcpy__(MK_FP(_ES, 0), MK_FP(_DS, 0), PLANE_SIZE);
-	asm { pop ds; }
-#else
-	for(vram_offset_t p = 0; p < PLANE_SIZE; p += int(sizeof(dots32_t))) {
-		VRAM_CHUNK(B, p, 32) = (
-			*reinterpret_cast<dots32_t *>(nopoly_B + p)
-		);
-	}
-#endif
+	nopoly_B.write(PL_B, 0, 0);
 }
 
 void pascal near polygon_init(polygon_t near& p)
@@ -482,20 +456,6 @@ void pascal near cmt_unput_and_put(void)
 	nopoly_B_put();
 	cmt_unput();
 	cmt_put();
-
-	// Update [nopoly_B] to match the B plane of the comment we just blitted
-	// into the respective area. Since this buffer is reblitted every frame,
-	// updating it here preserves the lowest bit of the comment text pixels
-	// regardless of the polygons rendered on top. This allows comment colors
-	// to have any odd value, just like the tracklist colors.
-	//
-	// ZUN bloat: Same as above – the second call overwrites the previously
-	// snapped contents with the exact same pixels from the other page.
-	// ZUN bloat: Also, limiting it to just the comment area would have been
-	// enough.
-	for(vram_offset_t p = 0; p < PLANE_SIZE; p += int(sizeof(dots32_t))) {
-		*reinterpret_cast<dots32_t *>(nopoly_B + p) = VRAM_CHUNK(B, p, 32);
-	}
 }
 #endif
 
@@ -602,6 +562,7 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	GrpSurface_LoadPI(bgimage, &Palettes, "op3.pi");
 #endif
 	bgimage.write(0, 0);
+	nopoly_B.alloc(RES_X, RES_Y);
 
 #if (GAME == 5)
 	pfend();
@@ -618,7 +579,7 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	graph_accesspage(1);
 	graph_showpage(0);
 
-#if (GAME <= 4)
+#if (GAME == 4)
 	nopoly_B_snap();
 #endif
 
@@ -628,8 +589,9 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	music_update_render_and_flip();
 	cmt_put();
 #else
-	graph_accesspage(1);	cmt_unput_and_put();
-	graph_accesspage(0);	cmt_unput_and_put();
+	graph_accesspage(1);	cmt_put();
+	graph_accesspage(0);	cmt_put();
+	nopoly_B_snap();
 #endif
 
 	// ZUN landmine: After all the loading and blitting, we're certainly in the
@@ -786,6 +748,20 @@ controls:
 				track_playing = music_sel;
 				cmt_load(music_sel);
 				cmt_unput_and_put();
+
+				// Update [nopoly_B] to match the B plane of the comment we
+				// just blitted into the respective area. Since this buffer is
+				// reblitted every frame, updating it here preserves the lowest
+				// bit of the comment text pixels regardless of the polygons
+				// rendered on top. This allows comment colors to have any odd
+				// value, just like the tracklist colors.
+				nopoly_B.snap(
+					CMT_TITLE_LEFT, CMT_TITLE_TOP, PL_B, &CMT_TITLE
+				);
+				nopoly_B.snap(
+					CMT_COMMENT_LEFT, CMT_COMMENT_TOP, PL_B, &CMT_COMMENT
+				);
+
 				music_update_render_and_flip();
 				cmt_unput_and_put();
 #endif
@@ -815,11 +791,12 @@ controls:
 	}
 
 	bgimage.free();
+	nopoly_B.free();
+
 #if (GAME == 5)
 	pfend();
 	pfstart(OP_AND_END_PF_FN);
 #endif
-	nopoly_B_free();
 #if (GAME >= 4)
 	snd_kaja_func(KAJA_SONG_FADE, 16);
 	graph_showpage(0);
