@@ -28,6 +28,18 @@ struct GrpSurface_M1 : public GrpSurface_M {
 	// Returns `true` on allocation failure.
 	bool pascal alloc(upixel_t w, upixel_t h);
 
+	// Copies the region from
+	// 	(⌊vram_left/8⌋*8, vram_top)
+	// to
+	// 	((⌊vram_left/8⌋*8)+[w], vram_top+[h])
+	// on the given bitplane of VRAM into this surface.
+	void pascal snap(
+		uscreen_x_t dst_left,
+		uscreen_y_t dst_top,
+		vram_plane_t plane,
+		const LTWH<upixel_t> near *region = nullptr
+	);
+
 	void pascal write(
 		vram_plane_t plane,
 		screen_x_t left,
@@ -40,6 +52,17 @@ struct GrpSurface_M1 : public GrpSurface_M {
 struct GrpSurface_M4 : public GrpSurface_M {
 	// Returns `true` on allocation failure.
 	bool pascal alloc(upixel_t w, upixel_t h);
+
+	// Copies the VRAM region from
+	// 	(⌊vram_left/8⌋*8, vram_top)
+	// to
+	// 	((⌊vram_left/8⌋*8)+[w], vram_top+[h])
+	// into this surface.
+	void pascal snap(
+		uscreen_x_t dst_left,
+		uscreen_y_t dst_top,
+		const LTWH<upixel_t> near *region = nullptr
+	);
 
 	void pascal write(
 		screen_x_t left,

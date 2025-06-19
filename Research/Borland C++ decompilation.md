@@ -832,6 +832,43 @@ contains one of the following:
 
 ## Compiler bugs
 
+* Direct calls to `__fastcall` function pointers through structure pointers
+  returned from a function are miscompiled. The first parameter is written to
+  `AX` before the call to the structure-returning function, where it gets
+  overwritten by the returned pointer. This happens regardless of whether the
+  returned pointer is `near` or `far`, and happens with C++ references as well.
+
+  ```c++
+  struct StructWithFastcallPointer {
+    void (__fastcall near *func)(int);
+  };
+
+  StructWithFastcallPointer example_struct = {};
+
+  StructWithFastcallPointer near* near return_struct(void)
+  {
+    return &example_struct;
+  }
+
+  void test_return_struct(void)
+  {
+    return_struct()->func(0);
+  }
+  ```
+
+  Resulting ASM:
+
+  ```asm
+  @TEST_RETURN_STRUCT$QV proc
+    xor     ax, ax            ; Sets up the 0 parameter for func()
+    call    @RETURN_STRUCT$QV ; AX gets overwritten with the returned pointer
+    mov     bx, ax
+                              ; `xor ax, ax` should have been here
+    call    word ptr [bx]
+    ret
+  @TEST_RETURN_STRUCT$QV endp
+  ```
+
 * Dereferencing a `far` pointer constructed from the `_FS` and `_GS`
   pseudoregisters emits wrong segment prefix opcodes – 0x46 (`INC SI`) and
   0x4E (`DEC SI`) rather than the correct 0x64 and 0x65, respectively.

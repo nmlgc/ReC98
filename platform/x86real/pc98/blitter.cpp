@@ -29,7 +29,7 @@ inline void def_rep_setup(void) {
 }
 #endif
 
-#define def_impl(name, offscreen) \
+#define def_impl(name, offscreen, reg_vram, reg_mem) \
 	void __fastcall name(seg_t /* _AX */) \
 	{ \
 		_ES = _AX; /* First __fastcall parameter */ \
@@ -51,18 +51,19 @@ inline void def_rep_setup(void) {
 			if(_BH & 1) { \
 				asm movsb; \
 			} \
-			_SI += _AX; \
+			reg_mem += _AX; \
 			if(!offscreen) { \
 				_CL = _BH; \
-				_DI -= _CX; \
-				_DI += ROW_SIZE; \
+				reg_vram -= _CX; \
+				reg_vram += ROW_SIZE; \
 			} \
 		} while(--static_cast<int16_t>(_DX) > 0); \
 		asm pop ds; \
 	}
 
-def_impl(write_def, false);
-def_impl(write_offscreen_def, true);
+def_impl(write_def, false, _DI, _SI);
+def_impl(write_offscreen_def, true, _DI, _SI);
+def_impl(near Blitter::snap, false, _SI, _DI);
 // -----------------------
 
 blit_state_t blit_state;

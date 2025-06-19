@@ -141,6 +141,24 @@ bool GrpSurface_M1::alloc(upixel_t w, upixel_t h)
 	return surface_alloc(*this, w, h, 1);
 }
 
+void GrpSurface_M1::snap(
+	uscreen_x_t dst_left,
+	uscreen_y_t dst_top,
+	vram_plane_t plane,
+	const LTWH<upixel_t> near *region
+)
+{
+	blitter_set_source_region_for(VRAM_PLANES[plane], ROW_SIZE, h, region);
+	blit_source.stride = w;
+
+	// `blitter_init_noclip((dst_left / BYTE_DOTS), dst_top).snap(plane_B);`
+	// would miscompile; see `Borland C++ decompilation.md` for details.
+	const Blitter __ds& b = blitter_init_noclip(
+		(dst_left / BYTE_DOTS), dst_top
+	);
+	b.snap(plane_B);
+}
+
 void GrpSurface_M1::write(
 	vram_plane_t plane,
 	screen_x_t left,
@@ -159,6 +177,25 @@ void GrpSurface_M1::write(
 bool GrpSurface_M4::alloc(upixel_t w, upixel_t h)
 {
 	return surface_alloc(*this, w, h, 4);
+}
+
+void GrpSurface_M4::snap(
+	uscreen_x_t dst_left,
+	uscreen_y_t dst_top,
+	const LTWH<upixel_t> near *region
+)
+{
+	blitter_set_source_region_for(SEG_PLANE_B, ROW_SIZE, h, region);
+	blit_source.stride = w;
+	const Blitter __ds& b = blitter_init_noclip(
+		(dst_left / BYTE_DOTS), dst_top
+	);
+	_SI = plane_B;
+	_DI = plane_paras;
+	b.snap(_SI); _SI += _DI; blit_source.dots_start.part.seg = SEG_PLANE_R;
+	b.snap(_SI); _SI += _DI; blit_source.dots_start.part.seg = SEG_PLANE_G;
+	b.snap(_SI); _SI += _DI; blit_source.dots_start.part.seg = SEG_PLANE_E;
+	b.snap(_SI);
 }
 
 void GrpSurface_M4::write(

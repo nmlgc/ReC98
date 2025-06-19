@@ -6,6 +6,11 @@
 struct Blitter {
 	void (__fastcall *write)(seg_t plane_seg);
 	void (__fastcall *write_offscreen)(seg_t plane_seg);
+
+	// Captures pixels from VRAM. Set the blitter source to the VRAM segment
+	// and the *target* segment stride and height, and pass the *target*
+	// segment. (I might rethink this one day.)
+	static void __fastcall near snap(seg_t plane_seg);
 };
 
 // Persistent state that defines the region of the blitted sprite.
