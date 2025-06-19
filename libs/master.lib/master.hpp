@@ -87,6 +87,7 @@ int MASTER_RET mem_unassign(void);
 int MASTER_RET mem_assign_dos(unsigned parasize);
 
 // Regular
+void __seg* MASTER_RET hmem_alloc(unsigned parasize);
 void __seg* MASTER_RET hmem_allocbyte(unsigned bytesize);
 void MASTER_RET hmem_free(void __seg* memseg);
 // Fast
