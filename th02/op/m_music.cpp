@@ -457,8 +457,15 @@ void near cmt_put(void)
 }
 
 #if (GAME >= 4)
-void near cmt_fadein_both_animate(void)
+void pascal near cmt_load_unput_and_put_both_animate(int track)
 {
+	cmt_unput();
+	music_update_render_and_flip();
+	cmt_unput();
+
+	cmt_load(track);
+
+	// Fade in
 	int func; // ACTUAL TYPE: graph_putsa_fx_func_t
 	for(func = FX_MASK; func < FX_MASK_END; func++) {
 		graph_putsa_fx_func = static_cast<graph_putsa_fx_func_t>(func);
@@ -468,20 +475,6 @@ void near cmt_fadein_both_animate(void)
 	graph_putsa_fx_func = FX_WEIGHT_BOLD;
 	cmt_put();	music_update_render_and_flip();
 	cmt_put();
-}
-
-void near cmt_unput_both_animate(void)
-{
-	cmt_unput();
-	music_update_render_and_flip();
-	cmt_unput();
-}
-
-void pascal near cmt_load_unput_and_put_both_animate(int track)
-{
-	cmt_unput_both_animate();
-	cmt_load(track);
-	cmt_fadein_both_animate();
 }
 #else
 void pascal near cmt_unput_and_put(void)
