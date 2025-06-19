@@ -702,16 +702,9 @@ controls:
 			if(music_sel != SEL_QUIT) {
 #if (GAME >= 4)
 				snd_kaja_func(KAJA_SONG_FADE, 32);
-#elif (GAME == 3)
-				// Avoids the snd_load() landmine that is still present in this
-				// game.
+#else
+				// Avoids the snd_load() landmine in both TH02 and TH03.
 				snd_kaja_func(KAJA_SONG_STOP, 0);
-#elif (GAME == 2)
-				// ZUN landmine: Should have stopped the currently playing
-				// track according to snd_load()'s header comment.
-				// Especially since this game simultaneously loads both the PMD
-				// and MIDI versions and is therefore inherently slower than
-				// the others.
 #endif
 #if (GAME == 5)
 				sel_prev = track_playing;
