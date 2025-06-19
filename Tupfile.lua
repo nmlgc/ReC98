@@ -307,19 +307,39 @@ local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 -- --------------
 -- TODO: Turn into a library.
 
-local platform_cfg = optimized_cfg:branch(
-	MODEL_LARGE, { cflags = "-zCPLATFORM_TEXT" }
-)
-local platform_obj = platform_cfg:build({
-	"platform/x86real/doserror.cpp",
-	"platform/x86real/noexcept.cpp",
-	"platform/x86real/spawn.cpp",
-	"platform/x86real/pc98/blitter.cpp",
-	"platform/x86real/pc98/egc.cpp",
-	"platform/x86real/pc98/font.cpp",
-	"platform/x86real/pc98/grcg.cpp",
-	"platform/x86real/pc98/grp_clip.cpp",
+---@param bundles { [string]: string[] }
+---@param config Config
+---@param inputs string[]
+---@return { [string]: string[] }
+function BuildAndBundlePlatform(bundles, config, inputs)
+	local ret = {}
+	local objs = {}
+	for _, input in ipairs(inputs) do
+		objs[tup.base(input)] = config:build_uncached(input)
+	end
+	for bundle, srcs in pairs(bundles) do
+		ret[bundle] = {}
+		for _, src in pairs(srcs) do
+			ret[bundle] += objs[src]
+		end
+	end
+	return ret
+end
+
+local platform_cfg = optimized_cfg:branch(MODEL_LARGE, {
+	obj_root = "platform/", cflags = "-zCPLATFORM_TEXT -DCPU=386",
 })
+local platform_src
+platform_src += tup.glob("platform/x86real/*.cpp")
+platform_src += tup.glob("platform/x86real/pc98/*.cpp")
+local platform_bundles = {
+	libc_debloat = { "noexcept" },
+	spawn = { "doserror", "spawn" },
+	th01 = { "noexcept", "blitter", "egc", "font", "grcg", "grp_clip" },
+}
+local platform_objs = BuildAndBundlePlatform(
+	platform_bundles, platform_cfg, platform_src
+)
 -- --------------
 
 -- Games
@@ -368,7 +388,8 @@ local th01_zunsoft = th01:branch(MODEL_TINY):link("zunsoft", {
 	"bin/masters.lib",
 })
 local th01_obj
-th01_obj += platform_obj
+th01_obj += platform_objs.spawn
+th01_obj += platform_objs.th01
 th01_obj += {
 	piloadm,
 	"th01.asm",
