@@ -455,65 +455,29 @@ void near option_update_and_render(void)
 		}
 	}
 
-	// ZUN bloat: Could have been deduplicated.
-	if(key_det & INPUT_RIGHT) {
+	if(key_det & (INPUT_RIGHT | INPUT_LEFT)) {
 	right:
+		int8_t delta = ((key_det & INPUT_LEFT) ? -1 : +1);
 		switch(menu_sel) {
 		case OC_RANK:
-			ring_inc_range(resident->rank, RANK_EASY, RANK_LUNATIC);
+			ring_step(resident->rank, delta, RANK_EASY, RANK_LUNATIC);
 			break;
 		case OC_LIVES:
-			ring_inc_range(resident->cfg_lives, 1, CFG_LIVES_MAX);
+			ring_step(resident->cfg_lives, delta, 1, CFG_LIVES_MAX);
 			break;
 		case OC_BOMBS:
-			ring_inc_range(resident->cfg_bombs, 0, CFG_BOMBS_MAX);
+			ring_step(resident->cfg_bombs, delta, 0, CFG_BOMBS_MAX);
 			break;
 		case OC_BGM:
-			ring_inc_ge_range(resident->bgm_mode, SND_BGM_OFF, SND_BGM_FM86);
+			ring_step(resident->bgm_mode, delta, SND_BGM_OFF, SND_BGM_FM86);
 			snd_redetermine_modes_and_restart_bgm(false);
 			break;
 		case OC_SE:
-			// ZUN bloat: Come on...
-			if(resident->se_mode == SND_SE_OFF) {
-				resident->se_mode = SND_SE_BEEP;
-			} else {
-				resident->se_mode--;
-			}
+			delta = -delta;
+			ring_step(resident->se_mode, delta, SND_SE_OFF, SND_SE_BEEP);
 
 			// ZUN bug: TH04 does not immediately apply SE mode changes.
 			// (Same below for INPUT_LEFT.)
-#if (GAME == 5)
-			snd_redetermine_modes_and_reload_se();
-#endif
-			break;
-		case OC_TURBO_OR_SLOW:
-			resident->turbo_mode = (1 - resident->turbo_mode);
-			break;
-		}
-		option_unput_and_put(menu_sel, COL_ACTIVE);
-	}
-	if(key_det & INPUT_LEFT) {
-		switch(menu_sel) {
-		case OC_RANK:
-			ring_dec_range(resident->rank, RANK_EASY, RANK_LUNATIC);
-			break;
-		case OC_LIVES:
-			ring_dec_range(resident->cfg_lives, 1, CFG_LIVES_MAX);
-			break;
-		case OC_BOMBS:
-			ring_dec_range(resident->cfg_bombs, 0, CFG_BOMBS_MAX);
-			break;
-		case OC_BGM:
-			// ZUN bloat: Come on...
-			if(resident->bgm_mode == SND_BGM_OFF) {
-				resident->bgm_mode = SND_BGM_FM86;
-			} else {
-				resident->bgm_mode--;
-			}
-			snd_redetermine_modes_and_restart_bgm(false);
-			break;
-		case OC_SE:
-			ring_inc_ge_range(resident->se_mode, SND_SE_OFF, SND_SE_BEEP);
 #if (GAME == 5)
 			snd_redetermine_modes_and_reload_se();
 #endif
