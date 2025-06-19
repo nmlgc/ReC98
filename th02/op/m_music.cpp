@@ -804,19 +804,20 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	graph_accesspage(1);
 	graph_showpage(0);
 
+#if (GAME <= 4)
+	nopoly_B_snap();
+#endif
+
 #if (GAME == 5)
 	pfend();
 	pfstart("music.dat");
 	cmt_load_unput_and_put_both_animate(music_sel);
-#else
-	nopoly_B_snap();
-#if (GAME >= 4)
+#elif (GAME == 4)
 	cmt_load_unput_and_put_both_animate(track_playing);
 #else
 	cmt_bg_snap();
 	graph_accesspage(1);	cmt_load_unput_and_put(track_playing);
 	graph_accesspage(0);	cmt_load_unput_and_put(track_playing);
-#endif
 #endif
 
 	// ZUN landmine: After all the loading and blitting, we're certainly in the
@@ -1018,11 +1019,11 @@ controls:
 		music_flip();
 	}
 
-#if (GAME >= 4)
 #if (GAME == 5)
 	pfend();
 	pfstart(OP_AND_END_PF_FN);
 #endif
+#if (GAME >= 4)
 	snd_kaja_func(KAJA_SONG_FADE, 16);
 	nopoly_B_free();
 	graph_showpage(0);
