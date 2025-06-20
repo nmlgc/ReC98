@@ -702,39 +702,10 @@ inline void option_quit(bool &initialized) {
 	initialized = false;
 }
 
-// Circumventing 16-bit promotion inside comparisons between two 8-bit values
-// in Borland C++'s C++ mode...
-inline char option_rank_max()  { return RANK_LUNATIC; }
-inline char option_bgm_max()   { return SND_BGM_MIDI; }
-inline char option_lives_max() { return CFG_LIVES_MAX; }
-inline char option_bombs_max() { return CFG_BOMBS_MAX; }
-
 void option_update_and_render(void)
 {
 	static bool input_allowed = false;
 	static bool initialized = false;
-
-	#define option_change(ring_direction) \
-		option_put(menu_sel, TX_YELLOW); \
-		switch(menu_sel) { \
-		case 0: \
-			ring_direction(rank, option_rank_max()); \
-			break; \
-		case 1: \
-			ring_direction((char)snd_bgm_mode, option_bgm_max()); \
-			snd_bgm_restart(); \
-			break; \
-		case 2: \
-			ring_direction(lives, option_lives_max()); \
-			break; \
-		case 3: \
-			ring_direction(bombs, option_bombs_max()); \
-			break; \
-		case 4: \
-			resident->reduce_effects = (true - resident->reduce_effects); \
-			break; \
-		} \
-		option_put(menu_sel, TX_WHITE);
 
 	if(!initialized) {
 		menu_init(initialized, input_allowed, option_put_shadow);
@@ -748,11 +719,28 @@ void option_update_and_render(void)
 	}
 	if(input_allowed) {
 		menu_update_vertical(key_det, 7);
-		if(key_det & INPUT_RIGHT) {
-			option_change(ring_inc);
-		}
-		if(key_det & INPUT_LEFT) {
-			option_change(ring_dec);
+		if(key_det & (INPUT_RIGHT | INPUT_LEFT)) {
+			int8_t delta = ((key_det & INPUT_LEFT) ? -1 : +1);
+			option_put(menu_sel, TX_YELLOW);
+			switch(menu_sel) {
+			case 0:
+				ring_step(rank, delta, RANK_EASY, RANK_LUNATIC);
+				break;
+			case 1:
+				ring_step(snd_bgm_mode, delta, SND_BGM_OFF, SND_BGM_MIDI);
+				snd_bgm_restart();
+				break;
+			case 2:
+				ring_step(lives, delta, 0, CFG_LIVES_MAX);
+				break;
+			case 3:
+				ring_step(bombs, delta, 0, CFG_BOMBS_MAX);
+				break;
+			case 4:
+				resident->reduce_effects = (true - resident->reduce_effects);
+				break;
+			}
+			option_put(menu_sel, TX_WHITE);
 		}
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {
