@@ -28,8 +28,8 @@ inline void op_exit_into_main(bool fade_out_bgm, bool allow_debug) {
 	}
 	game_exit();
 	if(!allow_debug || !resident->debug) {
-		execl(BINARY_MAIN, BINARY_MAIN, 0, 0);
+		execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 	} else {
-		execl(BINARY_DEB, BINARY_DEB, 0, 0);
+		execl(BINARY_DEB, BINARY_DEB, nullptr);
 	}
 }

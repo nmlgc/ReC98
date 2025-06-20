@@ -212,9 +212,9 @@ inline void start_exec() {
 	super_free();
 	game_exit();
 	if(resident->debug) {
-		execl("select", "select", 0, 0);
+		execl("select", "select", nullptr);
 	} else {
-		execl("main", "main", 0, 0);
+		execl("main", "main", nullptr);
 	}
 }
 
@@ -246,7 +246,7 @@ void start_demo(void)
 	gaiji_restore();
 	super_free();
 	game_exit();
-	execl("main", "main", 0, 0);
+	execl("main", "main", nullptr);
 }
 
 void start_extra(void)

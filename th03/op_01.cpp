@@ -173,7 +173,7 @@ inline bool switch_to_mainl(bool opwin_free) {
 		super_free(); // ZUN bloat: Process termination will do this anyway.
 	}
 	game_exit();
-	execl(BINARY_MAINL, BINARY_MAINL, 0, 0);
+	execl(BINARY_MAINL, BINARY_MAINL, nullptr);
 	return false;
 }
 
