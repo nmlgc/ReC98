@@ -139,14 +139,18 @@ void pascal near verdict_value_score_put(
 	#undef on_digit
 }
 
-#define verdict_value_singledigit_put(row, gaiji) { \
-	graph_gaiji_putc( \
-		VERDICT_VALUE_SINGLEDIGIT_LEFT, verdict_row_top(row), gaiji, V_WHITE \
-	); \
+void pascal near verdict_value_singledigit_put(int row, int gaiji)
+{
+	graph_gaiji_putc(
+		VERDICT_VALUE_SINGLEDIGIT_LEFT, verdict_row_top(row), gaiji, V_WHITE
+	);
 }
 
-#define verdict_value_gaiji_string_put(row, left, str) { \
-	graph_gaiji_puts(left, verdict_row_top(row), GAIJI_W, str, V_WHITE); \
+void pascal near verdict_value_gaiji_string_put(
+	int row, screen_x_t left, const char *str
+)
+{
+	graph_gaiji_puts(left, verdict_row_top(row), GAIJI_W, str, V_WHITE);
 }
 
 void pascal near line_type(
@@ -307,39 +311,41 @@ void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
 	str[i] = gs_NULL;
 }
 
-// ZUN bloat: Same algorithm as in TH01, same problems. Also could be a
-// single proper function.
-#define pic_put(left, top, rows, quarter, quarter_offset_y) { \
-	uvram_offset_t vram_offset_src = ( \
-		(quarter == 0) ? vram_offset_shift(0, 0) : \
-		(quarter == 1) ? vram_offset_shift(CUTSCENE_PIC_W, 0) : \
-		(quarter == 2) ? vram_offset_shift(0, CUTSCENE_PIC_H) : \
-		/*quarter == 3*/ vram_offset_shift(CUTSCENE_PIC_W, CUTSCENE_PIC_H) \
-	); \
-	uvram_offset_t vram_offset_dst = vram_offset_shift(left, top); \
-	vram_offset_src += (quarter_offset_y * ROW_SIZE); \
-	\
-	egc_start_copy(); \
-	\
-	pixel_t y = quarter_offset_y; \
-	vram_byte_amount_t vram_x; \
-	while(y < (rows + quarter_offset_y)) { \
-		vram_x = 0; \
-		while(vram_x < CUTSCENE_PIC_VRAM_W) { \
-			egc_temp_t d; \
-			\
-			graph_accesspage(1);	d = egc_chunk(vram_offset_src); \
-			graph_accesspage(0);	egc_chunk(vram_offset_dst) = d; \
-			\
-			vram_x += EGC_REGISTER_SIZE; \
-			vram_offset_src += EGC_REGISTER_SIZE; \
-			vram_offset_dst += EGC_REGISTER_SIZE; \
-		} \
-		y++; \
-		vram_offset_dst += (ROW_SIZE - CUTSCENE_PIC_VRAM_W); \
-		vram_offset_src += (ROW_SIZE - CUTSCENE_PIC_VRAM_W); \
-	} \
-	egc_off(); \
+// ZUN bloat: Same algorithm as in TH01, same problems.
+void pascal near pic_put(
+	screen_x_t left,
+	screen_y_t top,
+	pixel_t rows,
+	int quarter,
+	pixel_t quarter_offset_y
+)
+{
+	uvram_offset_t vram_offset_src = (
+		(quarter == 0) ? vram_offset_shift(0, 0) :
+		(quarter == 1) ? vram_offset_shift(CUTSCENE_PIC_W, 0) :
+		(quarter == 2) ? vram_offset_shift(0, CUTSCENE_PIC_H) :
+		/*quarter == 3*/ vram_offset_shift(CUTSCENE_PIC_W, CUTSCENE_PIC_H)
+	);
+	uvram_offset_t vram_offset_dst = vram_offset_shift(left, top);
+	vram_offset_src += (quarter_offset_y * ROW_SIZE);
+
+	egc_start_copy();
+
+	pixel_t y = quarter_offset_y;
+	while(y < (rows + quarter_offset_y)) {
+		vram_byte_amount_t vram_x = 0;
+		while(vram_x < CUTSCENE_PIC_VRAM_W) {
+			graph_accesspage(1);	_AX = egc_chunk(vram_offset_src);
+			graph_accesspage(0);	egc_chunk(vram_offset_dst) = _AX;
+			vram_x += EGC_REGISTER_SIZE;
+			vram_offset_src += EGC_REGISTER_SIZE;
+			vram_offset_dst += EGC_REGISTER_SIZE;
+		}
+		y++;
+		vram_offset_dst += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
+		vram_offset_src += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
+	}
+	egc_off();
 }
 
 void pascal near end_pic_show(int quarter)
@@ -347,18 +353,9 @@ void pascal near end_pic_show(int quarter)
 	pic_put(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_H, quarter, 0);
 }
 
-void pascal near staffroll_pic_put(screen_x_t left, screen_y_t top, int quarter)
+void pascal near staffroll_pic_put(int quarter)
 {
-	pic_put(left, top, CUTSCENE_PIC_H, quarter, 0);
-}
-
-void pascal near end_pic_put_rows(
-	int quarter, pixel_t quarter_offset_y, pixel_t rows
-)
-{
-	pic_put(
-		CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, rows, quarter, quarter_offset_y
-	);
+	pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, CUTSCENE_PIC_H, quarter, 0);
 }
 
 void near end_line_clear(void)
@@ -429,26 +426,24 @@ inline void end_pics_load_palette_show(const char *fn) {
 	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, fn);
 }
 
-// Calling line_type(int, int) directly from the loop would add a useless load
-// and store for [line].
-#define end_line_type_raw(line, frames) { \
-	line_type( \
-		END_LINE_LEFT, END_LINE_TOP, END_LINE_LENGTH, end_text[line], frames \
-	); \
-}
-
 inline void end_line_type(int line, int frames_per_kanji = 6) {
-	end_line_type_raw(line, frames_per_kanji);
+	line_type(
+		END_LINE_LEFT,
+		END_LINE_TOP,
+		END_LINE_LENGTH,
+		end_text[line],
+		frames_per_kanji
+	);
 }
 
-// ZUN bloat: Spending 3,344 bytes of the code segment on script code is way
-// too much. The most effective first compression step would be to turn the
+// ZUN bloat: The most effective first compression step would be to turn the
 // text color changes into a line-indexed array (similar to the generic face
-// arrays used for in-game dialog), and this into a proper function.
-#define end_lines_type_from_to(first, last) { \
-	for(i = first; i <= last; i++) { \
-		end_line_type_raw(i, 6); \
-	} \
+// arrays used for in-game dialog).
+void near end_lines_type_from_to(int first, int last)
+{
+	for(int i = first; i <= last; i++) {
+		end_line_type(i, 6);
+	}
 }
 
 inline void end_load_and_start_animate(const char* text_fn) {
@@ -510,8 +505,12 @@ void near end_bad_animate(void)
 			(CUTSCENE_PIC_TOP + CUTSCENE_PIC_H - 1 - VELOCITY),
 			VELOCITY
 		);
-		end_pic_put_rows(
-			3, ((CUTSCENE_PIC_H - VELOCITY) - (frame * VELOCITY)), VELOCITY
+		pic_put(
+			CUTSCENE_PIC_LEFT,
+			CUTSCENE_PIC_TOP,
+			VELOCITY,
+			3,
+			((CUTSCENE_PIC_H - VELOCITY) - (frame * VELOCITY))
 		);
 		frame_delay(1);
 	}
@@ -602,8 +601,6 @@ void near end_bad_animate(void)
 
 void near end_good_animate(void)
 {
-	int i;
-
 	end_load_and_start_animate("end2.txt");
 
 	end_pics_load_palette_show("ed03.pi");
@@ -808,7 +805,7 @@ void pascal near staffroll_rotrect_and_put_pic_animate(
 	// this all but ensures a tearing line on the first frame of the rotating
 	// rectangle animation.
 	staffroll_rotrect_animate(angle_speed, angle_start);
-	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, quarter);
+	staffroll_pic_put(quarter);
 	frame_delay(4);
 	palette_100();
 }
@@ -912,7 +909,7 @@ void near staffroll_and_verdict_animate(void)
 
 	// ZUN bloat: Will be immediately overwritten with the animation. (And
 	// we're still on the wrong palette.)
-	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, 3);
+	staffroll_pic_put(3);
 
 	palette_entry_rgb_show("ed06c.rgb");
 	staffroll_rotrect_and_put_pic_animate(0x04, 3, 0x29);
@@ -938,7 +935,7 @@ void near staffroll_and_verdict_animate(void)
 	// wastes time on the frame, since this isn't double-buffered and
 	// staffroll_rotrect_animate() immediately begins drawing (see the landmine
 	// in that function).
-	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, 2);
+	staffroll_pic_put(2);
 
 	staffroll_rotrect_and_put_pic_animate(-0x08, 2, -0x17);
 	snd_delay_until_measure(37);
