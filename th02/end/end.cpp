@@ -421,12 +421,14 @@ void near end_to_staffroll_animate(void)
 	}
 }
 
-inline void end_pics_load_palette_show(const char *fn) {
+void pascal near end_pics_load_palette_show(const char *fn)
+{
 	graph_accesspage(1);
 	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, fn);
 }
 
-inline void end_line_type(int line, int frames_per_kanji = 6) {
+void pascal near end_line_type(int line, int frames_per_kanji = 6)
+{
 	line_type(
 		END_LINE_LEFT,
 		END_LINE_TOP,
@@ -446,7 +448,8 @@ void near end_lines_type_from_to(int first, int last)
 	}
 }
 
-inline void end_load_and_start_animate(const char* text_fn) {
+void pascal near end_load_and_start_animate(const char* text_fn)
+{
 	end_load(text_fn);
 	snd_load("end1.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
