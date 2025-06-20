@@ -342,7 +342,7 @@ local platform_bundles = {
 	cutscene = { "cutscene" },
 	libc_debloat = { "noexcept" },
 	spawn = { "doserror", "spawn" },
-	surf = { "piloadm", "blitter", "grp_clip", "grp_surf" },
+	surf = { "piloadm", "bgimage", "blitter", "grp_clip", "grp_surf" },
 	th01 = { "noexcept", "blitter", "egc", "font", "grcg", "grp_clip" },
 	vblank = { "vblank" },
 }
