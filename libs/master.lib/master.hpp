@@ -215,6 +215,19 @@ void MASTER_RET respal_free(void);
 // simplify frame delay loops.
 extern volatile unsigned int __cdecl vsync_Count1, vsync_Count2;
 
+#define vsync_proc_set(proc) { \
+	extern void (far pascal *__cdecl vsync_Proc)(void); \
+	disable(); \
+	vsync_Proc = proc; \
+	enable(); \
+}
+#define vsync_proc_reset() { \
+	extern void (far pascal *__cdecl vsync_Proc)(void); \
+	disable(); \
+	vsync_Proc = nullptr; \
+	enable(); \
+}
+
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);
 void MASTER_RET vsync_wait(void);
