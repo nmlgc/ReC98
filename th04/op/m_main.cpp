@@ -10,6 +10,7 @@
 #include <conio.h>
 #include <string.h>
 #include "game/bgimage.hpp"
+#include "platform/vblank.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/v_colors.hpp"
@@ -302,12 +303,8 @@ void pascal near return_from_other_screen_to_main(
 	graph_accesspage(0);
 	GrpSurface_LoadPI(bgimage, &Palettes, MENU_MAIN_BG_FN);
 	bgimage.write(0, 0);
-
-	// ZUN landmine: After loading and blitting, we're certainly in the middle
-	// of a frame, where a sudden change to the hardware palette ensures
-	// tearing.
-	palette_100();
-
+	PaletteTone = 100;
+	vblank_run(palette_show);
 	main_initialized = false;
 	in_option = false;
 	menu_sel = sel;
