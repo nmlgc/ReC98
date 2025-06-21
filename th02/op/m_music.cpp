@@ -830,6 +830,9 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 #endif
 #endif
 
+	// ZUN landmine: After all the loading and blitting, we're certainly in the
+	// middle of a frame, where a sudden change to the hardware palette ensures
+	// tearing.
 	palette_100();
 
 	while(1) {
@@ -1041,19 +1044,20 @@ controls:
 
 	// ZUN quirk: graph_clear() sets all of VRAM to hardware color #0, which is
 	// purple in the original images, not black.
-	//
-	// ZUN bloat: Unlike the graph_clear() call at the beginning of the
-	// function, this one is not useless because we haven't reset the hardware
-	// palette yet. Still, setting all hardware colors to color #0 would have
-	// been a more efficient way to accomplish the same hiding effect before
-	// the graph_copy_page() call below.
+	// Since [PaletteTone] also stays at 100, this clear call is not as useless
+	// as it seems. The alternative of setting all other colors to color #0
+	// would even cause additional tearing at the pi_palette_apply() call
+	// below, which is sandwiched between the expensive calls to pi_load() and
+	// pi_put_8() and negates any palette tricks.
 	graph_accesspage(0);
 	graph_clear();
 
 	graph_accesspage(1);
 
 #if (GAME == 2)
-	// ZUN bloat: The call site would have been a better place for this.
+	// ZUN bloat: The call site would have been a better place for this,
+	// especially since it has another copy of the same code with the same
+	// landmine.
 	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
 	palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 	graph_copy_page(0);

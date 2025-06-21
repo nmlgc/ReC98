@@ -172,7 +172,11 @@ inline bool switch_to_mainl(bool opwin_free) {
 	if(opwin_free) {
 		super_free(); // ZUN bloat: Process termination will do this anyway.
 	}
+
+	// ZUN landmine: The screen clearing done in this function will almost
+	// certainly not run within VBLANK.
 	game_exit();
+
 	execl(BINARY_MAINL, BINARY_MAINL, nullptr);
 	return false;
 }

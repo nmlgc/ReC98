@@ -328,7 +328,12 @@ inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
 	graph_accesspage(1);
 	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
 	graph_copy_page(0); // switches the accessed page back to 0
+
+	// ZUN landmine: After loading and blitting, we're certainly in the middle
+	// of a frame, where a sudden change to the hardware palette ensures
+	// tearing.
 	palette_100();
+
 	main_initialized = false;
 	in_option = false;
 	menu_sel = sel;

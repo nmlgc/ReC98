@@ -136,6 +136,10 @@ void op_animate(void)
 	pi_load(0, "opa.pi");
 	pi_load(1, "opb.pi");
 	pi_load(2, "opc.pi");
+
+	// ZUN landmine: The black text layer would cover the fact that this will
+	// most certainly happen somewhere within a frame, but not if we
+	// immediately start mutating text cells in the loop below.
 	palette_settone(200);
 
 	for(door_x = 0; door_x < 40; door_x++) {
@@ -206,7 +210,11 @@ void pascal near start_init(void)
 inline void start_exec() {
 	cfg_save();
 	pi_load(0, "ts1.pi");
+
+	// ZUN landmine: Screen tearing – we most certainly won't come here during
+	// VBLANK.
 	text_clear();
+
 	shottype_menu();
 	snd_kaja_func(KAJA_SONG_FADE, 15);
 	gaiji_restore();
@@ -240,7 +248,12 @@ void start_demo(void)
 	resident->demo_num = demo_num;
 	resident->shottype = 0;
 	cfg_save();
+
+	// ZUN landmine: Clearing TRAM before gaiji_restore() is correct, but doing
+	// this after file I/O means that we most certainly won't come here during
+	// VBLANK.
 	text_clear();
+
 	pi_free(0);
 	pi_free(1);
 	pi_free(2);
@@ -400,8 +413,30 @@ void main_update_and_render(void)
 				score_menu();
 				graph_accesspage(1);
 				graph_showpage(0);
-				pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+
+				// ZUN landmine: We come here with [PaletteTone] set to 100,
+				// which causes two screen tearing landmines. I've inlined the
+				// usual pi_fullres_load_palette_apply_put_free() macro to
+				// point this out more clearly:
+				// • pi_load() takes a while and returns in the middle of some
+				//   frame.
+				// • pi_palette_apply() overwrites the hardware palette with
+				//   `op2.pi`'s differing one, causing screen tearing.
+				// • pi_put_8() also takes a while and returns in the middle of
+				//   some frame.
+				// • palette_entry_rgb_show() overwrites the hardware palette
+				//   with another differing one, also causing screen tearing.
+				// Without considering execution times, the pi_palette_apply()
+				// call seems redundant, but it does have a visible effect on
+				// any PC-98 model that can't run pi_put_8() instantly. This
+				// does not include the infinitely fast PC-98 we're assuming
+				// over on the `debloated` branch, though.
+				pi_load(0, MENU_MAIN_BG_FN);
+				pi_palette_apply(0);
+				pi_put_8(0, 0, 0);
+				pi_free(0);
 				palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
+
 				graph_copy_page(0);
 				graph_accesspage(0);
 				initialized = false;
@@ -638,6 +673,11 @@ int main(void)
 	}
 
 	op_animate();
+
+	// ZUN landmine: Screen tearing. Decoding two 192×144 .PI images takes a
+	// while and certainly returns with the CRT beam somewhere in the middle of
+	// a frame. A bit much to ask main_update_and_render() to then render the
+	// Main menu labels to both TRAM and VRAM on the same frame.
 	pi_load(2, "ts3.pi");
 	pi_load(1, "ts2.pi");
 	key_det = 0;

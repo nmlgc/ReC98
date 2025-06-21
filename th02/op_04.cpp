@@ -142,21 +142,34 @@ void pascal score_menu(void)
 	int input_allowed = 0;
 	char page = 0;
 
+	// ZUN landmine: We get here not too long after VSync, and a VRAM clear of
+	// the visible page might successfully race the beam. But it certainly
+	// won't if we do file I/O first.
 	scoredat_load();
 	graph_accesspage(0);	graph_clear();
 	graph_accesspage(1);	graph_clear();
+
 	if(need_op_h_bft) {
 		need_op_h_bft = 0;
 		super_entry_bfnt("op_h.bft");
 	}
 	palette_entry_rgb_show("op_h.rgb");
 	grc_setclip(128, 96, 512, 304);
+
+	// ZUN bug: Seems redundant since logo_render() starts with the same code.
+	// But note that we're accessing VRAM page 1. The first iteration of the
+	// loop below will *show* page 1 but *render* to page 0. Thus, the first
+	// well-defined frame actually just displays what's drawn here – the purple
+	// background without the 東方封魔録 label.
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();
+
 	scores_put(-1);
 	logo_step = 0;
 
+	// ZUN landmine: The beam is certainly at some place within the frame by
+	// now, yielding another tearing line.
 	graph_accesspage(0);
 	page = 1 - page;
 	graph_showpage(1);
