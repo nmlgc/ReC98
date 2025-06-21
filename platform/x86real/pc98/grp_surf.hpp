@@ -36,6 +36,14 @@ struct GrpSurface_M4 : public GrpSurface_M {
 	void pascal write_bg_region(
 		upixel_t left, upixel_t top, upixel_t w, upixel_t h
 	);
+
+	void pascal or_masked(
+		screen_x_t left,
+		screen_y_t top,
+		const dots16_t __ds *masks,
+		unsigned int mask_count,
+		const LTWH<upixel_t> near *region = nullptr
+	);
 };
 // ---------------
 
