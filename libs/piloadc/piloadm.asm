@@ -1,5 +1,4 @@
-; ZUN's fork of the PiLoad library, as linked into the original version of
-; TH01. The only change: The format ID is 'NZ', rather than 'iP'. Lol.
+; The only change in ZUN's fork: The format ID is 'NZ', rather than 'iP'. Lol.
 
 ; For compatibility with later TASM versions, "segcs movsw" has also been
 ; spelled out to what it's actually supposed to mean.
