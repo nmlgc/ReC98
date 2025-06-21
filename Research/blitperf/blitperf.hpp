@@ -37,6 +37,7 @@ struct Option {
 
 struct Test {
 	Option opt[OPT_COUNT];
+	unsigned int frame_digits;
 	unsigned int slowdown;
 	uint16_t frame;
 	bool skip_locked;

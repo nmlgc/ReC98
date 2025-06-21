@@ -39,10 +39,19 @@ void Test::frame_delay(unsigned int frames)
 		while(vsync_count_16 < frames) {}
 	}
 	if(frame != 0) {
-		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+		printf("\b\b\b\b\b\b\b\b");
+		for(int i = 0; i < frame_digits; i++) {
+			printf("\b\b\b\b");
+		}
 	}
 	printf(
-		"\xEB\xA0 %3d/%3d \xEB\xA1 %6lu", slowdown, (frame + 1), vsync_count_32
+		"\xEB\xA0 %*d/%*d \xEB\xA1 %*lu",
+		frame_digits,
+		slowdown,
+		frame_digits,
+		(frame + 1),
+		(2 * frame_digits),
+		vsync_count_32
 	);
 	vsync_count_16 = 0;
 }
@@ -226,6 +235,12 @@ int __cdecl main(int argc, const char *argv[])
 		}
 	}
 	// --------------------
+
+	// Calculate frame digits
+	uint16_t duration_cap_remaining = t.opt[OPT_DURATION].max;
+	for(t.frame_digits = 0; duration_cap_remaining != 0; t.frame_digits++) {
+		duration_cap_remaining /= 10;
+	}
 
 	printf("%s", "\x1B*");
 	banner_put();
