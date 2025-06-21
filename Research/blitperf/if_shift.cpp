@@ -3,8 +3,8 @@
 #include "Research/blitperf/blitperf.hpp"
 #include "platform/x86real/pc98/blit_low.hpp"
 #include "platform/x86real/pc98/grcg.hpp"
-#include "platform/x86real/pc98/palette.hpp"
 #include "platform/grp_clip.hpp"
+#include "platform/palette.hpp"
 #include "th01/main/entity.hpp"
 #include "th01/sprites/pellet.csp"
 

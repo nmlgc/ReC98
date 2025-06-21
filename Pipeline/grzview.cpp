@@ -3,7 +3,7 @@
 #include "planar.h"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "platform/x86real/pc98/palette.hpp"
+#include "platform/palette.hpp"
 #include "th01/formats/grz.h"
 
 // Copied from th01/formats/img_data.cpp. Unfortunate, but better than linking

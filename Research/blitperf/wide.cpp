@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "Research/blitperf/blitperf.hpp"
 #include "platform/x86real/pc98/blitter.hpp"
-#include "platform/x86real/pc98/palette.hpp"
+#include "platform/palette.hpp"
 #include "Research/blitperf/wide.csp"
 
 static const vram_byte_amount_t SPRITE_W = (640 / BYTE_DOTS);
