@@ -1048,7 +1048,6 @@ void near staffroll_and_verdict_animate(void)
 	graph_accesspage(1);
 	int skill = resident->skill;
 
-	// ZUN bloat: Could have been worked into the mapping below.
 	if(skill > 100) {
 		skill = 100;
 	} else if(skill < 0) {
