@@ -34,7 +34,7 @@ compact   モデル
 large/hugeモデル
  int	PiLoadL(char *name,char *buff,int Size,int X,int Y,int tone,int option)
 PASCAL
- functuon PiLoad( name:string; var buff; Size,X,Y,tone,option:integer):integer;
+ function PiLoad( name:string; var buff; Size,X,Y,tone,option:integer):integer;
 
  引数
 	name	ファイル名
@@ -45,17 +45,12 @@ PASCAL
 	tone	トーン（１～１００％）
 	option	オプション（下記のビットで指定）
 	   (lsb)0 .. パレット設定	する／しない = 1/0
-	   	1 .. 常駐パレット設定	する／しない = 1/0(*)
 		2 .. コメント表示	する／しない = 1/0
 		3 .. 画面設定		する／しない = 1/0
 		     (VRAMのON,400/200line設定)
 		4 .. ノート用パレット	する／しない = 1/0
-		5 .. スクロールロード	する／しない = 1/0(*)
 		6 .. 透明色利用		する／しない = 1/0
-		7 .. 裏画面ロード	する／しない = 1/0(*)
 	    8～15 .. 透明色指定(0～15)
-
- (*)はpiloadにはありますがpiloadcでは無意味です。
 
  戻り値
 	  0	正常終了
@@ -98,7 +93,7 @@ TurboC	A>TCC <組み込みたいファイル.c> piload.obj
 ＴｕｒｂｏＰａｓｃａｌでの使い方
 
 (1)ソース中で関数の外部定義とpiloadc.objのリンク指定をする
-functuon PiLoad( name:string; var buff; Size,X,Y,tone,option:integer):integer;
+function PiLoad( name:string; var buff; Size,X,Y,tone,option:integer):integer;
  external;
 {$l piloadc}
 
