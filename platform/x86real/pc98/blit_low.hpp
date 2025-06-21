@@ -161,6 +161,94 @@ inline void unroll_setup(upixel_t width) {
 	X(8) \
 	X(16) \
 
+// Recursion rules for blitting wide sprites with unit instructions
+// ----------------------------------------------------------------
+
+#define recurse_impl(prefix, this, large_part, small_part) \
+	inline uint8_t prefix##_##this(uint8_t op, uint8_t p) { \
+		return prefix##_##small_part(op, prefix##_##large_part(op, p)); \
+	}
+
+#define recurse_impl_all(prefix) \
+	recurse_impl(prefix,  24,  16,  8) \
+	recurse_impl(prefix,  40,  32,  8) \
+	recurse_impl(prefix,  48,  32, 16) \
+	recurse_impl(prefix,  56,  32, 24) \
+	recurse_impl(prefix,  64,  32, 32) \
+	recurse_impl(prefix,  72,  64,  8) \
+	recurse_impl(prefix,  80,  64, 16) \
+	recurse_impl(prefix,  88,  64, 24) \
+	recurse_impl(prefix,  96,  64, 32) \
+	recurse_impl(prefix, 104,  96,  8) \
+	recurse_impl(prefix, 112,  96, 16) \
+	recurse_impl(prefix, 120,  96, 24) \
+	recurse_impl(prefix, 128,  96, 32) \
+	recurse_impl(prefix, 136, 128,  8) \
+	recurse_impl(prefix, 144, 128, 16) \
+	recurse_impl(prefix, 152, 128, 24) \
+	recurse_impl(prefix, 160, 128, 32) \
+	recurse_impl(prefix, 168, 160,  8) \
+	recurse_impl(prefix, 176, 160, 16) \
+	recurse_impl(prefix, 184, 160, 24) \
+	recurse_impl(prefix, 192, 160, 32) \
+	recurse_impl(prefix, 200, 192,  8) \
+	recurse_impl(prefix, 208, 192, 16) \
+	recurse_impl(prefix, 216, 192, 24) \
+	recurse_impl(prefix, 224, 192, 32) \
+	recurse_impl(prefix, 232, 224,  8) \
+	recurse_impl(prefix, 240, 224, 16) \
+	recurse_impl(prefix, 248, 224, 24) \
+	recurse_impl(prefix, 256, 224, 32) \
+	recurse_impl(prefix, 264, 256,  8) \
+	recurse_impl(prefix, 272, 256, 16) \
+	recurse_impl(prefix, 280, 256, 24) \
+	recurse_impl(prefix, 288, 256, 32) \
+	recurse_impl(prefix, 296, 288,  8) \
+	recurse_impl(prefix, 304, 288, 16) \
+	recurse_impl(prefix, 312, 288, 24) \
+	recurse_impl(prefix, 320, 288, 32) \
+	recurse_impl(prefix, 328, 320,  8) \
+	recurse_impl(prefix, 336, 320, 16) \
+	recurse_impl(prefix, 344, 320, 24) \
+	recurse_impl(prefix, 352, 320, 32) \
+	recurse_impl(prefix, 360, 352,  8) \
+	recurse_impl(prefix, 368, 352, 16) \
+	recurse_impl(prefix, 376, 352, 24) \
+	recurse_impl(prefix, 384, 352, 32) \
+	recurse_impl(prefix, 392, 384,  8) \
+	recurse_impl(prefix, 400, 384, 16) \
+	recurse_impl(prefix, 408, 384, 24) \
+	recurse_impl(prefix, 416, 384, 32) \
+	recurse_impl(prefix, 424, 416,  8) \
+	recurse_impl(prefix, 432, 416, 16) \
+	recurse_impl(prefix, 440, 416, 24) \
+	recurse_impl(prefix, 448, 416, 32) \
+	recurse_impl(prefix, 456, 448,  8) \
+	recurse_impl(prefix, 464, 448, 16) \
+	recurse_impl(prefix, 472, 448, 24) \
+	recurse_impl(prefix, 480, 448, 32) \
+	recurse_impl(prefix, 488, 480,  8) \
+	recurse_impl(prefix, 496, 480, 16) \
+	recurse_impl(prefix, 504, 480, 24) \
+	recurse_impl(prefix, 512, 480, 32) \
+	recurse_impl(prefix, 520, 512,  8) \
+	recurse_impl(prefix, 528, 512, 16) \
+	recurse_impl(prefix, 536, 512, 24) \
+	recurse_impl(prefix, 544, 512, 32) \
+	recurse_impl(prefix, 552, 544,  8) \
+	recurse_impl(prefix, 560, 544, 16) \
+	recurse_impl(prefix, 568, 544, 24) \
+	recurse_impl(prefix, 576, 544, 32) \
+	recurse_impl(prefix, 584, 576,  8) \
+	recurse_impl(prefix, 592, 576, 16) \
+	recurse_impl(prefix, 600, 576, 24) \
+	recurse_impl(prefix, 608, 576, 32) \
+	recurse_impl(prefix, 616, 608,  8) \
+	recurse_impl(prefix, 624, 608, 16) \
+	recurse_impl(prefix, 632, 608, 24) \
+	recurse_impl(prefix, 640, 608, 32) \
+// ----------------------------------------------------------------
+
 // Displaced memory manipulation
 // -----------------------------
 // Uses MOV instructions with displacements for wider sprites. Supports both
