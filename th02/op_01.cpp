@@ -264,61 +264,66 @@ void start_extra(void)
 #pragma option -d-
 
 #include "th02/gaiji/ranks_c.c"
-const unsigned char gbHIT_KEY[] = {
-	gb_H_, gb_I_, gb_T_, gb_SP, gb_K_, gb_E_, gb_Y_, 0
+
+// ZUN bloat: Fixed-size strings ruin any chance of automatically centering
+// these with compile-time calculations.
+
+// A remnant from TH01? Unused in the final game.
+const char gbHIT_KEY[] = {
+	gb_H_, gb_I_, gb_T_, gb_SP, gb_K_, gb_E_, gb_Y_, '\0'
 };
-const unsigned char gb7SPACES[] = {
-	gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, 0
+const char gb7SPACES[] = {
+	gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, '\0'
 };
 
-const unsigned char gbSTART[] = {
-	gb_S_,gb_T_,gb_A_,gb_R_,gb_T_,    0,    0,    0,    0, 0
+const char gbSTART[10] = {
+	gb_S_,gb_T_,gb_A_,gb_R_,gb_T_, '\0'
 };
 inline char menu_extra_pos() {
 	return 1;
 }
-const unsigned char gbEXTRA_START[] = {
-	gb_E_,gb_X_,gb_T_,gb_R_,gb_A_,gb_SP,gb_S_,gb_T_,gb_A_,gb_R_,gb_T_, 0
+const char gbEXTRA_START[] = {
+	gb_E_,gb_X_,gb_T_,gb_R_,gb_A_,gb_SP,gb_S_,gb_T_,gb_A_,gb_R_,gb_T_, '\0'
 };
-const unsigned char gbHISCORE[] = {
-	gb_H_,gb_I_,gb_S_,gb_C_,gb_O_,gb_R_,gb_E_,    0,    0, 0
+const char gbHISCORE[10] = {
+	gb_H_,gb_I_,gb_S_,gb_C_,gb_O_,gb_R_,gb_E_, '\0'
 };
-const unsigned char gbOPTION[] = {
-	gb_O_,gb_P_,gb_T_,gb_I_,gb_O_,gb_N_,    0,    0,    0, 0
+const char gbOPTION[10] = {
+	gb_O_,gb_P_,gb_T_,gb_I_,gb_O_,gb_N_, '\0'
 };
-const unsigned char gbQUIT[] = {
-	gb_Q_,gb_U_,gb_I_,gb_T_,    0,    0,    0,    0,    0, 0
+const char gbQUIT[10] = {
+	gb_Q_,gb_U_,gb_I_,gb_T_, '\0'
 };
-const unsigned char gbRANK[] = {
-	gb_R_,gb_A_,gb_N_,gb_K_,    0,    0,    0,    0,    0, 0
+const char gbRANK[10] = {
+	gb_R_,gb_A_,gb_N_,gb_K_, '\0'
 };
-const unsigned char gbPLAYER[] = {
-	gb_P_,gb_L_,gb_A_,gb_Y_,gb_E_,gb_R_,    0,    0,    0, 0
+const char gbPLAYER[10] = {
+	gb_P_,gb_L_,gb_A_,gb_Y_,gb_E_,gb_R_, '\0'
 };
-const unsigned char gbMUSIC[] = {
-	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_,    0,    0,    0,    0, 0
+const char gbMUSIC[10] = {
+	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_, '\0'
 };
-const unsigned char gbBOMB[] = {
-	gb_B_,gb_O_,gb_M_,gb_B_,    0,    0,    0,    0,    0, 0
+const char gbBOMB[10] = {
+	gb_B_,gb_O_,gb_M_,gb_B_, '\0'
 };
-const unsigned char gbMUSIC_MODE[] = {
-	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_,gb_SP,gb_M_,gb_O_,gb_D_,gb_E_, 0
+const char gbMUSIC_MODE[] = {
+	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_,gb_SP,gb_M_,gb_O_,gb_D_,gb_E_, '\0'
 };
-const unsigned char gbRESET[] = {
-	gb_R_,gb_E_,gb_S_,gb_E_,gb_T_,    0,    0,    0,    0, 0
+const char gbRESET[10] = {
+	gb_R_,gb_E_,gb_S_,gb_E_,gb_T_, '\0'
 };
 
-const unsigned char gsRANKS[4][3] = {
-	gs_EA, gs_SY, 0,
-	gs_NOR, gs_MAL, 0,
-	gs_HA, gs_RD, 0,
-	gs_LUN, gs_ATIC, 0
+const char gsRANKS[4][3] = {
+	gs_EA, gs_SY, '\0',
+	gs_NOR, gs_MAL, '\0',
+	gs_HA, gs_RD, '\0',
+	gs_LUN, gs_ATIC, '\0',
 };
 
 const unsigned char gbcBGM_MODE[3][5] = {
-	gb_O_, gb_F_, gb_F_, gb_SP, 0,
-	gb_SP, gb_F_, gb_M_, gb_SP, 0,
-	gb_M_, gb_I_, gb_D_, gb_I_, 0
+	gb_O_, gb_F_, gb_F_, gb_SP, '\0',
+	gb_SP, gb_F_, gb_M_, gb_SP, '\0',
+	gb_M_, gb_I_, gb_D_, gb_I_, '\0',
 };
 
 #include "th02/shiftjis/op_main.hpp"
