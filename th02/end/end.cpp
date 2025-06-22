@@ -628,7 +628,6 @@ void near end_good_animate(void)
 	palette_black_out(2);
 
 	end_pics_load_palette_show("ed04.pi");
-	graph_accesspage(0); // ZUN bloat: Redundant, overridden by end_pic_show()
 	end_pic_show(0);
 	palette_black_in(2);
 
@@ -754,12 +753,7 @@ void near end_good_animate(void)
 		end_pic_show(2);
 		palette_black_in(2);
 
-		end_lines_type_from_to(84, 91);
-
-		// ZUN bloat: Could have been included in the loop. (As if it matters
-		// at this point...)
-		end_line_type(92);
-
+		end_lines_type_from_to(84, 92);
 		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
 		end_line_type(93, 12);
 	}
@@ -910,10 +904,6 @@ void near staffroll_and_verdict_animate(void)
 	staffroll_rotrect_and_put_pic_animate(-0x04, 2, 0x29);
 	snd_delay_until_measure(21);
 
-	// ZUN bloat: Will be immediately overwritten with the animation. (And
-	// we're still on the wrong palette.)
-	staffroll_pic_put(3);
-
 	palette_entry_rgb_show("ed06c.rgb");
 	staffroll_rotrect_and_put_pic_animate(0x04, 3, 0x29);
 
@@ -934,21 +924,11 @@ void near staffroll_and_verdict_animate(void)
 	staffroll_rotrect_and_put_pic_animate(0x08, 1, -0x17);
 	snd_delay_until_measure(33);
 
-	// ZUN bloat: Will be immediately overwritten with the animation. It also
-	// wastes time on the frame, since this isn't double-buffered and
-	// staffroll_rotrect_animate() immediately begins drawing (see the landmine
-	// in that function).
-	staffroll_pic_put(2);
-
 	staffroll_rotrect_and_put_pic_animate(-0x08, 2, -0x17);
 	snd_delay_until_measure(37);
 
 	staffroll_text_clear();
 	staffroll_text_put(GLYPH_FULL_W, 0, STAFFROLL_MUSIC);
-
-	// ZUN bloat: We're still on this palette. Disk I/O isn't free!
-	palette_entry_rgb_show("ed07b.rgb");
-
 	staffroll_rotrect_and_put_pic_animate(0x08, 3, -0x17);
 
 	graph_accesspage(1);
