@@ -317,8 +317,6 @@ void pascal near start_init(void)
 	resident->start_power = 0;
 	resident->score = 0;
 	resident->continues_used = 0;
-	resident->unused_3 = 0;
-	resident->unused_1 = 0;
 	resident->demo_num = 0;
 	resident->score_highest = 0;
 }
@@ -360,7 +358,6 @@ void start_demo(void)
 	resident->bgm_mode = snd_bgm_mode;
 	resident->rank = RANK_NORMAL;
 	resident->continues_used = 0;
-	resident->unused_3 = 0;
 	resident->demo_num = demo_num;
 	resident->shottype = 0;
 	cfg_save();
@@ -395,10 +392,6 @@ void start_extra(void)
 
 // ZUN bloat: Fixed-size strings ruin any chance of automatically centering
 // these with compile-time calculations.
-
-// A remnant from TH01? Unused in the final game.
-const char gbHIT_KEY[] = { g_chr_7(gb, H,I,T,_,K,E,Y), '\0' };
-const char gb7SPACES[] = { g_chr_7(gb, _,_,_,_,_,_,_), '\0' };
 
 const char gbSTART[10] = { g_chr_5(gb, S,T,A,R,T), '\0' };
 inline char menu_extra_pos() {
@@ -534,7 +527,7 @@ void main_update_and_render(void)
 	}
 	if(main_input_allowed) {
 		menu_update_vertical(key_det, 6);
-		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+		if(key_det & (INPUT_SHOT | INPUT_OK)) {
 			switch(menu_sel) {
 			case 0:
 				start_game();
@@ -652,23 +645,13 @@ void pascal near option_put(int sel, tram_atrb2 atrb)
 			CHOICE_LEFT = (option_value_left(REDUCE_VALUE_LEN) - 8),
 			Y = choice_top(4),
 		};
+		const shiftjis_t near *value = REDUCE_VALUES[resident->reduce_effects];
 		text_putsa(OPTION_LABEL_TRAM_LEFT, (Y / GLYPH_H), REDUCE_LABEL, atrb);
-		text_putsa(
-			(CHOICE_LEFT / GLYPH_HALF_W),
-			(Y / GLYPH_H),
-			REDUCE_VALUES[resident->reduce_effects],
-			atrb
-		);
-
+		text_putsa((CHOICE_LEFT / GLYPH_HALF_W), (Y / GLYPH_H), value, atrb);
 		graph_copy_rect_1_to_0_16(
 			CHOICE_LEFT, shadow(Y), (REDUCE_VALUE_LEN * GAIJI_W), GLYPH_H
 		);
-		graph_putsa_fx(
-			shadow(CHOICE_LEFT),
-			shadow(Y),
-			0,
-			REDUCE_VALUES[resident->reduce_effects]
-		);
+		graph_putsa_fx(shadow(CHOICE_LEFT), shadow(Y), 0, value);
 	} else if(sel == 5) {
 		command_put(5, gbRESET, 5, atrb);
 	} else if(sel == 6) {
@@ -678,18 +661,15 @@ void pascal near option_put(int sel, tram_atrb2 atrb)
 
 void pascal near snd_bgm_restart(void)
 {
+	snd_kaja_func(KAJA_SONG_STOP, 0);
 	if(snd_bgm_mode == SND_BGM_OFF) {
 		snd_fm_possible = false;
-		snd_kaja_func(KAJA_SONG_STOP, 0);
 		snd_active = false;
-		return;
 	} else if(snd_bgm_mode == SND_BGM_FM) {
-		snd_kaja_func(KAJA_SONG_STOP, 0);
 		snd_midi_active = false;
 		snd_determine_mode();
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	} else if(snd_bgm_mode == SND_BGM_MIDI) {
-		snd_kaja_func(KAJA_SONG_STOP, 0);
 		snd_midi_active = snd_midi_possible;
 		snd_determine_mode();
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
@@ -742,7 +722,7 @@ void option_update_and_render(void)
 			}
 			option_put(menu_sel, TX_WHITE);
 		}
-		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+		if(key_det & (INPUT_SHOT | INPUT_OK)) {
 			switch(menu_sel) {
 			case 5:
 				rank = RANK_NORMAL;
@@ -753,7 +733,6 @@ void option_update_and_render(void)
 				snd_kaja_func(KAJA_SONG_PLAY ,0);
 				lives = CFG_LIVES_DEFAULT;
 				bombs = CFG_BOMBS_DEFAULT;
-				resident->unused_2 = 1;
 				resident->reduce_effects = false;
 				option_put(0, TX_YELLOW);
 				option_put(1, TX_YELLOW);
