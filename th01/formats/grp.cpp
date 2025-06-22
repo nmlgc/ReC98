@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include "libs/master.lib/master.hpp"
-#include "libs/piloadc/piloadc.hpp"
+#include "libs/piloadc/piloadm.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/formats/grp.h"
@@ -110,19 +110,24 @@ int grp_put(const char *fn, grp_put_flag_t flag)
 {
 	static int8_t* grp_buf;
 	int option = 0;
-	char ret;
+	int ret;
 
 	grp_buf = new int8_t[GRP_BUFFER_SIZE];
 	if(flag & GPF_COLORKEY) {
 		option = PILOAD_OPT_COLORKEY(15);
 	}
-	ret = PiLoadL(fn, grp_buf, GRP_BUFFER_SIZE, 0, 0, 100, option);
+	if(!file_ropen(fn)) {
+		ret = FileNotFound;
+		goto err;
+	}
+	ret = PiBlitL(grp_buf, GRP_BUFFER_SIZE, 0, 0, option, file_read);
+	file_close();
 	if(flag & GPF_PALETTE_SHOW) {
 		grp_palette_load_show(fn);
 	} else {
 		grp_palette_load(fn);
 	}
-
+err:
 	delete[] grp_buf;
 	return ret;
 }

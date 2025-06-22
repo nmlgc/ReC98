@@ -297,7 +297,6 @@ end
 -- ---------------------
 
 local piload_cfg = Config:branch({ aflags = "/ml" })
-local piloadc = piload_cfg:build({ "libs/piloadc/piloadc.asm" })
 local piloadm = piload_cfg:build({ "libs/piloadc/piloadm.asm" })
 local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 	{ "libs/sprite16/sprite16.asm", o = "th03/zunsp.obj" }
@@ -371,7 +370,7 @@ local th01_zunsoft = th01:branch(MODEL_TINY):link("zunsoft", {
 local th01_obj
 th01_obj += platform_obj
 th01_obj += {
-	piloadc,
+	piloadm,
 	"th01.asm",
 	"th01/entry.cpp",
 	"th01/egc.cpp",
