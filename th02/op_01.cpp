@@ -225,7 +225,7 @@ inline void option_value_unput_shadow(
 	gaiji_putca( \
 		option_value_tram_left(1), choice_tram_top(sel), (gb_0 + digit), atrb \
 	); \
-	option_value_unput_shadow(sel, 1, 16); \
+	option_value_unput_shadow(sel, 1); \
 	graph_gaiji_putc( \
 		shadow(option_value_left(1)), \
 		shadow(choice_top(sel)), \
@@ -630,7 +630,7 @@ void pascal near option_put(int sel, tram_atrb2 atrb)
 	if(sel == 0) {
 		option_label_put(0, gbRANK, atrb);
 		option_value_put(0, gbcRANKS[rank], sizeof(gbcRANKS[0]), atrb);
-		option_value_unput_shadow(0, sizeof(gbcRANKS[0])); // off-by-one
+		option_value_unput_shadow(0, (sizeof(gbcRANKS[0]) - 1));
 		option_value_put_shadow(0, gbcRANKS[rank], sizeof(gbcRANKS[0]));
 	} else if(sel == 1) {
 		// Off-by-one, and the MIDI option is way off-center. The OFF option is
@@ -647,7 +647,7 @@ void pascal near option_put(int sel, tram_atrb2 atrb)
 	} else if(sel == 3) {
 		option_digit_unput_and_put(3, gbBOMB, bombs, atrb);
 	} else if(sel == 4) {
-		// Placed off-center by 8 pixels, and unblits twice the needed width.
+		// Placed off-center by 8 pixels.
 		enum {
 			CHOICE_LEFT = (option_value_left(REDUCE_VALUE_LEN) - 8),
 			Y = choice_top(4),
@@ -661,7 +661,7 @@ void pascal near option_put(int sel, tram_atrb2 atrb)
 		);
 
 		graph_copy_rect_1_to_0_16(
-			CHOICE_LEFT, shadow(Y), (REDUCE_VALUE_LEN * 2 * GAIJI_W), GLYPH_H
+			CHOICE_LEFT, shadow(Y), (REDUCE_VALUE_LEN * GAIJI_W), GLYPH_H
 		);
 		graph_putsa_fx(
 			shadow(CHOICE_LEFT),
