@@ -10,9 +10,16 @@ const char pf_fn[] = PF_FN;
 
 int game_init_op(void)
 {
-	if(mem_assign_dos(256000 >> 4)) {
+	// Very specifically fits exactly the High Score viewer's 「東方封魔録」
+	// sprite, the title screen animation, the main menu's background image,
+	// and the 16 KiB .PI load buffer. (Remember that the game launches
+	// directly into the High Score viewer after a demo, and that it wants to
+	// only load the 「東方封魔録」 sprite once and then keep it around for the
+	// lifetime of the process.)
+	if(mem_assign_dos(336416 >> 4)) {
 		return 1;
 	}
+
 	vram_planes_set();
 	graph_start();
 	graph_clear_both();

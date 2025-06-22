@@ -6,7 +6,7 @@
 #include <stddef.h>
 #include <process.h>
 #include "libs/master.lib/master.hpp"
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "platform/vblank.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
@@ -14,7 +14,6 @@
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/core/zunerror.h"
@@ -150,6 +149,10 @@ inline tram_x_t option_value_tram_left(int gaiji_len) {
 #define shadow(v) ( \
 	v + 4 \
 )
+
+static const screen_x_t MENU_LEFT = OPTION_LABEL_LEFT;
+static const pixel_t MENU_W = shadow(OPTION_COLUMN_W * 2);
+static const pixel_t MENU_H = shadow(choice_top(7));
 /// -----------
 
 // Option helpers
@@ -189,7 +192,7 @@ inline void option_label_put_shadow(int sel, const char *str) {
 inline void option_value_unput_shadow(
 	int sel, shiftjis_kanji_amount_t gaiji_len, pixel_t excess_w = 0
 ) {
-	graph_copy_rect_1_to_0_16(
+	bgimage.write_bg_region(
 		option_value_left(gaiji_len),
 		shadow(choice_top(sel)),
 		((gaiji_len * GAIJI_W) + excess_w),
@@ -239,7 +242,8 @@ void op_animate(void)
 	snd_load("huuma.efc", SND_LOAD_SE);
 
 	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
+	GrpSurface_LoadPI(bgimage, nullptr, MENU_MAIN_BG_FN);
+	bgimage.write(0, 0);
 	graph_accesspage(0);
 	GrpSurface_BlitBackgroundPI(&Palettes, "op.pi");
 
@@ -283,7 +287,8 @@ void op_animate(void)
 	title_flash();
 
 	palette_settone(200);
-	graph_accesspage(1);
+	graph_accesspage(0);
+	bgimage.write(0, 0);
 
 	// Note how neither the regular text nor its shadow are aligned to the
 	// 8×16 text grid.
@@ -291,7 +296,6 @@ void op_animate(void)
 	graph_gaiji_puts(shadow(544 + GAIJI_W), shadow(380), GAIJI_W, gbZUN, 0);
 	graph_gaiji_putc(544, 380, gs_COPYRIGHT, 6);
 	graph_gaiji_puts((544 + GAIJI_W), 380, GAIJI_W, gbZUN, 6);
-	graph_copy_page(0);
 
 	if(resident->demo_num == 0) {
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
@@ -494,18 +498,23 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 inline void menu_init(
 	bool& initialized, bool& input_allowed, nearfunc_t_near put_shadow
 ) {
+	// We get called near the beginning of a frame, and thus have a good chance
+	// of successfully racing the beam with the blitting calls below.
+	graph_showpage(0);
+
 	input_allowed = false;
 	initialized = true;
 	text_clear();
-	graph_showpage(1);
-	graph_copy_page(0);
+
+	// Don't overwrite "©ZUN"
+	bgimage.write_bg_region(MENU_LEFT, MENU_TOP, MENU_W, MENU_H);
+
 	put_shadow();
-	graph_showpage(0);
 }
 
-void pascal show_page_1_and_palette(void)
+void pascal show_page_0_and_palette(void)
 {
-	graph_showpage(1);
+	graph_showpage(0);
 	palette_show();
 }
 
@@ -537,9 +546,9 @@ void main_update_and_render(void)
 				score_duration = 2000;
 				score_menu();
 
-				graph_accesspage(1);
-				graph_showpage(0);
-				GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
+				graph_accesspage(0);
+				graph_showpage(1);
+				bgimage.write(0, 0);
 				palette_entry_rgb(MENU_MAIN_PALETTE_FN);
 
 				// These 19 frames have been removed from the end of
@@ -549,14 +558,12 @@ void main_update_and_render(void)
 				frame_delay(1);
 
 				// We can now cleanly show the image we just blitted, in its
-				// intended palette. The page flip will later be undone in
-				// menu_init(), where we also copy page 1 to page 0.
+				// intended palette.
 				// ZUN bug: We should be also be clearing TRAM here. In the
 				// original game, the scoreboard is still part of the next
 				// defined frame.
-				graph_showpage(1);
+				graph_showpage(0);
 				palette_show();
-				graph_accesspage(0);
 				initialized = false;
 				break;
 			case 3:
@@ -567,8 +574,9 @@ void main_update_and_render(void)
 			case 4:
 				musicroom_menu();
 
-				graph_accesspage(1);
-				GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
+				graph_accesspage(0);
+				GrpSurface_LoadPI(bgimage, nullptr, MENU_MAIN_BG_FN);
+				bgimage.write(0, 0);
 				palette_entry_rgb(MENU_MAIN_PALETTE_FN);
 
 				// Since ZUN doesn't give us the luxury of even just a single
@@ -583,8 +591,7 @@ void main_update_and_render(void)
 				// because even the original game only loads and blits the
 				// *image* here. It only renders the menu text in the next
 				// frame, after the frame_delay() at the call site.
-				vblank_run(show_page_1_and_palette);
-				graph_accesspage(0);
+				vblank_run(show_page_0_and_palette);
 				initialized = false;
 				break;
 			case 5:
@@ -649,7 +656,7 @@ void pascal near option_put(int sel, tram_atrb2 atrb)
 		const shiftjis_t near *value = REDUCE_VALUES[resident->reduce_effects];
 		text_putsa(OPTION_LABEL_TRAM_LEFT, (Y / GLYPH_H), REDUCE_LABEL, atrb);
 		text_putsa((CHOICE_LEFT / GLYPH_HALF_W), (Y / GLYPH_H), value, atrb);
-		graph_copy_rect_1_to_0_16(
+		bgimage.write_bg_region(
 			CHOICE_LEFT, shadow(Y), (REDUCE_VALUE_LEN * GAIJI_W), GLYPH_H
 		);
 		graph_putsa_fx(shadow(CHOICE_LEFT), shadow(Y), 0, value);

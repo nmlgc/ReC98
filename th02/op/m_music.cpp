@@ -767,7 +767,7 @@ controls:
 		music_update_render_and_flip();
 	}
 
-#if (GAME <= 3)
+#if (GAME == 3)
 	bgimage.free();
 #endif
 	nopoly_B.free();
@@ -784,7 +784,7 @@ controls:
 	snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 #else
-	graph_showpage(0);
+	graph_showpage(1);
 
 	// ZUN quirk: graph_clear() sets all of VRAM to hardware color #0, which is
 	// purple in the original images, not black.
@@ -793,7 +793,7 @@ controls:
 	// would even cause additional tearing with TH02's call site code: Its
 	// pi_palette_apply() call is sandwiched between the expensive calls to
 	// pi_load() and pi_put_8(), which would negate any palette tricks.
-	graph_accesspage(0);
+	graph_accesspage(1);
 	graph_clear();
 #endif
 }

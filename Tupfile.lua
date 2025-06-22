@@ -515,7 +515,6 @@ obj += {
 	"th02/exit_dos.cpp",
 	"th02/exit.cpp",
 	"th02/frmdelay.cpp",
-	"th02/grp_rect.cpp",
 	"th02/grppsafx.cpp",
 	"th02/initop.cpp",
 	"th02/input_rs.cpp",
