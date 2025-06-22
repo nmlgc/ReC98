@@ -457,7 +457,7 @@ obj += {
 	"th01/fuuin_03.cpp",
 }
 optimized_cfg:branch(
-	Subdir("th01/"), MODEL_LARGE, { cflags = "-DGAME=1" }
+	Subdir("th01/"), MODEL_LARGE, { cflags = "-DGAME=1 -DCPU=386" }
 ):link("debloat", obj)
 -- ----
 
