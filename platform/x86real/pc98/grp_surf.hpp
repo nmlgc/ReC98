@@ -30,6 +30,12 @@ struct GrpSurface_M4 : public GrpSurface_M {
 		screen_y_t top,
 		const LTWH<upixel_t> near *region = nullptr
 	);
+
+	// Helper that writes the given region of the image to the same place in
+	// VRAM.
+	void pascal write_bg_region(
+		upixel_t left, upixel_t top, upixel_t w, upixel_t h
+	);
 };
 // ---------------
 

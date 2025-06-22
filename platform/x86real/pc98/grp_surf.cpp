@@ -72,6 +72,18 @@ void GrpSurface_M4::write(
 	}
 	blitter_func_4plane(b->write, this->plane_paras);
 }
+
+void GrpSurface_M4::write_bg_region(
+	upixel_t left, upixel_t top, upixel_t w, upixel_t h
+)
+{
+	static LTWH<upixel_t> region;
+	region.left = left;
+	region.top = top;
+	region.w = w;
+	region.h = h;
+	write(left, top, &region);
+}
 // ---------------
 
 // Pulling the palette out of the buffer this way might look like reliance on
