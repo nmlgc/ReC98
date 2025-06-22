@@ -122,6 +122,123 @@ void pascal near pi_load_put_8_free_to(const char near *fn, char page)
 	pi_free(0);
 }
 
+/// Coordinates
+/// -----------
+
+static const screen_x_t MENU_CENTER_X = (RES_X / 2);
+static const screen_y_t MENU_TOP = 256;
+
+static const pixel_t OPTION_COLUMN_W = 128;
+static const screen_x_t OPTION_LABEL_LEFT = (MENU_CENTER_X - OPTION_COLUMN_W);
+static const tram_x_t OPTION_LABEL_TRAM_LEFT = (
+	OPTION_LABEL_LEFT / GLYPH_HALF_W
+);
+
+// This alignment makes no sense.
+static const screen_x_t MENU_MAIN_RANK_LABEL_LEFT = 208;
+static const screen_x_t MENU_MAIN_RANK_VALUE_LEFT = 304;
+
+// 16 pixels off-center?
+static const screen_x_t OPTION_VALUE_CENTER_X = (
+	MENU_CENTER_X + (OPTION_COLUMN_W / 2) + 16
+);
+
+inline screen_x_t command_left(int gaiji_len) {
+	return (MENU_CENTER_X - ((gaiji_len * GAIJI_W) / 2));
+}
+#define choice_top(row) ( \
+	MENU_TOP + (((row >= 6) ? (row + 1) : row) * GLYPH_H) \
+)
+#define choice_tram_top(row) ( \
+	choice_top(row) / GLYPH_H \
+)
+#define option_value_left(gaiji_len) ( \
+	OPTION_VALUE_CENTER_X - ((gaiji_len * GAIJI_W) / 2) \
+)
+inline tram_x_t option_value_tram_left(int gaiji_len) {
+	return (option_value_left(gaiji_len) / GLYPH_HALF_W);
+}
+#define shadow(v) ( \
+	v + 4 \
+)
+/// -----------
+
+// Option helpers
+// --------------
+
+#define command_put(sel, str, gaiji_len, atrb) { \
+	gaiji_putsa( \
+		(command_left(gaiji_len) / GLYPH_HALF_W), \
+		choice_tram_top(sel), \
+		str, \
+		atrb \
+	); \
+}
+
+inline void command_put_shadow(
+	int sel, const char *str, shiftjis_kanji_amount_t gaiji_len
+) {
+	graph_gaiji_puts(
+		shadow(command_left(gaiji_len)),
+		shadow(choice_top(sel)),
+		GAIJI_W,
+		str,
+		0
+	);
+}
+
+#define option_label_put(sel, str, atrb) { \
+	gaiji_putsa(OPTION_LABEL_TRAM_LEFT, choice_tram_top(sel), str, atrb); \
+}
+
+inline void option_label_put_shadow(int sel, const char *str) {
+	graph_gaiji_puts(
+		shadow(OPTION_LABEL_LEFT), shadow(choice_top(sel)), GAIJI_W, str, 0
+	);
+}
+
+inline void option_value_unput_shadow(
+	int sel, shiftjis_kanji_amount_t gaiji_len, pixel_t excess_w = 0
+) {
+	graph_copy_rect_1_to_0_16(
+		option_value_left(gaiji_len),
+		shadow(choice_top(sel)),
+		((gaiji_len * GAIJI_W) + excess_w),
+		GLYPH_H
+	);
+}
+
+#define option_value_put(sel, str, gaiji_len, atrb) { \
+	gaiji_putsa( \
+		option_value_tram_left(gaiji_len), choice_tram_top(sel), str, atrb \
+	); \
+}
+
+#define option_value_put_shadow(sel, str, gaiji_len) { \
+	graph_gaiji_puts( \
+		shadow(option_value_left(gaiji_len)), \
+		shadow(choice_top(sel)), \
+		GAIJI_W, \
+		str, \
+		0 \
+	); \
+}
+
+#define option_digit_unput_and_put(sel, label, digit, atrb) { \
+	option_label_put(sel, label, atrb); \
+	gaiji_putca( \
+		option_value_tram_left(1), choice_tram_top(sel), (gb_0 + digit), atrb \
+	); \
+	option_value_unput_shadow(sel, 1, 16); \
+	graph_gaiji_putc( \
+		shadow(option_value_left(1)), \
+		shadow(choice_top(sel)), \
+		(gb_0 + digit), \
+		0 \
+	); \
+}
+// --------------
+
 void op_animate(void)
 {
 	// Sony Vegas calls this a "Barn Door" transition.
@@ -174,10 +291,12 @@ void op_animate(void)
 	palette_settone(200);
 	graph_accesspage(1);
 
-	graph_gaiji_putc(548, 384, gs_COPYRIGHT, 0);
-	graph_gaiji_puts(564, 384, 16, gbZUN, 0);
+	// Note how neither the regular text nor its shadow are aligned to the
+	// 8×16 text grid.
+	graph_gaiji_putc(shadow(544), shadow(380), gs_COPYRIGHT, 0);
+	graph_gaiji_puts(shadow(544 + GAIJI_W), shadow(380), GAIJI_W, gbZUN, 0);
 	graph_gaiji_putc(544, 380, gs_COPYRIGHT, 6);
-	graph_gaiji_puts(560, 380, 16, gbZUN, 6);
+	graph_gaiji_puts((544 + GAIJI_W), 380, GAIJI_W, gbZUN, 6);
 	graph_copy_page(0);
 
 	if(resident->demo_num == 0) {
@@ -320,39 +439,62 @@ const unsigned char gbcBGM_MODE[3][5] = {
 
 void pascal near main_put_shadow(void)
 {
-	graph_gaiji_puts(284, 260, 16, gbSTART, 0);
-	graph_gaiji_puts(236, 276, 16, gbEXTRA_START, 0);
-	graph_gaiji_puts(268, 292, 16, gbHISCORE, 0);
-	graph_gaiji_puts(276, 308, 16, gbOPTION, 0);
-	graph_gaiji_puts(244, 324, 16, gbMUSIC_MODE, 0);
-	graph_gaiji_puts(292, 340, 16, gbQUIT, 0);
+	command_put_shadow(0, gbSTART, 5);
+	command_put_shadow(1, gbEXTRA_START, (sizeof(gbEXTRA_START) - 1));
+	command_put_shadow(2, gbHISCORE, 7);
+	command_put_shadow(3, gbOPTION, 6);
+	command_put_shadow(4, gbMUSIC_MODE, (sizeof(gbMUSIC_MODE) - 1));
+	command_put_shadow(5, gbQUIT, 4);
 
-	graph_gaiji_puts(212, 372, 16, gbRANK, 0);
-	graph_gaiji_puts(308, 372, 16, gbcRANKS[rank], 0);
+	graph_gaiji_puts(
+		shadow(MENU_MAIN_RANK_LABEL_LEFT),
+		shadow(choice_top(6)),
+		GAIJI_W,
+		gbRANK,
+		0
+	);
+	graph_gaiji_puts(
+		shadow(MENU_MAIN_RANK_VALUE_LEFT),
+		shadow(choice_top(6)),
+		GAIJI_W,
+		gbcRANKS[rank],
+		0
+	);
 }
 
 void pascal near main_put(int sel, tram_atrb2 atrb)
 {
+	// ZUN bloat: Could have been deduplicated.
 	if(sel == 0) {
-		gaiji_putsa(35, 16, gbSTART, atrb);
+		command_put(0, gbSTART, 5, atrb);
 	} else if(sel == 2) {
-		gaiji_putsa(33, 18, gbHISCORE, atrb);
+		command_put(2, gbHISCORE, 7, atrb);
 	} else if(sel == 3) {
-		gaiji_putsa(34, 19, gbOPTION, atrb);
+		command_put(3, gbOPTION, 6, atrb);
 	} else if(sel == 4) {
-		gaiji_putsa(30, 20, gbMUSIC_MODE, atrb);
+		command_put(4, gbMUSIC_MODE, (sizeof(gbMUSIC_MODE) - 1), atrb);
 	} else if(sel == 5) {
-		gaiji_putsa(36, 21, gbQUIT, atrb);
+		command_put(5, gbQUIT, 4, atrb);
 	}
 	if(sel == 1) {
 		if(extra_unlocked) {
-			gaiji_putsa(29, 17, gbEXTRA_START, atrb);
+			command_put(1, gbEXTRA_START, (sizeof(gbEXTRA_START) - 1), atrb);
 		} else {
-			gaiji_putsa(29, 17, gbEXTRA_START, TX_BLUE);
+			command_put(1, gbEXTRA_START, (sizeof(gbEXTRA_START) - 1), TX_BLUE);
 		}
 	}
-	gaiji_putsa(26, 23, gbRANK, TX_GREEN);
-	gaiji_putsa(38, 23, gbcRANKS[rank], TX_GREEN);
+	gaiji_putsa(
+		(MENU_MAIN_RANK_LABEL_LEFT / GLYPH_HALF_W),
+		choice_tram_top(6),
+		gbRANK,
+		TX_GREEN
+	);
+	gaiji_putsa(
+		(MENU_MAIN_RANK_VALUE_LEFT / GLYPH_HALF_W),
+		choice_tram_top(6),
+		gbcRANKS[rank],
+		TX_GREEN
+	);
 }
 
 void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
@@ -478,50 +620,66 @@ void main_update_and_render(void)
 
 void pascal near option_put_shadow(void)
 {
-	graph_gaiji_puts(196, 260, 16, gbRANK, 0);
-	graph_gaiji_puts(196, 276, 16, gbMUSIC, 0);
-	graph_gaiji_puts(196, 292, 16, gbPLAYER, 0);
-	graph_gaiji_puts(196, 308, 16, gbBOMB, 0);
-	graph_putsa_fx(196, 324, 0, REDUCE_EFFECTS_TITLE);
-	graph_gaiji_puts(284, 340, 16, gbRESET, 0);
-	graph_gaiji_puts(292, 372, 16, gbQUIT, 0);
+	option_label_put_shadow(0, gbRANK);
+	option_label_put_shadow(1, gbMUSIC);
+	option_label_put_shadow(2, gbPLAYER);
+	option_label_put_shadow(3, gbBOMB);
+	graph_putsa_fx(
+		shadow(OPTION_LABEL_LEFT), shadow(choice_top(4)), 0, REDUCE_LABEL
+	);
+	command_put_shadow(5, gbRESET, 5);
+	command_put_shadow(6, gbQUIT, 4);
 }
 
 void pascal near option_put(int sel, tram_atrb2 atrb)
 {
+	// ZUN bug: Some off-by-one widths here.
 	if(sel == 0) {
-		gaiji_putsa(24, 16, gbRANK, atrb);
-		gaiji_putsa(42, 16, gbcRANKS[rank], atrb);
-		graph_copy_rect_1_to_0_16(336, 260, 128, 16);
-		graph_gaiji_puts(340, 260, 16, gbcRANKS[rank], 0);
+		option_label_put(0, gbRANK, atrb);
+		option_value_put(0, gbcRANKS[rank], sizeof(gbcRANKS[0]), atrb);
+		option_value_unput_shadow(0, sizeof(gbcRANKS[0])); // off-by-one
+		option_value_put_shadow(0, gbcRANKS[rank], sizeof(gbcRANKS[0]));
 	} else if(sel == 1) {
-		gaiji_putsa(24, 17, gbMUSIC, atrb);
-		gaiji_putsa(47, 17, gbcBGM_MODE[(char)snd_bgm_mode], atrb);
-		graph_copy_rect_1_to_0_16(376, 276, 64, 16);
-		graph_gaiji_puts(380, 276, 16, gbcBGM_MODE[(char)snd_bgm_mode], 0);
+		// Off-by-one, and the MIDI option is way off-center. The OFF option is
+		// correctly centered, though...
+		enum {
+			LEN = (sizeof(gbcBGM_MODE[0]) - 2),
+		};
+		option_label_put(1, gbMUSIC, atrb);
+		option_value_put(1, gbcBGM_MODE[(char)snd_bgm_mode], LEN, atrb);
+		option_value_unput_shadow(1, LEN, 16);
+		option_value_put_shadow(1, gbcBGM_MODE[(char)snd_bgm_mode], LEN);
 	} else if(sel == 2) {
-		gaiji_putsa(24, 18, gbPLAYER, atrb);
-		gaiji_putca(49, 18, lives + 1 + gb_0, atrb);
-		graph_copy_rect_1_to_0_16(392, 292, 32, 16);
-		graph_gaiji_putc(396, 292, lives + 1 + gb_0, 0);
+		option_digit_unput_and_put(2, gbPLAYER, (lives + 1), atrb);
 	} else if(sel == 3) {
-		gaiji_putsa(24, 19, gbBOMB, atrb);
-		gaiji_putca(49, 19, bombs + gb_0, atrb);
-		graph_copy_rect_1_to_0_16(392, 308, 32, 16);
-		graph_gaiji_putc(396, 308, bombs + gb_0, 0);
+		option_digit_unput_and_put(3, gbBOMB, bombs, atrb);
 	} else if(sel == 4) {
-		text_putsa(24, 20, REDUCE_EFFECTS_TITLE, atrb);
+		// Placed off-center by 8 pixels, and unblits twice the needed width.
+		enum {
+			CHOICE_LEFT = (option_value_left(REDUCE_VALUE_LEN) - 8),
+			Y = choice_top(4),
+		};
+		text_putsa(OPTION_LABEL_TRAM_LEFT, (Y / GLYPH_H), REDUCE_LABEL, atrb);
 		text_putsa(
-			45, 20, REDUCE_EFFECTS_CHOICES[resident->reduce_effects], atrb
+			(CHOICE_LEFT / GLYPH_HALF_W),
+			(Y / GLYPH_H),
+			REDUCE_VALUES[resident->reduce_effects],
+			atrb
 		);
-		graph_copy_rect_1_to_0_16(360, 324, 128, 16);
+
+		graph_copy_rect_1_to_0_16(
+			CHOICE_LEFT, shadow(Y), (REDUCE_VALUE_LEN * 2 * GAIJI_W), GLYPH_H
+		);
 		graph_putsa_fx(
-			364, 324, 0, REDUCE_EFFECTS_CHOICES[resident->reduce_effects]
+			shadow(CHOICE_LEFT),
+			shadow(Y),
+			0,
+			REDUCE_VALUES[resident->reduce_effects]
 		);
 	} else if(sel == 5) {
-		gaiji_putsa(35, 21, gbRESET, atrb);
+		command_put(5, gbRESET, 5, atrb);
 	} else if(sel == 6) {
-		gaiji_putsa(36, 23, gbQUIT, atrb);
+		command_put(6, gbQUIT, 4, atrb);
 	}
 }
 
