@@ -358,20 +358,25 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	menu_put(menu_sel, TX_WHITE);
 }
 
+inline void menu_init(
+	bool& initialized, bool& input_allowed, nearfunc_t_near put_shadow
+) {
+	input_allowed = false;
+	initialized = true;
+	text_clear();
+	graph_showpage(1);
+	graph_copy_page(0);
+	put_shadow();
+	graph_showpage(0);
+}
+
 void main_update_and_render(void)
 {
 	static bool initialized = false;
 	if(!initialized) {
-		int i;
-		main_input_allowed = false;
-		initialized = true;
-		text_clear();
-		graph_showpage(1);
-		graph_copy_page(0);
-		main_put_shadow();
-		graph_showpage(0);
+		menu_init(initialized, main_input_allowed, main_put_shadow);
 		idle_frames = 0;
-		for(i = 0; i < 6; i++) {
+		for(int i = 0; i < 6; i++) {
 			main_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
 		menu_put = main_put;
@@ -539,15 +544,8 @@ void option_update_and_render(void)
 		option_put(menu_sel, TX_WHITE);
 
 	if(!initialized) {
-		int i;
-		input_allowed = false;
-		initialized = true;
-		text_clear();
-		graph_showpage(1);
-		graph_copy_page(0);
-		option_put_shadow();
-		graph_showpage(0);
-		for(i = 0; i < 7; i++) {
+		menu_init(initialized, input_allowed, option_put_shadow);
+		for(int i = 0; i < 7; i++) {
 			option_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
 		menu_put = option_put;
