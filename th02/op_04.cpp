@@ -107,17 +107,16 @@ static void pascal near scores_put(int place_to_highlight)
 	}
 }
 
-void pascal near logo_render(void)
+void pascal near logo_render(int step)
 {
 	int i;
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();
-	logo_step++;
 	#define render(i, offset) for(i = 0; i < 4; i++) { \
-		screen_x_t x = logo_step + (160 * i) + offset; \
+		screen_x_t x = step + (160 * i) + offset; \
 		x %= 640; \
-		screen_y_t y = (i * 100) - logo_step; \
+		screen_y_t y = (i * 100) - step; \
 		while(1) { \
 			if(y < 0) { \
 				y += 400; \
@@ -177,7 +176,7 @@ void pascal score_menu(void)
 		} else if(input_allowed == 1 && key_det) {
 			break;
 		}
-		logo_render();
+		logo_render(++logo_step);
 		frame_delay(1);
 		graph_accesspage(page_shown);
 		graph_showpage(page_shown = (1 - page_shown));
