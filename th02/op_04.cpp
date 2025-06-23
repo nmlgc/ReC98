@@ -146,7 +146,22 @@ void pascal score_menu(void)
 
 	if(need_op_h_bft) {
 		need_op_h_bft = 0;
+
+		// In super_entry_at(), master.lib insists on provisionally allocating
+		// a 9,216-byte [super_buffer], just in case the user later wants to
+		// perform any of the very few operations on the sprite that require
+		// that amount of temporary memory. This allocation rips an unfortunate
+		// 9,216-byte hole into our heap, which is smaller than most other
+		// allocations we want to do on this branch, thus forceing us to boost
+		// the memory limit to work around the ensuing heap fragmentation.
+		// super_convert_tiny() is the only super_*() function in PC-98 Touhou
+		// that needs this buffer, and we don't use it here. So let's
+		// temporarily point [super_buffer] to some non-null address to prevent
+		// the allocation, at least until we've replaced all of the super_*()
+		// functions with our own...
+		super_buffer = reinterpret_cast<void __seg *>(SEG_PLANE_B);
 		super_entry_bfnt("op_h.bft");
+		super_buffer = nullptr;
 	}
 	palette_entry_rgb_show("op_h.rgb");
 	grc_setclip(128, 96, 512, 304);
