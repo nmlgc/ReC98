@@ -534,39 +534,25 @@ void main_update_and_render(void)
 				score_duration = 2000;
 				score_menu();
 
-				// ZUN landmine: score_menu() can return with either page 0 or
-				// 1 as the last page it rendered to. Forcibly showing page 0
-				// thus has a 50% chance of flipping back to the High Score
-				// viewer's second-to-last frame for the duration of the .PI
-				// load and blit calls below. Pretty janky considering that ZUN
-				// just showed the actual last frame for 20 frames.
 				graph_accesspage(1);
 				graph_showpage(0);
-
-				// ZUN landmine: We come here with [PaletteTone] set to 100,
-				// which causes two screen tearing landmines. I've inlined the
-				// usual pi_fullres_load_palette_apply_put_free() macro to
-				// point this out more clearly:
-				// • pi_load() takes a while and returns in the middle of some
-				//   frame.
-				// • pi_palette_apply() overwrites the hardware palette with
-				//   `op2.pi`'s differing one, causing screen tearing.
-				// • pi_put_8() also takes a while and returns in the middle of
-				//   some frame.
-				// • palette_entry_rgb_show() overwrites the hardware palette
-				//   with another differing one, also causing screen tearing.
-				// Without considering execution times, the pi_palette_apply()
-				// call seems redundant, but it does have a visible effect on
-				// any PC-98 model that can't run pi_put_8() instantly. This
-				// does not include the infinitely fast PC-98 we're assuming
-				// over on the `debloated` branch, though.
 				pi_load(0, MENU_MAIN_BG_FN);
-				pi_palette_apply(0);
 				pi_put_8(0, 0, 0);
 				pi_free(0);
-				palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
+				palette_entry_rgb(MENU_MAIN_PALETTE_FN);
 
-				graph_copy_page(0);
+				// These 19 frames have been removed from the end of
+				// score_menu() on this branch.
+				while(vsync_Count1 < 19) {
+				}
+				frame_delay(1);
+
+				// We can now cleanly show the image we just blitted, in its
+				// intended palette. The page flip will later be undone in
+				// menu_init(), where we also copy page 1 to page 0.
+				graph_showpage(1);
+				palette_show();
+				text_clear();
 				graph_accesspage(0);
 				initialized = false;
 				break;
@@ -776,6 +762,11 @@ int main(void)
 		}
 		score_duration = 350;
 		score_menu();
+
+		// This branch removes 19 frames of delay from the end of score_menu()
+		// to fix the landmine at its other call site.
+		frame_delay(19);
+
 		graph_showpage(0);
 		graph_accesspage(0);
 	}

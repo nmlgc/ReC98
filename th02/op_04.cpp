@@ -183,10 +183,18 @@ void pascal score_menu(void)
 			palette_settone(100);
 			scores_put(-1);
 		}
-	} while(logo_step <= score_duration);
-
+		// Since we've merged the ZUN bug frame into this loop, we need to stay
+		// here for one extra frame.
+	} while(logo_step <= (score_duration + 1));
 	key_det = 0;
-	frame_delay(20);
+
+	// Render the previously rendered frame to the now active page to ensure
+	// that both VRAM pages are identical. This way, the call site can cleanly
+	// transition to whatever it wants to draw on whatever page.
+	vsync_Count1 = 0;
+	logo_render(logo_step - 1);
+	while(vsync_Count1 < 1) {
+	}
 	grc_setclip(0, 0, 639, 399);
 }
 

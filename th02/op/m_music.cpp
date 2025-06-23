@@ -1040,9 +1040,7 @@ controls:
 	graph_accesspage(1);
 
 #if (GAME == 2)
-	// ZUN bloat: The call site would have been a better place for this,
-	// especially since it has another copy of the same code with the same
-	// landmine.
+	// ZUN bloat: The call site would have been a better place for this.
 	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
 	palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 	graph_copy_page(0);
