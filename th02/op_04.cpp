@@ -109,27 +109,20 @@ static void pascal near scores_put(int place_to_highlight)
 
 void pascal near logo_render(int step)
 {
-	int i;
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();
-	#define render(i, offset) for(i = 0; i < 4; i++) { \
-		screen_x_t x = step + (160 * i) + offset; \
-		x %= 640; \
-		screen_y_t y = (i * 100) - step; \
-		while(1) { \
-			if(y < 0) { \
-				y += 400; \
-			} else { \
-				break; \
-			} \
-		} \
-		super_put_rect(x, y, 0); \
-		super_put_rect(x + 64, y, 1); \
+	for(int i = 0; i < 4; i++) {
+		screen_y_t y = ((i * 100) - step);
+		while(y < 0) {
+			y += 400;
+		}
+		for(screen_x_t offset = 0; offset < RES_X; offset += (RES_X / 2)) {
+			screen_x_t x = ((offset + step + (160 * i)) % RES_X);
+			super_put_rect((x +  0), y, 0);
+			super_put_rect((x + 64), y, 1);
+		}
 	}
-	render(i, 0);
-	render(i, 320);
-	#undef render
 }
 
 void pascal score_menu(void)
