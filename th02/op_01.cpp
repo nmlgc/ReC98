@@ -7,6 +7,7 @@
 #include <process.h>
 #include "libs/master.lib/master.hpp"
 #include "platform/grp_surf.hpp"
+#include "platform/vblank.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"
@@ -502,6 +503,12 @@ inline void menu_init(
 	graph_showpage(0);
 }
 
+void pascal show_page_1_and_palette(void)
+{
+	graph_showpage(1);
+	palette_show();
+}
+
 void main_update_and_render(void)
 {
 	static bool initialized = false;
@@ -562,8 +569,21 @@ void main_update_and_render(void)
 
 				graph_accesspage(1);
 				GrpSurface_BlitBackgroundPI(nullptr, MENU_MAIN_BG_FN);
-				palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
-				graph_copy_page(0);
+				palette_entry_rgb(MENU_MAIN_PALETTE_FN);
+
+				// Since ZUN doesn't give us the luxury of even just a single
+				// delay frame for switching back to the Main menu's background
+				// image, we have to do the flip after the frame_delay() in the
+				// loop that called us. This ensures that the game displays at
+				// least one frame of the Music Room's purple-cleared VRAM on
+				// even the hypothetical infinitely fast PC-98 that would
+				// execute everything above within the vertical blanking
+				// interval.
+				// But even then, we still maintain the original frame timing
+				// because even the original game only loads and blits the
+				// *image* here. It only renders the menu text in the next
+				// frame, after the frame_delay() at the call site.
+				vblank_run(show_page_1_and_palette);
 				graph_accesspage(0);
 				initialized = false;
 				break;
