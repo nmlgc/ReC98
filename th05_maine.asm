@@ -6388,7 +6388,6 @@ aStf00_bft	db 'stf00.bft',0
 	; th03/formats/cdg[bss].asm
 	extern _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
-include th03/cutscene/cutscene[bss].asm
 measure_1500E	dw ?
 word_15010	dw ?
 word_15012	dw ?

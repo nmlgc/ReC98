@@ -47,8 +47,6 @@
 #endif
 #include "th03/cutscene/cutscene.hpp"
 
-#pragma option -a2
-
 // Constants
 // ---------
 
@@ -77,8 +75,12 @@ static const pixel_t NAME_W = ((NAME_LEN * GLYPH_HALF_W) + GLYPH_FULL_W);
 static const int TEXT_INTERVAL_DEFAULT = ((GAME == 5) ? 2 : 1);
 // ---------
 
-// State
-// -----
+/// State
+/// -----
+
+#if (GAME == 5)
+#define extern
+#endif
 
 #if (GAME >= 4)
 // Statically allocated. MODDERS: TH03's dynamic allocation was better than
@@ -101,19 +103,9 @@ extern Planar<dots16_t> far *box_bg;
 // Skips any delays during the cutscene if `true`.
 extern bool fast_forward;
 
-// [y] is always aligned to GLYPH_H pixels.
-extern screen_point_t cursor;
-
-extern int text_interval;
-extern vc_t text_col;
-extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
-
-#if (GAME >= 4)
-#define text_fx graph_putsa_fx_func
-#endif
-// -----
-
 #if (GAME == 5)
+static int8_t unused[60]; // ZUN bloat
+
 // String-to-color map
 // -------------------
 // Used to automatically change the text color whenever a specific Shift-JIS
@@ -128,10 +120,27 @@ struct colmap_t {
 	ShiftJISKanji keys[COLMAP_COUNT][NAME_KANJI_LEN];
 };
 
-extern colmap_t colmap;
+colmap_t colmap;
+#undef extern
 extern unsigned char colmap_count;
-// -------------------
+#define extern
+static int8_t padding; // ZUN bloat
+/// -------------------
 #endif
+
+// [y] is always aligned to GLYPH_H pixels.
+extern screen_point_t cursor;
+
+extern int text_interval;
+extern vc_t text_col;
+extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
+
+#if (GAME >= 4)
+#define text_fx graph_putsa_fx_func
+#endif
+// -----
+
+#pragma option -a2
 
 // Function ordering fails
 // -----------------------
@@ -391,6 +400,7 @@ void near box_bg_put(void)
 }
 #endif
 
+#undef extern
 #include "th03/formats/script.hpp"
 
 void near cursor_advance_and_animate(void)

@@ -24,7 +24,11 @@ enum script_ret_t {
 	STOP = -1,
 };
 
+#if ((GAME == 5) && (BINARY == 'E'))
+int script_param_number_default;
+#else
 extern int script_param_number_default;
+#endif
 
 #define str_sep_control_or_space(c) \
 	(iscntrl(c) || (c == ' '))
