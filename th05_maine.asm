@@ -23,7 +23,7 @@ include th05/th05.inc
 include th01/math/subpixel.inc
 include th04/hardware/grppsafx.inc
 
-group_01 group maine_01_TEXT, SCORE_TEXT, maine_01__TEXT
+group_01 group CUTSCENE_TEXT, maine_01_TEXT, SCORE_TEXT, maine_01__TEXT
 
 ; ===========================================================================
 
@@ -64,7 +64,7 @@ _TEXT ends
 
 ; ===========================================================================
 
-maine_01_TEXT segment byte public 'CODE' use16
+CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -103,9 +103,9 @@ public @screen_line_next_animate$qv
 
 loc_B1F7:
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		dec	_graph_putsa_fx_func
 		inc	di
 
@@ -114,9 +114,9 @@ loc_B21E:
 		jl	short loc_B1F7
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		inc	_line_id_total
 		inc	_line_id_on_screen
 		mov	bx, _loaded_screen_id
@@ -170,7 +170,7 @@ arg_2		= word ptr  6
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage 0
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		GRCG_OFF_CLOBBERING dx
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -190,14 +190,14 @@ loc_B2EE:
 		idiv	bx
 		push	ax
 		call	@pi_put_quarter_masked_8$qiiiii
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		inc	si
 
 loc_B309:
 		cmp	si, 8
 		jl	short loc_B2EE
 		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		inc	_loaded_screen_id
 		cmp	_loaded_screen_id, 8
@@ -217,7 +217,7 @@ loc_B357:
 		add	_measure_target, 2
 
 loc_B35C:
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		or	al, al
 		jz	short loc_B35C
 		call	@screen_line_next_animate$qv
@@ -226,7 +226,7 @@ loc_B35C:
 		add	_measure_target, 30
 
 loc_B36F:
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		or	al, al
 		jz	short loc_B36F
 		pop	di
@@ -234,48 +234,10 @@ loc_B36F:
 		leave
 		retn	4
 sub_B273	endp
+CUTSCENE_TEXT ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B37C	proc near
-		push	bp
-		mov	bp, sp
-		call	@frame_delay$qi pascal, 2
-		graph_accesspage _page_shown
-		mov	al, 1
-		sub	al, _page_shown
-		mov	_page_shown, al
-		graph_showpage al
-		inc	_frames_half
-		call	_snd_bgm_measure
-		mov	_measure_cur, ax
-		cmp	_measure_cur, 0
-		jge	short loc_B3B9
-		mov	ax, _frames_half
-		mov	bx, 22
-		cwd
-		idiv	bx
-		mov	_measure_cur, ax
-
-loc_B3B9:
-		mov	ax, _measure_cur
-		cmp	ax, _measure_target
-		jl	short loc_B3C7
-		mov	ax, 1
-		jmp	short loc_B3C9
-; ---------------------------------------------------------------------------
-
-loc_B3C7:
-		xor	ax, ax
-
-loc_B3C9:
-		pop	bp
-		retn
-sub_B37C	endp
-
+maine_01_TEXT segment byte public 'CODE' use16
+	@wait_flip_and_check_measure_targ$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -310,7 +272,7 @@ public @allcast_animate$qv
 		mov	_measure_target, 2
 
 loc_B45F:
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		or	al, al
 		jz	short loc_B45F
 		mov	PaletteTone, 100
@@ -332,7 +294,7 @@ loc_B45F:
 		add	_measure_target, 16
 
 loc_B4B5:
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		or	al, al
 		jz	short loc_B4B5
 		push	4
@@ -6391,8 +6353,6 @@ aStf00_bft	db 'stf00.bft',0
 	extern _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
 	; th05/allcast.cpp
-	extern _measure_cur:word
-	extern _frames_half:word
 	extern _measure_target:word
 	extern _loaded_screen_id:word
 	extern _line_id_total:word
