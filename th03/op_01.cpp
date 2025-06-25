@@ -866,6 +866,14 @@ void main(void)
 
 	// Showing the menu options before loading part 2 is actually a pretty nice
 	// idea to better hide potentially long loading times.
+	//
+	// ZUN quirk: Resetting [input_sp] regardless of the actually held keys
+	// means that main_update_and_render() always returns with its instance of
+	// [input_allowed] set to `true`. Thus, any initially held key is processed
+	// instantly on the first call to the function in the loop below – contrary
+	// to what you would expect from the whole input locking system, and
+	// contrary to how the game behaves after switching the active menu later
+	// on, where inputs *are* locked until the player releases all keys.
 	in_option = false;
 	input_sp = INPUT_NONE;
 	main_update_and_render();
