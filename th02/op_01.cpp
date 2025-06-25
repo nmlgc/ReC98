@@ -411,6 +411,13 @@ void main_update_and_render(void)
 				score_duration = 2000;
 				text_clear();
 				score_menu();
+
+				// ZUN landmine: score_menu() can return with either page 0 or
+				// 1 as the last page it rendered to. Forcibly showing page 0
+				// thus has a 50% chance of flipping back to the High Score
+				// viewer's second-to-last frame for the duration of the .PI
+				// load and blit calls below. Pretty janky considering that ZUN
+				// just showed the actual last frame for 20 frames.
 				graph_accesspage(1);
 				graph_showpage(0);
 
