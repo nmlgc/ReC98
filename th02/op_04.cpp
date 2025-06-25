@@ -140,7 +140,7 @@ void pascal near logo_render(void)
 void pascal score_menu(void)
 {
 	int input_allowed = 0;
-	char page = 0;
+	page_t page_shown = 0;
 
 	// ZUN landmine: We get here not too long after VSync, and a VRAM clear of
 	// the visible page might successfully race the beam. But it certainly
@@ -171,7 +171,7 @@ void pascal score_menu(void)
 	// ZUN landmine: The beam is certainly at some place within the frame by
 	// now, yielding another tearing line.
 	graph_accesspage(0);
-	page = 1 - page;
+	page_shown = (1 - page_shown);
 	graph_showpage(1);
 
 	do {
@@ -183,8 +183,8 @@ void pascal score_menu(void)
 		}
 		logo_render();
 		frame_delay(1);
-		graph_accesspage(page);
-		graph_showpage(page = 1 - page);
+		graph_accesspage(page_shown);
+		graph_showpage(page_shown = (1 - page_shown));
 	} while(logo_step <= score_duration);
 
 	key_det = 0;
