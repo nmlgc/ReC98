@@ -13,7 +13,11 @@ inline void graph_accesspage_0(void) {
 	_outportb_(0xA6, (_AX ^= _AX));
 }
 
+#if (GAME == 5)
+vram_word_amount_t egcrect_w;
+#else
 extern vram_word_amount_t egcrect_w;
+#endif
 
 static void near egc_start_copy(void);
 

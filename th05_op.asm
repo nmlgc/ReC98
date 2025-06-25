@@ -224,7 +224,6 @@ include th05/formats/pi_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
-include th04/hardware/egcrect[bss].asm
 include th04/zunsoft[bss].asm
 
 		end

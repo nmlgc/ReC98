@@ -1009,7 +1009,6 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th04/snd_mmdr.c",
 	"th04/snd_mode.cpp",
 	"th04/grppsafx.asm",
-	"th05_maine.asm",
 	"th04/cdg_p_na.cpp",
 	"th02/snd_se_r.cpp",
 	"th04/snd_se.cpp",
@@ -1032,6 +1031,7 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th05/egcrect.cpp",
 	"th05/cutscene.cpp",
 	"th05/regist.cpp",
+	"th05_maine.asm",
 	"th05/staff.cpp",
 })
 -- ----
