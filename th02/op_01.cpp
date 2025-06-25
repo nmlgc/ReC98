@@ -131,7 +131,7 @@ void op_animate(void)
 
 	text_wipe();
 	snd_load("huuma.efc", SND_LOAD_SE);
-	pi_load_put_8_free_to("op2.pi", 1);
+	pi_load_put_8_free_to(MENU_MAIN_BG_FN, 1);
 	pi_load_put_8_free_to("op.pi", 0);
 	pi_load(0, "opa.pi");
 	pi_load(1, "opb.pi");
@@ -180,7 +180,7 @@ void op_animate(void)
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	}
 	resident->demo_num = 0;
-	palette_entry_rgb_show("op.rgb");
+	palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 	palette_white_in(6);
 }
 
@@ -400,8 +400,8 @@ void main_update_and_render(void)
 				score_menu();
 				graph_accesspage(1);
 				graph_showpage(0);
-				pi_fullres_load_palette_apply_put_free(0, "op2.pi");
-				palette_entry_rgb_show("op.rgb");
+				pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+				palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 				graph_copy_page(0);
 				graph_accesspage(0);
 				initialized = false;

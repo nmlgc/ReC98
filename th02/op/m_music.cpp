@@ -1054,8 +1054,8 @@ controls:
 
 #if (GAME == 2)
 	// ZUN bloat: The call site would have been a better place for this.
-	pi_fullres_load_palette_apply_put_free(0, "op2.pi");
-	palette_entry_rgb_show("op.rgb");
+	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
+	palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 	graph_copy_page(0);
 #endif
 
