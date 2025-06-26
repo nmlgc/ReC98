@@ -81,8 +81,8 @@ public @screen_line_next_animate$qv
 		push	di
 		mov	bx, _line_id_total
 		shl	bx, 2
-		mov	ax, word ptr (ALLCAST_PTRS+2)[bx]
-		mov	dx, word ptr ALLCAST_PTRS[bx]
+		mov	ax, word ptr (_LINES+2)[bx]
+		mov	dx, word ptr _LINES[bx]
 		mov	word ptr [bp+@@str+2], ax
 		mov	word ptr [bp+@@str], dx
 		mov	bx, _loaded_screen_id
@@ -142,68 +142,6 @@ CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
 	@wait_flip_and_check_measure_targ$qv procdesc near
-	@SCREEN_FADEOUT_ANIMATE_AND_ADVAN$QII procdesc pascal near \
-		pic_left_and_top:dword
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @allcast_animate$qv
-@allcast_animate$qv	proc near
-		push	bp
-		mov	bp, sp
-		mov	_line_id_total, 0
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.playchar]
-		mov	_allcast_playchar, al
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
-		graph_accesspage 1
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		graph_accesspage 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		GRCG_OFF_CLOBBERING dx
-		mov	_loaded_screen_id, 0
-		push	0
-		mov	al, _allcast_playchar
-		mov	ah, 0
-		shl	ax, 5
-		mov	bx, ax
-		pushd	_BG_FN[bx]
-		call	@pi_load$qinxc
-		call	@pi_palette_apply$qi pascal, 0
-		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		mov	_measure_target, 2
-
-loc_B45F:
-		call	@wait_flip_and_check_measure_targ$qv
-		or	al, al
-		jz	short loc_B45F
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
-		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
-		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
-		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
-		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
-		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
-		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
-		add	_measure_target, 16
-
-loc_B4B5:
-		call	@wait_flip_and_check_measure_targ$qv
-		or	al, al
-		jz	short loc_B4B5
-		push	4
-		call	palette_black_out
-		call	@pi_free$qi pascal, 0
-		graph_accesspage 0
-		graph_showpage al
-		pop	bp
-		retn
-@allcast_animate$qv	endp
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
@@ -6022,7 +5960,7 @@ _BG_QUARTER	label word
 		dw 1, 0, 1, 2, 1, 1, 1, 0
 		dw 1, 2, 0, 1, 0, 2, 2, 0
 		dw 1, 0, 0, 2, 0, 3, 3, 0
-ALLCAST_PTRS	dd aProjectOfTouho
+_LINES	dd aProjectOfTouho
 		dd aNo_1Buumx		; "		     Project of	TOUHOU	  "...
 		dd aReimuHakureiSh
 		dd aNo_2Buumx
@@ -6150,7 +6088,8 @@ aP_m_d_ProgramM	db '    P.M.D. Program                             M.Kajihara(KA
 aSpecialThanksA	db '    Special Thanks                             Aotaka',0
 aAmusementMaker	db '                                               Amusement Makers',0
 aAndAllTestPlay	db '             and all test player and you ... ',0
-aExed		db 'EXED',0
+public _EXED
+_EXED db 'EXED',0
 include th04/hiscore/alphabet[data].asm
 byte_11621	db 0
 public _entered_name_cursor
@@ -6250,10 +6189,8 @@ aStf00_bft	db 'stf00.bft',0
 	extern _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
 	; th05/allcast.cpp
-	extern _measure_target:word
 	extern _loaded_screen_id:word
 	extern _line_id_total:word
-	extern _allcast_playchar:byte
 
 include th04/formats/scoredat[bss].asm
 public _glyphballs

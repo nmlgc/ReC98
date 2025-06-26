@@ -4,8 +4,10 @@
 #include "th05/snd/snd.h"
 #include "th05/formats/pi.hpp"
 #include "th05/playchar.h"
+#include "th05/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th01/hardware/grcg.hpp"
+#include "game/cutscene.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 
 // Constants
@@ -18,12 +20,11 @@
 static const int SCREEN_COUNT = 8;
 
 static const vc_t COL_BLACK = 14;
+static const screen_y_t CUTSCENE_PIC_TOP = ((RES_Y / 2) - (CUTSCENE_PIC_H / 2));
 // ---------
 
 // State
 // -----
-
-#define playchar allcast_playchar
 
 int measure_cur;
 int frames_half;
@@ -36,7 +37,7 @@ int loaded_screen_id;
 
 int line_id_total;
 extern int line_id_on_screen;
-playchar_t playchar;
+static playchar_t playchar;
 // -----
 
 // Strings
@@ -131,4 +132,63 @@ bool near wait_flip_and_check_measure_target(void)
 		measure_cur = (frames_half / 22);
 	}
 	return (measure_cur >= measure_target);
+}
+
+void near allcast_animate(void)
+{
+	extern const char EXED[];
+	line_id_total = 0;
+	playchar = static_cast<playchar_t>(resident->playchar);
+	palette_settone(0);
+
+	// Not as redundant as it seems. palette_black_out() immediately sets
+	// [PaletteTone] to 100, and we'd be fading out the last state of VRAM once
+	// again on the first call to screen_fadeout_animate_and_advance() if we
+	// didn't clear VRAM here.
+	// ZUN bloat: Still, TDW mode would have been more performant.
+	grcg_setcolor(GC_RMW, COL_BLACK);
+	graph_accesspage(1); grcg_boxfill_8(0, 0, (RES_X - 1), (RES_Y - 1));
+	graph_accesspage(0); grcg_boxfill_8(0, 0, (RES_X - 1), (RES_Y - 1));
+	grcg_off();
+
+	loaded_screen_id = 0;
+	pi_load(0, BG_FN[playchar][0]);
+
+	// Ensure that [COL_BLACK] actually is black during the first fade-out.
+	pi_palette_apply(0);
+
+	snd_load(EXED, SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+
+	// ZUN quirk: screen_fadeout_animate_and_advance() starts with a (blocking)
+	// call to palette_black_out(2). The 2-measure delay loop here is supposed
+	// to delay past 「Peaceful Romancer」's anacrusis and breaks at its first
+	// downbeat, but said black-out call ensures that the animation starts
+	// about two beats behind what you'd expect.
+	measure_target = 2;
+	while(!wait_flip_and_check_measure_target()) {
+	}
+
+	// ZUN bloat: Could be reduced to a [PaletteTone] assignment because we're
+	// about to black out anyway.
+	palette_100();
+
+	// ZUN bloat: Should loop over [SCREEN_COUNT] after defusing its landmine.
+	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+
+	measure_target += 16;
+	while(!wait_flip_and_check_measure_target()) {
+	}
+
+	palette_black_out(4);
+
+	pi_free(0);
+	graph_accesspage(0);
+	graph_showpage(0);
 }
