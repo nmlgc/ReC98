@@ -71,28 +71,28 @@ maine_01_TEXT segment byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B1B5	proc near
+public @screen_line_next_animate$qv
+@screen_line_next_animate$qv proc near
 
 @@str		= dword	ptr -4
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	bx, allcast_step
+		mov	bx, _line_id_total
 		shl	bx, 2
 		mov	ax, word ptr (ALLCAST_PTRS+2)[bx]
 		mov	dx, word ptr ALLCAST_PTRS[bx]
 		mov	word ptr [bp+@@str+2], ax
 		mov	word ptr [bp+@@str], dx
-		mov	bx, allcast_screen_plus_one
+		mov	bx, _loaded_screen_id
 		add	bx, bx
-		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
+		mov	ax, word ptr _LINES_PER_SCREEN[bx]
 		dec	ax
 		shl	ax, 4
 		mov	dx, 192
 		sub	dx, ax
-		mov	ax, allcast_line_on_screen
+		mov	ax, _line_id_on_screen
 		shl	ax, 5
 		add	dx, ax
 		mov	si, dx
@@ -117,14 +117,14 @@ loc_B21E:
 		call	sub_B37C
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
 		call	sub_B37C
-		inc	allcast_step
-		inc	allcast_line_on_screen
-		mov	bx, allcast_screen_plus_one
+		inc	_line_id_total
+		inc	_line_id_on_screen
+		mov	bx, _loaded_screen_id
 		add	bx, bx
-		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
-		cmp	ax, allcast_line_on_screen
+		mov	ax, word ptr _LINES_PER_SCREEN[bx]
+		cmp	ax, _line_id_on_screen
 		jg	short loc_B26D
-		mov	allcast_line_on_screen, 0
+		mov	_line_id_on_screen, 0
 		mov	al, 1
 		jmp	short loc_B26F
 ; ---------------------------------------------------------------------------
@@ -137,7 +137,7 @@ loc_B26F:
 		pop	si
 		leave
 		retn
-sub_B1B5	endp
+@screen_line_next_animate$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -154,10 +154,10 @@ arg_2		= word ptr  6
 		push	si
 		push	di
 		mov	di, [bp+arg_2]
-		mov	al, playchar_15018
+		mov	al, _allcast_playchar
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, allcast_screen_plus_one
+		mov	dx, _loaded_screen_id
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
@@ -199,14 +199,14 @@ loc_B309:
 		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		call	sub_B37C
 		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
-		inc	allcast_screen_plus_one
-		cmp	allcast_screen_plus_one, 8
+		inc	_loaded_screen_id
+		cmp	_loaded_screen_id, 8
 		jge	short loc_B357
 		push	0
-		mov	al, playchar_15018
+		mov	al, _allcast_playchar
 		mov	ah, 0
 		shl	ax, 5
-		mov	dx, allcast_screen_plus_one
+		mov	dx, _loaded_screen_id
 		shl	dx, 2
 		add	ax, dx
 		mov	bx, ax
@@ -214,16 +214,16 @@ loc_B309:
 		call	@pi_load$qinxc
 
 loc_B357:
-		add	word_15012, 2
+		add	_measure_target, 2
 
 loc_B35C:
 		call	sub_B37C
 		or	al, al
 		jz	short loc_B35C
-		call	sub_B1B5
+		call	@screen_line_next_animate$qv
 		or	al, al
 		jz	short loc_B357
-		add	word_15012, 1Eh
+		add	_measure_target, 30
 
 loc_B36F:
 		call	sub_B37C
@@ -244,25 +244,25 @@ sub_B37C	proc near
 		push	bp
 		mov	bp, sp
 		call	@frame_delay$qi pascal, 2
-		graph_accesspage byte_1085E
+		graph_accesspage _page_shown
 		mov	al, 1
-		sub	al, byte_1085E
-		mov	byte_1085E, al
+		sub	al, _page_shown
+		mov	_page_shown, al
 		graph_showpage al
-		inc	word_15010
+		inc	_frames_half
 		call	_snd_bgm_measure
-		mov	measure_1500E, ax
-		cmp	measure_1500E, 0
+		mov	_measure_cur, ax
+		cmp	_measure_cur, 0
 		jge	short loc_B3B9
-		mov	ax, word_15010
+		mov	ax, _frames_half
 		mov	bx, 22
 		cwd
 		idiv	bx
-		mov	measure_1500E, ax
+		mov	_measure_cur, ax
 
 loc_B3B9:
-		mov	ax, measure_1500E
-		cmp	ax, word_15012
+		mov	ax, _measure_cur
+		cmp	ax, _measure_target
 		jl	short loc_B3C7
 		mov	ax, 1
 		jmp	short loc_B3C9
@@ -284,10 +284,10 @@ public @allcast_animate$qv
 @allcast_animate$qv	proc near
 		push	bp
 		mov	bp, sp
-		mov	allcast_step, 0
+		mov	_line_id_total, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.playchar]
-		mov	playchar_15018, al
+		mov	_allcast_playchar, al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -296,9 +296,9 @@ public @allcast_animate$qv
 		graph_accesspage 0
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
-		mov	allcast_screen_plus_one, 0
+		mov	_loaded_screen_id, 0
 		push	0
-		mov	al, playchar_15018
+		mov	al, _allcast_playchar
 		mov	ah, 0
 		shl	ax, 5
 		mov	bx, ax
@@ -307,7 +307,7 @@ public @allcast_animate$qv
 		call	@pi_palette_apply$qi pascal, 0
 		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
-		mov	word_15012, 2
+		mov	_measure_target, 2
 
 loc_B45F:
 		call	sub_B37C
@@ -329,7 +329,7 @@ loc_B45F:
 		call	sub_B273
 		push	0A00064h
 		call	sub_B273
-		add	word_15012, 10h
+		add	_measure_target, 16
 
 loc_B4B5:
 		call	sub_B37C
@@ -6120,8 +6120,9 @@ include th05/formats/pi_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
 include th03/cutscene/cutscene[data].asm
-byte_1085E	db 0
-		db 0
+public _page_shown
+_page_shown	db 0
+	evendata
 public _ALLCAST_BG_FN
 _ALLCAST_BG_FN	label dword
 		dd aExed01_pi		; "EXED01.pi"
@@ -6209,11 +6210,12 @@ ALLCAST_PTRS	dd aProjectOfTouho
 		dd aSpecialThanksA
 		dd aAmusementMaker
 		dd aAndAllTestPlay
-ALLCAST_LINES_PER_SCREEN	equ $-2
+public _LINES_PER_SCREEN, _line_id_on_screen
+_LINES_PER_SCREEN	equ $-2
 		dw 1, 2, 6, 10, 9, 12, 7
 		db    0
 		db    0
-allcast_line_on_screen	dw 0
+_line_id_on_screen	dw 0
 aExed01_pi	db 'EXED01.pi',0
 aExed07_pi	db 'EXED07.pi',0
 aExed08_pi	db 'EXED08.pi',0
@@ -6388,13 +6390,14 @@ aStf00_bft	db 'stf00.bft',0
 	; th03/formats/cdg[bss].asm
 	extern _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
-measure_1500E	dw ?
-word_15010	dw ?
-word_15012	dw ?
-allcast_screen_plus_one	dw ?
-allcast_step	dw ?
-playchar_15018	db ?
-		db ?
+	; th05/allcast.cpp
+	extern _measure_cur:word
+	extern _frames_half:word
+	extern _measure_target:word
+	extern _loaded_screen_id:word
+	extern _line_id_total:word
+	extern _allcast_playchar:byte
+
 include th04/formats/scoredat[bss].asm
 public _glyphballs
 _glyphballs	glyphball_t	(SCOREDAT_NAME_LEN + 1) dup (<?>)

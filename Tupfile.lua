@@ -1030,6 +1030,7 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th04/cdg_load.asm",
 	"th05/egcrect.cpp",
 	"th05/cutscene.cpp",
+	"th05/allcast.cpp",
 	"th05/regist.cpp",
 	"th05_maine.asm",
 	"th05/staff.cpp",
