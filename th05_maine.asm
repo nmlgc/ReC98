@@ -138,106 +138,12 @@ loc_B26F:
 		leave
 		retn
 @screen_line_next_animate$qv endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B273	proc near
-
-@@quarter		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	al, _allcast_playchar
-		mov	ah, 0
-		shl	ax, 4
-		mov	dx, _loaded_screen_id
-		add	dx, dx
-		add	ax, dx
-		mov	bx, ax
-		mov	ax, word ptr _ALLCAST_BG_QUARTER[bx]
-		mov	[bp+@@quarter], ax
-		push	2
-		call	palette_black_out
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0Eh
-		graph_accesspage 1
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		graph_accesspage 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		call	@wait_flip_and_check_measure_targ$qv
-		GRCG_OFF_CLOBBERING dx
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		call	@pi_palette_apply$qi pascal, 0
-		xor	si, si
-		jmp	short loc_B309
-; ---------------------------------------------------------------------------
-
-loc_B2EE:
-		push	di
-		push	[bp+arg_0]
-		push	0
-		push	[bp+@@quarter]
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	ax
-		call	@pi_put_quarter_masked_8$qiiiii
-		call	@wait_flip_and_check_measure_targ$qv
-		inc	si
-
-loc_B309:
-		cmp	si, 8
-		jl	short loc_B2EE
-		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
-		call	@wait_flip_and_check_measure_targ$qv
-		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
-		inc	_loaded_screen_id
-		cmp	_loaded_screen_id, 8
-		jge	short loc_B357
-		push	0
-		mov	al, _allcast_playchar
-		mov	ah, 0
-		shl	ax, 5
-		mov	dx, _loaded_screen_id
-		shl	dx, 2
-		add	ax, dx
-		mov	bx, ax
-		pushd	_ALLCAST_BG_FN[bx]
-		call	@pi_load$qinxc
-
-loc_B357:
-		add	_measure_target, 2
-
-loc_B35C:
-		call	@wait_flip_and_check_measure_targ$qv
-		or	al, al
-		jz	short loc_B35C
-		call	@screen_line_next_animate$qv
-		or	al, al
-		jz	short loc_B357
-		add	_measure_target, 30
-
-loc_B36F:
-		call	@wait_flip_and_check_measure_targ$qv
-		or	al, al
-		jz	short loc_B36F
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B273	endp
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
 	@wait_flip_and_check_measure_targ$qv procdesc near
+	@SCREEN_FADEOUT_ANIMATE_AND_ADVAN$QII procdesc pascal near \
+		pic_left_and_top:dword
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -264,7 +170,7 @@ public @allcast_animate$qv
 		mov	ah, 0
 		shl	ax, 5
 		mov	bx, ax
-		pushd	_ALLCAST_BG_FN[bx]
+		pushd	_BG_FN[bx]
 		call	@pi_load$qinxc
 		call	@pi_palette_apply$qi pascal, 0
 		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
@@ -277,20 +183,13 @@ loc_B45F:
 		jz	short loc_B45F
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
+		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
+		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
+		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
+		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
+		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
+		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
+		call	@screen_fadeout_animate_and_advan$qii pascal, (160 shl 16) or 100
 		add	_measure_target, 16
 
 loc_B4B5:
@@ -6047,10 +5946,8 @@ include th02/snd/snd.inc
 	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern @PI_PUT_QUARTER_MASKED_8$QIIIII:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @PI_PUT_8$QIII:proc
-	extern @PI_PUT_QUARTER_8$QIIII:proc
 	extern @PI_PALETTE_APPLY$QI:proc
 	extern @PI_FREE$QI:proc
 	extern @input_reset_sense_held$qv:proc
@@ -6085,8 +5982,8 @@ include th03/cutscene/cutscene[data].asm
 public _page_shown
 _page_shown	db 0
 	evendata
-public _ALLCAST_BG_FN
-_ALLCAST_BG_FN	label dword
+public _BG_FN
+_BG_FN	label dword
 		dd aExed01_pi		; "EXED01.pi"
 		dd aExed07_pi		; "EXED07.pi"
 		dd aExed08_pi		; "EXED08.pi"
@@ -6119,8 +6016,8 @@ _ALLCAST_BG_FN	label dword
 		dd aExed16_pi_2		; "EXED16.pi"
 		dd aExed15_pi_2		; "EXED15.pi"
 		dd 0
-public _ALLCAST_BG_QUARTER
-_ALLCAST_BG_QUARTER	label word
+public _BG_QUARTER
+_BG_QUARTER	label word
 		dw 1, 0, 1, 3, 0, 0, 0, 0
 		dw 1, 0, 1, 2, 1, 1, 1, 0
 		dw 1, 2, 0, 1, 0, 2, 2, 0
