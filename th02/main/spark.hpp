@@ -15,7 +15,7 @@ struct spark_t {
 
 	// Stores the current and previous position, indexed with the currently
 	// rendered VRAM page.
-	SPPoint screen_topleft[2];
+	SPPoint screen_topleft[PAGE_COUNT];
 
 	SPPoint velocity;
 	spark_render_as_t render_as;

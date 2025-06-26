@@ -106,6 +106,8 @@ typedef uint16_t tram_atrb2;
 
 typedef bool page_t;
 
+static const int PAGE_COUNT = 2;
+
 #define COLOR_COUNT 16
 
 #define COMPONENT_R 0

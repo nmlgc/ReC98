@@ -45,7 +45,7 @@ struct item_pos_t {
 struct item_t {
 	entity_flag_t flag;
 	item_type_t type;
-	item_pos_t pos[2];
+	item_pos_t pos[PAGE_COUNT];
 	Subpixel velocity_y;
 	pixel_t velocity_x_during_bounce;
 	int age; // unused

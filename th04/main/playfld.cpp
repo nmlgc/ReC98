@@ -31,7 +31,7 @@ inline void shift(
 	// only necessary during the animation, where the other VRAM page will
 	// still display its previous shifted state. It's just easier to always
 	// unconditionally redraw the next two frames, though.
-	playfield_shake_redraw_time = 2;
+	playfield_shake_redraw_time = PAGE_COUNT;
 }
 
 inline void shift_x(egc_shift_func_t *func, bool negate) {

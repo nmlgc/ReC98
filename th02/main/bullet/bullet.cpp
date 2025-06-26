@@ -35,7 +35,7 @@ struct bullet_t {
 
 	// Stores the current and previous position, indexed with the currently
 	// rendered VRAM page.
-	SPPoint screen_topleft[2];
+	SPPoint screen_topleft[PAGE_COUNT];
 
 	SPPoint velocity;
 	main_patnum_t patnum; // Only used with `BST_BULLET16`.

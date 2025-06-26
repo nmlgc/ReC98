@@ -20,7 +20,7 @@ struct CPointnums {
 	vc_t col;
 	int8_t unused;
 	screen_x_t left[POINTNUM_COUNT];
-	screen_y_t top[POINTNUM_COUNT][2];
+	screen_y_t top[POINTNUM_COUNT][PAGE_COUNT];
 	uint16_t points[POINTNUM_COUNT];
 	entity_flag_t flag[POINTNUM_COUNT];
 	uint8_t age[POINTNUM_COUNT];

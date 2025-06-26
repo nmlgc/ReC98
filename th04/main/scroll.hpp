@@ -9,7 +9,7 @@ extern SubpixelLength8 scroll_subpixel_line;
 // variable.
 extern SubpixelLength8 scroll_speed;
 
-extern vram_y_t scroll_line_on_page[2];
+extern vram_y_t scroll_line_on_page[PAGE_COUNT];
 
 // Playfield-space pixels scrolled in the last frame.
 extern Subpixel scroll_last_delta;

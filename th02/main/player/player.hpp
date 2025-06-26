@@ -51,13 +51,13 @@ static const pixel_t PLAYER_LEFT_TO_OPTION_LEFT_LEFT = (
 // of the sparks by temporarily mutating the position. This can definitely be
 // done in a cleaner and less redundant way.
 
-extern screen_x_t player_left_on_page[2];
-extern screen_y_t player_top_on_page[2];
+extern screen_x_t player_left_on_page[PAGE_COUNT];
+extern screen_y_t player_top_on_page[PAGE_COUNT];
 extern screen_x_t near* player_left_on_back_page;
 extern screen_y_t near* player_top_on_back_page;
 extern screen_point_t player_topleft;
 
-extern screen_point_t player_option_left_topleft[2];
+extern screen_point_t player_option_left_topleft[PAGE_COUNT];
 extern screen_x_t near* player_option_left_left_on_back_page;
 extern screen_y_t near* player_option_left_top_on_back_page;
 

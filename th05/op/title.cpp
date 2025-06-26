@@ -80,7 +80,7 @@ void near op_animate(void)
 
 	{for(int frame = 0; frame < ROLL_DURATION; frame++) {
 		// Blit to both pages
-		if((frame % ROLL_FRAMES_PER_CEL) <= (2 - 1)) {
+		if((frame % ROLL_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
 			pi_palette_apply(frame / ROLL_FRAMES_PER_CEL);
 			pi_put_8(0, 278, (frame / ROLL_FRAMES_PER_CEL));
 		}
@@ -118,7 +118,7 @@ void near op_animate(void)
 
 	{for(int frame = 0; frame < FADE_DURATION; frame++) {
 		// Blit to both pages
-		if((frame % FADE_FRAMES_PER_CEL) <= (2 - 1)) {
+		if((frame % FADE_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
 			pi_put_masked_8(0, 0, 0, (frame / FADE_FRAMES_PER_CEL));
 		}
 		page.wait_and_flip();
