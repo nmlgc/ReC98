@@ -25,6 +25,7 @@
 #include "th02/shiftjis/end.hpp"
 #include "th02/shiftjis/title.hpp"
 #include "th02/sprites/verdict.hpp"
+#include "th02/sprites/verdict.csp"
 
 #include "th02/gaiji/ranks_c.c"
 
@@ -239,18 +240,17 @@ void verdict_kanji_1_to_0_masked(
 	Planar<dots_t(VERDICT_MASK_W)> dots;
 	vram_offset_t vo = vram_offset_shift(left, top);
 	for(pixel_t row = 0; row < VERDICT_MASK_H; row++) {
-		// ZUN bloat: Thanks to the blit functions being macros, `mask[row]` is
-		// evaluated a total of 5 times. Once would be enough.
+		const dots16_t row_mask = mask[row];
 		graph_accesspage(1);
 		VRAM_SNAP_PLANAR(dots, vo, VERDICT_MASK_W);
 
 		graph_accesspage(0);
 
 		grcg_setcolor(GC_RMW, 0);
-		grcg_put(vo, mask[row], VERDICT_MASK_W);
+		grcg_put(vo, row_mask, VERDICT_MASK_W);
 		grcg_off();
 
-		vram_or_planar_masked(vo, dots, VERDICT_MASK_W, mask[row]);
+		vram_or_planar_masked(vo, dots, VERDICT_MASK_W, row_mask);
 
 		vo += ROW_SIZE;
 	}
@@ -260,13 +260,8 @@ void verdict_row_1_to_0_animate(
 	screen_x_t left, screen_y_t top, shiftjis_kanji_amount_t len
 )
 {
-	// ZUN bloat: This array is not `static`, and will be needlessly copied
-	// into a local variable at every call to the function.
-	#include "th02/sprites/verdict.csp"
-
-	shiftjis_kanji_amount_t i;
 	for(int mask = 0; mask < VERDICT_MASK_COUNT; mask++) {
-		for(i = 0; i < len; i++) {
+		for(shiftjis_kanji_amount_t i = 0; i < len; i++) {
 			verdict_kanji_1_to_0_masked(
 				(left + (i * GLYPH_FULL_W)), top, &sVERDICT_MASKS[mask][0]
 			);
@@ -283,14 +278,13 @@ inline void verdict_row_1_to_0_animate(
 }
 
 void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
-	int value, // ZUN bloat: Not meant to support unsigned values.
-	gaiji_th02_t str[4]
+	unsigned int value, gaiji_th02_t str[4]
 )
 {
 	enum {
 		DIGITS = 3,
 	};
-	int divisor = 100; // Must match DIGITS!
+	unsigned int divisor = 100; // Must match DIGITS!
 	int8_t digit;
 	uint8_t past_leading_zeroes = 0;
 	int i = 0;
@@ -468,8 +462,6 @@ void pascal near end_load_and_start_animate(const char* text_fn)
 
 void near end_bad_animate(void)
 {
-	int i;
-
 	end_load_and_start_animate("end1.txt");
 
 	end_pic_show(1);
@@ -495,8 +487,7 @@ void near end_bad_animate(void)
 	enum {
 		VELOCITY = 2,
 	};
-	#define frame i
-	for(frame = 0; frame < (CUTSCENE_PIC_H / VELOCITY); frame++) {
+	for(int frame = 0; frame < (CUTSCENE_PIC_H / VELOCITY); frame++) {
 		// ZUN bloat: Redundant; end_pic_put_rows() returns with VRAM page 0
 		// accessed.
 		graph_accesspage(0);
@@ -517,7 +508,6 @@ void near end_bad_animate(void)
 		);
 		frame_delay(1);
 	}
-	#undef i
 
 	end_line_type(13);
 	line_col_set(V_YELLOW);
