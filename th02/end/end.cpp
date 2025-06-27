@@ -1,9 +1,8 @@
 #include <stddef.h>
 #include "planar.h"
-#include "platform/grp_surf.hpp"
+#include "game/bgimage.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
-#include "th01/hardware/egc.h"
 
 // ZUN bloat: Needed for code generation reasons in the single graph_putsa_fx()
 // call during the verdict screen that pushes a string pointer with a
@@ -306,47 +305,18 @@ void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
 	str[i] = gs_NULL;
 }
 
-// ZUN bloat: Same algorithm as in TH01, same problems.
-void pascal near pic_put(
-	screen_x_t left,
-	screen_y_t top,
-	pixel_t rows,
-	int quarter,
-	pixel_t quarter_offset_y
-)
-{
-	const LTWH<upixel_t> near& src = CUTSCENE_QUARTERS[quarter];
-	uvram_offset_t vram_offset_src = vram_offset_shift(src.left, src.top);
-	uvram_offset_t vram_offset_dst = vram_offset_shift(left, top);
-	vram_offset_src += (quarter_offset_y * ROW_SIZE);
-
-	egc_start_copy();
-
-	pixel_t y = quarter_offset_y;
-	while(y < (rows + quarter_offset_y)) {
-		vram_byte_amount_t vram_x = 0;
-		while(vram_x < CUTSCENE_PIC_VRAM_W) {
-			graph_accesspage(1);	_AX = egc_chunk(vram_offset_src);
-			graph_accesspage(0);	egc_chunk(vram_offset_dst) = _AX;
-			vram_x += EGC_REGISTER_SIZE;
-			vram_offset_src += EGC_REGISTER_SIZE;
-			vram_offset_dst += EGC_REGISTER_SIZE;
-		}
-		y++;
-		vram_offset_dst += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
-		vram_offset_src += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
-	}
-	egc_off();
-}
-
 void pascal near end_pic_show(int quarter)
 {
-	pic_put(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_H, quarter, 0);
+	bgimage.write(
+		CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &CUTSCENE_QUARTERS[quarter]
+	);
 }
 
 void pascal near staffroll_pic_put(int quarter)
 {
-	pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, CUTSCENE_PIC_H, quarter, 0);
+	bgimage.write(
+		STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, &CUTSCENE_QUARTERS[quarter]
+	);
 }
 
 void near end_line_clear(void)
@@ -412,12 +382,6 @@ void near end_to_staffroll_animate(void)
 	}
 }
 
-void pascal near end_pics_load_palette_show(const char *fn)
-{
-	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(&Palettes, fn);
-}
-
 void pascal near end_line_type(int line, int frames_per_kanji = 6)
 {
 	line_type(
@@ -445,7 +409,7 @@ void pascal near end_load_and_start_animate(const char* text_fn)
 	snd_load("end1.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 	palette_settone(0);
-	end_pics_load_palette_show("ed01.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed01.pi");
 	palette_black_in(2);
 	frame_delay(40);
 
@@ -484,11 +448,13 @@ void near end_bad_animate(void)
 	enum {
 		VELOCITY = 2,
 	};
-	for(int frame = 0; frame < (CUTSCENE_PIC_H / VELOCITY); frame++) {
-		// ZUN bloat: Redundant; end_pic_put_rows() returns with VRAM page 0
-		// accessed.
-		graph_accesspage(0);
 
+	static LTWH<upixel_t> q3_src;
+	q3_src.left = CUTSCENE_QUARTERS[3].left;
+	q3_src.top = (CUTSCENE_QUARTERS[3].top + CUTSCENE_PIC_H - VELOCITY);
+	q3_src.w = CUTSCENE_PIC_W;
+	q3_src.h = VELOCITY;
+	while(q3_src.top >= CUTSCENE_QUARTERS[3].top) {
 		egc_shift_down(
 			CUTSCENE_PIC_LEFT,
 			CUTSCENE_PIC_TOP,
@@ -496,13 +462,8 @@ void near end_bad_animate(void)
 			(CUTSCENE_PIC_TOP + CUTSCENE_PIC_H - 1 - VELOCITY),
 			VELOCITY
 		);
-		pic_put(
-			CUTSCENE_PIC_LEFT,
-			CUTSCENE_PIC_TOP,
-			VELOCITY,
-			3,
-			((CUTSCENE_PIC_H - VELOCITY) - (frame * VELOCITY))
-		);
+		bgimage.write(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &q3_src);
+		q3_src.top -= VELOCITY;
 		frame_delay(1);
 	}
 
@@ -524,7 +485,7 @@ void near end_bad_animate(void)
 	// with the new palette while the shown VRAM page still contains a pic from
 	// the previous .PI file. This only works in the original game because the
 	// palettes of the original ED01.PI and ED02.PI are identical.
-	end_pics_load_palette_show("ed02.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed02.pi");
 	palette_black_out(2);
 
 	if(resident->shottype == 0) {
@@ -593,7 +554,7 @@ void near end_good_animate(void)
 {
 	end_load_and_start_animate("end2.txt");
 
-	end_pics_load_palette_show("ed03.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed03.pi");
 	end_pic_show(0);
 	palette_black_in(1);
 
@@ -614,7 +575,7 @@ void near end_good_animate(void)
 	end_lines_type_from_to(14, 15);
 	palette_black_out(2);
 
-	end_pics_load_palette_show("ed04.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed04.pi");
 	end_pic_show(0);
 	palette_black_in(2);
 
@@ -658,7 +619,7 @@ void near end_good_animate(void)
 		end_line_type(39);
 		palette_black_out(2);
 
-		end_pics_load_palette_show("ed05.pi");
+		GrpSurface_LoadPI(bgimage, &Palettes, "ed05.pi");
 		end_pic_show(0);
 		palette_black_in(2);
 
@@ -695,7 +656,7 @@ void near end_good_animate(void)
 		end_lines_type_from_to(62, 66);
 		palette_black_out(2);
 
-		end_pics_load_palette_show("ed05.pi");
+		GrpSurface_LoadPI(bgimage, &Palettes, "ed05.pi");
 		end_pic_show(1);
 		palette_black_in(2);
 
@@ -736,7 +697,7 @@ void near end_good_animate(void)
 		end_line_type(83);
 		palette_black_out(2);
 
-		end_pics_load_palette_show("ed05.pi");
+		GrpSurface_LoadPI(bgimage, &Palettes, "ed05.pi");
 		end_pic_show(2);
 		palette_black_in(2);
 
@@ -783,11 +744,10 @@ void pascal near staffroll_rotrect_and_put_pic_animate(
 )
 {
 	// ZUN landmine: This function always runs immediately after an expensive
-	// operation (640×400 .PI image loading and blitting to VRAM, 320×200 VRAM
-	// inter-page copy, or hardware palette loading from a packed file),
-	// without any frame_delay() before. As the Staff Roll is single-buffered,
-	// this all but ensures a tearing line on the first frame of the rotating
-	// rectangle animation.
+	// operation (640×400 .PI image loading and blitting to VRAM, or hardware
+	// palette loading from a packed file), without any frame_delay() before.
+	// As the Staff Roll is single-buffered, this all but ensures a tearing
+	// line on the first frame of the rotating rectangle animation.
 	staffroll_rotrect_animate(angle_speed, angle_start);
 	staffroll_pic_put(quarter);
 	frame_delay(4);
@@ -876,10 +836,8 @@ void near staffroll_and_verdict_animate(void)
 	);
 	snd_delay_until_measure(13);
 
-	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(&Palettes, "ed06.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed06.pi");
 	palette_show();
-	graph_accesspage(0);
 	staffroll_rotrect_and_put_pic_animate(0x04, 0, 0x29);
 	staffroll_text_clear();
 	staffroll_text_put(0, 0, STAFFROLL_PROGRAM);
@@ -895,9 +853,7 @@ void near staffroll_and_verdict_animate(void)
 	palette_entry_rgb_show("ed06c.rgb");
 	staffroll_rotrect_and_put_pic_animate(0x04, 3, 0x29);
 
-	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(nullptr, "ed07.pi");
-	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, nullptr, "ed07.pi");
 	snd_delay_until_measure(25);
 
 	staffroll_text_clear();
@@ -919,9 +875,7 @@ void near staffroll_and_verdict_animate(void)
 	staffroll_text_put(GLYPH_FULL_W, 0, STAFFROLL_MUSIC);
 	staffroll_rotrect_and_put_pic_animate(0x08, 3, -0x17);
 
-	graph_accesspage(1);
-	GrpSurface_BlitBackgroundPI(&Palettes, "ed08.pi");
-	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed08.pi");
 	snd_delay_until_measure(41);
 
 	palette_show();
@@ -947,6 +901,7 @@ void near staffroll_and_verdict_animate(void)
 	snd_delay_until_measure(57);
 
 	palette_black_out(4);
+	bgimage.free();
 	/// ----------
 
 	/// Verdict

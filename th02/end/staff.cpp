@@ -33,9 +33,6 @@ void pascal near rotrect_put(pixel_t rad, unsigned char angle)
 	grcg_line(x[3], y[3], x[0], y[0]);
 }
 
-#define page_access graph_accesspage
-#include "th01/hardware/egcrect.cpp"
-
 void pascal staffroll_rotrect_animate(
 	unsigned char angle_speed, unsigned char angle_start
 )
