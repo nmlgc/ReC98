@@ -14,11 +14,7 @@
 // Constants
 // ---------
 
-// ZUN landmine: Should be 7 (「Project of TOUHOU」 + 5 games + Credits), but
-// ZUN sets it to 8, presumably for micro-optimization reasons. In exchange,
-// though, the final call to screen_fadeout_animate_and_advance() unnecessarily
-// calls pi_load() with a `nullptr` filename parameter.
-static const int SCREEN_COUNT = 8;
+static const int SCREEN_COUNT = 7;
 
 static const vc_t COL_BLACK = 14;
 static const screen_y_t CUTSCENE_PIC_TOP = ((RES_Y / 2) - (CUTSCENE_PIC_H / 2));
@@ -45,11 +41,7 @@ static playchar_t playchar;
 // -------
 
 extern const char *BG_FN[PLAYCHAR_COUNT][SCREEN_COUNT];
-
-// ZUN bloat: We need (log₂(4) × [PLAYCHAR_COUNT] × 7) = 56 *bits* of
-// information here, not 64 *bytes*. Using 2-bit values would probably be
-// overkill, but a change to uint8_t would be free.
-extern int BG_QUARTER[PLAYCHAR_COUNT][SCREEN_COUNT];
+extern uint8_t BG_QUARTER[PLAYCHAR_COUNT][SCREEN_COUNT];
 // -------
 
 // Function ordering fails
@@ -176,14 +168,9 @@ void near allcast_animate(void)
 	while(!wait_flip_and_check_measure_target()) {
 	}
 
-	// ZUN bloat: Should loop over [SCREEN_COUNT] after defusing its landmine.
-	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
-	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
-	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
-	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
-	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
-	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
-	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	for(int i = 0; i < SCREEN_COUNT; i++) {
+		screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+	}
 
 	measure_target += 16;
 	while(!wait_flip_and_check_measure_target()) {

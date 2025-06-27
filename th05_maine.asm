@@ -5862,7 +5862,6 @@ _BG_FN	label dword
 		dd aExed10_pi		; "EXED10.pi"
 		dd aExed16_pi		; "EXED16.pi"
 		dd aExed15_pi		; "EXED15.pi"
-		dd 0
 		dd aExed01_pi_0		; "EXED01.pi"
 		dd aExed11_pi		; "EXED11.pi"
 		dd aExed11_pi_0		; "EXED11.pi"
@@ -5870,7 +5869,6 @@ _BG_FN	label dword
 		dd aExed03_pi		; "EXED03.pi"
 		dd aExed16_pi_0		; "EXED16.pi"
 		dd aExed15_pi_0		; "EXED15.pi"
-		dd 0
 		dd aExed01_pi_1		; "EXED01.pi"
 		dd aExed12_pi		; "EXED12.pi"
 		dd aExed12_pi_0		; "EXED12.pi"
@@ -5878,7 +5876,6 @@ _BG_FN	label dword
 		dd aExed04_pi		; "EXED04.pi"
 		dd aExed16_pi_1		; "EXED16.pi"
 		dd aExed15_pi_1		; "EXED15.pi"
-		dd 0
 		dd aExed01_pi_2		; "EXED01.pi"
 		dd aExed14_pi		; "EXED14.pi"
 		dd aExed05_pi		; "EXED05.pi"
@@ -5886,13 +5883,12 @@ _BG_FN	label dword
 		dd aExed06_pi		; "EXED06.pi"
 		dd aExed16_pi_2		; "EXED16.pi"
 		dd aExed15_pi_2		; "EXED15.pi"
-		dd 0
 public _BG_QUARTER
 _BG_QUARTER	label word
-		dw 1, 0, 1, 3, 0, 0, 0, 0
-		dw 1, 0, 1, 2, 1, 1, 1, 0
-		dw 1, 2, 0, 1, 0, 2, 2, 0
-		dw 1, 0, 0, 2, 0, 3, 3, 0
+		db 1, 0, 1, 3, 0, 0, 0
+		db 1, 0, 1, 2, 1, 1, 1
+		db 1, 2, 0, 1, 0, 2, 2
+		db 1, 0, 0, 2, 0, 3, 3
 _LINES	dd aProjectOfTouho
 		dd aNo_1Buumx		; "		     Project of	TOUHOU	  "...
 		dd aReimuHakureiSh
