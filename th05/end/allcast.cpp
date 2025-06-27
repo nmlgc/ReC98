@@ -2,12 +2,12 @@
 
 #include "th05/end/allcast.hpp"
 #include "th05/snd/snd.h"
-#include "th05/formats/pi.hpp"
 #include "th05/playchar.h"
 #include "th05/resident.hpp"
 #include "th03/sprites/pi_mask.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th01/hardware/grcg.hpp"
+#include "game/bgimage.hpp"
 #include "game/cutscene.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 
@@ -35,6 +35,10 @@ int loaded_screen_id;
 int line_id_total;
 extern int line_id_on_screen;
 static playchar_t playchar;
+
+// We load the next image and its palette before fading out the old one, so we
+// only want to assign to [Palettes] after the fade.
+Palette8 palette_next;
 // -----
 
 // Strings
@@ -69,23 +73,29 @@ void pascal near screen_fadeout_animate_and_advance(
 	wait_flip_and_check_measure_target();
 	grcg_off();
 
-	PaletteTone = 100;
-	pi_palette_apply(0);
+	Palettes = palette_next;
+	palette_100();
 
-	for(int i = 0; i < (PI_MASK_COUNT * PAGE_COUNT); i++) {
+	for(unsigned int i = 0; i < (PI_MASK_COUNT * PAGE_COUNT); i++) {
 		// ZUN quirk: Dividing by 4 reduces this animation to only the first
 		// two mask patterns shown at an interval of 4 double frames, rather
 		// than showing the full 4 masks at a 2-double-frame interval. But
 		// given that the text later only even uses a single mask, ZUN most
 		// likely did this on purpose to make this sequence feel more languid
 		// and relaxed. It does look rather hectic with 4 masks.
-		pi_put_quarter_masked_8(pic_left, pic_top, 0, quarter, (i / 4));
+		bgimage.or_masked(
+			pic_left,
+			pic_top,
+			&PI_MASKS[i / 4][0],
+			PI_MASK_H,
+			&CUTSCENE_QUARTERS[quarter]
+		);
 		wait_flip_and_check_measure_target();
 	}
 
-	pi_put_quarter_8(pic_left, pic_top, 0, quarter);
+	bgimage.write(pic_left, pic_top, &CUTSCENE_QUARTERS[quarter]);
 	wait_flip_and_check_measure_target();
-	pi_put_quarter_8(pic_left, pic_top, 0, quarter);
+	bgimage.write(pic_left, pic_top, &CUTSCENE_QUARTERS[quarter]);
 
 	// ZUN landmine: Loading the .PI image for the next screen seems like a
 	// productive use of the upcoming intentional delay, until you realize that
@@ -98,7 +108,9 @@ void pascal near screen_fadeout_animate_and_advance(
 	// 30-measure delay below.
 	loaded_screen_id++;
 	if(loaded_screen_id < SCREEN_COUNT) {
-		pi_load(0, BG_FN[playchar][loaded_screen_id]);
+		GrpSurface_LoadPI(
+			bgimage, &palette_next, BG_FN[playchar][loaded_screen_id]
+		);
 	}
 
 	do {
@@ -151,10 +163,8 @@ void near allcast_animate(void)
 	grcg_off();
 
 	loaded_screen_id = 0;
-	pi_load(0, BG_FN[playchar][0]);
-
-	// Ensure that [COL_BLACK] actually is black during the first fade-out.
-	pi_palette_apply(0);
+	GrpSurface_LoadPI(bgimage, &palette_next, BG_FN[playchar][0]);
+	Palettes = palette_next;
 
 	snd_load(EXED, SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
@@ -178,7 +188,7 @@ void near allcast_animate(void)
 
 	palette_black_out(4);
 
-	pi_free(0);
+	bgimage.free();
 	graph_accesspage(0);
 	graph_showpage(0);
 }

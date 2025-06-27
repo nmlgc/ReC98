@@ -6,7 +6,6 @@
 #include "th05/formats/pi.hpp"
 #include "th05/formats/pi_impl.hpp"
 #include "th03/sprites/pi_mask.hpp"
-#include "game/cutscene.hpp"
 
 extern dots16_t near *pi_mask_ptr;
 extern unsigned int pi_mask_y;
@@ -79,21 +78,5 @@ void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot)
 		call	near ptr pi_put_8_rowloop; \
 	}
 	pi_put_impl(slot, rowloop_func);
-	#undef rowloop_func
-}
-
-void pascal pi_put_quarter_8(
-	screen_x_t left, vram_y_t top, int slot, int quarter
-)
-{
-	#define rowloop_func _asm { \
-		push	left; \
-		push	top; \
-		push	CUTSCENE_PIC_W; \
-		push	(PI_W / 2); \
-		mov 	di, CUTSCENE_PIC_H; \
-		call	near ptr pi_put_8_rowloop; \
-	}
-	pi_put_quarter_impl(slot, quarter, rowloop_func);
 	#undef rowloop_func
 }
