@@ -77,9 +77,7 @@ void pascal near screen_fadeout_animate_and_advance(
 	wait_flip_and_check_measure_target();
 	grcg_off();
 
-	// ZUN bloat: palette_100() could be reduced to a [PaletteTone] assignment
-	// because [Palettes] remains unchanged until pi_palette_apply().
-	palette_100();
+	PaletteTone = 100;
 	pi_palette_apply(0);
 
 	for(int i = 0; i < (PI_MASK_COUNT * PAGE_COUNT); i++) {
@@ -177,10 +175,6 @@ void near allcast_animate(void)
 	measure_target = 2;
 	while(!wait_flip_and_check_measure_target()) {
 	}
-
-	// ZUN bloat: Could be reduced to a [PaletteTone] assignment because we're
-	// about to black out anyway.
-	palette_100();
 
 	// ZUN bloat: Should loop over [SCREEN_COUNT] after defusing its landmine.
 	screen_fadeout_animate_and_advance(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
