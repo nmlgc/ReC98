@@ -841,7 +841,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		break;
 
 	case '=':
-		script_param_number_default = PI_QUARTER_COUNT;
+		script_param_number_default = CUTSCENE_QUARTER_COUNT;
 		c = *script_p;
 
 		// ZUN landmine: Same screen tearing issues here. TH05's frame_delay()
@@ -886,7 +886,7 @@ script_ret_t pascal near script_op(unsigned char c)
 			graph_showpage(1);
 			graph_accesspage(0);
 #endif
-			if(p1 < PI_QUARTER_COUNT) {
+			if(p1 < CUTSCENE_QUARTER_COUNT) {
 				pi_put_quarter_8(
 					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
 				);
@@ -931,8 +931,6 @@ script_ret_t pascal near script_op(unsigned char c)
 #if (GAME <= 4)
 		graph_showpage(0); // ZUN bloat: See above.
 #endif
-		static_assert(CUTSCENE_PIC_W == PI_QUARTER_W);
-		static_assert(CUTSCENE_PIC_H == PI_QUARTER_H);
 		pic_copy_to_other(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
 		break;
 

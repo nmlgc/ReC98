@@ -1,3 +1,6 @@
+#ifndef GAME_COORDS_HPP
+#define GAME_COORDS_HPP
+
 #include "th01/math/subpixel.hpp"
 
 // Coordinates that change from subpixel space to pixel space within the same
@@ -32,3 +35,5 @@ template <class TX, class TY> struct LTRB {
 	TX left, top;
 	TY right, bottom;
 };
+
+#endif /* GAME_COORDS_HPP */

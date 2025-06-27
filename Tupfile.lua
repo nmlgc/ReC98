@@ -331,9 +331,11 @@ local platform_cfg = optimized_cfg:branch(MODEL_LARGE, {
 	obj_root = "platform/", cflags = "-zCPLATFORM_TEXT -DCPU=386",
 })
 local platform_src
+platform_src += tup.glob("game/*.cpp")
 platform_src += tup.glob("platform/x86real/*.cpp")
 platform_src += tup.glob("platform/x86real/pc98/*.cpp")
 local platform_bundles = {
+	cutscene = { "cutscene" },
 	libc_debloat = { "noexcept" },
 	spawn = { "doserror", "spawn" },
 	th01 = { "noexcept", "blitter", "egc", "font", "grcg", "grp_clip" },
@@ -393,6 +395,7 @@ local th01_zunsoft = th01:branch(MODEL_TINY):link("zunsoft", {
 local obj
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.spawn
 obj += platform_objs.th01
 obj += tup.glob("th01/pc98/*.cpp")
@@ -569,6 +572,7 @@ obj = {
 th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
 obj += {
 	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
@@ -688,6 +692,7 @@ obj = {
 th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
 obj += {
 	"th03/cfg_lres.cpp",
@@ -873,6 +878,7 @@ th04:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }):link(
 )
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
 obj += {
 	"th04/maine_e.cpp",

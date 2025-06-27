@@ -314,12 +314,8 @@ void pascal near pic_put(
 	pixel_t quarter_offset_y
 )
 {
-	uvram_offset_t vram_offset_src = (
-		(quarter == 0) ? vram_offset_shift(0, 0) :
-		(quarter == 1) ? vram_offset_shift(CUTSCENE_PIC_W, 0) :
-		(quarter == 2) ? vram_offset_shift(0, CUTSCENE_PIC_H) :
-		/*quarter == 3*/ vram_offset_shift(CUTSCENE_PIC_W, CUTSCENE_PIC_H)
-	);
+	const LTWH<upixel_t> near& src = CUTSCENE_QUARTERS[quarter];
+	uvram_offset_t vram_offset_src = vram_offset_shift(src.left, src.top);
 	uvram_offset_t vram_offset_dst = vram_offset_shift(left, top);
 	vram_offset_src += (quarter_offset_y * ROW_SIZE);
 

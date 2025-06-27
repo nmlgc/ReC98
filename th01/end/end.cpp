@@ -42,9 +42,8 @@ void end_pic_show(int quarter)
 {
 	egc_start_copy();
 
-	pixel_t src_left = ((quarter % 2) * PIC_W);
-	pixel_t src_top  = ((quarter / 2) * PIC_H);
-	uvram_offset_t vram_offset_src = vram_offset_shift(src_left, src_top);
+	const LTWH<upixel_t> near& src = CUTSCENE_QUARTERS[quarter];
+	uvram_offset_t vram_offset_src = vram_offset_shift(src.left, src.top);
 	uvram_offset_t vram_offset_dst = vram_offset_shift(PIC_LEFT, PIC_TOP);
 	vram_word_amount_t vram_x;
 	pixel_t y;

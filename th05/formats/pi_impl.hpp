@@ -22,12 +22,12 @@
 	\
 	quarter_local = quarter; \
 	if(quarter_local & 1) { \
-		buffer_offset_off = (PI_QUARTER_W / 2); \
+		buffer_offset_off = (CUTSCENE_PIC_W / 2); \
 	} \
 	if(quarter_local & 2) { \
 		/* Careful! Parenthesizing this naively leads to overflows, since */ \
-		/* (PI_QUARTER_H * PI_W) doesn't fit into 16 bits. */\
-		buffer_offset_seg = ((PI_QUARTER_H / 2) * (PI_W / 16)); \
+		/* (CUTSCENE_PIC_H * PI_W) doesn't fit into 16 bits. */\
+		buffer_offset_seg = ((CUTSCENE_PIC_H / 2) * (PI_W / 16)); \
 	} \
 	_SI <<= 2;	/* *= sizeof(void far *) */ \
 	asm { les	si, pi_buffers[si]; } \

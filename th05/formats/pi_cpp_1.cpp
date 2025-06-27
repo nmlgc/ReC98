@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include "th05/formats/pi.hpp"
 #include "th05/formats/pi_impl.hpp"
+#include "game/cutscene.hpp"
 
 // Additionally takes:
 // • `int mask_id` in AX
@@ -38,10 +39,10 @@ void pascal pi_put_quarter_masked_8(
 )
 {
 	#define rowloop_func _asm { \
-		mov 	di, PI_QUARTER_H; \
+		mov 	di, CUTSCENE_PIC_H; \
 		push	left; \
 		push	top; \
-		push	PI_QUARTER_W; \
+		push	CUTSCENE_PIC_W; \
 		push	(PI_W / 2); \
 		mov 	ax, mask_id; \
 		call	near ptr pi_put_masked_8_rowloop; \
