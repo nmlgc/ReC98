@@ -12,11 +12,11 @@
 #pragma option -zPgroup_01
 
 #include <stddef.h>
+#include "game/cutscene.hpp"
 #include "libs/master.lib/master.hpp"
 #if (GAME >= 4)
 #include "th01/hardware/grcg.hpp" // ZUN bloat
 #endif
-#include "th01/formats/cutscene.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
