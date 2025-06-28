@@ -329,6 +329,25 @@ void near polygons_update_and_render(void)
 	}
 }
 
+void near music_flip(void)
+{
+#if (GAME <= 4)
+	static uint8_t near music_sel_on_page[PAGE_COUNT];
+	uint8_t music_sel_prev = music_sel_on_page[music_page_accessed];
+
+	if(music_sel != music_sel_prev) {
+		track_put(music_sel_prev, COL_TRACKLIST);
+		track_put(music_sel, COL_TRACKLIST_SELECTED);
+		music_sel_on_page[music_page_accessed] = music_sel;
+	}
+#endif
+
+	frame_delay(1);
+
+	graph_showpage(music_page_accessed);
+	graph_accesspage(music_page_accessed ^= 1);
+}
+
 void near music_update_render_and_flip(void)
 {
 	nopoly_B_put();
@@ -345,23 +364,7 @@ void near music_update_render_and_flip(void)
 	grcg_setcolor((GC_RMW | GC_B), 0xF);
 	polygons_update_and_render();
 	grcg_off();
-
-#if (GAME <= 4)
-	static uint8_t near music_sel_on_page[PAGE_COUNT];
-	uint8_t music_sel_prev = music_sel_on_page[music_page_accessed];
-
-	if(music_sel != music_sel_prev) {
-		track_put(music_sel_prev, COL_TRACKLIST);
-		track_put(music_sel, COL_TRACKLIST_SELECTED);
-		music_sel_on_page[music_page_accessed] = music_sel;
-	}
-#endif
-
-	frame_delay(1);
-
-	graph_showpage(music_page_accessed);
-	music_page_accessed = (1 - music_page_accessed);
-	graph_accesspage(music_page_accessed);
+	music_flip();
 }
 
 void pascal near cmt_load(int track)
@@ -748,6 +751,17 @@ controls:
 	while(1) {
 		music_input_sense();
 		if(!key_det) {
+#if (GAME >= 4)
+			// palette_black_out() starts with a delay frame, so we can leave
+			// immediately.
+#else
+			// TH03's music_input_sense() takes a while on slower systems and
+			// ZUN immediately wants to clear VRAM. Make sure we only leave
+			// during VBLANK.
+			if(!vblank_in()) {
+				music_flip();
+			}
+#endif
 			break;
 		}
 		music_update_render_and_flip();

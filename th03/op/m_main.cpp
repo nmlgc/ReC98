@@ -9,6 +9,7 @@
 #include "libs/master.lib/master.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "platform/x86real/flags.hpp"
+#include "platform/vblank.hpp"
 #include "planar.h"
 
 inline void title_load_opwin_and_bgm(void) {
@@ -134,12 +135,10 @@ void near op_animate(void)
 
 void near op_fadein_animate(void)
 {
-	title_load_opwin_and_bgm();
+	PaletteTone = 0;
+	vblank_run(palette_show);
 
-	// ZUN landmine: Will cause tearing if we return from the Music Room, which
-	// leaves with VRAM cleared to color 0 but still keeps its purple color in
-	// palette slot 0.
-	palette_settone(0);
+	title_load_opwin_and_bgm();
 
 	pi_load(0, MENU_MAIN_BG_FN);
 	graph_showpage(0);
@@ -160,10 +159,8 @@ void near op_fadein_animate(void)
 	select_cdg_load_part1_of_4();
 
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
-	for(int i = 0; i <= 100; i += 4) {
-		// At least this one doesn't constitute an additional landmine because
-		// the `palette_settone(0)` call on the first iteration matches the
-		// call at the beginning of the function.
+	frame_delay(1);
+	for(int i = 4; i <= 100; i += 4) {
 		palette_settone(i);
 		frame_delay(1);
 	}
