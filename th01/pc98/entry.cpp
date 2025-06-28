@@ -8,7 +8,15 @@
 
 // argv[1] value to select a given entry point.
 static char* ENTRYPOINTS[EP_COUNT] = {
-	"op", "reiiden", "fuuin"
+	"op",
+#if (GAME == 3)
+	"mainl",
+#elif (GAME == 1)
+	"reiiden",
+	"fuuin",
+#else
+	"maine",
+#endif
 };
 
 int __cdecl main(int argc, const char *argv[])
@@ -19,8 +27,10 @@ int __cdecl main(int argc, const char *argv[])
 		entry = main_setup;
 	} else if(!stricmp(argv[1], ENTRYPOINTS[EP_OP])) {
 		entry = main_op;
+#if (GAME == 1)
 	} else if(!stricmp(argv[1], ENTRYPOINTS[EP_MAIN])) {
 		entry = main_main;
+#endif
 	} else if(!stricmp(argv[1], ENTRYPOINTS[EP_CUTSCENE])) {
 		entry = main_cutscene;
 	} else {
