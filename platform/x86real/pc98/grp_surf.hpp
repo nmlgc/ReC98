@@ -23,6 +23,16 @@ struct GrpSurface_M : public GrpSurface {
 	void pascal free(void);
 };
 
+// 1bpp surface allocated to heap memory
+struct GrpSurface_M1 : public GrpSurface_M {
+	void pascal write(
+		vram_plane_t plane,
+		screen_x_t left,
+		screen_y_t top,
+		const LTWH<upixel_t> near *region = nullptr
+	);
+};
+
 // 4×1bpp surface
 struct GrpSurface_M4 : public GrpSurface_M {
 	void pascal write(

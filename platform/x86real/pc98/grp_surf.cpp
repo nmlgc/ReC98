@@ -11,6 +11,11 @@
 
 static const uint16_t PILOAD_BUFFER_SIZE = 0x4000;
 
+// The research tools don't have the [VRAM_PLANE] array from `planar.h`.
+static const seg_t VRAM_PLANES[PLANE_COUNT] = {
+	SEG_PLANE_B, SEG_PLANE_R, SEG_PLANE_G, SEG_PLANE_E,
+};
+
 // Interfacing with the blitters
 // -----------------------------
 
@@ -105,6 +110,21 @@ void GrpSurface_M::free(void)
 	plane_paras = 0;
 	w = 0;
 	h = 0;
+}
+
+void GrpSurface_M1::write(
+	vram_plane_t plane,
+	screen_x_t left,
+	screen_y_t top,
+	const LTWH<upixel_t> near *region
+)
+{
+	blitter_set_source_region_for(plane_B, ROW_SIZE, h, region);
+	const Blitter __ds* b = blitter_init_clip((left >> BYTE_BITS), top);
+	if(!b) {
+		return;
+	}
+	b->write(VRAM_PLANES[plane]);
 }
 
 void GrpSurface_M4::write(
