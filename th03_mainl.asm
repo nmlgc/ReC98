@@ -1068,10 +1068,10 @@ SCOREDAT_TEXT ends
 REGIST_TEXT segment byte public 'CODE' use16
 	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
 		rank:word
-	@regist_load_and_put_initial$qv procdesc near
+	@regist_load_and_put_initial_both$qv procdesc near
 	@regist_score_enter_from_resident$qv procdesc near
 	@alphabet_put_initial$qv procdesc near
-	@regist_rows_put$qv procdesc near
+	@regist_rows_unput_and_put$qv procdesc near
 	@regist_name_enter$qv procdesc near
 REGIST_TEXT ends
 
@@ -1194,17 +1194,17 @@ loc_B819:
 		mov	_entered_place, ax
 
 loc_B81F:
-		call	@regist_load_and_put_initial$qv
+		call	@regist_load_and_put_initial_both$qv
 		cmp	_entered_place, -1
 		jnz	short loc_B835
-		call	@regist_rows_put$qv
+		call	@regist_rows_unput_and_put$qv
 		push	2
 		call	palette_black_in
 		jmp	short loc_B858
 ; ---------------------------------------------------------------------------
 
 loc_B835:
-		call	@regist_rows_put$qv
+		call	@regist_rows_unput_and_put$qv
 		call	graph_copy_page pascal, 1
 		graph_accesspage 0
 		call	@alphabet_put_initial$qv
@@ -1212,7 +1212,7 @@ loc_B835:
 		call	palette_black_in
 		call	@regist_name_enter$qv
 		call	sub_B74E
-		call	@regist_rows_put$qv
+		call	@regist_rows_unput_and_put$qv
 
 loc_B858:
 		call	@input_wait_for_change$qi pascal, 0

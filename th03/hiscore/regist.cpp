@@ -74,7 +74,7 @@ void pascal near regi_put(
 extern int entered_place;
 /// -----
 
-void near regist_load_and_put_initial(void)
+void near regist_load_and_put_initial_both(void)
 {
 	enum {
 		RANK_IMAGE_W = 320,
@@ -286,8 +286,10 @@ void pascal near regist_row_put_at(screen_x_t left, screen_y_t top, int place)
 	regi_put(left, top, hi.score.stage[place], highlight);
 }
 
-void near regist_rows_put(void)
+void near regist_rows_unput_and_put(void)
 {
+	// ZUN bloat: Way too excessive. The names are the only thing we possibly
+	// change throughout this screen.
 	graph_copy_page(0);
 
 	int place = 0;
