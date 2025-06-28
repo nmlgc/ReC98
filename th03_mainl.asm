@@ -757,7 +757,7 @@ loc_9DAD:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.show_score_menu], 0
 		jz	short loc_9E04
-		call	sub_B7D2
+		call	@regist_menu$qv
 		call	text_clear
 		call	gaiji_restore
 		call	@game_exit$qv
@@ -882,7 +882,7 @@ loc_9F2E:
 loc_9F38:
 		call	cdg_free_all
 		freePISlotLarge	0
-		call	sub_B7D2
+		call	@regist_menu$qv
 		call	sub_9F8D
 		or	ax, ax
 		jnz	short loc_9F85
@@ -1061,120 +1061,13 @@ sub_9F8D	endp
 CUTSCENE_TEXT ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
-	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
-		rank:word
 SCOREDAT_TEXT ends
 
 REGIST_TEXT segment byte public 'CODE' use16
-	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
-		rank:word
-	@regist_load_and_put_initial_both$qv procdesc near
-	@regist_score_enter_from_resident$qv procdesc near
-	@alphabet_put_initial$qv procdesc near
-	@regist_rows_unput_and_put$qv procdesc near
-	@regist_name_enter$qv procdesc near
-	@regist_replace_same_letter_name_$qv procdesc near
+	@regist_menu$qv procdesc near
 REGIST_TEXT ends
 
 STAFF_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B7D2	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	eax, es:[bx+resident_t.rand]
-		mov	random_seed, eax
-		call	_snd_load c, offset aScore_m, ds, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		call	@scoredat_load_and_decode$q6rank_t pascal, ax
-		les	bx, _resident
-		cmp	es:[bx+resident_t.story_stage], STAGE_NONE
-		jnz	short loc_B819
-		mov	_entered_place, -1
-		jmp	short loc_B81F
-; ---------------------------------------------------------------------------
-
-loc_B819:
-		call	@regist_score_enter_from_resident$qv
-		mov	_entered_place, ax
-
-loc_B81F:
-		call	@regist_load_and_put_initial_both$qv
-		cmp	_entered_place, -1
-		jnz	short loc_B835
-		call	@regist_rows_unput_and_put$qv
-		push	2
-		call	palette_black_in
-		jmp	short loc_B858
-; ---------------------------------------------------------------------------
-
-loc_B835:
-		call	@regist_rows_unput_and_put$qv
-		call	graph_copy_page pascal, 1
-		graph_accesspage 0
-		call	@alphabet_put_initial$qv
-		push	2
-		call	palette_black_in
-		call	@regist_name_enter$qv
-		call	@regist_replace_same_letter_name_$qv
-		call	@regist_rows_unput_and_put$qv
-
-loc_B858:
-		call	@input_wait_for_change$qi pascal, 0
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rem_credits], 0
-		jz	short loc_B871
-		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
-		jnz	short loc_B879
-
-loc_B871:
-		kajacall	KAJA_SONG_FADE, 16
-
-loc_B879:
-		push	2
-		call	palette_black_out
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		call	@scoredat_encode_and_save$q6rank_t pascal, ax
-		call	super_free
-		graph_accesspage 0
-		graph_showpage al
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rem_credits], 0
-		jz	short loc_B8F1
-		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
-		jz	short loc_B8F1
-		call	@pi_load$qinxc pascal, 0, ds, offset aConti_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
-		call	cdg_load_all pascal, 0, ds, offset aConti_cd2
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_B8F1:
-		call	@pi_load$qinxc pascal, 0, ds, offset aOver_pi_0
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
-		call	_snd_delay_until_volume stdcall, 255
-		pop	cx
-		kajacall	KAJA_SONG_STOP
-		pop	bp
-		retn
-sub_B7D2	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1256,7 +1149,7 @@ loc_B9DD:
 		call	sub_C40D
 		les	bx, _resident
 		mov	es:[bx+resident_t.story_stage], STAGE_ALL
-		call	sub_B7D2
+		call	@regist_menu$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rem_credits], 3
 		jnz	short loc_BA66
@@ -2538,14 +2431,12 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
-	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE:proc
 	extern @game_exit_from_mainl_to_main$qv:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
-	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
 SHARED	ends
@@ -2738,14 +2629,15 @@ aB@vVfvsb@	db ' 　ちゆり　 ',0
 aB@CF		db ' 　 夢美　  ',0
 aYume_nem	db 'YUME.NEM',0
 aRft0_cdg	db 'rft0.cdg',0
-public _regib_pi, _regi2_bft, _regi1_bft
+public _regib_pi, _regi2_bft, _regi1_bft, _score_m, _conti_pi, _conti_cd2
+public _GAMEOVER_BG_FN
 _regib_pi 	db 'regib.pi',0
 _regi2_bft	db 'regi2.bft',0
 _regi1_bft	db 'regi1.bft',0
-aScore_m	db 'score.m',0
-aConti_pi	db 'conti.pi',0
-aConti_cd2	db 'conti.cd2',0
-aOver_pi_0	db 'over.pi',0
+_score_m	db 'score.m',0
+_conti_pi	db 'conti.pi',0
+_conti_cd2	db 'conti.cd2',0
+_GAMEOVER_BG_FN	db 'over.pi',0
 aOver_m		db 'over.m',0
 		db 0
 off_EE4E	dd a@00ed_txt

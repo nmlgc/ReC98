@@ -30,7 +30,8 @@ enum game_mode_t {
 
 // Won't enter [score_last[0]] into YUME.NEM, even if it's high enough for a
 // place. Also used for just showing the high scores from the main menu.
-#define STAGE_NONE -1
+static const uint8_t STAGE_NONE = -1;
+
 #define STAGE_ALL 99
 
 #define CREDIT_LIVES 2
