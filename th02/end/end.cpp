@@ -380,9 +380,7 @@ void near end_to_staffroll_animate(void)
 {
 	enum {
 		VELOCITY = 4,
-
-		// ZUN bloat: (CUTSCENE_PIC_H - 1) would have been enough.
-		SHIFT_H = (RES_Y - 1 - CUTSCENE_PIC_TOP),
+		CUTSCENE_PIC_BOTTOM = (CUTSCENE_PIC_TOP + CUTSCENE_PIC_H - 1),
 	};
 	end_load("end3.txt");
 	frame_delay(30);
@@ -408,7 +406,7 @@ void near end_to_staffroll_animate(void)
 			left_prev,
 			CUTSCENE_PIC_TOP,
 			(left_prev + CUTSCENE_PIC_W - 1),
-			SHIFT_H,
+			CUTSCENE_PIC_BOTTOM,
 			VELOCITY
 		);
 
@@ -418,7 +416,7 @@ void near end_to_staffroll_animate(void)
 			(left_prev + CUTSCENE_PIC_W - (VELOCITY * 2)),
 			CUTSCENE_PIC_TOP,
 			(left_prev + CUTSCENE_PIC_W - 1),
-			SHIFT_H
+			CUTSCENE_PIC_BOTTOM
 		);
 		grcg_off();
 		frame_delay(1);
