@@ -1,4 +1,5 @@
 #include <dos.h>
+#include "platform/vblank.hpp"
 #include "shiftjis.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
@@ -112,6 +113,13 @@ void pascal near logo_render(int step)
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();
+
+	// ZUN bug: The first defined frame only displays the purple background
+	// without the 東方封魔録 label. See the `master` branch for more details.
+	if(step == 0) {
+		return;
+	}
+
 	for(int i = 0; i < 4; i++) {
 		screen_y_t y = ((i * 100) - step);
 		while(y < 0) {
@@ -128,14 +136,9 @@ void pascal near logo_render(int step)
 void pascal score_menu(void)
 {
 	int input_allowed = 0;
-	page_t page_shown = 0;
 
-	// ZUN landmine: We get here not too long after VSync, and a VRAM clear of
-	// the visible page might successfully race the beam. But it certainly
-	// won't if we do file I/O first.
+	vblank_run(vblank_palette_black_and_tram_wipe);
 	scoredat_load();
-	graph_accesspage(0);	graph_clear();
-	graph_accesspage(1);	graph_clear();
 
 	if(need_op_h_bft) {
 		need_op_h_bft = 0;
@@ -156,27 +159,14 @@ void pascal score_menu(void)
 		super_entry_bfnt("op_h.bft");
 		super_buffer = nullptr;
 	}
-	palette_entry_rgb_show("op_h.rgb");
+	palette_entry_rgb("op_h.rgb");
+
+	graph_accesspage(1);	graph_clear();
+	graph_accesspage(0);	graph_clear();
 	grc_setclip(128, 96, 512, 304);
 
-	// ZUN bug: Seems redundant since logo_render() starts with the same code.
-	// But note that we're accessing VRAM page 1. The first iteration of the
-	// loop below will *show* page 1 but *render* to page 0. Thus, the first
-	// well-defined frame actually just displays what's drawn here – the purple
-	// background without the 東方封魔録 label.
-	grcg_setcolor(GC_RMW, 10);
-	grcg_fill();
-	grcg_off();
-
-	scores_put(-1);
+	page_t page_shown = 1;
 	logo_step = 0;
-
-	// ZUN landmine: The beam is certainly at some place within the frame by
-	// now, yielding another tearing line.
-	graph_accesspage(0);
-	page_shown = (1 - page_shown);
-	graph_showpage(1);
-
 	do {
 		input_reset_sense();
 		if(!input_allowed && !key_det) {
@@ -184,10 +174,15 @@ void pascal score_menu(void)
 		} else if(input_allowed == 1 && key_det) {
 			break;
 		}
-		logo_render(++logo_step);
+		logo_render(logo_step++);
 		frame_delay(1);
+
 		graph_accesspage(page_shown);
 		graph_showpage(page_shown = (1 - page_shown));
+		if(logo_step == 1) {
+			palette_settone(100);
+			scores_put(-1);
+		}
 	} while(logo_step <= score_duration);
 
 	key_det = 0;
