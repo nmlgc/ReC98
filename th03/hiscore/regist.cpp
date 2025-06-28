@@ -15,6 +15,8 @@
 #include "th03/formats/score_ld.cpp"
 #include "th03/formats/score_es.cpp"
 
+extern regi_patnum_t REGI_PLAYCHAR[PLAYCHAR_COUNT][SCOREDAT_NAME_LEN];
+
 static const int PLACE_NONE = -1;
 
 /// Coordinates
@@ -451,4 +453,35 @@ void near regist_name_enter(void)
 	}
 
 	#undef on_direction
+}
+
+void near regist_replace_same_letter_name_with_default_for_playchar(void)
+{
+	int i;
+	regi_patnum_t near *def_p;
+
+	// ZUN bloat: "Name is all spaces" is a subset of "all name letters are
+	// identical". By removing this loop and only keeping the one at the
+	// bottom, there's also no need to jump around using `goto`.
+	for(i = 0; i < SCOREDAT_NAME_LEN; i++) {
+		if(hi.score.name[entered_place][i] != REGI_ASCII(' ')) {
+			goto name_is_not_just_spaces;
+		}
+	}
+
+write_default_name_for_playchar:
+	def_p = REGI_PLAYCHAR[resident->playchar_paletted[0].char_id_16()];
+	for(i = (SCOREDAT_NAME_LEN - 1); i >= 0; (i--, def_p++)) {
+		hi.score.name[entered_place][i] = *def_p;
+	}
+	return;
+
+name_is_not_just_spaces:
+	uint8_t first_c = hi.score.name[entered_place][0];
+	for(i = 0; i < SCOREDAT_NAME_LEN; i++) {
+		if(hi.score.name[entered_place][i] != first_c) {
+			return;
+		}
+	}
+	goto write_default_name_for_playchar;
 }

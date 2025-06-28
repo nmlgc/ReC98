@@ -1073,98 +1073,10 @@ REGIST_TEXT segment byte public 'CODE' use16
 	@alphabet_put_initial$qv procdesc near
 	@regist_rows_unput_and_put$qv procdesc near
 	@regist_name_enter$qv procdesc near
+	@regist_replace_same_letter_name_$qv procdesc near
 REGIST_TEXT ends
 
 STAFF_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B74E	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	cx, cx
-		jmp	short loc_B769
-; ---------------------------------------------------------------------------
-
-loc_B758:
-		mov	bx, _entered_place
-		shl	bx, 3
-		add	bx, cx
-		cmp	_hi.SDS_score.SD_name[bx], REGI_SP
-		jnz	short loc_B7A2
-		inc	cx
-
-loc_B769:
-		cmp	cx, SCOREDAT_NAME_LEN
-		jl	short loc_B758
-
-loc_B76E:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		shl	ax, 3
-		add	ax, offset _REGI_PLAYCHAR
-		mov	di, ax
-		mov	cx, (SCOREDAT_NAME_LEN - 1)
-		jmp	short loc_B79C
-; ---------------------------------------------------------------------------
-
-loc_B78B:
-		mov	bx, _entered_place
-		shl	bx, 3
-		add	bx, cx
-		mov	al, [di]
-		mov	_hi.SDS_score.SD_name[bx], al
-		dec	cx
-		inc	di
-
-loc_B79C:
-		or	cx, cx
-		jge	short loc_B78B
-		jmp	short loc_B7CE
-; ---------------------------------------------------------------------------
-
-loc_B7A2:
-		mov	bx, _entered_place
-		shl	bx, 3
-		mov	al, _hi.SDS_score.SD_name[bx]
-		mov	[bp+var_1], al
-		xor	cx, cx
-		jmp	short loc_B7C7
-; ---------------------------------------------------------------------------
-
-loc_B7B4:
-		mov	bx, _entered_place
-		shl	bx, 3
-		add	bx, cx
-		mov	al, _hi.SDS_score.SD_name[bx]
-		cmp	al, [bp+var_1]
-		jnz	short loc_B7CE
-		inc	cx
-
-loc_B7C7:
-		cmp	cx, SCOREDAT_NAME_LEN
-		jl	short loc_B7B4
-		jmp	short loc_B76E
-; ---------------------------------------------------------------------------
-
-loc_B7CE:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B74E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1211,7 +1123,7 @@ loc_B835:
 		push	2
 		call	palette_black_in
 		call	@regist_name_enter$qv
-		call	sub_B74E
+		call	@regist_replace_same_letter_name_$qv
 		call	@regist_rows_unput_and_put$qv
 
 loc_B858:
