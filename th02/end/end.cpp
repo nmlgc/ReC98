@@ -857,11 +857,8 @@ void near staffroll_and_verdict_animate(void)
 	// Move game title and version down to make room for the staff roll text
 	// ---------------------------------------------------------------------
 
-	// ZUN bloat: Calculated in terms of the ENDFT.BFT top position, but
-	// would have saved a lot of [VELOCITY] additions if it was calculated in
-	// terms of the version string's top position instead. (Note that the first
-	// loop iteration is a no-op, so make sure to pull out the frame_delay(1)
-	// call when debloating.)
+	// ZUN bloat: Why not use egc_shift_down() instead? The binary already
+	// links this function.
 	#define endft_top i
 	endft_top = (STAFFROLL_TEXT_TOP - (VELOCITY * 2));
 	while(endft_top < (RES_Y - ENDFT_H)) {
