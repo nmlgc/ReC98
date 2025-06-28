@@ -532,7 +532,6 @@ void main_update_and_render(void)
 				break;
 			case 2:
 				score_duration = 2000;
-				text_clear();
 				score_menu();
 
 				// ZUN landmine: score_menu() can return with either page 0 or
