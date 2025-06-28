@@ -25,6 +25,9 @@ struct GrpSurface_M : public GrpSurface {
 
 // 1bpp surface allocated to heap memory
 struct GrpSurface_M1 : public GrpSurface_M {
+	// Returns `true` on allocation failure.
+	bool pascal alloc(upixel_t w, upixel_t h);
+
 	void pascal write(
 		vram_plane_t plane,
 		screen_x_t left,
@@ -35,6 +38,9 @@ struct GrpSurface_M1 : public GrpSurface_M {
 
 // 4×1bpp surface
 struct GrpSurface_M4 : public GrpSurface_M {
+	// Returns `true` on allocation failure.
+	bool pascal alloc(upixel_t w, upixel_t h);
+
 	void pascal write(
 		screen_x_t left,
 		screen_y_t top,

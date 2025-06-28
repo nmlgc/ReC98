@@ -97,6 +97,30 @@ void near blitter_write_offscreen_4plane_fast(uint16_t plane_paras)
 }
 // -----------------------------
 
+inline uint16_t plane_paras_for(uvram_byte_amount_t vram_w, upixel_t h) {
+	return (((vram_w * h) + 15) / 16);
+}
+
+bool near surface_alloc(
+	GrpSurface_M& surf, upixel_t w, upixel_t h, unsigned int plane_count
+)
+{
+	surf.free();
+	const uvram_byte_amount_t vram_w = ((w + BYTE_MASK) / BYTE_DOTS);
+	const uint16_t plane_paras = plane_paras_for(vram_w, h);
+	const seg_t plane_B = reinterpret_cast<seg_t>(
+		hmem_alloc(plane_paras * plane_count)
+	);
+	if(!plane_B) {
+		return true;
+	}
+	surf.plane_B = plane_B;
+	surf.plane_paras = plane_paras;
+	surf.w = vram_w;
+	surf.h = h;
+	return false;
+}
+
 // Surface classes
 // ---------------
 
@@ -112,6 +136,11 @@ void GrpSurface_M::free(void)
 	h = 0;
 }
 
+bool GrpSurface_M1::alloc(upixel_t w, upixel_t h)
+{
+	return surface_alloc(*this, w, h, 1);
+}
+
 void GrpSurface_M1::write(
 	vram_plane_t plane,
 	screen_x_t left,
@@ -125,6 +154,11 @@ void GrpSurface_M1::write(
 		return;
 	}
 	b->write(VRAM_PLANES[plane]);
+}
+
+bool GrpSurface_M4::alloc(upixel_t w, upixel_t h)
+{
+	return surface_alloc(*this, w, h, 4);
 }
 
 void GrpSurface_M4::write(
