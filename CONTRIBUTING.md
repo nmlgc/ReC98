@@ -480,6 +480,14 @@ the following assumptions:
 * ZUN's original build of the decompiled game is correctly installed and
   accessible, together with all its original data files.
 * No files of this installation were modified.
+* All configuration or score files are in a state that ZUN's original code
+  could have written, and weren't modified externally (or at least not beyond
+  these constraints).
+  * All score values representable within the original score file format should
+    be considered valid and possible, regardless of whether they can be
+    realistically reached in actual gameplay of the unmodded original game.
+    Hence, rendering issues caused by excessively high scores are bugs, not
+    landmines.
 * All files can be read as intended without I/O errors.
 * The game runs on a clean PC-98 DOS system that matches the official minimum
   system requirements, with enough free memory.
