@@ -167,7 +167,12 @@ void near cfg_save_exit(void)
 
 inline bool switch_to_mainl(bool opwin_free) {
 	cfg_save();
+
+	// ZUN landmine: The system's previous gaiji should be restored *after*
+	// TRAM gets cleared in game_exit(), not before while we're still showing
+	// menu text.
 	gaiji_restore();
+
 	snd_kaja_func(KAJA_SONG_STOP, 0);
 	if(opwin_free) {
 		super_free(); // ZUN bloat: Process termination will do this anyway.
@@ -893,8 +898,21 @@ void main(void)
 		frame_delay(1);
 	}
 	cfg_save_exit();
+
+	// ZUN landmine: The system's previous gaiji should be restored *after*
+	// clearing TRAM, not before while we're still showing menu text. Sending
+	// ((8,192 × 2) + 512) bytes of data over I/O ports one byte at a time
+	// takes a short while, so this can definitely be visible for a fraction of
+	// a frame on real, not infinitely fast hardware. Especially since the CRT
+	// beam is most certainly in the middle of a frame after the file I/O
+	// immediately above.
+	// Funnily enough, TH02 got the order correct right in the one place where
+	// it mattered in that game.
+	//
+	// ZUN bloat: Also, game_exit_to_dos() already clears TRAM.
 	gaiji_restore();
 	text_clear();
+
 	game_exit_to_dos();
 	respal_free();
 }
