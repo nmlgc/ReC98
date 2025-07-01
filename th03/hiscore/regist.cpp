@@ -117,6 +117,10 @@ int near regist_score_enter_from_resident(void)
 	int shift;
 	int c;
 
+	// ZUN bug: This sort loop does not consider the 9th digit, i.e., the
+	// number of continues used. Identical scores with a different number of
+	// used continues will therefore always appear in the order they were
+	// inserted into the list.
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
 		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
 			if(score_digit_as_regi(c) > hi.score.score[place][c + 1]) {
