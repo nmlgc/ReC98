@@ -1,11 +1,12 @@
 // High-level overview of the differences between the three games that can't be
 // easily abstracted away:
 //
-// 2) TH03 types text onto both pages, with a delay after each glyph. TH04 and
+// 2) TH03 types text onto VRAM page 0, with a delay after each glyph. TH04 and
 //    TH05 render all text onto VRAM page 1 (the invisible one) without any
 //    delay, and then fade the new text onto page 0 during box_1_to_0_animate().
-// 3) TH03 and TH04 unblit both VRAM pages when starting a new text box, while
-//    TH05 leaves the text of the previous box on the visible VRAM page 0.
+// 3) TH03 and TH04 unblit the text of the previous box when starting a new
+//    one, from all VRAM pages they rendered to. TH05 leaves the text of the
+//    previous box on the visible VRAM page 0.
 
 #pragma option -zPgroup_01
 
@@ -343,8 +344,10 @@ void near cursor_advance_and_animate(void)
 			// will just be blitted on top of old text.
 			// (Not that the feature would have been particularly usable
 			// without this bug, thanks to the assignments above…)
-#if (GAME != 5)
+#if (GAME == 4)
 			graph_accesspage(1);	box_bg_put();
+			graph_accesspage(0);	box_bg_put();
+#elif (GAME == 3)
 			graph_accesspage(0);	box_bg_put();
 #endif
 		}
@@ -496,7 +499,9 @@ script_ret_t pascal near script_op(unsigned char c)
 		cursor.y = BOX_TOP;
 
 		// High-level overview, point 2)
+#if (GAME >= 4)
 		graph_accesspage(1);	box_bg_put();
+#endif
 #if (GAME <= 4)
 		graph_accesspage(0);	box_bg_put();
 #endif
@@ -619,8 +624,11 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_p++;
 			script_param_read_number_first(p1, 0);
 
-			graph_accesspage(1);
-#if (GAME == 3)
+			graph_accesspage((GAME >= 4) ? 1 : 0);
+#if (GAME >= 4)
+			// [text_fx] is also ignored here...
+			graph_gaiji_putc(cursor.x, cursor.y, p1, text_col);
+#else
 			// Looks like a ZUN bug, but actually works around the master.lib
 			// bug mentioned in the comment of this function, which ZUN only
 			// fixed for TH04 and TH05. In the original binary, the ASCII→digit
@@ -633,11 +641,7 @@ script_ret_t pascal near script_op(unsigned char c)
 			// happens to be cleared, which is why the subtraction is not
 			// necessary for the call below to display the intended gaiji.
 			graph_gaiji_putc(cursor.x, cursor.y, (p1 - 1), text_col);
-
-			graph_accesspage(0);
 #endif
-			// [text_fx] is also ignored here...
-			graph_gaiji_putc(cursor.x, cursor.y, p1, text_col);
 			// ZUN quirk: No [text_interval]-based delay in TH03.
 
 			cursor_advance_and_animate();
@@ -922,12 +926,10 @@ void near cutscene_animate(void)
 		}
 #endif
 
-		graph_accesspage(1);
+		graph_accesspage((GAME >= 4) ? 1 : 0);
 #if (GAME >= 4)
 		graph_putsa_fx(cursor.x, cursor.y, text_col, kanji.byte);
 #else
-		graph_putsa_fx(cursor.x, cursor.y, (text_col | text_fx), kanji.byte);
-		graph_accesspage(0);
 		graph_putsa_fx(cursor.x, cursor.y, (text_col | text_fx), kanji.byte);
 #endif
 		cursor_advance_and_animate();
