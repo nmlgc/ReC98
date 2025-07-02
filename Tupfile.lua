@@ -609,38 +609,53 @@ th03:zungen("bin/th03/zun.com", {
 })
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
 obj += platform_objs.pi_surf
 obj += platform_objs.surf
 obj += platform_objs.vblank
+obj += tup.glob("th03/pc98/*.cpp")
 obj += {
+	"th03/cfg_lres.cpp",
 	"th03/op_01.cpp",
-	"th03_op.asm",
+	{ "th03.asm", extra_inputs = th03_sprites["flake"] },
 	"th03/op_music.cpp",
 	"th03/op_main.cpp",
-	"th03/op_02.cpp",
 	"th03/scoredat.cpp",
 	"th03/op_sel.cpp",
+	"th03/mainl_sc.cpp",
+	"th03/cutscene.cpp",
+	"th03/regist.cpp",
+	"th03/staff.cpp",
 
 	-- SHARED
 	"th02/exit_dos.cpp",
 	"th02/frmdelay.cpp",
+	"th02/snd_dlyv.c",
 	"th02/snd_load.cpp",
 	"th02/snd_mode.c",
 	"th02/snd_pmdr.c",
+	"th02/snd_se_r.cpp",
 	"th02/vplanset.cpp",
 	"th03/cdg_load.cpp",
 	"th03/cdg_p_na.asm",
 	"th03/cdg_put.asm",
 	"th03/exit.cpp",
+	"th03/exitmain.cpp",
 	"th03/grppsafx.cpp",
 	"th03/hfliplut.asm",
+	"th03/initmain.cpp",
 	"th03/initop.cpp",
 	"th03/inp_m_w.cpp",
+	"th03/inp_wait.cpp",
 	"th03/input_s.cpp",
+	"th03/snd_dlym.cpp",
 	"th03/snd_kaja.cpp",
+	"th03/snd_se.cpp",
+	"th03/sprites/pi_mask.cpp",
+	"th03/vector.cpp",
 }
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+th03:branch(MODEL_LARGE):link("debloat", obj)
 
 obj = {
 	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
@@ -670,50 +685,7 @@ obj = {
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",
 }
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
-
-obj = {}
-obj += platform_objs.cutscene
-obj += platform_objs.libc_debloat
-obj += platform_objs.pi_surf
-obj += platform_objs.surf
-obj += {
-	"th03/cfg_lres.cpp",
-	"th03/mainl_sc.cpp",
-	{ "th03_mainl.asm", extra_inputs = th03_sprites["flake"] },
-	"th03/cutscene.cpp",
-	"th03/scoredat.cpp",
-	"th03/regist.cpp",
-	"th03/staff.cpp",
-
-	-- SHARED
-	"th02/frmdelay.cpp",
-	"th02/snd_dlyv.c",
-	"th02/snd_load.cpp",
-	"th02/snd_mode.c",
-	"th02/snd_pmdr.c",
-	"th02/snd_se_r.cpp",
-	"th02/vplanset.cpp",
-	"th03/cdg_load.cpp",
-	"th03/cdg_p_na.asm",
-	"th03/cdg_put.asm",
-	"th03/exit.cpp",
-	"th03/exitmain.cpp",
-	"th03/grppsafx.cpp",
-	"th03/hfliplut.asm",
-	"th03/initmain.cpp",
-	"th03/inp_m_w.cpp",
-	"th03/inp_wait.cpp",
-	"th03/input_s.cpp",
-	"th03/snd_dlym.cpp",
-	"th03/snd_kaja.cpp",
-	"th03/snd_se.cpp",
-	"th03/sprites/pi_mask.cpp",
-	"th03/vector.cpp",
-}
-th03:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='L'" }):link(
-	"mainl", obj
-)
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("debloatm", obj)
 -- ----
 
 -- TH04

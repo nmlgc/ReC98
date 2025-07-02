@@ -28,7 +28,6 @@
 #include <conio.h>
 #include <mem.h>
 #include <stddef.h>
-#include <process.h>
 
 enum main_choice_t {
 	MC_STORY,
@@ -176,7 +175,7 @@ bool near switch_to_mainl(void)
 	// certainly not run within VBLANK.
 	game_exit();
 
-	execl(BINARY_MAINL, BINARY_MAINL, nullptr);
+	entrypoint_exec(EP_CUTSCENE);
 	return false;
 }
 
@@ -785,7 +784,7 @@ void near option_update_and_render(void)
 	#undef input_allowed
 }
 
-void main(void)
+int main_op(int, const char *[])
 {
 	graph_400line();
 	text_clear();
@@ -794,7 +793,7 @@ void main(void)
 	if(game_init_op(OP_AND_END_PF_FN)) {
 		dos_puts2(ERROR_OUT_OF_MEMORY);
 		getch();
-		return;
+		return 1;
 	}
 
 	gaiji_backup();
@@ -859,5 +858,7 @@ void main(void)
 
 	game_exit_to_dos();
 	respal_free();
+
+	return 0;
 }
 /// --------

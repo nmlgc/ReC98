@@ -2325,13 +2325,15 @@ public @GameExecl$qnxc
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
-		call	@mrs_free$qi pascal, 0
-		call	@mrs_free$qi pascal, 1
 		call	@game_exit$qv
-		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
+		call	_execl c, offset _MERGED_FN, cs, offset _MERGED_FN, cs, large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
 @GameExecl$qnxc	endp
+
+_MERGED_FN	db 'debloat',0
+	nop
+	nop
 
 
 ; =============== S U B	R O U T	I N E =======================================

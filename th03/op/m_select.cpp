@@ -100,8 +100,6 @@ static int curve_trail_count;
 static unsigned char playchars_available;
 /// -----
 
-#include "th03/formats/score_ld.cpp"
-
 unsigned char near playchars_available_load(void)
 {
 	unsigned char ret = PLAYCHAR_COUNT_LOCKED;
