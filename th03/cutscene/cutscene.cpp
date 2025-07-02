@@ -64,6 +64,10 @@ static const vram_byte_amount_t BOX_VRAM_W = (BOX_W / BYTE_DOTS);
 static const screen_x_t BOX_RIGHT = (BOX_LEFT + BOX_W);
 static const screen_y_t BOX_BOTTOM = (BOX_TOP + BOX_H);
 
+#if (GAME == 5)
+static const screen_x_t RETURN_LEFT = (BOX_RIGHT + GLYPH_FULL_W);
+#endif
+
 static const shiftjis_ank_amount_t NAME_LEN = 6;
 static const shiftjis_kanji_amount_t NAME_KANJI_LEN = (
 	NAME_LEN / sizeof(shiftjis_kanji_t)
@@ -505,10 +509,6 @@ void near box_1_to_0_animate(void)
 #if (GAME == 5)
 void pascal near box_wait_animate(int frames_to_wait)
 {
-	enum {
-		LEFT = (BOX_RIGHT + GLYPH_FULL_W),
-	};
-
 	unsigned int frames_waited = 0;
 	bool16 ignore_frames = false;
 
@@ -531,7 +531,7 @@ void pascal near box_wait_animate(int frames_to_wait)
 
 		// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
 		// applying boldface… why not just show it on TRAM?
-		bgimage_put_rect_16(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
+		bgimage_put_rect_16(RETURN_LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
 
 		if(
 			(frames_to_wait <= 0) ||
@@ -542,7 +542,7 @@ void pascal near box_wait_animate(int frames_to_wait)
 			return;
 		}
 		graph_gaiji_putc(
-			LEFT,
+			RETURN_LEFT,
 			cursor.y,
 			(ga_RETURN_KEY + ((frames_waited / 8) % RETURN_KEY_CELS)),
 			V_WHITE
