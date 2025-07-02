@@ -1,7 +1,7 @@
 NAME_LEN = 6
 NAME_KANJI_LEN = (NAME_LEN / 2)
 
-public _script, _fast_forward, _box_bg
+public _script, _fast_forward
 if (GAME ge 4)
 	public _script_p
 	_script  	db 8192 dup(?)
@@ -9,7 +9,6 @@ if (GAME ge 4)
 else
 	_script	dd ?
 endif
-_box_bg	dd ?
 _fast_forward	db ?
 	evendata
 

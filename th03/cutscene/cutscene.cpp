@@ -1,8 +1,6 @@
 // High-level overview of the differences between the three games that can't be
 // easily abstracted away:
 //
-// 1) TH03 and TH04 allocate dedicated memory for backing up the text box area
-//    in VRAM ([box_bg]), TH05 uses the bgimage system instead.
 // 2) TH03 types text onto both pages, with a delay after each glyph. TH04 and
 //    TH05 render all text onto VRAM page 1 (the invisible one) without any
 //    delay, and then fade the new text onto page 0 during box_1_to_0_animate().
@@ -13,6 +11,7 @@
 
 #include <stddef.h>
 #include "game/cutscene.hpp"
+#include "platform/grp_surf.hpp"
 #include "libs/master.lib/master.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -32,7 +31,6 @@
 #define key_det input_sp
 #endif
 #if (GAME == 5)
-#include "th04/hardware/bgimage.hpp"
 #include "th04/hardware/grppsafx.h"
 #include "th04/snd/snd.h"
 #include "th04/gaiji/gaiji.h"
@@ -58,13 +56,25 @@ static const screen_y_t BOX_TOP = 320;
 static const pixel_t BOX_W = 480;
 static const pixel_t BOX_H = (GLYPH_H * 4);
 
-static const vram_byte_amount_t BOX_VRAM_W = (BOX_W / BYTE_DOTS);
 static const screen_x_t BOX_RIGHT = (BOX_LEFT + BOX_W);
 static const screen_y_t BOX_BOTTOM = (BOX_TOP + BOX_H);
 
 #if (GAME == 5)
 static const screen_x_t RETURN_LEFT = (BOX_RIGHT + GLYPH_FULL_W);
+static const screen_x_t RETURN_RIGHT = (RETURN_LEFT + GLYPH_FULL_W);
 #endif
+
+static const LTWH<upixel_t> BOX_REGION = {
+	BOX_LEFT,
+	BOX_TOP,
+#if (GAME == 5)
+	(RETURN_RIGHT - BOX_LEFT),
+	(BOX_H + GLYPH_H),
+#else
+	BOX_W,
+	BOX_H,
+#endif
+};
 
 static const shiftjis_ank_amount_t NAME_LEN = 6;
 static const shiftjis_kanji_amount_t NAME_KANJI_LEN = (
@@ -100,7 +110,7 @@ extern unsigned char far *script;
 #define script_p script
 #endif
 
-extern Planar<dots16_t> far *box_bg;
+GrpSurface_M4 box_bg;
 
 // Skips any delays during the cutscene if `true`.
 extern bool fast_forward;
@@ -151,9 +161,6 @@ void pascal near box_wait_animate(int frames_to_wait = 0);
 #define box_wait_animate(frames_to_wait) { \
 	input_wait_for_change(frames_to_wait); \
 }
-
-void near box_bg_allocate_and_snap(void);
-void near box_bg_free(void);
 #endif
 #if (GAME >= 4)
 // Crossfades the text box area from VRAM page 1 to VRAM page 0, spending
@@ -322,68 +329,17 @@ void pascal near pic_put_both_masked(
 	}
 	pic_copy_1_to_0(left, top);
 }
-
-#define box_bg_snap_func(p, vo) { \
-	(&box_bg->B)[p++] = VRAM_CHUNK(B, vo, 16); \
-	(&box_bg->B)[p++] = VRAM_CHUNK(R, vo, 16); \
-	(&box_bg->B)[p++] = VRAM_CHUNK(G, vo, 16); \
-	(&box_bg->B)[p++] = VRAM_CHUNK(E, vo, 16); \
-}
-
-#define box_bg_put_func(p, vo) { \
-	VRAM_CHUNK(B, vo, 16) = (&box_bg->B)[p++]; \
-	VRAM_CHUNK(R, vo, 16) = (&box_bg->B)[p++]; \
-	VRAM_CHUNK(G, vo, 16) = (&box_bg->B)[p++]; \
-	VRAM_CHUNK(E, vo, 16) = (&box_bg->B)[p++]; \
-}
-
-#define box_bg_loop(func) /* No braces due to local variable layout */ \
-	size_t p; \
-	vram_y_t src_y; \
-	screen_x_t src_x; \
-	pixel_t dst_y; \
-	vram_byte_amount_t dst_byte; \
-	vram_offset_t vo; \
-	\
-	p = 0; \
-	src_y = BOX_TOP; \
-	dst_y = 0; \
-	while(dst_y < BOX_H) { \
-		src_x = BOX_LEFT; \
-		dst_byte = 0; \
-		while(dst_byte < BOX_VRAM_W) { \
-			vo = vram_offset_shift(src_x, src_y); \
-			func(p, vo); \
-			dst_byte += static_cast<vram_byte_amount_t>(sizeof(dots16_t)); \
-			src_x += 16; \
-		} \
-		dst_y++; \
-		src_y++; \
-	}
-
-void near box_bg_allocate_and_snap(void)
-{
-	box_bg_free();
-	graph_accesspage(0);
-	box_bg = HMem< Planar<dots16_t> >::alloc(
-		((BOX_VRAM_W * BOX_H) / sizeof(dots16_t))
-	);
-	box_bg_loop(box_bg_snap_func);
-}
-
-void near box_bg_free(void)
-{
-	if(box_bg) {
-		HMem< Planar<dots16_t> >::free(box_bg);
-		box_bg = nullptr;
-	}
-}
+#endif
 
 void near box_bg_put(void)
 {
-	box_bg_loop(box_bg_put_func);
+	box_bg.write(BOX_LEFT, BOX_TOP);
 }
-#endif
+
+void near box_bg_snap(void)
+{
+	box_bg.snap(0, 0, &BOX_REGION);
+}
 
 #undef extern
 #include "th03/formats/script.hpp"
@@ -503,11 +459,15 @@ void pascal near box_wait_animate(int frames_to_wait)
 
 	graph_accesspage(0);
 	while(1) {
+		static LTWH<upixel_t> return_region = {
+			(RETURN_LEFT - BOX_LEFT), 0, GLYPH_FULL_W, GLYPH_H
+		};
+		return_region.top = (cursor.y - BOX_TOP);
 		cutscene_input_sense();
 
 		// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
 		// applying boldface… why not just show it on TRAM?
-		bgimage_put_rect_16(RETURN_LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
+		box_bg.write(RETURN_LEFT, cursor.y, &return_region);
 
 		if(
 			(frames_to_wait <= 0) ||
@@ -571,12 +531,9 @@ script_ret_t pascal near script_op(unsigned char c)
 		cursor.x = BOX_LEFT;
 		cursor.y = BOX_TOP;
 
-#if (GAME == 5)
-		graph_accesspage(1);
-		bgimage_put_rect_16(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
-#else
 		// High-level overview, point 2)
 		graph_accesspage(1);	box_bg_put();
+#if (GAME <= 4)
 		graph_accesspage(0);	box_bg_put();
 #endif
 		break;
@@ -746,14 +703,14 @@ script_ret_t pascal near script_op(unsigned char c)
 		graph_accesspage(1);	graph_clear();
 		graph_accesspage(0);	graph_clear();
 #if (GAME == 5)
-		bgimage_snap();
+		box_bg_snap();
 #else
-		// ZUN landmine: Missing a box_bg_allocate_and_snap() or equivalent
-		// call. Any future box_bg_put() call will still display the box area
-		// snapped from any previously displayed background image. This bug
-		// therefore effectively restricts usage of this command to either the
-		// beginning of a script (before the first background image is shown)
-		// or its end (after no more new text boxes are started).
+		// ZUN landmine: Missing a box_bg_snap() or equivalent call. Any future
+		// box_bg_put() call will still display the box area snapped from any
+		// previously displayed background image. This bug therefore
+		// effectively restricts usage of this command to either the beginning
+		// of a script (before the first background image is shown) or its end
+		// (after no more new text boxes are started).
 #endif
 		break;
 
@@ -772,11 +729,7 @@ script_ret_t pascal near script_op(unsigned char c)
 			pi_put_8(0, 0, CUTSCENE_PIC_SLOT);
 			graph_copy_page(0);
 			graph_accesspage(0);
-#if (GAME == 5)
-			bgimage_snap();
-#else
-			box_bg_allocate_and_snap();
-#endif
+			box_bg_snap();
 		} else if(c == '-') {
 			pi_free(CUTSCENE_PIC_SLOT);
 			return CONTINUE;
@@ -903,12 +856,14 @@ void near cutscene_animate(void)
 
 	graph_showpage(0);
 
+	box_bg.alloc(BOX_REGION.w, BOX_REGION.h);
+
 	// Necessary because scripts can (and do) show multiple text boxes on the
 	// initially black background.
 	// ZUN landmine: TH05 assumes that they don't, which is true for all
 	// scripts in the original game.
 #if (GAME != 5)
-	box_bg_allocate_and_snap();
+	box_bg_snap();
 #endif
 
 	fast_forward = false;
@@ -1034,10 +989,9 @@ void near cutscene_animate(void)
 #endif
 	}
 #if (GAME == 5)
-	bgimage_free();
 	pi_free(CUTSCENE_PIC_SLOT);
 #else
 	box_bg_put();
-	box_bg_free();
 #endif
+	box_bg.free();
 }
