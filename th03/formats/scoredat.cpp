@@ -43,9 +43,11 @@ void near scoredat_recreate(void)
 		j++;
 		regi--;
 	}
-	hi.score.cleared = SCOREDAT_NOT_CLEARED;
 
 	for(i = RANK_EASY; i < RANK_COUNT; i++) {
+		// scoredat_encode_and_save() might overwrite [cleared] if necessary.
+		hi.score.cleared = SCOREDAT_NOT_CLEARED;
+
 		scoredat_encode_and_save(static_cast<rank_t>(i));
 		scoredat_decode();
 	}
