@@ -1126,7 +1126,6 @@ obj += {
 	"th04/snd_pmdr.c",
 	"th04/snd_se.cpp",
 	"th05/bgimager.asm",
-	"th05/egcrect.cpp",
 	"th05/initmain.cpp",
 	"th05/inp_h_w.cpp",
 	"th05/input_s.asm",

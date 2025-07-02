@@ -233,69 +233,6 @@ void near cutscene_script_free(void)
 #include "th01/hardware/egcstart.cpp"
 #undef egc_start_copy
 
-// Picture crossfading works by doing a masked blit of the new picture on top
-// of the old one on the invisible VRAM page, then blitting the result to the
-// visible page using an EGC inter-page copy. While the latter is notoriously
-// slow (see TH01's end_pic_show() for more info), blitting a packed-pixel
-// format from RAM to VRAM is even worse on PC-98: At best, the inner 8-pixel
-// XLOOP of master.lib's graph_pack_put_8() takes 81 cycles on a 486 and 141
-// cycles on a 386, and these are just the raw instruction timings without any
-// of the PC-98's infamous VRAM latencies factored in. On lower-end systems,
-// this can easily sum up to more than one frame for a 320×200 image. In that
-// light, it's understandable why ZUN first builds the final masked image on
-// the invisible VRAM plane and then uses a *relatively* quick EGC copy to
-// display it.
-// (Flipping the visible page on every picture change would have only made
-// everything even more complicated.)
-#if (GAME == 5)
-#include "th01/hardware/egc.h"
-
-#define pic_copy_1_to_0(left, top) { \
-	egc_copy_rect_1_to_0_16(left, top, CUTSCENE_PIC_W, CUTSCENE_PIC_H); \
-}
-#else
-void pascal near pic_copy_1_to_0(screen_x_t left, vram_y_t top)
-{
-	vram_offset_t vo = vram_offset_shift(left, top);
-	pixel_t y;
-	vram_byte_amount_t vram_x;
-
-	egc_start_copy();
-
-	// Faster than TH01's very slow end_pic_show() version, but still not
-	// as optimal as you can get within the EGC's limited 16-dot tile
-	// register.
-	y = 0;
-	while(y < CUTSCENE_PIC_H) {
-		vram_x = 0;
-		while(vram_x < CUTSCENE_PIC_VRAM_W) {
-			egc_temp_t tmp;
-			graph_accesspage(1);	tmp = egc_chunk(vo);
-			graph_accesspage(0);	egc_chunk(vo) = tmp;
-
-			vram_x += EGC_REGISTER_SIZE;
-			vo += EGC_REGISTER_SIZE;
-		}
-		y++;
-		vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
-	}
-	egc_off();
-}
-#endif
-
-void pascal near pic_put_both_masked(int quarter, int mask_id)
-{
-	graph_accesspage(1);
-	bgimage.or_masked(
-		CUTSCENE_PIC_LEFT,
-		CUTSCENE_PIC_TOP,
-		PI_MASKS[mask_id],
-		PI_MASK_H,
-		&CUTSCENE_QUARTERS[quarter]
-	);
-	pic_copy_1_to_0(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
-}
-
 void near box_bg_put(void)
 {
 	box_bg.write(BOX_LEFT, BOX_TOP);
@@ -720,12 +657,12 @@ script_ret_t pascal near script_op(unsigned char c)
 
 		// ZUN landmine: Same screen tearing issues here. TH05's frame_delay()
 		// call prevents them for immediate blitting, but not for crossfading.
+		graph_accesspage(0);
 		if(c != '=') {
 			script_param_read_number_first(p1);
 #if (GAME == 5)
 			frame_delay(1);
 #endif
-			graph_accesspage(1);
 			if(p1 < CUTSCENE_QUARTER_COUNT) {
 				bgimage.write(
 					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &CUTSCENE_QUARTERS[p1]
@@ -746,12 +683,17 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_param_number_default = 1;
 			script_param_read_number_second(p2);
 			for(i = 0; i < PI_MASK_COUNT; i++) {
-				pic_put_both_masked(p1, i);
+				bgimage.or_masked(
+					CUTSCENE_PIC_LEFT,
+					CUTSCENE_PIC_TOP,
+					PI_MASKS[i],
+					PI_MASK_H,
+					&CUTSCENE_QUARTERS[p1]
+				);
 				if(!fast_forward) {
 					frame_delay(p2);
 				}
 			}
-			graph_accesspage(1);
 			bgimage.write(
 				CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &CUTSCENE_QUARTERS[p1]
 			);
@@ -759,7 +701,6 @@ script_ret_t pascal near script_op(unsigned char c)
 			frame_delay(1); // ZUN quirk
 #endif
 		}
-		pic_copy_1_to_0(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
 		break;
 
 	case 'm':
