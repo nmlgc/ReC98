@@ -200,11 +200,6 @@ typedef Palette<RGB8> Palette8;
 	palette_foreach(tmp_col, tmp_comp, { \
 		dst[tmp_col].v[tmp_comp] = value; \
 	})
-
-#define palette_copy(dst, src, tmp_col, tmp_comp) \
-	palette_foreach(tmp_col, tmp_comp, { \
-		dst[tmp_col].v[tmp_comp] = src[tmp_col].v[tmp_comp]; \
-	})
 #endif
 /// --------
 
