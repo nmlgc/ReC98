@@ -41,14 +41,6 @@ bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 #endif
 #endif
 {
-#if (BINARY == 'O')
-	#define SCOREDAT_FN_0 SCOREDAT_FN
-	#define SCOREDAT_FN_1 SCOREDAT_FN
-#else
-	extern const char SCOREDAT_FN_0[];
-	extern const char SCOREDAT_FN_1[];
-#endif
-
 	// ZUN bloat: Classic TOCTOU issue; file_ropen() also fails if the file
 	// doesn't exist. Doesn't have any consequences in this case though: In the
 	// very unlikely event that the file stops existing between file_exist()
@@ -59,8 +51,8 @@ bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 	// • The code then recreates score data just as it would have if the file
 	//   hadn't existed in this initial check.
 	// Hence, this is not a landmine, just bloat.
-	if(file_exist(SCOREDAT_FN_0)) {
-		file_ropen(SCOREDAT_FN_1);
+	if(file_exist(SCOREDAT_FN)) {
+		file_ropen(SCOREDAT_FN);
 
 		// ZUN bloat: The TH05 version is correct for both games and all
 		// binaries.

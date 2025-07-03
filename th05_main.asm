@@ -19589,8 +19589,6 @@ aMaine_0	db 'maine',0
 include th04/main/player/shot_levels[data].asm
 include th05/formats/bb_txt_load[data].asm
 include th04/main/player/shot_velocity[data].asm
-public _SCOREDAT_FN
-_SCOREDAT_FN	db 'GENSOU.SCR',0
 public _gCONTINUE
 _gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 public _group_is_special

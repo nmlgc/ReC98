@@ -18,9 +18,6 @@
 #include "decomp.hpp"
 #include "x86real.h"
 
-#undef SCOREDAT_FN
-extern const char near SCOREDAT_FN[];
-
 inline void seek_to_playchar_and_rank(void) {
 	// DOS file seek
 	_AH ^= _AH;

@@ -1,10 +1,6 @@
 // Leaves [hi] in encoded state.
 void near hiscore_scoredat_save(void)
 {
-	#undef SCOREDAT_FN
-	#define SCOREDAT_FN SCOREDAT_FN_2
-	extern const char SCOREDAT_FN[];
-
 	scoredat_encode_func();
 
 	file_append(SCOREDAT_FN);

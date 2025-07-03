@@ -6022,10 +6022,6 @@ include th04/hiscore/alphabet[data].asm
 byte_11621	db 0
 public _entered_name_cursor
 _entered_name_cursor	dw 0
-public _SCOREDAT_FN, _SCOREDAT_FN_2
-_SCOREDAT_FN	db 'GENSOU.SCR',0
-include th05/formats/scoredat_load_for[data].asm
-_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum_bft	db 'scnum.bft',0
 aSctm0_bft	db 'sctm0.bft',0

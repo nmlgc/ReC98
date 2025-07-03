@@ -1,5 +1,0 @@
-if BINARY eq 'E'
-	public _SCOREDAT_FN_0, _SCOREDAT_FN_1
-	_SCOREDAT_FN_0	db 'GENSOU.SCR',0
-	_SCOREDAT_FN_1	db 'GENSOU.SCR',0
-endif

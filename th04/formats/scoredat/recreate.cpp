@@ -71,10 +71,6 @@ void near scoredat_recreate(void)
 
 	#undef c
 
-#if (BINARY != 'O')
-	#undef SCOREDAT_FN
-	extern const char SCOREDAT_FN[];
-#endif
 	file_create(SCOREDAT_FN);
 	for(i = 0; i < (RANK_COUNT * PLAYCHAR_COUNT); i++) {
 #if ((GAME == 5) && (BINARY == 'O'))

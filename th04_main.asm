@@ -29865,11 +29865,6 @@ byte_23242	db 0
 		db    0
 public _gCONTINUE_
 _gCONTINUE_	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
-public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1, _SCOREDAT_FN_2
-_SCOREDAT_FN	db 'GENSOU.SCR',0
-_SCOREDAT_FN_0	db 'GENSOU.SCR',0
-_SCOREDAT_FN_1	db 'GENSOU.SCR',0
-_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 public _group_fixedspeed
 _group_fixedspeed	db 0
 		db 0

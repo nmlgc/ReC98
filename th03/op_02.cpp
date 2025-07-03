@@ -4,7 +4,6 @@
 #include "th03/resident.hpp"
 #include "th03/formats/scoredat.hpp"
 
-const char near* SCOREDAT_FN_PTR = SCOREDAT_FN; // ZUN bloat: Use the macro.
 scoredat_section_t hi;
 
 #include "th03/formats/score_es.cpp"

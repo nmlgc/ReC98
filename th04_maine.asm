@@ -2934,11 +2934,6 @@ aPicacovVVcvsfT	db '処理落ちによる判定不可',0
 aUde_pi		db 'ude.pi',0
 		db    0
 include th04/hiscore/alphabet[data].asm
-public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1, _SCOREDAT_FN_2
-_SCOREDAT_FN	db 'GENSOU.SCR',0
-_SCOREDAT_FN_0	db 'GENSOU.SCR',0
-_SCOREDAT_FN_1	db 'GENSOU.SCR',0
-_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum2_bft	db 'scnum2.bft',0
 aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0
