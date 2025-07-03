@@ -13,6 +13,7 @@
 #include "th02/gaiji/score_p.hpp"
 #include "th02/gaiji/str.hpp"
 #include "th02/op/op.h"
+#include "th02/shiftjis/hiscore.hpp"
 
 #include "th02/score.c"
 
@@ -23,7 +24,7 @@ const unsigned char gbcRANKS[4][8] = {
 	g_chr_7(gb, L,U,N,A,T,I,C), '\0',
 };
 
-const shiftjis_t *SHOTTYPES[] = {"高機動", "防御", "攻撃"};
+const shiftjis_t *SHOTTYPES[SHOTTYPE_COUNT] = HISCORE_SHOTTYPES;
 int logo_step = 0;
 char need_op_h_bft = 1;
 int8_t need_op_h_bft_padding = 0;
@@ -86,11 +87,7 @@ void pascal near scores_put(int place_to_highlight)
 	int i;
 	gaiji_putsa(22, 2, gbHI_SCORE, TX_GREEN);
 	gaiji_putsa(40, 2, gbcRANKS[rank], TX_GREEN);
-	text_putsa(
-		8, 4,
-		"      お名前　　　　　　得点　　　 STAGE  TYPE   日付",
-		TX_GREEN
-	);
+	text_putsa(8, 4, HISCORE_HEADER, TX_GREEN);
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		score_atrb_set(atrb, i, place_to_highlight);
 		gaiji_putsa(12, 7+i, hi.score.g_name[i], atrb);
