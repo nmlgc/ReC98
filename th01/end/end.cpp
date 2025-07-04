@@ -32,20 +32,12 @@ static const screen_y_t PIC_BOTTOM = (PIC_TOP + PIC_H);
 
 static const pixel_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 
-// Loads the ending pictures from the .GRP file [fn] onto graphics page #1,
-// and sets the hardware color palette to the one in [fn]'s header.
 void end_pics_load_palette_show(const char *fn)
 {
 	page_access(1);
 	grp_put(fn, GPF_PALETTE_SHOW);
 }
 
-// Blits the given [quarter] of the set of ending pictures currently loaded
-// onto graphics page #1 to the center of page #0.
-// The quarters are numbered like this:
-// | 0 | 1 |
-// | 2 | 3 |
-// Implemented using EGC inter-page copies, and therefore really slow.
 void end_pic_show(int quarter)
 {
 	egc_start_copy();
