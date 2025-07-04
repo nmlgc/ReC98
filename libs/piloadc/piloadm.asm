@@ -1,4 +1,5 @@
 ; ReC98 fork of PiLoad. The full list of changes:
+; • Input data is now provided through a read callback
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
 ; • [PaletteBuff] now receives the original 8-bit palette from the file's
 ;   header instead of getting shifted down to 4 bits
@@ -62,7 +63,7 @@ tcol	=	byte ptr ds:[13ah]
 flg800	=	byte ptr ds:[13bh] ; unused
 line4	=	word ptr ds:[13ch]
 vadr	=	word ptr ds:[13eh]
-fhandle	=	word ptr ds:[140h]
+fhandle	=	word ptr ds:[140h] ; unused
 bufbgn	=	word ptr ds:[142h]
 bufend	=	word ptr ds:[144h]
 bufsize	=	word ptr ds:[146h]
@@ -77,6 +78,9 @@ parasize =	buffer
 	locals
 spreg	dw	?
 dsseg	dw	?
+read_func	label dword
+read_func_off	dw	?
+read_func_seg	dw	?
 
 ; Segment-aligns the data buffer address (BX:CX) and size (SI) received from
 ; the entry point. Thrashes AX.
@@ -94,18 +98,19 @@ buf_align endp
 
 	public	_PiLoad
 _PiLoad	proc	near
-	arg		nam:word,buf,bufsiz,x,y,opt:word
+	arg		buf,bufsiz,x,y,opt:word,reader:word
 	push	bp
 	mov	bp,sp
 	push	si
 	push	di
 	push	ds
 	mov	bx,ds
-	mov	es,bx
-	mov	dx,nam
 	mov	cx,buf
 	mov	si,bufsiz
 	call	buf_align
+	xor	bx,bx
+	mov	es,bx
+	mov	dx,reader
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
@@ -119,17 +124,17 @@ _PiLoad	endp
 
 	public	_PiLoadL
 _PiLoadL	proc	far
-	arg		nam:dword,buf:dword,bufsiz,x,y,opt:word
+	arg		buf:dword,bufsiz,x,y,opt:word,reader:dword
 	push	bp
 	mov	bp,sp
 	push	si
 	push	di
 	push	ds
-	les	dx,nam
 	mov	bx,word ptr buf+2
 	mov	cx,word ptr buf
 	mov	si,bufsiz
 	call	buf_align
+	les	dx,reader
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
@@ -143,17 +148,19 @@ _PiLoadL	endp
 
 	public	_PiLoadC
 _PiLoadC	proc	near
-	arg		nam:dword,buf:dword,bufsiz,x,y,opt:word
+	arg		buf:dword,bufsiz,x,y,opt:word,reader:word
 	push	bp
 	mov	bp,sp
 	push	si
 	push	di
 	push	ds
-	les	dx,nam
 	mov	bx,word ptr buf+2
 	mov	cx,word ptr buf
 	mov	si,bufsiz
 	call	buf_align
+	xor	bx,bx
+	mov	es,bx
+	mov	dx,reader
 	mov	bx,x
 	mov	cx,y
 	mov	ax,opt
@@ -166,7 +173,7 @@ _PiLoadC	proc	near
 _PiLoadC	endp
 
 
-;	in	es:dx	= filename
+;	in	es:dx	= read_func
 ;		ds:0	= buff
 ;		si	= size(paragraph)
 ;		bx	= x
@@ -180,6 +187,8 @@ piload0:
 	cld
 	mov	spreg,sp
 	mov	dsseg,ds
+	mov	read_func_off,dx
+	mov	read_func_seg,es
 	mov	x_pos,bx
 	mov	y_pos,cx
 	mov	word ptr option,ax
@@ -199,14 +208,7 @@ piload0:
 	mov	word ptr gw&n,ax	;自己書換(^^;)
 	endm
 
-	push	es
-	pop	ds
-	call	fopen
-	mov	bx,dsseg
-	mov	ds,bx
-	mov	es,bx
-	jc	error
-	mov	fhandle,ax
+	mov	es,dsseg
 	call	fread
 	mov	si,bx
 	lodsw
@@ -575,40 +577,35 @@ maketbl:
 	jnz	@@lop1
 	ret
 
-;-----------------------------------------------------------------------------
-;	ＭＳ－ＤＯＳ依存部
-;-----------------------------------------------------------------------------
-fopen:
-	mov	ax,3d00h
-	int	21h
-	ret
-
+	; Returns the buffer offset in BX.
 fread:
 	push	ax
 	push	cx
 	push	dx
-	mov	bx,fhandle
-	mov	dx,buffer
-	push	dx
-	mov	cx,bufsize
-	mov	ah,3fh
-	int	21h
-	jc	@err
-	pop	bx
+	push	ds
+	push	buffer
+	push	bufsize
+	mov	ax,seg DGROUP
+	mov	ds,ax
+	cmp	read_func_seg,0
+	jz	@@read_func_near
+@@read_func_far:
+	call	read_func
+	jmp	@@read_func_return
+@@read_func_near:
+	call	read_func_off
+@@read_func_return:
+	mov	ds,dsseg
+	cmp	ax,0
+	je	@err
+	mov	bx,buffer
 	pop	dx
 	pop	cx
 	pop	ax
 	ret
 
 @err:
-	call	fclose
 	mov	sp,spreg
-	ret
-
-fclose:
-	mov	bx,fhandle
-	mov	ah,3eh
-	int	21h
 	ret
 
 ;	gbuffからlinライン分表示(gbuff->VRAM)
@@ -784,7 +781,6 @@ ext2:
 	mov	di,bufbgn
 	ret
 fin:
-	call	fclose
 	mov	sp,spreg
 	xor	ax,ax
 	ret
