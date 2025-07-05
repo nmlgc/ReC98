@@ -733,7 +733,6 @@ obj += {
 	"th03/input_s.cpp",
 	"th03/pi_load.cpp",
 	"th03/pi_put_i.cpp",
-	"th03/pi_put_q.cpp",
 	"th03/pi_put.cpp",
 	"th03/snd_dlym.cpp",
 	"th03/snd_kaja.cpp",
@@ -908,7 +907,6 @@ obj += {
 	"th02/vplanset.cpp",
 	"th03/hfliplut.asm",
 	"th03/pi_load.cpp",
-	"th03/pi_put_q.cpp",
 	"th03/pi_put.cpp",
 	"th03/sprites/pi_mask.cpp",
 	"th04/bgimage.cpp",
@@ -1098,6 +1096,7 @@ th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }):link(
 )
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
 obj += platform_objs.surf
 obj += {

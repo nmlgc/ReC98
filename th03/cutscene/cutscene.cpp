@@ -10,21 +10,19 @@
 #pragma option -zPgroup_01
 
 #include <stddef.h>
+#include "game/bgimage.hpp"
 #include "game/cutscene.hpp"
-#include "platform/grp_surf.hpp"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/sprites/pi_mask.hpp"
 #if (GAME == 5)
 #include "th05/hardware/input.h"
-#include "th05/formats/pi.hpp"
 #elif (GAME == 4)
-#include "th03/formats/pi.hpp"
 #include "th04/hardware/input.h"
 #else
 #include "th03/hardware/input.h"
-#include "th03/formats/pi.hpp"
 
 // Let's rather not have this one global, since it might be wrong in an in-game
 // context?
@@ -111,6 +109,7 @@ extern unsigned char far *script;
 #endif
 
 GrpSurface_M4 box_bg;
+Palette8 palette_from_last_pi_loaded;
 
 // Skips any delays during the cutscene if `true`.
 extern bool fast_forward;
@@ -253,15 +252,6 @@ void near cutscene_script_free(void)
 #define pic_copy_1_to_0(left, top) { \
 	egc_copy_rect_1_to_0_16(left, top, CUTSCENE_PIC_W, CUTSCENE_PIC_H); \
 }
-
-void pascal near pic_put_both_masked(
-	screen_x_t left, vram_y_t top, int quarter, int mask_id
-)
-{
-	graph_accesspage(1);
-	pi_put_quarter_masked_8(left, top, CUTSCENE_PIC_SLOT, quarter, mask_id);
-	pic_copy_1_to_0(left, top);
-}
 #else
 void pascal near pic_copy_1_to_0(screen_x_t left, vram_y_t top)
 {
@@ -290,46 +280,20 @@ void pascal near pic_copy_1_to_0(screen_x_t left, vram_y_t top)
 	}
 	egc_off();
 }
-
-void pascal near pic_put_both_masked(
-	screen_x_t left, vram_y_t top, int quarter, int mask_id
-)
-{
-	enum {
-		TEMP_ROW = RES_Y,
-	};
-
-	vram_word_amount_t vram_word;
-	vram_offset_t vo_temp;
-	pi_buffer_p_t row_p;
-
-	pi_buffer_p_init_quarter(row_p, CUTSCENE_PIC_SLOT, quarter);
-
-	vram_offset_t vo = vram_offset_shift(left, top);
-	for(pixel_t y = 0; y < CUTSCENE_PIC_H; y++) {
-		// This actually is much faster than clearing the masked pixels using
-		// the GRCG and doing an unaccelerated 4-plane VRAM OR. See the
-		// `Research/blitperf/xfade` example for a benchmark.
-		graph_pack_put_8_noclip(0, TEMP_ROW, row_p, CUTSCENE_PIC_W);
-		egc_start_copy();
-		egc_setup_copy_masked(PI_MASKS[mask_id][y % PI_MASK_COUNT]);
-		vo_temp = vram_offset_shift(0, TEMP_ROW);
-		vram_word = 0;
-		while(vram_word < (CUTSCENE_PIC_W / EGC_REGISTER_DOTS)) {
-			egc_chunk(vo) = egc_chunk(vo_temp);
-			vram_word++;
-			vo += EGC_REGISTER_SIZE;
-			vo_temp += EGC_REGISTER_SIZE;
-		}
-		egc_off();
-
-		vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
-		pi_buffer_p_offset(row_p, PI_W, 0);
-		pi_buffer_p_normalize(row_p);
-	}
-	pic_copy_1_to_0(left, top);
-}
 #endif
+
+void pascal near pic_put_both_masked(int quarter, int mask_id)
+{
+	graph_accesspage(1);
+	bgimage.or_masked(
+		CUTSCENE_PIC_LEFT,
+		CUTSCENE_PIC_TOP,
+		PI_MASKS[mask_id],
+		PI_MASK_H,
+		&CUTSCENE_QUARTERS[quarter]
+	);
+	pic_copy_1_to_0(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
+}
 
 void near box_bg_put(void)
 {
@@ -724,26 +688,25 @@ script_ret_t pascal near script_op(unsigned char c)
 		if((c == '=') || (c == '@')) {
 			graph_accesspage(1);
 			if(c == '=') {
-				pi_palette_apply(CUTSCENE_PIC_SLOT);
+				Palettes = palette_from_last_pi_loaded;
+				palette_show();
 			}
-			pi_put_8(0, 0, CUTSCENE_PIC_SLOT);
+			bgimage.write(0, 0);
 			graph_copy_page(0);
 			graph_accesspage(0);
 			box_bg_snap();
 		} else if(c == '-') {
-			pi_free(CUTSCENE_PIC_SLOT);
+			bgimage.free();
 			return CONTINUE;
 		} else if(c == 'p') {
-			pi_palette_apply(CUTSCENE_PIC_SLOT);
+			Palettes = palette_from_last_pi_loaded;
+			palette_show();
 			return CONTINUE;
 		} else if(c != ',') {
 			script_p--;
 		} else {
 			script_param_read_fn(fn, p1, c);
-#if (GAME >= 4)
-			pi_free(CUTSCENE_PIC_SLOT);
-#endif
-			pi_load(CUTSCENE_PIC_SLOT, fn);
+			GrpSurface_LoadPI(bgimage, &palette_from_last_pi_loaded, fn);
 		}
 		break;
 
@@ -760,8 +723,8 @@ script_ret_t pascal near script_op(unsigned char c)
 #endif
 			graph_accesspage(1);
 			if(p1 < CUTSCENE_QUARTER_COUNT) {
-				pi_put_quarter_8(
-					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
+				bgimage.write(
+					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &CUTSCENE_QUARTERS[p1]
 				);
 			} else {
 				grcg_setcolor(GC_RMW, 0);
@@ -779,14 +742,14 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_param_number_default = 1;
 			script_param_read_number_second(p2);
 			for(i = 0; i < PI_MASK_COUNT; i++) {
-				pic_put_both_masked(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, p1, i);
+				pic_put_both_masked(p1, i);
 				if(!fast_forward) {
 					frame_delay(p2);
 				}
 			}
 			graph_accesspage(1);
-			pi_put_quarter_8(
-				CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
+			bgimage.write(
+				CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &CUTSCENE_QUARTERS[p1]
 			);
 #if (GAME == 5)
 			frame_delay(1); // ZUN quirk
@@ -988,10 +951,9 @@ void near cutscene_animate(void)
 		}
 #endif
 	}
-#if (GAME == 5)
-	pi_free(CUTSCENE_PIC_SLOT);
-#else
+#if (GAME <= 4)
 	box_bg_put();
 #endif
 	box_bg.free();
+	bgimage.free();
 }
