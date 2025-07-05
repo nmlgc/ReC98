@@ -228,11 +228,6 @@ void near cutscene_script_free(void)
 }
 #endif
 
-// ZUN bloat: Turn into a single global inline function.
-#define egc_start_copy	near egc_start_copy
-#include "th01/hardware/egcstart.cpp"
-#undef egc_start_copy
-
 void near box_bg_put(void)
 {
 	box_bg.write(BOX_LEFT, BOX_TOP);
@@ -292,6 +287,8 @@ void near cursor_advance_and_animate(void)
 }
 
 #if (GAME >= 4)
+#include "th01/hardware/egc_impl.hpp"
+
 typedef enum {
 	BOX_MASK_0,
 	BOX_MASK_1,
@@ -326,7 +323,8 @@ void pascal near box_1_to_0_masked(box_mask_t mask)
 
 void near box_1_to_0_animate(void)
 {
-	egc_start_copy();
+	egc_on();
+	egc_setup_copy();
 	if(!fast_forward) {
 		for(int i = BOX_MASK_0; i < BOX_MASK_COPY; i++) {
 			box_1_to_0_masked(static_cast<box_mask_t>(i));
