@@ -393,10 +393,7 @@ char VALUE_KEY_JOY[] = {
 int8_t menu_sel = 0;
 bool quit = false;
 bool in_main = true;
-
-// ZUN bloat: Should be function-level statics.
-bool main_input_allowed;
-bool option_input_allowed;
+bool input_allowed;
 
 int8_t in_option; // ACTUAL TYPE: bool
 menu_put_func_t menu_put;
@@ -586,7 +583,7 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	menu_put(menu_sel, TX_WHITE);
 }
 
-#define menu_init(in_this_menu, input_allowed, choice_count, put) { \
+#define menu_init(in_this_menu, choice_count, put) { \
 	for(int i = 0; i < choice_count; i++) { \
 		put(i, ((menu_sel == i) ? TX_WHITE : TX_BLACK)); \
 	} \
@@ -595,14 +592,12 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	input_allowed = false; \
 }
 
-inline void return_from_other_screen_to_main(
-	bool& in_this_menu, bool& main_input_allowed
-) {
+inline void return_from_other_screen_to_main(bool& in_this_menu) {
 	op_fadein_animate();
 	wait_for_input_or_start_demo_then_box_to_main_animate();
 	select_cdg_load_part2_of_4();
 	in_this_menu = false;
-	main_input_allowed = false;
+	input_allowed = false;
 	in_main = true;
 }
 
@@ -611,7 +606,6 @@ inline void return_from_other_screen_to_main(
 // the even more blocking character selection and Music Room screens.
 void near main_update_and_render(void)
 {
-	#define input_allowed	main_input_allowed
 	static bool in_this_menu = false;
 
 	if(!in_this_menu) {
@@ -620,12 +614,9 @@ void near main_update_and_render(void)
 			box_animate(SUBMENU_W, MAIN_W);
 		}
 		in_main = false; // ZUN bloat: Why is this set here, and now?
-		menu_init(in_this_menu, input_allowed, MC_COUNT, main_choice_put);
+		menu_init(in_this_menu, MC_COUNT, main_choice_put);
 	}
 
-	if(input_sp == INPUT_NONE) {
-		input_allowed = true;
-	}
 	if(!input_allowed) {
 		return;
 	}
@@ -634,13 +625,13 @@ void near main_update_and_render(void)
 		switch(menu_sel) {
 		case MC_STORY:
 			story_menu();
-			return_from_other_screen_to_main(in_this_menu, input_allowed);
+			return_from_other_screen_to_main(in_this_menu);
 			return;
 		case MC_VS:
 			resident->playchar_paletted[0].set(PLAYCHAR_REIMU);
 			resident->playchar_paletted[1].set(PLAYCHAR_REIMU);
 			vs_menu();
-			return_from_other_screen_to_main(in_this_menu, input_allowed);
+			return_from_other_screen_to_main(in_this_menu);
 			return;
 		case MC_MUSICROOM:
 			{for(int i = 0; i < CDG_SLOT_COUNT; i++) {
@@ -648,7 +639,7 @@ void near main_update_and_render(void)
 			}}
 			super_free();
 			musicroom_menu();
-			return_from_other_screen_to_main(in_this_menu, input_allowed);
+			return_from_other_screen_to_main(in_this_menu);
 			return;
 		case MC_REGIST_VIEW:
 			score_menu();
@@ -667,27 +658,18 @@ void near main_update_and_render(void)
 	if(input_sp & INPUT_CANCEL) {
 		quit = true;
 	}
-	if(input_sp != INPUT_NONE) { // Covers all previous input cases too! Good!
-		input_allowed = false;
-	}
-
-	#undef input_allowed
 }
 
 void near option_update_and_render(void)
 {
-	#define input_allowed	option_input_allowed
 	static bool in_this_menu = false;
 
 	if(!in_this_menu) {
 		text_clear();
 		box_animate(MAIN_W, SUBMENU_W);
-		menu_init(in_this_menu, input_allowed, OC_COUNT, option_choice_put);
+		menu_init(in_this_menu, OC_COUNT, option_choice_put);
 	}
 
-	if(input_sp == INPUT_NONE) {
-		input_allowed = true;
-	}
 	if(!input_allowed) {
 		return;
 	}
@@ -724,11 +706,6 @@ void near option_update_and_render(void)
 		menu_sel = MC_OPTION;
 		in_option = false;
 	}
-	if(input_sp != INPUT_NONE) { // Covers all previous input cases too! Good!
-		input_allowed = false;
-	}
-
-	#undef input_allowed
 }
 
 int main_op(int, const char *[])
@@ -766,23 +743,31 @@ int main_op(int, const char *[])
 	// idea to better hide potentially long loading times.
 	//
 	// ZUN quirk: Resetting [input_sp] regardless of the actually held keys
-	// means that main_update_and_render() always returns with its instance of
-	// [input_allowed] set to `true`. Thus, any initially held key is processed
-	// instantly on the first call to the function in the loop below – contrary
-	// to what you would expect from the whole input locking system, and
-	// contrary to how the game behaves after switching the active menu later
-	// on, where inputs *are* locked until the player releases all keys.
+	// causes ZUN's original version of main_update_and_render() to always
+	// return with its instance of [input_allowed] set to `true`. Thus, any
+	// initially held key is supposed to be processed instantly on the first
+	// call to the function in the loop below – contrary to what you would
+	// expect from the whole input locking system, and contrary to how the game
+	// behaves after switching the active menu later on, where inputs *are*
+	// locked until the player releases all keys.
 	in_option = false;
 	input_sp = INPUT_NONE;
 	main_update_and_render();
+	input_allowed = true;
 
 	select_cdg_load_part2_of_4();
 
 	while(!quit) {
 		input_mode_interface();
+		if(input_sp == INPUT_NONE) {
+			input_allowed = true;
+		}
 		switch(in_option) {
 		case false:	main_update_and_render();  	break;
 		case true: 	option_update_and_render();	break;
+		}
+		if(input_sp != INPUT_NONE) {
+			input_allowed = false;
 		}
 		resident->rand++;
 		frame_delay(1);
