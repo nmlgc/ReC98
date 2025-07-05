@@ -430,6 +430,14 @@ int8_t in_option; // ACTUAL TYPE: bool
 menu_put_func_t menu_put;
 // -------
 
+bool pascal near input_is_quit(int sel_quit)
+{
+	return (
+		((input_sp & (INPUT_OK | INPUT_SHOT)) && (menu_sel == sel_quit)) ||
+		(input_sp & INPUT_CANCEL)
+	);
+}
+
 // These menus want to display centered strings. However, the underlying gaiji
 // of all of these (except "Start", which exactly fits into the 48 pixels
 // covered by its 3 gaiji) are left-aligned and leave anywhere from 6 to 14
@@ -694,12 +702,6 @@ void near main_update_and_render(void)
 	#undef input_allowed
 }
 
-inline void return_from_option_to_main(bool& option_initialized) {
-	option_initialized = false;
-	menu_sel = MC_OPTION;
-	in_option = false;
-}
-
 void near option_update_and_render(void)
 {
 	#define input_allowed	option_input_allowed
@@ -745,13 +747,10 @@ void near option_update_and_render(void)
 		}
 		option_choice_put(menu_sel, TX_WHITE);
 	}
-	if((input_sp & INPUT_OK) || (input_sp & INPUT_SHOT)) {
-		if(menu_sel == OC_QUIT) {
-			return_from_option_to_main(in_this_menu);
-		}
-	}
-	if(input_sp & INPUT_CANCEL) {
-		return_from_option_to_main(in_this_menu);
+	if(input_is_quit(OC_QUIT)) {
+		in_this_menu = false;
+		menu_sel = MC_OPTION;
+		in_option = false;
 	}
 	if(input_sp != INPUT_NONE) { // Covers all previous input cases too! Good!
 		input_allowed = false;
