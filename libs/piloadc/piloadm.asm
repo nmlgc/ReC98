@@ -3,6 +3,7 @@
 ; • [PaletteBuff] now receives the original 8-bit palette from the file's
 ;   header instead of getting shifted down to 4 bits
 ; • Removed all palette and tone setting code
+; • Removed all mode setting code
 ; • Removed the Pascal entry points (might restore them if other PC-98 homebrew
 ;   developers actually need them)
 ; • Slightly optimized VRAM transfer by jumping over the GRCG shutdown when
@@ -56,7 +57,7 @@ y_wid	=	word ptr ds:[136h]
 tone	=	byte ptr ds:[138h] ; unused
 option	=	byte ptr ds:[139h]
 tcol	=	byte ptr ds:[13ah]
-flg800	=	byte ptr ds:[13bh]
+flg800	=	byte ptr ds:[13bh] ; unused
 line4	=	word ptr ds:[13ch]
 vadr	=	word ptr ds:[13eh]
 fhandle	=	word ptr ds:[140h]
@@ -183,9 +184,6 @@ piload0:
 	mov	y_pos,cx
 	mov	word ptr option,ax
 
-	xor	ax,ax
-	mov	flg800,al
-
 	mov	ax,-8
 	cmp	si,parasize+18+48
 	jb	error0
@@ -242,10 +240,6 @@ pilop:
 	cmp	al,4	;plane check
 	mov	ax,-32
 	jnz	error
-	test	option,8
-	jz	@@skip
-	mov	ax,cx
-	call	gmode
 @@skip:
 	add	si,4	;machine code skip
 	lodsw
@@ -626,54 +620,10 @@ fclose:
 	int	21h
 	ret
 
-;-----------------------------------------------------------------------------
-;	９８依存部
-;-----------------------------------------------------------------------------
-
-;	画面モード設定
-;	in	ax=ドット比率データ
-gmode:
-	cmp	ax,102h
-	jz	@@next
-;	or	ax,ax
-;	mov	ax,-32
-;	jnz	error
-	mov	ch,0c0h
-	mov	ah,42h
-	int	18h
-	mov	ah,40h
-	int	18h
-	mov	al,1
-	out	6ah,al
-	ret
-@@next:
-	mov	ch,080h
-	mov	ah,42h
-	int	18h
-	mov	al,8
-	out	68h,al
-	mov	ah,40h
-	int	18h
-	mov	al,1
-	out	6ah,al
-	or	flg800,4
-	ret
-
-
 ;	gbuffからlinライン分表示(gbuff->VRAM)
 gtrans:
 	pusha
 	push	es
-	cmp	vadr,32000
-	jl	@@skip
-	sub	vadr,32000
-	or	flg800,1
-	mov	al,1
-	out	0a6h,al
-;	out	0a4h,al
-@@skip:
-
-disp:
 	mov	si,bufend
 	mov	di,gbuff
 	mov	cx,x_wid
@@ -912,13 +862,6 @@ ext2:
 	mov	di,bufbgn
 	ret
 fin:
-	test	flg800,1
-	jle	@@jmp
-	mov	al,0
-;	out	0a4h,al
-	out	0a6h,al
-	and	flg800,not 2
-@@jmp:
 	call	fclose
 	mov	sp,spreg
 	xor	ax,ax
