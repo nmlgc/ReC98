@@ -315,6 +315,16 @@ void near start_demo(void)
 	switch_to_mainl();
 }
 
+struct Menu {
+	pixel_t w;
+};
+
+extern const Menu MENU_MAIN;
+extern const Menu MENU_OPTION;
+
+const Menu near *menu_prev;
+const Menu near *menu_cur;
+
 void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
 {
 	{
@@ -330,8 +340,10 @@ void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
 			frame_delay(1);
 		}
 	}
+	menu_cur = &MENU_MAIN;
+	menu_prev = menu_cur;
 	super_put(BOX_LEFT, BOX_TOP, OPWIN_LEFT);
-	box_animate((OPWIN_W + OPWIN_STEP_W), MAIN_W);
+	box_animate((OPWIN_W + OPWIN_STEP_W), menu_cur->w);
 }
 
 bool near score_menu(void)
@@ -392,7 +404,6 @@ char VALUE_KEY_JOY[] = {
 
 int8_t menu_sel = 0;
 bool quit = false;
-bool in_main = true;
 bool input_allowed;
 
 int8_t in_option; // ACTUAL TYPE: bool
@@ -598,7 +609,7 @@ inline void return_from_other_screen_to_main(bool& in_this_menu) {
 	select_cdg_load_part2_of_4();
 	in_this_menu = false;
 	input_allowed = false;
-	in_main = true;
+	menu_cur = &MENU_MAIN;
 }
 
 // Sure, *maybe* these names should point out the possibility of a blocking
@@ -609,11 +620,6 @@ void near main_update_and_render(void)
 	static bool in_this_menu = false;
 
 	if(!in_this_menu) {
-		text_clear();
-		if(!in_main) {
-			box_animate(SUBMENU_W, MAIN_W);
-		}
-		in_main = false; // ZUN bloat: Why is this set here, and now?
 		menu_init(in_this_menu, MC_COUNT, main_choice_put);
 	}
 
@@ -647,6 +653,7 @@ void near main_update_and_render(void)
 		case MC_OPTION:
 			in_this_menu = false;
 			in_option = true;
+			menu_cur = &MENU_OPTION;
 			menu_sel = OC_RANK;
 			break;
 		case MC_QUIT:
@@ -665,8 +672,6 @@ void near option_update_and_render(void)
 	static bool in_this_menu = false;
 
 	if(!in_this_menu) {
-		text_clear();
-		box_animate(MAIN_W, SUBMENU_W);
 		menu_init(in_this_menu, OC_COUNT, option_choice_put);
 	}
 
@@ -705,8 +710,16 @@ void near option_update_and_render(void)
 		in_this_menu = false;
 		menu_sel = MC_OPTION;
 		in_option = false;
+		menu_cur = &MENU_MAIN;
 	}
 }
+
+const Menu MENU_MAIN = {
+	MAIN_W,
+};
+const Menu MENU_OPTION = {
+	SUBMENU_W,
+};
 
 int main_op(int, const char *[])
 {
@@ -759,6 +772,11 @@ int main_op(int, const char *[])
 
 	while(!quit) {
 		input_mode_interface();
+		if(menu_prev != menu_cur) {
+			text_clear();
+			box_animate(menu_prev->w, menu_cur->w);
+			menu_prev = menu_cur;
+		}
 		if(input_sp == INPUT_NONE) {
 			input_allowed = true;
 		}
