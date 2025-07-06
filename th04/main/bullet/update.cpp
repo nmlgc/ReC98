@@ -338,17 +338,12 @@ void bullets_update(void)
 						_AX, _DX,
 						to_sp(16.0f), to_sp(22.0f), to_sp(20.0f), to_sp(22.0f)
 					)) {
-						/* TODO: Replace with the decompiled call
-						 * 	sparks_add_random(bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2);
-						 * once that function is part of the same segment */
-						_asm {
-							db  	0xFF, 0x74, 0x02;
-							db  	0xFF, 0x74, 0x04;
-							db  	0x66, 0x68, 2, 0x00, (2 * 16), 0x00;
-							nop;
-							push	cs;
-							call	near ptr sparks_add_random;
-						}
+						sparks_add_random(
+							bullet->pos.cur.x,
+							bullet->pos.cur.y,
+							to_sp(2.0f),
+							2
+						);
 						bullet->spawn_state = BSS_GRAZED;
 						if(stage_graze < STAGE_GRAZE_CAP) {
 							stage_graze++;

@@ -711,11 +711,7 @@ void near main_update_and_render(void)
 			return_from_other_screen_to_main(in_this_menu, input_allowed);
 			return;
 		case MC_MUSICROOM:
-			/* TODO: Replace with the decompiled call
-			* 	musicroom_menu();
-			* once the segmentation allows us to, if ever */
-			_asm { nop; push cs; call near ptr musicroom_menu; }
-
+			musicroom_menu();
 			return_from_other_screen_to_main(in_this_menu, input_allowed);
 			return;
 		case MC_REGIST_VIEW:

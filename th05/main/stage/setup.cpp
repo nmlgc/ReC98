@@ -150,19 +150,8 @@ void pascal near stage5_setup(void)
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st04bk.cdg");
 	bb_boss_load("st04.bb");
 
-	/* TODO: Replace with the decompiled calls
-	 * 	yumeko_interval_phase4 = select_for_rank(20, 10,  6,  6);
-	 *	yumeko_interval_phase7 = select_for_rank(48, 32, 24, 24);
-	 * once that function is part of this translation unit */
-	#define SELECT_FOR_RANK(easy, normal, hard, lunatic) _asm { \
-		db	0x66, 0x68,  normal, 0x00, easy, 0x00; \
-		db	0x66, 0x68, lunatic, 0x00, hard, 0x00; \
-		nop; push cs; call near ptr select_for_rank; \
-	}
-	SELECT_FOR_RANK(20, 10,  6,  6);
-	yumeko_interval_phase4 = _AL;
-	SELECT_FOR_RANK(48, 32, 24, 24);
-	yumeko_interval_phase7 = _AL;
+	yumeko_interval_phase4 = select_for_rank(20, 10,  6,  6);
+	yumeko_interval_phase7 = select_for_rank(48, 32, 24, 24);
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;

@@ -164,21 +164,10 @@ void near reimu_stars_update_and_render(void)
 		head += ((REIMU_STAR_NODE_COUNT * 2) - 2);
 
 		if((bomb_frame <= 112) && (stage_frame_mod8 == i)) {
-			/* TODO: Replace with the decompiled call
-			 * 	circles_add_growing(
-			 * 		head->topleft.screen_x,
-			 * 		(head->topleft.screen_y + PLAYFIELD_TOP)
-			 * 	);
-			 * once that function is part of this translation unit */
-			_asm {
-				db	0xFF, 0x34;
-				db	0x8B, 0x44, 0x02;
-				add 	ax, (PLAYFIELD_TOP * 16);
-				push	ax;
-				nop;
-				push	cs;
-				call	near ptr circles_add_growing;
-			}
+			circles_add_growing(
+				head->topleft.screen_x,
+				(head->topleft.screen_y.v + to_sp(PLAYFIELD_TOP))
+			);
 		}
 	}
 }

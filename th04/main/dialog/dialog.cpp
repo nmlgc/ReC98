@@ -237,15 +237,7 @@ void dialog_animate(void)
 	dialog_pre();
 	dialog_run();
 
-	/* TODO: Replace with the decompiled call
-	 * 	tiles_activate_and_render_all_for_next_N_frames(PAGE_COUNT);
-	 * once that function is part of the same segment */
-	_asm {
-		push	PAGE_COUNT;
-		nop;
-		push 	cs;
-		call	near ptr tiles_activate_and_render_all_for_next_N_frames;
-	}
+	tiles_activate_and_render_all_for_next_N_frames(PAGE_COUNT);
 
 	dialog_exit();
 	dialog_post();
