@@ -317,8 +317,11 @@ void near start_demo(void)
 
 struct Menu {
 	pixel_t w;
-	void (near *near update_and_render)(void);
+	void (near *near update)(void);
 	menu_put_func_t choice_put;
+	unsigned int choice_count;
+
+	void near put_initial(void) const;
 };
 
 extern const Menu MENU_MAIN;
@@ -346,6 +349,7 @@ void near wait_for_input_or_start_demo_then_box_to_main_animate(void)
 	menu_prev = menu_cur;
 	super_put(BOX_LEFT, BOX_TOP, OPWIN_LEFT);
 	box_animate((OPWIN_W + OPWIN_STEP_W), menu_cur->w);
+	menu_cur->put_initial();
 }
 
 bool near score_menu(void)
@@ -592,49 +596,38 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	menu_cur->choice_put(menu_sel, TX_WHITE);
 }
 
-#define menu_init(in_this_menu, choice_count) { \
-	for(int i = 0; i < choice_count; i++) { \
-		menu_cur->choice_put(i, ((menu_sel == i) ? TX_WHITE : TX_BLACK)); \
-	} \
-	in_this_menu = true; \
-	input_allowed = false; \
+void near Menu::put_initial(void) const
+{
+	for(int i = 0; i < choice_count; i++) {
+		choice_put(i, ((menu_sel == i) ? TX_WHITE : TX_BLACK));
+	}
+	input_allowed = false;
 }
 
-inline void return_from_other_screen_to_main(bool& in_this_menu) {
+inline void return_from_other_screen_to_main(void) {
 	op_fadein_animate();
 	wait_for_input_or_start_demo_then_box_to_main_animate();
 	select_cdg_load_part2_of_4();
-	in_this_menu = false;
 	input_allowed = false;
 	menu_cur = &MENU_MAIN;
 }
 
 // Sure, *maybe* these names should point out the possibility of a blocking
-// box transition animation, but main_update_and_render() also directly enters
-// the even more blocking character selection and Music Room screens.
-void near main_update_and_render(void)
+// box transition animation, but main_update() also directly enters the even
+// more blocking character selection and Music Room screens.
+void near main_update(void)
 {
-	static bool in_this_menu = false;
-
-	if(!in_this_menu) {
-		menu_init(in_this_menu, MC_COUNT);
-	}
-
-	if(!input_allowed) {
-		return;
-	}
-	menu_update_vertical(input_sp, MC_COUNT);
 	if((input_sp & INPUT_OK) || (input_sp & INPUT_SHOT)) {
 		switch(menu_sel) {
 		case MC_STORY:
 			story_menu();
-			return_from_other_screen_to_main(in_this_menu);
+			return_from_other_screen_to_main();
 			return;
 		case MC_VS:
 			resident->playchar_paletted[0].set(PLAYCHAR_REIMU);
 			resident->playchar_paletted[1].set(PLAYCHAR_REIMU);
 			vs_menu();
-			return_from_other_screen_to_main(in_this_menu);
+			return_from_other_screen_to_main();
 			return;
 		case MC_MUSICROOM:
 			{for(int i = 0; i < CDG_SLOT_COUNT; i++) {
@@ -642,18 +635,16 @@ void near main_update_and_render(void)
 			}}
 			super_free();
 			musicroom_menu();
-			return_from_other_screen_to_main(in_this_menu);
+			return_from_other_screen_to_main();
 			return;
 		case MC_REGIST_VIEW:
 			score_menu();
 			break; // launches into MAINL.EXE
 		case MC_OPTION:
-			in_this_menu = false;
 			menu_cur = &MENU_OPTION;
 			menu_sel = OC_RANK;
 			break;
 		case MC_QUIT:
-			in_this_menu = false; // We're quitting anyway...
 			menu_cur = nullptr;
 			break;
 		}
@@ -663,19 +654,8 @@ void near main_update_and_render(void)
 	}
 }
 
-void near option_update_and_render(void)
+void near option_update(void)
 {
-	static bool in_this_menu = false;
-
-	if(!in_this_menu) {
-		menu_init(in_this_menu, OC_COUNT);
-	}
-
-	if(!input_allowed) {
-		return;
-	}
-	menu_update_vertical(input_sp, OC_COUNT);
-
 	if(input_sp & (INPUT_LEFT | INPUT_RIGHT)) {
 		int8_t delta = ((input_sp & INPUT_LEFT) ? -1 : +1);
 		switch(menu_sel) {
@@ -703,17 +683,16 @@ void near option_update_and_render(void)
 		option_choice_put(menu_sel, TX_WHITE);
 	}
 	if(input_is_quit(OC_QUIT)) {
-		in_this_menu = false;
 		menu_sel = MC_OPTION;
 		menu_cur = &MENU_MAIN;
 	}
 }
 
 const Menu MENU_MAIN = {
-	MAIN_W, main_update_and_render, main_choice_put
+	MAIN_W, main_update, main_choice_put, MC_COUNT,
 };
 const Menu MENU_OPTION = {
-	SUBMENU_W, option_update_and_render, option_choice_put
+	SUBMENU_W, option_update, option_choice_put, OC_COUNT,
 };
 
 int main_op(int, const char *[])
@@ -751,15 +730,14 @@ int main_op(int, const char *[])
 	// idea to better hide potentially long loading times.
 	//
 	// ZUN quirk: Resetting [input_sp] regardless of the actually held keys
-	// causes ZUN's original version of main_update_and_render() to always
-	// return with its instance of [input_allowed] set to `true`. Thus, any
-	// initially held key is supposed to be processed instantly on the first
-	// call to the function in the loop below – contrary to what you would
-	// expect from the whole input locking system, and contrary to how the game
-	// behaves after switching the active menu later on, where inputs *are*
-	// locked until the player releases all keys.
+	// causes ZUN's original version of main_update() to always return with its
+	// instance of [input_allowed] set to `true`. Thus, any initially held key
+	// is supposed to be processed instantly on the first call to the function
+	// in the loop below – contrary to what you would expect from the whole
+	// input locking system, and contrary to how the game behaves after
+	// switching the active menu later on, where inputs *are* locked until the
+	// player releases all keys.
 	input_sp = INPUT_NONE;
-	menu_cur->update_and_render();
 	input_allowed = true;
 
 	select_cdg_load_part2_of_4();
@@ -769,12 +747,16 @@ int main_op(int, const char *[])
 		if(menu_prev != menu_cur) {
 			text_clear();
 			box_animate(menu_prev->w, menu_cur->w);
+			menu_cur->put_initial();
 			menu_prev = menu_cur;
 		}
 		if(input_sp == INPUT_NONE) {
 			input_allowed = true;
 		}
-		menu_cur->update_and_render();
+		if(input_allowed) {
+			menu_update_vertical(input_sp, menu_cur->choice_count);
+			menu_cur->update();
+		}
 		if(input_sp != INPUT_NONE) {
 			input_allowed = false;
 		}
