@@ -317,6 +317,8 @@ void near start_demo(void)
 
 struct Menu {
 	pixel_t w;
+	void (near *near update_and_render)(void);
+	menu_put_func_t choice_put;
 };
 
 extern const Menu MENU_MAIN;
@@ -403,11 +405,7 @@ char VALUE_KEY_JOY[] = {
 // -------
 
 int8_t menu_sel = 0;
-bool quit = false;
 bool input_allowed;
-
-int8_t in_option; // ACTUAL TYPE: bool
-menu_put_func_t menu_put;
 // -------
 
 bool pascal near input_is_quit(int sel_quit)
@@ -583,7 +581,7 @@ void pascal near option_choice_put(int sel, tram_atrb2 atrb)
 
 void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 {
-	menu_put(menu_sel, TX_BLACK);
+	menu_cur->choice_put(menu_sel, TX_BLACK);
 	menu_sel += direction;
 	if(menu_sel < ring_min()) {
 		menu_sel = max;
@@ -591,14 +589,13 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	if(menu_sel > max) {
 		menu_sel = 0;
 	}
-	menu_put(menu_sel, TX_WHITE);
+	menu_cur->choice_put(menu_sel, TX_WHITE);
 }
 
-#define menu_init(in_this_menu, choice_count, put) { \
+#define menu_init(in_this_menu, choice_count) { \
 	for(int i = 0; i < choice_count; i++) { \
-		put(i, ((menu_sel == i) ? TX_WHITE : TX_BLACK)); \
+		menu_cur->choice_put(i, ((menu_sel == i) ? TX_WHITE : TX_BLACK)); \
 	} \
-	menu_put = put; \
 	in_this_menu = true; \
 	input_allowed = false; \
 }
@@ -620,7 +617,7 @@ void near main_update_and_render(void)
 	static bool in_this_menu = false;
 
 	if(!in_this_menu) {
-		menu_init(in_this_menu, MC_COUNT, main_choice_put);
+		menu_init(in_this_menu, MC_COUNT);
 	}
 
 	if(!input_allowed) {
@@ -652,18 +649,17 @@ void near main_update_and_render(void)
 			break; // launches into MAINL.EXE
 		case MC_OPTION:
 			in_this_menu = false;
-			in_option = true;
 			menu_cur = &MENU_OPTION;
 			menu_sel = OC_RANK;
 			break;
 		case MC_QUIT:
 			in_this_menu = false; // We're quitting anyway...
-			quit = true;
+			menu_cur = nullptr;
 			break;
 		}
 	}
 	if(input_sp & INPUT_CANCEL) {
-		quit = true;
+		menu_cur = nullptr;
 	}
 }
 
@@ -672,7 +668,7 @@ void near option_update_and_render(void)
 	static bool in_this_menu = false;
 
 	if(!in_this_menu) {
-		menu_init(in_this_menu, OC_COUNT, option_choice_put);
+		menu_init(in_this_menu, OC_COUNT);
 	}
 
 	if(!input_allowed) {
@@ -709,16 +705,15 @@ void near option_update_and_render(void)
 	if(input_is_quit(OC_QUIT)) {
 		in_this_menu = false;
 		menu_sel = MC_OPTION;
-		in_option = false;
 		menu_cur = &MENU_MAIN;
 	}
 }
 
 const Menu MENU_MAIN = {
-	MAIN_W,
+	MAIN_W, main_update_and_render, main_choice_put
 };
 const Menu MENU_OPTION = {
-	SUBMENU_W,
+	SUBMENU_W, option_update_and_render, option_choice_put
 };
 
 int main_op(int, const char *[])
@@ -763,14 +758,13 @@ int main_op(int, const char *[])
 	// expect from the whole input locking system, and contrary to how the game
 	// behaves after switching the active menu later on, where inputs *are*
 	// locked until the player releases all keys.
-	in_option = false;
 	input_sp = INPUT_NONE;
-	main_update_and_render();
+	menu_cur->update_and_render();
 	input_allowed = true;
 
 	select_cdg_load_part2_of_4();
 
-	while(!quit) {
+	while(menu_cur != nullptr) {
 		input_mode_interface();
 		if(menu_prev != menu_cur) {
 			text_clear();
@@ -780,10 +774,7 @@ int main_op(int, const char *[])
 		if(input_sp == INPUT_NONE) {
 			input_allowed = true;
 		}
-		switch(in_option) {
-		case false:	main_update_and_render();  	break;
-		case true: 	option_update_and_render();	break;
-		}
+		menu_cur->update_and_render();
 		if(input_sp != INPUT_NONE) {
 			input_allowed = false;
 		}
