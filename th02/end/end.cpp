@@ -1109,10 +1109,7 @@ void near staffroll_and_verdict_animate(void)
 	key_delay();
 	palette_black_out(5);
 
-	/* TODO: Replace with the decompiled call
-	* 	extra_unlock_animate();
-	* once that function is part of this translation unit */
-	_asm { nop; push cs; call near ptr extra_unlock_animate; }
+	extra_unlock_animate();
 
 	graph_clear();
 	/// -------

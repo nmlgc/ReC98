@@ -292,12 +292,7 @@ void near boss_defeat_update(void)
 					bgm_title_id = 15;
 					overlay1 = overlay_boss_bgm_update_and_render;
 					cdg_free(CDG_BG_BOSS);
-
-					/* TODO: Replace with the decompiled call
-					* 	bb_boss_free();
-					* once that function is part of this translation unit */
-					_asm { push cs; call near ptr bb_boss_free; }
-
+					bb_boss_free();
 					cdg_load_single_noalpha(
 						CDG_BG_BOSS, BOSS_BG_GENGETSU_FN, 0
 					);
