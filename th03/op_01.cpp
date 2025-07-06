@@ -47,6 +47,10 @@ enum option_choice_t {
 	OC_COUNT,
 };
 
+enum vs_choice_t {
+	VC_COUNT = VS_MODE_COUNT,
+};
+
 // Proportional gaiji strings
 // --------------------------
 
@@ -480,9 +484,9 @@ bool near vs_menu(void)
 	box_animate(MAIN_W, SUBMENU_W);
 
 	menu_sel = VS_1P_CPU;
-	vs_choice_put(VS_1P_CPU, TX_WHITE);
-	vs_choice_put(VS_1P_2P, TX_BLACK);
-	vs_choice_put(VS_CPU_CPU, TX_BLACK);
+	for(int i = 0; i < VC_COUNT; i++) {
+		vs_choice_put(i, ((i == menu_sel) ? TX_WHITE : TX_BLACK));
+	}
 
 	while(1) {
 		input_mode_interface();

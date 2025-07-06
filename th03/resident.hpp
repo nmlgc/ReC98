@@ -11,6 +11,7 @@ enum vs_mode_t {
 	VS_1P_CPU = 0,
 	VS_1P_2P = 1,
 	VS_CPU_CPU = 2,
+	VS_MODE_COUNT,
 };
 
 enum game_mode_t {
