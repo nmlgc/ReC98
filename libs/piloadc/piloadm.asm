@@ -4,6 +4,7 @@
 ;   header instead of getting shifted down to 4 bits
 ; • Removed all palette and tone setting code
 ; • Removed all mode setting code
+; • Removed comment display
 ; • Removed the Pascal entry points (might restore them if other PC-98 homebrew
 ;   developers actually need them)
 ; • Slightly optimized VRAM transfer by jumping over the GRCG shutdown when
@@ -218,20 +219,11 @@ piload0:
 	jz	pilop
 error:	ret
 pilop:
-	test	option,4
-	jz	@@lop2
-@@lop:
-	lodsb
-	cmp	al,1ah
-	jz	@@lop2
-	mov	dl,al
-	mov	ah,2
-	int	21h
-	jmp	short	@@lop
-@@lop2:
+	; Skip comment
 	lodsb
 	or	al,al
-	jnz	@@lop2
+	jnz	pilop
+
 	lodsb
 	mov	bl,al	;palet flag
 	lodsw		;ドット比率
