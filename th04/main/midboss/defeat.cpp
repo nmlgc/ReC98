@@ -64,10 +64,6 @@ void near midboss_defeat_update(void)
 			}
 		}
 	} else {
-		/* TODO: Replace with the decompiled call
-		 * 	midboss_reset();
-		 * if we ever decide to put that function into the same translation
-		 * unit */
-		_asm { push cs; call near ptr midboss_reset; }
+		midboss_reset();
 	}
 }
