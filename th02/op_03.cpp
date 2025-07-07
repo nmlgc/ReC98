@@ -14,6 +14,11 @@ void title_flash(void)
 	for(frame = 0; frame < 18; frame++) {
 		graph_showpage(page);
 		page = 1 - page;
+		if((frame % 3) == 0) {
+			palette_settone(150);
+		} else if((frame % 3) == 1) {
+			palette_settone(100);
+		}
 
 		if(frame == 0) {
 			pi_put_8(0, 0, 0);
@@ -21,15 +26,6 @@ void title_flash(void)
 			pi_put_8(0, 0, 1);
 		} else if(frame == 10) {
 			pi_put_8(0, 0, 2);
-		}
-
-		// ZUN landmine: Classic screen tearing – pi_put_8() takes a while, so
-		// we're most certainly in the middle of a frame when we get here.
-		// Should be done at the beginning of the loop.
-		if((frame % 3) == 0) {
-			palette_settone(150);
-		} else if((frame % 3) == 1) {
-			palette_settone(100);
 		}
 		frame_delay(1);
 	}
