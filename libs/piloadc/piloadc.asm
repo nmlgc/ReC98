@@ -704,19 +704,6 @@ maketbl:
 ;	ＭＳ－ＤＯＳ依存部
 ;-----------------------------------------------------------------------------
 fopen:
-comment	;
-	push	si
-	push	dx
-	mov	si,dx
-flop:	lodsb
-	mov	dl,al
-	mov	ah,2
-	int	21h
-	or	dl,dl
-	jnz	flop
-	pop	dx
-	pop	si
-;
 	mov	ax,3d00h
 	int	21h
 	ret
