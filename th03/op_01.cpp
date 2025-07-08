@@ -311,6 +311,10 @@ void pascal near vs_choice_put(int sel, tram_atrb2 atrb)
 bool near vs_menu(void)
 {
 	int sel;
+
+	// ZUN quirk: This assignment causes any initially held inputs to be
+	// processed immediately, just like in the Main menu at startup, but unlike
+	// after a later switch between the Main and Option menu.
 	input_t input_prev = INPUT_NONE;
 
 	// After a match, we come back here, skip the menu, and launch into
