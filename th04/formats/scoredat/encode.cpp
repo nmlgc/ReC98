@@ -4,7 +4,7 @@
 #include "th04/formats/scoredat/impl.hpp"
 #include "libs/master.lib/master.hpp"
 
-void near scoredat_encode(void)
+void pascal near scoredat_encode(void)
 {
 	int i;
 	scoredat_sum(hi.score_sum, i, hi);
