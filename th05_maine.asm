@@ -162,7 +162,7 @@ sub_B6A3	proc near
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		imul	ax, 5
 		mov	dl, _rank
@@ -489,7 +489,7 @@ loc_B90A:
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_B922
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+arg_0]
 		jnz	short loc_B922
@@ -593,7 +593,7 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_B9E1
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+arg_2]
 		jnz	short loc_B9E1
@@ -973,7 +973,7 @@ loc_BC67:
 		mov	ah, 0
 		push	ax
 		call	sub_B9C1
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+arg_0]
 		jnz	short loc_BC8F
@@ -1360,7 +1360,7 @@ loc_BECC:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	_entered_name_cursor
 		call	sub_BA84
 		mov	si, offset _glyphballs
@@ -1778,13 +1778,13 @@ loc_C25E:
 		mov	_rank, al
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.playchar]
-		mov	playchar_15178, al
+		mov	_playchar, al
 		mov	[bp+var_4], 0
 		jmp	short loc_C28C
 ; ---------------------------------------------------------------------------
 
 loc_C273:
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jz	short loc_C289
@@ -1798,7 +1798,7 @@ loc_C289:
 loc_C28C:
 		cmp	[bp+var_4], PLAYCHAR_COUNT
 		jl	short loc_C273
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		call	@hiscore_scoredat_load_for$qi pascal, ax
 		les	bx, _resident
@@ -1809,7 +1809,7 @@ loc_C28C:
 
 loc_C2AD:
 		call	sub_B730
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_BCD3
@@ -1818,7 +1818,7 @@ loc_C2AD:
 
 loc_C2BB:
 		mov	_entered_place, -1
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_BCD3
@@ -1847,14 +1847,14 @@ loc_C307:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	0
 		call	sub_BA84
 		graph_accesspage 0
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	0
 		call	sub_BA84
 		graph_accesspage 1
@@ -2032,7 +2032,7 @@ loc_C4D4:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	_entered_name_cursor
 		call	sub_BD46
 		cmp	_entered_name_cursor, (SCOREDAT_NAME_LEN - 1)
@@ -6196,9 +6196,9 @@ include th04/formats/scoredat[bss].asm
 public _glyphballs
 _glyphballs	glyphball_t	(SCOREDAT_NAME_LEN + 1) dup (<?>)
 include th03/hiscore/regist[bss].asm
-public _rank
+public _rank, _playchar
 _rank	db ?
-playchar_15178	db ?
+_playchar	db ?
 		db 3 dup(?)
 public _skill
 byte_1517C	db ?

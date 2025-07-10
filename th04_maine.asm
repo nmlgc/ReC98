@@ -1698,7 +1698,7 @@ sub_C316	proc near
 		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		call	file_seek pascal, large eax, 0
-		cmp	playchar_125B8, PLAYCHAR_REIMU
+		cmp	_playchar, PLAYCHAR_REIMU
 		jz	short loc_C350
 		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
 
@@ -1961,7 +1961,7 @@ loc_C531:
 		cmp	ax, si
 		jnz	short loc_C549
 		mov	al, [bp+arg_0]
-		cmp	al, playchar_125B8
+		cmp	al, _playchar
 		jnz	short loc_C549
 		mov	al, 0Ah
 		jmp	short loc_C54B
@@ -2066,7 +2066,7 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_C60E
-		mov	al, playchar_125B8
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, di
 		jnz	short loc_C60E
@@ -2276,7 +2276,7 @@ loc_C73C:
 		cmp	ax, si
 		jnz	short loc_C76E
 		mov	al, byte ptr [bp+arg_0]
-		cmp	al, playchar_125B8
+		cmp	al, _playchar
 		jz	short loc_C787
 
 loc_C76E:
@@ -2450,18 +2450,18 @@ loc_C895:
 		xor	ax, ax
 
 loc_C897:
-		mov	playchar_125B8, al
+		mov	_playchar, al
 		mov	al, 1
-		sub	al, playchar_125B8
+		sub	al, _playchar
 		push	ax
 		call	@hiscore_scoredat_load_for$q10playchar_t
-		mov	al, playchar_125B8
+		mov	al, _playchar
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
 		push	dx
 		call	sub_C7C9
-		call	@hiscore_scoredat_load_for$q10playchar_t pascal, word ptr playchar_125B8
+		call	@hiscore_scoredat_load_for$q10playchar_t pascal, word ptr _playchar
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C8CB
@@ -2470,7 +2470,7 @@ loc_C897:
 
 loc_C8CB:
 		call	sub_C3B2
-		mov	al, playchar_125B8
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
@@ -2479,7 +2479,7 @@ loc_C8CB:
 
 loc_C8D9:
 		mov	_entered_place, -1
-		mov	al, playchar_125B8
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
@@ -2719,7 +2719,7 @@ loc_CAF5:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_125B8
+		push	word ptr _playchar
 		push	si
 		call	sub_C665
 
@@ -2739,7 +2739,7 @@ loc_CB1E:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_125B8
+		push	word ptr _playchar
 		push	si
 		call	sub_C665
 
@@ -3050,8 +3050,8 @@ byte_124EF	db ?
 		db 2 dup(?)
 include th04/formats/scoredat[bss].asm
 include th03/hiscore/regist[bss].asm
-public _rank
+public _rank, _playchar
 _rank	db ?
-playchar_125B8	db ?
+_playchar	db ?
 
 		end
