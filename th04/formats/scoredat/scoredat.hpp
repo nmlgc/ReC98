@@ -59,9 +59,9 @@ void pascal near scoredat_encode(scoredat_section_t near *hi);
 // TH05 where [hi2] is not referenced anywhere else. Using the MAIN.EXE variant
 // throughout the game would be much saner.
 // Also, [hi2] is only decoded if [hi] is valid.
-uint8_t near scoredat_decode(void);
+uint8_t pascal near scoredat_decode(void);
 
-void near scoredat_encode(void);
+void pascal near scoredat_encode(void);
 
 #define scoredat_decode_func scoredat_decode
 #define scoredat_encode_func scoredat_encode
@@ -69,16 +69,4 @@ void near scoredat_encode(void);
 
 // Recreation
 void near scoredat_recreate(void);
-
-// Loading
-// -------
-// MODDERS: Take [rank] as a parameter instead.
-
-#if (BINARY == 'M')
-// Loads the score data for the current global playchar at the global [rank]
-// into [hi]. TH04 recreates the default file on a loading or decoding failure,
-// TH05 doesn't.
-void near scoredat_load_for_cur(void);
-#endif
-// -------
 /// ---------

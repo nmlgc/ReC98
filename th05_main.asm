@@ -2823,45 +2823,12 @@ include th04/main/playperf.asm
 include th05/main/select_for_playchar.asm
 include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
+
+	@scoredat_load_for_cur$qv procdesc near
+	@scoredat_save_cur$qv procdesc near
 SCORE_TEXT ends
 
 LASER_RH_TEXT segment byte public 'CODE' use16
-include th05/formats/scoredat_main.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E813	proc near
-		call	@scoredat_encode$qv
-		mov	ax, (3Dh shl 8) or 02h
-		mov	dx, offset aGENSOU_SCR
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 2 - read & write
-		mov	bx, ax
-		xor	ah, ah
-		mov	al, _playchar
-		imul	ax, 5
-		add	al, _rank
-		imul	ax, size scoredat_section_t
-		mov	dx, ax
-		xor	cx, cx
-		mov	ax, (42h shl 8) or 00h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	ah, 40h
-		mov	dx, offset _hi
-		mov	cx, size scoredat_section_t
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		call	@scoredat_decode$qv
-		retn
-sub_E813	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2951,7 +2918,7 @@ loc_E8E4:
 		mov	di, dx
 		add	al, gb_1_
 		mov	_hi.score.g_stage[di], al
-		call	sub_E813
+		call	@scoredat_save_cur$qv
 
 loc_E8EF:
 		pop	di
@@ -2979,7 +2946,7 @@ sub_E8F2	endp
 
 
 sub_E8FE	proc near
-		call	_scoredat_load_for_cur
+		call	@scoredat_load_for_cur$qv
 		xor	bx, bx
 		mov	cx, SCORE_DIGITS
 
@@ -19752,7 +19719,8 @@ aMaine_0	db 'maine',0
 include th04/main/player/shot_levels[data].asm
 include th05/formats/bb_txt_load[data].asm
 include th04/main/player/shot_velocity[data].asm
-aGENSOU_SCR	db 'GENSOU.SCR',0
+public _SCOREDAT_FN
+_SCOREDAT_FN	db 'GENSOU.SCR',0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 public _group_is_special
 _group_is_special	db 0

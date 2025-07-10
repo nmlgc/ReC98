@@ -3,7 +3,7 @@
 #include "th04/formats/scoredat/scoredat.hpp"
 #include "th04/formats/scoredat/impl.hpp"
 
-uint8_t near scoredat_decode(void)
+uint8_t pascal near scoredat_decode(void)
 {
 	int i;
 	int sum;
