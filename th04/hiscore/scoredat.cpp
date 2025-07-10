@@ -32,11 +32,16 @@ bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 	extern const char SCOREDAT_FN_1[];
 #endif
 
-	// ZUN bloat: Classic TOCTOU issue; file_ropen() does fail if the file
+	// ZUN bloat: Classic TOCTOU issue; file_ropen() also fails if the file
 	// doesn't exist. Doesn't have any consequences in this case though: In the
 	// very unlikely event that the file stops existing between file_exist()
-	// and file_ropen(), old score data will remain in [hi] and [hi2], the game
-	// will re-decode this already decoded data, and always recreate the file.
+	// and file_ropen(), the following will happen:
+	// • All file-related calls will fail and leave old score data in [hi] and
+	//   [hi2].
+	// • scoredat_decode() re-decodes already decoded data and fails.
+	// • The code then recreates score data just as it would have if the file
+	//   hadn't existed in this initial check.
+	// Hence, this is not a landmine, just bloat.
 	if(file_exist(SCOREDAT_FN_0)) {
 		file_ropen(SCOREDAT_FN_1);
 
