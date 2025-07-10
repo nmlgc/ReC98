@@ -1676,62 +1676,9 @@ public @verdict_animate$qv
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@scoredat_decode$qv procdesc near
-	@scoredat_encode$qv procdesc near
 	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T procdesc pascal near \
 		playchar:byte
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C316	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	scoredat_encode_func
-		push	ds
-		push	offset aGensou_scr_2 ; "GENSOU.SCR"
-		call	file_append
-		mov	al, _rank
-		mov	ah, 0
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		cmp	_playchar, PLAYCHAR_REIMU
-		jz	short loc_C350
-		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
-
-loc_C350:
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		xor	si, si
-		jmp	short loc_C3A5
-; ---------------------------------------------------------------------------
-
-loc_C360:
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	scoredat_decode_func
-		call	scoredat_encode_func
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		inc	si
-
-loc_C3A5:
-		cmp	si, 0Ah
-		jl	short loc_C360
-		call	file_close
-		pop	si
-		pop	bp
-		retn
-sub_C316	endp
-
+	@hiscore_scoredat_save$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2783,12 +2730,12 @@ loc_CB6B:
 ; ---------------------------------------------------------------------------
 
 @@enter:
-		call	sub_C316
+		call	@hiscore_scoredat_save$qv
 		jmp	short loc_CB89
 ; ---------------------------------------------------------------------------
 
 loc_CB7F:
-		call	sub_C316
+		call	@hiscore_scoredat_save$qv
 		call	@input_wait_for_change$qi pascal, 0
 
 loc_CB89:
@@ -3001,11 +2948,11 @@ aPicacovVVcvsfT	db '処理落ちによる判定不可',0
 aUde_pi		db 'ude.pi',0
 		db    0
 include th04/hiscore/alphabet[data].asm
-public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1
+public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1, _SCOREDAT_FN_2
 _SCOREDAT_FN	db 'GENSOU.SCR',0
 _SCOREDAT_FN_0	db 'GENSOU.SCR',0
 _SCOREDAT_FN_1	db 'GENSOU.SCR',0
-aGensou_scr_2	db 'GENSOU.SCR',0
+_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum2_bft	db 'scnum2.bft',0
 aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0

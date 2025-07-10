@@ -9705,38 +9705,10 @@ BOSS_BG_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@hiscore_scoredat_load_for_cur$qv procdesc near
+	@hiscore_scoredat_save$qv procdesc near
 SCORE_TEXT ends
 
 BOSS_FG_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12B1E	proc near
-		push	bp
-		mov	bp, sp
-		call	scoredat_encode_func
-		push	ds
-		push	offset aGensou_scr_2 ; "GENSOU.SCR"
-		call	file_append
-		mov	al, _rank
-		mov	ah, 0
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		les	bx, _resident
-		cmp	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
-		jnz	short loc_12B5E
-		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
-
-loc_12B5E:
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		call	file_close
-		pop	bp
-		retn
-sub_12B1E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9911,7 +9883,7 @@ loc_12CA3:
 		mov	_hi.score.g_stage[bx], gb_1_
 
 loc_12CAF:
-		call	main_01:sub_12B1E
+		call	@hiscore_scoredat_save$qv
 
 loc_12CB2:
 		pop	si
@@ -30127,11 +30099,11 @@ _checkerboard checkerboard_t <>
 byte_23242	db 0
 		db    0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
-public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1
+public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1, _SCOREDAT_FN_2
 _SCOREDAT_FN	db 'GENSOU.SCR',0
 _SCOREDAT_FN_0	db 'GENSOU.SCR',0
 _SCOREDAT_FN_1	db 'GENSOU.SCR',0
-aGensou_scr_2	db 'GENSOU.SCR',0
+_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 public _group_fixedspeed
 _group_fixedspeed	db 0
 		db 0
