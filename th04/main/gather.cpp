@@ -116,19 +116,18 @@ void gather_update(void)
 				set_bullet_template_to_gather_template(*gather);
 				bullet_template.origin.x = gather->center.cur.x;
 				bullet_template.origin.y = gather->center.cur.y;
-				#if (GAME == 5)
-					if(
-						bullet_template.spawn_type <
-						BST_GATHER_NORMAL_SPECIAL_MOVE
-					) {
-						bullets_add_regular();
-					} else {
-						bullet_template.spawn_type = BST_NORMAL;
-						bullets_add_special();
-					}
-				#else
+#if (GAME == 5)
+				if(
+					bullet_template.spawn_type < BST_GATHER_NORMAL_SPECIAL_MOVE
+				) {
 					bullets_add_regular();
-				#endif
+				} else {
+					bullet_template.spawn_type = BST_NORMAL;
+					bullets_add_special();
+				}
+#else
+				bullets_add_regular();
+#endif
 			}
 		}
 	}

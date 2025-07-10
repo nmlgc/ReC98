@@ -3,8 +3,8 @@
 extern bool bombing_disabled;
 extern unsigned char bomb_frame;
 #if (GAME == 4)
-	// Pointless indirection to player_bomb().
-	extern nearfunc_t_near player_bomb_func;
+// Pointless indirection to player_bomb().
+extern nearfunc_t_near player_bomb_func;
 #endif
 
 // Character-specific bomb update and render functions
@@ -17,9 +17,9 @@ void pascal near bomb_marisa(void);
 // ---------------------------------------------------
 
 #if (GAME == 4)
-	// Handles the BB?.BB animation, scroll deactivation, common palette
-	// manipulation, and calls [playchar_bomb_func].
-	void near bomb_update_and_render(void);
+// Handles the BB?.BB animation, scroll deactivation, common palette
+// manipulation, and calls [playchar_bomb_func].
+void near bomb_update_and_render(void);
 #endif
 
 // Drops a bomb, if possible. Also cancels a death if called during the

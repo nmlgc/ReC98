@@ -63,9 +63,9 @@ void near scoredat_decode(void);
 // returns `true` if that data was recreated due to corruption or a nonexistent
 // file.
 #if (BINARY == 'O')
-	bool16 pascal near scoredat_load_and_decode(rank_t rank);
+bool16 pascal near scoredat_load_and_decode(rank_t rank);
 #elif (BINARY == 'L')
-	void pascal near scoredat_load_and_decode(rank_t rank);
+void pascal near scoredat_load_and_decode(rank_t rank);
 #endif
 
 // Calculates the checksum and encrypts [hi] in-place, then saves it to the

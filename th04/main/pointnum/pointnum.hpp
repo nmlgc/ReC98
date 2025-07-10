@@ -7,12 +7,12 @@
 /// Structure
 /// ---------
 #if GAME == 5
-	#define POINTNUM_DIGITS 5
-	#define POINTNUM_YELLOW_COUNT 80
+#define POINTNUM_DIGITS 5
+#define POINTNUM_YELLOW_COUNT 80
 #else
-	#define POINTNUM_DIGITS 4
-	#define POINTNUM_YELLOW_COUNT 200
-	#define POINTNUM_TIMES_2_W (POINTNUM_W * 2)
+#define POINTNUM_DIGITS 4
+#define POINTNUM_YELLOW_COUNT 200
+#define POINTNUM_TIMES_2_W (POINTNUM_W * 2)
 #endif
 #define POINTNUM_WHITE_COUNT 200
 #define POINTNUM_COUNT (POINTNUM_WHITE_COUNT + POINTNUM_YELLOW_COUNT)
@@ -47,14 +47,14 @@ extern unsigned char pointnum_white_p;
 extern bool pointnum_times_2;
 
 #if GAME == 5
-	// Returns the on-screen width of [number] in pixels.
-	upixel_t pascal near pointnum_digits_set(
-		unsigned char near *last_digit, uint16_t points
-	);
+// Returns the on-screen width of [number] in pixels.
+upixel_t pascal near pointnum_digits_set(
+	unsigned char near *last_digit, uint16_t points
+);
 #else
-	void pascal near pointnum_digits_set(
-		unsigned char near *last_digit, uint16_t points
-	);
+void pascal near pointnum_digits_set(
+	unsigned char near *last_digit, uint16_t points
+);
 #endif
 
 void pascal near pointnums_add_white(

@@ -17,9 +17,9 @@ void pascal near bb_boss_load(const char far *fn);
 
 // Frees any previously allocated [bb_boss_seg].
 #if (GAME == 5)
-	void near bb_boss_free(void);
+void near bb_boss_free(void);
 #else
-	void far bb_boss_free(void);
+void far bb_boss_free(void);
 #endif
 // -------------------------------
 

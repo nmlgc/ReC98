@@ -78,9 +78,9 @@ extern resident_t far *resident;
 
 // ACTUAL TYPE: rank_t
 #if (BINARY == 'M')
-	extern int8_t rank;
+extern int8_t rank;
 #elif (BINARY == 'E')
-	extern uint8_t rank;
+extern uint8_t rank;
 #endif
 
 extern bgm_mode_t bgm_mode;
@@ -96,9 +96,9 @@ extern int rem_lives; // ZUN bloat: The resident structure just uses int8_t.
 extern unsigned long frame_rand;
 
 #if (BINARY == 'M')
-	extern uscore_t score;
+extern uscore_t score;
 #elif (BINARY == 'E')
-	extern score_t score;
+extern score_t score;
 #endif
 extern int32_t continues_total;
 

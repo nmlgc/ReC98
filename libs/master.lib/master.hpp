@@ -217,54 +217,54 @@ void MASTER_RET vsync_end(void);
 /// ------------------
 
 #ifdef __cplusplus
-	// Type-safe hmem_* memory allocation
-	template<class T> struct HMem {
-		static T __seg* alloc(unsigned int size_in_elements) {
-			return reinterpret_cast<T __seg *>(hmem_allocbyte(
-				size_in_elements * sizeof(T)
-			));
-		}
+// Type-safe hmem_* memory allocation
+template<class T> struct HMem {
+	static T __seg* alloc(unsigned int size_in_elements) {
+		return reinterpret_cast<T __seg *>(hmem_allocbyte(
+			size_in_elements * sizeof(T)
+		));
+	}
 
-		static void free(T *&block) {
-			hmem_free(reinterpret_cast<void __seg *>(block));
-		}
+	static void free(T *&block) {
+		hmem_free(reinterpret_cast<void __seg *>(block));
+	}
 
-		static void free(T __seg *&block) {
-			hmem_free(reinterpret_cast<void __seg *>(block));
-		}
-	};
+	static void free(T __seg *&block) {
+		hmem_free(reinterpret_cast<void __seg *>(block));
+	}
+};
 
-	// Type-safe resident structure allocation and retrieval
-	template <class T> struct ResData {
-		static unsigned int id_len() {
-			return (sizeof(reinterpret_cast<T *>(0)->id) - 1);
-		}
+// Type-safe resident structure allocation and retrieval
+template <class T> struct ResData {
+	static unsigned int id_len() {
+		return (sizeof(reinterpret_cast<T *>(0)->id) - 1);
+	}
 
-		static T __seg* create(const char MASTER_PTR *id) {
-			return reinterpret_cast<T __seg *>(resdata_create(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
+	static T __seg* create(const char MASTER_PTR *id) {
+		return reinterpret_cast<T __seg *>(resdata_create(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
 
-		static T __seg* exist(const char MASTER_PTR *id) {
-			return reinterpret_cast<T __seg *>(resdata_exist(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
+	static T __seg* exist(const char MASTER_PTR *id) {
+		return reinterpret_cast<T __seg *>(resdata_exist(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
 
-		// Workarounds for correct code generation
-		static T __seg* create_with_id_from_pointer(const char *&id) {
-			return reinterpret_cast<T __seg *>(resdata_create(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
+	// Workarounds for correct code generation
+	static T __seg* create_with_id_from_pointer(const char *&id) {
+		return reinterpret_cast<T __seg *>(resdata_create(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
 
-		static T __seg* exist_with_id_from_pointer(const char *&id) {
-			return reinterpret_cast<T __seg *>(resdata_exist(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
-	};
+	static T __seg* exist_with_id_from_pointer(const char *&id) {
+		return reinterpret_cast<T __seg *>(resdata_exist(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
+};
 #endif
 /// ------------------
 

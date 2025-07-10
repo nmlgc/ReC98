@@ -6,19 +6,17 @@
 extern vram_y_t scroll_line;
 
 #if (GAME == 2)
-	// Amount of pixels to be added to [scroll_line] on every scrolling
-	// operation.
-	extern pixel_length_8_t scroll_speed;
+// Amount of pixels to be added to [scroll_line] on every scrolling operation.
+extern pixel_length_8_t scroll_speed;
 
-	extern uint8_t scroll_cycle;
+extern uint8_t scroll_cycle;
 
-	// Interval between successive scrolling operations, used to achieve
-	// scrolling speeds below 1 pixel per frame. Must be ≥1.
-	extern uint8_t scroll_interval;
+// Interval between successive scrolling operations, used to achieve scrolling
+// speeds below 1 pixel per frame. Must be ≥1.
+extern uint8_t scroll_interval;
 
-	// Set to 1 when the top of the map was reached and the boss should be
-	// started.
-	extern bool scroll_done;
+// Set to 1 when the top of the map was reached and the boss should be started.
+extern bool scroll_done;
 #endif
 
 #define scroll_screen_y_to_vram(ret, screen_y) \

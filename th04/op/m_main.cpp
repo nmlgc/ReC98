@@ -1,12 +1,12 @@
 #if (GAME == 5)
-	#include "th05/mem.h"
-	#include "th05/op/start.cpp"
-	#include "th05/shiftjis/fns.hpp"
+#include "th05/mem.h"
+#include "th05/op/start.cpp"
+#include "th05/shiftjis/fns.hpp"
 #else
-	#include "th03/shiftjis/fnshared.hpp"
-	#include "th04/mem.h"
-	#include "th04/op/start.cpp"
-	#include "th04/shiftjis/fns.hpp"
+#include "th03/shiftjis/fnshared.hpp"
+#include "th04/mem.h"
+#include "th04/op/start.cpp"
+#include "th04/shiftjis/fns.hpp"
 #endif
 
 #include <conio.h>
@@ -123,7 +123,7 @@ const vc2 COL_DESC     = ((GAME == 5) ?  9 : V_WHITE);
 // -------
 
 #if (GAME == 5)
-	static int8_t unused = 0; // ZUN bloat
+static int8_t unused = 0; // ZUN bloat
 #endif
 int8_t menu_sel = 0;
 bool quit = false;
@@ -414,15 +414,15 @@ void near main_update_and_render(void)
 
 inline void snd_redetermine_modes_and_restart_bgm(bool also_reload_se) {
 	snd_kaja_func(KAJA_SONG_STOP, 0);
-	#if (GAME == 5)
-		if(also_reload_se) {
-			snd_redetermine_modes_and_reload_se();
-		} else {
-			snd_determine_modes(resident->bgm_mode, resident->se_mode);
-		}
-	#else
+#if (GAME == 5)
+	if(also_reload_se) {
+		snd_redetermine_modes_and_reload_se();
+	} else {
 		snd_determine_modes(resident->bgm_mode, resident->se_mode);
-	#endif
+	}
+#else
+	snd_determine_modes(resident->bgm_mode, resident->se_mode);
+#endif
 	snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 }
@@ -509,9 +509,9 @@ void near option_update_and_render(void)
 
 			// ZUN bug: TH04 does not immediately apply SE mode changes.
 			// (Same below for INPUT_LEFT.)
-			#if (GAME == 5)
-				snd_redetermine_modes_and_reload_se();
-			#endif
+#if (GAME == 5)
+			snd_redetermine_modes_and_reload_se();
+#endif
 			break;
 		case OC_TURBO_OR_SLOW:
 			resident->turbo_mode = (1 - resident->turbo_mode);
@@ -541,9 +541,9 @@ void near option_update_and_render(void)
 			break;
 		case OC_SE:
 			ring_inc_ge_range(resident->se_mode, SND_SE_OFF, SND_SE_BEEP);
-			#if (GAME == 5)
-				snd_redetermine_modes_and_reload_se();
-			#endif
+#if (GAME == 5)
+			snd_redetermine_modes_and_reload_se();
+#endif
 			break;
 		case OC_TURBO_OR_SLOW:
 			resident->turbo_mode = (1 - resident->turbo_mode);
@@ -572,10 +572,10 @@ void main(void)
 		getch();
 	}
 
-	#if (GAME == 4)
-		gaiji_backup();
-		gaiji_entry_bfnt(GAIJI_FN);
-	#endif
+#if (GAME == 4)
+	gaiji_backup();
+	gaiji_entry_bfnt(GAIJI_FN);
+#endif
 
 	cfg_load();
 	if(resident->rank == RANK_SHOW_SETUP_MENU) {
@@ -597,32 +597,32 @@ void main(void)
 	}
 	op_animate();
 
-	#if (GAME == 5)
-		main_cdg_load();
+#if (GAME == 5)
+	main_cdg_load();
 
-		// ZUN bug: cleardata_and_regist_view_sprites_load() ends with a call
-		// to super_entry_bfnt(), which overwrites the master.lib [Palettes]
-		// with the palette from hi_m.bft's palette. In TH05, this file has a
-		// different palette than the one we loaded from OP1.PI earlier during
-		// op_animate(), thus resulting in [Palettes] going out of sync with
-		// the hardware palette.
-		// This is merely a landmine in this menu, but then turns into a bug
-		// in regist_view_menu(). As this function calls palette_black_out(),
-		// which operates on [Palettes], it thus fades out a much brighter
-		// palette than the one currently shown if the High Score screen is the
-		// first subscreen entered within a OP.EXE process.
-		// The two most obvious ways of fixing this bug:
-		// 1) Separate clear data loading from sprite loading (as any sane
-		//    coder would do), and load the sprites inside regist_view_menu()
-		// 2) Call this function before op_animate() and either bump or remove
-		//    the memory limit of OP.EXE (MEM_ASSIGN_PARAS_OP) accordingly to
-		//    reserve enough room in conventional RAM for both these sprites
-		//    and all title animation cels
-		cleardata_and_regist_view_sprites_load();
-	#else
-		cleardata_and_regist_view_sprites_load();
-		main_cdg_load();
-	#endif
+	// ZUN bug: cleardata_and_regist_view_sprites_load() ends with a call to
+	// super_entry_bfnt(), which overwrites the master.lib [Palettes] with the
+	// palette from hi_m.bft's palette. In TH05, this file has a different
+	// palette than the one we loaded from OP1.PI earlier during op_animate(),
+	// thus resulting in [Palettes] going out of sync with the hardware
+	// palette.
+	// This is merely a landmine in this menu, but then turns into a bug in
+	// regist_view_menu(). As this function calls palette_black_out(), which
+	// operates on [Palettes], it thus fades out a much brighter palette than
+	// the one currently shown if the High Score screen is the first subscreen
+	// entered within a OP.EXE process.
+	// The two most obvious ways of fixing this bug:
+	// 1) Separate clear data loading from sprite loading (as any sane coder
+	//    would do), and load the sprites inside regist_view_menu()
+	// 2) Call this function before op_animate() and either bump or remove the
+	//    memory limit of OP.EXE (MEM_ASSIGN_PARAS_OP) accordingly to reserve
+	//    enough room in conventional RAM for both these sprites and all title
+	//    animation cels
+	cleardata_and_regist_view_sprites_load();
+#else
+	cleardata_and_regist_view_sprites_load();
+	main_cdg_load();
+#endif
 	in_option = false;
 	quit = false;
 	menu_sel = 0;
@@ -633,10 +633,10 @@ void main(void)
 			main_update_and_render();
 			if(idle_frames >= 640) {
 				start_demo();
-				#if (GAME == 5)
-					// ZUN bloat: Execution never gets here.
-					idle_frames = 0;
-				#endif
+#if (GAME == 5)
+				// ZUN bloat: Execution never gets here.
+				idle_frames = 0;
+#endif
 			}
 			break;
 
@@ -663,9 +663,9 @@ void main(void)
 	}
 	main_cdg_free();
 	cfg_save_exit();
-	#if (GAME == 4)
-		gaiji_restore();
-	#endif
+#if (GAME == 4)
+	gaiji_restore();
+#endif
 	text_clear();
 	game_exit_to_dos();
 	respal_free(); // ZUN bloat: These games don't use resident palettes.

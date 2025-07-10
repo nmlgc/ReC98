@@ -155,7 +155,7 @@ void MASTER_RET grcg_settile_1line(int mode, long tile);
 
 // Just in case this is #included after `th01/hardware/grcg.hpp`...
 #ifndef grcg_off
-	void MASTER_RET grcg_off(void);
+void MASTER_RET grcg_off(void);
 #endif
 
 // Trapezoids

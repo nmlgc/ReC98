@@ -34,42 +34,42 @@ typedef enum {
 #define sdots_t(x) sdots_t_(x)
 
 #ifdef __cplusplus
-	template <class T> struct Planar {
-		T B, R, G, E;
+template <class T> struct Planar {
+	T B, R, G, E;
 
-		T& operator [](int plane) {
-			return (&B)[plane];
-		}
+	T& operator [](int plane) {
+		return (&B)[plane];
+	}
 
-		const T& operator [](int plane) const {
-			return (&B)[plane];
-		}
-	};
+	const T& operator [](int plane) const {
+		return (&B)[plane];
+	}
+};
 
-	// Base template for a 1bpp rectangle, with a custom per-row data type.
-	template <class RowDots, pixel_t H> struct DotRect {
-		typedef RowDots row_dots_t;
+// Base template for a 1bpp rectangle, with a custom per-row data type.
+template <class RowDots, pixel_t H> struct DotRect {
+	typedef RowDots row_dots_t;
 
-		row_dots_t row[H];
+	row_dots_t row[H];
 
-		row_dots_t& operator [](pixel_t y) {
-			return row[y];
-		}
+	row_dots_t& operator [](pixel_t y) {
+		return row[y];
+	}
 
-		const row_dots_t& operator [](pixel_t y) const {
-			return row[y];
-		}
+	const row_dots_t& operator [](pixel_t y) const {
+		return row[y];
+	}
 
-		static pixel_t w() {
-			return (sizeof(row_dots_t) * 8);
-		}
+	static pixel_t w() {
+		return (sizeof(row_dots_t) * 8);
+	}
 
-		static pixel_t h() {
-			return H;
-		}
-	};
+	static pixel_t h() {
+		return H;
+	}
+};
 
-	#define dot_rect_t(w, h) DotRect<dots_t(w), h>
+#define dot_rect_t(w, h) DotRect<dots_t(w), h>
 #endif
 
 // Since array subscripts create slightly different assembly in places, we

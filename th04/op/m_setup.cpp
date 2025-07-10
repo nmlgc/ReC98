@@ -3,11 +3,11 @@
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
-	#include "th05/resident.hpp"
-	#include "th05/formats/pi.hpp"
+#include "th05/resident.hpp"
+#include "th05/formats/pi.hpp"
 #else
-	#include "th04/resident.hpp"
-	#include "th03/formats/pi.hpp"
+#include "th04/resident.hpp"
+#include "th03/formats/pi.hpp"
 #endif
 #include "th04/hardware/grppsafx.h"
 #include "th04/hardware/input.h"

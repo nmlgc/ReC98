@@ -43,7 +43,7 @@ extern unsigned char item_playperf_raise;
 extern unsigned char item_playperf_lower;
 
 #if GAME == 5
-	extern unsigned int item_point_score_at_full_dream;
+extern unsigned int item_point_score_at_full_dream;
 #endif
 
 // Items dropped when losing a life
@@ -71,9 +71,9 @@ extern unsigned int items_spawned;
 extern unsigned int items_collected;
 
 #if GAME == 5
-	// Same value as [total_point_items_collected].
-	// Used for extends and end-of-game score bonus calculation.
-	extern unsigned int extend_point_items_collected;
+// Same value as [total_point_items_collected].
+// Used for extends and end-of-game score bonus calculation.
+extern unsigned int extend_point_items_collected;
 #endif
 
 extern unsigned int total_point_items_collected;

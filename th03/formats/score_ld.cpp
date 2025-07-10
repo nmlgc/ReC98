@@ -1,11 +1,11 @@
 #if (BINARY == 'L')
-	#define recreated
-	#define loaded
-	void pascal near scoredat_load_and_decode(rank_t rank)
+#define recreated
+#define loaded
+void pascal near scoredat_load_and_decode(rank_t rank)
 #else
-	#define recreated true
-	#define loaded false
-	bool16 pascal near scoredat_load_and_decode(rank_t rank)
+#define recreated true
+#define loaded false
+bool16 pascal near scoredat_load_and_decode(rank_t rank)
 #endif
 {
 	if(!file_exist(SCOREDAT_FN)) {

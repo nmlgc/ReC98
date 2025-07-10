@@ -6,11 +6,11 @@
 #include "th01/formats/ptn_data.hpp"
 
 #if (BINARY != 'E')
-	// TODO: Move into vplanset.cpp once we're close to done with TH02-TH04.
-	dots8_t far *VRAM_PLANE_B;
-	dots8_t far *VRAM_PLANE_R;
-	dots8_t far *VRAM_PLANE_G;
-	dots8_t far *VRAM_PLANE_E;
+// TODO: Move into vplanset.cpp once we're close to done with TH02-TH04.
+dots8_t far *VRAM_PLANE_B;
+dots8_t far *VRAM_PLANE_R;
+dots8_t far *VRAM_PLANE_G;
+dots8_t far *VRAM_PLANE_E;
 #endif
 
 
@@ -52,16 +52,16 @@ uint8_t planar_stream_count[GRX_COUNT];
 // ----------
 
 #if (BINARY == 'E')
-	int grp_palette_tone = 100;
+int grp_palette_tone = 100;
 #endif
 bool flag_grp_colorkey = false;
 int8_t* grp_buf;
 // ----------
 
 #if (BINARY == 'E')
-	// TODO: Move into vplanset.cpp once we're close to done with TH02-TH04.
-	dots8_t far *VRAM_PLANE_B;
-	dots8_t far *VRAM_PLANE_R;
-	dots8_t far *VRAM_PLANE_G;
-	dots8_t far *VRAM_PLANE_E;
+// TODO: Move into vplanset.cpp once we're close to done with TH02-TH04.
+dots8_t far *VRAM_PLANE_B;
+dots8_t far *VRAM_PLANE_R;
+dots8_t far *VRAM_PLANE_G;
+dots8_t far *VRAM_PLANE_E;
 #endif

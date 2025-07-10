@@ -7,9 +7,9 @@ void midboss_reset(void)
 	midboss_invalidate = nullfunc_near;
 	midboss_render = nullfunc_near;
 	midboss_update = nullfunc_far;
-	#if (GAME == 4)
-		midboss_active = false;
-	#endif
+#if (GAME == 4)
+	midboss_active = false;
+#endif
 	midboss.hp = 0;
 }
 

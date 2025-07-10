@@ -8,13 +8,13 @@
 
 // Number of planes per image.
 typedef enum {
-	#if (GAME >= 4)
-		CDG_COLORS = 0,          	// 4 planes per image
-		CDG_COLORS_AND_ALPHA = 1,	// 5 planes per image
-		CDG_ALPHA = 2,           	// 1 plane per image
-	#else
-		CDG_COLORS_AND_ALPHA = 0,	// 5 planes per image
-	#endif
+#if (GAME >= 4)
+	CDG_COLORS = 0,          	// 4 planes per image
+	CDG_COLORS_AND_ALPHA = 1,	// 5 planes per image
+	CDG_ALPHA = 2,           	// 1 plane per image
+#else
+	CDG_COLORS_AND_ALPHA = 0,	// 5 planes per image
+#endif
 } cdg_plane_layout_t;
 
 // Doubles as both the file format header (describing all images in a file)
@@ -93,24 +93,24 @@ void pascal cdg_put_8(screen_x_t left, vram_y_t top, int slot);
 void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot);
 
 #if (GAME == 3)
-	// Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top),
-	// flipped horizontally using the [hflip_lut].
-	void pascal cdg_put_hflip_8(screen_x_t left, vram_y_t top, int slot);
+// Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top), flipped
+// horizontally using the [hflip_lut].
+void pascal cdg_put_hflip_8(screen_x_t left, vram_y_t top, int slot);
 
-	// Displays the CDG image in the given [slot] centered at
-	// (⌊center_x/8⌋*8, center_y), then applies a dissolve effect with the
-	// given [strength] (mod 8, 0 = none, 7 = full) on the E bitplane.
-	void pascal cdg_put_dissolve_e_8(
-		screen_x_t center_x, vram_y_t center_y, int slot, int strength
-	);
+// Displays the CDG image in the given [slot] centered at
+// (⌊center_x/8⌋*8, center_y), then applies a dissolve effect with the given
+// [strength] (mod 8, 0 = none, 7 = full) on the E bitplane.
+void pascal cdg_put_dissolve_e_8(
+	screen_x_t center_x, vram_y_t center_y, int slot, int strength
+);
 
-	// Assuming that the CDG image in the given [slot] was previously
-	// displayed centered at (⌊center_x/8⌋*8, center_y), this function clears
-	// the two lines at the bottom of that image, as well as the one line
-	// immediately below, from the VRAM's E plane.
-	void cdg_unput_for_upwards_motion_e_8(
-		screen_x_t center_x, vram_y_t center_y, int slot
-	);
+// Assuming that the CDG image in the given [slot] was previously displayed
+// centered at (⌊center_x/8⌋*8, center_y), this function clears the two lines
+// at the bottom of that image, as well as the one line immediately below, from
+// the VRAM's E plane.
+void cdg_unput_for_upwards_motion_e_8(
+	screen_x_t center_x, vram_y_t center_y, int slot
+);
 #endif
 // --------
 

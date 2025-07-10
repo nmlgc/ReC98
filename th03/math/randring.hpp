@@ -5,9 +5,9 @@ uint16_t pascal near randring1_next16_and(uint16_t mask);
 uint16_t pascal near randring2_next16_and(uint16_t mask);
 uint16_t pascal near randring2_next16_mod(uint16_t mask);
 #if (GAME == 3)
-	uint16_t far randring_far_next16(void);
-	uint16_t pascal far randring_far_next16_and(uint16_t mask);
-	uint16_t pascal far randring_far_next16_mod(uint16_t mask);
+uint16_t far randring_far_next16(void);
+uint16_t pascal far randring_far_next16_and(uint16_t mask);
+uint16_t pascal far randring_far_next16_mod(uint16_t mask);
 #endif
 
 /// Constrained random numbers

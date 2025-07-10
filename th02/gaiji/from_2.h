@@ -28,9 +28,9 @@
 // offset, as it may suggest that this also works for M and N (which it
 // doesn't). This was fixed in later games.
 #if (GAME == 2)
-	#define gb_MN_BUG gb_N_, gb_M_
+#define gb_MN_BUG gb_N_, gb_M_
 #else
-	#define gb_MN_BUG gb_M_, gb_N_
+#define gb_MN_BUG gb_M_, gb_N_
 #endif
 
 #define gaiji_boldfont(start) \

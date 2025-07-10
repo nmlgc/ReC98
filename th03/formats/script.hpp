@@ -13,10 +13,10 @@
 
 // Code generation… PORTERS: Remove.
 #if defined(__TURBOC__) && defined(__MSDOS__)
-	#undef _IS_DIG
-	#undef _IS_CTL
-	static const unsigned char _IS_DIG = 2;
-	static const unsigned char _IS_CTL = 32;
+#undef _IS_DIG
+#undef _IS_CTL
+static const unsigned char _IS_DIG = 2;
+static const unsigned char _IS_CTL = 32;
 #endif
 
 enum script_ret_t {
@@ -30,7 +30,7 @@ extern int script_param_number_default;
 	(iscntrl(c) || (c == ' '))
 
 #ifndef script_p
-	#error `script_p` not defined
+#error `script_p` not defined
 #endif
 
 // Reads up to 3 ASCII number digits from [script_p] and writes the resulting
@@ -98,8 +98,8 @@ void pascal near script_param_read_number_second(int& ret)
 // is an rvalue in the TH04/TH05 dialog code and an lvalue in the
 // TH03/TH04/TH05 cutscene code.
 #if defined(__TURBOC__) && defined(__MSDOS__)
-	#pragma warn -rch
-	#pragma warn -ccc
+#pragma warn -rch
+#pragma warn -ccc
 #endif
 
 #define script_op_bgm(stop_before_load, temp_c, temp_fn, temp_len) { \

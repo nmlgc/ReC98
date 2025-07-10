@@ -71,7 +71,7 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 /// this needless complexity.
 
 #if (HP_POINT_W != (PTN_QUARTER_W / 2))
-	#error Original code assumes HP_POINT_W == (PTN_QUARTER_W / 2)
+#error Original code assumes HP_POINT_W == (PTN_QUARTER_W / 2)
 #endif
 
 static const pixel_t HP_2POINT_W = PTN_QUARTER_W;

@@ -16,10 +16,10 @@
 #include "th04/main/stage/stage.hpp"
 
 #if (GAME == 5)
-	#include "th05/resident.hpp"
+#include "th05/resident.hpp"
 #else
-	#include "th04/playchar.h"
-	#include "th04/resident.hpp"
+#include "th04/playchar.h"
+#include "th04/resident.hpp"
 #endif
 
 // See tile.hpp for the reason why this declaration is necessary
@@ -48,7 +48,7 @@ extern const gaiji_th04_t gpEXTEND[];
 extern const gaiji_th04_t gpBONUS[];
 extern const gaiji_th04_t gpFULL_POWERUP[];
 #if (GAME == 5)
-	extern const gaiji_th04_t gpDREAMBONUS_MAX[];
+extern const gaiji_th04_t gpDREAMBONUS_MAX[];
 #endif
 
 // MODDERS: Keep this up-to-date!
@@ -60,18 +60,18 @@ extern unsigned char dissolve_sprite; // = 0
 extern int stage_title_len;
 extern int stage_bgm_title_len;
 #if (GAME == 4)
-	extern unsigned char stage_title_id;
+extern unsigned char stage_title_id;
 #endif
 
 // Pre-declarations, since we want some of the data to be function-static, but
 // still need to preserve the original order
 extern unsigned char titles_frame;
 #if (GAME == 4)
-	extern const shiftjis_t* BGM_TITLES[];
-	extern const shiftjis_t* STAGE_TITLES[];
-	#define stage_title (STAGE_TITLES[stage_title_id])
-	#define stage_bgm_title (BGM_TITLES[bgm_title_id])
-	#define boss_bgm_title stage_bgm_title
+extern const shiftjis_t* BGM_TITLES[];
+extern const shiftjis_t* STAGE_TITLES[];
+#define stage_title (STAGE_TITLES[stage_title_id])
+#define stage_bgm_title (BGM_TITLES[bgm_title_id])
+#define boss_bgm_title stage_bgm_title
 #endif
 // --------------------------
 
@@ -346,14 +346,14 @@ void pascal near overlay_titles_update_and_render(void)
 	} else {
 		if(frames == 0) {
 			dissolve_sprite = BB_TXT_IN_SPRITE;
-			#if (GAME == 4)
-				stage_title_id = (stage_id + 1);
-				bgm_title_id = ((stage_id * 2) + 1);
-				if(stage_id == 0 && playchar == PLAYCHAR_REIMU) {
-					stage_title_id = 0;
-					bgm_title_id = 0;
-				}
-			#endif
+#if (GAME == 4)
+			stage_title_id = (stage_id + 1);
+			bgm_title_id = ((stage_id * 2) + 1);
+			if(stage_id == 0 && playchar == PLAYCHAR_REIMU) {
+				stage_title_id = 0;
+				bgm_title_id = 0;
+			}
+#endif
 			stage_title_len = strlen(stage_title);
 			stage_bgm_title_len = strlen(stage_bgm_title);
 		}
@@ -413,12 +413,12 @@ inline void line_wipe(tram_y_t y) {
 }
 
 inline void near popup_put_points(const unsigned long &points) {
-	#if (GAME == 5)
-		hud_points_put(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, points);
-	#else
-		void pascal near popup_put_points_th04(unsigned long points);
-		popup_put_points_th04(points);
-	#endif
+#if (GAME == 5)
+	hud_points_put(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, points);
+#else
+	void pascal near popup_put_points_th04(unsigned long points);
+	popup_put_points_th04(points);
+#endif
 }
 
 void pascal near overlay_popup_update_and_render(void)
@@ -532,35 +532,35 @@ void pascal near overlay_popup_update_and_render(void)
 }
 
 #if (GAME == 4)
-	void pascal near popup_put_points_th04(unsigned long points)
-	{
-		int i;
-		bool16 past_leading_zeroes;
-		gaiji_th04_t buf[SCORE_DIGITS + 1];
-		unsigned long divisor = 1000000; // Must match SCORE_DIGITS!
-		unsigned long digit;
+void pascal near popup_put_points_th04(unsigned long points)
+{
+	int i;
+	bool16 past_leading_zeroes;
+	gaiji_th04_t buf[SCORE_DIGITS + 1];
+	unsigned long divisor = 1000000; // Must match SCORE_DIGITS!
+	unsigned long digit;
 
-		i = 0;
-		past_leading_zeroes = false;
-		while(divisor > 1) {
-			digit = (points / divisor);
-			points = (points % divisor);
-			past_leading_zeroes |= digit;
-			if(past_leading_zeroes) {
-				buf[i] = static_cast<gaiji_th04_t>(gb_0_ + digit);
-			} else {
-				buf[i] = g_EMPTY;
-			}
-			divisor /= 10;
-			i++;
+	i = 0;
+	past_leading_zeroes = false;
+	while(divisor > 1) {
+		digit = (points / divisor);
+		points = (points % divisor);
+		past_leading_zeroes |= digit;
+		if(past_leading_zeroes) {
+			buf[i] = static_cast<gaiji_th04_t>(gb_0_ + digit);
+		} else {
+			buf[i] = g_EMPTY;
 		}
-		// (ones)
-		buf[SCORE_DIGITS - 2] = static_cast<gaiji_th04_t>(gb_0_ + points);
-		buf[SCORE_DIGITS - 1] = gb_0_;  // ("continues used" digit)
-		buf[SCORE_DIGITS - 0] = g_NULL; // (null terminator)
-
-		gaiji_putsa(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, buf, TX_WHITE);
+		divisor /= 10;
+		i++;
 	}
+	// (ones)
+	buf[SCORE_DIGITS - 2] = static_cast<gaiji_th04_t>(gb_0_ + points);
+	buf[SCORE_DIGITS - 1] = gb_0_;  // ("continues used" digit)
+	buf[SCORE_DIGITS - 0] = g_NULL; // (null terminator)
+
+	gaiji_putsa(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, buf, TX_WHITE);
+}
 #endif
 // ----------------------------------------------------------------------------
 
@@ -572,7 +572,7 @@ extern nearfunc_t_near overlay2;
 extern unsigned char titles_frame;
 extern unsigned long overlay_popup_bonus;
 #if (GAME == 5)
-	extern shiftjis_t *stage_title;
-	extern shiftjis_t *stage_bgm_title;
-	extern shiftjis_t *boss_bgm_title;
+extern shiftjis_t *stage_title;
+extern shiftjis_t *stage_bgm_title;
+extern shiftjis_t *boss_bgm_title;
 #endif

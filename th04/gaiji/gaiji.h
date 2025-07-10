@@ -19,10 +19,10 @@ typedef enum {
 	gs_DOUBLE_EXCLAMATION, // ‼
 	gs_EXCLAMATION_QUESTION, // ⁉
 
-	#if (GAME == 5)
-		ga_RETURN_KEY = 0x1C,
-		ga_RETURN_KEY_last = (ga_RETURN_KEY + RETURN_KEY_CELS - 1),
-	#endif
+#if (GAME == 5)
+	ga_RETURN_KEY = 0x1C,
+	ga_RETURN_KEY_last = (ga_RETURN_KEY + RETURN_KEY_CELS - 1),
+#endif
 
 	gaiji_bar(0x20),
 

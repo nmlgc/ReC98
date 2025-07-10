@@ -2,39 +2,39 @@
 
 #include "th02/snd/impl.hpp"
 #if (GAME >= 4)
-	#include "libs/master.lib/master.hpp"
-	#include "th04/snd/snd.h"
+#include "libs/master.lib/master.hpp"
+#include "th04/snd/snd.h"
 
-	// MODDERS: Just replace with [snd_se_playing].
-	inline uint16_t for_current(void) {
-		_BL = snd_se_playing;
-		_BH ^= _BH;
-		return _BX;
-	}
+// MODDERS: Just replace with [snd_se_playing].
+inline uint16_t for_current(void) {
+	_BL = snd_se_playing;
+	_BH ^= _BH;
+	return _BX;
+}
 
-	inline void driver_play(unsigned char &se) {
-		_AL = snd_se_playing;
-		if(snd_se_mode != SND_SE_BEEP) {
-			_AH = PMD_SE_PLAY;
-			geninterrupt(PMD);
-		} else {
-			_AH ^= _AH;
-			bgm_sound(_AX);
-		}
-	}
-#else
-	#include "th02/snd/snd.h"
-
-	// MODDERS: Just replace with [snd_se_playing].
-	inline uint16_t for_current(void) {
-		return snd_se_playing;
-	}
-
-	inline void driver_play(unsigned char &se) {
+inline void driver_play(unsigned char &se) {
+	_AL = snd_se_playing;
+	if(snd_se_mode != SND_SE_BEEP) {
 		_AH = PMD_SE_PLAY;
-		_AL = se;
 		geninterrupt(PMD);
+	} else {
+		_AH ^= _AH;
+		bgm_sound(_AX);
 	}
+}
+#else
+#include "th02/snd/snd.h"
+
+// MODDERS: Just replace with [snd_se_playing].
+inline uint16_t for_current(void) {
+	return snd_se_playing;
+}
+
+inline void driver_play(unsigned char &se) {
+	_AH = PMD_SE_PLAY;
+	_AL = se;
+	geninterrupt(PMD);
+}
 #endif
 
 void DEFCONV snd_se_play(int new_se)
@@ -51,7 +51,7 @@ void DEFCONV snd_se_play(int new_se)
 	}
 }
 #if (GAME >= 4)
-	#pragma codestring "\x90"
+#pragma codestring "\x90"
 #endif
 
 void snd_se_update(void)

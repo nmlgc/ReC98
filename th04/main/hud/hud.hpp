@@ -10,21 +10,20 @@
 void pascal hud_hp_put(int bar_value);
 
 #if (GAME == 5)
-	// Prints [points] using the bold gaiji font, right-aligned at
-	// 	([left+8], [y]),
-	// in white, using up to 7 digits (8 if the "continue" digit is included).
-	// Larger numbers will overflow the most significant digit into the A-Z
-	// range.
-	void pascal hud_points_put(
-		utram_x_t left, utram_y_t y, unsigned long points
-	);
+// Prints [points] using the bold gaiji font, right-aligned at
+// 	([left+8], [y]),
+// in white, using up to 7 digits (8 if the "continue" digit is included).
+// Larger numbers will overflow the most significant digit into the A-Z range.
+void pascal hud_points_put(
+	utram_x_t left, utram_y_t y, unsigned long points
+);
 
-	// Prints [val] using the bold gaiji font, right-aligned at
-	// 	([left+8], [y]),
-	// with the given attribute.
-	void pascal hud_5_digit_put(
-		utram_x_t left, utram_y_t y, uint16_t val, tram_atrb2 atrb
-	);
+// Prints [val] using the bold gaiji font, right-aligned at
+// 	([left+8], [y]),
+// with the given attribute.
+void pascal hud_5_digit_put(
+	utram_x_t left, utram_y_t y, uint16_t val, tram_atrb2 atrb
+);
 #endif
 // ---------
 

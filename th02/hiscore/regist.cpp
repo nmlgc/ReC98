@@ -1,7 +1,7 @@
 #include "th02/hiscore/regist.h"
 #include "th02/main/playfld.hpp"
 #if (BINARY == 'M')
-	#include "th02/main/stage/stage.hpp"
+#include "th02/main/stage/stage.hpp"
 #endif
 #include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
@@ -95,14 +95,14 @@ void scoredat_defaults_set(void)
 	for(int i = 0; i < SCOREDAT_PLACES; i++) {
 		int c;
 
+#if (BINARY == 'M')
 		// ZUN bloat: Probably leftover debug code? This function only ever
 		// gets called if HUUHI.DAT doesn't exist, in which case [hi] can't be
 		// anything other than zero-initialized, and all code that would write
 		// to [cleared] immediately saves this file afterward.
 		// (Also, this could have been done outside the loop!1!!)
-		#if (BINARY == 'M')
-			hi.score.cleared = 0;
-		#endif
+		hi.score.cleared = 0;
+#endif
 
 		hi.score.score[i] = (10000 - (i * 1000));
 		hi.score.stage[i] = (MAIN_STAGE_COUNT - (i >> 1));
@@ -255,10 +255,10 @@ void regist_menu(void)
 	// former binary. The verdict screen also needs the multiplied and
 	// continue-added value and is always shown before this menu, so it *kinda*
 	// makes sense? (Counted as bloat in the header comment.)
-	#if (BINARY == 'M')
-		score *= 10;
-		score += resident->continues_used;
-	#endif
+#if (BINARY == 'M')
+	score *= 10;
+	score += resident->continues_used;
+#endif
 
 	if(hi.score.score[SCOREDAT_PLACES - 1] > score) {
 		scores_put(-1);
@@ -286,11 +286,11 @@ void regist_menu(void)
 
 	// ZUN bloat: Could have also been turned into a parameter to avoid
 	// compiling this twice.
-	#if (BINARY == 'E')
-		hi.score.stage[place] = STAGE_ALL;
-	#else
-		hi.score.stage[place] = (stage_id + 1);
-	#endif
+#if (BINARY == 'E')
+	hi.score.stage[place] = STAGE_ALL;
+#else
+	hi.score.stage[place] = (stage_id + 1);
+#endif
 
 	getdate(&hi.score.date[place]);
 	hi.score.shottype[place] = resident->shottype;

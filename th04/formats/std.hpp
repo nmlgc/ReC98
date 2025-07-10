@@ -6,12 +6,12 @@
 extern uint8_t __seg* std_seg;
 
 #if (GAME == 5)
-	// Within [std_seg]. TH05 doubles the map section ID so that this variable
-	// can be "directly" used as the byte offset into [TILE_SECTION_OFFSETS],
-	// saving a grand total of one instruction for the lookup. *shrug*
-	extern int std_map_section_p;
+// Within [std_seg]. TH05 doubles the map section ID so that this variable can
+// be "directly" used as the byte offset into [TILE_SECTION_OFFSETS], saving a
+// grand total of one instruction for the lookup. *shrug*
+extern int std_map_section_p;
 #else
-	extern int std_map_section_id; // Within [std_seg]
+extern int std_map_section_id; // Within [std_seg]
 #endif
 
 extern SubpixelLength8 near* std_scroll_speed; // Within [std_seg]

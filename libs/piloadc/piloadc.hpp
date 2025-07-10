@@ -9,9 +9,9 @@
 #define PILOAD_ERR_NOT_SUPPORTED -32
 
 #if defined(__LARGE__) || defined(__HUGE__)
-	#define PiLoad PiLoadL
+#define PiLoad PiLoadL
 #elif defined(__COMPACT__)
-	#define PiLoad PiLoadC
+#define PiLoad PiLoadC
 #endif
 
 extern "C" int __cdecl PiLoad(

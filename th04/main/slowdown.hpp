@@ -6,8 +6,8 @@ extern bool turbo_mode;
 extern unsigned int slowdown_factor;
 
 #if (GAME == 5)
-	// Only written to in Slow Mode.
-	extern bool slowdown_caused_by_bullets;
+// Only written to in Slow Mode.
+extern bool slowdown_caused_by_bullets;
 #endif
 
 // Blocks until the number of VSync events given in [slowdown_factor] have

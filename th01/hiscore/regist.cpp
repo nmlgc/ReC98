@@ -209,18 +209,18 @@ void regist_put_initial(
 
 		#define col_and_fx_text (place_col | FX_WEIGHT_BOLD)
 
-		#if (BINARY == 'E')
-			#define place_col ((i == entered_place) \
-				? COL_REGIST_SELECTED \
-				: COL_REGIST_REGULAR \
-			)
-			#define top table_row_top(i)
-		#else
-			vc2 place_col = (
-				(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
-			);
-			vram_y_t top = table_row_top(i);
-		#endif
+#if (BINARY == 'E')
+		#define place_col ((i == entered_place) \
+			? COL_REGIST_SELECTED \
+			: COL_REGIST_REGULAR \
+		)
+		#define top table_row_top(i)
+#else
+		vc2 place_col = (
+			(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
+		);
+		vram_y_t top = table_row_top(i);
+#endif
 
 		switch(i) {
 		case 0:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_0);	break;
@@ -338,7 +338,7 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 }
 
 #if (BINARY == 'M')
-	bool regist_jump_to_enter = false;
+bool regist_jump_to_enter = false;
 #endif
 
 #define set_kanji_at(name, pos, kanji) { \
@@ -365,11 +365,11 @@ int regist_on_shot(
 
 	if(kanji != '\0') {
 		set_kanji_at(entered_name.ubyte, entered_name_cursor, kanji);
-		#if (BINARY == 'M')
-			if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
-				regist_jump_to_enter = true;
-			}
-		#endif
+#if (BINARY == 'M')
+		if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
+			regist_jump_to_enter = true;
+		}
+#endif
 		if(entered_name_cursor < (SCOREDAT_NAME_KANJI - 1)) {
 			entered_name_cursor++;
 		}
@@ -488,17 +488,17 @@ regist_input_ret_t regist_on_input(
 		if(regist_on_shot(left, top, entered_name, entered_name_cursor)) {
 			return RI_ENTER;
 		}
-		#if (BINARY == 'M')
-			if(regist_jump_to_enter) {
-				alphabet_put_at(left, top, false);
+#if (BINARY == 'M')
+		if(regist_jump_to_enter) {
+			alphabet_put_at(left, top, false);
 
-				left = ENTER_LEFT;
-				top = NUM_TOP;
+			left = ENTER_LEFT;
+			top = NUM_TOP;
 
-				alphabet_put_at(left, top, true);
-				regist_jump_to_enter = false;
-			}
-		#endif
+			alphabet_put_at(left, top, true);
+			regist_jump_to_enter = false;
+		}
+#endif
 		input_shot = false;
 	} else if(input_strike == true) {
 		regist_on_shot(LEFT_LEFT, NUM_TOP, entered_name, entered_name_cursor);
@@ -510,9 +510,9 @@ regist_input_ret_t regist_on_input(
 }
 
 #if (BINARY == 'E')
-	inline void scoredat_free(void) {
+inline void scoredat_free(void) {
 #else
-	void scoredat_free(void)
+void scoredat_free(void)
 {
 #endif
 	delete[] scoredat_names;

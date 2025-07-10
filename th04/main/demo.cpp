@@ -5,23 +5,23 @@
 #include "th04/main/frames.h"
 #include "th04/main/demo.hpp"
 #if (GAME == 5)
-	#include "th05/mem.h"
-	#include "th05/resident.hpp"
+#include "th05/mem.h"
+#include "th05/resident.hpp"
 #else
-	#include "th04/mem.h"
-	#include "th04/resident.hpp"
+#include "th04/mem.h"
+#include "th04/resident.hpp"
 #endif
 
 void near demo_load(void)
 {
-	#if (GAME == 5)
-		size_t size = ((resident->demo_num <= 4)
-			? sizeof(REC<DEMO_N>)
-			: sizeof(REC<DEMO_N_EXTRA>)
-		);
-	#else
-		#define size sizeof(REC<DEMO_N>)
-	#endif
+#if (GAME == 5)
+	size_t size = ((resident->demo_num <= 4)
+		? sizeof(REC<DEMO_N>)
+		: sizeof(REC<DEMO_N_EXTRA>)
+	);
+#else
+	#define size sizeof(REC<DEMO_N>)
+#endif
 
 	extern char near demo_fn[];
 	DemoBuf = static_cast<uint8_t *>(hmem_allocbyte(size));
@@ -39,11 +39,11 @@ void near DemoPlay(void)
 	#define BINARY_OP DEMOPLAY_BINARY_OP
 	extern const char BINARY_OP[];
 
-	#if (GAME == 5)
-		size_t shift_offset = (resident->demo_num <= 4) ? DEMO_N : DEMO_N_EXTRA;
-	#else
-		#define shift_offset DEMO_N
-	#endif
+#if (GAME == 5)
+	size_t shift_offset = (resident->demo_num <= 4) ? DEMO_N : DEMO_N_EXTRA;
+#else
+	#define shift_offset DEMO_N
+#endif
 
 	// In TH04, replay playback ends by pressing anything. In TH05, only the
 	// non-movement inputs (shot, bomb, cancel, OK, and Q) work.

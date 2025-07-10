@@ -23,11 +23,11 @@ void DEFCONV graph_putsa_fx(
 	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
 	register dots_t(GLYPH_FULL_W) glyph_row_tmp;
 
-	#if (GAME >= 3)
-		grcg_setcolor(GC_RMW, (col_and_fx & (COLOR_COUNT - 1)));
-	#else
-		grcg_setcolor(GC_RMW, col_and_fx);
-	#endif
+#if (GAME >= 3)
+	grcg_setcolor(GC_RMW, (col_and_fx & (COLOR_COUNT - 1)));
+#else
+	grcg_setcolor(GC_RMW, col_and_fx);
+#endif
 	outportb(0x68, 0xB); // CG ROM dot access
 
 	while(str[0]) {

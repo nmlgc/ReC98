@@ -4,15 +4,15 @@
 // to work around the resulting `Condition is always true/false` and
 // `Unreachable code` warnings.
 #ifndef gaiji_score_put
-	inline score_t gaiji_score_divide(
-		const score_t& score, const score_t& divisor, bool check_divisor
-	) {
-		if(check_divisor) {
-			return (divisor ? ((score / divisor) % 10) : (score % 10));
-		} else {
-			return ((score / divisor) % 10);
-		}
+inline score_t gaiji_score_divide(
+	const score_t& score, const score_t& divisor, bool check_divisor
+) {
+	if(check_divisor) {
+		return (divisor ? ((score / divisor) % 10) : (score % 10));
+	} else {
+		return ((score / divisor) % 10);
 	}
+}
 #endif
 
 #define gaiji_score_put_update( \

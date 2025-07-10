@@ -18,9 +18,9 @@ void pascal vector2_at(
 )
 {
 	_BX = angle;
-	#if (GAME == 5)
-		_BH ^= _BH;
-	#endif
+#if (GAME == 5)
+	_BH ^= _BH;
+#endif
 	_BX += _BX; // *= sizeof(short)
 	ret.x.v = polar_x_fast_unsafe(origin_x, length, _BX);
 	ret.y.v = polar_y_fast_unsafe(origin_y, length, _BX);

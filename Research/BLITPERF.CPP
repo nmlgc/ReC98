@@ -19,7 +19,7 @@ static const vc_t SPRITE_COL = 2;
 typedef dot_rect_t(16, SPRITE_H) sprite_rect_t;
 
 #ifndef CPU
-	#error CPU macro not defined
+#error CPU macro not defined
 #endif
 
 #define _(x) __(x)
@@ -259,13 +259,13 @@ void graph_clear(void)
 	GRCGStaticColor<static_cast<vc_t>(0)> grcg(GC_TDW);
 	_ES = SEG_PLANE_B;
 	_DI = 0;
-	#if (CPU == 386)
-		_CX = (PLANE_SIZE / sizeof(uint32_t));
-		asm { cld; db 0x66, 0xF3, 0xAB; } // REP STOSD
-	#else
-		_CX = (PLANE_SIZE / sizeof(uint16_t));
-		asm { cld; rep stosw; }
-	#endif
+#if (CPU == 386)
+	_CX = (PLANE_SIZE / sizeof(uint32_t));
+	asm { cld; db 0x66, 0xF3, 0xAB; } // REP STOSD
+#else
+	_CX = (PLANE_SIZE / sizeof(uint16_t));
+	asm { cld; rep stosw; }
+#endif
 }
 
 void Test::sprite_loop(test_func_t func)

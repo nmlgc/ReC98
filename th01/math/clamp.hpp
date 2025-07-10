@@ -32,13 +32,13 @@
 	}
 
 #ifdef __cplusplus
-	// This is, in fact, the only way to circumvent 16-bit promotion inside
-	// comparisons between two 8-bit values in C++. I kid you not.
-	static inline char ring_min() {
-		return 0;
-	}
+// This is, in fact, the only way to circumvent 16-bit promotion inside
+// comparisons between two 8-bit values in C++. I kid you not.
+static inline char ring_min() {
+	return 0;
+}
 #else
-	#define ring_min() 0
+#define ring_min() 0
 #endif
 
 #define ring_inc_range(val, ring_min, ring_max) { \
@@ -63,20 +63,20 @@
 }
 
 #if (GAME >= 4)
-	#define ring_dec_range(val, ring_min, ring_max) { \
-		if(val == (ring_min)) { \
-			(val) = ((ring_max) + 1); \
-		} \
-		(val)--; \
-	}
+#define ring_dec_range(val, ring_min, ring_max) { \
+	if(val == (ring_min)) { \
+		(val) = ((ring_max) + 1); \
+	} \
+	(val)--; \
+}
 #else
-	#define ring_dec_range(val, ring_min, ring_max) { \
-		if(val == (ring_min)) { \
-			(val) = (ring_max); \
-		} else { \
-			(val)--; \
-		} \
-	}
+#define ring_dec_range(val, ring_min, ring_max) { \
+	if(val == (ring_min)) { \
+		(val) = (ring_max); \
+	} else { \
+		(val)--; \
+	} \
+}
 #endif
 
 #define ring_dec(val, ring_end) \

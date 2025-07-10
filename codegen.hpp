@@ -36,8 +36,8 @@
 #include "platform.h"
 
 #if defined(__TURBOC__) && defined(__MSDOS__)
-	// Declared in <dos.h> in these compilers.
-	void __emit__(uint8_t __byte, ...);
+// Declared in <dos.h> in these compilers.
+void __emit__(uint8_t __byte, ...);
 #endif
 
 struct X86 {

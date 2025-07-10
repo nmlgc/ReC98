@@ -4,21 +4,21 @@
 #include "pc98.h"
 
 #if defined(__cplusplus)
-	extern Palette4 z_Palettes;
+extern Palette4 z_Palettes;
 
-	// Calls z_palette_set_show() for all colors in [pal].
-	void z_palette_set_all_show(const Palette4& pal);
+// Calls z_palette_set_show() for all colors in [pal].
+void z_palette_set_all_show(const Palette4& pal);
 
-	// Fades each hardware palette color from the given RGB value to its
-	// respective value in z_Palettes, blocking [step_ms] milliseconds at each
-	// of the 16 fade steps. If [keep] is nonzero for a specific color number,
-	// that color is excluded from the fade calculation and will stay at its
-	// z_Palettes value throughout the function.
-	void z_palette_fade_from(
-		svc_comp_t from_r, svc_comp_t from_g, svc_comp_t from_b,
-		vc2 keep[COLOR_COUNT],
-		unsigned int step_ms
-	);
+// Fades each hardware palette color from the given RGB value to its respective
+// value in z_Palettes, blocking [step_ms] milliseconds at each of the 16 fade
+// steps. If [keep] is nonzero for a specific color number, that color is
+// excluded from the fade calculation and will stay at its [z_Palettes] value
+// throughout the function.
+void z_palette_fade_from(
+	svc_comp_t from_r, svc_comp_t from_g, svc_comp_t from_b,
+	vc2 keep[COLOR_COUNT],
+	unsigned int step_ms
+);
 #endif
 
 // Sets the given hardware [col] to the given RGB value.

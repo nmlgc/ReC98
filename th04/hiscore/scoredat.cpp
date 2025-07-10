@@ -1,9 +1,9 @@
 #if (GAME == 5)
-	#include "th05/playchar.h"
-	typedef int playchar2;
+#include "th05/playchar.h"
+typedef int playchar2;
 #else
-	#include "th04/playchar.h"
-	typedef playchar_t playchar2;
+#include "th04/playchar.h"
+typedef playchar_t playchar2;
 #endif
 
 // ZUN bloat: Take [rank] as a parameter instead.
@@ -24,13 +24,13 @@ bool near hiscore_scoredat_load_both(void)
 bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 #endif
 {
-	#if (BINARY != 'E')
-		#define SCOREDAT_FN_0 SCOREDAT_FN
-		#define SCOREDAT_FN_1 SCOREDAT_FN
-	#else
-		extern const char SCOREDAT_FN_0[];
-		extern const char SCOREDAT_FN_1[];
-	#endif
+#if (BINARY != 'E')
+	#define SCOREDAT_FN_0 SCOREDAT_FN
+	#define SCOREDAT_FN_1 SCOREDAT_FN
+#else
+	extern const char SCOREDAT_FN_0[];
+	extern const char SCOREDAT_FN_1[];
+#endif
 
 	// ZUN bloat: Classic TOCTOU issue; file_ropen() does fail if the file
 	// doesn't exist. Doesn't have any consequences in this case though: In the
@@ -41,25 +41,23 @@ bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 		file_ropen(SCOREDAT_FN_1);
 
 		// ZUN bloat: The TH05 version is correct for both games.
-		#if (GAME == 5)
-			file_seek(
-				(((playchar * RANK_COUNT) + rank) * sizeof(scoredat_section_t)),
-				SEEK_SET
-			);
-		#else
-			file_seek((rank * sizeof(scoredat_section_t)), SEEK_SET);
-			if((BINARY != 'O') && (playchar != PLAYCHAR_REIMU)) {
-				file_seek((RANK_COUNT * sizeof(scoredat_section_t)), SEEK_CUR);
-			}
-		#endif
+#if (GAME == 5)
+		file_seek(
+			(((playchar * RANK_COUNT) + rank) * sizeof(scoredat_section_t)),
+			SEEK_SET
+		);
+#else
+		file_seek((rank * sizeof(scoredat_section_t)), SEEK_SET);
+		if((BINARY != 'O') && (playchar != PLAYCHAR_REIMU)) {
+			file_seek((RANK_COUNT * sizeof(scoredat_section_t)), SEEK_CUR);
+		}
+#endif
 		file_read(&hi, sizeof(scoredat_section_t));
 
-		#if (GAME == 4) && (BINARY == 'O')
-			file_seek(
-				((RANK_COUNT - 1) * sizeof(scoredat_section_t)), SEEK_CUR
-			);
-			file_read(&hi2, sizeof(scoredat_section_t));
-		#endif
+#if (GAME == 4) && (BINARY == 'O')
+		file_seek(((RANK_COUNT - 1) * sizeof(scoredat_section_t)), SEEK_CUR);
+		file_read(&hi2, sizeof(scoredat_section_t));
+#endif
 
 		file_close();
 		if(scoredat_decode() != 0) {

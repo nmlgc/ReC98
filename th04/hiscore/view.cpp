@@ -10,15 +10,15 @@
 #include "th04/snd/snd.h"
 #include "th04/shiftjis/fnshared.hpp"
 #if (GAME == 5)
-	#include "th05/resident.hpp"
-	#include "th05/hardware/input.h"
-	#include "th05/formats/pi.hpp"
-	#include "th05/op/op.hpp"
+#include "th05/resident.hpp"
+#include "th05/hardware/input.h"
+#include "th05/formats/pi.hpp"
+#include "th05/op/op.hpp"
 #else
-	#include "th04/resident.hpp"
-	#include "th04/hardware/input.h"
-	#include "th03/formats/pi.hpp"
-	#include "th04/op/op.hpp"
+#include "th04/resident.hpp"
+#include "th04/hardware/input.h"
+#include "th03/formats/pi.hpp"
+#include "th04/op/op.hpp"
 #endif
 
 enum hiscore_patnum_t {
@@ -26,10 +26,10 @@ enum hiscore_patnum_t {
 	// ---------
 	PAT_SCNUM = 0,
 	PAT_SCNUM_last = (PAT_SCNUM + 9),
-	#if (GAME == 5)
-		PAT_SCNUM_UNUSED,
-		PAT_SCNUM_UNUSED_last = (PAT_SCNUM_UNUSED + 9),
-	#endif
+#if (GAME == 5)
+	PAT_SCNUM_UNUSED,
+	PAT_SCNUM_UNUSED_last = (PAT_SCNUM_UNUSED + 9),
+#endif
 	// ---------
 	// hi_m.bft
 	// --------
@@ -69,12 +69,12 @@ static const screen_x_t SCORE_LEFT = (NAME_LEFT + NAME_PADDED_W);
 static const screen_x_t STAGE_LEFT = (SCORE_LEFT + SCORE_PADDED_W);
 
 #if (GAME == 5)
-	static const screen_y_t TABLE_1_TOP = 88;
-	static const screen_y_t TABLE_2_TOP = 224;
-	static const pixel_t PLACE_1_PADDING_BOTTOM = 8;
+static const screen_y_t TABLE_1_TOP = 88;
+static const screen_y_t TABLE_2_TOP = 224;
+static const pixel_t PLACE_1_PADDING_BOTTOM = 8;
 #else
-	static const screen_y_t TABLE_TOP = 96;
-	static const pixel_t PLACE_1_PADDING_BOTTOM = GLYPH_H;
+static const screen_y_t TABLE_TOP = 96;
+static const pixel_t PLACE_1_PADDING_BOTTOM = GLYPH_H;
 #endif
 
 static const screen_x_t RANK_LEFT = (RES_X - GLYPH_FULL_W - RANK_W);
@@ -92,7 +92,7 @@ unsigned char rank;
 unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
 bool extra_unlocked;
 #if (GAME == 4)
-	int8_t unused[48]; // ZUN bloat
+int8_t unused[48]; // ZUN bloat
 #endif
 /// -----
 
@@ -330,21 +330,21 @@ void near rank_render(void)
 	graph_accesspage(1);	pi_palette_apply(0);	pi_put_8(0, 0, 0);
 	graph_accesspage(0);	pi_palette_apply(0);	pi_put_8(0, 0, 0);
 
-	#if (GAME == 5)
-		for(playchar2 pc = PLAYCHAR_REIMU; pc < PLAYCHAR_COUNT; pc++) {
-			hiscore_scoredat_load_for(pc);
-			for(int place = 0; place < SCOREDAT_PLACES; place++) {
-				place_put(pc, place);
-			}
+#if (GAME == 5)
+	for(playchar2 pc = PLAYCHAR_REIMU; pc < PLAYCHAR_COUNT; pc++) {
+		hiscore_scoredat_load_for(pc);
+		for(int place = 0; place < SCOREDAT_PLACES; place++) {
+			place_put(pc, place);
 		}
-	#else
-		// ZUN bloat: No need to move calls out of the loop.
-		place_put(0);
-		for(int place = 1; place < (SCOREDAT_PLACES - 1); place++) {
-			place_put(place);
-		}
-		place_put(SCOREDAT_PLACES - 1);
-	#endif
+	}
+#else
+	// ZUN bloat: No need to move calls out of the loop.
+	place_put(0);
+	for(int place = 1; place < (SCOREDAT_PLACES - 1); place++) {
+		place_put(place);
+	}
+	place_put(SCOREDAT_PLACES - 1);
+#endif
 
 	static_assert(RANK_W == (2 * BFNT_ASSUMED_MAX_W));
 	#define RANK_HALF_W (RANK_W / 2)
@@ -375,9 +375,9 @@ void near regist_view_menu(void)
 	palette_black_out(1);
 	rank = resident->rank;
 
-	#if (GAME == 4)
-		hiscore_scoredat_load_both();
-	#endif
+#if (GAME == 4)
+	hiscore_scoredat_load_both();
+#endif
 	pi_load(0, HISCORE_BG_FN);
 	rank_render();
 	palette_black_in(1);
@@ -401,18 +401,18 @@ void near regist_view_menu(void)
 		if((key_det & INPUT_LEFT) && (rank != RANK_EASY)) {
 			rank--;
 			palette_black();
-			#if (GAME == 4)
-				hiscore_scoredat_load_both();
-			#endif
+#if (GAME == 4)
+			hiscore_scoredat_load_both();
+#endif
 			rank_render();
 			palette_black_in(1);
 		}
 		if((key_det & INPUT_RIGHT) && (rank < RANK_EXTRA)) {
 			rank++;
 			palette_black();
-			#if (GAME == 4)
-				hiscore_scoredat_load_both();
-			#endif
+#if (GAME == 4)
+			hiscore_scoredat_load_both();
+#endif
 			rank_render();
 			palette_black_in(1);
 		}

@@ -12,9 +12,9 @@ extern "C" {
 /// -----------------------------------
 
 #if GAME == 5
-	#include "th05/main/bullet/types.h"
+#include "th05/main/bullet/types.h"
 #else
-	#include "th04/main/bullet/types.h"
+#include "th04/main/bullet/types.h"
 #endif
 /// -----------------------------------
 
@@ -112,13 +112,13 @@ enum bullet_special_motion_t {
 	// every two frames.
 	BSM_GRAVITY,
 
-	#if (GAME == 5)
-		// Exact linear movement along a line; recalculates the bullet position
-		// based on the origin, angle, and distance every frame. Useful if
-		// regular incremental subpixel movement would introduce too much
-		// quantization noise.
-		BSM_EXACT_LINEAR,
-	#endif
+#if (GAME == 5)
+	// Exact linear movement along a line; recalculates the bullet position
+	// based on the origin, angle, and distance every frame. Useful if regular
+	// incremental subpixel movement would introduce too much quantization
+	// noise.
+	BSM_EXACT_LINEAR,
+#endif
 
 	BSM_NONE = 0xFF,
 };
@@ -169,8 +169,8 @@ static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
 
 #if GAME == 5
-	#define PELLET_COUNT 180
-	#define BULLET16_COUNT 220
+#define PELLET_COUNT 180
+#define BULLET16_COUNT 220
 
 // Returns the sprite ID of a directional or vector bullet sprite that
 // represents the given [angle], relative to [patnum_base]. While the function
@@ -184,8 +184,8 @@ extern "C++" unsigned char pascal near bullet_patnum_for_angle(
 // Turns every 4th bullet into a point item when zapping bullets.
 extern bool bullet_zap_drop_point_items;
 #else
-	#define PELLET_COUNT 240
-	#define BULLET16_COUNT 200
+#define PELLET_COUNT 240
+#define BULLET16_COUNT 200
 
 // Returns the offset for a directional bullet sprite that shows the given
 // [angle].
@@ -335,25 +335,25 @@ extern nearfunc_t_near bullet_template_tune;
 // bullets (which receive a move state of BMS_DECELERATE or BMS_REGULAR) or
 // "special" ones (which are BMS_SPECIAL).
 #if (GAME == 5)
-	void near bullets_add_regular(void);
-	void near bullets_add_special(void);
+void near bullets_add_regular(void);
+void near bullets_add_special(void);
 
-	// Only used for the revenge bullets fired from Stage 3 Alice's barrier.
-	void far bullets_add_regular_far(void);
+// Only used for the revenge bullets fired from Stage 3 Alice's barrier.
+void far bullets_add_regular_far(void);
 #else
-	// TH04 additionally uses pointless per-difficulty wrappers around these
-	// spawn functions that don't actually do anything difficulty-specific.
-	void pascal near bullets_add_regular_easy(void);
-	void pascal near bullets_add_regular_normal(void);
-	void pascal near bullets_add_regular_hard_lunatic(void);
-	void pascal near bullets_add_special_easy(void);
-	void pascal near bullets_add_special_normal(void);
-	void pascal near bullets_add_special_hard_lunatic(void);
+// TH04 additionally uses pointless per-difficulty wrappers around these spawn
+// functions that don't actually do anything difficulty-specific.
+void pascal near bullets_add_regular_easy(void);
+void pascal near bullets_add_regular_normal(void);
+void pascal near bullets_add_regular_hard_lunatic(void);
+void pascal near bullets_add_special_easy(void);
+void pascal near bullets_add_special_normal(void);
+void pascal near bullets_add_special_hard_lunatic(void);
 
-	// Set to the version of the wrapper functions above that match the
-	// current difficulty.
-	extern nearfunc_t_near bullets_add_regular;
-	extern nearfunc_t_near bullets_add_special;
+// Set to the version of the wrapper functions above that match the current
+// difficulty.
+extern nearfunc_t_near bullets_add_regular;
+extern nearfunc_t_near bullets_add_special;
 #endif
 
 // Further wrappers around the spawn functions that bypass base [speed] tuning

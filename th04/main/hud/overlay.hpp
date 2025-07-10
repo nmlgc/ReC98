@@ -6,7 +6,7 @@
 #include "th04/gaiji/gaiji.h"
 #include "th02/main/hud/overlay.hpp"
 #if (GAME == 5)
-	#include "shiftjis.hpp"
+#include "shiftjis.hpp"
 #endif
 
 extern nearfunc_t_near overlay1; // Rendered first
@@ -52,9 +52,9 @@ enum popup_id_t {
 	POPUP_ID_EXTEND = 1,
 	POPUP_ID_BONUS = 2,
 	POPUP_ID_FULL_POWERUP = 3,
-	#if (GAME == 5)
-		POPUP_ID_DREAMBONUS_MAX = 4,
-	#endif
+#if (GAME == 5)
+	POPUP_ID_DREAMBONUS_MAX = 4,
+#endif
 
 	_popup_id_t_FORCE_UINT8 = 0xFF
 };
@@ -76,9 +76,9 @@ inline void overlay_popup_show(popup_id_t popup_new) {
 
 extern unsigned char bgm_title_id;	// only used in TH04
 #if (GAME == 5)
-	extern shiftjis_t *stage_title;
-	extern shiftjis_t *stage_bgm_title;
-	extern shiftjis_t *boss_bgm_title;
+extern shiftjis_t *stage_title;
+extern shiftjis_t *stage_bgm_title;
+extern shiftjis_t *boss_bgm_title;
 #endif
 
 void near overlay_titles_invalidate(void);

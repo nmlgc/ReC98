@@ -136,65 +136,65 @@ typedef int16_t svc_comp2;
 // ------
 
 #ifdef __cplusplus
-	template <class ComponentType, int Range> union RGB {
-		struct {
-			ComponentType r, g, b;
-		} c;
-		ComponentType v[COMPONENT_COUNT];
+template <class ComponentType, int Range> union RGB {
+	struct {
+		ComponentType r, g, b;
+	} c;
+	ComponentType v[COMPONENT_COUNT];
 
-		// Yes, we actually need this function in certain cases where code
-		// generation calls for a 0 in the ComponentType.
-		static ComponentType min() {
-			return 0;
-		}
-		static ComponentType max() {
-			return (Range - 1);
-		}
-
-		void set(ComponentType r, ComponentType g, ComponentType b) {
-			this->c.r = r;
-			this->c.g = g;
-			this->c.b = b;
-		}
-	};
-
-	template <class RGBType> struct Palette {
-		RGBType colors[COLOR_COUNT];
-
-		static int range() {
-			return RGBType::Range;
-		}
-
-		RGBType& operator [](vc2 col) {
-			return colors[col];
-		}
-
-		const RGBType& operator [](vc2 col) const {
-			return colors[col];
-		}
-	};
-
-	typedef RGB<svc_comp_t, 16> RGB4;
-	typedef Palette<RGB4> Palette4;
-
-	#define palette_foreach(tmp_col, tmp_comp, func) { \
-		for(tmp_col = 0; tmp_col < COLOR_COUNT; tmp_col++) { \
-			for(tmp_comp = 0; tmp_comp < COMPONENT_COUNT; tmp_comp++) { \
-				func \
-			} \
-		} \
+	// Yes, we actually need this function in certain cases where code
+	// generation calls for a 0 in the ComponentType.
+	static ComponentType min() {
+		return 0;
+	}
+	static ComponentType max() {
+		return (Range - 1);
 	}
 
-	// Sets all components of all colors to the given grayscale [value].
-	#define palette_set_grayscale(dst, value, tmp_col, tmp_comp) \
-		palette_foreach(tmp_col, tmp_comp, { \
-			dst[tmp_col].v[tmp_comp] = value; \
-		})
+	void set(ComponentType r, ComponentType g, ComponentType b) {
+		this->c.r = r;
+		this->c.g = g;
+		this->c.b = b;
+	}
+};
 
-	#define palette_copy(dst, src, tmp_col, tmp_comp) \
-		palette_foreach(tmp_col, tmp_comp, { \
-			dst[tmp_col].v[tmp_comp] = src[tmp_col].v[tmp_comp]; \
-		})
+template <class RGBType> struct Palette {
+	RGBType colors[COLOR_COUNT];
+
+	static int range() {
+		return RGBType::Range;
+	}
+
+	RGBType& operator [](vc2 col) {
+		return colors[col];
+	}
+
+	const RGBType& operator [](vc2 col) const {
+		return colors[col];
+	}
+};
+
+typedef RGB<svc_comp_t, 16> RGB4;
+typedef Palette<RGB4> Palette4;
+
+#define palette_foreach(tmp_col, tmp_comp, func) { \
+	for(tmp_col = 0; tmp_col < COLOR_COUNT; tmp_col++) { \
+		for(tmp_comp = 0; tmp_comp < COMPONENT_COUNT; tmp_comp++) { \
+			func \
+		} \
+	} \
+}
+
+// Sets all components of all colors to the given grayscale [value].
+#define palette_set_grayscale(dst, value, tmp_col, tmp_comp) \
+	palette_foreach(tmp_col, tmp_comp, { \
+		dst[tmp_col].v[tmp_comp] = value; \
+	})
+
+#define palette_copy(dst, src, tmp_col, tmp_comp) \
+	palette_foreach(tmp_col, tmp_comp, { \
+		dst[tmp_col].v[tmp_comp] = src[tmp_col].v[tmp_comp]; \
+	})
 #endif
 /// --------
 

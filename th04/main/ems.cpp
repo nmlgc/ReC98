@@ -8,13 +8,13 @@
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
 #if (GAME == 5)
-	#include "th05/resident.hpp"
-	#include "th05/playchar.h"
-	#include "th05/shiftjis/fns.hpp"
+#include "th05/resident.hpp"
+#include "th05/playchar.h"
+#include "th05/shiftjis/fns.hpp"
 #else
-	#include "th04/resident.hpp"
-	#include "th04/playchar.h"
-	#include "th04/shiftjis/fns.hpp"
+#include "th04/resident.hpp"
+#include "th04/playchar.h"
+#include "th04/shiftjis/fns.hpp"
 #endif
 #include "th04/main/ems.hpp"
 
@@ -68,9 +68,9 @@ void near ems_allocate_and_preload_eyecatch(void)
 		rank = resident->rank;
 	}
 
-	#if (GAME == 4)
-		eyename[3] = ('0' + rank);
-	#endif
+#if (GAME == 4)
+	eyename[3] = ('0' + rank);
+#endif
 
 	Ems = nullptr;
 	if(!ems_exist() || (ems_space() < EMSSIZE)) {
@@ -98,13 +98,13 @@ void near bomb_bg_load__ems_preload_playchar_cdgs(void)
 	extern const char FACESET_MIMA_FN[];
 	extern const char FACESET_YUUKA_FN[];
 
-	#if (GAME == 5)
-		bbname[2] = ('0' + resident->playchar);
-		cdg_load_all_noalpha(CDG_BG_PLAYCHAR_BOMB, bbname);
-	#else
-		bbname[2] = resident->playchar_ascii;
-		cdg_load_single_noalpha(CDG_BG_PLAYCHAR_BOMB, bbname, 0);
-	#endif
+#if (GAME == 5)
+	bbname[2] = ('0' + resident->playchar);
+	cdg_load_all_noalpha(CDG_BG_PLAYCHAR_BOMB, bbname);
+#else
+	bbname[2] = resident->playchar_ascii;
+	cdg_load_single_noalpha(CDG_BG_PLAYCHAR_BOMB, bbname, 0);
+#endif
 
 	if(Ems) {
 		ems_write_cdg_color_planes(
@@ -118,16 +118,16 @@ void near bomb_bg_load__ems_preload_playchar_cdgs(void)
 }
 
 #if (GAME == 5)
-	void pascal near ems_preload_boss_faceset(const char *fn)
-	{
-		if(!Ems) {
-			return;
-		}
-		cdg_load_all(CDG_FACESET_BOSS, fn);
-		ems_transfer_cdgs_until_freed_slot(
-			EMS_FACESET_BOSS_OFFSET, CDG_FACESET_BOSS
-		);
+void pascal near ems_preload_boss_faceset(const char *fn)
+{
+	if(!Ems) {
+		return;
 	}
+	cdg_load_all(CDG_FACESET_BOSS, fn);
+	ems_transfer_cdgs_until_freed_slot(
+		EMS_FACESET_BOSS_OFFSET, CDG_FACESET_BOSS
+	);
+}
 #endif
 
 void near eyecatch_animate(void)

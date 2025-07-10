@@ -18,8 +18,8 @@
 #define TILE_BITS_H 4
 
 #if (GAME >= 4)
-	// No idea why ZUN just didn't go with the actually visible space of 384
-	// horizontal tiles. That's 8 wasted tiles per row that the game doesn't do
-	// anything with?
-	#define TILES_MEMORY_X (512 / TILE_W)
+// No idea why ZUN just didn't go with the actually visible space of 384
+// horizontal tiles. That's 8 wasted tiles per row that the game doesn't do
+// anything with?
+#define TILES_MEMORY_X (512 / TILE_W)
 #endif

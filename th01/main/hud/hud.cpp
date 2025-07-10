@@ -36,10 +36,10 @@ static const int16_t MAX_FX = (V_WHITE | FX_WEIGHT_BOLD);
 static const int16_t CUR_FX = (V_WHITE | FX_WEIGHT_BLACK);
 
 #if (PTN_QUARTER_W < GLYPH_FULL_W)
-	#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
+#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
 #endif
 #if (PTN_QUARTER_H < GLYPH_H)
-	#error Original code assumes PTN_QUARTER_H >= GLYPH_H
+#error Original code assumes PTN_QUARTER_H >= GLYPH_H
 #endif
 static const pixel_t COL_W = PTN_QUARTER_W;
 static const pixel_t ROW_H = PTN_QUARTER_H;
