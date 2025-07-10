@@ -9704,11 +9704,10 @@ loc_12A05:
 BOSS_BG_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@scoredat_recreate$qv procdesc near
+	@hiscore_scoredat_load_for_cur$qv procdesc near
 SCORE_TEXT ends
 
 BOSS_FG_TEXT segment byte public 'CODE' use16
-include th04/formats/scoredat_main.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9928,7 +9927,7 @@ sub_12B71	endp
 sub_12CB5	proc near
 		push	bp
 		mov	bp, sp
-		call	_scoredat_load_for_cur
+		call	@hiscore_scoredat_load_for_cur$qv
 		cmp	_turbo_mode, 0
 		jz	short loc_12CC5
 		call	main_01:sub_12B71
@@ -9947,7 +9946,7 @@ sub_12CC7	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	_scoredat_load_for_cur
+		call	@hiscore_scoredat_load_for_cur$qv
 		xor	si, si
 		jmp	short loc_12CDD
 ; ---------------------------------------------------------------------------
@@ -30128,10 +30127,10 @@ _checkerboard checkerboard_t <>
 byte_23242	db 0
 		db    0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
-public _SCOREDAT_FN
+public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1
 _SCOREDAT_FN	db 'GENSOU.SCR',0
-aGensou_scr_0	db 'GENSOU.SCR',0
-aGensou_scr_1	db 'GENSOU.SCR',0
+_SCOREDAT_FN_0	db 'GENSOU.SCR',0
+_SCOREDAT_FN_1	db 'GENSOU.SCR',0
 aGensou_scr_2	db 'GENSOU.SCR',0
 public _group_fixedspeed
 _group_fixedspeed	db 0

@@ -46,15 +46,15 @@ extern scoredat_section_t hi2;
 /// ---------
 /// All of those write to and read from [hi], except where mentioned otherwise.
 
-// Decoding and encoding
+// Decoding and encoding. scoredat_decode() returns 0 if the contents of [hi]
+// match its checksum.
 #if (BINARY == 'M') && (GAME == 4)
-void pascal near scoredat_decode(scoredat_section_t near *hi);
+uint8_t pascal near scoredat_decode(scoredat_section_t near *hi);
 void pascal near scoredat_encode(scoredat_section_t near *hi);
 
 #define scoredat_decode_func() scoredat_decode(&hi)
 #define scoredat_encode_func() scoredat_encode(&hi)
 #else
-// Returns 0 if the contents of [hi] match its checksum.
 // ZUN bloat: The OP.EXE implementation decodes both [hi] and [hi2], even in
 // TH05 where [hi2] is not referenced anywhere else. Using the MAIN.EXE variant
 // throughout the game would be much saner.

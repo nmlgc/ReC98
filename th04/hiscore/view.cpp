@@ -3,7 +3,7 @@
 
 #pragma option -zPop_01
 #include "th04/formats/scoredat/recreate.cpp"
-#include "th04/hiscore/scoredat.cpp"
+#include "th04/hiscore/score_ld.cpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/bfnt.h"
