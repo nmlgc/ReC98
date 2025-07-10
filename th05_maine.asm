@@ -145,67 +145,9 @@ maine_01_TEXT segment byte public 'CODE' use16
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@scoredat_decode$qv procdesc near
-	@scoredat_encode$qv procdesc near
 	@HISCORE_SCOREDAT_LOAD_FOR$QI procdesc pascal near \
 		playchar:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B6A3	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	scoredat_encode_func
-		push	ds
-		push	offset aGensou_scr_2 ; "GENSOU.SCR"
-		call	file_append
-		mov	al, _playchar
-		mov	ah, 0
-		imul	ax, 5
-		mov	dl, _rank
-		mov	dh, 0
-		add	ax, dx
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		xor	si, si
-		jmp	short loc_B723
-; ---------------------------------------------------------------------------
-
-loc_B6E2:
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	scoredat_decode_func
-		call	scoredat_encode_func
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		inc	si
-
-loc_B723:
-		cmp	si, RANK_COUNT * PLAYCHAR_COUNT
-		jl	short loc_B6E2
-		call	file_close
-		pop	si
-		pop	bp
-		retn
-sub_B6A3	endp
-
+	@hiscore_scoredat_save$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2131,12 +2073,12 @@ loc_C5B8:
 ; ---------------------------------------------------------------------------
 
 loc_C5BE:
-		call	sub_B6A3
+		call	@hiscore_scoredat_save$qv
 		jmp	short loc_C5CD
 ; ---------------------------------------------------------------------------
 
 loc_C5C3:
-		call	sub_B6A3
+		call	@hiscore_scoredat_save$qv
 		call	@input_wait_for_change$qi pascal, 0
 
 loc_C5CD:
@@ -6094,10 +6036,10 @@ include th04/hiscore/alphabet[data].asm
 byte_11621	db 0
 public _entered_name_cursor
 _entered_name_cursor	dw 0
-public _SCOREDAT_FN
+public _SCOREDAT_FN, _SCOREDAT_FN_2
 _SCOREDAT_FN	db 'GENSOU.SCR',0
 include th05/formats/scoredat_load_for[data].asm
-aGensou_scr_2	db 'GENSOU.SCR',0
+_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum_bft	db 'scnum.bft',0
 aSctm0_bft	db 'sctm0.bft',0
