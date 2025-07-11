@@ -53,11 +53,7 @@ struct CDG {
 	}
 };
 
-#if (GAME >= 4)
-	static const int CDG_SLOT_COUNT = 64;
-#else
-	static const int CDG_SLOT_COUNT = 32;
-#endif
+static const int CDG_SLOT_COUNT = ((GAME >= 4) ? 64 : 32);
 
 extern CDG cdg_slots[CDG_SLOT_COUNT];
 

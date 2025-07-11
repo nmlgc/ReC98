@@ -15,12 +15,7 @@ SPPoint pascal near shot_velocity_set(
 	SPPoint near* velocity, unsigned char angle
 );
 
-#if (GAME == 5)
-	static const int HITSHOT_FRAMES_PER_CEL = 3;
-#else
-	static const int HITSHOT_FRAMES_PER_CEL = 4;
-#endif
-
+static const int HITSHOT_FRAMES_PER_CEL = ((GAME == 5) ? 3 : 4);
 static const int HITSHOT_FRAMES = (HITSHOT_FRAMES_PER_CEL * HITSHOT_CELS);
 
 #if (GAME == 4)
@@ -82,11 +77,7 @@ struct Shot {
 	}
 };
 
-#if (GAME == 5)
-	#define SHOT_COUNT 64
-#else
-	#define SHOT_COUNT 68
-#endif
+static const int SHOT_COUNT = ((GAME == 5) ? 64 : 68);
 
 extern unsigned char shot_time;
 extern Shot near shots[SHOT_COUNT];

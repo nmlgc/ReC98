@@ -30,11 +30,7 @@ struct item_t {
 #define ITEM_H 16
 #define ITEM_PULL_SPEED 10
 
-#if GAME == 5
-	#define ITEM_COUNT 40
-#else
-	#define ITEM_COUNT 32
-#endif
+static const int ITEM_COUNT = ((GAME == 5) ? 40 : 32);
 
 extern item_t items[ITEM_COUNT];
 

@@ -38,11 +38,9 @@ static const uint32_t EMS_PLAYCHAR_BOMB_BG_OFFSET = 34000;
 static const uint32_t EMS_PLAYCHAR_BOMB_BG_END = (EMS_PLAYCHAR_BOMB_BG_OFFSET +
 	sizeof_planar_rect(BOMB_BG_W_MAX, BOMB_BG_H_MAX)
 );
-#if (GAME == 5)
-	static const uint32_t EMS_FACESET_PLAYCHAR_OFFSET = 100000;
-#else
-	static const uint32_t EMS_FACESET_PLAYCHAR_OFFSET = 94000;
-#endif
+static const uint32_t EMS_FACESET_PLAYCHAR_OFFSET = (
+	(GAME == 5) ? 100000 : 94000
+);
 static const uint32_t EMS_FACESET_PLAYCHAR_END = (EMS_FACESET_PLAYCHAR_OFFSET +
 	(FACESET_PLAYCHAR_COUNT * sizeof_planar_rect(FACE_W, FACE_H))
 );

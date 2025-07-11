@@ -16,11 +16,8 @@ struct circle_t {
 	pixel_t radius_delta;
 };
 
-#if (GAME == 5)
-	static const int CIRCLE_COUNT = 8;
-#else
-	static const int CIRCLE_COUNT = 16;
-#endif
+static const int CIRCLE_COUNT = ((GAME == 5) ? 8 : 16);
+
 extern circle_t circles[CIRCLE_COUNT];
 
 #define circle_init(p, center_x, center_y, radius_delta_) { \

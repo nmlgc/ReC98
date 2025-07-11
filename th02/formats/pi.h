@@ -1,11 +1,7 @@
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "defconv.h"
 
-#if GAME == 5
-	#define PI_SLOT_COUNT 8
-#else
-	#define PI_SLOT_COUNT 6
-#endif
+static const int PI_SLOT_COUNT = ((GAME == 5) ? 8 : 6);
 
 #define PI_W RES_X
 #define PI_H RES_Y
