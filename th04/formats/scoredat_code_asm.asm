@@ -46,22 +46,6 @@ scoredat_func SCOREDAT_DECODE
 		add	[bx], dl
 		mov	cx, size scoredat_t
 		xor	bx, bx
-	else
-		mov	ah, [bx+scoredat_section_t.key2]
-		add	bx, scoredat_section_t.score
-
-	@@decode:
-		mov	al, [bx+1]
-		ror	al, 3
-		xor	al, ah
-		add	al, [si+scoredat_section_t.key1]
-		add	[bx], al
-		inc	bx
-		loop	@@decode
-		mov	al, [si+scoredat_section_t.key1]
-		add	[bx], al
-		xor	bx, bx
-		mov	cx, size scoredat_t
 	endif
 
 	xor	dx, dx

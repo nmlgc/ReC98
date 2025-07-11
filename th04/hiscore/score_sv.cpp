@@ -31,7 +31,7 @@ void near hiscore_scoredat_save(void)
 	for(int i = 0; i < ((RANK_COUNT * PLAYCHAR_COUNT)); i++) {
 		file_seek((i * sizeof(scoredat_section_t)), SEEK_SET);
 		file_read(&hi, sizeof(scoredat_section_t));
-		scoredat_decode_func();
+		scoredat_decode(hi);
 		scoredat_encode_func();
 		file_seek((i * sizeof(scoredat_section_t)), SEEK_SET);
 		file_write(&hi, sizeof(scoredat_section_t));

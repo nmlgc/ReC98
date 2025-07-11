@@ -86,7 +86,7 @@ void near scoredat_recreate(void)
 		// section its own encraption key...
 		scoredat_encode_func();
 		file_write(&hi, sizeof(hi));
-		scoredat_decode_func();
+		scoredat_decode(hi);
 	}
 	file_close();
 }

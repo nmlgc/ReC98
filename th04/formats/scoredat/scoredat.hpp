@@ -50,22 +50,18 @@ extern scoredat_section_t hi2;
 
 // Decoding and encoding. scoredat_decode() returns 0 if the contents of [hi]
 // match its checksum.
-#if (BINARY == 'M') && (GAME == 4)
-uint8_t pascal near scoredat_decode(scoredat_section_t near *hi);
-void pascal near scoredat_encode(scoredat_section_t near *hi);
 
-#define scoredat_decode_func() scoredat_decode(&hi)
+#if ((GAME == 5) && (BINARY == 'M'))
+uint8_t pascal near scoredat_decode(void);
+#else
+uint8_t pascal near scoredat_decode(scoredat_section_t& section);
+#endif
+
+#if (BINARY == 'M') && (GAME == 4)
+void pascal near scoredat_encode(scoredat_section_t near *hi);
 #define scoredat_encode_func() scoredat_encode(&hi)
 #else
-// ZUN bloat: The OP.EXE implementation decodes both [hi] and [hi2], even in
-// TH05 where [hi2] is not referenced anywhere else. Using the MAIN.EXE variant
-// throughout the game would be much saner.
-// Also, [hi2] is only decoded if [hi] is valid.
-uint8_t pascal near scoredat_decode(void);
-
 void pascal near scoredat_encode(void);
-
-#define scoredat_decode_func scoredat_decode
 #define scoredat_encode_func scoredat_encode
 #endif
 

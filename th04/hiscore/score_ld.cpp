@@ -86,22 +86,27 @@ bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 		// because why should it, this is our job. But this means that it will
 		// render garbage data in both cases:
 		//
-		// • If Reimu/[hi] is corrupt, scoredat_decode() exits early and
-		//   doesn't decode [hi2]. The call site assumes that it got decoded,
-		//   though, and consequently renders garbage. The fact that [hi]
-		//   receives the default data from scoredat_recreate() doesn't even
-		//   matter because the corruption from [hi2] will most likely mess up
-		//   the entire screen.
+		// • If Reimu/[hi] is corrupt, we return and don't decode [hi2]. The
+		//   call site assumes that it got decoded, though, and consequently
+		//   renders garbage. The fact that [hi] receives the default data from
+		//   scoredat_recreate() doesn't even matter because the corruption
+		//   from [hi2] will most likely mess up the entire screen.
 		//
 		// • If Marisa/[hi2] is corrupt, [hi2] did get decoded, but still
 		//   carries the same garbage data that failed decoding.
 		//
 		// Both sections then only get loaded correctly on the next call to
 		// this function.
-		if(scoredat_decode_func() != 0) {
+		if(scoredat_decode(hi) != 0) {
 			scoredat_recreate();
 			return recreated;
 		}
+#if (GAME == 4) && (BINARY == 'O')
+		if(scoredat_decode(hi2) != 0) {
+			scoredat_recreate();
+			return recreated;
+		}
+#endif
 	} else {
 		// Same TH04 landmine as above.
 		scoredat_recreate();
