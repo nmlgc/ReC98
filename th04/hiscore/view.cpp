@@ -86,7 +86,6 @@ static const screen_y_t RANK_TOP = (RES_Y - (GLYPH_H / 2) - GLYPH_H);
 scoredat_section_t hi;
 scoredat_section_t hi2;
 
-unsigned char rank;
 unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
 bool extra_unlocked;
 /// -----
@@ -280,7 +279,7 @@ void pascal near place_put(
 }
 #endif
 
-void near rank_animate(void)
+void pascal near rank_animate(rank_t rank)
 {
 	bgimage.write(0, 0);
 
@@ -290,9 +289,7 @@ void near rank_animate(void)
 
 	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
 #if (GAME == 5)
-		hiscore_scoredat_load_for(
-			static_cast<playchar_t>(pc), static_cast<rank_t>(rank)
-		);
+		hiscore_scoredat_load_for(static_cast<playchar_t>(pc), rank);
 		for(int place = 0; place < SCOREDAT_PLACES; place++) {
 			place_put(static_cast<playchar_t>(pc), place);
 		}
@@ -332,10 +329,10 @@ void near regist_view_menu(void)
 	snd_kaja_func(KAJA_SONG_FADE, -128);
 
 	palette_black_out(1);
-	rank = resident->rank;
+	rank_t rank = static_cast<rank_t>(resident->rank);
 
 	GrpSurface_LoadPI(bgimage, &Palettes, HISCORE_BG_FN);
-	rank_animate();
+	rank_animate(rank);
 
 	while(1) {
 		// ZUN bug: The TH04 version of this function doesn't address the PC-98
@@ -350,14 +347,14 @@ void near regist_view_menu(void)
 			break;
 		}
 		if((key_det & INPUT_LEFT) && (rank != RANK_EASY)) {
-			rank--;
+			rank = static_cast<rank_t>(rank - 1);
 			palette_settone(0);
-			rank_animate();
+			rank_animate(rank);
 		}
 		if((key_det & INPUT_RIGHT) && (rank < RANK_EXTRA)) {
-			rank++;
+			rank = static_cast<rank_t>(rank + 1);
 			palette_settone(0);
-			rank_animate();
+			rank_animate(rank);
 		}
 	}
 
@@ -392,8 +389,7 @@ void near cleardata_load(void)
 	extra_unlocked = false;
 	for(int playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
 		extra_playable_with[playchar] = false;
-		rank = RANK_EASY;
-		while(rank < RANK_COUNT) {
+		for(int rank = RANK_EASY; rank < RANK_COUNT; rank++) {
 			if(hiscore_scoredat_load_for(
 				static_cast<playchar_t>(playchar), static_cast<rank_t>(rank)
 			)) {
@@ -407,16 +403,13 @@ void near cleardata_load(void)
 				extra_unlocked |= cleared_with[playchar][rank];
 				extra_playable_with[playchar] |= cleared_with[playchar][rank];
 			}
-			rank++;
 		}
 	}
-	rank = resident->rank;
 }
 #else
 void near cleardata_load(void)
 {
-	rank = RANK_EASY;
-	while(rank < RANK_COUNT) {
+	for(int rank = RANK_EASY; rank < RANK_COUNT; rank++) {
 		if(hiscore_scoredat_load_both(static_cast<rank_t>(rank))) {
 			break;
 		}
@@ -435,8 +428,6 @@ void near cleardata_load(void)
 			static_assert(PLAYCHAR_COUNT == 2);
 			sd = &hi2.score;
 		}
-		rank++;
 	}
-	rank = resident->rank;
 }
 #endif
