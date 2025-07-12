@@ -280,9 +280,13 @@ void pascal near place_put(
 }
 #endif
 
-void near rank_render(void)
+void near rank_animate(void)
 {
 	bgimage.write(0, 0);
+
+#if (GAME == 4)
+	hiscore_scoredat_load_both(static_cast<rank_t>(rank));
+#endif
 
 	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
 #if (GAME == 5)
@@ -308,6 +312,8 @@ void near rank_render(void)
 		(RANK_LEFT + (1 * RANK_HALF_W)), RANK_TOP, (PAT_RANK_2 + (rank * 2))
 	);
 	#undef RANK_HALF_W
+
+	palette_black_in(1);
 }
 
 void near regist_view_menu(void)
@@ -328,12 +334,8 @@ void near regist_view_menu(void)
 	palette_black_out(1);
 	rank = resident->rank;
 
-#if (GAME == 4)
-	hiscore_scoredat_load_both(static_cast<rank_t>(rank));
-#endif
 	GrpSurface_LoadPI(bgimage, &Palettes, HISCORE_BG_FN);
-	rank_render();
-	palette_black_in(1);
+	rank_animate();
 
 	while(1) {
 		// ZUN bug: The TH04 version of this function doesn't address the PC-98
@@ -350,20 +352,12 @@ void near regist_view_menu(void)
 		if((key_det & INPUT_LEFT) && (rank != RANK_EASY)) {
 			rank--;
 			palette_settone(0);
-#if (GAME == 4)
-			hiscore_scoredat_load_both(static_cast<rank_t>(rank));
-#endif
-			rank_render();
-			palette_black_in(1);
+			rank_animate();
 		}
 		if((key_det & INPUT_RIGHT) && (rank < RANK_EXTRA)) {
 			rank++;
 			palette_settone(0);
-#if (GAME == 4)
-			hiscore_scoredat_load_both(static_cast<rank_t>(rank));
-#endif
-			rank_render();
-			palette_black_in(1);
+			rank_animate();
 		}
 	}
 
