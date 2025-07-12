@@ -3,13 +3,11 @@
 
 #if (GAME == 5)
 #include "th05/playchar.h"
-typedef int playchar2;
 #else
 #if ((GAME == 4) && (BINARY == 'M'))
 #include "th04/resident.hpp"
 #endif
 #include "th04/playchar.h"
-typedef playchar_t playchar2;
 #endif
 
 // ZUN bloat: Take [rank] as a parameter instead.
@@ -36,8 +34,7 @@ bool near hiscore_scoredat_load_both(void)
 // Loads the score data for the given [playchar] at the global [rank] into
 // [hi]. Returns `false` if the data was loaded and decoded correctly, or
 // `true` if the defaults were recreated.
-// ZUN bloat: Use the regular `playchar_t` type.
-bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
+bool pascal near hiscore_scoredat_load_for(playchar_t playchar)
 #endif
 #endif
 {

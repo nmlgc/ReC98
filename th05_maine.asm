@@ -147,8 +147,8 @@ maine_01_TEXT segment byte public 'CODE' use16
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@HISCORE_SCOREDAT_LOAD_FOR$QI procdesc pascal near \
-		playchar:word
+	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T procdesc pascal near \
+		playchar:byte
 	@hiscore_scoredat_save$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1729,7 +1729,7 @@ loc_C273:
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jz	short loc_C289
-		call	@hiscore_scoredat_load_for$qi pascal, [bp+var_4]
+		call	@hiscore_scoredat_load_for$q10playchar_t pascal, [bp+var_4]
 		push	[bp+var_4]
 		call	sub_BCD3
 
@@ -1741,7 +1741,7 @@ loc_C28C:
 		jl	short loc_C273
 		mov	al, _playchar
 		mov	ah, 0
-		call	@hiscore_scoredat_load_for$qi pascal, ax
+		call	@hiscore_scoredat_load_for$q10playchar_t pascal, ax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C2AD

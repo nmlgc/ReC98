@@ -191,7 +191,7 @@ void pascal near stage_put(
 }
 
 #if (GAME == 5)
-void pascal near place_put(playchar2 playchar, int place)
+void pascal near place_put(playchar_t playchar, int place)
 {
 	screen_x_t left;
 	screen_y_t top;
@@ -286,9 +286,9 @@ void near rank_render(void)
 
 	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
 #if (GAME == 5)
-		hiscore_scoredat_load_for(pc);
+		hiscore_scoredat_load_for(static_cast<playchar_t>(pc));
 		for(int place = 0; place < SCOREDAT_PLACES; place++) {
-			place_put(pc, place);
+			place_put(static_cast<playchar_t>(pc), place);
 		}
 #else
 		for(int place = 0; place < SCOREDAT_PLACES; place++) {
@@ -398,7 +398,7 @@ void near cleardata_load(void)
 		extra_playable_with[playchar] = false;
 		rank = RANK_EASY;
 		while(rank < RANK_COUNT) {
-			if(hiscore_scoredat_load_for(playchar)) {
+			if(hiscore_scoredat_load_for(static_cast<playchar_t>(playchar))) {
 				break;
 			}
 			cleared_with[playchar][rank] = hi.score.cleared;
