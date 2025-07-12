@@ -1,5 +1,5 @@
 // Leaves [hi] in encoded state.
-void near hiscore_scoredat_save(void)
+void pascal near hiscore_scoredat_save(rank_t rank)
 {
 	scoredat_encode(hi);
 

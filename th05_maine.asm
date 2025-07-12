@@ -147,9 +147,10 @@ maine_01_TEXT segment byte public 'CODE' use16
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T procdesc pascal near \
-		playchar:byte
-	@hiscore_scoredat_save$qv procdesc near
+	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T6RANK_T procdesc pascal near \
+		playchar:byte, rank:byte
+	@HISCORE_SCOREDAT_SAVE$Q6RANK_T procdesc pascal near \
+		rank:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1729,7 +1730,7 @@ loc_C273:
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jz	short loc_C289
-		call	@hiscore_scoredat_load_for$q10playchar_t pascal, [bp+var_4]
+		call	@hiscore_scoredat_load_for$q10playchar_t6rank_t pascal, [bp+var_4], word ptr _rank
 		push	[bp+var_4]
 		call	sub_BCD3
 
@@ -1741,7 +1742,7 @@ loc_C28C:
 		jl	short loc_C273
 		mov	al, _playchar
 		mov	ah, 0
-		call	@hiscore_scoredat_load_for$q10playchar_t pascal, ax
+		call	@hiscore_scoredat_load_for$q10playchar_t6rank_t pascal, ax, word ptr _rank
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C2AD
@@ -2072,12 +2073,12 @@ loc_C5B8:
 ; ---------------------------------------------------------------------------
 
 loc_C5BE:
-		call	@hiscore_scoredat_save$qv
+		call	@hiscore_scoredat_save$q6rank_t pascal, word ptr _rank
 		jmp	short loc_C5CD
 ; ---------------------------------------------------------------------------
 
 loc_C5C3:
-		call	@hiscore_scoredat_save$qv
+		call	@hiscore_scoredat_save$q6rank_t pascal, word ptr _rank
 		call	@input_wait_for_change$qi pascal, 0
 
 loc_C5CD:

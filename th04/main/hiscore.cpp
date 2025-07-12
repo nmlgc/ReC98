@@ -1,4 +1,5 @@
 #include "th04/main/hiscore.hpp"
+#include "th04/main/rank.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/slowdown.hpp"
@@ -82,12 +83,12 @@ shift:
 		hi.score.g_stage[entered_place] = gb_1;
 	}
 
-	hiscore_scoredat_save();
+	hiscore_scoredat_save(static_cast<rank_t>(rank));
 }
 
 void near hiscore_continue_enter(void)
 {
-	hiscore_scoredat_load_for_cur();
+	hiscore_scoredat_load_for_cur(static_cast<rank_t>(rank));
 	if(turbo_mode) {
 		hiscore_continue_enter_raw();
 	}
@@ -95,7 +96,7 @@ void near hiscore_continue_enter(void)
 
 void near hiscore_load(void)
 {
-	hiscore_scoredat_load_for_cur();
+	hiscore_scoredat_load_for_cur(static_cast<rank_t>(rank));
 	for(int i = 0; i < SCORE_DIGITS; i++) {
 		hiscore.digits[i] = (hi.score.g_score[0].digits[i] - gb_0);
 	}

@@ -10,31 +10,28 @@
 #include "th04/playchar.h"
 #endif
 
-// ZUN bloat: Take [rank] as a parameter instead.
-extern unsigned char rank;
-
 #if ((GAME == 4) && (BINARY == 'M'))
 #define recreated
 #define loaded
-// Loads the score data for the current resident player character at the global
+// Loads the score data for the current resident player character at the given
 // [rank] into [hi], recreating the defaults if necessary.
 // ZUN bloat: Completely redundant.
-void near hiscore_scoredat_load_for_cur(void)
+void pascal near hiscore_scoredat_load_for_cur(rank_t rank)
 #else
 #define recreated true
 #define loaded false
 #if (GAME == 4) && (BINARY == 'O')
-// Loads the score data for both characters at the global [rank] into [hi] and
+// Loads the score data for both characters at the given [rank] into [hi] and
 // [hi2]. Returns `false` if the data was loaded and decoded correctly, or
 // `true` if the defaults were recreated.
 // ZUN bloat: Shouldn't exist. Give the regular version a `scoredat_section_t&`
 // parameter and call it twice.
-bool near hiscore_scoredat_load_both(void)
+bool pascal near hiscore_scoredat_load_both(rank_t rank)
 #else
-// Loads the score data for the given [playchar] at the global [rank] into
-// [hi]. Returns `false` if the data was loaded and decoded correctly, or
-// `true` if the defaults were recreated.
-bool pascal near hiscore_scoredat_load_for(playchar_t playchar)
+// Loads the score data for the given [playchar] at the given [rank] into [hi].
+// Returns `false` if the data was loaded and decoded correctly, or `true` if
+// the defaults were recreated.
+bool pascal near hiscore_scoredat_load_for(playchar_t playchar, rank_t rank)
 #endif
 #endif
 {

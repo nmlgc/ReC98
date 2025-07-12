@@ -286,7 +286,9 @@ void near rank_render(void)
 
 	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
 #if (GAME == 5)
-		hiscore_scoredat_load_for(static_cast<playchar_t>(pc));
+		hiscore_scoredat_load_for(
+			static_cast<playchar_t>(pc), static_cast<rank_t>(rank)
+		);
 		for(int place = 0; place < SCOREDAT_PLACES; place++) {
 			place_put(static_cast<playchar_t>(pc), place);
 		}
@@ -327,7 +329,7 @@ void near regist_view_menu(void)
 	rank = resident->rank;
 
 #if (GAME == 4)
-	hiscore_scoredat_load_both();
+	hiscore_scoredat_load_both(static_cast<rank_t>(rank));
 #endif
 	GrpSurface_LoadPI(bgimage, &Palettes, HISCORE_BG_FN);
 	rank_render();
@@ -349,7 +351,7 @@ void near regist_view_menu(void)
 			rank--;
 			palette_settone(0);
 #if (GAME == 4)
-			hiscore_scoredat_load_both();
+			hiscore_scoredat_load_both(static_cast<rank_t>(rank));
 #endif
 			rank_render();
 			palette_black_in(1);
@@ -358,7 +360,7 @@ void near regist_view_menu(void)
 			rank++;
 			palette_settone(0);
 #if (GAME == 4)
-			hiscore_scoredat_load_both();
+			hiscore_scoredat_load_both(static_cast<rank_t>(rank));
 #endif
 			rank_render();
 			palette_black_in(1);
@@ -398,7 +400,9 @@ void near cleardata_load(void)
 		extra_playable_with[playchar] = false;
 		rank = RANK_EASY;
 		while(rank < RANK_COUNT) {
-			if(hiscore_scoredat_load_for(static_cast<playchar_t>(playchar))) {
+			if(hiscore_scoredat_load_for(
+				static_cast<playchar_t>(playchar), static_cast<rank_t>(rank)
+			)) {
 				break;
 			}
 			cleared_with[playchar][rank] = hi.score.cleared;
@@ -419,7 +423,7 @@ void near cleardata_load(void)
 {
 	rank = RANK_EASY;
 	while(rank < RANK_COUNT) {
-		if(hiscore_scoredat_load_both()) {
+		if(hiscore_scoredat_load_both(static_cast<rank_t>(rank))) {
 			break;
 		}
 
