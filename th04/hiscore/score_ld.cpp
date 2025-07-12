@@ -41,19 +41,7 @@ bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 #endif
 #endif
 {
-	// ZUN bloat: Classic TOCTOU issue; file_ropen() also fails if the file
-	// doesn't exist. Doesn't have any consequences in this case though: In the
-	// very unlikely event that the file stops existing between file_exist()
-	// and file_ropen(), the following will happen:
-	// • All file-related calls will fail and leave old score data in [hi] and
-	//   [hi2].
-	// • scoredat_decode() re-decodes already decoded data and fails.
-	// • The code then recreates score data just as it would have if the file
-	//   hadn't existed in this initial check.
-	// Hence, this is not a landmine, just bloat.
-	if(file_exist(SCOREDAT_FN)) {
-		file_ropen(SCOREDAT_FN);
-
+	if(file_ropen(SCOREDAT_FN)) {
 		// ZUN bloat: The TH05 version is correct for both games and all
 		// binaries.
 #if (GAME == 5)

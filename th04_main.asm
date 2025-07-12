@@ -80,7 +80,6 @@ include libs/master.lib/egc_shift_up.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
-include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
