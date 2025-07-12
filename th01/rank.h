@@ -22,7 +22,7 @@ typedef enum {
 	RANK_SHOW_SETUP_MENU = 0xFF,
 #endif
 
-	_rank_t_FORCE_INT16 = 0x7FFF
+	_rank_t_FORCE_UINT8 = 0xFF
 } rank_t;
 
 #define RANKS_CAPS { \
