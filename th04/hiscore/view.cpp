@@ -84,7 +84,6 @@ static const screen_y_t RANK_TOP = (RES_Y - (GLYPH_H / 2) - GLYPH_H);
 /// -----
 
 scoredat_section_t hi;
-scoredat_section_t hi2;
 
 unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
 bool extra_unlocked;
@@ -249,9 +248,7 @@ void pascal near place_put(playchar_t playchar, int place)
 	stage_put((left + (STAGE_LEFT - NAME_LEFT)), top, hi.score.g_stage[place]);
 }
 #else
-void pascal near place_put(
-	int playchar, int place, const scoredat_section_t& section
-)
+void pascal near place_put(int playchar, int place)
 {
 	vc_t col;
 	screen_y_t top;
@@ -269,12 +266,12 @@ void pascal near place_put(
 	name_put_shadowed(
 		(NAME_LEFT + (playchar * (COLUMN_W + 4))),
 		top,
-		reinterpret_cast<const char far *>(section.score.g_name[place]),
+		reinterpret_cast<const char far *>(hi.score.g_name[place]),
 		col
 	);
-	score_put(playchar, section, top, place);
+	score_put(playchar, hi, top, place);
 	stage_put(
-		(STAGE_LEFT + (playchar * COLUMN_W)), top, section.score.g_stage[place]
+		(STAGE_LEFT + (playchar * COLUMN_W)), top, hi.score.g_stage[place]
 	);
 }
 #endif
@@ -283,21 +280,11 @@ void pascal near rank_animate(rank_t rank)
 {
 	bgimage.write(0, 0);
 
-#if (GAME == 4)
-	hiscore_scoredat_load_both(static_cast<rank_t>(rank));
-#endif
-
 	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
-#if (GAME == 5)
 		hiscore_scoredat_load_for(static_cast<playchar_t>(pc), rank);
 		for(int place = 0; place < SCOREDAT_PLACES; place++) {
 			place_put(static_cast<playchar_t>(pc), place);
 		}
-#else
-		for(int place = 0; place < SCOREDAT_PLACES; place++) {
-			place_put(pc, place, ((pc == PLAYCHAR_REIMU) ? hi : hi2));
-		}
-#endif
 	}
 
 	static_assert(RANK_W == (2 * BFNT_ASSUMED_MAX_W));
@@ -410,23 +397,20 @@ void near cleardata_load(void)
 void near cleardata_load(void)
 {
 	for(int rank = RANK_EASY; rank < RANK_COUNT; rank++) {
-		if(hiscore_scoredat_load_both(static_cast<rank_t>(rank))) {
-			break;
-		}
-
-		scoredat_t near *sd = &hi.score;
 		for(int playchar = 0; playchar < PLAYCHAR_COUNT; playchar++) {
+			if(hiscore_scoredat_load_for(
+				static_cast<playchar_t>(playchar), static_cast<rank_t>(rank)
+			)) {
+				return;
+			}
 			unsigned char near* cleared = &cleared_with[playchar][rank];
-			*cleared = sd->cleared;
+			*cleared = hi.score.cleared;
 			if(*cleared > SCOREDAT_CLEARED_BOTH) {
 				*cleared = false;
 			}
 			if(rank != RANK_EASY) {
 				extra_unlocked |= *cleared;
 			}
-
-			static_assert(PLAYCHAR_COUNT == 2);
-			sd = &hi2.score;
 		}
 	}
 }

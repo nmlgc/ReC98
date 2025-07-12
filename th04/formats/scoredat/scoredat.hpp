@@ -40,9 +40,6 @@ struct scoredat_section_t {
 };
 
 extern scoredat_section_t hi;
-// Used to simultaneously store scores for Marisa in TH04's OP.EXE. Still
-// present in TH05, but unused.
-extern scoredat_section_t hi2;
 
 /// Functions
 /// ---------
