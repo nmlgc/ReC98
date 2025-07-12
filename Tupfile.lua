@@ -834,6 +834,7 @@ obj += {
 	"th04/mb_inv.cpp",
 	"th04/boss_bd.cpp",
 	"th04/score_d.cpp",
+	"th04/score_e.cpp",
 	"th04/score_rm.cpp",
 	"th04/gather.cpp",
 	"th04/scrolly3.cpp",

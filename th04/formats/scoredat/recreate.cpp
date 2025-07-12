@@ -84,7 +84,7 @@ void near scoredat_recreate(void)
 #endif
 		// Well, OK, if you like to fully obfuscate the format by giving every
 		// section its own encraption key...
-		scoredat_encode_func();
+		scoredat_encode(hi);
 		file_write(&hi, sizeof(hi));
 		scoredat_decode(hi);
 	}

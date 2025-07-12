@@ -53,16 +53,10 @@ extern scoredat_section_t hi2;
 
 #if ((GAME == 5) && (BINARY == 'M'))
 uint8_t pascal near scoredat_decode(void);
+void pascal near scoredat_encode(void);
 #else
 uint8_t pascal near scoredat_decode(scoredat_section_t& section);
-#endif
-
-#if (BINARY == 'M') && (GAME == 4)
-void pascal near scoredat_encode(scoredat_section_t near *hi);
-#define scoredat_encode_func() scoredat_encode(&hi)
-#else
-void pascal near scoredat_encode(void);
-#define scoredat_encode_func scoredat_encode
+void pascal near scoredat_encode(scoredat_section_t& section);
 #endif
 
 // Recreation

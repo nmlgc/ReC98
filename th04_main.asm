@@ -1450,7 +1450,6 @@ sub_C34E	endp
 
 include th04/main/playperf.asm
 include th04/main/select_for_rank.asm
-include th04/formats/scoredat_code_asm.asm
 include th04/formats/z_super_roll_put_tiny.asm
 
 	extern @CIRCLES_ADD_GROWING$QII:proc

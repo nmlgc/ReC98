@@ -1,7 +1,7 @@
 // Leaves [hi] in encoded state.
 void near hiscore_scoredat_save(void)
 {
-	scoredat_encode_func();
+	scoredat_encode(hi);
 
 	file_append(SCOREDAT_FN);
 
@@ -32,7 +32,7 @@ void near hiscore_scoredat_save(void)
 		file_seek((i * sizeof(scoredat_section_t)), SEEK_SET);
 		file_read(&hi, sizeof(scoredat_section_t));
 		scoredat_decode(hi);
-		scoredat_encode_func();
+		scoredat_encode(hi);
 		file_seek((i * sizeof(scoredat_section_t)), SEEK_SET);
 		file_write(&hi, sizeof(scoredat_section_t));
 	}
