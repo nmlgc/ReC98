@@ -1,1 +1,1 @@
-#include "th04/formats/scoredat/decode.cpp"
+#include "th04/formats/scoredat/scoredat.cpp"
