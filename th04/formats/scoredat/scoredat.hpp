@@ -58,6 +58,7 @@ void pascal near scoredat_encode(scoredat_section_t near *hi);
 // ZUN bloat: The OP.EXE implementation decodes both [hi] and [hi2], even in
 // TH05 where [hi2] is not referenced anywhere else. Using the MAIN.EXE variant
 // throughout the game would be much saner.
+// Also, [hi2] is only decoded if [hi] is valid.
 uint8_t near scoredat_decode(void);
 
 void near scoredat_encode(void);

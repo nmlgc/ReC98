@@ -58,18 +58,36 @@ bool pascal near hiscore_scoredat_load_for(playchar2 playchar)
 		}
 #endif
 		file_read(&hi, sizeof(scoredat_section_t));
-
 #if (GAME == 4) && (BINARY == 'O')
 		file_seek(((RANK_COUNT - 1) * sizeof(scoredat_section_t)), SEEK_CUR);
 		file_read(&hi2, sizeof(scoredat_section_t));
 #endif
-
 		file_close();
+
+		// ZUN landmine: In TH04, scoredat_recreate() only writes to [hi] and
+		// leaves [hi2] as it is. TH04's High Score viewer in OP.EXE uses both
+		// sections and doesn't double-check whether it contains valid data,
+		// because why should it, this is our job. But this means that it will
+		// render garbage data in both cases:
+		//
+		// • If Reimu/[hi] is corrupt, scoredat_decode() exits early and
+		//   doesn't decode [hi2]. The call site assumes that it got decoded,
+		//   though, and consequently renders garbage. The fact that [hi]
+		//   receives the default data from scoredat_recreate() doesn't even
+		//   matter because the corruption from [hi2] will most likely mess up
+		//   the entire screen.
+		//
+		// • If Marisa/[hi2] is corrupt, [hi2] did get decoded, but still
+		//   carries the same garbage data that failed decoding.
+		//
+		// Both sections then only get loaded correctly on the next call to
+		// this function.
 		if(scoredat_decode() != 0) {
 			scoredat_recreate();
 			return true;
 		}
 	} else {
+		// Same TH04 landmine as above.
 		scoredat_recreate();
 		return true;
 	}
