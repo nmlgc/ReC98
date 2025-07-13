@@ -2825,122 +2825,10 @@ include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
 
 	@scoredat_load_for_cur$qv procdesc near
-	@scoredat_save_cur$qv procdesc near
+	@hiscore_continue_enter$qv procdesc near
 SCORE_TEXT ends
 
 LASER_RH_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E84A	proc near
-		push	si
-		push	di
-		mov	dx, 4
-
-loc_E84F:
-		mov	si, dx
-		shl	si, 3
-		add	si, offset _hi.score.g_score[SCORE_DIGITS - 1]
-		mov	bx, offset _score[SCORE_DIGITS - 1]
-		mov	cx, SCORE_DIGITS
-
-loc_E85E:
-		mov	al, [si]
-		sub	al, gb_0_
-		cmp	al, [bx]
-		jb	short loc_E86C
-		ja	short loc_E86F
-		dec	bx
-		dec	si
-		loop	loc_E85E
-
-loc_E86C:
-		dec	dx
-		jns	short loc_E84F
-
-loc_E86F:
-		inc	dx
-		mov	byte_25342, dl
-		cmp	dx, 5
-		jnb	short loc_E8EF
-		push	ds
-		pop	es
-		mov	bx, 3
-		jmp	short loc_E8AD
-; ---------------------------------------------------------------------------
-
-loc_E880:
-		imul	di, bx,	(SCOREDAT_NAME_LEN + 1)
-		mov	si, di
-		add	si, offset _hi.score.g_name[0 * (SCOREDAT_NAME_LEN + 1)]
-		add	di, offset _hi.score.g_name[1 * (SCOREDAT_NAME_LEN + 1)]
-		movsd
-		movsd
-		mov	di, bx
-		shl	di, 3
-		mov	si, di
-		add	si, offset _hi.score.g_score[0 * SCORE_DIGITS]
-		add	di, offset _hi.score.g_score[1 * SCORE_DIGITS]
-		movsd
-		movsd
-		mov	al, _hi.score.g_stage+0[bx]
-		mov	_hi.score.g_stage+1[bx], al
-		dec	bx
-
-loc_E8AD:
-		cmp	bx, dx
-		jge	short loc_E880
-		imul	di, dx,	(SCOREDAT_NAME_LEN + 1)
-		add	di, offset _hi.score.g_name
-		mov	si, offset gCONTINUE
-		movsd
-		movsd
-		mov	di, dx
-		shl	di, 3
-		add	di, offset _hi.score.g_score
-		mov	si, offset _score
-		movsd
-		movsd
-		sub	di, SCORE_DIGITS
-		mov	cx, SCORE_DIGITS
-
-loc_E8D5:
-		add	byte ptr [di], gb_0_
-		inc	di
-		loop	loc_E8D5
-		mov	al, _stage_id
-		cmp	al, 6
-		jnz	short loc_E8E4
-		xor	al, al
-
-loc_E8E4:
-		mov	di, dx
-		add	al, gb_1_
-		mov	_hi.score.g_stage[di], al
-		call	@scoredat_save_cur$qv
-
-loc_E8EF:
-		pop	di
-		pop	si
-		retn
-sub_E84A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E8F2	proc near
-		cmp	_turbo_mode, 0
-		jz	short locret_E8FC
-		call	sub_E84A
-
-locret_E8FC:
-		retn
-sub_E8F2	endp
-
-; ---------------------------------------------------------------------------
-		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3654,7 +3542,7 @@ loc_FBAB:
 loc_FBB5:
 		or	di, di
 		jnz	short loc_FBF5
-		call	sub_E8F2
+		call	@hiscore_continue_enter$qv
 		mov	_power, POWER_MIN
 		mov	_dream, 1
 		les	bx, _resident
@@ -19721,7 +19609,8 @@ include th05/formats/bb_txt_load[data].asm
 include th04/main/player/shot_velocity[data].asm
 public _SCOREDAT_FN
 _SCOREDAT_FN	db 'GENSOU.SCR',0
-gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
+public _gCONTINUE
+_gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 public _group_is_special
 _group_is_special	db 0
 	evendata
@@ -20071,8 +19960,9 @@ _invalidate_left_x_tile	dw ?
 include th04/main/sparks_add[bss].asm
 include th04/main/drawpoint[bss].asm
 include th04/formats/scoredat[bss].asm
-byte_25342	db ?
-		db ?
+public _unnecessary_shift_place_copy
+_unnecessary_shift_place_copy db ? ; ZUN bloat
+	evendata
 include th04/main/bullet/tune[bss].asm
 public _group_fixedspeed, _group_i_spread_angle, _group_i
 public _group_i_absolute_angle, _group_i_speed, _group_i_velocity

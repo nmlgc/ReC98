@@ -33,6 +33,8 @@ void near hiscore_continue_enter_raw(void)
 			// This bug reinforces the High Score viewer's soft score limit of
 			// 959,999,999, or `A9 A9 A9 A9 A9 A9 A9 FF` in the gaiji-offsetted
 			// [hi.score] list.
+			// TH05 fixes this bug by subtracting and comparing unsigned bytes
+			// instead.
 			if(score.digits[c] > (hi.score.g_score[i].digits[c] - gb_0)) {
 				break;
 			}
