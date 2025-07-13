@@ -18,18 +18,5 @@ void pascal near hiscore_scoredat_save(playchar_t playchar, rank_t rank)
 	}
 #endif
 	file_write(&hi, sizeof(scoredat_section_t));
-
-#if (BINARY == 'E')
-	// Re-encode the entire score file with newly randomized encraption keys.
-	// ZUN bloat: Could have been its own function, and not thrashed [hi].
-	for(int i = 0; i < ((RANK_COUNT * PLAYCHAR_COUNT)); i++) {
-		file_seek((i * sizeof(scoredat_section_t)), SEEK_SET);
-		file_read(&hi, sizeof(scoredat_section_t));
-		scoredat_decode(hi);
-		scoredat_encode(hi);
-		file_seek((i * sizeof(scoredat_section_t)), SEEK_SET);
-		file_write(&hi, sizeof(scoredat_section_t));
-	}
-#endif
 	file_close();
 }
