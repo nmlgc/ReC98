@@ -1,5 +1,5 @@
 // Leaves [hi] in encoded state.
-void pascal near hiscore_scoredat_save(rank_t rank)
+void pascal near hiscore_scoredat_save(playchar_t playchar, rank_t rank)
 {
 	scoredat_encode(hi);
 
@@ -13,15 +13,9 @@ void pascal near hiscore_scoredat_save(rank_t rank)
 	);
 #else
 	file_seek((rank * sizeof(scoredat_section_t)), SEEK_SET);
-#if (BINARY == 'M')
-	if(resident->playchar_ascii == ('0' + PLAYCHAR_MARISA)) {
-		file_seek((RANK_COUNT * sizeof(scoredat_section_t)), SEEK_CUR);
-	}
-#else
 	if(playchar != PLAYCHAR_REIMU) {
 		file_seek((RANK_COUNT * sizeof(scoredat_section_t)), SEEK_CUR);
 	}
-#endif
 #endif
 	file_write(&hi, sizeof(scoredat_section_t));
 

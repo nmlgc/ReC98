@@ -1671,8 +1671,8 @@ maine_01_TEXT ends
 SCORE_TEXT segment byte public 'CODE' use16
 	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T6RANK_T procdesc pascal near \
 		playchar:byte, rank:byte
-	@HISCORE_SCOREDAT_SAVE$Q6RANK_T procdesc pascal near \
-		rank:byte
+	@HISCORE_SCOREDAT_SAVE$Q10PLAYCHAR_T6RANK_T procdesc pascal near \
+		playchar:byte, rank:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2720,12 +2720,12 @@ loc_CB6B:
 ; ---------------------------------------------------------------------------
 
 @@enter:
-		call	@hiscore_scoredat_save$q6rank_t pascal, word ptr _rank
+		call	@hiscore_scoredat_save$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
 		jmp	short loc_CB89
 ; ---------------------------------------------------------------------------
 
 loc_CB7F:
-		call	@hiscore_scoredat_save$q6rank_t pascal, word ptr _rank
+		call	@hiscore_scoredat_save$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
 		call	@input_wait_for_change$qi pascal, 0
 
 loc_CB89:
