@@ -84,7 +84,7 @@ shift:
 		hi.score.g_stage[entered_place] = gb_1;
 	}
 
-	hiscore_scoredat_save(
+	scoredat_save(
 		static_cast<playchar_t>(resident->playchar_ascii - '0'),
 		static_cast<rank_t>(rank)
 	);
@@ -92,7 +92,7 @@ shift:
 
 void near hiscore_continue_enter(void)
 {
-	hiscore_scoredat_load_for(
+	scoredat_load(
 		static_cast<playchar_t>(resident->playchar_ascii - '0'),
 		static_cast<rank_t>(rank)
 	);
@@ -103,7 +103,7 @@ void near hiscore_continue_enter(void)
 
 void near hiscore_load(void)
 {
-	hiscore_scoredat_load_for(
+	scoredat_load(
 		static_cast<playchar_t>(resident->playchar_ascii - '0'),
 		static_cast<rank_t>(rank)
 	);

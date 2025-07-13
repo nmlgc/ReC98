@@ -1669,9 +1669,9 @@ public @verdict_animate$qv
 maine_01_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T6RANK_T procdesc pascal near \
+	@SCOREDAT_LOAD$Q10PLAYCHAR_T6RANK_T procdesc pascal near \
 		playchar:byte, rank:byte
-	@HISCORE_SCOREDAT_SAVE$Q10PLAYCHAR_T6RANK_T procdesc pascal near \
+	@SCOREDAT_SAVE$Q10PLAYCHAR_T6RANK_T procdesc pascal near \
 		playchar:byte, rank:byte
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2391,14 +2391,14 @@ loc_C897:
 		mov	_playchar, al
 		mov	al, 1
 		sub	al, _playchar
-		call	@hiscore_scoredat_load_for$q10playchar_t6rank_t, ax, word ptr _rank
+		call	@scoredat_load$q10playchar_t6rank_t, ax, word ptr _rank
 		mov	al, _playchar
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
 		push	dx
 		call	sub_C7C9
-		call	@hiscore_scoredat_load_for$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
+		call	@scoredat_load$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C8CB
@@ -2720,12 +2720,12 @@ loc_CB6B:
 ; ---------------------------------------------------------------------------
 
 @@enter:
-		call	@hiscore_scoredat_save$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
+		call	@scoredat_save$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
 		jmp	short loc_CB89
 ; ---------------------------------------------------------------------------
 
 loc_CB7F:
-		call	@hiscore_scoredat_save$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
+		call	@scoredat_save$q10playchar_t6rank_t pascal, word ptr _playchar, word ptr _rank
 		call	@input_wait_for_change$qi pascal, 0
 
 loc_CB89:

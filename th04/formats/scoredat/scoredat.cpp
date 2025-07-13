@@ -2,6 +2,7 @@
 
 #include "th04/formats/scoredat/scoredat.hpp"
 #include "th04/formats/scoredat/impl.hpp"
+#include "th04/shiftjis/fnshared.hpp"
 #include "libs/master.lib/master.hpp"
 
 uint8_t pascal near scoredat_decode(scoredat_section_t& section)
@@ -31,4 +32,38 @@ void pascal near scoredat_encode(scoredat_section_t& section)
 		);
 		i--;
 	}
+}
+
+inline int scoredat_section_i(playchar_t playchar, rank_t rank) {
+	return ((playchar * RANK_COUNT) + rank);
+}
+
+size_t pascal near scoredat_section_offset(playchar_t playchar, rank_t rank)
+{
+	return (scoredat_section_i(playchar, rank) * sizeof(scoredat_section_t));
+}
+
+bool pascal near scoredat_load(playchar_t playchar, rank_t rank)
+{
+	if(file_ropen(SCOREDAT_FN)) {
+		file_seek(scoredat_section_offset(playchar, rank), SEEK_SET);
+		file_read(&hi, sizeof(scoredat_section_t));
+		file_close();
+
+		if(scoredat_decode(hi) == 0) {
+			return false;
+		}
+	}
+	scoredat_recreate();
+	return true;
+}
+
+void pascal near scoredat_save(playchar_t playchar, rank_t rank)
+{
+	scoredat_encode(hi);
+
+	file_append(SCOREDAT_FN);
+	file_seek(scoredat_section_offset(playchar, rank), SEEK_SET);
+	file_write(&hi, sizeof(scoredat_section_t));
+	file_close();
 }

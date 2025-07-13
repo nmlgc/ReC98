@@ -1,4 +1,10 @@
+#if (GAME == 5)
+#include "th05/playchar.h"
+#else
+#include "th04/playchar.h"
+#endif
 #include "th04/score.h"
+#include "th01/rank.h"
 
 #define SCOREDAT_FN "GENSOU.SCR"
 
@@ -54,6 +60,15 @@ void pascal near scoredat_encode(void);
 #else
 uint8_t pascal near scoredat_decode(scoredat_section_t& section);
 void pascal near scoredat_encode(scoredat_section_t& section);
+
+// Loads the score data for the given [playchar] at the given [rank] into [hi].
+// Returns `false` if the data was loaded and decoded correctly, or `true` if
+// the defaults were recreated.
+bool pascal near scoredat_load(playchar_t playchar, rank_t rank);
+
+// Saves [hi] to the score file, replacing the section for the given [playchar]
+// at the given [rank]. Leaves [hi] in encoded state.
+void pascal near scoredat_save(playchar_t playchar, rank_t rank);
 #endif
 
 // Recreation

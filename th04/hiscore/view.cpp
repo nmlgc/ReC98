@@ -3,7 +3,6 @@
 
 #pragma option -zPop_01
 #include "th04/formats/scoredat/recreate.cpp"
-#include "th04/hiscore/score_ld.cpp"
 #include "game/bgimage.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -281,7 +280,7 @@ void pascal near rank_animate(rank_t rank)
 	bgimage.write(0, 0);
 
 	for(int pc = 0; pc < PLAYCHAR_COUNT; pc++) {
-		hiscore_scoredat_load_for(static_cast<playchar_t>(pc), rank);
+		scoredat_load(static_cast<playchar_t>(pc), rank);
 		for(int place = 0; place < SCOREDAT_PLACES; place++) {
 			place_put(static_cast<playchar_t>(pc), place);
 		}
@@ -377,7 +376,7 @@ void near cleardata_load(void)
 	for(int playchar = PLAYCHAR_REIMU; playchar < PLAYCHAR_COUNT; playchar++) {
 		extra_playable_with[playchar] = false;
 		for(int rank = RANK_EASY; rank < RANK_COUNT; rank++) {
-			if(hiscore_scoredat_load_for(
+			if(scoredat_load(
 				static_cast<playchar_t>(playchar), static_cast<rank_t>(rank)
 			)) {
 				break;
@@ -398,7 +397,7 @@ void near cleardata_load(void)
 {
 	for(int rank = RANK_EASY; rank < RANK_COUNT; rank++) {
 		for(int playchar = 0; playchar < PLAYCHAR_COUNT; playchar++) {
-			if(hiscore_scoredat_load_for(
+			if(scoredat_load(
 				static_cast<playchar_t>(playchar), static_cast<rank_t>(rank)
 			)) {
 				return;
