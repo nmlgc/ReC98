@@ -12,6 +12,10 @@
 
 static const int SCORE_INITIAL_DIGIT = ((GAME == 5) ? 6 : 5);
 
+#if (GAME == 5)
+bool in_maine;
+#endif
+
 void near scoredat_recreate(void)
 {
 	int i;
@@ -42,8 +46,10 @@ void near scoredat_recreate(void)
 		// it didn't exist or was corrupted, so this code can only ever run if
 		// the file was somehow modified or deleted from outside the game while
 		// it was running.
-#if ((GAME == 5) && (BINARY == 'E'))
-		hi.score.g_stage[i] = (gb_6 - i);
+#if (GAME == 5)
+		if(in_maine) {
+			hi.score.g_stage[i] = (gb_6 - i);
+		}
 #elif (GAME == 4)
 		hi.score.g_stage[i] = (gb_5 - (i / 2));
 #endif
@@ -56,12 +62,14 @@ void near scoredat_recreate(void)
 
 	file_create(SCOREDAT_FN);
 	for(i = 0; i < (RANK_COUNT * PLAYCHAR_COUNT); i++) {
-#if ((GAME == 5) && (BINARY == 'O'))
-		for(int place = 0; place < SCOREDAT_PLACES; place++) {
-			if((i % RANK_COUNT) == RANK_EXTRA) {
-				hi.score.g_stage[place] = gb_1;
-			} else {
-				hi.score.g_stage[place] = (gb_1 + SCOREDAT_PLACES - place);
+#if (GAME == 5)
+		if(!in_maine) {
+			for(int place = 0; place < SCOREDAT_PLACES; place++) {
+				if((i % RANK_COUNT) == RANK_EXTRA) {
+					hi.score.g_stage[place] = gb_1;
+				} else {
+					hi.score.g_stage[place] = (gb_1 + SCOREDAT_PLACES - place);
+				}
 			}
 		}
 #endif

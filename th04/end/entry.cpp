@@ -107,6 +107,8 @@ void main(void)
 #endif
 	snd_determine_modes(resident->bgm_mode, resident->se_mode);
 #if (GAME == 5)
+	extern bool in_maine;
+	in_maine = true;
 	snd_load(SE_FN, SND_LOAD_SE);
 	graph_show();
 	random_seed = resident->rand;
