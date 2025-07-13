@@ -2,12 +2,14 @@
 /// -------------------------
 
 #pragma option -zPop_01
-#include "th04/formats/scoredat/recreate.cpp"
+
 #include "game/bgimage.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/bfnt.h"
+#include "th04/gaiji/gaiji.h"
 #include "th04/snd/snd.h"
+#include "th04/formats/scoredat/scoredat.hpp"
 #include "th04/shiftjis/fnshared.hpp"
 #if (GAME == 5)
 #include "th05/resident.hpp"

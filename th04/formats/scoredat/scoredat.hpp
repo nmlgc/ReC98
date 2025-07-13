@@ -70,7 +70,4 @@ bool pascal near scoredat_load(playchar_t playchar, rank_t rank);
 // at the given [rank]. Leaves [hi] in encoded state.
 void pascal near scoredat_save(playchar_t playchar, rank_t rank);
 #endif
-
-// Recreation
-void near scoredat_recreate(void);
 /// ---------

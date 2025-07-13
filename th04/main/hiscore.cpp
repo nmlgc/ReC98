@@ -1,8 +1,12 @@
+#pragma option -zCSCORE_TEXT
+
 #include "th04/main/hiscore.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/slowdown.hpp"
+#include "th04/gaiji/gaiji.h"
+#include "th04/formats/scoredat/scoredat.hpp"
 #include "th04/resident.hpp"
 #include "th04/common.h"
 
