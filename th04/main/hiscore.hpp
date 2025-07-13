@@ -6,3 +6,7 @@
 // for the current global character and [rank].
 // TH04 reloads [hi] from the score file before trying.
 void near hiscore_continue_enter(void);
+
+// Loads [hi] with the score data for the current [rank] and copies the highest
+// score into [hiscore].
+void near hiscore_load(void);

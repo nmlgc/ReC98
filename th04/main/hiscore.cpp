@@ -1,4 +1,5 @@
 #include "th04/main/hiscore.hpp"
+#include "th04/main/score.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/slowdown.hpp"
 #include "th04/common.h"
@@ -89,5 +90,13 @@ void near hiscore_continue_enter(void)
 	hiscore_scoredat_load_for_cur();
 	if(turbo_mode) {
 		hiscore_continue_enter_raw();
+	}
+}
+
+void near hiscore_load(void)
+{
+	hiscore_scoredat_load_for_cur();
+	for(int i = 0; i < SCORE_DIGITS; i++) {
+		hiscore.digits[i] = (hi.score.g_score[0].digits[i] - gb_0);
 	}
 }

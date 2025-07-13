@@ -9,6 +9,7 @@
 #include "th05/playchar.h"
 #include "th04/main/stage/stage.hpp"
 #include "th04/main/rank.hpp"
+#include "th04/main/score.hpp"
 #include "th04/main/slowdown.hpp"
 #include "th04/gaiji/gaiji.h"
 #include "th04/common.h"
@@ -200,3 +201,17 @@ void near hiscore_continue_enter(void)
 }
 
 #pragma codestring "\x90"
+
+void near hiscore_load(void)
+{
+	scoredat_load_for_cur();
+
+	_BX = 0;
+	_CX = SCORE_DIGITS;
+	digit_loop: {
+		_AL = hi.score.g_score[0].digits[_BX];
+		_AL -= gb_0;
+		hiscore.digits[_BX++] = _AL;
+		asm { loop digit_loop }
+	}
+}
