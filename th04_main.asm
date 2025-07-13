@@ -3674,7 +3674,7 @@ loc_E787:
 loc_E796:
 		or	di, di
 		jnz	short loc_E7D8
-		call	main_01:sub_12CB5
+		call	@hiscore_continue_enter$qv
 		mov	_power, POWER_MIN
 		mov	_dream_items_collected, 0
 		les	bx, _resident
@@ -9705,210 +9705,10 @@ BOSS_BG_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
 	@hiscore_scoredat_load_for_cur$qv procdesc near
-	@hiscore_scoredat_save$qv procdesc near
+	@hiscore_continue_enter$qv procdesc near
 SCORE_TEXT ends
 
 BOSS_FG_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12B71	proc near
-
-var_A		= byte ptr -0Ah
-var_2		= word ptr -2
-
-		enter	0Ah, 0
-		push	si
-		lea	ax, [bp+var_A]
-		push	ss
-		push	ax
-		push	ds
-		push	offset gCONTINUE
-		mov	cx, 8
-		call	SCOPY@
-		mov	[bp+var_2], 9
-		jmp	short loc_12BCF
-; ---------------------------------------------------------------------------
-
-loc_12B8E:
-		mov	si, SCORE_DIGITS - 1
-		jmp	short loc_12BC8
-; ---------------------------------------------------------------------------
-
-loc_12B93:
-		mov	al, _score[si]
-		mov	ah, 0
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	dl, _hi.score.g_score[bx+si]
-		mov	dh, 0
-		add	dx, -gb_0_
-		cmp	ax, dx
-		jg	short loc_12BCC
-		mov	al, _score[si]
-		mov	ah, 0
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	dl, _hi.score.g_score[bx+si]
-		mov	dh, 0
-		add	dx, -gb_0_
-		cmp	ax, dx
-		jl	short loc_12BDC
-		dec	si
-
-loc_12BC8:
-		or	si, si
-		jge	short loc_12B93
-
-loc_12BCC:
-		dec	[bp+var_2]
-
-loc_12BCF:
-		cmp	[bp+var_2], 0
-		jge	short loc_12B8E
-		mov	byte_2CFF2, 0
-		jmp	short loc_12BF2
-; ---------------------------------------------------------------------------
-
-loc_12BDC:
-		cmp	[bp+var_2], 9
-		jnz	short loc_12BEA
-		mov	byte_2CFF2, -1
-		jmp	loc_12CB2
-; ---------------------------------------------------------------------------
-
-loc_12BEA:
-		mov	al, byte ptr [bp+var_2]
-		inc	al
-		mov	byte_2CFF2, al
-
-loc_12BF2:
-		mov	[bp+var_2], 8
-		jmp	short loc_12C43
-; ---------------------------------------------------------------------------
-
-loc_12BF9:
-		mov	si, 7
-		jmp	short loc_12C13
-; ---------------------------------------------------------------------------
-
-loc_12BFE:
-		mov	bx, [bp+var_2]
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	al, _hi.score.g_name[0 * (SCOREDAT_NAME_LEN + 1)][bx+si]
-		mov	bx, [bp+var_2]
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	_hi.score.g_name[1 * (SCOREDAT_NAME_LEN + 1)][bx+si], al
-		dec	si
-
-loc_12C13:
-		or	si, si
-		jge	short loc_12BFE
-		mov	si, 7
-		jmp	short loc_12C31
-; ---------------------------------------------------------------------------
-
-loc_12C1C:
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	al, _hi.score.g_score[0 * SCORE_DIGITS][bx+si]
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	_hi.score.g_score[1 * SCORE_DIGITS][bx+si], al
-		dec	si
-
-loc_12C31:
-		or	si, si
-		jge	short loc_12C1C
-		mov	bx, [bp+var_2]
-		mov	al, _hi.score.g_stage[0][bx]
-		mov	_hi.score.g_stage[1][bx], al
-		dec	[bp+var_2]
-
-loc_12C43:
-		mov	al, byte_2CFF2
-		mov	ah, 0
-		cmp	ax, [bp+var_2]
-		jle	short loc_12BF9
-		mov	si, 7
-		jmp	short loc_12C65
-; ---------------------------------------------------------------------------
-
-loc_12C52:
-		mov	al, [bp+si+var_A]
-		mov	dl, byte_2CFF2
-		mov	dh, 0
-		imul	dx, (SCOREDAT_NAME_LEN + 1)
-		mov	bx, dx
-		mov	_hi.score.g_name[bx+si], al
-		dec	si
-
-loc_12C65:
-		or	si, si
-		jge	short loc_12C52
-		mov	si, 7
-		jmp	short loc_12C84
-; ---------------------------------------------------------------------------
-
-loc_12C6E:
-		mov	al, _score[si]
-		add	al, gb_0_
-		mov	dl, byte_2CFF2
-		mov	dh, 0
-		shl	dx, 3
-		mov	bx, dx
-		mov	_hi.score.g_score[bx+si], al
-		dec	si
-
-loc_12C84:
-		or	si, si
-		jge	short loc_12C6E
-		cmp	_stage_id, 6
-		jz	short loc_12CA3
-		mov	al, byte_2CFF2
-		mov	ah, 0
-		mov	dl, _stage_id
-		add	dl, gb_1_
-		mov	bx, ax
-		mov	_hi.score.g_stage[bx], dl
-		jmp	short loc_12CAF
-; ---------------------------------------------------------------------------
-
-loc_12CA3:
-		mov	al, byte_2CFF2
-		mov	ah, 0
-		mov	bx, ax
-		mov	_hi.score.g_stage[bx], gb_1_
-
-loc_12CAF:
-		call	@hiscore_scoredat_save$qv
-
-loc_12CB2:
-		pop	si
-		leave
-		retn
-sub_12B71	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12CB5	proc near
-		push	bp
-		mov	bp, sp
-		call	@hiscore_scoredat_load_for_cur$qv
-		cmp	_turbo_mode, 0
-		jz	short loc_12CC5
-		call	main_01:sub_12B71
-
-loc_12CC5:
-		pop	bp
-		retn
-sub_12CB5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -30098,7 +29898,8 @@ _checkerboard checkerboard_t <>
 
 byte_23242	db 0
 		db    0
-gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
+public _gCONTINUE_
+_gCONTINUE_	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
 public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1, _SCOREDAT_FN_2
 _SCOREDAT_FN	db 'GENSOU.SCR',0
 _SCOREDAT_FN_0	db 'GENSOU.SCR',0
@@ -30625,8 +30426,9 @@ _bg_shape_flyout_speed	dw ?
 _bg_shape_clip	dw ?
 
 include th04/formats/scoredat[bss].asm
-byte_2CFF2	db ?
-		db ?
+public _entered_place
+_entered_place	db ?
+	evendata
 word_2CFF4	dw ?
 public _group_i_spread_angle
 _group_i_spread_angle	db ?
