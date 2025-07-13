@@ -1,6 +1,7 @@
 #include <process.h>
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
+#include "th01/pc98/entry.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/cdg.h"
 #if (GAME == 4)
@@ -26,7 +27,9 @@
 #include "th04/shiftjis/fns.hpp"
 #endif
 
+#if (GAME == 5)
 resident_t far* resident;
+#endif
 
 // ZUN bloat: Should be its own translation unit.
 resident_t __seg* near cfg_load_resident_ptr(void)
@@ -35,7 +38,11 @@ resident_t __seg* near cfg_load_resident_ptr(void)
 	return cfg_load_and_set_resident(cfg, CFG_FN);
 }
 
+#if (GAME == 5)
 void pascal near game_exit_and_exec(char* fn)
+#else
+void pascal near game_exit_and_exec(entrypoint_t entrypoint)
+#endif
 {
 	cdg_free_all();
 	graph_hide();
@@ -44,7 +51,11 @@ void pascal near game_exit_and_exec(char* fn)
 	gaiji_restore();
 #endif
 	game_exit();
+#if (GAME == 5)
 	execl(fn, fn, nullptr);
+#else
+	entrypoint_exec(entrypoint);
+#endif
 }
 
 void near end_animate(void)
@@ -93,10 +104,14 @@ inline void delay_then_regist_menu(void) {
 	regist_menu();
 }
 
-void main(void)
+#if (GAME == 5)
+int main(void)
+#else
+int main_cutscene(int, const char *[])
+#endif
 {
 	if(!cfg_load_resident_ptr()) {
-		return;
+		return 1;
 	}
 
 	mem_assign_paras = (336000 >> 4);
@@ -158,5 +173,11 @@ void main(void)
 		verdict_animate();
 	}
 	snd_kaja_func(KAJA_SONG_FADE, 4);
+#if (GAME == 5)
 	game_exit_and_exec(BINARY_OP);
+#else
+	game_exit_and_exec(EP_OP);
+#endif
+
+	return 0;
 }

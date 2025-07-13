@@ -497,7 +497,11 @@ void near option_update_and_render(void)
 	}
 }
 
-void main(void)
+#if (GAME == 5)
+int main(void)
+#else
+int main_op(int, const char *[])
+#endif
 {
 	int idle_frames = 0;
 
@@ -602,4 +606,6 @@ void main(void)
 	text_clear();
 	game_exit_to_dos();
 	respal_free(); // ZUN bloat: These games don't use resident palettes.
+
+	return 0;
 }
