@@ -655,7 +655,7 @@ loc_B15D:
 
 loc_B16F:
 		call	sub_10398
-		call	sub_E8FE
+		call	@hiscore_load$qv
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
@@ -2824,29 +2824,11 @@ include th05/main/select_for_playchar.asm
 include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
 
-	@scoredat_load_for_cur$qv procdesc near
 	@hiscore_continue_enter$qv procdesc near
+	@hiscore_load$qv procdesc near
 SCORE_TEXT ends
 
 LASER_RH_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E8FE	proc near
-		call	@scoredat_load_for_cur$qv
-		xor	bx, bx
-		mov	cx, SCORE_DIGITS
-
-loc_E906:
-		mov	al, _hi.score.g_score[bx]
-		sub	al, gb_0_
-		mov	_hiscore[bx], al
-		inc	bx
-		loop	loc_E906
-		retn
-sub_E8FE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

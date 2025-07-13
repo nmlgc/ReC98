@@ -588,7 +588,7 @@ loc_ADEA:
 
 loc_ADFC:
 		call	main_01:sub_EEB0
-		call	main_01:sub_12CC7
+		call	@hiscore_load$qv
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
@@ -9704,39 +9704,11 @@ loc_12A05:
 BOSS_BG_TEXT ends
 
 SCORE_TEXT segment byte public 'CODE' use16
-	@hiscore_scoredat_load_for_cur$qv procdesc near
 	@hiscore_continue_enter$qv procdesc near
+	@hiscore_load$qv procdesc near
 SCORE_TEXT ends
 
 BOSS_FG_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12CC7	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@hiscore_scoredat_load_for_cur$qv
-		xor	si, si
-		jmp	short loc_12CDD
-; ---------------------------------------------------------------------------
-
-loc_12CD2:
-		mov	al, _hi.score.g_score[si]
-		add	al, -gb_0_
-		mov	_hiscore[si], al
-		inc	si
-
-loc_12CDD:
-		cmp	si, SCORE_DIGITS
-		jl	short loc_12CD2
-		pop	si
-		pop	bp
-		retn
-sub_12CC7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
