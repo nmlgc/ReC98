@@ -15,14 +15,7 @@ static const int SCORE_INITIAL_DIGIT = ((GAME == 5) ? 6 : 5);
 void near scoredat_recreate(void)
 {
 	int i;
-	int place;
-
-	// ZUN bloat
-#if (GAME == 5)
-	#define c place
-#else
 	int c;
-#endif
 
 	// ACTUAL TYPE: gaiji_th04_t
 	unsigned char digit = (gb_0 + 10 - (10 / SCOREDAT_PLACES));
@@ -37,15 +30,7 @@ void near scoredat_recreate(void)
 			hi.score.g_score[i].digits[SCORE_INITIAL_DIGIT - 0] = gb_1;
 		} else {
 			hi.score.g_score[i].digits[SCORE_INITIAL_DIGIT - 1] = digit;
-
-			// ZUN bloat: `digit -= (10 / SCOREDAT_PLACES);` would work for
-			// both games.
-#if (GAME == 4)
-			static_assert(SCOREDAT_PLACES == 10);
-			digit--;
-#else
 			digit -= (10 / SCOREDAT_PLACES);
-#endif
 		}
 
 		// ZUN landmine: This assigns decreasing stage numbers even for TH05's
@@ -69,12 +54,10 @@ void near scoredat_recreate(void)
 		hi.score.g_name[i][SCOREDAT_NAME_LEN] = g_NULL;
 	}
 
-	#undef c
-
 	file_create(SCOREDAT_FN);
 	for(i = 0; i < (RANK_COUNT * PLAYCHAR_COUNT); i++) {
 #if ((GAME == 5) && (BINARY == 'O'))
-		for(place = 0; place < SCOREDAT_PLACES; place++) {
+		for(int place = 0; place < SCOREDAT_PLACES; place++) {
 			if((i % RANK_COUNT) == RANK_EXTRA) {
 				hi.score.g_stage[place] = gb_1;
 			} else {
