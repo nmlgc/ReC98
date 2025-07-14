@@ -23,10 +23,10 @@
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn_data.hpp"
-#include "th01/formats/scoredat.hpp"
 #include "th01/hiscore/regist.hpp"
 #include "th01/main/bonus.hpp"
 #include "th01/main/debug.hpp"
+#include "th01/main/hiscore.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
 #include "th01/main/player/player.hpp"
@@ -318,7 +318,7 @@ void load_and_init_stuff_used_in_all_stages(void)
 {
 	int i;
 
-	scoredat_load_hiscore();
+	hiscore_load();
 	hud_bg_load("mask.grf");
 	player_48x48.load("miko_ac.bos");
 	player_48x32.load("miko_ac2.bos");

@@ -40,10 +40,6 @@ struct scoredat_t {
 // Returns 0 on success, 1 on failure.
 int scoredat_load();
 
-// Loads only the high score for the current [rank] into the resident
-// structure.
-void scoredat_load_hiscore();
-
 // Sets [str] to the null-terminated name at the given [place] for the
 // difficulty previously loaded by scoredat_load().
 void scoredat_name_get(int place, unsigned char str[SCOREDAT_NAME_BYTES + 1]);
