@@ -497,11 +497,7 @@ void near option_update_and_render(void)
 	}
 }
 
-#if (GAME == 5)
-int main(void)
-#else
 int main_op(int, const char *[])
-#endif
 {
 	int idle_frames = 0;
 

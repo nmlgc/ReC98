@@ -858,21 +858,27 @@ local th05_zuncom = th05:zungen("obj/th05/zuncom.bin", {
 th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
 obj += platform_objs.surf
 obj += platform_objs.vblank
+obj += tup.glob("th05/pc98/*.cpp")
 obj += {
 	"th05/op_main.cpp",
-	"th05_op.asm",
-	{ "th05_op2.asm", extra_inputs = th05_sprites["piano_l"] },
+	{ "th05.asm", extra_inputs = th05_sprites["piano_l"] },
+	"th05/cfg.cpp",
 	"th05/op_setup.cpp",
 	"th04/zunsoft.cpp",
-	"th05/cfg.cpp",
 	"th05/op_title.cpp",
 	"th05/op_music.cpp",
 	"th05/scoredat.cpp",
 	"th05/hi_view.cpp",
 	"th05/m_char.cpp",
+	"th05/cutscene.cpp",
+	"th05/maine_e.cpp",
+	"th05/staff.cpp",
+	"th05/allcast.cpp",
+	"th05/regist.cpp",
 
 	-- SHARED
 	"th02/exit_dos.cpp",
@@ -892,6 +898,7 @@ obj += {
 	"th05/bgimager.asm",
 	"th05/cdg_p_nc.cpp",
 	"th05/cdg_put.asm",
+	"th05/initmain.cpp",
 	"th05/initop.cpp",
 	"th05/inp_h_w.cpp",
 	"th05/input_s.asm",
@@ -902,7 +909,7 @@ obj += {
 	"th05/snd_load.cpp",
 	"th05/vector.cpp",
 }
-th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='O'" }):link("op", obj)
+th05:branch(MODEL_LARGE, SEMIOPTIM):link("debloat", obj)
 
 obj = {}
 obj += platform_objs.libc_debloat
@@ -990,50 +997,9 @@ obj += {
 	"th05/snd_load.cpp",
 	"th05/vector.cpp",
 }
-th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }):link(
-	"main", obj
-)
-
-obj = {}
-obj += platform_objs.cutscene
-obj += platform_objs.libc_debloat
-obj += platform_objs.surf
-obj += {
-	"th05/maine_e.cpp",
-	{ "th05_maine_master.asm", o = "mainem.obj" },
-	"th05/scoredat.cpp",
-	"th05/cutscene.cpp",
-	"th05/allcast.cpp",
-	"th05/regist.cpp",
-	"th05_maine.asm",
-	"th05/staff.cpp",
-
-	-- SHARED
-	"th02/frmdelay.cpp",
-	"th02/snd_se_r.cpp",
-	"th03/hfliplut.asm",
-	"th03/sprites/pi_mask.cpp",
-	"th04/bgimage.cpp",
-	"th04/cdg_load.asm",
-	"th04/cdg_p_na.cpp",
-	"th04/exit.cpp",
-	"th04/grppsafx.asm",
-	"th04/snd_mmdr.c",
-	"th04/snd_mode.cpp",
-	"th04/snd_pmdr.c",
-	"th04/snd_se.cpp",
-	"th05/bgimager.asm",
-	"th05/initmain.cpp",
-	"th05/inp_h_w.cpp",
-	"th05/input_s.asm",
-	"th05/snd_dlym.cpp",
-	"th05/snd_kaja.cpp",
-	"th05/snd_load.cpp",
-	"th05/vector.cpp",
-}
-th05:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='E'" }):link(
-	"maine", obj
-)
+th05:branch(
+	MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }
+):link("debloatm", obj)
 -- ----
 
 -- Research

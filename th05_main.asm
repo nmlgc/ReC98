@@ -3063,10 +3063,12 @@ loc_F71C:
 		call	graph_hide
 		call	text_clear
 		call	@game_exit$qv
-		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
+		call	_execl c, offset _MERGED_FN, cs, offset _MERGED_FN, cs, large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
 @GameExecl$qnxc	endp
+
+_MERGED_FN	db 'debloat',0
 
 include th04/main/item/render.asm
 

@@ -1,11 +1,7 @@
 // File names shared between TH04 and TH05
 
 #define BINARY_OP  	"op"
-#if (GAME == 5)
-#define BINARY_MAIN	"main"
-#else
 #define BINARY_MAIN	"debloatm"
-#endif
 #define BINARY_DEB 	"deb"
 
 #define BGM_MENU_MAIN_FN	"op"

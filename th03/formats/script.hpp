@@ -24,7 +24,7 @@ enum script_ret_t {
 	STOP = -1,
 };
 
-#if ((GAME == 5) && (BINARY == 'E'))
+#if ((GAME == 5) && (BINARY != 'M'))
 int script_param_number_default;
 #else
 extern int script_param_number_default;
