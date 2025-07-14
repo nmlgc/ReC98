@@ -93,21 +93,10 @@ static const int TEXT_INTERVAL_DEFAULT = ((GAME == 5) ? 2 : 1);
 #define extern
 #endif
 
-#if (GAME >= 4)
-// Statically allocated. MODDERS: TH03's dynamic allocation was better than
-// hardcoding a maximum size...
-extern unsigned char script[8192];
-
-extern unsigned char near *script_p;
-
-// Required by `script.hpp`.
-#define script_p script_p
-#else
 // Dynamically allocated.
 extern unsigned char far *script;
 
 #define script_p script
-#endif
 
 GrpSurface_M4 box_bg;
 Palette8 palette_from_last_pi_loaded;
@@ -204,29 +193,19 @@ bool16 pascal near cutscene_script_load(const char* fn)
 		return true;
 	}
 	size_t size = file_size();
-#if (GAME >= 4)
-	// PORTERS: Required for TH03 on flat memory models as well.
-	// ZUN landmine: Missing an error check if [size] >= sizeof(script);
-	script_p = static_cast<unsigned char near *>(script);
-#else
 	script = reinterpret_cast<unsigned char far *>(hmem_allocbyte(size));
-#endif
 	file_read(script_p, size);
 	file_close();
 	return false;
 }
 
-#if (GAME <= 4)
 void near cutscene_script_free(void)
 {
-#if (GAME == 3)
 	if(script) {
 		HMem<unsigned char>::free(script);
 		script = nullptr;
 	}
-#endif
 }
-#endif
 
 void near box_bg_put(void)
 {

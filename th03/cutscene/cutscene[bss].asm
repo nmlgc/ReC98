@@ -2,13 +2,7 @@ NAME_LEN = 6
 NAME_KANJI_LEN = (NAME_LEN / 2)
 
 public _script, _fast_forward
-if (GAME ge 4)
-	public _script_p
-	_script  	db 8192 dup(?)
-	_script_p	dw ?
-else
-	_script	dd ?
-endif
+_script	dd ?
 _fast_forward	db ?
 	evendata
 
