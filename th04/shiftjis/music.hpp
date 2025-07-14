@@ -2,7 +2,7 @@
 #include "th04/shiftjis/fnshared.hpp"
 #include "shiftjis.hpp"
 
-const shiftjis_t* MUSIC_CHOICES[] = {
+const shiftjis_t near *MUSIC_CHOICES[] = {
 	"No.1  " TH04_01,
 	"No.2  " TH04_02,
 	"No.3  " TH04_03,
@@ -29,7 +29,7 @@ const shiftjis_t* MUSIC_CHOICES[] = {
 	"      " TH04_QT,
 };
 
-const char* MUSIC_FILES[] = {
+const char near *MUSIC_FILES[] = {
 	BGM_MENU_MAIN_FN,
 	"st00",
 	"st10",

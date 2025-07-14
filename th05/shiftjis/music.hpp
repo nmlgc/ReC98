@@ -12,13 +12,13 @@ static const unsigned int TRACKS_MAX = 30;
 // Corresponds to 36 Shift-JIS code units.
 static const pixel_t TRACKLIST_W = 288;
 
-const shiftjis_t* LABEL_UP     = "             ------ £ ------       ";
-const shiftjis_t* LABEL_DOWN   = "             ------ ¥ ------       ";
+const shiftjis_t near *LABEL_UP   = "             ------ £ ------       ";
+const shiftjis_t near *LABEL_DOWN = "             ------ ¥ ------       ";
 
 // ZUN bug: TH03's list is the only one that correctly aligns this label.
 #define LABEL_QUIT "ƒ^ƒCƒgƒ‹‚É–ß‚é"
 
-const shiftjis_t* LABEL_GAME[GAME_COUNT] = {
+const shiftjis_t near *LABEL_GAME[GAME_COUNT] = {
 	"   ‘æ‚P’e@“Œ•ûèËˆÙ“`  Arrange ver  ",
 	"   ‘æ‚Q’e@“Œ•û••–‚˜^  Special MIX  ",
 	"   ‘æ‚R’e@“Œ•û–²‹ó  Special MIX  ",
@@ -26,7 +26,7 @@ const shiftjis_t* LABEL_GAME[GAME_COUNT] = {
 	"   ‘æ‚T’e@“Œ•û‰öãY’k MysticSquare  ",
 };
 
-const shiftjis_t* MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
+const shiftjis_t near *MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	// Only 7 of the 14 tracks have identical strings in TH01:
 	// * ‰i‰“‚Ì›Ş—
 	// * “Œ•û‰öŠï’k
@@ -165,7 +165,7 @@ const shiftjis_t* MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	"            " LABEL_QUIT "          ",
 }};
 
-const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
+const char near *MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"r_00",
 	"r_01",
 	"r_02",
