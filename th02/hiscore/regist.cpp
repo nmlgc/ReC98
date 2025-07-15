@@ -69,7 +69,7 @@ static const tram_x_t TABLE_HEADER_NAME_LEFT = (
 // bug, but with both binaries being closer to (inconsistently) left-aligning
 // this one, ZUN's intention is not all too clear.
 static const tram_x_t TABLE_HEADER_SCORE_LEFT = (
-	TABLE_SCORE_LEFT + 1 + (BINARY == 'E')
+	TABLE_SCORE_LEFT + 1 + (BINARY != 'M')
 );
 
 // ZUN bug: Misaligned in MAIN.EXE.
@@ -286,10 +286,10 @@ void regist_menu(void)
 
 	// ZUN bloat: Could have also been turned into a parameter to avoid
 	// compiling this twice.
-#if (BINARY == 'E')
-	hi.score.stage[place] = STAGE_ALL;
-#else
+#if (BINARY == 'M')
 	hi.score.stage[place] = (stage_id + 1);
+#else
+	hi.score.stage[place] = STAGE_ALL;
 #endif
 
 	getdate(&hi.score.date[place]);
