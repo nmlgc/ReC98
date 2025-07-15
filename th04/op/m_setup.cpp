@@ -185,7 +185,7 @@ void pascal near window_animate(
 void pascal near bgm_choice_put(int bgm_mode, vc2 col)
 {
 	screen_y_t top = CHOICE_TOP;
-	const shiftjis_t* str;
+	const shiftjis_t near *str;
 	static_assert(SND_BGM_MODE_COUNT == 3);
 	switch(bgm_mode) {
 	case SND_BGM_FM86:	str = BGM_CHOICE_FM86;	top += (0 * GLYPH_H);	break;
@@ -198,7 +198,7 @@ void pascal near bgm_choice_put(int bgm_mode, vc2 col)
 void pascal near se_choice_put(int se_mode, vc2 col)
 {
 	screen_y_t top = CHOICE_TOP;
-	const shiftjis_t* str;
+	const shiftjis_t near *str;
 	static_assert(SND_SE_MODE_COUNT == 3);
 	switch(se_mode) {
 	case SND_SE_FM:  	str = SE_CHOICE_FM;  	top += (0 * GLYPH_H);	break;
@@ -213,7 +213,7 @@ unsigned int pascal near setup_submenu(
 	unsigned int choice_count,
 	unsigned int choice_default,
 	void (pascal near *near choice_put)(int, vc2),
-	shiftjis_t *near help[HELP_LINES],
+	shiftjis_t near *near help[HELP_LINES],
 	input_t increment_input
 )
 {
