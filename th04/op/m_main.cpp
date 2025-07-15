@@ -120,7 +120,7 @@ const vc2 COL_DESC     = ((GAME == 5) ?  9 : V_WHITE);
 
 int8_t menu_sel = 0;
 bool quit = false;
-const shiftjis_t* MENU_DESC[] = MENU_DESCRIPTIONS;
+const shiftjis_t near *MENU_DESC[] = MENU_DESCRIPTIONS;
 resident_t far *resident;
 int8_t in_option; // ACTUAL TYPE: bool
 menu_unput_and_put_func_t menu_unput_and_put;
