@@ -54,6 +54,8 @@ _TEXT segment word public 'CODE' use16
 	extern IRAND:proc
 	extern TEXT_CLEAR:proc
 	extern TEXT_PUTSA:proc
+	extern HMEM_ALLOCBYTE:proc
+	extern HMEM_FREE:proc
 	extern SUPER_FREE:proc
 	extern SUPER_ENTRY_BFNT:proc
 	extern SUPER_PUT_RECT:proc
@@ -5466,8 +5468,8 @@ include th05/end/verdict_bitmap.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public @staffroll_animate$qv
-@staffroll_animate$qv proc near
+public @staffroll_animate_with_verdict_b$qv
+@staffroll_animate_with_verdict_b$qv proc near
 
 var_4		= word ptr -4
 @@verdict_bitmap_offset		= word ptr -2
@@ -5486,6 +5488,8 @@ var_4		= word ptr -4
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	sub_D21D
+		call	hmem_allocbyte pascal, (2 * VERDICT_SCREEN_H * (VERDICT_BITMAP_W / BYTE_DOTS))
+		mov	_verdict_bitmap, ax
 		call	verdict_bitmap_snap pascal, (1 * VERDICT_SCREEN_SIZE)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
@@ -5796,6 +5800,7 @@ loc_E7CC:
 		dec	si
 		or	si, si
 		jg	short loc_E7CC
+		call	hmem_free pascal, _verdict_bitmap
 		call	cdg_free_all
 		call	super_free
 		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (RES_Y - 1)
@@ -5803,7 +5808,7 @@ loc_E7CC:
 		pop	si
 		leave
 		retn
-@staffroll_animate$qv endp
+@staffroll_animate_with_verdict_b$qv endp
 
 maine_01__TEXT	ends
 
@@ -6159,6 +6164,6 @@ word_151E2	dw ?
 	extern _particles:orb_particle_t:ORB_PARTICLE_COUNT
 	extern _orb_trails_center:Point:ORB_TRAIL_COUNT
 	extern _stars_center:Point:STAR_COUNT
-	extern _verdict_bitmap:word:(VERDICT_SCREEN_H * 2 * (VERDICT_BITMAP_W / 16))
+	extern _verdict_bitmap:word
 
 		end

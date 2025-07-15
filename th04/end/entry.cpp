@@ -120,7 +120,11 @@ void main(void)
 	static_assert(ES_GOOD > ES_BAD);
 	if(resident->end_sequence >= ES_BAD) {
 		end_animate();
+#if (GAME == 5)
+		staffroll_animate_with_verdict_bitmap_on_heap();
+#else
 		staffroll_animate();
+#endif
 #if (GAME == 4)
 		verdict_animate();
 

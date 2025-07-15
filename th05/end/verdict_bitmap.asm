@@ -13,15 +13,12 @@ verdict_bitmap_snap	proc near
 	push	si
 	push	di
 	push	ds
-	push	ds
-	pop	es
-	assume es:_DATA
+	mov	es, _verdict_bitmap
 	mov	ax, SEG_PLANE_E
 	mov	ds, ax
 	assume ds:nothing
 	xor	si, si
 	mov	di, [bp+@@bitmap_offset]
-	add	di, offset _verdict_bitmap
 	mov	ax, VERDICT_SCREEN_H
 
 @@snap_loop:
@@ -64,8 +61,10 @@ verdict_bitmap_put proc near
 	call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 	xor	di, di
 	mov	si, [bp+@@bitmap_offset]
-	add	si, offset _verdict_bitmap
 	mov	dx, VERDICT_SCREEN_H
+	push	ds
+	mov	ds, _verdict_bitmap
+	assume ds:nothing
 
 @@put_loop:
 	mov	cx, (VERDICT_BITMAP_VRAM_W / 2)
@@ -73,6 +72,8 @@ verdict_bitmap_put proc near
 	add	di, (ROW_SIZE - VERDICT_BITMAP_VRAM_W)
 	dec	dx
 	jnz	short @@put_loop
+	pop	ds
+	assume ds:_DATA
 	GRCG_OFF_CLOBBERING dx
 	pop	di
 	pop	si
