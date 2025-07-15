@@ -178,10 +178,9 @@ public @screen_line_next_animate$qv
 		push	si
 		push	di
 		mov	bx, _line_id_total
-		shl	bx, 2
-		mov	ax, word ptr (_LINES+2)[bx]
+		add	bx, bx
 		mov	dx, word ptr _LINES[bx]
-		mov	word ptr [bp+@@str+2], ax
+		mov	word ptr [bp+@@str+2], ds
 		mov	word ptr [bp+@@str], dx
 		mov	bx, _loaded_screen_id
 		add	bx, bx
@@ -5955,88 +5954,88 @@ public _page_shown
 _page_shown	db 0
 	evendata
 public _BG_FN
-_BG_FN	label dword
-		dd aExed01_pi		; "EXED01.pi"
-		dd aExed07_pi		; "EXED07.pi"
-		dd aExed08_pi		; "EXED08.pi"
-		dd aExed09_pi		; "EXED09.pi"
-		dd aExed10_pi		; "EXED10.pi"
-		dd aExed16_pi		; "EXED16.pi"
-		dd aExed15_pi		; "EXED15.pi"
-		dd aExed01_pi_0		; "EXED01.pi"
-		dd aExed11_pi		; "EXED11.pi"
-		dd aExed11_pi_0		; "EXED11.pi"
-		dd aExed11_pi_1		; "EXED11.pi"
-		dd aExed03_pi		; "EXED03.pi"
-		dd aExed16_pi_0		; "EXED16.pi"
-		dd aExed15_pi_0		; "EXED15.pi"
-		dd aExed01_pi_1		; "EXED01.pi"
-		dd aExed12_pi		; "EXED12.pi"
-		dd aExed12_pi_0		; "EXED12.pi"
-		dd aExed13_pi		; "EXED13.pi"
-		dd aExed04_pi		; "EXED04.pi"
-		dd aExed16_pi_1		; "EXED16.pi"
-		dd aExed15_pi_1		; "EXED15.pi"
-		dd aExed01_pi_2		; "EXED01.pi"
-		dd aExed14_pi		; "EXED14.pi"
-		dd aExed05_pi		; "EXED05.pi"
-		dd aExed14_pi_0		; "EXED14.pi"
-		dd aExed06_pi		; "EXED06.pi"
-		dd aExed16_pi_2		; "EXED16.pi"
-		dd aExed15_pi_2		; "EXED15.pi"
+_BG_FN	label word
+		dw aExed01_pi		; "EXED01.pi"
+		dw aExed07_pi		; "EXED07.pi"
+		dw aExed08_pi		; "EXED08.pi"
+		dw aExed09_pi		; "EXED09.pi"
+		dw aExed10_pi		; "EXED10.pi"
+		dw aExed16_pi		; "EXED16.pi"
+		dw aExed15_pi		; "EXED15.pi"
+		dw aExed01_pi_0		; "EXED01.pi"
+		dw aExed11_pi		; "EXED11.pi"
+		dw aExed11_pi_0		; "EXED11.pi"
+		dw aExed11_pi_1		; "EXED11.pi"
+		dw aExed03_pi		; "EXED03.pi"
+		dw aExed16_pi_0		; "EXED16.pi"
+		dw aExed15_pi_0		; "EXED15.pi"
+		dw aExed01_pi_1		; "EXED01.pi"
+		dw aExed12_pi		; "EXED12.pi"
+		dw aExed12_pi_0		; "EXED12.pi"
+		dw aExed13_pi		; "EXED13.pi"
+		dw aExed04_pi		; "EXED04.pi"
+		dw aExed16_pi_1		; "EXED16.pi"
+		dw aExed15_pi_1		; "EXED15.pi"
+		dw aExed01_pi_2		; "EXED01.pi"
+		dw aExed14_pi		; "EXED14.pi"
+		dw aExed05_pi		; "EXED05.pi"
+		dw aExed14_pi_0		; "EXED14.pi"
+		dw aExed06_pi		; "EXED06.pi"
+		dw aExed16_pi_2		; "EXED16.pi"
+		dw aExed15_pi_2		; "EXED15.pi"
 public _BG_QUARTER
 _BG_QUARTER	label word
 		db 1, 0, 1, 3, 0, 0, 0
 		db 1, 0, 1, 2, 1, 1, 1
 		db 1, 2, 0, 1, 0, 2, 2
 		db 1, 0, 0, 2, 0, 3, 3
-_LINES	dd aProjectOfTouho
-		dd aNo_1Buumx		; "		     Project of	TOUHOU	  "...
-		dd aReimuHakureiSh
-		dd aNo_2Buumx
-		dd aReimuHakurei_0
-		dd aRikaEngineer
-		dd aMeiraSamurai
-		dd aMarisaKirisame
-		dd aMimaGhost
-		dd aNo_3Buumx
-		dd aReimuHakurei_1
-		dd aMarisaKirisa_0
-		dd aMimaGhost_0
-		dd aEllenWitch
-		dd aKotohimePrince
-		dd aKanaAnaberalPo
-		dd aRikakoAsakuraS
-		dd aTiyuriKitashir
-		dd aYumemiOkazakiP
-		dd aNo_4Buumx
-		dd aReimuHakurei_2
-		dd aMarisaKirisa_1
-		dd aOrangeOriental
-		dd aKurumiVampire
-		dd aElliyGateKeepe
-		dd aYukaOrientalDe
-		dd aMugetuMaid
-		dd aGengetuDemon
-		dd aNo_5Buumx
-		dd aReimuHakurei_3
-		dd aMarisaKirisa_2
-		dd aMimaGhost_1
-		dd aYukaOriental_0
-		dd aSaraGateKeeper
-		dd aLuizeDemon
-		dd aAliceWitchOfDe
-		dd aYukiBlackWitch
-		dd aMaiWhiteWitch
-		dd aYumekoMaid
-		dd aShinkiGoddessO
-		dd aProgramerZunJu
-		dd aGraphicsZunJun
-		dd aMusicComposeZu
-		dd aP_m_d_ProgramM
-		dd aSpecialThanksA
-		dd aAmusementMaker
-		dd aAndAllTestPlay
+_LINES	dw aProjectOfTouho
+		dw aNo_1Buumx		; "		     Project of	TOUHOU	  "...
+		dw aReimuHakureiSh
+		dw aNo_2Buumx
+		dw aReimuHakurei_0
+		dw aRikaEngineer
+		dw aMeiraSamurai
+		dw aMarisaKirisame
+		dw aMimaGhost
+		dw aNo_3Buumx
+		dw aReimuHakurei_1
+		dw aMarisaKirisa_0
+		dw aMimaGhost_0
+		dw aEllenWitch
+		dw aKotohimePrince
+		dw aKanaAnaberalPo
+		dw aRikakoAsakuraS
+		dw aTiyuriKitashir
+		dw aYumemiOkazakiP
+		dw aNo_4Buumx
+		dw aReimuHakurei_2
+		dw aMarisaKirisa_1
+		dw aOrangeOriental
+		dw aKurumiVampire
+		dw aElliyGateKeepe
+		dw aYukaOrientalDe
+		dw aMugetuMaid
+		dw aGengetuDemon
+		dw aNo_5Buumx
+		dw aReimuHakurei_3
+		dw aMarisaKirisa_2
+		dw aMimaGhost_1
+		dw aYukaOriental_0
+		dw aSaraGateKeeper
+		dw aLuizeDemon
+		dw aAliceWitchOfDe
+		dw aYukiBlackWitch
+		dw aMaiWhiteWitch
+		dw aYumekoMaid
+		dw aShinkiGoddessO
+		dw aProgramerZunJu
+		dw aGraphicsZunJun
+		dw aMusicComposeZu
+		dw aP_m_d_ProgramM
+		dw aSpecialThanksA
+		dw aAmusementMaker
+		dw aAndAllTestPlay
 public _LINES_PER_SCREEN, _line_id_on_screen
 _LINES_PER_SCREEN	equ $-2
 		dw 1, 2, 6, 10, 9, 12, 7

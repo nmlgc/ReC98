@@ -44,7 +44,7 @@ Palette8 palette_next;
 // Strings
 // -------
 
-extern const char *BG_FN[PLAYCHAR_COUNT][SCREEN_COUNT];
+extern const char near *BG_FN[PLAYCHAR_COUNT][SCREEN_COUNT];
 extern uint8_t BG_QUARTER[PLAYCHAR_COUNT][SCREEN_COUNT];
 // -------
 
