@@ -6,7 +6,6 @@ zunsoft_pyro_t struc
 	alive	db ?
 	frame	db ? ; since creation
 	origin	Point ?
-	distance_prev	dw ? ; unused
 	distance	dw ?
 	speed	dw ?
 	angle	db ?

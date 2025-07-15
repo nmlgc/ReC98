@@ -26,7 +26,6 @@ loc_B63E:
 	mov	ax, @@origin.x
 	mov	[si+zunsoft_pyro_t.origin.y], ax
 	mov	[si+zunsoft_pyro_t.distance], 0
-	mov	[si+zunsoft_pyro_t.distance_prev], 0
 	call	IRand
 	mov	bx, 224
 	cwd
@@ -110,8 +109,6 @@ loc_B6FA:
 	call	snd_se_play pascal, 15
 
 loc_B70D:
-	mov	ax, [si+zunsoft_pyro_t.distance]
-	mov	[si+zunsoft_pyro_t.distance_prev], ax
 	mov	ax, [si+zunsoft_pyro_t.speed]
 	add	[si+zunsoft_pyro_t.distance], ax
 	push	[si+zunsoft_pyro_t.origin.x]
@@ -136,8 +133,6 @@ loc_B70D:
 	jmp	short @@put
 
 loc_B754:
-	mov	ax, [si+zunsoft_pyro_t.distance]
-	mov	[si+zunsoft_pyro_t.distance_prev], ax
 	mov	ax, [si+zunsoft_pyro_t.speed]
 	add	[si+zunsoft_pyro_t.distance], ax
 	push	[si+zunsoft_pyro_t.origin.x]

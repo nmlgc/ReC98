@@ -14,7 +14,6 @@ struct pyro_t {
 	bool alive;
 	uint8_t age;
 	SPPoint origin;
-	Subpixel distance_prev; // ZUN bloat: Unused.
 	Subpixel distance;
 	Subpixel speed;
 	unsigned char angle;
