@@ -2357,7 +2357,6 @@ public @GameExecl$qnxc
 
 		push	bp
 		mov	bp, sp
-		freePISlotLarge	0
 		call	sub_E24A
 		call	_mpn_free
 		call	sub_1C608
@@ -2366,11 +2365,14 @@ public @GameExecl$qnxc
 		call	text_clear
 		call	@gaiji_free$qv
 		call	@game_exit$qv
-		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
+		call	_execl c, offset _MERGED_FN, cs, offset _MERGED_FN, cs, large [bp+@@binary_fn], large 0
 		pop	bp
 		retf
 @GameExecl$qnxc	endp
 
+_MERGED_FN	db 'debloat',0
+	nop
+	nop
 
 ; =============== S U B	R O U T	I N E =======================================
 

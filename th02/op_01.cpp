@@ -762,7 +762,7 @@ void option_update_and_render(void)
 	}
 }
 
-int main(void)
+int main_op(int, const char *[])
 {
 	unsigned char ret;
 	if(snd_pmd_resident()) {

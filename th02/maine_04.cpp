@@ -8,7 +8,6 @@
 #include "th02/score.c"
 
 score_t score_highest;
-scoredat_section_t hi;
 
 void pascal score_highest_get(void)
 {

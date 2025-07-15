@@ -1022,7 +1022,7 @@ void near staffroll_and_verdict_animate(void)
 
 	// Copyright
 	graph_accesspage(1);
-	verdict_label_put(8, VERDICT_LABEL_LEFT, VERDICT_COPYRIGHT "\0all.pi");
+	verdict_label_put(8, VERDICT_LABEL_LEFT, VERDICT_COPYRIGHT);
 	verdict_row_1_to_0_animate(
 		8, ((sizeof(VERDICT_COPYRIGHT) - 1) / sizeof(shiftjis_kanji_t))
 	);

@@ -498,18 +498,25 @@ th02:zungen("bin/th02/zun.com", {
 })
 
 obj = {}
+obj += platform_objs.cutscene
 obj += platform_objs.libc_debloat
 obj += platform_objs.pi_surf
 obj += platform_objs.surf
 obj += platform_objs.vblank
+obj += tup.glob("th02/pc98/*.cpp")
 obj += {
 	"th02/op_01.cpp",
-	"th02_op.asm",
+	"th02.asm",
 	"th02/op_03.cpp",
 	"th02/globals.cpp",
 	"th02/op_04.cpp",
 	"th02/op_05.cpp",
 	"th02/op_music.cpp",
+	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
+	"th02/maine022.cpp",
+	"th02/maine_03.cpp",
+	"th02/maine_04.cpp",
+	"th02/staff.cpp",
 
 	-- SHARED
 	"th02/exit_dos.cpp",
@@ -517,7 +524,9 @@ obj += {
 	"th02/frmdelay.cpp",
 	"th02/grppsafx.cpp",
 	"th02/initop.cpp",
+	"th02/initmain.cpp",
 	"th02/input_rs.cpp",
+	"th02/keydelay.cpp",
 	"th02/snd_dlym.cpp",
 	"th02/snd_kaja.cpp",
 	"th02/snd_load.cpp",
@@ -529,7 +538,7 @@ obj += {
 	"th02/vplanset.cpp",
 	"th02/zunerror.cpp",
 }
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("debloat", obj)
 
 obj = {
 	{ "th02_main.asm", extra_inputs = {
@@ -574,39 +583,7 @@ obj = {
 	"th02/boss_5.cpp",
 	"th02/regist_m.cpp",
 }
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
-
-obj = {}
-obj += platform_objs.cutscene
-obj += platform_objs.libc_debloat
-obj += platform_objs.surf
-obj += {
-	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
-	"th02_maine.asm",
-	"th02/maine022.cpp",
-	"th02/globals.cpp",
-	"th02/maine_03.cpp",
-	"th02/maine_04.cpp",
-	"th02/staff.cpp",
-
-	-- SHARED
-	"th02/exit.cpp",
-	"th02/frmdelay.cpp",
-	"th02/grppsafx.cpp",
-	"th02/initmain.cpp",
-	"th02/input_rs.cpp",
-	"th02/keydelay.cpp",
-	"th02/snd_dlym.cpp",
-	"th02/snd_kaja.cpp",
-	"th02/snd_load.cpp",
-	"th02/snd_mmdr.c",
-	"th02/snd_mode.c",
-	"th02/snd_pmdr.c",
-	"th02/vplanset.cpp",
-}
-th02:branch(MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='E'" }):link(
-	"maine", obj
-)
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("debloatm", obj)
 -- ----
 
 -- TH03
