@@ -48,7 +48,8 @@ enum option_choice_t {
 };
 
 enum vs_choice_t {
-	VC_COUNT = VS_MODE_COUNT,
+	VC_QUIT = VS_MODE_COUNT,
+	VC_COUNT
 };
 
 // Proportional gaiji strings
@@ -457,12 +458,16 @@ void pascal near vs_choice_put(int sel, tram_atrb2 atrb)
 	} else if(sel == VS_1P_2P) {
 		static const char STR[] = g_str_vs(gp_1P_vs, gp__2P);
 		gaiji_putsa(TRAM_LEFT, choice_tram_y(2), STR, atrb);
-	} else /* if (sel == VS_CPU_CPU) */ {
+	} else if(sel == VS_CPU_CPU) {
 		static const char STR[] = g_str_vs(gp_CPU_vs, gp__CPU);
 		gaiji_putsa(TRAM_LEFT, choice_tram_y(3), STR, atrb);
+	} else if(sel == VC_QUIT) {
+		choice_put_centered(BOX_SUBMENU_CENTER_X, 4, 0, COMMAND_QUIT, atrb);
 	}
 }
 
+// Returns `false` if the user quit from this menu, and `true` if they quit
+// from the Select screen.
 bool near vs_menu(void)
 {
 	// ZUN quirk: This assignment causes any initially held inputs to be
@@ -484,15 +489,15 @@ bool near vs_menu(void)
 			if(input_sp & (INPUT_UP | INPUT_DOWN)) {
 				int8_t delta = ((input_sp & INPUT_UP) ? -1 : +1);
 				vs_choice_put(menu_sel, TX_BLACK);
-				ring_step(menu_sel, delta, VS_1P_CPU, VS_CPU_CPU);
+				ring_step(menu_sel, delta, VS_1P_CPU, (VC_COUNT - 1));
 				vs_choice_put(menu_sel, TX_WHITE);
+			}
+			if(input_is_quit(VC_QUIT)) {
+				return false;
 			}
 			if((input_sp & (INPUT_SHOT | INPUT_OK))) {
 				return select_vs_menu(static_cast<vs_mode_t>(menu_sel));
 			}
-			// ZUN bug: Should have added a INPUT_CANCEL branch to allow
-			// players to quit back to the main menu once they entered this
-			// one.
 		}
 		input_prev = input_sp;
 		frame_delay(1);
@@ -626,8 +631,13 @@ void near main_update(void)
 		case MC_VS:
 			resident->playchar_paletted[0].set(PLAYCHAR_REIMU);
 			resident->playchar_paletted[1].set(PLAYCHAR_REIMU);
-			vs_menu();
-			return_from_other_screen_to_main();
+			if(vs_menu()) {
+				return_from_other_screen_to_main();
+			} else {
+				menu_prev = &MENU_OPTION;
+				menu_cur = &MENU_MAIN;
+				menu_sel = MC_VS;
+			}
 			return;
 		case MC_MUSICROOM:
 			{for(int i = 0; i < CDG_SLOT_COUNT; i++) {
