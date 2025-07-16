@@ -16,10 +16,10 @@
 #include "th02/score.c"
 
 const unsigned char gbcRANKS[4][8] = {
-	gb_SP, gb_E_, gb_A_, gb_S_, gb_Y_, gb_SP, gb_SP, 0,
-	gb_N_, gb_O_, gb_R_, gb_M_, gb_A_, gb_L_, gb_SP, 0,
-	gb_SP, gb_H_, gb_A_, gb_R_, gb_D_, gb_SP, gb_SP, 0,
-	gb_L_, gb_U_, gb_N_, gb_A_, gb_T_, gb_I_, gb_C_, 0,
+	gb__, gb_E, gb_A, gb_S, gb_Y, gb__, gb__, 0,
+	gb_N, gb_O, gb_R, gb_M, gb_A, gb_L, gb__, 0,
+	gb__, gb_H, gb_A, gb_R, gb_D, gb__, gb__, 0,
+	gb_L, gb_U, gb_N, gb_A, gb_T, gb_I, gb_C, 0,
 };
 
 const shiftjis_t *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
@@ -95,7 +95,7 @@ void pascal near scores_put(int place_to_highlight)
 		gaiji_putsa(12, 7+i, hi.score.g_name[i], atrb);
 		score_put(7+i, hi.score.score[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
-			gaiji_putca(44, 7+i, hi.score.stage[i] + gb_0_, atrb);
+			gaiji_putca(44, 7+i, hi.score.stage[i] + gb_0, atrb);
 		} else {
 			gaiji_putca(44, 7+i, gs_ALL, atrb);
 		}
@@ -105,10 +105,10 @@ void pascal near scores_put(int place_to_highlight)
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		score_atrb_set(atrb, i, place_to_highlight);
 		if(i != 9) {
-			gaiji_putca(9, 7+i, gb_1_ + i, atrb);
+			gaiji_putca(9, (7 + i), (gb_1 + i), atrb);
 		} else {
-			gaiji_putca(8, 16, gb_1_, atrb);
-			gaiji_putca(10, 16, gb_0_, atrb);
+			gaiji_putca(8, 16, gb_1, atrb);
+			gaiji_putca(10, 16, gb_0, atrb);
 		}
 	}
 }

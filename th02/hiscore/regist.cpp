@@ -168,7 +168,7 @@ void pascal near scores_put(int place_to_highlight)
 			gaiji_putca(
 				TABLE_STAGE_X,
 				table_place_y(i),
-				(hi.score.stage[i] + gb_0_),
+				(hi.score.stage[i] + gb_0),
 				atrb
 			);
 		} else {
@@ -179,19 +179,19 @@ void pascal near scores_put(int place_to_highlight)
 		score_atrb_set(atrb, i, place_to_highlight);
 		if(i != (SCOREDAT_PLACES - 1)) {
 			gaiji_putca(
-				TABLE_PLACE_SINGLE_X, table_place_y(i), (gb_1_ + i), atrb
+				TABLE_PLACE_SINGLE_X, table_place_y(i), (gb_1 + i), atrb
 			);
 		} else {
 			gaiji_putca(
 				(TABLE_PLACE_DOUBLE_LEFT + (0 * GAIJI_TRAM_W)),
 				table_place_y(SCOREDAT_PLACES - 1),
-				gb_1_,
+				gb_1,
 				atrb
 			);
 			gaiji_putca(
 				(TABLE_PLACE_DOUBLE_LEFT + (1 * GAIJI_TRAM_W)),
 				table_place_y(SCOREDAT_PLACES - 1),
-				gb_0_,
+				gb_0,
 				atrb
 			);
 		}

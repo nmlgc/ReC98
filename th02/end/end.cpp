@@ -296,7 +296,7 @@ void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
 			past_leading_zeroes = digit;
 		}
 		if(past_leading_zeroes || (i == (DIGITS - 1))) {
-			str[i] = gaiji_th02_t(gb_0_ + digit);
+			str[i] = gaiji_th02_t(gb_0 + digit);
 		} else {
 			str[i] = gb_SP;
 		}
@@ -1024,7 +1024,7 @@ void near staffroll_and_verdict_animate(void)
 	// Continues
 	graph_accesspage(1);
 	verdict_label_put(2, VERDICT_LABEL_LEFT, VERDICT_LABEL_CONTINUES);
-	verdict_value_singledigit_put(2, (gb_0_ + resident->continues_used));
+	verdict_value_singledigit_put(2, (gb_0 + resident->continues_used));
 	verdict_row_1_to_0_animate(2);
 	frame_delay(ROW_FRAMES);
 
@@ -1038,14 +1038,14 @@ void near staffroll_and_verdict_animate(void)
 	// Starting lives
 	graph_accesspage(1);
 	verdict_label_put(4, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_LIVES);
-	verdict_value_singledigit_put(4, (gb_1_ + resident->start_lives));
+	verdict_value_singledigit_put(4, (gb_1 + resident->start_lives));
 	verdict_row_1_to_0_animate(4);
 	frame_delay(ROW_FRAMES);
 
 	// Starting bombs
 	graph_accesspage(1);
 	verdict_label_put(5, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_BOMBS);
-	verdict_value_singledigit_put(5, (gb_0_ + resident->start_bombs));
+	verdict_value_singledigit_put(5, (gb_0 + resident->start_bombs));
 	verdict_row_1_to_0_animate(5);
 	frame_delay(ROW_FRAMES + (ROW_FRAMES / 2));
 

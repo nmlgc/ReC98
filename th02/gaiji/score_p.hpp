@@ -20,7 +20,7 @@ inline score_t gaiji_score_divide(
 ) { \
 	digit = gaiji_score_divide(score, divisor, check_divisor); \
 	divisor /= 10; \
-	gaiji = (gb_0_ + digit); \
+	gaiji = (gb_0 + digit); \
 	if(digit) { \
 		past_leading_zeroes = true; \
 	} \
@@ -28,7 +28,7 @@ inline score_t gaiji_score_divide(
 
 #define gaiji_score_put(score, on_digit, check_divisor) { \
 	/* ZUN bloat: Initialized inside the loop. */ \
-	int gaiji = gb_0_; /* ACTUAL TYPE: gaiji_th02_t */ \
+	int gaiji = gb_0; /* ACTUAL TYPE: gaiji_th02_t */ \
 	\
 	score_t divisor = 10000000; /* Must match SCORE_DIGITS! */ \
 	score_t digit; \
@@ -48,7 +48,7 @@ inline score_t gaiji_score_divide(
 	int i; \
 	\
 	/* ZUN bloat: Initialized inside the loop. */ \
-	int gaiji = gb_0_; /* ACTUAL TYPE: gaiji_th02_t */ \
+	int gaiji = gb_0; /* ACTUAL TYPE: gaiji_th02_t */ \
 	\
 	score_t divisor = 10000000; /* Must match SCORE_DIGITS! */ \
 	score_t digit; \

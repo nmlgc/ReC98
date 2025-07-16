@@ -268,7 +268,7 @@ inline void titles_dissolve_put(const int& bgm_len) {
 }
 
 #define titles_strings_put(bgm_str, bgm_len) \
-	gStage_1[6] = static_cast<gaiji_th04_t>(gb_1_ + stage_id); \
+	gStage_1[6] = static_cast<gaiji_th04_t>(gb_1 + stage_id); \
 	if(stage_id == 5) { \
 		gaiji_putsa( \
 			STAGE_NUM_FE_TRAM_LEFT, \
@@ -547,7 +547,7 @@ void pascal near popup_put_points_th04(unsigned long points)
 		points = (points % divisor);
 		past_leading_zeroes |= digit;
 		if(past_leading_zeroes) {
-			buf[i] = static_cast<gaiji_th04_t>(gb_0_ + digit);
+			buf[i] = static_cast<gaiji_th04_t>(gb_0 + digit);
 		} else {
 			buf[i] = g_EMPTY;
 		}
@@ -555,8 +555,8 @@ void pascal near popup_put_points_th04(unsigned long points)
 		i++;
 	}
 	// (ones)
-	buf[SCORE_DIGITS - 2] = static_cast<gaiji_th04_t>(gb_0_ + points);
-	buf[SCORE_DIGITS - 1] = gb_0_;  // ("continues used" digit)
+	buf[SCORE_DIGITS - 2] = static_cast<gaiji_th04_t>(gb_0 + points);
+	buf[SCORE_DIGITS - 1] = gb_0;   // ("continues used" digit)
 	buf[SCORE_DIGITS - 0] = g_NULL; // (null terminator)
 
 	gaiji_putsa(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, buf, TX_WHITE);

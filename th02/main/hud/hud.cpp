@@ -61,7 +61,7 @@ void pascal near hud_score_put(utram_y_t y, score_t value)
 		int numeral = (value / *po10_p);
 		value -= (numeral * (*po10_p));
 		po10_p++;
-		c = (gb_0_ + numeral);
+		c = (gb_0 + numeral);
 		gaiji_putca(x, y, c, TX_WHITE);
 	}
 }
@@ -71,7 +71,7 @@ void pascal near hud_continues_put(utram_y_t y, int continues_used)
 	if(continues_used >= 10) {
 		continues_used = 9;
 	}
-	int c = (gb_0_ + continues_used);
+	int c = (gb_0 + continues_used);
 	gaiji_putca(HUD_CONTINUES_LEFT, y, c, TX_WHITE);
 }
 

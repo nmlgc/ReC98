@@ -26,16 +26,16 @@ void near scoredat_recreate(void)
 #endif
 
 	// ACTUAL TYPE: gaiji_th04_t
-	unsigned char digit = (gb_0_ + 10 - (10 / SCOREDAT_PLACES));
+	unsigned char digit = (gb_0 + 10 - (10 / SCOREDAT_PLACES));
 
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		hi.score.cleared = SCOREDAT_NOT_CLEARED;
 		for(c = 0; c < SCORE_DIGITS; c++) {
-			hi.score.g_score[i].digits[c] = gb_0_;
+			hi.score.g_score[i].digits[c] = gb_0;
 		}
 
 		if(i == 0) {
-			hi.score.g_score[i].digits[SCORE_INITIAL_DIGIT - 0] = gb_1_;
+			hi.score.g_score[i].digits[SCORE_INITIAL_DIGIT - 0] = gb_1;
 		} else {
 			hi.score.g_score[i].digits[SCORE_INITIAL_DIGIT - 1] = digit;
 
@@ -59,9 +59,9 @@ void near scoredat_recreate(void)
 		// the file was somehow modified or deleted from outside the game while
 		// it was running.
 #if ((GAME == 5) && (BINARY == 'E'))
-		hi.score.g_stage[i] = (gb_6_ - i);
+		hi.score.g_stage[i] = (gb_6 - i);
 #elif (GAME == 4)
-		hi.score.g_stage[i] = (gb_5_ - (i / 2));
+		hi.score.g_stage[i] = (gb_5 - (i / 2));
 #endif
 
 		for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
@@ -81,9 +81,9 @@ void near scoredat_recreate(void)
 #if ((GAME == 5) && (BINARY == 'O'))
 		for(place = 0; place < SCOREDAT_PLACES; place++) {
 			if((i % RANK_COUNT) == RANK_EXTRA) {
-				hi.score.g_stage[place] = gb_1_;
+				hi.score.g_stage[place] = gb_1;
 			} else {
-				hi.score.g_stage[place] = (gb_1_ + SCOREDAT_PLACES - place);
+				hi.score.g_stage[place] = (gb_1 + SCOREDAT_PLACES - place);
 			}
 		}
 #endif

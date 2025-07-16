@@ -126,7 +126,7 @@ void op_animate(void)
 	// Sony Vegas calls this a "Barn Door" transition.
 	int door_x;
 	tram_y_t door_y;
-	const char gbZUN[] = {gb_Z_, gb_U_, gb_N_, 0};
+	const char gbZUN[] = { gb_Z, gb_U, gb_N, '\0' };
 
 	text_wipe();
 	snd_load("huuma.efc", SND_LOAD_SE);
@@ -270,47 +270,47 @@ void start_extra(void)
 
 // A remnant from TH01? Unused in the final game.
 const char gbHIT_KEY[] = {
-	gb_H_, gb_I_, gb_T_, gb_SP, gb_K_, gb_E_, gb_Y_, '\0'
+	gb_H, gb_I, gb_T, gb__, gb_K, gb_E, gb_Y, '\0'
 };
 const char gb7SPACES[] = {
-	gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, '\0'
+	gb__, gb__, gb__, gb__, gb__, gb__, gb__, '\0'
 };
 
 const char gbSTART[10] = {
-	gb_S_,gb_T_,gb_A_,gb_R_,gb_T_, '\0'
+	gb_S, gb_T, gb_A, gb_R, gb_T, '\0'
 };
 inline char menu_extra_pos() {
 	return 1;
 }
 const char gbEXTRA_START[] = {
-	gb_E_,gb_X_,gb_T_,gb_R_,gb_A_,gb_SP,gb_S_,gb_T_,gb_A_,gb_R_,gb_T_, '\0'
+	gb_E, gb_X, gb_T, gb_R, gb_A, gb__, gb_S, gb_T, gb_A, gb_R, gb_T, '\0'
 };
 const char gbHISCORE[10] = {
-	gb_H_,gb_I_,gb_S_,gb_C_,gb_O_,gb_R_,gb_E_, '\0'
+	gb_H, gb_I, gb_S, gb_C, gb_O, gb_R, gb_E, '\0'
 };
 const char gbOPTION[10] = {
-	gb_O_,gb_P_,gb_T_,gb_I_,gb_O_,gb_N_, '\0'
+	gb_O, gb_P, gb_T, gb_I, gb_O, gb_N, '\0'
 };
 const char gbQUIT[10] = {
-	gb_Q_,gb_U_,gb_I_,gb_T_, '\0'
+	gb_Q, gb_U, gb_I, gb_T, '\0'
 };
 const char gbRANK[10] = {
-	gb_R_,gb_A_,gb_N_,gb_K_, '\0'
+	gb_R, gb_A, gb_N, gb_K, '\0'
 };
 const char gbPLAYER[10] = {
-	gb_P_,gb_L_,gb_A_,gb_Y_,gb_E_,gb_R_, '\0'
+	gb_P, gb_L, gb_A, gb_Y, gb_E, gb_R, '\0'
 };
 const char gbMUSIC[10] = {
-	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_, '\0'
+	gb_M, gb_U, gb_S, gb_I, gb_C, '\0'
 };
 const char gbBOMB[10] = {
-	gb_B_,gb_O_,gb_M_,gb_B_, '\0'
+	gb_B, gb_O, gb_M, gb_B, '\0'
 };
 const char gbMUSIC_MODE[] = {
-	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_,gb_SP,gb_M_,gb_O_,gb_D_,gb_E_, '\0'
+	gb_M, gb_U, gb_S, gb_I, gb_C, gb__, gb_M, gb_O, gb_D, gb_E, '\0'
 };
 const char gbRESET[10] = {
-	gb_R_,gb_E_,gb_S_,gb_E_,gb_T_, '\0'
+	gb_R, gb_E, gb_S, gb_E, gb_T, '\0'
 };
 
 const char gsRANKS[4][3] = {
@@ -321,9 +321,9 @@ const char gsRANKS[4][3] = {
 };
 
 const unsigned char gbcBGM_MODE[3][5] = {
-	gb_O_, gb_F_, gb_F_, gb_SP, '\0',
-	gb_SP, gb_F_, gb_M_, gb_SP, '\0',
-	gb_M_, gb_I_, gb_D_, gb_I_, '\0',
+	gb_O, gb_F, gb_F, gb__, '\0',
+	gb__, gb_F, gb_M, gb__, '\0',
+	gb_M, gb_I, gb_D, gb_I, '\0',
 };
 
 #include "th02/shiftjis/op_main.hpp"
@@ -479,14 +479,14 @@ void pascal near option_put(int sel, tram_atrb2 atrb)
 		graph_gaiji_puts(380, 276, 16, gbcBGM_MODE[(char)snd_bgm_mode], 0);
 	} else if(sel == 2) {
 		gaiji_putsa(24, 18, gbPLAYER, atrb);
-		gaiji_putca(49, 18, lives + 1 + gb_0_, atrb);
+		gaiji_putca(49, 18, lives + 1 + gb_0, atrb);
 		graph_copy_rect_1_to_0_16(392, 292, 32, 16);
-		graph_gaiji_putc(396, 292, lives + 1 + gb_0_, 0);
+		graph_gaiji_putc(396, 292, lives + 1 + gb_0, 0);
 	} else if(sel == 3) {
 		gaiji_putsa(24, 19, gbBOMB, atrb);
-		gaiji_putca(49, 19, bombs + gb_0_, atrb);
+		gaiji_putca(49, 19, bombs + gb_0, atrb);
 		graph_copy_rect_1_to_0_16(392, 308, 32, 16);
-		graph_gaiji_putc(396, 308, bombs + gb_0_, 0);
+		graph_gaiji_putc(396, 308, bombs + gb_0, 0);
 	} else if(sel == 4) {
 		text_putsa(24, 20, REDUCE_EFFECTS_TITLE, atrb);
 		text_putsa(

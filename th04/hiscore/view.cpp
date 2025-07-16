@@ -101,7 +101,7 @@ int8_t unused[48]; // ZUN bloat
 // over its four. The `debloated` branch would also migrate TH04 to loops.
 
 #define digit_at(section, place, digit) ( \
-	((section.score.g_score[place].digits[digit]) - gb_0_) \
+	((section.score.g_score[place].digits[digit]) - gb_0) \
 )
 
 #define digit_put(left, top, digit) { \
