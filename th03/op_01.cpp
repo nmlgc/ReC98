@@ -479,7 +479,7 @@ bool near vs_menu(void)
 	text_clear();
 	box_animate(MAIN_W, SUBMENU_W);
 
-	int sel = VS_1P_CPU;
+	menu_sel = VS_1P_CPU;
 	vs_choice_put(VS_1P_CPU, TX_WHITE);
 	vs_choice_put(VS_1P_2P, TX_BLACK);
 	vs_choice_put(VS_CPU_CPU, TX_BLACK);
@@ -489,12 +489,12 @@ bool near vs_menu(void)
 		if(input_prev == INPUT_NONE) {
 			if(input_sp & (INPUT_UP | INPUT_DOWN)) {
 				int8_t delta = ((input_sp & INPUT_UP) ? -1 : +1);
-				vs_choice_put(sel, TX_BLACK);
-				ring_step(sel, delta, VS_1P_CPU, VS_CPU_CPU);
-				vs_choice_put(sel, TX_WHITE);
+				vs_choice_put(menu_sel, TX_BLACK);
+				ring_step(menu_sel, delta, VS_1P_CPU, VS_CPU_CPU);
+				vs_choice_put(menu_sel, TX_WHITE);
 			}
 			if((input_sp & (INPUT_SHOT | INPUT_OK))) {
-				return select_vs_menu(static_cast<vs_mode_t>(sel));
+				return select_vs_menu(static_cast<vs_mode_t>(menu_sel));
 			}
 			// ZUN bug: Should have added a INPUT_CANCEL branch to allow
 			// players to quit back to the main menu once they entered this
