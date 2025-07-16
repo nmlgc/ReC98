@@ -275,91 +275,6 @@ bool near story_menu(void)
 	return switch_to_mainl();
 }
 
-inline tram_y_t choice_tram_y(unsigned int line) {
-	return ((BOX_TOP / GLYPH_H) + 1 + line);
-}
-
-void pascal near vs_choice_put(int sel, tram_atrb2 atrb)
-{
-	enum {
-		W = (8 * GAIJI_W),
-		TRAM_LEFT = ((BOX_SUBMENU_CENTER_X - (W / 2)) / GLYPH_HALF_W),
-	};
-	if(sel == VS_1P_CPU) {
-		static const char STR[] = g_str_vs(gp_1P_vs, gp__CPU);
-		gaiji_putsa(TRAM_LEFT, choice_tram_y(1), STR, atrb);
-	} else if(sel == VS_1P_2P) {
-		static const char STR[] = g_str_vs(gp_1P_vs, gp__2P);
-		gaiji_putsa(TRAM_LEFT, choice_tram_y(2), STR, atrb);
-	} else /* if (sel == VS_CPU_CPU) */ {
-		static const char STR[] = g_str_vs(gp_CPU_vs, gp__CPU);
-		gaiji_putsa(TRAM_LEFT, choice_tram_y(3), STR, atrb);
-	}
-}
-
-bool near vs_menu(void)
-{
-	int sel;
-
-	// ZUN quirk: This assignment causes any initially held inputs to be
-	// processed immediately, just like in the Main menu at startup, but unlike
-	// after a later switch between the Main and Option menu.
-	input_t input_prev = INPUT_NONE;
-
-	// After a match, we come back here, skip the menu, and launch into
-	// character selection.
-	if(resident->game_mode < GM_VS) {
-		text_clear();
-		box_animate(MAIN_W, SUBMENU_W);
-
-		sel = VS_1P_CPU;
-		vs_choice_put(VS_1P_CPU, TX_WHITE);
-		vs_choice_put(VS_1P_2P, TX_BLACK);
-		vs_choice_put(VS_CPU_CPU, TX_BLACK);
-
-		while(1) {
-			input_mode_interface();
-			if(input_prev == INPUT_NONE) {
-				if(input_sp & INPUT_UP) {
-					vs_choice_put(sel, TX_BLACK);
-					ring_dec(sel, VS_CPU_CPU);
-					vs_choice_put(sel, TX_WHITE);
-				}
-				if(input_sp & INPUT_DOWN) {
-					vs_choice_put(sel, TX_BLACK);
-					ring_inc(sel, VS_CPU_CPU);
-					vs_choice_put(sel, TX_WHITE);
-				}
-				if((input_sp & INPUT_SHOT) || (input_sp & INPUT_OK)) {
-					break;
-				}
-				// ZUN bug: Should have added a INPUT_CANCEL branch to allow
-				// players to quit back to the main menu once they entered this
-				// one.
-			}
-			input_prev = input_sp;
-			frame_delay(1);
-		}
-	} else {
-		sel = (resident->game_mode - GM_VS);
-	}
-
-	resident->is_cpu[0] = ((sel == VS_CPU_CPU) ? true : false);
-	resident->is_cpu[1] = ((sel != VS_1P_2P) ? true : false);
-	resident->demo_num = 0;
-	resident->pid_winner = 0;
-	resident->story_stage = 0;
-	resident->game_mode = (GM_VS + sel);
-	resident->show_score_menu = false;
-
-	if(select_menu((sel == VS_1P_2P) ? SM_VS_2P : SM_VS_CPU)) {
-		resident->game_mode = GM_NONE;
-		return true;
-	}
-
-	return switch_to_mainl();
-}
-
 void near start_demo(void)
 {
 	static const int8_t PAIRINGS[DEMO_COUNT * PLAYER_COUNT] = {
@@ -505,6 +420,10 @@ menu_put_func_t menu_put;
 	((sizeof(str) - 1) + shift_x) * GAIJI_W \
 )
 
+inline tram_y_t choice_tram_y(unsigned int line) {
+	return ((BOX_TOP / GLYPH_H) + 1 + line);
+}
+
 #define choice_put_centered(center_x, line, shift_x, str, atrb) { \
 	gaiji_putsa( \
 		((center_x - (gaiji_w_shifted(str, shift_x) / 2)) / GLYPH_HALF_W), \
@@ -512,6 +431,87 @@ menu_put_func_t menu_put;
 		str, \
 		atrb \
 	); \
+}
+
+void pascal near vs_choice_put(int sel, tram_atrb2 atrb)
+{
+	enum {
+		W = (8 * GAIJI_W),
+		TRAM_LEFT = ((BOX_SUBMENU_CENTER_X - (W / 2)) / GLYPH_HALF_W),
+	};
+	if(sel == VS_1P_CPU) {
+		static const char STR[] = g_str_vs(gp_1P_vs, gp__CPU);
+		gaiji_putsa(TRAM_LEFT, choice_tram_y(1), STR, atrb);
+	} else if(sel == VS_1P_2P) {
+		static const char STR[] = g_str_vs(gp_1P_vs, gp__2P);
+		gaiji_putsa(TRAM_LEFT, choice_tram_y(2), STR, atrb);
+	} else /* if (sel == VS_CPU_CPU) */ {
+		static const char STR[] = g_str_vs(gp_CPU_vs, gp__CPU);
+		gaiji_putsa(TRAM_LEFT, choice_tram_y(3), STR, atrb);
+	}
+}
+
+bool near vs_menu(void)
+{
+	int sel;
+
+	// ZUN quirk: This assignment causes any initially held inputs to be
+	// processed immediately, just like in the Main menu at startup, but unlike
+	// after a later switch between the Main and Option menu.
+	input_t input_prev = INPUT_NONE;
+
+	// After a match, we come back here, skip the menu, and launch into
+	// character selection.
+	if(resident->game_mode < GM_VS) {
+		text_clear();
+		box_animate(MAIN_W, SUBMENU_W);
+
+		sel = VS_1P_CPU;
+		vs_choice_put(VS_1P_CPU, TX_WHITE);
+		vs_choice_put(VS_1P_2P, TX_BLACK);
+		vs_choice_put(VS_CPU_CPU, TX_BLACK);
+
+		while(1) {
+			input_mode_interface();
+			if(input_prev == INPUT_NONE) {
+				if(input_sp & INPUT_UP) {
+					vs_choice_put(sel, TX_BLACK);
+					ring_dec(sel, VS_CPU_CPU);
+					vs_choice_put(sel, TX_WHITE);
+				}
+				if(input_sp & INPUT_DOWN) {
+					vs_choice_put(sel, TX_BLACK);
+					ring_inc(sel, VS_CPU_CPU);
+					vs_choice_put(sel, TX_WHITE);
+				}
+				if((input_sp & INPUT_SHOT) || (input_sp & INPUT_OK)) {
+					break;
+				}
+				// ZUN bug: Should have added a INPUT_CANCEL branch to allow
+				// players to quit back to the main menu once they entered this
+				// one.
+			}
+			input_prev = input_sp;
+			frame_delay(1);
+		}
+	} else {
+		sel = (resident->game_mode - GM_VS);
+	}
+
+	resident->is_cpu[0] = ((sel == VS_CPU_CPU) ? true : false);
+	resident->is_cpu[1] = ((sel != VS_1P_2P) ? true : false);
+	resident->demo_num = 0;
+	resident->pid_winner = 0;
+	resident->story_stage = 0;
+	resident->game_mode = (GM_VS + sel);
+	resident->show_score_menu = false;
+
+	if(select_menu((sel == VS_1P_2P) ? SM_VS_2P : SM_VS_CPU)) {
+		resident->game_mode = GM_NONE;
+		return true;
+	}
+
+	return switch_to_mainl();
 }
 
 void pascal near main_choice_put(int sel, tram_atrb2 atrb)
