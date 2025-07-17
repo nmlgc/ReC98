@@ -11,15 +11,16 @@
 #include "th02/formats/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
+#include "th02/gaiji/str.hpp"
 #include "th02/op/op.h"
 
 #include "th02/score.c"
 
 const unsigned char gbcRANKS[4][8] = {
-	gb__, gb_E, gb_A, gb_S, gb_Y, gb__, gb__, 0,
-	gb_N, gb_O, gb_R, gb_M, gb_A, gb_L, gb__, 0,
-	gb__, gb_H, gb_A, gb_R, gb_D, gb__, gb__, 0,
-	gb_L, gb_U, gb_N, gb_A, gb_T, gb_I, gb_C, 0,
+	g_chr_7(gb, _,E,A,S,Y,_,_), '\0',
+	g_chr_7(gb, N,O,R,M,A,L,_), '\0',
+	g_chr_7(gb, _,H,A,R,D,_,_), '\0',
+	g_chr_7(gb, L,U,N,A,T,I,C), '\0',
 };
 
 const shiftjis_t *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};

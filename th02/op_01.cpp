@@ -21,6 +21,7 @@
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 #include "th02/gaiji/gaiji.h"
+#include "th02/gaiji/str.hpp"
 #include "th02/shiftjis/fns.hpp"
 #include "th02/op/op.h"
 #include "th02/op/menu.hpp"
@@ -126,7 +127,7 @@ void op_animate(void)
 	// Sony Vegas calls this a "Barn Door" transition.
 	int door_x;
 	tram_y_t door_y;
-	const char gbZUN[] = { gb_Z, gb_U, gb_N, '\0' };
+	const char gbZUN[] = { g_chr_3(gb, Z,U,N), '\0' };
 
 	text_wipe();
 	snd_load("huuma.efc", SND_LOAD_SE);
@@ -269,49 +270,23 @@ void start_extra(void)
 // these with compile-time calculations.
 
 // A remnant from TH01? Unused in the final game.
-const char gbHIT_KEY[] = {
-	gb_H, gb_I, gb_T, gb__, gb_K, gb_E, gb_Y, '\0'
-};
-const char gb7SPACES[] = {
-	gb__, gb__, gb__, gb__, gb__, gb__, gb__, '\0'
-};
+const char gbHIT_KEY[] = { g_chr_7(gb, H,I,T,_,K,E,Y), '\0' };
+const char gb7SPACES[] = { g_chr_7(gb, _,_,_,_,_,_,_), '\0' };
 
-const char gbSTART[10] = {
-	gb_S, gb_T, gb_A, gb_R, gb_T, '\0'
-};
+const char gbSTART[10] = { g_chr_5(gb, S,T,A,R,T), '\0' };
 inline char menu_extra_pos() {
 	return 1;
 }
-const char gbEXTRA_START[] = {
-	gb_E, gb_X, gb_T, gb_R, gb_A, gb__, gb_S, gb_T, gb_A, gb_R, gb_T, '\0'
-};
-const char gbHISCORE[10] = {
-	gb_H, gb_I, gb_S, gb_C, gb_O, gb_R, gb_E, '\0'
-};
-const char gbOPTION[10] = {
-	gb_O, gb_P, gb_T, gb_I, gb_O, gb_N, '\0'
-};
-const char gbQUIT[10] = {
-	gb_Q, gb_U, gb_I, gb_T, '\0'
-};
-const char gbRANK[10] = {
-	gb_R, gb_A, gb_N, gb_K, '\0'
-};
-const char gbPLAYER[10] = {
-	gb_P, gb_L, gb_A, gb_Y, gb_E, gb_R, '\0'
-};
-const char gbMUSIC[10] = {
-	gb_M, gb_U, gb_S, gb_I, gb_C, '\0'
-};
-const char gbBOMB[10] = {
-	gb_B, gb_O, gb_M, gb_B, '\0'
-};
-const char gbMUSIC_MODE[] = {
-	gb_M, gb_U, gb_S, gb_I, gb_C, gb__, gb_M, gb_O, gb_D, gb_E, '\0'
-};
-const char gbRESET[10] = {
-	gb_R, gb_E, gb_S, gb_E, gb_T, '\0'
-};
+const char gbEXTRA_START[] = { g_chr_11(gb, E,X,T,R,A,_,S,T,A,R,T), '\0' };
+const char gbHISCORE[10] = { g_chr_7(gb, H,I,S,C,O,R,E), '\0' };
+const char gbOPTION[10] = { g_chr_6(gb, O,P,T,I,O,N), '\0' };
+const char gbQUIT[10] = { g_chr_4(gb, Q,U,I,T), '\0' };
+const char gbRANK[10] = { g_chr_4(gb, R,A,N,K), '\0' };
+const char gbPLAYER[10] = { g_chr_6(gb, P,L,A,Y,E,R), '\0' };
+const char gbMUSIC[10] = { g_chr_5(gb, M,U,S,I,C), '\0' };
+const char gbBOMB[10] = { g_chr_4(gb, B,O,M,B), '\0' };
+const char gbMUSIC_MODE[] = { g_chr_10(gb, M,U,S,I,C,_,M,O,D,E), '\0' };
+const char gbRESET[10] = { g_chr_5(gb, R,E,S,E,T), '\0' };
 
 const char gsRANKS[4][3] = {
 	gs_EA, gs_SY, '\0',
@@ -321,9 +296,9 @@ const char gsRANKS[4][3] = {
 };
 
 const unsigned char gbcBGM_MODE[3][5] = {
-	gb_O, gb_F, gb_F, gb__, '\0',
-	gb__, gb_F, gb_M, gb__, '\0',
-	gb_M, gb_I, gb_D, gb_I, '\0',
+	g_chr_4(gb, O,F,F,_), '\0',
+	g_chr_4(gb, _,F,M,_), '\0',
+	g_chr_4(gb, M,I,D,I), '\0',
 };
 
 #include "th02/shiftjis/op_main.hpp"

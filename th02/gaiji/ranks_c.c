@@ -1,7 +1,9 @@
-// Moved to the right by one character compared to the one in op_04.c.
+#include "th02/gaiji/str.hpp"
+
+// Moved to the right by one character compared to the one in op_04.cpp.
 unsigned char gbcRANKS[4][8] = {
-	gb__, gb__, gb_E, gb_A, gb_S, gb_Y, gb__, 0,
-	gb__, gb_N, gb_O, gb_R, gb_M, gb_A, gb_L, 0,
-	gb__, gb__, gb_H, gb_A, gb_R, gb_D, gb__, 0,
-	gb_L, gb_U, gb_N, gb_A, gb_T, gb_I, gb_C, 0,
+	g_chr_7(gb, _,_,E,A,S,Y,_), '\0',
+	g_chr_7(gb, _,N,O,R,M,A,L), '\0',
+	g_chr_7(gb, _,_,H,A,R,D,_), '\0',
+	g_chr_7(gb, L,U,N,A,T,I,C), '\0',
 };
