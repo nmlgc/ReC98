@@ -1,3 +1,6 @@
+#define BINARY_OP  	"op"
+#define BINARY_MAIN	"main"
+
 #define PF_FN "“Œ•û••–‚.˜^"
 #define SHIFTJIS_FN "MIKOFT.bft"
 

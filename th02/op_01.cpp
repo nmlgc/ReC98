@@ -342,7 +342,7 @@ inline void start_exec() {
 	if(resident->debug) {
 		execl("select", "select", nullptr);
 	} else {
-		execl("main", "main", nullptr);
+		execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 	}
 }
 
@@ -379,7 +379,7 @@ void start_demo(void)
 	gaiji_restore();
 	super_free();
 	game_exit();
-	execl("main", "main", nullptr);
+	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 }
 
 void start_extra(void)
