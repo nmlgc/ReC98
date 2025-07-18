@@ -2,6 +2,9 @@
 
 extern const char* SCOREDAT_FN_PTR;
 
+#if (BINARY != 'M')
+static
+#endif
 void near scoredat_load(void)
 {
 	int byte;
