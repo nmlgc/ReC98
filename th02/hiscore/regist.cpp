@@ -119,7 +119,7 @@ void scoredat_defaults_set(void)
 
 #include "th02/scorelod.c"
 
-void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
+static void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
 	#define on_digit_at(x, gaiji) { \
 		gaiji_putca(x, y, gaiji, atrb); \
@@ -138,7 +138,7 @@ void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 	); \
 }
 
-void pascal near scores_put(int place_to_highlight)
+static void pascal near scores_put(int place_to_highlight)
 {
 	tram_atrb2 atrb = TX_WHITE;
 	int i;

@@ -52,7 +52,7 @@ void title_flash(void);
 void pascal score_menu(void);
 void pascal shottype_menu(void);
 
-int cfg_load(void)
+static int cfg_load(void)
 {
 	cfg_t cfg;
 	const char *cfg_fn = CFG_FN;
