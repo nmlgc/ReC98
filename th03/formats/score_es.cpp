@@ -32,7 +32,7 @@ void pascal near scoredat_encode_and_save(rank_t rank)
 	}
 
 	// Save
-	file_append(SCOREDAT_FN);
+	file_append(SCOREDAT_FN_PTR);
 	file_seek((rank * sizeof(scoredat_section_t)), SEEK_SET);
 	file_write(&hi, sizeof(scoredat_section_t));
 	file_close();

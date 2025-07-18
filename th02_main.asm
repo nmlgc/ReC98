@@ -25919,7 +25919,7 @@ main_06_TEXT	segment	byte public 'CODE' use16
 sub_1CD36	proc far
 		push	bp
 		mov	bp, sp
-		pushd	[_SCOREDAT_FN]
+		pushd	[_SCOREDAT_FN_PTR]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CD4D
@@ -26840,8 +26840,8 @@ byte_1EDA6	db 1
 word_1EDA8	dw 0
 word_1EDAA	dw 0
 aBoss4_m	db 'boss4.m',0
-public _SCOREDAT_FN
-_SCOREDAT_FN	dd aHuuhi_dat
+public _SCOREDAT_FN_PTR
+_SCOREDAT_FN_PTR dd aHuuhi_dat
 include th02/gaiji/hiscore[data].asm
 public _GAME_CLEAR_CONSTANTS, _EXTRA_CLEAR_FLAGS
 _GAME_CLEAR_CONSTANTS	dw 318, 118, 218

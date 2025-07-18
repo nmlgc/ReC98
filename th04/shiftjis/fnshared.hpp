@@ -7,8 +7,6 @@
 #define BGM_MENU_MAIN_FN	"op"
 #define BGM_HISCORE_FN  	"name"
 
-#define SCOREDAT_FN "GENSOU.SCR"
-
 #define SE_FN	"miko"
 
 #define MENU_MAIN_BG_FN	"op1.pi"

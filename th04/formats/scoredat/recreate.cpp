@@ -9,7 +9,6 @@
 #include "th04/playchar.h"
 #endif
 #include "th04/gaiji/gaiji.h"
-#include "th04/shiftjis/fnshared.hpp"
 
 static const int SCORE_INITIAL_DIGIT = ((GAME == 5) ? 6 : 5);
 

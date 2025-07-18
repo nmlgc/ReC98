@@ -2612,8 +2612,8 @@ _REGI_PLAYCHAR label byte
 	db REGI_R, REGI_I, REGI_K, REGI_A, REGI_K, REGI_O, regi_sp, regi_sp
 	db REGI_C, REGI_H, REGI_I, REGI_Y, REGI_U, REGI_R, REGI_I, regi_sp
 	db REGI_Y, REGI_U, REGI_M, REGI_E, REGI_M, REGI_I, regi_sp, regi_sp
-public _SCOREDAT_FN
-_SCOREDAT_FN	dw offset aYume_nem
+public _SCOREDAT_FN_PTR
+_SCOREDAT_FN_PTR	dw offset aYume_nem
 public _rank_image_fn, _REGIST_INPUT_HOLD_INIT
 _rank_image_fn	dw offset aRft0_cdg
 _REGIST_INPUT_HOLD_INIT	dw 4 dup(0)
