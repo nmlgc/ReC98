@@ -703,17 +703,6 @@ inline void music_input_sense(void) {
 }
 // --------------
 
-#define wait_for_key_release_animate() { \
-	while(1) { \
-		music_input_sense(); \
-		if(key_det) { \
-			music_flip(); \
-		} else { \
-			break; \
-		} \
-	} \
-}
-
 #if (GAME == 5)
 void pascal near tracklist_unput_and_put_both_animate(int sel)
 {
@@ -836,14 +825,17 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	palette_100();
 
 	while(1) {
-#if (GAME == 5)
-		// This loop also ignores any ← or → inputs while ↑ or ↓ are held,
-		// and vice versa.
+		// In TH05, this loop also ignores any ← or → inputs while ↑ or ↓ are
+		// held, and vice versa.
+		// ZUN bloat: None of this `goto` business would have been necessary if
+		// the loop clearly defined its update and render steps. Especially
+		// since it does want to render the polygon animation every frame.
 		while(1) {
 			music_input_sense();
 			if(!key_det) {
 				break;
 			}
+#if (GAME == 5)
 			if(frames_since_last_input >= 24) {
 				if((key_det == INPUT_UP) || (key_det == INPUT_DOWN)) {
 					frames_since_last_input = 20;
@@ -851,15 +843,9 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 				}
 			}
 			frames_since_last_input++;
+#endif
 			music_flip();
 		}
-#else
-		// ZUN bloat: None of this `goto` business would have been
-		// necessary if the loop clearly defined its update and render
-		// steps. Especially since it does want to render the polygon
-		// animation every frame.
-		wait_for_key_release_animate();
-#endif
 controls:
 		// ZUN bloat: We already did that for this frame if we came from above,
 		// but not if we came from the `goto` below.
@@ -1022,7 +1008,15 @@ controls:
 			goto controls;
 		}
 	};
-	wait_for_key_release_animate();
+
+	// Wait until the player released the key that broke out of the loop
+	while(1) {
+		music_input_sense();
+		if(!key_det) {
+			break;
+		}
+		music_flip();
+	}
 
 #if (GAME >= 4)
 #if (GAME == 5)
