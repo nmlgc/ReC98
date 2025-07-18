@@ -17,7 +17,7 @@
 
 #include "th02/score.c"
 
-const unsigned char gbcRANKS[4][8] = {
+static const unsigned char gbcRANKS[4][8] = {
 	g_chr_7(gb, _,E,A,S,Y,_,_), '\0',
 	g_chr_7(gb, N,O,R,M,A,L,_), '\0',
 	g_chr_7(gb, _,H,A,R,D,_,_), '\0',
@@ -36,7 +36,7 @@ unsigned int score_duration;
 
 #include "th02/scorelod.c"
 
-void pascal near score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
+static void pascal near score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
 	#define on_digit(i, gaiji) { \
 		gaiji_putca((26 + (i * GAIJI_TRAM_W)), y, gaiji, atrb); \
@@ -81,7 +81,7 @@ void pascal near scoredat_date_put(tram_y_t y, int place, tram_atrb2 atrb)
 	text_putsa(64, y, str, atrb);
 }
 
-void pascal near scores_put(int place_to_highlight)
+static void pascal near scores_put(int place_to_highlight)
 {
 	tram_atrb2 atrb = TX_WHITE;
 	int i;
