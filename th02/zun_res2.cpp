@@ -5,7 +5,8 @@
 
 #include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
-#include "th02/formats/scoredat.hpp"
+#include "th02/formats/scoredat/scoredat.hpp"
+#include "th02/formats/scoredat/impl.hpp"
 #include "th02/gaiji/gaiji.h"
 
 scoredat_section_t hi;
@@ -117,8 +118,6 @@ place_loop:
 end:
 }
 
-#include "th02/scoreenc.c"
-
 void pascal scoredat_create(void)
 {
 	scoredat_encode();
@@ -137,4 +136,4 @@ void pascal scoredat_recreate(void)
 	scoredat_create();
 }
 
-#include "th02/scorelod.c"
+#include "th02/formats/scoredat/load.cpp"

@@ -3,7 +3,8 @@
 #if (BINARY == 'M')
 #include "th02/main/stage/stage.hpp"
 #endif
-#include "th02/formats/scoredat.hpp"
+#include "th02/formats/scoredat/scoredat.hpp"
+#include "th02/formats/scoredat/impl.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -117,7 +118,7 @@ void scoredat_defaults_set(void)
 	}
 }
 
-#include "th02/scorelod.c"
+#include "th02/formats/scoredat/load.cpp"
 
 static void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
@@ -218,8 +219,6 @@ void pascal near scoredat_name_puts(int place, int char_to_highlight)
 		(TX_GREEN | TX_REVERSE)
 	);
 }
-
-#include "th02/scoreenc.c"
 
 void scoredat_save(void)
 {

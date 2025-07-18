@@ -1,7 +1,4 @@
-/* ReC98
- * -----
- * TH02 high score pre-save encoding
- */
+// HUUHI.DAT implementation functions
 
 #define scoredat_encode() { \
 	int i; \
