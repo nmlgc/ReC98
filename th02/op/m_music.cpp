@@ -2,6 +2,7 @@
 #include "game/bgimage.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "th01/math/clamp.hpp"
 #include "th01/math/polar.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -25,7 +26,6 @@
 #endif
 #include "th02/op/m_music.hpp"
 #if (GAME == 5)
-#include "th01/math/clamp.hpp"
 #include "th05/op/piano.hpp"
 #include "th05/shiftjis/fns.hpp"
 #include "th05/shiftjis/music.hpp"
@@ -733,32 +733,14 @@ controls:
 			game_switch();
 		}
 #else
-		if(key_det & INPUT_UP) {
+		if(key_det & (INPUT_UP | INPUT_DOWN)) {
+			int8_t delta = ((key_det & INPUT_UP) ? -1 : +1);
 			track_put_both(music_sel, COL_TRACKLIST);
-			if(music_sel > 0) {
-				music_sel--;
-			} else {
-				music_sel = SEL_QUIT;
-			}
+			ring_step(music_sel, delta, 0, SEL_QUIT);
 
 			// Skip over the empty line
 			if(music_sel == TRACK_COUNT) {
-				music_sel--;
-			}
-
-			track_put_both(music_sel, COL_TRACKLIST_SELECTED);
-		}
-		if(key_det & INPUT_DOWN) {
-			track_put_both(music_sel, COL_TRACKLIST);
-			if(music_sel < SEL_QUIT) {
-				music_sel++;
-			} else {
-				music_sel = 0;
-			}
-
-			// Skip over the empty line
-			if(music_sel == TRACK_COUNT) {
-				music_sel++;
+				music_sel += delta;
 			}
 
 			track_put_both(music_sel, COL_TRACKLIST_SELECTED);
