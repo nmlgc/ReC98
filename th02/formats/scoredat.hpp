@@ -1,6 +1,8 @@
 #include "th02/score.h"
 #include <dos.h>
 
+#define SCOREDAT_FN "huuhi.dat"
+
 #define SCOREDAT_PLACES 10
 #define SCOREDAT_NAME_LEN 6 /* excluding the terminating 0 */
 #define EXTRA_CLEAR_FLAGS {1, 2, 4}

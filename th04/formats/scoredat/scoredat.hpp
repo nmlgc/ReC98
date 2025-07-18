@@ -1,5 +1,7 @@
 #include "th04/score.h"
 
+#define SCOREDAT_FN "GENSOU.SCR"
+
 #if GAME == 5
 #define SCOREDAT_PLACES 5
 #define SCOREDAT_NOT_CLEARED 18

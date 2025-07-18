@@ -6,7 +6,7 @@
 #include "th02/hiscore/regist.h"
 #include "th02/gaiji/str.hpp"
 
-const char *SCOREDAT_FN = "huuhi.dat";
+const char *SCOREDAT_FN_PTR = SCOREDAT_FN; // ZUN bloat: Use the macro.
 const unsigned char gbHI_SCORE[] = { g_chr_8(gb, H,I,_,S,C,O,R,E), '\0' };
 
 const unsigned char gALPHABET[ALPHABET_ROWS][ALPHABET_COLS] = {
