@@ -179,7 +179,7 @@ static unsigned char angle_speed[POLYGON_COUNT];
 uint8_t track_playing = 0;
 #endif
 uint8_t music_sel;
-page_t music_page;
+page_t music_page_accessed;
 #if (GAME >= 4)
 // The initial comment is displayed immediately, without a fade-in animation.
 bool cmt_shown_initial;
@@ -276,12 +276,12 @@ void pascal near tracklist_put(uint8_t sel)
 #else
 void pascal near track_put_both(uint8_t i, vc_t col)
 {
-	page_t other_page = (1 - music_page);
+	page_t other_page = (1 - music_page_accessed);
 	graph_accesspage(other_page);
 	graph_putsa_fx(
 		TRACKLIST_LEFT, track_top(i), track_fx(col), MUSIC_CHOICES[i]
 	);
-	graph_accesspage(music_page);
+	graph_accesspage(music_page_accessed);
 	graph_putsa_fx(
 		TRACKLIST_LEFT, track_top(i), track_fx(col), MUSIC_CHOICES[i]
 	);
@@ -442,9 +442,9 @@ void near music_update_render_and_flip(void)
 	frame_delay(1);
 #endif
 
-	graph_showpage(music_page);
-	music_page = (1 - music_page);
-	graph_accesspage(music_page);
+	graph_showpage(music_page_accessed);
+	music_page_accessed = (1 - music_page_accessed);
+	graph_accesspage(music_page_accessed);
 
 	// ZUN landmine: Waiting for VSync *after* flipping, however, means that we
 	// almost certainly *don't* flip within the vertical blanking interval, but
@@ -773,7 +773,7 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	text_clear();
 #endif
 
-	music_page = 1;
+	music_page_accessed = 1;
 
 	palette_settone(0);
 	graph_showpage(0);
