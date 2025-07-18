@@ -8,7 +8,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
-#include "th02/formats/scoredat.hpp"
+#include "th02/formats/scoredat/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
 #include "th02/gaiji/str.hpp"
@@ -34,7 +34,7 @@ char extra_unlocked;
 int8_t extra_unlocked_padding;
 unsigned int score_duration;
 
-#include "th02/scorelod.c"
+#include "th02/formats/scoredat/load.cpp"
 
 static void pascal near score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
