@@ -224,14 +224,14 @@ void pascal near scoredat_name_puts(int place, int char_to_highlight)
 void scoredat_save(void)
 {
 	scoredat_encode();
-	file_append(SCOREDAT_FN);
+	file_append(SCOREDAT_FN_PTR);
 	file_seek((rank * sizeof(hi)), SEEK_SET);
 	file_write(&hi, sizeof(hi));
 	file_close();
 }
 
 inline void scoredat_init() {
-	if(!file_exist(SCOREDAT_FN)) {
+	if(!file_exist(SCOREDAT_FN_PTR)) {
 		scoredat_defaults_set();
 	} else {
 		scoredat_load();

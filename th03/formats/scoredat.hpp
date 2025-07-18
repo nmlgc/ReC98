@@ -5,9 +5,6 @@
 
 #define SCOREDAT_FN "YUME.NEM"
 
-#undef SCOREDAT_FN
-extern const char near* SCOREDAT_FN;
-
 static const int SCOREDAT_PLACES = 10;
 static const int SCOREDAT_NAME_LEN = 8;
 
