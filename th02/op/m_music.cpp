@@ -274,24 +274,26 @@ void pascal near tracklist_put(uint8_t sel)
 	);
 }
 #else
-void pascal near track_put(uint8_t sel, vc_t col)
+void pascal near track_put_both(uint8_t i, vc_t col)
 {
 	page_t other_page = (1 - music_page);
 	graph_accesspage(other_page);
 	graph_putsa_fx(
-		TRACKLIST_LEFT, track_top(sel), track_fx(col), MUSIC_CHOICES[sel]
+		TRACKLIST_LEFT, track_top(i), track_fx(col), MUSIC_CHOICES[i]
 	);
 	graph_accesspage(music_page);
 	graph_putsa_fx(
-		TRACKLIST_LEFT, track_top(sel), track_fx(col), MUSIC_CHOICES[sel]
+		TRACKLIST_LEFT, track_top(i), track_fx(col), MUSIC_CHOICES[i]
 	);
 }
 
-void pascal near tracklist_put(uint8_t sel)
+void pascal near tracklist_put_both(uint8_t sel)
 {
 	int i;
 	for(i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
-		track_put(i, ((i == sel) ? COL_TRACKLIST_SELECTED : COL_TRACKLIST));
+		track_put_both(
+			i, ((i == sel) ? COL_TRACKLIST_SELECTED : COL_TRACKLIST)
+		);
 	}
 }
 #endif
@@ -793,10 +795,14 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	piano_setup_and_put_initial();
 	nopoly_B_snap();
 	bgimage_snap();
+	tracklist_put(music_sel);
 #else
 	music_sel = track_playing;
+
+	// ZUN bloat: We copy pages below anyway, this doesn't need to be blitted
+	// to both.
+	tracklist_put_both(music_sel);
 #endif
-	tracklist_put(music_sel);
 	graph_copy_page(0);
 
 #if (GAME == 4)
@@ -916,7 +922,7 @@ controls:
 		}
 #else
 		if(key_det & INPUT_UP) {
-			track_put(music_sel, COL_TRACKLIST);
+			track_put_both(music_sel, COL_TRACKLIST);
 			if(music_sel > 0) {
 				music_sel--;
 			} else {
@@ -928,10 +934,10 @@ controls:
 				music_sel--;
 			}
 
-			track_put(music_sel, COL_TRACKLIST_SELECTED);
+			track_put_both(music_sel, COL_TRACKLIST_SELECTED);
 		}
 		if(key_det & INPUT_DOWN) {
-			track_put(music_sel, COL_TRACKLIST);
+			track_put_both(music_sel, COL_TRACKLIST);
 			if(music_sel < SEL_QUIT) {
 				music_sel++;
 			} else {
@@ -943,7 +949,7 @@ controls:
 				music_sel++;
 			}
 
-			track_put(music_sel, COL_TRACKLIST_SELECTED);
+			track_put_both(music_sel, COL_TRACKLIST_SELECTED);
 		}
 #endif
 	skip_processing_of_left_and_right:
