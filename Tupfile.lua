@@ -767,6 +767,7 @@ th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
 obj = {}
 obj += platform_objs.libc_debloat
 obj += platform_objs.surf
+obj += platform_objs.vblank
 obj += {
 	"th04/op_main.cpp",
 	"th04_op.asm",
@@ -955,6 +956,7 @@ th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
 obj = {}
 obj += platform_objs.libc_debloat
 obj += platform_objs.surf
+obj += platform_objs.vblank
 obj += {
 	"th05/op_main.cpp",
 	"th05_op.asm",

@@ -673,7 +673,6 @@ void near main_update_and_render(void)
 				cdg_free(i);
 			}}
 			super_free();
-			text_clear();
 			musicroom_menu();
 			return_from_other_screen_to_main(in_this_menu, input_allowed);
 			return;

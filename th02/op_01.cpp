@@ -558,7 +558,6 @@ void main_update_and_render(void)
 				initialized = false;
 				break;
 			case 4:
-				text_clear();
 				musicroom_menu();
 
 				graph_accesspage(1);

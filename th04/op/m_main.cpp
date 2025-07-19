@@ -376,7 +376,6 @@ void near main_update_and_render(void)
 			break;
 		case MC_MUSICROOM:
 			cdg_free_all();
-			text_clear();
 			musicroom_menu();
 			main_cdg_load();
 

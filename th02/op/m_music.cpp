@@ -1,4 +1,5 @@
 #include <mem.h>
+#include "platform/vblank.hpp"
 #include "game/bgimage.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
@@ -538,10 +539,9 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	music_sel = track_playing;
 #endif
 
-	music_page_accessed = 1;
+	// We don't always come here immediately after VSync.
+	vblank_run(vblank_palette_black_and_tram_wipe);
 
-	palette_settone(0);
-	graph_showpage(0);
 	graph_accesspage(1);
 
 #if (GAME >= 4)
@@ -559,28 +559,17 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	nopoly_B_snap();
 #endif
 	tracklist_put(music_sel);
-	graph_copy_page(0);
-	graph_accesspage(1);
-	graph_showpage(0);
-
 #if (GAME == 4)
 	nopoly_B_snap();
 #endif
-
 	cmt_load(track_playing);
-#if (GAME >= 4)
 	cmt_put();
-	music_update_render_and_flip();
-	cmt_put();
-#else
-	graph_accesspage(1);	cmt_put();
-	graph_accesspage(0);	cmt_put();
+#if (GAME <= 3)
 	nopoly_B_snap();
 #endif
-
-	// ZUN landmine: After all the loading and blitting, we're certainly in the
-	// middle of a frame, where a sudden change to the hardware palette ensures
-	// tearing.
+	graph_copy_page(0);
+	graph_accesspage(music_page_accessed = 1);
+	music_update_render_and_flip();
 	palette_100();
 
 	while(1) {
