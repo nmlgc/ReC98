@@ -240,26 +240,26 @@ void pascal near tracklist_put(uint8_t sel)
 	);
 }
 #else
-void pascal near track_put_both(uint8_t i, vc_t col)
+void pascal near track_put(uint8_t i, vc_t col)
 {
-	page_t other_page = (1 - music_page_accessed);
-	graph_accesspage(other_page);
-	graph_putsa_fx(
-		TRACKLIST_LEFT, track_top(i), track_fx(col), MUSIC_CHOICES[i]
-	);
-	graph_accesspage(music_page_accessed);
 	graph_putsa_fx(
 		TRACKLIST_LEFT, track_top(i), track_fx(col), MUSIC_CHOICES[i]
 	);
 }
 
-void pascal near tracklist_put_both(uint8_t sel)
+void pascal near track_put_both(uint8_t i, vc_t col)
 {
-	int i;
-	for(i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
-		track_put_both(
-			i, ((i == sel) ? COL_TRACKLIST_SELECTED : COL_TRACKLIST)
-		);
+	page_t other_page = (1 - music_page_accessed);
+	graph_accesspage(other_page);
+	track_put(i, col);
+	graph_accesspage(music_page_accessed);
+	track_put(i, col);
+}
+
+void pascal near tracklist_put(uint8_t sel)
+{
+	for(int i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
+		track_put(i, ((i == sel) ? COL_TRACKLIST_SELECTED : COL_TRACKLIST));
 	}
 }
 #endif
@@ -569,12 +569,8 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 	pfstart("music.dat");
 	piano_setup_and_put_initial();
 	nopoly_B_snap();
-	tracklist_put(music_sel);
-#else
-	// ZUN bloat: We copy pages below anyway, this doesn't need to be blitted
-	// to both.
-	tracklist_put_both(music_sel);
 #endif
+	tracklist_put(music_sel);
 	graph_copy_page(0);
 	graph_accesspage(1);
 	graph_showpage(0);
