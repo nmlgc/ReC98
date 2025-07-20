@@ -337,6 +337,7 @@ local platform_bundles = {
 	libc_debloat = { "noexcept" },
 	spawn = { "doserror", "spawn" },
 	th01 = { "noexcept", "blitter", "egc", "font", "grcg", "grp_clip" },
+	vblank = { "vblank" },
 }
 local platform_objs = BuildAndBundlePlatform(
 	platform_bundles, platform_cfg, platform_src
@@ -489,6 +490,7 @@ th02:zungen("bin/th02/zun.com", {
 
 obj = {}
 obj += platform_objs.libc_debloat
+obj += platform_objs.vblank
 obj += {
 	"th02/op_01.cpp",
 	"th02_op.asm",
