@@ -324,11 +324,6 @@ void pascal near start_init(void)
 inline void start_exec() {
 	cfg_save();
 	pi_load(0, "ts1.pi");
-
-	// ZUN landmine: Screen tearing – we most certainly won't come here during
-	// VBLANK.
-	text_clear();
-
 	shottype_menu();
 	snd_kaja_func(KAJA_SONG_FADE, 15);
 	gaiji_restore();

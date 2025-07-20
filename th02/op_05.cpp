@@ -1,4 +1,5 @@
 #include "planar.h"
+#include "platform/vblank.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"
 #include "th02/v_colors.hpp"
@@ -113,9 +114,7 @@ void pascal shottype_menu_init(void)
 			graph_putsa_fx(432, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
-	// ZUN landmine: Screen tearing – we most certainly won't come here during
-	// VBLANK.
-	palette_settone(0);
+	vblank_run(vblank_palette_black_and_tram_wipe);
 
 	graph_accesspage(0);
 	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
