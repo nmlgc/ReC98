@@ -250,17 +250,18 @@ void op_animate(void)
 	pi_load(1, "opb.pi");
 	pi_load(2, "opc.pi");
 
-	// ZUN landmine: The black text layer would cover the fact that this will
-	// most certainly happen somewhere within a frame, but not if we
-	// immediately start mutating text cells in the loop below.
-	palette_settone(200);
+	// The original game didn't have this delay frame. But since this branch
+	// uses the faster PiLoad over master.lib *and* we technically haven't
+	// rendered anything, it's a good investment in exchange for running the
+	// animation below without tearing.
+	frame_delay(1);
 
 	for(door_x = 0; door_x < 40; door_x++) {
+		palette_settone(200 - (door_x * 2));
 		for(door_y = 0; door_y < 25; door_y++) {
 			text_putca(39 - door_x, door_y, ' ', TX_WHITE);
 			text_putca(door_x + 40, door_y, ' ', TX_WHITE);
 		}
-		palette_settone(200 - (door_x * 2));
 		frame_delay(1);
 	}
 	for(door_x = 40; door_x < 50; door_x++) {
