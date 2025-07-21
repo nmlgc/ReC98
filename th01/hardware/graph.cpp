@@ -90,11 +90,6 @@ inline void graph_access_and_show_0() {
 	page_show(0);
 }
 
-inline void cgrom_code_and_grcg_off() {
-	outportb(0x68, 0xA); // CG ROM code access
-	grcg_off();
-}
-
 inline void z_graph_400line() {
 	REGS regs;
 
@@ -115,7 +110,7 @@ void z_graph_init()
 	z_palette_set_all_show(z_Palettes);
 	graph_access_and_show_0();
 	z_graph_clear_0();
-	cgrom_code_and_grcg_off();
+	grcg_off();
 	z_graph_show();
 }
 
@@ -125,7 +120,7 @@ void z_graph_exit()
 	z_graph_clear_0();
 	graph_access_and_show_0();
 	z_graph_show();
-	cgrom_code_and_grcg_off();
+	grcg_off();
 }
 
 void z_graph_show()

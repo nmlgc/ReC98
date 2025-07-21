@@ -341,11 +341,12 @@ platform_src += tup.glob("platform/x86real/pc98/*.cpp")
 platform_src += tup.glob("libs/kaja/*.cpp")
 local platform_bundles = {
 	cutscene = { "cutscene" },
+	font = { "font", "grcg" },
 	libc_debloat = { "noexcept", "novbuf" },
 	pi_surf = { "pi_surf" },
 	spawn = { "doserror", "spawn" },
 	surf = { "piloadm", "bgimage", "blitter", "grp_clip", "grp_surf" },
-	th01 = { "noexcept", "blitter", "egc", "font", "grcg", "grp_clip" },
+	th01 = { "noexcept", "blitter", "egc", "grp_clip" },
 	vblank = { "vblank" },
 }
 local platform_objs = BuildAndBundlePlatform(
@@ -403,6 +404,7 @@ local obj
 
 obj = {}
 obj += platform_objs.cutscene
+obj += platform_objs.font
 obj += platform_objs.spawn
 obj += platform_objs.th01
 obj += tup.glob("th01/pc98/*.cpp")
@@ -415,6 +417,7 @@ obj += {
 	"th01/grp2xscs.cpp",
 	"th01/grp_text.cpp",
 	"th01/grp.cpp",
+	"th01/grppsafx.cpp",
 	"th01/initexit.cpp",
 	"th01/mdrv2.cpp",
 	"th01/pf.cpp",
@@ -500,6 +503,7 @@ th02:zungen("bin/th02/zun.com", {
 
 obj = {}
 obj += platform_objs.cutscene
+obj += platform_objs.font
 obj += platform_objs.libc_debloat
 obj += platform_objs.pi_surf
 obj += platform_objs.spawn
@@ -521,10 +525,10 @@ obj += {
 	"th02/staff.cpp",
 
 	-- SHARED
+	"th01/grppsafx.cpp",
 	"th02/exit_dos.cpp",
 	"th02/exit.cpp",
 	"th02/frmdelay.cpp",
-	"th02/grppsafx.cpp",
 	"th02/initop.cpp",
 	"th02/initmain.cpp",
 	"th02/input_rs.cpp",
@@ -612,6 +616,7 @@ th03:zungen("bin/th03/zun.com", {
 
 obj = {}
 obj += platform_objs.cutscene
+obj += platform_objs.font
 obj += platform_objs.libc_debloat
 obj += platform_objs.pi_surf
 obj += platform_objs.spawn
@@ -632,6 +637,7 @@ obj += {
 	"th03/staff.cpp",
 
 	-- SHARED
+	"th01/grppsafx.cpp",
 	"th02/exit_dos.cpp",
 	"th02/frmdelay.cpp",
 	"th02/snd_dlyv.c",
@@ -645,7 +651,6 @@ obj += {
 	"th03/cdg_put.asm",
 	"th03/exit.cpp",
 	"th03/exitmain.cpp",
-	"th03/grppsafx.cpp",
 	"th03/hfliplut.asm",
 	"th03/initmain.cpp",
 	"th03/initop.cpp",

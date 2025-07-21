@@ -5,6 +5,7 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/grppsafx.h"
 #include "th01/formats/grf.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/hud/hud.hpp"

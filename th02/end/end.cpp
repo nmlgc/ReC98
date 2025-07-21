@@ -3,14 +3,7 @@
 #include "game/bgimage.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
-
-// ZUN bloat: Needed for code generation reasons in the single graph_putsa_fx()
-// call during the verdict screen that pushes a string pointer with a
-// calculated offset.
-#define const
 #include "th01/hardware/grppsafx.h"
-#undef const
-
 #include "th02/score.h"
 #include "th02/v_colors.hpp"
 #include "th02/resident.hpp"
