@@ -2,6 +2,7 @@
 ; • Added support for ZUN's .GRP files with a 'NZ' signature (lol)
 ; • [PaletteBuff] now receives the original 8-bit palette from the file's
 ;   header instead of getting shifted down to 4 bits
+; • Removed blitting at non-byte-aligned X positions
 ; • Removed all palette and tone setting code
 ; • Removed all mode setting code
 ; • Removed comment display
@@ -627,75 +628,6 @@ gtrans:
 ylop:
 	push	cx
 	mov	di,vadr
-	mov	ax,x_pos
-	and	ax,7
-	jz	@@skip
-	mov	cx,8
-	sub	cx,ax
-	push	cx
-	mov	ah,0ffh
-	shl	ah,cl
-	not	al
-	xor	bx,bx
-	mov	dx,bx
-@@lop:
-	lodsb
-	shl1	al
-	rcl1	bl
-	shl1	al
-	rcl1	bh
-	shl1	al
-	rcl1	dl
-	shl1	al
-	rcl1	dh
-	loop	@@lop
-	mov	cx,0a800h
-	mov	es,cx
-
-	mov	al,0c0h
-	out	7ch,al
-	mov	al,dh
-	out	7eh,al
-	mov	al,dl
-	out	7eh,al
-	mov	al,bh
-	out	7eh,al
-	mov	al,bl
-	out	7eh,al
-	mov	al,ah
-	test	option,40h
-	jz	@@skip0
-	mov	ah,tcol
-	shr	ah,1
-	jnc	@@jmp1
-	not	dh
-@@jmp1:
-	shr	ah,1
-	jnc	@@jmp2
-	not	dl
-@@jmp2:
-	shr	ah,1
-	jnc	@@jmp3
-	not	bh
-@@jmp3:
-	shr	ah,1
-	jnc	@@jmp4
-	not	bl
-@@jmp4:
-	or	bx,dx
-	or	bl,bh
-	or	al,bl
-@@skip0:
-	stosb
-	xor	al,al
-	out	7ch,al
-
-	pop	ax
-	mov	cx,x_wid
-	sub	cx,ax
-	shr	cx,3
-	jmp	short	xlop
-@@skip:
 	mov	cx,x_wid
 	shr	cx,3
 xlop:
