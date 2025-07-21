@@ -117,8 +117,8 @@
 	} \
 	vram += ROW_SIZE;
 
-#define advance_left(left, fullwidth, spacing) \
+#define advance_left(left, fullwidth) \
 	if(fullwidth) { \
 		left += GLYPH_HALF_W; \
 	} \
-	left += spacing + GLYPH_HALF_W;
+	left += GLYPH_HALF_W;

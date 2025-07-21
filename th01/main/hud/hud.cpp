@@ -455,7 +455,7 @@ void rank_put(void)
 {
 	static const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS;
 	graph_putsa_fx(
-		(RANK_CENTER_X - (text_extent_fx(V_WHITE, RANKS[rank]) / 2)),
+		(RANK_CENTER_X - (text_extent(RANKS[rank]) / 2)),
 		RANK_TOP,
 		MAX_FX,
 		RANKS[rank]

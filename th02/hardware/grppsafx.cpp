@@ -18,7 +18,6 @@ void DEFCONV graph_putsa_fx(
 	int fullwidth;
 	int first_bit;
 	int weight = (col_and_fx >> 4) & 3;
-	pixel_t spacing = (col_and_fx >> 6) & 7;
 	pixel_t line;
 	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
 	register dots_t(GLYPH_FULL_W) glyph_row_tmp;
@@ -38,7 +37,7 @@ void DEFCONV graph_putsa_fx(
 			apply_weight(glyph_row, glyph[line], glyph_row_tmp, weight);
 			put_row_and_advance(vram, glyph_row, first_bit);
 		}
-		advance_left(left, fullwidth, spacing);
+		advance_left(left, fullwidth);
 	}
 
 	outportb(0x68, 0xA); // CG ROM code access

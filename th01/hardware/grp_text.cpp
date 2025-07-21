@@ -16,10 +16,6 @@ inline int fx_weight_from(int col_and_fx) {
 	return ((col_and_fx / 0x10) % 4);
 }
 
-inline pixel_t fx_spacing_from(int col_and_fx) {
-	return ((col_and_fx / 0x40) % 8);
-}
-
 #include "th01/hardware/grppsafx.cpp"
 
 void graph_putsa_fx(
@@ -29,14 +25,13 @@ void graph_putsa_fx(
 	register screen_x_t x = left;
 	dots8_t far *vram;
 	int weight = fx_weight_from(col_and_fx);
-	pixel_t spacing = fx_spacing_from(col_and_fx);
 	bool16 clear_bg = (col_and_fx & FX_CLEAR_BG);
 	bool16 reverse = (col_and_fx & FX_REVERSE);
 
 	GRCG grcg(GC_RMW);
 
 	if(clear_bg) {
-		pixel_t w = text_extent_fx(col_and_fx, str);
+		pixel_t w = text_extent(str);
 		grcg.set_color_static(0);
 		grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1));
 	}
@@ -96,14 +91,13 @@ void graph_putsa_fx(
 			}
 			put_row_and_advance(vram, glyph_row, first_bit);
 		}
-		x += (glyph.tag.w + spacing);
+		x += glyph.tag.w;
 	}
 }
 
-pixel_t text_extent_fx(int col_and_fx, const shiftjis_t *str)
+pixel_t text_extent(const shiftjis_t *str)
 {
 	register pixel_t ret = 0;
-	register pixel_t spacing = fx_spacing_from(col_and_fx);
 	while(*str) {
 		if(_ismbblead(str[0])) {
 			shiftjis_kanji_t codepoint = ((char)str[0] << 8) + str[0];
@@ -120,9 +114,8 @@ pixel_t text_extent_fx(int col_and_fx, const shiftjis_t *str)
 			ret += GLYPH_HALF_W;
 			str++;
 		}
-		ret += spacing;
 	}
-	return ret - spacing;
+	return ret;
 }
 
 void graph_printf_fx(

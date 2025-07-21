@@ -44,13 +44,9 @@ static const int16_t FX_8X8       = 0x1000; // Use the 8×8 font
 // ----------------------
 #endif
 
-// Not used in any of the three games that support the feature.
-#define FX_SPACING(spacing) \
-	((spacing & 7) << 6)
-
 #if (GAME == 1)
-// Calculates the width of [str], displayed with the given [fx].
-int text_extent_fx(int16_t fx, const shiftjis_t *str);
+// Calculates the width of [str]
+int text_extent(const shiftjis_t *str);
 #endif
 
 // Puts the given [str] onto the graphics RAM at the given position, with the
