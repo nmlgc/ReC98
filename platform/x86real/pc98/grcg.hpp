@@ -43,7 +43,7 @@ struct GRCG {
 		set_tile_static(b, r, g, e);
 	}
 
-	void set_color(vc_t col);
+	void __fastcall set_color(vc_t col);
 
 	// Generates the optimal instructions for setting up the GRCG with a
 	// statically known tile.
