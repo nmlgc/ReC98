@@ -832,14 +832,17 @@ int main(void)
 
 	op_animate();
 
-	// ZUN landmine: Screen tearing. Decoding two 192×144 .PI images takes a
-	// while and certainly returns with the CRT beam somewhere in the middle of
-	// a frame. A bit much to ask main_update_and_render() to then render the
-	// Main menu labels to both TRAM and VRAM on the same frame.
 	pi_load(2, "ts3.pi");
 	pi_load(1, "ts2.pi");
 	key_det = 0;
 	idle_frames = 0;
+
+	// Another frame that wasn't defined in ZUN's original code, but that will
+	// allow us to render the initial frame of the loop below without tearing.
+	// It makes sense to display the title image without text for at least one
+	// frame, especially since the High Score screen and Music Room return code
+	// does the same.
+	frame_delay(1);
 
 	while(!quit) {
 		input_reset_sense();
