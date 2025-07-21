@@ -416,7 +416,7 @@ void near polygons_update_and_render(void)
 #define frame_delay frame_delay_2
 #endif
 
-void near music_flip(void)
+void near music_update_render_and_flip(void)
 {
 	nopoly_B_put();
 #if (GAME == 5)
@@ -555,11 +555,11 @@ void near cmt_fadein_both_animate(void)
 	int func; // ACTUAL TYPE: graph_putsa_fx_func_t
 	for(func = FX_MASK; func < FX_MASK_END; func++) {
 		graph_putsa_fx_func = static_cast<graph_putsa_fx_func_t>(func);
-		cmt_put();	music_flip();
-		cmt_put();	music_flip();
+		cmt_put();	music_update_render_and_flip();
+		cmt_put();	music_update_render_and_flip();
 	}
 	graph_putsa_fx_func = FX_WEIGHT_BOLD;
-	cmt_put();	music_flip();
+	cmt_put();	music_update_render_and_flip();
 	cmt_put();
 }
 
@@ -585,7 +585,7 @@ void near cmt_unput_both_animate(void)
 	graph_putsa_fx_func = FX_WEIGHT_BOLD;
 
 	cmt_unput();
-	music_flip();
+	music_update_render_and_flip();
 	cmt_unput();
 }
 
@@ -614,12 +614,13 @@ void pascal near cmt_load_unput_and_put_both_animate(int track)
 	} else {
 		cmt_shown_initial = true;
 		cmt_put();
-		music_flip();
+		music_update_render_and_flip();
 		cmt_put();
 	}
 
-	// ZUN bloat: Redundant; this is the first thing done in music_flip(),
-	// which runs almost immediately after this function on every code path.
+	// ZUN bloat: Redundant; music_update_render_and_flip() runs almost
+	// immediately after this function on every code path, and this is the
+	// first thing that function does.
 	nopoly_B_put();
 }
 #else
@@ -709,7 +710,7 @@ void pascal near tracklist_unput_and_put_both_animate(int sel)
 	bgimage_put_rect_16(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
 	bgimage_put_rect_16(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
 	tracklist_put(sel);
-	music_flip();
+	music_update_render_and_flip();
 	bgimage_put_rect_16(0, LABEL_GAME_TOP, CMT_TITLE_LEFT, GLYPH_H);
 	bgimage_put_rect_16(0, TRACKLIST_TOP, CMT_TITLE_LEFT, TRACKLIST_H);
 	tracklist_put(sel);
@@ -720,7 +721,7 @@ inline void track_unput_and_put_both_animate(
 ) {
 	track_unput_or_put(sel_prev, false);
 	track_unput_or_put(sel_new, true);
-	music_flip();
+	music_update_render_and_flip();
 	track_unput_or_put(sel_prev, false);
 	track_unput_or_put(sel_new, true);
 }
@@ -845,7 +846,7 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 			}
 			frames_since_last_input++;
 #endif
-			music_flip();
+			music_update_render_and_flip();
 		}
 controls:
 		// ZUN bloat: We already did that for this frame if we came from above,
@@ -991,7 +992,7 @@ controls:
 				snd_kaja_func(KAJA_SONG_PLAY, 0);
 				track_playing = music_sel;
 				cmt_load_unput_and_put(music_sel);
-				music_flip();
+				music_update_render_and_flip();
 				cmt_load_unput_and_put(music_sel);
 #endif
 			} else {
@@ -1005,7 +1006,7 @@ controls:
 #if (GAME == 5)
 			frames_since_last_input = 0;
 #endif
-			music_flip();
+			music_update_render_and_flip();
 			goto controls;
 		}
 	};
@@ -1016,7 +1017,7 @@ controls:
 		if(!key_det) {
 			break;
 		}
-		music_flip();
+		music_update_render_and_flip();
 	}
 
 #if (GAME == 5)
