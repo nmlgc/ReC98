@@ -2,6 +2,7 @@
 
 #include "platform/x86real/pc98/vblank.hpp"
 #include "libs/master.lib/master.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "x86real.h"
 
 func_t vblank_pending;
@@ -36,4 +37,10 @@ void vblank_flush_func_queue(void)
 {
 	vblank_pending = nullptr;
 	vsync_proc_reset();
+}
+
+void vblank_palette_black_and_tram_wipe(void)
+{
+	palette_settone(0);
+	text_clear();
 }
