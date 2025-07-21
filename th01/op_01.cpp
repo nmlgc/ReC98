@@ -6,7 +6,7 @@
 #include <mem.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "bin/fork.h"
+#include "obj/fork.h"
 #include "platform/x86real/pc98/page.hpp"
 #include "platform/x86real/pc98/keyboard.hpp"
 #include "game/input.hpp"
