@@ -449,13 +449,13 @@ loc_9A8E:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(128 shl 16) or 308
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
@@ -470,13 +470,13 @@ loc_9A8E:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(384 shl 16) or 308
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	1
 		call	palette_black_in
 		mov	vsync_Count1, 0
@@ -961,7 +961,7 @@ loc_9FC8:
 		les	bx, [bp+var_6]
 		add	al, es:[bx]
 		mov	es:[bx], al
-		call	graph_putsa_fx pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
+		call	@graph_putsa_fx$qiiinxuc pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
 		push	1
 		call	palette_black_in
 
@@ -1013,7 +1013,7 @@ loc_A069:
 		dec	es:[bx+resident_t.rem_credits]
 		les	bx, [bp+var_6]
 		dec	byte ptr es:[bx]
-		call	graph_putsa_fx pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
+		call	@graph_putsa_fx$qiiinxuc pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
 		jmp	short loc_A0C5
 ; ---------------------------------------------------------------------------
 
@@ -2016,7 +2016,7 @@ var_4		= word ptr -4
 		shl	ax, 2
 		mov	bx, ax
 		pushd	aVERDICT_PLAYCHARS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(360 shl 16) or 199
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	al, _rank
@@ -2024,7 +2024,7 @@ var_4		= word ptr -4
 		shl	ax, 2
 		mov	bx, ax
 		pushd	aVERDICT_RANKS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		mov	si, 408
 		mov	[bp+var_4], 0
 		mov	[bp+@@digits], SCORE_DIGITS
@@ -2053,7 +2053,7 @@ loc_C2F7:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		add	si, 16
 
 loc_C316:
@@ -2070,13 +2070,13 @@ loc_C319:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(408 shl 16) or 248
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		mov	al, _skill
 		mov	ah, 0
 		mov	bx, 100
@@ -2094,7 +2094,7 @@ loc_C319:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		add	si, 16
 
 loc_C38D:
@@ -2123,7 +2123,7 @@ loc_C3B4:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		add	si, 16
 
 loc_C3D3:
@@ -2138,9 +2138,9 @@ loc_C3D3:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		lea	ax, [si+16]
-		call	graph_putsa_fx pascal, ax, (291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD), ds, offset aU_	; "“_"
+		call	@graph_putsa_fx$qiiinxuc pascal, ax, (291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD), ds, offset aU_	; "“_"
 		pop	di
 		pop	si
 		leave
@@ -2433,7 +2433,7 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE:proc
 	extern @game_exit_from_mainl_to_main$qv:proc
-	extern GRAPH_PUTSA_FX:proc
+	extern @GRAPH_PUTSA_FX$QIIINXUC:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
