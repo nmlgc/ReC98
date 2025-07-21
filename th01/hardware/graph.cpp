@@ -608,48 +608,6 @@ void graph_r_lineloop_unput(const screen_point_t point[], int count)
 
 /// -----------------------
 
-void z_grcg_boxfill(
-	screen_x_t left,
-	vram_y_t top,
-	screen_x_t right,
-	vram_y_t bottom,
-	vc2 col
-)
-{
-	vram_byte_amount_t x;
-	vram_y_t y;
-	vram_byte_amount_t full_bytes_to_put;
-	int order_tmp;
-	dots8_t left_pixels;
-	dots8_t right_pixels;
-	dots8_t *vram_row;
-
-	fix_order(order_tmp, left, right);
-	fix_order(order_tmp, top, bottom);
-	clip_x(left, right);
-	clip_y(top, bottom);
-
-	grcg_setcolor_rmw(col);
-	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_mulshift(left, top)));
-	for(y = top; y <= bottom; y++) {
-		full_bytes_to_put = ((right >> BYTE_BITS) - (left >> BYTE_BITS));
-		left_pixels = 0xFF >> (left & BYTE_MASK);
-		right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
-
-		if(full_bytes_to_put == 0) {
-			vram_row[0] = (left_pixels & right_pixels);
-		} else {
-			vram_row[0] = left_pixels;
-			for(x = 1; x < full_bytes_to_put; x++) {
-				vram_row[x] = 0xFF;
-			}
-			vram_row[full_bytes_to_put] = right_pixels;
-		}
-		vram_row += ROW_SIZE;
-	}
-	grcg_off_func();
-}
-
 void graph_move_byterect_interpage(
 	screen_x_t src_left,
 	vram_y_t src_top,

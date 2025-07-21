@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/pc98/font.hpp"
 #include "platform/x86real/pc98/grcg.hpp"
 #include "th01/hardware/graph.h"
@@ -32,12 +33,14 @@ void graph_putsa_fx(
 	bool16 clear_bg = (col_and_fx & FX_CLEAR_BG);
 	bool16 reverse = (col_and_fx & FX_REVERSE);
 
+	GRCG grcg(GC_RMW);
+
 	if(clear_bg) {
 		pixel_t w = text_extent_fx(col_and_fx, str);
-		z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
+		grcg.set_color_static(0);
+		grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1));
 	}
 
-	GRCG grcg(GC_RMW);
 	grcg.set_color(col_and_fx);
 
 	while(str[0]) {

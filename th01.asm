@@ -39,6 +39,7 @@ include libs/master.lib/keystart.asm
 include libs/master.lib/key_sense.asm
 include libs/master.lib/keybios.asm
 include libs/master.lib/dos_ropen.asm
+include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/dos_puts2.asm
 include libs/master.lib/egc.asm
@@ -54,6 +55,7 @@ include libs/master.lib/version[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm
+include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/keytable[data].asm
 include libs/master.lib/keystart[data].asm

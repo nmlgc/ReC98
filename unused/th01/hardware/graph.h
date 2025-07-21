@@ -9,6 +9,10 @@ void z_palette_white(void);
 void z_palette_white_out(void);
 void z_palette_show(void);
 
+void z_grcg_boxfill(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
+);
+
 void z_grcg_pset(screen_x_t x, vram_y_t y, vc2 col);
 
 // Returns the color value at the given point on the current VRAM page.
