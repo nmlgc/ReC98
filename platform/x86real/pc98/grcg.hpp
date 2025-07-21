@@ -7,6 +7,10 @@
 #include "planar.h"
 #include "x86real.h"
 
+// Critical for removing the exception handling code that Turbo C++ 4.0J would
+// generate for the destructor by default.
+#pragma option -x-
+
 // Just in case master.hpp was included before...
 #undef GC_OFF
 #undef GC_TDW
