@@ -75,16 +75,17 @@ if errorlevel 9009 goto fork_write
 : --------------------------------------
 
 for /f %%i in ('git tag --points-at HEAD') do set TAG=%%i
-for /f %%i in ('git describe --tags --abbrev --always') do set DESC=%%i
+for /f %%i in ('git describe --tags --abbrev^=0') do set DESC=%%i
+for /f %%i in ('git rev-parse --short^=4 HEAD') do set COMMIT=%%i
 
 git diff-files --quiet
 if errorlevel 1 (
-	set FORK_TAG="WIP (%DESC%)"
+	set FORK_TAG="WIP (%DESC%^%COMMIT%)"
 ) else (
 	if not "%TAG%"=="" (
 		set FORK_TAG="Version %TAG%"
 	) else (
-		set FORK_TAG="WIP (%DESC%)"
+		set FORK_TAG="WIP (%DESC%^%COMMIT%)"
 	)
 
 	for /f %%i in ('git show -s --date=short --format^=%%cd') do set FORK_DATE="%%i"
