@@ -341,6 +341,7 @@ platform_src += tup.glob("libs/kaja/*.cpp")
 local platform_bundles = {
 	cutscene = { "cutscene" },
 	font = { "font", "grcg" },
+	forkbanner = { "forkbann" },
 	libc_debloat = { "noexcept", "novbuf" },
 	pi_surf = { "pi_surf" },
 	spawn = { "doserror", "spawn" },
@@ -404,6 +405,7 @@ local obj
 obj = {}
 obj += platform_objs.cutscene
 obj += platform_objs.font
+obj += platform_objs.forkbanner
 obj += platform_objs.spawn
 obj += platform_objs.th01
 obj += tup.glob("th01/pc98/*.cpp")

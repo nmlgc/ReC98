@@ -6,9 +6,9 @@
 #include <mem.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "obj/fork.h"
 #include "platform/x86real/pc98/page.hpp"
 #include "platform/x86real/pc98/keyboard.hpp"
+#include "game/forkbann.hpp"
 #include "game/input.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
@@ -249,13 +249,6 @@ void whitelines_animate(void)
 	page_access(0);
 }
 
-void forkbanner_row_put(int row, const char* str)
-{
-	graph_putsa_fx(
-		0, (RES_Y - ((GLYPH_HALF_H + 2) * (4 - row))), (FX_8X8 | 7), str
-	);
-}
-
 void title_init(void)
 {
 	mdrv2_bgm_load("reimu.mdt");
@@ -267,10 +260,7 @@ void title_init(void)
 	page_access(1);
 	grp_put("REIIDEN3.grp", GPF_PALETTE_KEEP);
 
-	forkbanner_row_put(0, "Anniversary Edition");
-	forkbanner_row_put(1, FORK_TAG);
-	forkbanner_row_put(2, FORK_DATE);
-	forkbanner_row_put(3, FORK_CREDIT);
+	forkbanner_put(0, RES_Y, (FBA_LEFT | FBA_BOTTOM), 7);
 
 	page_access(0);
 	z_palette_black_in();
