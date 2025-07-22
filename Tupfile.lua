@@ -387,10 +387,14 @@ local th01_zunsoft = th01:branch(MODEL_TINY):link("zunsoft", {
 	"th01/zunsoft.cpp",
 	"bin/masters.lib",
 })
-local th01_obj
-th01_obj += platform_objs.spawn
-th01_obj += platform_objs.th01
-th01_obj += {
+
+---@type ReC98Input[]
+local obj
+
+obj = {}
+obj += platform_objs.spawn
+obj += platform_objs.th01
+obj += {
 	piloadm,
 	"th01.asm",
 	"th01/entry.cpp",
@@ -455,7 +459,7 @@ th01_obj += {
 }
 optimized_cfg:branch(
 	Subdir("th01/"), MODEL_LARGE, { cflags = "-DGAME=1" }
-):link("debloat", th01_obj)
+):link("debloat", obj)
 -- ----
 
 -- TH02
@@ -482,7 +486,8 @@ th02:zungen("bin/th02/zun.com", {
 	}) },
 	{ "ZUNSOFT", th01_zunsoft },
 })
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
+
+obj = {
 	"th02/op_01.cpp",
 	"th02/exit_dos.cpp",
 	"th02/zunerror.cpp",
@@ -509,8 +514,10 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th02/op_04.cpp",
 	"th02/op_05.cpp",
 	"th02/op_music.cpp",
-})
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
+}
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+
+obj = {
 	{ "th02_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["bombpart"],
@@ -552,8 +559,10 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th02/dialog.cpp",
 	"th02/boss_5.cpp",
 	"th02/regist_m.cpp",
-})
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
+}
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
+
+obj = {
 	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
 	"th02_maine.asm",
 	"th02/grppsafx.cpp",
@@ -576,7 +585,8 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th02/maine_03.cpp",
 	"th02/maine_04.cpp",
 	"th02/staff.cpp",
-})
+}
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", obj)
 -- ----
 
 -- TH03
@@ -600,7 +610,8 @@ th03:zungen("bin/th03/zun.com", {
 		"bin/masters.lib",
 	})}
 })
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
+
+obj = {
 	"th03/op_01.cpp",
 	"th03_op.asm",
 	"th03/op_music.cpp",
@@ -627,8 +638,10 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th03/inp_m_w.cpp",
 	"th03/cdg_p_na.asm",
 	"th03/hfliplut.asm",
-})
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
+}
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+
+obj = {
 	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
 	"th03/playfld.cpp",
 	"th03/cfg_lres.cpp",
@@ -655,8 +668,10 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th03/hfliplut.asm",
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",
-})
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='L'" }):link("mainl", {
+}
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
+
+obj = {
 	"th03/cfg_lres.cpp",
 	"th03/mainl_sc.cpp",
 	{ "th03_mainl.asm", extra_inputs = th03_sprites["flake"] },
@@ -690,7 +705,8 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='L'" }):link("mainl", {
 	"th03/inp_m_w.cpp",
 	"th03/cdg_p_na.asm",
 	"th03/hfliplut.asm",
-})
+}
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='L'" }):link("mainl", obj)
 -- ----
 
 -- TH04
@@ -711,7 +727,8 @@ local th04_zuncom = th04:zungen("obj/th04/zuncom.bin", {
 	{ "-M", th04:branch(MODEL_TINY):link("memchk", { "th04_memchk.asm" }) },
 })
 th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
-th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
+
+obj = {
 	"th04/op_main.cpp",
 	"th04_op.asm",
 	"th02/vplanset.cpp",
@@ -750,8 +767,10 @@ th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th04/hi_view.cpp",
 	"th04/op_title.cpp",
 	"th04/m_char.cpp",
-})
-th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
+}
+th04:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+
+obj = {
 	{ "th04_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -818,8 +837,10 @@ th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th04/boss.cpp",
 	"th04/boss_4r.cpp",
 	"th04/boss_x2.cpp",
-})
-th04:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
+}
+th04:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
+
+obj = {
 	"th04/maine_e.cpp",
 	{ "th04_maine_master.asm", o = "mainem.obj" },
 	"th04/score_d.cpp",
@@ -853,7 +874,8 @@ th04:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th04/cdg_load.asm",
 	"th04/cutscene.cpp",
 	"th04/staff.cpp",
-})
+}
+th04:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", obj)
 -- ----
 
 -- TH05
@@ -877,7 +899,8 @@ local th05_zuncom = th05:zungen("obj/th05/zuncom.bin", {
 	{ "-M", th05:branch(MODEL_ASM):link("memchk", { "th05_memchk.asm" }) },
 })
 th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
-th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
+
+obj = {
 	"th05/op_main.cpp",
 	"th05_op.asm",
 	"th03/hfliplut.asm",
@@ -920,8 +943,10 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th05/score_e.cpp",
 	"th05/hi_view.cpp",
 	"th05/m_char.cpp",
-})
-th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
+}
+th05:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", obj)
+
+obj = {
 	{ "th05_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -1002,8 +1027,10 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th05/hud_num.asm",
 	"th05/boss.cpp",
 	"th05/main014.cpp",
-})
-th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
+}
+th05:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", obj)
+
+obj = {
 	"th05/maine_e.cpp",
 	{ "th05_maine_master.asm", o = "mainem.obj" },
 	"th05/score_d.cpp",
@@ -1039,7 +1066,8 @@ th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 	"th05/regist.cpp",
 	"th05_maine.asm",
 	"th05/staff.cpp",
-})
+}
+th05:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", obj)
 -- ----
 
 -- Research
