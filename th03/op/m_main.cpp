@@ -6,8 +6,10 @@
 #include "th03/snd/snd.h"
 #include "th03/op/m_select.hpp"
 #include "th03/shiftjis/fns.hpp"
+#include "th01/hardware/grppsafx.h"
 #include "libs/master.lib/master.hpp"
 #include "game/bgimage.hpp"
+#include "game/forkbann.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "platform/x86real/flags.hpp"
 #include "platform/vblank.hpp"
@@ -17,6 +19,24 @@ inline void title_load_opwin_and_bgm(void) {
 	super_entry_bfnt("opwin.bft");
 	snd_kaja_func(KAJA_SONG_STOP, 0);
 	snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
+}
+
+void near forkbanner_put(void)
+{
+	// Sort of symmetric with the "☪ The Phantasmagoria of Dim. Dream" string.
+	enum {
+		RIGHT = (RES_X - 23),
+		TOP = 35,
+		FX = FX_WEIGHT_BOLD,
+	};
+	for(pixel_t outline_y = 0; outline_y < 3; outline_y++) {
+		for(pixel_t outline_x = 0; outline_x < 3; outline_x++) {
+			forkbanner_put(
+				(RIGHT - outline_x), (TOP - outline_y), FBA_RIGHT, (FX | 7)
+			);
+		}
+	}
+	forkbanner_put((RIGHT - 1), (TOP - 1), FBA_RIGHT, (FX | 15));
 }
 
 void near op_animate(void)
@@ -114,6 +134,7 @@ void near op_animate(void)
 	graph_accesspage(0);
 	Palettes = bgimage_palette;
 	bgimage.write(0, 0);
+	forkbanner_put();
 	frame_delay(1);
 
 	palette_settone(100);
@@ -147,6 +168,7 @@ void near op_fadein_animate(void)
 
 	graph_accesspage(0);
 	bgimage.write(0, 0);
+	forkbanner_put();
 
 	select_cdg_load_part1_of_4();
 

@@ -618,6 +618,7 @@ th03:zungen("bin/th03/zun.com", {
 obj = {}
 obj += platform_objs.cutscene
 obj += platform_objs.font
+obj += platform_objs.forkbanner
 obj += platform_objs.libc_debloat
 obj += platform_objs.pi_surf
 obj += platform_objs.spawn
