@@ -2331,7 +2331,9 @@ public @GameExecl$qnxc
 		retf	4
 @GameExecl$qnxc	endp
 
-_MERGED_FN	db 'debloat',0
+_MERGED_FN	db 'anniv',0
+	nop
+	nop
 	nop
 	nop
 

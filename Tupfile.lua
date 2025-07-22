@@ -662,7 +662,7 @@ obj += {
 	"th03/sprites/pi_mask.cpp",
 	"th03/vector.cpp",
 }
-th03:branch(MODEL_LARGE):link("debloat", obj)
+th03:branch(MODEL_LARGE):link("anniv", obj)
 
 obj = {
 	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
@@ -692,7 +692,7 @@ obj = {
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",
 }
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("debloatm", obj)
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("annivm", obj)
 -- ----
 
 -- TH04

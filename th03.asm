@@ -2527,7 +2527,7 @@ aYume_efc	db 'YUME.EFC',0
 aCOul		db '–²Žž‹ó1.dat',0
 aMikoft_bft	db 'MIKOFT.bft',0
 aWin_m		db 'win.m',0
-aMain		db 'debloatm',0
+aMain		db 'annivm',0
 include libs/master.lib/atan8[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
