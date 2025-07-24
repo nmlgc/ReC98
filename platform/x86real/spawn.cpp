@@ -1,6 +1,5 @@
 #pragma option -zC_TEXT
 
-#include <alloc.h>
 #include <dos.h>
 #include <errno.h>
 #include <stdio.h>
@@ -9,6 +8,7 @@
 #include "platform/x86real/dos.hpp"
 #include "platform/x86real/flags.hpp"
 #include "platform/x86real/spawn.hpp"
+#include "platform/x86real/spawnenv.hpp"
 
 #if defined(__TURBOC__) && defined(__MSDOS__)
 // Nothing wrong with Borland's low-level spawn function.
@@ -89,80 +89,13 @@ static int near report(int ret, const char* path)
 // custom TSR spawn function can have a "sane" parameter list – no need to
 // conform to POSIX when we don't have to.
 
-class Subprocess {
-private:
-	char far* env;
-	char __seg* env_aligned;
-	int16_t env_added_bytes;
-
-public:
-	Subprocess(void);
-	~Subprocess() {
-		if(env) {
-			free(env);
-		}
-	}
-
-	int near spawn_adjacent(const char* path, const char *args);
-	int near spawn_at_top(
-		const char* path, const char *args, const uint32_t reserve_bytes
-	);
-};
-
-Subprocess::Subprocess(void) :
-	env(nullptr), env_aligned(nullptr)
-{
-	// Build environment
-	// -----------------
-
-	char __seg* env_seg = reinterpret_cast<dos_psp_t __seg *>(_psp)->environ;
-	char* far* src_p;
-
-	uint16_t env_orig_bytes = 1; 	// original, including the list terminator
-	this->env_added_bytes = 0;   	// added since startup
-	for(src_p = environ; *src_p != nullptr; src_p++) {
-		char far* p = *src_p;
-		uint16_t p_len = (strlen(p) + 1);
-		if(static_cast<char __seg *>(p) != env_seg) {
-			this->env_added_bytes += p_len;
-		} else {
-			env_orig_bytes += p_len;
-		}
-	}
-
-	// The EXEC block only stores a segment-only pointer, so we need to
-	// paragraph-align it.
-	this->env = reinterpret_cast<char far *>(malloc(
-		env_orig_bytes + this->env_added_bytes + 15
-	));
-	if(!this->env) {
-		errno = ENOMEM;
-		return;
-	}
-	this->env_aligned = reinterpret_cast<char __seg *>(
-		FP_SEG(this->env) + (FP_OFF(this->env + 15) >> 4)
-	);
-
-	char far* dst_p = this->env_aligned;
-	for(src_p = environ; *src_p != nullptr; src_p++) {
-		dst_p = stpcpy(dst_p, *src_p);
-		*(dst_p++) = '\0';
-	}
-	*(dst_p++) = '\0';
-	// -----------------
-}
-
 // The MCB of each allocation immediately precedes the allocated segment.
 inline dos_mcb_t __seg* near mcb_for(seg_t sgm) {
 	return reinterpret_cast<dos_mcb_t __seg *>(sgm - (sizeof(dos_mcb_t) >> 4));
 }
 
-int near Subprocess::spawn_adjacent(const char *path, const char *args)
+int near spawn_adjacent(const char *path, const char *args, const SpawnEnv *env)
 {
-	if(!env) {
-		return -1;
-	}
-
 	char dos_args[128]; // DOS PSP limit
 	const uint16_t args_len = strlen(args);
 	if(args_len > (sizeof(dos_args) - 2)) {
@@ -175,17 +108,16 @@ int near Subprocess::spawn_adjacent(const char *path, const char *args)
 
 	// Depending on the Borland C runtime out of pure convenience here. Would
 	// need to be replaced or reimplemented when migrating to other compilers.
-	return _spawn(path, dos_args, env_aligned);
+	return _spawn(path, dos_args, (env ? env->buf_aligned : nullptr));
 }
 
-int near Subprocess::spawn_at_top(
-	const char *path, const char *args, const uint32_t reserve_bytes
+int near spawn_at_top(
+	const char *path,
+	const char *args,
+	const uint32_t reserve_bytes,
+	const SpawnEnv *env
 )
 {
-	if(!env) {
-		return -1;
-	}
-
 	char __seg* env_seg = reinterpret_cast<dos_psp_t __seg *>(_psp)->environ;
 	uint16_t prev_paras = mcb_for(_psp)->size;
 
@@ -197,15 +129,18 @@ int near Subprocess::spawn_at_top(
 		return -1;
 	}
 
+	// Guess the size of the environment block that DOS will create for the new
+	// process, from its MCB (+1), the old size (+[env_seg->size]), and any
+	// bytes added through [environ].
+	uint16_t env_paras = (1 + (mcb_for(FP_SEG(env_seg))->size));
+	if(env) {
+		env_paras += ((env->added_bytes + 15) >> 4);
+	}
+
+	// Total paragraphs = (environment + TSR's MCB + TSR itself).
 	// Calculating the final reserve size in 32 bits also includes an overflow
 	// check for [reserve_bytes].
-	uint32_t top_paras = (
-		1 +                               	// Environment MCB
-		(mcb_for(FP_SEG(env_seg))->size) +	// Original environment
-		((env_added_bytes + 15) >> 4) +   	// New environment
-		1 +                               	// TSR MCB
-		((reserve_bytes + 15) >> 4)       	// TSR itself
-	);
+	uint32_t top_paras = (env_paras + 1 + ((reserve_bytes + 15) >> 4));
 	if(top_paras > (extended_paras - prev_paras)) {
 		errno = ENOMEM;
 		return -1;
@@ -215,7 +150,7 @@ int near Subprocess::spawn_at_top(
 		return -1;
 	}
 
-	int ret = spawn_adjacent(path, args);
+	int ret = spawn_adjacent(path, args, env);
 
 	// Restore original memory boundaries
 	setblock(_psp, prev_paras);
@@ -225,15 +160,18 @@ int near Subprocess::spawn_at_top(
 // ------------
 
 int spawn_at_top_report(
-	const uint32_t reserve_bytes, const char* path, const char *args
+	const uint32_t reserve_bytes,
+	const char* path,
+	const char *args,
+	const SpawnEnv *env
 )
 {
-	Subprocess subprocess;
-	return report(subprocess.spawn_at_top(path, args, reserve_bytes), path);
+	return report(spawn_at_top(path, args, reserve_bytes, env), path);
 }
 
-int spawn_adjacent_report(const char* path, const char *args)
+int spawn_adjacent_report(
+	const char* path, const char *args, const SpawnEnv *env
+)
 {
-	Subprocess subprocess;
-	return report(subprocess.spawn_adjacent(path, args), path);
+	return report(spawn_adjacent(path, args, env), path);
 }
