@@ -91,26 +91,25 @@ static int near report(int ret, const char* path)
 
 class Subprocess {
 private:
-	const char* path;
 	char far* env;
 	char __seg* env_aligned;
 	int16_t env_added_bytes;
 	char args[128]; // DOS PSP limit
 
 public:
-	Subprocess(const char* path, const char* args);
+	Subprocess(const char* args);
 	~Subprocess() {
 		if(env) {
 			free(env);
 		}
 	}
 
-	int near spawn_at_top(const uint32_t reserve_bytes);
-	int near spawn_adjacent(void);
+	int near spawn_at_top(const char* path, const uint32_t reserve_bytes);
+	int near spawn_adjacent(const char* path);
 };
 
-Subprocess::Subprocess(const char* path_, const char *args_) :
-	path(path_), env(nullptr), env_aligned(nullptr)
+Subprocess::Subprocess(const char *args_) :
+	env(nullptr), env_aligned(nullptr)
 {
 	// Build command line
 	// ------------------
@@ -170,7 +169,9 @@ inline dos_mcb_t __seg* near mcb_for(seg_t sgm) {
 	return reinterpret_cast<dos_mcb_t __seg *>(sgm - (sizeof(dos_mcb_t) >> 4));
 }
 
-int near Subprocess::spawn_at_top(const uint32_t reserve_bytes)
+int near Subprocess::spawn_at_top(
+	const char *path, const uint32_t reserve_bytes
+)
 {
 	if(!env) {
 		return -1;
@@ -205,7 +206,7 @@ int near Subprocess::spawn_at_top(const uint32_t reserve_bytes)
 		return -1;
 	}
 
-	int ret = spawn_adjacent();
+	int ret = spawn_adjacent(path);
 
 	// Restore original memory boundaries
 	setblock(_psp, prev_paras);
@@ -213,7 +214,7 @@ int near Subprocess::spawn_at_top(const uint32_t reserve_bytes)
 	return ret;
 }
 
-int near Subprocess::spawn_adjacent(void)
+int near Subprocess::spawn_adjacent(const char *path)
 {
 	if(!env) {
 		return -1;
@@ -229,12 +230,12 @@ int spawn_at_top_report(
 	const uint32_t reserve_bytes, const char* path, const char *args
 )
 {
-	Subprocess subprocess(path, args);
-	return report(subprocess.spawn_at_top(reserve_bytes), path);
+	Subprocess subprocess(args);
+	return report(subprocess.spawn_at_top(path, reserve_bytes), path);
 }
 
 int spawn_adjacent_report(const char* path, const char *args)
 {
-	Subprocess subprocess(path, args);
-	return report(subprocess.spawn_adjacent(), path);
+	Subprocess subprocess(args);
+	return report(subprocess.spawn_adjacent(path), path);
 }
