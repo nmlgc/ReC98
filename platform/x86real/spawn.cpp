@@ -94,36 +94,24 @@ private:
 	char far* env;
 	char __seg* env_aligned;
 	int16_t env_added_bytes;
-	char args[128]; // DOS PSP limit
 
 public:
-	Subprocess(const char* args);
+	Subprocess(void);
 	~Subprocess() {
 		if(env) {
 			free(env);
 		}
 	}
 
-	int near spawn_adjacent(const char* path);
-	int near spawn_at_top(const char* path, const uint32_t reserve_bytes);
+	int near spawn_adjacent(const char* path, const char *args);
+	int near spawn_at_top(
+		const char* path, const char *args, const uint32_t reserve_bytes
+	);
 };
 
-Subprocess::Subprocess(const char *args_) :
+Subprocess::Subprocess(void) :
 	env(nullptr), env_aligned(nullptr)
 {
-	// Build command line
-	// ------------------
-
-	const uint16_t args_len = strlen(args_);
-	if(args_len > (sizeof(this->args) - 2)) {
-		errno = E2BIG;
-		return;
-	}
-	this->args[0] = args_len;
-	memcpy(&this->args[1], args_, args_len);
-	this->args[args_len + 1] = 0x0D;
-	// ------------------
-
 	// Build environment
 	// -----------------
 
@@ -169,11 +157,21 @@ inline dos_mcb_t __seg* near mcb_for(seg_t sgm) {
 	return reinterpret_cast<dos_mcb_t __seg *>(sgm - (sizeof(dos_mcb_t) >> 4));
 }
 
-int near Subprocess::spawn_adjacent(const char *path)
+int near Subprocess::spawn_adjacent(const char *path, const char *args)
 {
 	if(!env) {
 		return -1;
 	}
+
+	char dos_args[128]; // DOS PSP limit
+	const uint16_t args_len = strlen(args);
+	if(args_len > (sizeof(dos_args) - 2)) {
+		errno = E2BIG;
+		return -2;
+	}
+	dos_args[0] = args_len;
+	memcpy(&dos_args[1], args, args_len);
+	dos_args[args_len + 1] = 0x0D;
 
 	// Depending on the Borland C runtime out of pure convenience here. Would
 	// need to be replaced or reimplemented when migrating to other compilers.
@@ -181,7 +179,7 @@ int near Subprocess::spawn_adjacent(const char *path)
 }
 
 int near Subprocess::spawn_at_top(
-	const char *path, const uint32_t reserve_bytes
+	const char *path, const char *args, const uint32_t reserve_bytes
 )
 {
 	if(!env) {
@@ -217,7 +215,7 @@ int near Subprocess::spawn_at_top(
 		return -1;
 	}
 
-	int ret = spawn_adjacent(path);
+	int ret = spawn_adjacent(path, args);
 
 	// Restore original memory boundaries
 	setblock(_psp, prev_paras);
@@ -230,12 +228,12 @@ int spawn_at_top_report(
 	const uint32_t reserve_bytes, const char* path, const char *args
 )
 {
-	Subprocess subprocess(args);
-	return report(subprocess.spawn_at_top(path, reserve_bytes), path);
+	Subprocess subprocess;
+	return report(subprocess.spawn_at_top(path, args, reserve_bytes), path);
 }
 
 int spawn_adjacent_report(const char* path, const char *args)
 {
-	Subprocess subprocess(args);
-	return report(subprocess.spawn_adjacent(path), path);
+	Subprocess subprocess;
+	return report(subprocess.spawn_adjacent(path, args), path);
 }
