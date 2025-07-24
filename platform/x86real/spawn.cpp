@@ -104,8 +104,8 @@ public:
 		}
 	}
 
-	int near spawn_at_top(const char* path, const uint32_t reserve_bytes);
 	int near spawn_adjacent(const char* path);
+	int near spawn_at_top(const char* path, const uint32_t reserve_bytes);
 };
 
 Subprocess::Subprocess(const char *args_) :
@@ -169,6 +169,17 @@ inline dos_mcb_t __seg* near mcb_for(seg_t sgm) {
 	return reinterpret_cast<dos_mcb_t __seg *>(sgm - (sizeof(dos_mcb_t) >> 4));
 }
 
+int near Subprocess::spawn_adjacent(const char *path)
+{
+	if(!env) {
+		return -1;
+	}
+
+	// Depending on the Borland C runtime out of pure convenience here. Would
+	// need to be replaced or reimplemented when migrating to other compilers.
+	return _spawn(path, dos_args, env_aligned);
+}
+
 int near Subprocess::spawn_at_top(
 	const char *path, const uint32_t reserve_bytes
 )
@@ -212,17 +223,6 @@ int near Subprocess::spawn_at_top(
 	setblock(_psp, prev_paras);
 
 	return ret;
-}
-
-int near Subprocess::spawn_adjacent(const char *path)
-{
-	if(!env) {
-		return -1;
-	}
-
-	// Depending on the Borland C runtime out of pure convenience here. Would
-	// need to be replaced or reimplemented when migrating to other compilers.
-	return _spawn(path, args, env_aligned);
 }
 // ------------
 
