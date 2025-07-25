@@ -36,6 +36,11 @@ enum debug_mode_t {
 	_debug_mode_t_FORCE_INT16 = 0x7FFF
 };
 
+enum shutdown_flag_t {
+	SHUTDOWN_NONE = 0x00,
+	SHUTDOWN_MDRV2 = 0x01,
+};
+
 #define RES_ID "ReiidenConfig"
 struct resident_t {
 	char id[sizeof(RES_ID)];
@@ -44,7 +49,7 @@ struct resident_t {
 	int8_t rem_bombs;
 	int8_t credit_lives_extra; // Add 2 for the actual number of lives
 	end_sequence_t end_flag; /* ZUN symbol [Strings] */
-	int8_t unused_1;
+	uint8_t shutdown_flags;
 	route_t route;
 	int8_t rem_lives;
 	int8_t snd_need_init; // ACTUAL TYPE: bool

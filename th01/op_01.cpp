@@ -280,7 +280,13 @@ void title_window_put(void)
 void start_game(bool new_game)
 {
 	cfg_save();
+
+	// If we went through main_setup(), we already allocated a resident
+	// structure, but not it someone launched us via `debloat op` from GAME.BAT
+	// (which you shouldn't do, but still makes sense to support for parity
+	// reasons).
 	resident = resident_get_or_create();
+
 	resident->rank = opts.rank;
 	resident->bgm_mode = opts.bgm_mode;
 	resident->rem_bombs = opts.credit_bombs;
@@ -773,7 +779,6 @@ int main_op(int argc, const char *argv[])
 	cfg_save();
 	mdrv2_bgm_stop();
 	key_end();
-	resident_free();
 
 	page_access(1);	z_graph_clear();
 	page_access(0);	z_graph_clear();

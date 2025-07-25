@@ -22,6 +22,7 @@ resident_t __seg* resident_get_or_create(void)
 			exit(-1);
 		}
 		seg->stage_id = 0;
+		seg->shutdown_flags = SHUTDOWN_NONE;
 	}
 	return seg;
 }
