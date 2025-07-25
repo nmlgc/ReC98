@@ -6,3 +6,7 @@ int main_setup(int argc, const char *argv[])
 {
 	return main_op(argc, argv);
 }
+
+void main_shutdown(void)
+{
+}

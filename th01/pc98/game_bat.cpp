@@ -22,3 +22,7 @@ int main_setup(int argc, const char *argv[])
 	}
 	return ret;
 }
+
+void main_shutdown(void)
+{
+}

@@ -21,7 +21,8 @@ static char* ENTRYPOINTS[EP_COUNT] = {
 
 int __cdecl main(int argc, const char *argv[])
 {
-	int (*entry)(int, const char* []);
+	int (*entry)(int, const char* []) = nullptr;
+	int ret;
 
 	if(argc < 2) {
 		entry = main_setup;
@@ -33,12 +34,19 @@ int __cdecl main(int argc, const char *argv[])
 #endif
 	} else if(!stricmp(argv[1], ENTRYPOINTS[EP_CUTSCENE])) {
 		entry = main_cutscene;
+	}
+
+	if(entry) {
+		ret = entry((argc - 1), &argv[1]);
 	} else {
 		// No entry point string means that we've got debug flags. Pass them
 		// along to the GAME.BAT reimplementation.
-		return main_setup(argc, argv);
+		ret = main_setup(argc, argv);
 	}
-	return entry((argc - 1), &argv[1]);
+
+	// We can only get here if we return to DOS.
+	main_shutdown();
+	return ret;
 }
 
 void entrypoint_exec(entrypoint_t entrypoint)
