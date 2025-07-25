@@ -12,7 +12,6 @@
 #include "platform/x86real/pc98/page.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/core/initexit.hpp"
-#include "th01/core/resstuff.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
@@ -269,11 +268,14 @@ int main_main(int, const char *[])
 		error_resident_invalid();
 		return 1;
 	}
-	if(resident_stuff_get(rank, frame_rand, stage_id) == 1) {
+	if( (resident = resident_get()) == nullptr) {
 		error_resident_invalid();
 		return 1;
 	}
 
+	rank = resident->rank;
+	frame_rand = resident->rand;
+	stage_id = resident->stage_id;
 	score = resident->score;
 	extend_next = ((resident->score / SCORE_PER_EXTEND) + 1);
 	irand_init(frame_rand);

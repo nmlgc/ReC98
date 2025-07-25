@@ -420,7 +420,7 @@ obj += {
 	"th01/planar.cpp",
 	"th01/scoredat.cpp",
 	"th01/regist.cpp",
-	"th01/resstuff.cpp",
+	"th01/resident.cpp",
 	"th01/tram_x16.cpp",
 	"th01/vsync.cpp",
 	"th01/ztext.cpp",

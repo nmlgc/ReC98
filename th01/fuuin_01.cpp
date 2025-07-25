@@ -26,7 +26,7 @@ end_sequence_t end_flag = ES_NONE;
 bool16 end_init(void)
 {
 	int i;
-	resident_t __seg *resident = ResData<resident_t>::exist(RES_ID);
+	resident_t __seg *resident = resident_get();
 	if(resident) {
 		if(resident->end_flag != ES_NONE) {
 			score = resident->score;
@@ -59,7 +59,7 @@ bool16 end_init(void)
 bool16 end_resident_clear(void)
 {
 	int i;
-	resident_t __seg *resident = ResData<resident_t>::exist(RES_ID);
+	resident_t __seg *resident = resident_get();
 	if(resident) {
 		resident->score = 0;
 		resident->end_flag = ES_NONE;

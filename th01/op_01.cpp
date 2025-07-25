@@ -11,7 +11,6 @@
 #include "game/input.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
-#include "th01/core/resstuff.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
@@ -281,13 +280,13 @@ void title_window_put(void)
 void start_game(bool new_game)
 {
 	cfg_save();
-	resident_create_and_stuff_set(
-		opts.rank,
-		opts.bgm_mode,
-		opts.credit_bombs,
-		opts.credit_lives_extra,
-		frame_rand
-	);
+	resident = resident_get_or_create();
+	resident->rank = opts.rank;
+	resident->bgm_mode = opts.bgm_mode;
+	resident->rem_bombs = opts.credit_bombs;
+	resident->credit_lives_extra = opts.credit_lives_extra;
+	resident->rand = frame_rand;
+	resident->score = 0;
 	key_end();
 	mdrv2_bgm_fade_out_nonblock();
 

@@ -67,6 +67,14 @@ struct resident_t {
 
 extern resident_t __seg *resident;
 
+// Returns an existing instance of the resident structure, or a `nullptr` if it
+// hasn't been allocated. Does *not* assign [resident]!
+resident_t __seg* resident_get(void);
+
+// Allocates and initializes the resident structure if it doesn't exist yet,
+// and returns its pointer. Does *not* assign [resident]!
+resident_t __seg* resident_get_or_create(void);
+
 // Frees the resident structure if it exists.
 void resident_free(void);
 
