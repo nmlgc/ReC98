@@ -111,6 +111,63 @@ int near spawn_adjacent(const char *path, const char *args, const SpawnEnv *env)
 	return _spawn(path, dos_args, (env ? env->buf_aligned : nullptr));
 }
 
+SpawnSpacer pascal spawn_claim_memory_minus(
+	uint32_t payload_bytes, unsigned int process_count, const SpawnEnv *env
+)
+{
+	SpawnSpacer ret;
+	SpawnSpacer err;
+	err.set_error();
+
+	char __seg* env_seg = reinterpret_cast<dos_psp_t __seg *>(_psp)->environ;
+	ret.prev_paras = mcb_for(_psp)->size;
+
+	// Get the maximum amount of conventional RAM this process could take up by
+	// asking for the maximum possible segment size. Will already reallocate
+	// [_psp] to the returned size!
+	uint16_t extended_paras = setblock(_psp, 0xFFFF);
+	if((extended_paras == 0xFFFF) || (errno != ENOMEM)) {
+		return err;
+	}
+
+	// Guess the amount of paragraphs that DOS requires for each process, which
+	// includes
+	// • the MCB of its environment block (+1),
+	// • the size of our own environment block (+[env_seg->size]),
+	// • any bytes added through [environ],
+	// • and the MCB for the process itself (+1).
+	uint16_t dos_process_paras = (1 + (mcb_for(FP_SEG(env_seg))->size) + 1);
+	if(env) {
+		dos_process_paras += ((env->added_bytes + 15) >> 4);
+	}
+
+	// Calculating the final reserve size in 32 bits also includes an overflow
+	// check for [payload_bytes].
+	uint32_t top_paras = (
+		(process_count * dos_process_paras) + ((payload_bytes + 15) >> 4)
+	);
+	if(top_paras > (extended_paras - ret.prev_paras)) {
+		errno = ENOMEM;
+		return err;
+	}
+
+	if(setblock(_psp, (extended_paras - top_paras)) != -1) {
+		return err;
+	}
+	return ret;
+}
+
+void SpawnSpacer::release(void)
+{
+	if(*this) {
+		return;
+	}
+
+	// Restore original memory boundaries
+	setblock(_psp, prev_paras);
+	set_error();
+}
+
 int near spawn_at_top(
 	const char *path,
 	const char *args,
@@ -118,43 +175,12 @@ int near spawn_at_top(
 	const SpawnEnv *env
 )
 {
-	char __seg* env_seg = reinterpret_cast<dos_psp_t __seg *>(_psp)->environ;
-	uint16_t prev_paras = mcb_for(_psp)->size;
-
-	// Get the maximum amount of conventional RAM this process could take up by
-	// asking for the maximum possible segment size. Will already reallocate
-	// [_psp] to the returned size!
-	uint16_t extended_paras = setblock(_psp, 0xFFFF);
-	if((extended_paras == 0xFFFF) || (errno != ENOMEM)) {
+	SpawnSpacer spacer = spawn_claim_memory_minus(reserve_bytes, 1, env);
+	if(spacer) {
 		return -1;
 	}
-
-	// Guess the size of the environment block that DOS will create for the new
-	// process, from its MCB (+1), the old size (+[env_seg->size]), and any
-	// bytes added through [environ].
-	uint16_t env_paras = (1 + (mcb_for(FP_SEG(env_seg))->size));
-	if(env) {
-		env_paras += ((env->added_bytes + 15) >> 4);
-	}
-
-	// Total paragraphs = (environment + TSR's MCB + TSR itself).
-	// Calculating the final reserve size in 32 bits also includes an overflow
-	// check for [reserve_bytes].
-	uint32_t top_paras = (env_paras + 1 + ((reserve_bytes + 15) >> 4));
-	if(top_paras > (extended_paras - prev_paras)) {
-		errno = ENOMEM;
-		return -1;
-	}
-
-	if(setblock(_psp, (extended_paras - top_paras)) != -1) {
-		return -1;
-	}
-
 	int ret = spawn_adjacent(path, args, env);
-
-	// Restore original memory boundaries
-	setblock(_psp, prev_paras);
-
+	spacer.release();
 	return ret;
 }
 // ------------
