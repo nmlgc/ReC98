@@ -65,7 +65,7 @@ struct resident_t {
 	uint16_t point_value;
 };
 
-extern resident_t far *resident;
+extern resident_t __seg *resident;
 
 // Frees the resident structure if it exists.
 void resident_free(void);

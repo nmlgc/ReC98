@@ -6,7 +6,7 @@
 #include "libs/master.lib/master.hpp"
 #include "th01/core/resstuff.hpp"
 
-resident_t far *resident;
+resident_t __seg *resident;
 
 void resident_create_and_stuff_set(
 	int8_t rank,
