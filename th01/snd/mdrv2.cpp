@@ -3,13 +3,13 @@
  * MDRV2 functions
  */
 
-#include <dos.h>
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
 #include "platform/x86real/spawn.hpp"
 #include "libs/master.lib/master.hpp"
 #include "th01/snd/mdrv2.h"
+#include "x86real.h"
 
 #define MDRV2_FN "MDRV98.COM"
 #define MDRV2_MAGIC "Mdrv2System"
@@ -28,11 +28,6 @@ typedef enum {
 
 static const uint8_t MDRV2 = 0xF2;
 
-inline int16_t mdrv2_segment(void) {
-	// 0000:((0xF2 * 4) + 2)
-	return peek(0, ((MDRV2 * sizeof(void far *)) + sizeof(void near *)));
-}
-
 inline uint16_t mdrv2_call(mdrv2_func_t func) {
 	_AH = func;
 	geninterrupt(MDRV2);
@@ -43,16 +38,10 @@ static int8_t mdrv2_active = false; // ACTUAL TYPE: bool
 
 bool16 mdrv2_resident(void)
 {
-	char s1[sizeof(MDRV2_MAGIC)];
-	const char MAGIC[] = MDRV2_MAGIC;
-	char far *magicp = reinterpret_cast<char far *>(
-		(static_cast<uint32_t>(mdrv2_segment()) << 16) + 0x102
-	);
-
-	for(int i = 0; i < sizeof(s1); i++) {
-		s1[i] = magicp[i];
-	}
-	if(strcmp(s1, MAGIC) != 0) {
+	if(strcmp(
+		reinterpret_cast<char far *>(MK_FP(intvector_segment(MDRV2), 0x102)),
+		MDRV2_MAGIC
+	)) {
 		return false;
 	}
 	return true;
@@ -139,6 +128,9 @@ static const uint8_t MDRV2_RESERVE_KIB_MAX = (64 - MDRV2_DRIVER_KIB);
 int mdrv2_spawn(uint8_t bgm_data_kib)
 {
 	if((bgm_data_kib < 1) || (bgm_data_kib > MDRV2_RESERVE_KIB_MAX)) {
+		// Would be part of <dos.h>, but we'd rather #include "x86real.h".
+		extern char **__cdecl _argv;
+
 		printf(
 			"%s: MDRV2 reserve size must be between 1 and %d KiB, got %d KiB",
 			_argv[0], MDRV2_RESERVE_KIB_MAX, bgm_data_kib
