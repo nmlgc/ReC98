@@ -394,13 +394,12 @@ local obj
 obj = {}
 obj += platform_objs.spawn
 obj += platform_objs.th01
+obj += tup.glob("th01/pc98/*.cpp")
 obj += {
 	piloadm,
 	"th01.asm",
-	"th01/entry.cpp",
 	"th01/egc.cpp",
 	"th01/frmdelay.cpp",
-	"th01/game.cpp",
 	"th01/graph.cpp",
 	"th01/grp2xscs.cpp",
 	"th01/grp_text.cpp",

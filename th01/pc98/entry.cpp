@@ -1,8 +1,10 @@
+#pragma option -zCPLATFORM_TEXT
+
 #include <process.h>
 #include <dos.h>
 #include <string.h>
 #include "platform.h"
-#include "th01/core/entry.hpp"
+#include "th01/pc98/entry.hpp"
 
 // argv[1] value to select a given entry point.
 static char* ENTRYPOINTS[EP_COUNT] = {
