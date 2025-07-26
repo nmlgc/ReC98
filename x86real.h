@@ -146,6 +146,13 @@ inline uint8_t _inportb_(uint8_t port) {
 	__emit__(0xE4, port); // IN AL, port
 	return _AL;
 }
+
+// Returns the segment part of the handler for the given interrupt.
+inline void __seg* intvector_segment(uint8_t i) {
+	return reinterpret_cast<void __seg *>(
+		peek(0, ((i * sizeof(void far *)) + sizeof(uint16_t)))
+	);
+}
 #endif
 // --------------------------
 
