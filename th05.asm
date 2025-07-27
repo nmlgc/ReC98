@@ -1861,7 +1861,7 @@ loc_C2BB:
 		push	ax
 		call	sub_BCD3
 		call	graph_putsa_fx pascal, (124 shl 16) or 196, 9, ds, offset aGxgnbGvbGhvVGv
-		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvV_0
+		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvVGv
 
 loc_C2EB:
 		call	_bgimage_snap
@@ -6129,7 +6129,6 @@ aScnum_bft	db 'scnum.bft',0
 aSctm0_bft	db 'sctm0.bft',0
 aSctm1_bft	db 'sctm1.bft',0
 aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0
-aGxgnbGvbGhvV_0	db 'スローモードでのプレイでは、スコアは記録されません',0
 aName		db 'name',0
 		db 0
 x_116E2	dw 336

@@ -2531,7 +2531,7 @@ loc_C8D9:
 		push	ax
 		call	sub_C7C9
 		call	graph_putsa_fx pascal, (124 shl 16) or 196, 9, ds, offset aGxgnbGvbGhvVGv ; "スローモードでのプレイでは、スコアは記・...
-		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvV_1 ; "スローモードでのプレイでは、スコアは記・...
+		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvVGv ; "スローモードでのプレイでは、スコアは記・...
 
 loc_C909:
 		les	bx, _resident
@@ -3048,7 +3048,6 @@ include th04/hiscore/alphabet[data].asm
 aHi01_pi	db 'hi01.pi',0
 aScnum2_bft	db 'scnum2.bft',0
 aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0
-aGxgnbGvbGhvV_1	db 'スローモードでのプレイでは、スコアは記録されません',0
 aName		db 'name',0
 		db    0
 
