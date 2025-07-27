@@ -108,7 +108,16 @@ int near spawn_adjacent(const char *path, const char *args, const SpawnEnv *env)
 
 	// Depending on the Borland C runtime out of pure convenience here. Would
 	// need to be replaced or reimplemented when migrating to other compilers.
-	return _spawn(path, dos_args, (env ? env->buf_aligned : nullptr));
+	//
+	// The only gotcha: _spawn() returns either -1 on error or the 8-bit return
+	// code of the spawned process. This meant that the function had to return
+	// `int`, but Borland then didn't truncate the return code to [0; 255],
+	// which potentially leaves garbage in the high byte.
+	int ret = _spawn(path, dos_args, (env ? env->buf_aligned : nullptr));
+	if(ret == -1) {
+		return ret;
+	}
+	return (ret & 0xFF);
 }
 
 SpawnSpacer pascal spawn_claim_memory_minus(
