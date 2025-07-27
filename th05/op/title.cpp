@@ -1,10 +1,10 @@
 #include "game/bgimage.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/sprites/pi_mask.hpp"
 #include "th04/op/op.hpp"
 #include "th04/shiftjis/fnshared.hpp"
-#include "th05/formats/pi.hpp"
 #include "th05/resident.hpp"
 #include "th04/sprites/op_cdg.hpp"
 
@@ -24,10 +24,15 @@ void near main_cdg_free(void)
 	cdg_free_all();
 }
 
+static const int ROLL_CELS = 8;
+
+// Slightly awkward to spend BSS space on an array that could be allocated on
+// the stack, but GrpSurface_LoadPI() expects these to be zero-initialized.
+GrpSurface_M4 roll_cel_surf[ROLL_CELS];
+
 void near op_animate(void)
 {
 	enum {
-		ROLL_CELS = 8,
 		ROLL_FRAMES_PER_CEL = 8,
 		ROLL_DURATION = (ROLL_CELS * ROLL_FRAMES_PER_CEL),
 
@@ -47,15 +52,15 @@ void near op_animate(void)
 		}
 	} page;
 
+
+	Palette8 roll_cel_palette[ROLL_CELS];
+
 	palette_settone(0);
-	pi_load(0, "op2a.pi");
-	pi_load(1, "op2b.pi");
-	pi_load(2, "op2c.pi");
-	pi_load(3, "op2d.pi");
-	pi_load(4, "op2e.pi");
-	pi_load(5, "op2f.pi");
-	pi_load(6, "op2g.pi");
-	pi_load(7, "op2h.pi");
+	{for(int i = 0; i < ROLL_CELS; i++) {
+		static char fn[] = "op2_.pi";
+		fn[3] = ('a' + i);
+		GrpSurface_LoadPI(roll_cel_surf[i], &roll_cel_palette[i], fn);
+	}}
 
 	// Not the same as graph_clear(), which uses hardware palette color #0.
 	grcg_setcolor(GC_RMW, 1);
@@ -71,11 +76,12 @@ void near op_animate(void)
 	// cause tearing on slower systems on the first frame of the loop below.
 	graph_showpage(0);
 
-	{for(int frame = 0; frame < ROLL_DURATION; frame++) {
+	{for(unsigned int frame = 0; frame < ROLL_DURATION; frame++) {
 		// Blit to both pages
 		if((frame % ROLL_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
-			pi_palette_apply(frame / ROLL_FRAMES_PER_CEL);
-			pi_put_8(0, 278, (frame / ROLL_FRAMES_PER_CEL));
+			Palettes = roll_cel_palette[frame / ROLL_FRAMES_PER_CEL];
+			palette_show();
+			roll_cel_surf[frame / ROLL_FRAMES_PER_CEL].write(0, 278);
 		}
 		page.wait_and_flip();
 
@@ -85,7 +91,7 @@ void near op_animate(void)
 	}}
 
 	{for(int i = 0; i < ROLL_CELS; i++) {
-		pi_free(i);
+		roll_cel_surf[i].free();
 	}}
 
 	if(resident->demo_num == 0) {
