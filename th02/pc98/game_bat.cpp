@@ -207,6 +207,8 @@ TSR tsr_mmd = {
 // PMD
 // ---
 
+static bool pmd_canbe;
+
 #if (GAME >= 4)
 #define PMD_ARGS_26 "/M8 /V0 /E2 /K /N  /P"
 #define PMD_ARGS_86 "/M8 /V0 /E2 /K /N- /P"
@@ -229,6 +231,11 @@ bool pascal near tsr_pmd_init(TSR near &pmd)
 {
 	if(snd_pmd_resident()) {
 		return true;
+	}
+	if(pmd_canbe) {
+		pmd.fn = "pmdppz.com";
+		pmd.spawn_args = PMD_ARGS_86;
+		return false;
 	}
 	int ongchk_ret = zuncom_spawn(ZUNCOM_ONGCHK);
 	if(ongchk_ret < 0) {
@@ -295,6 +302,12 @@ static const int TSR_COUNT = (sizeof(tsrs) / sizeof(tsrs[0]));
 
 int main_setup(int argc, const char *argv[])
 {
+	{for(int i = 1; i < argc; i++) {
+		if(!stricmp(argv[i], "-c") || !stricmp(argv[i], "--canbe")) {
+			pmd_canbe = true;
+		}
+	}}
+
 	TSRBundle bundle;
 
 	// If all required TSRs are already resident, we assume that the game was
