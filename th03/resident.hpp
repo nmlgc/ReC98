@@ -45,7 +45,7 @@ struct resident_t {
 	PlaycharPalettedOptional playchar_paletted[PLAYER_COUNT];
 	bool is_cpu[PLAYER_COUNT];
 	long rand;
-	int8_t unused_1;
+	uint8_t shutdown_flags;
 	unsigned char bgm_mode;
 	unsigned char key_mode;
 	pid_t pid_winner;
@@ -60,7 +60,8 @@ struct resident_t {
 	bool op_animation_fast;
 	unsigned char skill;
 	unsigned char demo_num;	// 0 = no demo active
-	int8_t unused_3[198];
+	const char near *pmd_fn; // relative to the data segment of `DEBLOAT.EXE`
+	int8_t unused_3[196];
 };
 
 extern resident_t far *resident;

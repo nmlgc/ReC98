@@ -58,6 +58,7 @@ include libs/master.lib/bopenr.asm
 include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
+include libs/master.lib/resdata.asm
 include libs/master.lib/dos_axdx.asm
 include libs/master.lib/dos_filesize.asm
 include libs/master.lib/dos_keyclear.asm

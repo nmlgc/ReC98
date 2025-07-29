@@ -36,8 +36,10 @@ include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
 include libs/master.lib/cutline.asm
+include libs/master.lib/resdata.asm
 include libs/master.lib/dos_axdx.asm
 include libs/master.lib/dos_filesize.asm
+include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/egc_shift_down.asm
