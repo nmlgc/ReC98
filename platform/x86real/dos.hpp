@@ -8,6 +8,8 @@
 // The structures are limited up to the fields needed by other code.
 // FreeDOS-specific declarations were replaced with reserved bytes.
 
+#include "platform.h"
+
 enum dos_alloc_strategy_t {
 	FIRST_FIT = 0,
 	BEST_FIT  = 1,
