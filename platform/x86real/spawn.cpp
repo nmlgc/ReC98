@@ -2,10 +2,10 @@
 
 #include <dos.h>
 #include <errno.h>
-#include <stdio.h>
 #include <string.h>
-#include "platform.h"
+#include "libs/master.lib/master.hpp"
 #include "platform/x86real/dos.hpp"
+#include "platform/x86real/doserror.hpp"
 #include "platform/x86real/flags.hpp"
 #include "platform/x86real/spawn.hpp"
 #include "platform/x86real/spawnenv.hpp"
@@ -20,8 +20,7 @@ extern "C" int near __cdecl _spawn(
 static int near report(int ret, const char* path)
 {
 	if(ret == -1) {
-		printf("%s: Failed to spawn `%s", _argv[0], path);
-		perror("`");
+		dos_print_error("Failed to spawn `", path, "`");
 	}
 	return ret;
 }
