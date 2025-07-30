@@ -1,3 +1,6 @@
+#ifndef TH01_HARDWARE_GRPPSAFX_H
+#define TH01_HARDWARE_GRPPSAFX_H
+
 #include "pc98.h"
 #include "shiftjis.hpp"
 #include "defconv.h"
@@ -28,9 +31,27 @@
 #define FX_WEIGHT_BOLD   (WEIGHT_BOLD << 4)
 #define FX_WEIGHT_BLACK  (WEIGHT_BLACK << 4)
 
+#if (GAME == 1)
+// TH01-exclusive effects
+// ----------------------
+
+// Puts a black background behind the text. Useful if the text is rendered
+// onto the back page and should then be 2× scaled onto the front page.
+static const int16_t FX_CLEAR_BG  = 0x200;
+
+static const int16_t FX_UNDERLINE = 0x400;
+static const int16_t FX_REVERSE   = 0x800;
+// ----------------------
+#endif
+
 // Not used in any of the three games that support the feature.
 #define FX_SPACING(spacing) \
 	((spacing & 7) << 6)
+
+#if (GAME == 1)
+// Calculates the width of [str], displayed with the given [fx].
+int text_extent_fx(int16_t fx, const shiftjis_t *str);
+#endif
 
 // Puts the given [str] onto the graphics RAM at the given position, with the
 // given graphics color and effect.
@@ -43,3 +64,5 @@ void DEFCONV graph_putsa_fx(
 	screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 );
 #endif
+
+#endif /* TH01_HARDWARE_GRPPSAFX_H */

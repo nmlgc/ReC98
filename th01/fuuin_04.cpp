@@ -8,6 +8,7 @@
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.hpp"
 #include "th01/formats/grp.h"
