@@ -180,7 +180,7 @@ GrpSurface_M1 nopoly_B;
 struct cmt_line_t {
 	shiftjis_t c[CMT_LINE_SIZE];
 };
-cmt_line_t cmt[CMT_LINES];
+cmt_line_t __seg *cmt;
 
 #if (GAME == 5)
 // TH05 selection state
@@ -379,8 +379,8 @@ void pascal near cmt_load(int track)
 #else
 	file_ropen("MUSIC.TXT");
 #endif
-	file_seek((track * int(sizeof(cmt))), SEEK_SET);
-	file_read(cmt, sizeof(cmt));
+	file_seek((track * CMT_LINES * CMT_LINE_SIZE), SEEK_SET);
+	file_read(cmt, (CMT_LINES * CMT_LINE_SIZE));
 	file_close();
 	for(int i = 0; i < CMT_LINES; i++) {
 		cmt[i].c[CMT_LINE_LENGTH] = '\0';
@@ -409,7 +409,7 @@ void near cmt_put(void)
 	graph_putsa_fx(
 		CMT_TITLE_LEFT, CMT_TITLE_TOP, (COL_CMT_TRACK | FX), cmt[0].c
 	);
-	const cmt_line_t near* cmt_p = &cmt[1];
+	const cmt_line_t *cmt_p = &cmt[1];
 	screen_y_t top = CMT_COMMENT_TOP;
 	for(int line = 1; line < CMT_LINES; line++) {
 		if(!((GAME >= 4) && (cmt_p->c[0] == ';'))) {
@@ -565,6 +565,7 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 #if (GAME == 4)
 	nopoly_B_snap();
 #endif
+	cmt = HMem<cmt_line_t>::alloc(CMT_LINES);
 	cmt_load(track_playing);
 	cmt_put();
 #if (GAME <= 3)
@@ -767,6 +768,8 @@ controls:
 		music_update_render_and_flip();
 	}
 
+	HMem<cmt_line_t>::free(cmt);
+	cmt = nullptr;
 	nopoly_B.free();
 
 #if (GAME == 5)
