@@ -25,6 +25,9 @@ void resident_create_and_stuff_set(
 		resident->stage_id = 0;
 		resident->continues_total = 0;
 	}
+
+	// ZUN landmine: We should be quitting if we can't allocate the resident
+	// structure.
 	if(seg) {
 		resident = seg;
 		resident->rank = rank;
