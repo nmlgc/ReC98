@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/grppsafx.h"
 
 void graph_printf_fx(
 	screen_x_t left,

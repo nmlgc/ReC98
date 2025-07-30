@@ -5,21 +5,8 @@
 #ifndef TH01_HARDWARE_GRP_TEXT_HPP
 #define TH01_HARDWARE_GRP_TEXT_HPP
 
-#include "th01/hardware/grppsafx.h"
-
-// TH01-exclusive effects
-// ----------------------
-
-// Puts a black background behind the text. Useful if the text is rendered
-// onto the back page and should then be 2× scaled onto the front page.
-static const int16_t FX_CLEAR_BG  = 0x200;
-
-static const int16_t FX_UNDERLINE = 0x400;
-static const int16_t FX_REVERSE   = 0x800;
-// ----------------------
-
-// Calculates the width of [str], displayed with the given [fx].
-int text_extent_fx(int16_t fx, const shiftjis_t *str);
+#include "pc98.h"
+#include "shiftjis.hpp"
 
 // Variadic version of graph_putsa_fx().
 void graph_printf_fx(
