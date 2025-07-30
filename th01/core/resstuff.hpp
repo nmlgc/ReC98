@@ -21,6 +21,3 @@ int resident_stuff_get(
 	int32_t& continues_total,
 	int& stage_id
 );
-
-// Frees the resident structure if it exists.
-void resident_free(void);

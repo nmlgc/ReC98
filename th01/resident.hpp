@@ -73,6 +73,9 @@ struct resident_t {
 
 extern resident_t far *resident;
 
+// Frees the resident structure if it exists.
+void resident_free(void);
+
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------
 
