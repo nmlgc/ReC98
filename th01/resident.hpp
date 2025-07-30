@@ -71,8 +71,9 @@ extern resident_t __seg *resident;
 // hasn't been allocated. Does *not* assign [resident]!
 resident_t __seg* resident_get(void);
 
-// Allocates and initializes the resident structure if it doesn't exist yet,
-// and returns its pointer. Does *not* assign [resident]!
+// Allocates and initializes the resident structure if it doesn't exist yet.
+// Returns its pointer on successful allocation, or exits the program
+// otherwise. Does *not* assign [resident]!
 resident_t __seg* resident_get_or_create(void);
 
 // Frees the resident structure if it exists.
