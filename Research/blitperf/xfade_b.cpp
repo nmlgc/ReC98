@@ -17,73 +17,85 @@ inline void masked_or_mask_set(void) {
 #endif
 }
 
-inline void erase_masked_or_mask_set(void) {
-	masked_or_mask_set();
-#if (CPU == 386)
-	_ECX = _EBX; // Prevent the call site from using these registers for locals
-	__emit__(0x66, 0xF7, 0xD1); // NOT ECX
-#else
-	_CX = _BX; // Prevent the call site from using these registers for locals
-	__emit__(0xF7, 0xD1); // NOT CX
-#endif
-}
-
-inline uint8_t mo_8(uint8_t erase, uint8_t p) {
+inline uint8_t mo_8(uint8_t, uint8_t p) {
 	__emit__(0xAC); // LODSB
 	__emit__(0x22, 0xC3); // AND AL, BL
 	if(p == 0) {
-		if(erase) {
-			__emit__(0x26, 0x20, 0x0D); // AND ES:[DI], CL
-		}
 		__emit__(0x26, 0x08, 0x05); // OR ES:[DI], AL
 	} else {
-		if(erase) {
-			__emit__(0x26, 0x20, 0x4D, p); // AND ES:[DI+p], CL
-		}
 		__emit__(0x26, 0x08, 0x45, p); // OR ES:[DI+p], AL
 	}
 	return (p + 1);
 }
 
-inline uint8_t mo_16(uint8_t erase, uint8_t p) {
+inline uint8_t mo_16(uint8_t, uint8_t p) {
 	__emit__(0xAD); // LODSW
 	__emit__(0x23, 0xC3); // AND AX, BX
 	if(p == 0) {
-		if(erase) {
-			__emit__(0x26, 0x21, 0x0D); // AND ES:[DI], CX
-		}
 		__emit__(0x26, 0x09, 0x05); // OR ES:[DI], AX
 	} else {
-		if(erase) {
-			__emit__(0x26, 0x21, 0x4D, p); // AND ES:[DI+p], CX
-		}
 		__emit__(0x26, 0x09, 0x45, p); // OR ES:[DI+p], AX
 	}
 	return (p + 2);
 }
 
-inline uint8_t mo_32(uint8_t erase, uint8_t p) {
+inline uint8_t mo_32(uint8_t, uint8_t p) {
 #if (CPU == 386)
 	__emit__(0x66, 0xAD); // LODSD
 	__emit__(0x66, 0x23, 0xC3); // AND EAX, EBX
 	if(p == 0) {
-		if(erase) {
-			__emit__(0x66, 0x26, 0x21, 0x0D); // AND ES:[DI], ECX
-		}
 		__emit__(0x66, 0x26, 0x09, 0x05); // OR ES:[DI], EAX
 	} else {
-		if(erase) {
-			__emit__(0x66, 0x26, 0x21, 0x4D, p); // AND ES:[DI+p], ECX
-		}
 		__emit__(0x66, 0x26, 0x09, 0x45, p); // OR ES:[DI+p], EAX
 	}
 	return (p + 4);
 #else
-	return mo_16(erase, mo_16(erase, p));
+	return mo_16(0, mo_16(0, p));
+#endif
+}
+
+inline uint8_t erase_mo_8(uint8_t, uint8_t) {
+	__emit__(0xAC); // LODSB
+	_AL &= _BL;
+	__emit__(0xF6, 0xD3); // NOT BL
+	__emit__(0x26, 0x8A, 0x0D); // MOV CL, ES:[DI]
+	_CL &= _BL;
+	_AL |= _CL;
+	__emit__(0xAA); // STOSB
+	__emit__(0xF6, 0xD3); // NOT BL
+	return 0;
+}
+
+inline uint8_t erase_mo_16(uint8_t, uint8_t p) {
+	__emit__(0xAD); // LODSW
+	_AX &= _BX;
+	__emit__(0xF7, 0xD3); // NOT BX
+	__emit__(0x26, 0x8B, 0x0D); // MOV CX, ES:[DI]
+	_CX &= _BX;
+	_AX |= _CX;
+	__emit__(0xAB); // STOSW
+	__emit__(0xF7, 0xD3); // NOT BX
+	return p;
+}
+
+inline uint8_t erase_mo_32(uint8_t, uint8_t p) {
+#if (CPU == 386)
+	__emit__(0x66, 0xAD); // LODSD
+	_EAX &= _EBX;
+	__emit__(0x66, 0xF7, 0xD3); // NOT EBX
+	__emit__(0x66, 0x26, 0x8B, 0x0D); // MOV ECX, ES:[DI]
+	_ECX &= _EBX;
+	_EAX |= _ECX;
+	__emit__(0x66, 0xAB); // STOSD
+	__emit__(0x66, 0xF7, 0xD3); // NOT EBX
+	return p;
+#else
+	return erase_mo_16(0, erase_mo_16(0, p));
 #endif
 }
 
 recurse_impl_all(mo)
+recurse_impl_all(erase_mo)
 // ---------
 
 #define blitter_impl_masked_or(width) \
@@ -104,7 +116,7 @@ recurse_impl_all(mo)
 			masked_or_mask_set(); \
 			__emit__(0x1E); /* PUSH DS */ \
 			_DS = blit_source.dots_start.part.seg; \
-			mo_##width(false, 0); \
+			mo_##width(0, 0); \
 			__emit__(0x1F); /* POP DS */ \
 			_SI -= (width / BYTE_DOTS); \
 			_SI += blit_source.stride; \
@@ -130,14 +142,14 @@ recurse_impl_all(mo)
 		do { \
 			mask_offset = _BX; \
 			_BX += FP_OFF(masks); \
-			erase_masked_or_mask_set(); \
+			masked_or_mask_set(); \
 			__emit__(0x1E); /* PUSH DS */ \
 			_DS = blit_source.dots_start.part.seg; \
-			mo_##width(true, 0); \
+			erase_mo_##width(0, 0); \
 			__emit__(0x1F); /* POP DS */ \
 			_SI -= (width / BYTE_DOTS); \
 			_SI += blit_source.stride; \
-			_DI += ROW_SIZE; \
+			_DI += (ROW_SIZE - (width / BYTE_DOTS)); \
 			_BX = mask_offset; \
 			_BX += sizeof(masks[0]); \
 			_BX &= mask_offset_mask; \
