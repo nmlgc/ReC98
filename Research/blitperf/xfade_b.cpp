@@ -105,6 +105,7 @@ recurse_impl_all(erase_mo)
 		_ES = plane_seg; \
 		uint16_t mask_offset = 0; \
 		uint16_t mask_offset_mask = ((mask_h * sizeof(masks[0])) - 1); \
+		uint16_t si_skip = (blit_source.stride - (width / BYTE_DOTS)); \
 		_SI = blit_source.dots_start.part.off; \
 		_SI += blit_state.sprite_offset; \
 		_DI = blit_state.vo; \
@@ -118,8 +119,7 @@ recurse_impl_all(erase_mo)
 			_DS = blit_source.dots_start.part.seg; \
 			mo_##width(0, 0); \
 			__emit__(0x1F); /* POP DS */ \
-			_SI -= (width / BYTE_DOTS); \
-			_SI += blit_source.stride; \
+			_SI += si_skip; \
 			_DI += ROW_SIZE; \
 			mask_offset += sizeof(masks[0]); \
 			mask_offset &= mask_offset_mask; \
@@ -133,6 +133,7 @@ recurse_impl_all(erase_mo)
 		_ES = plane_seg; \
 		uint16_t mask_offset; \
 		uint16_t mask_offset_mask = ((mask_h * sizeof(masks[0])) - 1); \
+		uint16_t si_skip = (blit_source.stride - (width / BYTE_DOTS)); \
 		_SI = blit_source.dots_start.part.off; \
 		_SI += blit_state.sprite_offset; \
 		_DI = blit_state.vo; \
@@ -147,8 +148,7 @@ recurse_impl_all(erase_mo)
 			_DS = blit_source.dots_start.part.seg; \
 			erase_mo_##width(0, 0); \
 			__emit__(0x1F); /* POP DS */ \
-			_SI -= (width / BYTE_DOTS); \
-			_SI += blit_source.stride; \
+			_SI += si_skip; \
 			_DI += (ROW_SIZE - (width / BYTE_DOTS)); \
 			_BX = mask_offset; \
 			_BX += sizeof(masks[0]); \
