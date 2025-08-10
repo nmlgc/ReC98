@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define max_macro(a, b) ( \
 	(a > b) ? a : b \
 )
@@ -90,3 +92,11 @@ static inline char ring_min() {
 	if(val < 0) { \
 		(val) = ring_end; \
 	}
+
+#define ring_step(var, delta, min, max) { \
+	uint8_t var_prev = var; \
+	var = ((delta < 0) \
+		? ((var_prev <= min) ? max : (var_prev + delta)) \
+		: ((var_prev == max) ? min : (var_prev + delta)) \
+	); \
+}
