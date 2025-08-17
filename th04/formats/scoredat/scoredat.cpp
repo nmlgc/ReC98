@@ -50,7 +50,7 @@ static const int SCORE_INITIAL_DIGIT = ((GAME == 5) ? 6 : 5);
 bool in_maine;
 #endif
 
-void near scoredat_recreate(void)
+void near scoredat_defaults_set(void)
 {
 	int i;
 	int c;
@@ -93,25 +93,37 @@ void near scoredat_recreate(void)
 		}
 		hi.score.g_name[i][SCOREDAT_NAME_LEN] = g_NULL;
 	}
+}
 
-	file_create(SCOREDAT_FN);
-	for(i = 0; i < (RANK_COUNT * PLAYCHAR_COUNT); i++) {
+void pascal near scoredat_save_default(int section_i)
+{
 #if (GAME == 5)
-		if(!in_maine) {
-			for(int place = 0; place < SCOREDAT_PLACES; place++) {
-				if((i % RANK_COUNT) == RANK_EXTRA) {
-					hi.score.g_stage[place] = gb_1;
-				} else {
-					hi.score.g_stage[place] = (gb_1 + SCOREDAT_PLACES - place);
-				}
+	if(!in_maine) {
+		for(int place = 0; place < SCOREDAT_PLACES; place++) {
+			if((section_i % RANK_COUNT) == RANK_EXTRA) {
+				hi.score.g_stage[place] = gb_1;
+			} else {
+				hi.score.g_stage[place] = (gb_1 + SCOREDAT_PLACES - place);
 			}
 		}
+	}
+#else
+	(section_i);
 #endif
-		// Well, OK, if you like to fully obfuscate the format by giving every
-		// section its own encraption key...
-		scoredat_encode(hi);
-		file_write(&hi, sizeof(hi));
-		scoredat_decode(hi);
+	// Well, OK, if you like to fully obfuscate the format by giving every
+	// section its own encraption key...
+	scoredat_encode(hi);
+	file_write(&hi, sizeof(hi));
+	scoredat_decode(hi);
+}
+
+void near scoredat_recreate(void)
+{
+	scoredat_defaults_set();
+
+	file_create(SCOREDAT_FN);
+	for(int i = 0; i < (RANK_COUNT * PLAYCHAR_COUNT); i++) {
+		scoredat_save_default(i);
 	}
 	file_close();
 }
@@ -119,13 +131,39 @@ void near scoredat_recreate(void)
 bool pascal near scoredat_load(playchar_t playchar, rank_t rank)
 {
 	if(file_ropen(SCOREDAT_FN)) {
-		file_seek(scoredat_section_offset(playchar, rank), SEEK_SET);
+		int section_i = scoredat_section_i(playchar, rank);
+		size_t offset = (section_i * sizeof(scoredat_section_t));
+		file_seek(offset, SEEK_SET);
 		file_read(&hi, sizeof(scoredat_section_t));
 		file_close();
 
 		if(scoredat_decode(hi) == 0) {
 			return false;
 		}
+
+		// Recreate this specific section
+		// ------------------------------
+
+		scoredat_defaults_set();
+		file_append(SCOREDAT_FN);
+
+		// Size still correct?
+		unsigned long size = file_size();
+		if(size < (offset + sizeof(scoredat_section_t))) {
+			// Recreate everything up to our section
+			int i = (size / sizeof(scoredat_section_t));
+			file_seek((i * sizeof(scoredat_section_t)), SEEK_SET);
+			while(i < section_i) {
+				scoredat_save_default(i++);
+			}
+		} else {
+			file_seek(offset, SEEK_SET);
+		}
+		scoredat_save_default(section_i);
+		file_close();
+
+		return true;
+		// ------------------------------
 	}
 	scoredat_recreate();
 	return true;

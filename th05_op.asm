@@ -54,6 +54,7 @@ include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
 include libs/master.lib/dos_axdx.asm
+include libs/master.lib/dos_filesize.asm
 include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_read.asm
@@ -66,6 +67,7 @@ include libs/master.lib/file_create.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
+include libs/master.lib/file_size.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
