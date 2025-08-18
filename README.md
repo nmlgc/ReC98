@@ -73,6 +73,8 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
 * ▶ **`master`: ZUN's original code, without mods or bugfixes** (You are here!)
 * [`debloated`]: Rearchitected version of ZUN's code that is easier to read and modify, and builds smaller and faster PC-98 binaries. Only removes [bloat] and [landmines]; all [bugs] and [quirks] from ZUN's original code are left in place. **Ports should start from that branch**, and it's also the recommended base for mods that don't care about similarity to the original binary.
+
+  This branch also includes the patch from [`th03_no_gdc_frequency_check`], as the issue is classified as a landmine.
 * [`anniversary`]: Takes `debloated` and additionally fixes [bugs], achieving a smoother and flicker-free gameplay experience on the PC-98 platform while still leaving [quirks] in place. Might be an even better starting port for mods and ports.
 * [`BossRush`]
 * [`th03_no_gdc_frequency_check`]: Allows TH03 to be run with the GDC clock set to 5&nbsp;MHz. The original game enforces 2.5&nbsp;MHz, but doesn't functionally require it, even on real hardware.
