@@ -9,7 +9,6 @@
 #include "shiftjis.hpp"
 
 static const unsigned int GAME_COUNT = 5;
-static const unsigned int TRACKS_MAX = 30;
 
 // Corresponds to 36 Shift-JIS code units.
 static const pixel_t TRACKLIST_W = 288;
@@ -28,7 +27,7 @@ const shiftjis_t near *LABEL_GAME[GAME_COUNT] = {
 	"   第５弾　東方怪綺談 MysticSquare" /**/,
 };
 
-const shiftjis_t near *MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
+const shiftjis_t near *MUSIC_CHOICES_TH01[] = {
 	// Only 7 of the 14 tracks have identical strings in TH01:
 	// * 永遠の巫女
 	// * 東方怪奇談
@@ -55,7 +54,8 @@ const shiftjis_t near *MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	"No.13            星幽天使"          /**/,
 	"No.14            アイリス"          /**/,
 	"            " LABEL_QUIT            /**/,
-}, {
+};
+const shiftjis_t near *MUSIC_CHOICES_TH02[] = {
 	"No.1      " TH02_01,
 	"No.2      " TH02_02,
 	"No.3      " TH02_03,
@@ -84,7 +84,8 @@ const shiftjis_t near *MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	"未使用.2         　陽落ちて"        /**/,
 	"未使用.3         　封魔終演"        /**/,
 	"            " LABEL_QUIT            /**/,
-}, {
+};
+const shiftjis_t near *MUSIC_CHOICES_TH03[] = {
 	"No.1     " TH03_01,
 	"No.2     " TH03_02,
 	"No.3     " TH03_03,
@@ -110,7 +111,8 @@ const shiftjis_t near *MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	"未使用.2     スターボウドリーム"    /**/,
 	"未使用.3       Phantasmagoria"      /**/,
 	"              " LABEL_QUIT          /**/,
-}, {
+};
+const shiftjis_t near *MUSIC_CHOICES_TH04[] = {
 	"No.1   " TH04_01,
 	"No.2   " TH04_02,
 	"No.3   " TH04_03,
@@ -140,7 +142,8 @@ const shiftjis_t near *MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	"未使用.5   Magic Shop of Raspberry" /**/,
 	"未使用.6       Crescent Dream"      /**/,
 	"            " LABEL_QUIT            /**/,
-}, {
+};
+const shiftjis_t near *MUSIC_CHOICES_TH05[] = {
 	"No.1  " TH05_01,
 	"No.2  " TH05_02,
 	"No.3  " TH05_03,
@@ -165,9 +168,9 @@ const shiftjis_t near *MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	"No.22 " TH05_22,
 	"No.23 " TH05_23,
 	"            " LABEL_QUIT            /**/,
-}};
+};
 
-const char near *MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
+const char near *MUSIC_FILES_TH01[] = {
 	"r_00",
 	"r_01",
 	"r_02",
@@ -182,7 +185,8 @@ const char near *MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"r_11",
 	"r_12",
 	"r_13",
-}, {
+};
+const char near *MUSIC_FILES_TH02[] = {
 	"h_op",
 	"h_st00",
 	"h_st00b",
@@ -201,7 +205,8 @@ const char near *MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"h_ng00",
 	"h_ng01",
 	"h_ng02",
-}, {
+};
+const char near *MUSIC_FILES_TH03[] = {
 	"y_op",
 	"y_select",
 	"y_00mm",
@@ -226,7 +231,8 @@ const char near *MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"y_ng00",
 	"y_ng01",
 	"y_ng02",
-}, {
+};
+const char near *MUSIC_FILES_TH04[] = {
 	"g_op",
 	"g_st00",
 	"g_st10",
@@ -255,7 +261,8 @@ const char near *MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"g_ng03",
 	"g_ng04",
 	"g_ng05",
-}, {
+};
+const char near *MUSIC_FILES_TH05[] = {
 	BGM_MENU_MAIN_FN,
 	"st00",
 	"st00b",
@@ -279,4 +286,4 @@ const char near *MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"staff",
 	"exed",
 	"name",
-}};
+};

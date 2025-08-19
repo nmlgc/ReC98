@@ -31,6 +31,22 @@
 #include "th05/shiftjis/fns.hpp"
 #include "th05/shiftjis/music.hpp"
 
+static const shiftjis_t near *near *MUSIC_CHOICES[GAME_COUNT] = {
+	MUSIC_CHOICES_TH01,
+	MUSIC_CHOICES_TH02,
+	MUSIC_CHOICES_TH03,
+	MUSIC_CHOICES_TH04,
+	MUSIC_CHOICES_TH05,
+};
+
+static const char near *near *MUSIC_FILES[GAME_COUNT] = {
+	MUSIC_FILES_TH01,
+	MUSIC_FILES_TH02,
+	MUSIC_FILES_TH03,
+	MUSIC_FILES_TH04,
+	MUSIC_FILES_TH05,
+};
+
 int game_sel = (GAME_COUNT - 1);
 const int TRACK_COUNT[GAME_COUNT] = { 14, 18, 24, 28, 23 };
 #else
