@@ -7,17 +7,17 @@
 #include "th05/hardware/input.h"
 #include "th04/op/start.hpp"
 
-#define resident_reset_last_highest_and_stage_scores() \
-	int digit; \
-	int stage; \
-	for(digit = 0; digit < SCORE_DIGITS; digit++) { \
-		resident->score_last.digits[digit] = 0; \
-		resident->score_highest.digits[digit] = 0; \
-		\
-		for(stage = 0; stage < MAIN_STAGE_COUNT; stage++) { \
-			resident->stage_score[stage].digits[digit] = 0; \
-		} \
+void near resident_reset_last_highest_and_stage_scores(void)
+{
+	for(int digit = 0; digit < SCORE_DIGITS; digit++) {
+		resident->score_last.digits[digit] = 0;
+		resident->score_highest.digits[digit] = 0;
+
+		for(int stage = 0; stage < MAIN_STAGE_COUNT; stage++) {
+			resident->stage_score[stage].digits[digit] = 0;
+		}
 	}
+}
 
 #define resident_reset_last_and_highest_scores() \
 	for(int digit = 0; digit < SCORE_DIGITS; digit++) { \
