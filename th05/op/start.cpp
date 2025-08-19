@@ -54,6 +54,19 @@ void near start_extra(void)
 	op_exit_into_main(true, false);
 }
 
+struct demo_t {
+	playchar_t playchar;
+	uint8_t stage;
+};
+
+const demo_t DEMOS[5] = {
+	{ PLAYCHAR_REIMU, 3 },
+	{ PLAYCHAR_MARISA, 1 },
+	{ PLAYCHAR_MIMA, 2 },
+	{ PLAYCHAR_YUUKA, 4 },
+	{ PLAYCHAR_MIMA, STAGE_EXTRA },
+};
+
 void near start_demo(void)
 {
 	resident->end_sequence = ES_SCORE;
@@ -81,28 +94,12 @@ void near start_demo(void)
 			return;
 		}
 	}
-	switch(resident->demo_num) {
-	case 1:
-		resident->playchar = PLAYCHAR_REIMU;
-		resident->demo_stage = 3;
-		break;
-	case 2:
-		resident->playchar = PLAYCHAR_MARISA;
-		resident->demo_stage = 1;
-		break;
-	case 3:
-		resident->playchar = PLAYCHAR_MIMA;
-		resident->demo_stage = 2;
-		break;
-	case 4:
-		resident->playchar = PLAYCHAR_YUUKA;
-		resident->demo_stage = 4;
-		break;
-	case 5:
-		resident->playchar = PLAYCHAR_MIMA;
-		resident->demo_stage = STAGE_EXTRA;
+
+	const demo_t near& demo = DEMOS[resident->demo_num - 1];
+	resident->playchar = demo.playchar;
+	resident->demo_stage = demo.stage;
+	if(resident->demo_num == 5) {
 		snd_kaja_func(KAJA_SONG_FADE, 8);
-		break;
 	}
 	resident_reset_last_and_highest_scores();
 	main_cdg_free();
