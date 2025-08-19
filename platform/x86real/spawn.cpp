@@ -121,7 +121,10 @@ int near spawn_adjacent(const char *path, const char *args, const SpawnEnv *env)
 }
 
 SpawnSpacer pascal spawn_claim_memory_minus(
-	uint32_t payload_bytes, unsigned int process_count, const SpawnEnv *env
+	uint32_t payload_bytes,
+	unsigned int process_count,
+	unsigned int max_binary_fn_len,
+	const SpawnEnv *env
 )
 {
 	SpawnSpacer ret;
@@ -130,6 +133,22 @@ SpawnSpacer pascal spawn_claim_memory_minus(
 
 	char __seg* env_seg = reinterpret_cast<dos_psp_t __seg *>(_psp)->environ;
 	ret.prev_paras = mcb_for(_psp)->size;
+
+	// Ensure that environment segments can fit an extra [max_binary_fn_len].
+	// Calculation taken from the DOS 6 kernel, where this is actually an
+	// issue that would prevent this whole thing from working.
+	unsigned int env_seg_size = ((mcb_for(FP_SEG(env_seg))->size) * 16);
+	char far *env_p = env_seg;
+	do {
+		env_p += (strlen(env_p) + 1);
+	} while(*env_p != '\0');
+	env_p++;
+	const unsigned int env_seg_size_min = (
+		FP_OFF(env_p) + 2 + max_binary_fn_len + 15
+	);
+	if(env_seg_size_min > env_seg_size) {
+		env_seg_size = env_seg_size_min;
+	}
 
 	// Get the maximum amount of conventional RAM this process could take up by
 	// asking for the maximum possible segment size. Will already reallocate
@@ -142,10 +161,10 @@ SpawnSpacer pascal spawn_claim_memory_minus(
 	// Guess the amount of paragraphs that DOS requires for each process, which
 	// includes
 	// • the MCB of its environment block (+1),
-	// • the size of our own environment block (+[env_seg->size]),
+	// • the size of our own environment block (+[env_seg_size]),
 	// • any bytes added through [environ],
 	// • and the MCB for the process itself (+1).
-	uint16_t dos_process_paras = (1 + (mcb_for(FP_SEG(env_seg))->size) + 1);
+	uint16_t dos_process_paras = (1 + ((env_seg_size + 15) >> 4) + 1);
 	if(env) {
 		dos_process_paras += ((env->added_bytes + 15) >> 4);
 	}
@@ -184,7 +203,9 @@ int near spawn_at_top(
 	const SpawnEnv *env
 )
 {
-	SpawnSpacer spacer = spawn_claim_memory_minus(reserve_bytes, 1, env);
+	SpawnSpacer spacer = spawn_claim_memory_minus(
+		reserve_bytes, 1, strlen(path), env
+	);
 	if(spacer) {
 		return -1;
 	}
