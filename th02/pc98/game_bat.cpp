@@ -364,10 +364,25 @@ int main_setup(int argc, const char *argv[])
 		// .COM binary. We later spawn all of the binaries we check the size
 		// of, so we can skimp on error handling here.
 		file_ropen(tsr.fn);
+		uint32_t binary_size = file_size();
 
-		// Don't forget the Program Segment Prefix. DOSBox also adds an extra
-		// 256 bytes for stack memory.
-		const uint16_t binary_size = (256 + 256 + file_size());
+		// …except that TH03's and TH04's ZUN.COM are actually Diet-compressed
+		// .EXE files that decompress to more than the file size.
+		dos_mz_header_t mz;
+		file_read(&mz, sizeof(mz));
+		if(mz.magic == DOS_MZ_MAGIC) {
+			// Calculation taken from DOSBox-X's DOS_Execute() function.
+			binary_size = (16LU * (
+				((mz.page_count * 32U) - mz.header_paras) + mz.min_alloc_paras
+			));
+		} else {
+			// DOSBox adds an extra 256 bytes for stack memory for .COM
+			// processes.
+			binary_size += 256;
+		}
+
+		// Don't forget the Program Segment Prefix.
+		binary_size += 256;
 		file_close();
 
 		// The difference between the previous binary and resident size will
