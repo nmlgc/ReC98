@@ -22,10 +22,15 @@ struct SpawnSpacer {
 
 // Resizes the DOS memory block of the current process to its largest possible
 // size minus [payload_bytes], plus [process_count] times the guessed amount of
-// memory that DOS will add to new processes. Returns a spacer object that
-// evaluates to `true` on failure and a more specific error code in [errno].
+// memory that DOS will add to new processes. The environment block is assumed
+// to be at least as large to additionally contain [max_binary_fn_len], without
+// the terminating '\0'. Returns a spacer object that evaluates to `true` on
+// failure and a more specific error code in [errno].
 SpawnSpacer pascal spawn_claim_memory_minus(
-	uint32_t payload_bytes, unsigned int process_count, const SpawnEnv *env
+	uint32_t payload_bytes,
+	unsigned int process_count,
+	unsigned int max_binary_fn_len,
+	const SpawnEnv *env
 );
 
 // Spawns the given executable at the top of conventional RAM, assuming that it
