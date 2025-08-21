@@ -23,6 +23,12 @@
 		str += 1; \
 	} \
 	\
+	/** \
+	 * ZUN landmine: This still gets executed if _mbcjmstojis() returned \
+	 * 0x0000 for an illegal Shift-JIS codepoint. In that case, the codepoint \
+	 * calculation overflows to 0xE0, which reliably returns the `=` from \
+	 * NEC's single-byte JIS X 0201 extensions. \
+	 */ \
 	outportb(0xA1, codepoint & 0xFF); \
 	outportb(0xA3, (codepoint >> 8) - 0x20); \
 	if(codepoint >= 0x2921 && codepoint <= 0x2B7E) { \
