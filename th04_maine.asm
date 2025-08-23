@@ -22,9 +22,6 @@ include ReC98.inc
 include th04/th04.inc
 include th04/hardware/grppsafx.inc
 
-	extern _tolower:proc
-	extern __ctype:byte
-
 group_01 group maine_01_TEXT, SCORE_TEXT
 
 ; ===========================================================================

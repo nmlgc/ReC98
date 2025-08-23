@@ -1,8 +1,6 @@
 #pragma option -2 -d- // ZUN bloat
 
 #include <dos.h>
-#include <mbctype.h>
-#include <mbstring.h>
 #include "shiftjis.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"

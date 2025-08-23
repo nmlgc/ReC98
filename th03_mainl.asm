@@ -25,7 +25,6 @@ include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
 
 	extern SCOPY@:proc
-	extern __ctype:byte
 	extern _execl:proc
 
 group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, STAFF_TEXT, mainl_03_TEXT

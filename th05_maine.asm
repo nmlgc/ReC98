@@ -23,9 +23,6 @@ include th05/th05.inc
 include th01/math/subpixel.inc
 include th04/hardware/grppsafx.inc
 
-	extern _tolower:proc
-	extern __ctype:byte
-
 group_01 group maine_01_TEXT, SCORE_TEXT, maine_01__TEXT
 
 ; ===========================================================================
