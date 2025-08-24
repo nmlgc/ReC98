@@ -247,15 +247,6 @@ void pascal near track_put(uint8_t i, vc_t col)
 	);
 }
 
-void pascal near track_put_both(uint8_t i, vc_t col)
-{
-	page_t other_page = (1 - music_page_accessed);
-	graph_accesspage(other_page);
-	track_put(i, col);
-	graph_accesspage(music_page_accessed);
-	track_put(i, col);
-}
-
 void pascal near tracklist_put(uint8_t sel)
 {
 	for(int i = 0; i < sizeof(MUSIC_CHOICES) / sizeof(MUSIC_CHOICES[0]); i++) {
@@ -353,6 +344,17 @@ void near music_update_render_and_flip(void)
 	grcg_setcolor((GC_RMW | GC_B), 0xF);
 	polygons_update_and_render();
 	grcg_off();
+
+#if (GAME <= 4)
+	static uint8_t near music_sel_on_page[PAGE_COUNT];
+	uint8_t music_sel_prev = music_sel_on_page[music_page_accessed];
+
+	if(music_sel != music_sel_prev) {
+		track_put(music_sel_prev, COL_TRACKLIST);
+		track_put(music_sel, COL_TRACKLIST_SELECTED);
+		music_sel_on_page[music_page_accessed] = music_sel;
+	}
+#endif
 
 	// This is the correct position for a VSync delay. frame_delay() returns
 	// immediately after a VSync interrupt and at the beginning of the vertical
@@ -686,15 +688,12 @@ controls:
 #else
 		if(key_det & (INPUT_UP | INPUT_DOWN)) {
 			int8_t delta = ((key_det & INPUT_UP) ? -1 : +1);
-			track_put_both(music_sel, COL_TRACKLIST);
 			ring_step(music_sel, delta, 0, SEL_QUIT);
 
 			// Skip over the empty line
 			if(music_sel == TRACK_COUNT) {
 				music_sel += delta;
 			}
-
-			track_put_both(music_sel, COL_TRACKLIST_SELECTED);
 		}
 #endif
 	skip_processing_of_left_and_right:
