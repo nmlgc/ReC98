@@ -90,8 +90,8 @@ int MASTER_RET mem_assign_dos(unsigned parasize);
 void __seg* MASTER_RET hmem_allocbyte(unsigned bytesize);
 void MASTER_RET hmem_free(void __seg* memseg);
 // Fast
-unsigned MASTER_RET smem_wget(unsigned bytesize);
-void MASTER_RET smem_release(unsigned memseg);
+void __seg* MASTER_RET smem_wget(unsigned bytesize);
+void MASTER_RET smem_release(void __seg* memseg);
 // ----
 
 // Machine identification
