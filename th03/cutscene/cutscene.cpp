@@ -811,6 +811,10 @@ script_ret_t pascal near script_op(unsigned char c)
 	case 'p':
 		c = *script_p;
 		script_p++;
+
+		// ZUN landmine: Blitting and palette changes will cause screen tearing
+		// if done outside of VBLANK. It shouldn't be the script's
+		// responsibility to prevent that.
 		if((c == '=') || (c == '@')) {
 			graph_accesspage(1);
 			if(c == '=') {
@@ -844,10 +848,13 @@ script_ret_t pascal near script_op(unsigned char c)
 	case '=':
 		script_param_number_default = PI_QUARTER_COUNT;
 		c = *script_p;
+
+		// ZUN landmine: Same screen tearing issues here. TH05's frame_delay()
+		// call prevents them for immediate blitting, but not for crossfading.
 		if(c != '=') {
 			script_param_read_number_first(p1);
 #if (GAME == 5)
-			frame_delay(1); // ZUN quirk
+			frame_delay(1);
 			graph_showpage(0);
 			graph_accesspage(1);
 #else
