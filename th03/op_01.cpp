@@ -837,16 +837,6 @@ void main(void)
 	text_clear();
 	respal_create();
 
-	// ZUN landmine: There are no known issues with running the game at a GDC
-	// clock speed of 5 MHz, so there's no need to enforce it here.
-	if(graph_VramZoom) {
-		dos_puts2(ERROR_GDC_5MHZ_1);
-		dos_puts2(ERROR_GDC_5MHZ_2);
-		dos_puts2(ERROR_GDC_5MHZ_3);
-		getch();
-		return;
-	}
-
 	if(game_init_op(OP_AND_END_PF_FN)) {
 		dos_puts2(ERROR_OUT_OF_MEMORY);
 		getch();
