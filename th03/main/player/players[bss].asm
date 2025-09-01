@@ -11,7 +11,7 @@ CHARGE_AT_AVAIL_RING_SIZE = 64
 
 GAUGE_MAX = (0FFh shl 4)
 
-player_t	struc
+player_stuff_t struc
 	center	Point ?
 	is_hit	db ?
 	PLAYER_unused_1	db ?
@@ -55,9 +55,9 @@ player_t	struc
 	boss_attacks_reversed db ?
 	boss_panics_fired db ?
 		align 16
-player_t	ends
+player_stuff_t ends
 
 public _p1, _p2, _players
-_players label player_t
-_p1	player_t <?>
-_p2	player_t <?>
+_players label player_stuff_t
+_p1	player_stuff_t <?>
+_p2	player_stuff_t <?>

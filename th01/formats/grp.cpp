@@ -116,7 +116,7 @@ int grp_put(const char *fn, grp_put_flag_t flag)
 	if(flag & GPF_COLORKEY) {
 		option = PILOAD_OPT_COLORKEY(15);
 	}
-	ret = PiLoad(fn, grp_buf, GRP_BUFFER_SIZE, 0, 0, 100, option);
+	ret = PiLoadL(fn, grp_buf, GRP_BUFFER_SIZE, 0, 0, 100, option);
 	if(flag & GPF_PALETTE_SHOW) {
 		grp_palette_load_show(fn);
 	} else {

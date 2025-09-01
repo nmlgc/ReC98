@@ -3,10 +3,10 @@
 #include "th01/math/clamp.hpp"
 #include "th03/main/player/move.hpp"
 
-void pascal near player_pos_update_and_clamp(player_t near& player)
+void pascal near player_pos_update_and_clamp(PlayfieldPoint near& center)
 {
-	subpixel_t x = player.center.x;
-	subpixel_t y = player.center.y;
+	subpixel_t x = center.x;
+	subpixel_t y = center.y;
 
 	x += player_velocity.x.v;
 	y += player_velocity.y.v;
@@ -14,8 +14,8 @@ void pascal near player_pos_update_and_clamp(player_t near& player)
 	clamp_minmax(x, to_sp( 8), to_sp(PLAYFIELD_W -  8));
 	clamp_minmax(y, to_sp(24), to_sp(PLAYFIELD_H - 16));
 
-	player.center.x.v = x;
-	player.center.y.v = y;
+	center.x.v = x;
+	center.y.v = y;
 }
 
 #pragma option -a2

@@ -38,6 +38,7 @@ typedef enum {
 	gs_REIGEKI_GEKI,
 	gs_Hi,
 	gb_SP,
+	gb__ = gb_SP,
 
 	// ZUN bloat: Defining any other empty cell to be the "space" would have
 	// been better than repurposing a cel of an animation that just *happens*

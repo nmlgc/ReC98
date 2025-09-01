@@ -98,7 +98,7 @@ bool near pattern_curved_rings(void)
 	#define delta_angle static_cast<unsigned char>(boss_statebyte[15])
 
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_N_OUTLINED_BALL_BLUE;
 		bullet_template.speed.set(2.0f);
 		bullet_template.group = BG_RING;
@@ -124,7 +124,7 @@ bool near pattern_dualspeed_rings(void)
 	#define interval boss_statebyte[15]
 
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_RING;
 		bullet_template.angle = randring2_next16();
@@ -164,7 +164,7 @@ static void near phase_2_3_with_pattern(void)
 			// it's just copy-pasted from a similar function in Yumeko's fight,
 			// which does fire bullets based on that template.
 			bullet_template.spawn_type = (
-				BST_CLOUD_BACKWARDS | BST_NO_SLOWDOWN
+				BST_CLOUD_BACKWARDS | BST_NO_DECELERATE
 			);
 			bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
 			bullet_template.group = BG_RING;
@@ -183,7 +183,7 @@ static void near phase_2_3_with_pattern(void)
 bool near pattern_random_directional_and_kunai(void)
 {
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.speed.set(1.75f);
 		bullet_template.group = BG_RANDOM_ANGLE_AND_SPEED;
 		bullet_template.spread = 3;
@@ -207,7 +207,7 @@ bool near pattern_random_directional_and_kunai(void)
 bool near pattern_dense_blue_stacks(void)
 {
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SPREAD_STACK_AIMED;
 		bullet_template.angle = 0x00;
@@ -275,7 +275,7 @@ bool near pattern_wing_preparation(void)
 		return false;
 	}
 	if(wing_frames == 0) {
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SINGLE;
 		bullet_template_tune();
@@ -334,7 +334,7 @@ void near pattern_random_rain_and_spreads_from_wings(void)
 		bullet_template.origin.y.v = (
 			boss.pos.cur.y.v - randring2_next16_mod(to_sp(BOSS_H))
 		);
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SPREAD_AIMED;
 		bullet_template.spread = 5;
@@ -365,7 +365,7 @@ void near pattern_cheetos_within_spread_walls(void)
 	int frame_in_cycle = (boss.phase_frame % interval);
 	if((frame_in_cycle & 7) == 0) {
 		bullet_template.patnum = PAT_BULLET16_N_OUTLINED_BALL_BLUE;
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.group = BG_SPREAD;
 		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(3.0f, 5.0f);
 		bullet_template.set_spread(6, 0x08);
@@ -441,7 +441,7 @@ void near pattern_aimed_b6balls_and_symmetric_spreads(void)
 		bullet_template.group = BG_SPREAD;
 		bullet_template.special_motion = BSM_EXACT_LINEAR;
 		bullet_template.set_spread(3, 0x02);
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.speed.set(2.5f);
 		bullet_template.patnum = PAT_BULLET16_V_RED;
 		if(spread_cycle < 0x40) {
@@ -535,7 +535,7 @@ void near pattern_devil(void)
 			laser_angle_outer = 0x40;
 			laser_direction = CLOCKWISE;
 		}
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_V_RED;
 		bullet_template.group = BG_SPREAD;
 		if((bullet_angle_outer == 0x40) && (bullet_intro_done == 0)) {
@@ -571,7 +571,7 @@ void near pattern_devil(void)
 		} else {
 			// "Decorative" pellets aimed to the top of the playfield
 			bullet_template.patnum = 0;
-			bullet_template.spawn_type = BST_NO_SLOWDOWN;
+			bullet_template.spawn_type = BST_NO_DECELERATE;
 			bullet_template.set_spread(3, 0x30); // technically redundant
 
 			bullet_template.angle = (0x80 + bullet_angle_outer);
@@ -718,7 +718,9 @@ void near pattern_circles_and_alternating_spirals(void)
 	if(boss.phase_frame >= 256) {
 		frame_in_cycle = (boss.phase_frame % 256);
 		if(((boss.phase_frame % 8) == 0) && (frame_in_cycle < 128)) {
-			bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+			bullet_template.spawn_type = (
+				BST_CLOUD_FORWARDS | BST_NO_DECELERATE
+			);
 			bullet_template.group = BG_RING;
 			bullet_template.angle = red_angle;
 			bullet_template.patnum = PAT_BULLET16_V_RED;
@@ -731,7 +733,7 @@ void near pattern_circles_and_alternating_spirals(void)
 		if(boss.phase_frame >= 512) {
 			if(((boss.phase_frame % 8) == 0) && (frame_in_cycle >= 128)) {
 				bullet_template.spawn_type = (
-					BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN
+					BST_CLOUD_FORWARDS | BST_NO_DECELERATE
 				);
 				bullet_template.group = BG_RING;
 				bullet_template.angle = pellet_angle;

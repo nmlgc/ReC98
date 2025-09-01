@@ -5,7 +5,4 @@
 
 #define RANDRING_INSTANCE 2
 #include "th02/math/randring.cpp"
-
-extern "C" {
 #include "th02/main/bullet/pellet_r.cpp"
-}

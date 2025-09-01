@@ -17,6 +17,12 @@ struct bos_header_t {
 	spriteformat_header_inner_t inner;
 };
 
+// In-game bitplane slot structure
+struct bos_image_t {
+	Planar<dots8_t *> planes;
+	dots8_t *alpha;
+};
+
 // Shared loading subfunctions
 // ---------------------------
 

@@ -14,7 +14,6 @@ void near main_pat_exalice_override_and_super_clean_stage(void);
 #include "th04/main/dialog/shared.cpp"
 #include "th04/main/demo.hpp"
 #include "th04/main/ems.hpp"
-#include "th05/mem.h"
 #include "th05/resident.hpp"
 #include "th05/formats/dialog.hpp"
 #include "th05/main/dialog/dialog.hpp"

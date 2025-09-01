@@ -127,6 +127,9 @@ CUTSCENE_TEXT ends
 maine_01_TEXT segment byte public 'CODE' use16
 maine_01_TEXT ends
 
+SCORE_TEXT segment byte public 'CODE' use16
+SCORE_TEXT ends
+
 	.data
 
 include libs/master.lib/atrtcmod[data].asm

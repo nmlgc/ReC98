@@ -23,10 +23,7 @@ include th05/th05.inc
 include th01/math/subpixel.inc
 include th04/hardware/grppsafx.inc
 
-	extern _tolower:proc
-	extern __ctype:byte
-
-group_01 group maine_01_TEXT, maine_01__TEXT
+group_01 group CUTSCENE_TEXT, maine_01_TEXT, SCORE_TEXT, maine_01__TEXT
 
 ; ===========================================================================
 
@@ -35,8 +32,6 @@ _TEXT segment word public 'CODE' use16
 	extern PALETTE_BLACK_OUT:proc
 	extern FILE_APPEND:proc
 	extern FILE_CLOSE:proc
-	extern FILE_CREATE:proc
-	extern FILE_EXIST:proc
 	extern FILE_READ:proc
 	extern FILE_ROPEN:proc
 	extern FILE_SEEK:proc
@@ -69,35 +64,35 @@ _TEXT ends
 
 ; ===========================================================================
 
-maine_01_TEXT segment byte public 'CODE' use16
+CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B1B5	proc near
+public @screen_line_next_animate$qv
+@screen_line_next_animate$qv proc near
 
 @@str		= dword	ptr -4
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	bx, allcast_step
+		mov	bx, _line_id_total
 		shl	bx, 2
-		mov	ax, word ptr (ALLCAST_PTRS+2)[bx]
-		mov	dx, word ptr ALLCAST_PTRS[bx]
+		mov	ax, word ptr (_LINES+2)[bx]
+		mov	dx, word ptr _LINES[bx]
 		mov	word ptr [bp+@@str+2], ax
 		mov	word ptr [bp+@@str], dx
-		mov	bx, allcast_screen_plus_one
+		mov	bx, _loaded_screen_id
 		add	bx, bx
-		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
+		mov	ax, word ptr _LINES_PER_SCREEN[bx]
 		dec	ax
 		shl	ax, 4
 		mov	dx, 192
 		sub	dx, ax
-		mov	ax, allcast_line_on_screen
+		mov	ax, _line_id_on_screen
 		shl	ax, 5
 		add	dx, ax
 		mov	si, dx
@@ -108,9 +103,9 @@ sub_B1B5	proc near
 
 loc_B1F7:
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		dec	_graph_putsa_fx_func
 		inc	di
 
@@ -119,17 +114,17 @@ loc_B21E:
 		jl	short loc_B1F7
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
+		call	@wait_flip_and_check_measure_targ$qv
 		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
-		call	sub_B37C
-		inc	allcast_step
-		inc	allcast_line_on_screen
-		mov	bx, allcast_screen_plus_one
+		call	@wait_flip_and_check_measure_targ$qv
+		inc	_line_id_total
+		inc	_line_id_on_screen
+		mov	bx, _loaded_screen_id
 		add	bx, bx
-		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
-		cmp	ax, allcast_line_on_screen
+		mov	ax, word ptr _LINES_PER_SCREEN[bx]
+		cmp	ax, _line_id_on_screen
 		jg	short loc_B26D
-		mov	allcast_line_on_screen, 0
+		mov	_line_id_on_screen, 0
 		mov	al, 1
 		jmp	short loc_B26F
 ; ---------------------------------------------------------------------------
@@ -142,274 +137,17 @@ loc_B26F:
 		pop	si
 		leave
 		retn
-sub_B1B5	endp
+@screen_line_next_animate$qv endp
+CUTSCENE_TEXT ends
 
+maine_01_TEXT segment byte public 'CODE' use16
+	@wait_flip_and_check_measure_targ$qv procdesc near
+maine_01_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B273	proc near
-
-@@quarter		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	al, playchar_15018
-		mov	ah, 0
-		shl	ax, 4
-		mov	dx, allcast_screen_plus_one
-		add	dx, dx
-		add	ax, dx
-		mov	bx, ax
-		mov	ax, word ptr _ALLCAST_BG_QUARTER[bx]
-		mov	[bp+@@quarter], ax
-		push	2
-		call	palette_black_out
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0Eh
-		graph_accesspage 1
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		graph_accesspage 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		call	sub_B37C
-		GRCG_OFF_CLOBBERING dx
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		call	@pi_palette_apply$qi pascal, 0
-		xor	si, si
-		jmp	short loc_B309
-; ---------------------------------------------------------------------------
-
-loc_B2EE:
-		push	di
-		push	[bp+arg_0]
-		push	0
-		push	[bp+@@quarter]
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	ax
-		call	@pi_put_quarter_masked_8$qiiiii
-		call	sub_B37C
-		inc	si
-
-loc_B309:
-		cmp	si, 8
-		jl	short loc_B2EE
-		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
-		call	sub_B37C
-		call	@pi_put_quarter_8$qiiii pascal, di, [bp+arg_0], 0, [bp+@@quarter]
-		inc	allcast_screen_plus_one
-		cmp	allcast_screen_plus_one, 8
-		jge	short loc_B357
-		push	0
-		mov	al, playchar_15018
-		mov	ah, 0
-		shl	ax, 5
-		mov	dx, allcast_screen_plus_one
-		shl	dx, 2
-		add	ax, dx
-		mov	bx, ax
-		pushd	_ALLCAST_BG_FN[bx]
-		call	@pi_load$qinxc
-
-loc_B357:
-		add	word_15012, 2
-
-loc_B35C:
-		call	sub_B37C
-		or	al, al
-		jz	short loc_B35C
-		call	sub_B1B5
-		or	al, al
-		jz	short loc_B357
-		add	word_15012, 1Eh
-
-loc_B36F:
-		call	sub_B37C
-		or	al, al
-		jz	short loc_B36F
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B273	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B37C	proc near
-		push	bp
-		mov	bp, sp
-		call	@frame_delay$qi pascal, 2
-		graph_accesspage byte_1085E
-		mov	al, 1
-		sub	al, byte_1085E
-		mov	byte_1085E, al
-		graph_showpage al
-		inc	word_15010
-		call	_snd_bgm_measure
-		mov	measure_1500E, ax
-		cmp	measure_1500E, 0
-		jge	short loc_B3B9
-		mov	ax, word_15010
-		mov	bx, 22
-		cwd
-		idiv	bx
-		mov	measure_1500E, ax
-
-loc_B3B9:
-		mov	ax, measure_1500E
-		cmp	ax, word_15012
-		jl	short loc_B3C7
-		mov	ax, 1
-		jmp	short loc_B3C9
-; ---------------------------------------------------------------------------
-
-loc_B3C7:
-		xor	ax, ax
-
-loc_B3C9:
-		pop	bp
-		retn
-sub_B37C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @allcast_animate$qv
-@allcast_animate$qv	proc near
-		push	bp
-		mov	bp, sp
-		mov	allcast_step, 0
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.playchar]
-		mov	playchar_15018, al
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
-		graph_accesspage 1
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		graph_accesspage 0
-		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
-		GRCG_OFF_CLOBBERING dx
-		mov	allcast_screen_plus_one, 0
-		push	0
-		mov	al, playchar_15018
-		mov	ah, 0
-		shl	ax, 5
-		mov	bx, ax
-		pushd	_ALLCAST_BG_FN[bx]
-		call	@pi_load$qinxc
-		call	@pi_palette_apply$qi pascal, 0
-		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		mov	word_15012, 2
-
-loc_B45F:
-		call	sub_B37C
-		or	al, al
-		jz	short loc_B45F
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		push	0A00064h
-		call	sub_B273
-		add	word_15012, 10h
-
-loc_B4B5:
-		call	sub_B37C
-		or	al, al
-		jz	short loc_B4B5
-		push	4
-		call	palette_black_out
-		call	@pi_free$qi pascal, 0
-		graph_accesspage 0
-		graph_showpage al
-		pop	bp
-		retn
-@allcast_animate$qv	endp
-
-include th04/formats/scoredat_decode.asm
-include th04/formats/scoredat_encode.asm
-include th05/formats/scoredat_recreate_maine.asm
-include th05/formats/scoredat_load_for.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B6A3	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	scoredat_encode
-		push	ds
-		push	offset aGensou_scr_2 ; "GENSOU.SCR"
-		call	file_append
-		mov	al, playchar_15178
-		mov	ah, 0
-		imul	ax, 5
-		mov	dl, _rank
-		mov	dh, 0
-		add	ax, dx
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		xor	si, si
-		jmp	short loc_B723
-; ---------------------------------------------------------------------------
-
-loc_B6E2:
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	scoredat_decode
-		call	scoredat_encode
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		inc	si
-
-loc_B723:
-		cmp	si, RANK_COUNT * PLAYCHAR_COUNT
-		jl	short loc_B6E2
-		call	file_close
-		pop	si
-		pop	bp
-		retn
-sub_B6A3	endp
-
+SCORE_TEXT segment byte public 'CODE' use16
+	@HISCORE_SCOREDAT_LOAD_FOR$QI procdesc pascal near \
+		playchar:word
+	@hiscore_scoredat_save$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -693,7 +431,7 @@ loc_B90A:
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_B922
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+arg_0]
 		jnz	short loc_B922
@@ -797,7 +535,7 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_B9E1
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+arg_2]
 		jnz	short loc_B9E1
@@ -1177,7 +915,7 @@ loc_BC67:
 		mov	ah, 0
 		push	ax
 		call	sub_B9C1
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+arg_0]
 		jnz	short loc_BC8F
@@ -1564,7 +1302,7 @@ loc_BECC:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	_entered_name_cursor
 		call	sub_BA84
 		mov	si, offset _glyphballs
@@ -1982,17 +1720,17 @@ loc_C25E:
 		mov	_rank, al
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.playchar]
-		mov	playchar_15178, al
+		mov	_playchar, al
 		mov	[bp+var_4], 0
 		jmp	short loc_C28C
 ; ---------------------------------------------------------------------------
 
 loc_C273:
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jz	short loc_C289
-		call	scoredat_load_for pascal, [bp+var_4]
+		call	@hiscore_scoredat_load_for$qi pascal, [bp+var_4]
 		push	[bp+var_4]
 		call	sub_BCD3
 
@@ -2002,9 +1740,9 @@ loc_C289:
 loc_C28C:
 		cmp	[bp+var_4], PLAYCHAR_COUNT
 		jl	short loc_C273
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
-		call	scoredat_load_for pascal, ax
+		call	@hiscore_scoredat_load_for$qi pascal, ax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C2AD
@@ -2013,7 +1751,7 @@ loc_C28C:
 
 loc_C2AD:
 		call	sub_B730
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_BCD3
@@ -2022,7 +1760,7 @@ loc_C2AD:
 
 loc_C2BB:
 		mov	_entered_place, -1
-		mov	al, playchar_15178
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_BCD3
@@ -2051,14 +1789,14 @@ loc_C307:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	0
 		call	sub_BA84
 		graph_accesspage 0
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	0
 		call	sub_BA84
 		graph_accesspage 1
@@ -2236,7 +1974,7 @@ loc_C4D4:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_15178
+		push	word ptr _playchar
 		push	_entered_name_cursor
 		call	sub_BD46
 		cmp	_entered_name_cursor, (SCOREDAT_NAME_LEN - 1)
@@ -2335,12 +2073,12 @@ loc_C5B8:
 ; ---------------------------------------------------------------------------
 
 loc_C5BE:
-		call	sub_B6A3
+		call	@hiscore_scoredat_save$qv
 		jmp	short loc_C5CD
 ; ---------------------------------------------------------------------------
 
 loc_C5C3:
-		call	sub_B6A3
+		call	@hiscore_scoredat_save$qv
 		call	@input_wait_for_change$qi pascal, 0
 
 loc_C5CD:
@@ -3233,7 +2971,10 @@ loc_CE08:
 
 loc_CE1C:
 		mov	[bp+var_4], 1000000
-		jmp	loc_CEAF
+		; Hack (jmp	loc_CEAF)
+		; No idea why TASM can't assemble this properly after
+		; scoredat_load_for() was decompiled.
+		db	0E9h, 88h, 00h
 ; ---------------------------------------------------------------------------
 
 loc_CE27:
@@ -3713,7 +3454,7 @@ loc_D2FE:
 		leave
 		retn
 sub_D21D	endp
-maine_01_TEXT	ends
+SCORE_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
 	@SPACE_WINDOW_SET$QIIII procdesc pascal near \
@@ -6085,10 +5826,8 @@ include th02/snd/snd.inc
 	extern BGIMAGE_PUT_RECT_16:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
-	extern @PI_PUT_QUARTER_MASKED_8$QIIIII:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @PI_PUT_8$QIII:proc
-	extern @PI_PUT_QUARTER_8$QIIII:proc
 	extern @PI_PALETTE_APPLY$QI:proc
 	extern @PI_FREE$QI:proc
 	extern @input_reset_sense_held$qv:proc
@@ -6101,10 +5840,10 @@ SHARED ends
 
 	.data
 
-	; libs/master/pal[data].mas
+	; libs/master/pal[data].asm
 	extern PaletteTone:word
 
-	; libs/master/rand[data].mas
+	; libs/master/rand[data].asm
 	extern random_seed:dword
 
 	; th04/hardware/grppsafx.asm
@@ -6120,10 +5859,11 @@ include th05/formats/pi_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
 include th03/cutscene/cutscene[data].asm
-byte_1085E	db 0
-		db 0
-public _ALLCAST_BG_FN
-_ALLCAST_BG_FN	label dword
+public _page_shown
+_page_shown	db 0
+	evendata
+public _BG_FN
+_BG_FN	label dword
 		dd aExed01_pi		; "EXED01.pi"
 		dd aExed07_pi		; "EXED07.pi"
 		dd aExed08_pi		; "EXED08.pi"
@@ -6156,13 +5896,13 @@ _ALLCAST_BG_FN	label dword
 		dd aExed16_pi_2		; "EXED16.pi"
 		dd aExed15_pi_2		; "EXED15.pi"
 		dd 0
-public _ALLCAST_BG_QUARTER
-_ALLCAST_BG_QUARTER	label word
+public _BG_QUARTER
+_BG_QUARTER	label word
 		dw 1, 0, 1, 3, 0, 0, 0, 0
 		dw 1, 0, 1, 2, 1, 1, 1, 0
 		dw 1, 2, 0, 1, 0, 2, 2, 0
 		dw 1, 0, 0, 2, 0, 3, 3, 0
-ALLCAST_PTRS	dd aProjectOfTouho
+_LINES	dd aProjectOfTouho
 		dd aNo_1Buumx		; "		     Project of	TOUHOU	  "...
 		dd aReimuHakureiSh
 		dd aNo_2Buumx
@@ -6209,11 +5949,12 @@ ALLCAST_PTRS	dd aProjectOfTouho
 		dd aSpecialThanksA
 		dd aAmusementMaker
 		dd aAndAllTestPlay
-ALLCAST_LINES_PER_SCREEN	equ $-2
+public _LINES_PER_SCREEN, _line_id_on_screen
+_LINES_PER_SCREEN	equ $-2
 		dw 1, 2, 6, 10, 9, 12, 7
 		db    0
 		db    0
-allcast_line_on_screen	dw 0
+_line_id_on_screen	dw 0
 aExed01_pi	db 'EXED01.pi',0
 aExed07_pi	db 'EXED07.pi',0
 aExed08_pi	db 'EXED08.pi',0
@@ -6289,14 +6030,16 @@ aP_m_d_ProgramM	db '    P.M.D. Program                             M.Kajihara(KA
 aSpecialThanksA	db '    Special Thanks                             Aotaka',0
 aAmusementMaker	db '                                               Amusement Makers',0
 aAndAllTestPlay	db '             and all test player and you ... ',0
-aExed		db 'EXED',0
+public _EXED
+_EXED db 'EXED',0
 include th04/hiscore/alphabet[data].asm
 byte_11621	db 0
 public _entered_name_cursor
 _entered_name_cursor	dw 0
-aGensou_scr	db 'GENSOU.SCR',0
+public _SCOREDAT_FN, _SCOREDAT_FN_2
+_SCOREDAT_FN	db 'GENSOU.SCR',0
 include th05/formats/scoredat_load_for[data].asm
-aGensou_scr_2	db 'GENSOU.SCR',0
+_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum_bft	db 'scnum.bft',0
 aSctm0_bft	db 'sctm0.bft',0
@@ -6387,21 +6130,17 @@ aStf00_bft	db 'stf00.bft',0
 	; th03/formats/cdg[bss].asm
 	extern _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
-include th04/hardware/egcrect[bss].asm
-include th03/cutscene/cutscene[bss].asm
-measure_1500E	dw ?
-word_15010	dw ?
-word_15012	dw ?
-allcast_screen_plus_one	dw ?
-allcast_step	dw ?
-playchar_15018	db ?
-		db ?
+	; th05/allcast.cpp
+	extern _loaded_screen_id:word
+	extern _line_id_total:word
+
 include th04/formats/scoredat[bss].asm
 public _glyphballs
 _glyphballs	glyphball_t	(SCOREDAT_NAME_LEN + 1) dup (<?>)
 include th03/hiscore/regist[bss].asm
+public _rank, _playchar
 _rank	db ?
-playchar_15178	db ?
+_playchar	db ?
 		db 3 dup(?)
 public _skill
 byte_1517C	db ?

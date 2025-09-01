@@ -133,6 +133,9 @@ CUTSCENE_TEXT ends
 maine_01_TEXT segment byte public 'CODE' use16
 maine_01_TEXT ends
 
+SCORE_TEXT segment byte public 'CODE' use16
+SCORE_TEXT ends
+
 maine_01__TEXT segment byte public 'CODE' use16
 maine_01__TEXT ends
 

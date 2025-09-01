@@ -34,42 +34,42 @@ typedef enum {
 #define sdots_t(x) sdots_t_(x)
 
 #ifdef __cplusplus
-	template <class T> struct Planar {
-		T B, R, G, E;
+template <class T> struct Planar {
+	T B, R, G, E;
 
-		T& operator [](int plane) {
-			return (&B)[plane];
-		}
+	T& operator [](int plane) {
+		return (&B)[plane];
+	}
 
-		const T& operator [](int plane) const {
-			return (&B)[plane];
-		}
-	};
+	const T& operator [](int plane) const {
+		return (&B)[plane];
+	}
+};
 
-	// Base template for a 1bpp rectangle, with a custom per-row data type.
-	template <class RowDots, pixel_t H> struct DotRect {
-		typedef RowDots row_dots_t;
+// Base template for a 1bpp rectangle, with a custom per-row data type.
+template <class RowDots, pixel_t H> struct DotRect {
+	typedef RowDots row_dots_t;
 
-		row_dots_t row[H];
+	row_dots_t row[H];
 
-		row_dots_t& operator [](pixel_t y) {
-			return row[y];
-		}
+	row_dots_t& operator [](pixel_t y) {
+		return row[y];
+	}
 
-		const row_dots_t& operator [](pixel_t y) const {
-			return row[y];
-		}
+	const row_dots_t& operator [](pixel_t y) const {
+		return row[y];
+	}
 
-		static pixel_t w() {
-			return (sizeof(row_dots_t) * 8);
-		}
+	static pixel_t w() {
+		return (sizeof(row_dots_t) * 8);
+	}
 
-		static pixel_t h() {
-			return H;
-		}
-	};
+	static pixel_t h() {
+		return H;
+	}
+};
 
-	#define dot_rect_t(w, h) DotRect<dots_t(w), h>
+#define dot_rect_t(w, h) DotRect<dots_t(w), h>
 #endif
 
 // Since array subscripts create slightly different assembly in places, we
@@ -146,8 +146,16 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 }
 #endif
 
+// Converts the given ([x], [y]) position to an x86 segment inside the given
+// plane. Only defined for paragraph-aligned values of [x], i.e., multiples of
+// 128 pixels.
+#define vram_segment(plane, x, y) ( \
+	static_assert((((y * ROW_SIZE) + (x / BYTE_DOTS)) % 16) == 0), \
+	(SEG_PLANE_##plane + (((y * ROW_SIZE) + (x / BYTE_DOTS)) / 16)) \
+)
+
 #define VRAM_CHUNK(plane, offset, bit_count) \
-	*(dots##bit_count##_t *)(VRAM_PLANE_##plane + offset)
+	*(dots##bit_count##_t far *)(VRAM_PLANE_##plane + offset)
 
 #define VRAM_SNAP(dst, plane, offset, bit_count) \
 	dst = VRAM_CHUNK(plane, offset, bit_count);
@@ -227,7 +235,7 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 
 #define grcg_put_8(offset, src) \
 	/* Nope, pokeb() doesn't generate the same code */ \
-	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, offset)) = src
+	*reinterpret_cast<dots8_t far *>(MK_FP(SEG_PLANE_B, offset)) = src
 
 // EGC
 // ---

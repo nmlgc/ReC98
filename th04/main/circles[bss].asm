@@ -11,4 +11,5 @@ CIRCLE_COUNT = 8
 else
 CIRCLE_COUNT = 16
 endif
+public _circles
 _circles	circle_t CIRCLE_COUNT dup(<?>)

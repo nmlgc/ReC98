@@ -35,7 +35,8 @@ extern input_t input_sp;
 
 /// Modes
 /// -----
-extern farfunc_t_near input_mode;
+
+extern func_t_near input_mode;
 
 // Merges the inputs for the P1 multi-player keys into the single-player state
 // after sensing.

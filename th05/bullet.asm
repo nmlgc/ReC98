@@ -41,7 +41,7 @@ BULLET_A_TEXT	segment	word public 'CODE' use16
 ; Identical to TH04's decompiled version, except for:
 ; • regular and special bullets being handled within the same function,
 ; • the TH05-specific changes to the spawn types, and
-; • the TH05-specific changes related to BMS_SLOWDOWN (see bullet.hpp)
+; • the TH05-specific changes related to BMS_DECELERATE (see bullet.hpp)
 public _bullets_add_raw
 _bullets_add_raw proc near
 	@@group_done	equ <cl>
@@ -49,7 +49,7 @@ _bullets_add_raw proc near
 	; Sigh. Dropping down to ASM, and then not even turning [spawn_type] into
 	; a proper bitfield. If it was, then a TEST for BST_GATHER_PELLET would
 	; have been enough here.
-	cmp	_bullet_template.spawn_type, (BST_GATHER_PELLET or BST_NO_SLOWDOWN)
+	cmp	_bullet_template.spawn_type, (BST_GATHER_PELLET or BST_NO_DECELERATE)
 	jz	short @@is_gather_pellet
 	cmp	_bullet_template.spawn_type, BST_GATHER_PELLET
 	jnz	short @@no_gather
@@ -96,7 +96,7 @@ _bullets_add_raw proc near
 @@determine_spawn_state:
 	mov	dl, BSS_GRAZEABLE
 	mov	al, _bullet_template.spawn_type
-	and	al, (BST_NO_SLOWDOWN - 1)
+	and	al, (BST_NO_DECELERATE - 1)
 	cmp	al, BST_CLOUD_BACKWARDS
 	jz	short @@is_cloud_backwards
 	cmp	al, BST_CLOUD_FORWARDS
@@ -117,15 +117,15 @@ _bullets_add_raw proc near
 	jnz	short @@got_both_spawn_and_move_states
 
 	mov	al, BMS_REGULAR
-	cmp	_bullet_template.speed, (BMS_SLOWDOWN_BASE_SPEED - 8)
+	cmp	_bullet_template.speed, (BMS_DECELERATE_BASE_SPEED - 8)
 	jb	short @@speed_below_slowdown_threshold
 	cmp	_bullet_clear_time, 0
 	jz	short @@got_both_spawn_and_move_states
 
 @@speed_below_slowdown_threshold:
-	test	_bullet_template.spawn_type, BST_NO_SLOWDOWN
+	test	_bullet_template.spawn_type, BST_NO_DECELERATE
 	jnz	short @@got_both_spawn_and_move_states
-	xor	al, al	; BMS_SLOWDOWN
+	xor	al, al	; BMS_DECELERATE
 
 @@got_both_spawn_and_move_states:
 	mov	cs:@@spawn_state, dl
@@ -147,10 +147,10 @@ _bullets_add_raw proc near
 
 	@@move_state = byte ptr $+3
 	mov	[si+bullet_t.move_state], 123
-	mov	[si+bullet_t.slowdown_time], BMS_SLOWDOWN_FRAMES
-	mov	al, BMS_SLOWDOWN_BASE_SPEED
+	mov	[si+bullet_t.decelerate_time], BMS_DECELERATE_FRAMES
+	mov	al, BMS_DECELERATE_BASE_SPEED
 	sub	al, _bullet_template.speed
-	mov	[si+bullet_t.slowdown_speed_delta], al
+	mov	[si+bullet_t.decelerate_speed_delta], al
 	jmp	short @@init_common
 ; ---------------------------------------------------------------------------
 

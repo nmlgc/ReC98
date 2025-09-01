@@ -44,11 +44,7 @@ struct gather_template_t {
 #define GATHER_RADIUS_END to_sp(2.0f)
 
 #define GATHER_COUNT 16
-#if GAME == 5
-	#define GATHER_CAP 8
-#else
-	#define GATHER_CAP GATHER_COUNT
-#endif
+static const int GATHER_CAP = ((GAME == 5) ? 8 : GATHER_COUNT);
 
 extern gather_t gather_circles[GATHER_COUNT];
 extern gather_template_t gather_template;

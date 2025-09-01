@@ -18,7 +18,7 @@ static const int STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y);
 #define CARDS_PER_BYTE 4
 
 #if ((STAGEOBJS_X % CARDS_PER_BYTE) != 0)
-	#error STAGEOBJS_X must be divisible by the amount of cards per byte
+#error STAGEOBJS_X must be divisible by the amount of cards per byte
 #endif
 
 #define STAGEDAT_MAGIC "STAGE"

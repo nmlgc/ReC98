@@ -13,7 +13,11 @@ inline void graph_accesspage_0(void) {
 	_outportb_(0xA6, (_AX ^= _AX));
 }
 
+#if (GAME == 5)
+vram_word_amount_t egcrect_w;
+#else
 extern vram_word_amount_t egcrect_w;
+#endif
 
 static void near egc_start_copy(void);
 
@@ -28,10 +32,10 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 	#define rows_remaining	static_cast<pixel_t>(_BX)
 	#define dots	static_cast<dots16_t>(_DX)
 
-	#if (GAME == 4)
-		// TH04 wants to blit using a forward STOSW (DF = 0)
-		_asm { cld; }
-	#endif
+#if (GAME == 4)
+	// TH04 wants to blit using a forward STOSW (DF = 0)
+	_asm { cld; }
+#endif
 	egc_start_copy();
 
 	// (EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0)
@@ -70,17 +74,17 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 	do {
 		_CX = egcrect_w;
 		put_loop: {
-			#if (GAME == 5)
-				_DI |= _DI;
-				if((!FLAGS_SIGN) && (_DI < PLANE_SIZE)) {
-					graph_accesspage_1();	dots = peek(_ES, _DI);
-					graph_accesspage_0();	_poke_(_ES, _DI, dots);
-				}
-				_DI += 2;
-			#else
-				graph_accesspage_1();  	dots = peek(_ES, _DI);
-				graph_accesspage_0();	_AX = dots; asm { stosw; }
-			#endif
+#if (GAME == 5)
+			_DI |= _DI;
+			if((!FLAGS_SIGN) && (_DI < PLANE_SIZE)) {
+				graph_accesspage_1();	dots = peek(_ES, _DI);
+				graph_accesspage_0();	_poke_(_ES, _DI, dots);
+			}
+			_DI += 2;
+#else
+			graph_accesspage_1();  	dots = peek(_ES, _DI);
+			graph_accesspage_0();	_AX = dots; asm { stosw; }
+#endif
 			asm { loop put_loop; }
 		}
 		_DI += stride;

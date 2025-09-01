@@ -1,5 +1,8 @@
+.gitattributes text eol=lf
+.gitignore text eol=lf
 *.asm text eol=crlf
 *.bat text eol=crlf
 *.[ch]* text eol=lf
+*.doc text eol=crlf diff
 *.lua text eol=lf
 zun.txt -text

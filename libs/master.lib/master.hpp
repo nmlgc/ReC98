@@ -65,6 +65,15 @@ void MASTER_RET js_end(void);
 int MASTER_RET js_sense(void);
 // --------
 
+// super.lib error codes
+// ---------------------
+
+#define NoError 0            	/* 正常終了 */
+#define FileNotFound -2      	/* ファイル名が見つからない */
+#define InsufficientMemory -8	/* メモリ不足 */
+#define InvalidData -13      	/* 無効なデータ */
+// ---------------------
+
 // Keyboard
 // --------
 
@@ -87,17 +96,18 @@ int MASTER_RET mem_unassign(void);
 int MASTER_RET mem_assign_dos(unsigned parasize);
 
 // Regular
+void __seg* MASTER_RET hmem_alloc(unsigned parasize);
 void __seg* MASTER_RET hmem_allocbyte(unsigned bytesize);
 void MASTER_RET hmem_free(void __seg* memseg);
 // Fast
-unsigned MASTER_RET smem_wget(unsigned bytesize);
-void MASTER_RET smem_release(unsigned memseg);
+void __seg* MASTER_RET smem_wget(unsigned bytesize);
+void MASTER_RET smem_release(void __seg* memseg);
 // ----
 
 // Machine identification
 // ----------------------
 
-extern const unsigned Machine_State;
+extern const unsigned __cdecl Machine_State;
 
 unsigned MASTER_RET get_machine(void);
 
@@ -165,8 +175,8 @@ int MASTER_RET file_delete(const char MASTER_PTR *filename);
 // Packfiles
 // ---------
 
-extern unsigned char pfkey; // 復号化キー
-extern unsigned bbufsiz;    // バッファサイズ
+extern unsigned char __cdecl pfkey; // 復号化キー
+extern unsigned __cdecl bbufsiz;    // バッファサイズ
 
 void MASTER_RET pfstart(const unsigned char MASTER_PTR *parfile);
 void MASTER_RET pfend(void);
@@ -203,10 +213,24 @@ void MASTER_RET respal_free(void);
 
 // Incremented by 1 on every VSync interrupt. Can be manually reset to 0 to
 // simplify frame delay loops.
-extern __cdecl volatile unsigned int vsync_Count1, vsync_Count2;
+extern volatile unsigned int __cdecl vsync_Count1, vsync_Count2;
+
+#define vsync_proc_set(proc) { \
+	extern void (far pascal *__cdecl vsync_Proc)(void); \
+	disable(); \
+	vsync_Proc = proc; \
+	enable(); \
+}
+#define vsync_proc_reset() { \
+	extern void (far pascal *__cdecl vsync_Proc)(void); \
+	disable(); \
+	vsync_Proc = nullptr; \
+	enable(); \
+}
 
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);
+void MASTER_RET vsync_wait(void);
 // -----
 #ifdef __cplusplus
 }
@@ -217,54 +241,54 @@ void MASTER_RET vsync_end(void);
 /// ------------------
 
 #ifdef __cplusplus
-	// Type-safe hmem_* memory allocation
-	template<class T> struct HMem {
-		static T __seg* alloc(unsigned int size_in_elements) {
-			return reinterpret_cast<T __seg *>(hmem_allocbyte(
-				size_in_elements * sizeof(T)
-			));
-		}
+// Type-safe hmem_* memory allocation
+template<class T> struct HMem {
+	static T __seg* alloc(unsigned int size_in_elements) {
+		return reinterpret_cast<T __seg *>(hmem_allocbyte(
+			size_in_elements * sizeof(T)
+		));
+	}
 
-		static void free(T *&block) {
-			hmem_free(reinterpret_cast<void __seg *>(block));
-		}
+	static void free(T far *&block) {
+		hmem_free(reinterpret_cast<void __seg *>(block));
+	}
 
-		static void free(T __seg *&block) {
-			hmem_free(reinterpret_cast<void __seg *>(block));
-		}
-	};
+	static void free(T __seg *&block) {
+		hmem_free(reinterpret_cast<void __seg *>(block));
+	}
+};
 
-	// Type-safe resident structure allocation and retrieval
-	template <class T> struct ResData {
-		static unsigned int id_len() {
-			return (sizeof(reinterpret_cast<T *>(0)->id) - 1);
-		}
+// Type-safe resident structure allocation and retrieval
+template <class T> struct ResData {
+	static unsigned int id_len() {
+		return (sizeof(reinterpret_cast<T *>(0)->id) - 1);
+	}
 
-		static T __seg* create(const char MASTER_PTR *id) {
-			return reinterpret_cast<T __seg *>(resdata_create(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
+	static T __seg* create(const char MASTER_PTR *id) {
+		return reinterpret_cast<T __seg *>(resdata_create(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
 
-		static T __seg* exist(const char MASTER_PTR *id) {
-			return reinterpret_cast<T __seg *>(resdata_exist(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
+	static T __seg* exist(const char MASTER_PTR *id) {
+		return reinterpret_cast<T __seg *>(resdata_exist(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
 
-		// Workarounds for correct code generation
-		static T __seg* create_with_id_from_pointer(const char *&id) {
-			return reinterpret_cast<T __seg *>(resdata_create(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
+	// Workarounds for correct code generation
+	static T __seg* create_with_id_from_pointer(const char *&id) {
+		return reinterpret_cast<T __seg *>(resdata_create(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
 
-		static T __seg* exist_with_id_from_pointer(const char *&id) {
-			return reinterpret_cast<T __seg *>(resdata_exist(
-				id, id_len(), ((sizeof(T) + 0xF) >> 4)
-			));
-		}
-	};
+	static T __seg* exist_with_id_from_pointer(const char *&id) {
+		return reinterpret_cast<T __seg *>(resdata_exist(
+			id, id_len(), ((sizeof(T) + 0xF) >> 4)
+		));
+	}
+};
 #endif
 /// ------------------
 

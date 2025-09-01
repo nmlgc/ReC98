@@ -48,7 +48,7 @@ void near op_animate(void)
 		}
 	} page;
 
-	palette_black();
+	palette_settone(0);
 	pi_load(0, "op2a.pi");
 	pi_load(1, "op2b.pi");
 	pi_load(2, "op2c.pi");
@@ -80,11 +80,14 @@ void near op_animate(void)
 
 	{for(int frame = 0; frame < ROLL_DURATION; frame++) {
 		// Blit to both pages
-		if((frame % ROLL_FRAMES_PER_CEL) <= (2 - 1)) {
+		if((frame % ROLL_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
 			pi_palette_apply(frame / ROLL_FRAMES_PER_CEL);
 			pi_put_8(0, 278, (frame / ROLL_FRAMES_PER_CEL));
 		}
 		page.wait_and_flip();
+
+		// ZUN bug: Off by one; the last iteration will leave [PaletteTone] at
+		// 99, not 100, which does in fact significantly darken the image.
 		palette_settone((100 - ROLL_DURATION) + frame);
 	}}
 
@@ -104,18 +107,26 @@ void near op_animate(void)
 	}
 
 	pi_load(0, MENU_MAIN_BG_FN);
-	graph_accesspage(0);
 
-	// ZUN landmine: Should also be page 1. Masked .PI blitting is even slower.
-	// When fixing this landmine, the frame_delay() also needs to be reduced by
-	// 1; wait_and_flip() adds another delay frame before the flip, during
-	// which the first pi_put_masked_8() call would remain invisible.
+	// ZUN bug: This one starts with a screen tearing landmine caused by slow
+	// .PI blitting onto the shown page. However, it then turns out that shown
+	// page = accessed page shifts the timing of the whole animation back by
+	// one frame:
+	// • The first cel is shown for one additional frame as the CRT beam also
+	//   draws it *before* the first flip in the loop below. Every other cel
+	//   only appears on screen *after* the flip.
+	// • Since the code immediately quits out of the loop after the last flip
+	//   and draws the original unmasked image on the next frame, it also cuts
+	//   one frame from the last cel.
+	// In the end, we end up with a frame timing of 5-4-4-3 instead of the
+	// intended 4-4-4-4.
+	graph_accesspage(0);
 	graph_showpage(0);
 	frame_delay(16);
 
 	{for(int frame = 0; frame < FADE_DURATION; frame++) {
 		// Blit to both pages
-		if((frame % FADE_FRAMES_PER_CEL) <= (2 - 1)) {
+		if((frame % FADE_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
 			pi_put_masked_8(0, 0, 0, (frame / FADE_FRAMES_PER_CEL));
 		}
 		page.wait_and_flip();

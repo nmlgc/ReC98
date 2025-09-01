@@ -1,8 +1,6 @@
 #pragma option -2 -d- // ZUN bloat
 
 #include <dos.h>
-#include <mbctype.h>
-#include <mbstring.h>
 #include "shiftjis.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
@@ -10,21 +8,23 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
-#include "th02/formats/scoredat.hpp"
+#include "th02/formats/scoredat/scoredat.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
+#include "th02/gaiji/str.hpp"
 #include "th02/op/op.h"
+#include "th02/shiftjis/hiscore.hpp"
 
 #include "th02/score.c"
 
-const unsigned char gbcRANKS[4][8] = {
-	gb_SP, gb_E_, gb_A_, gb_S_, gb_Y_, gb_SP, gb_SP, 0,
-	gb_N_, gb_O_, gb_R_, gb_M_, gb_A_, gb_L_, gb_SP, 0,
-	gb_SP, gb_H_, gb_A_, gb_R_, gb_D_, gb_SP, gb_SP, 0,
-	gb_L_, gb_U_, gb_N_, gb_A_, gb_T_, gb_I_, gb_C_, 0,
+static const unsigned char gbcRANKS[4][8] = {
+	g_chr_7(gb, _,E,A,S,Y,_,_), '\0',
+	g_chr_7(gb, N,O,R,M,A,L,_), '\0',
+	g_chr_7(gb, _,H,A,R,D,_,_), '\0',
+	g_chr_7(gb, L,U,N,A,T,I,C), '\0',
 };
 
-const shiftjis_t *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
+const shiftjis_t *SHOTTYPES[SHOTTYPE_COUNT] = HISCORE_SHOTTYPES;
 int logo_step = 0;
 char need_op_h_bft = 1;
 int8_t need_op_h_bft_padding = 0;
@@ -34,9 +34,9 @@ char extra_unlocked;
 int8_t extra_unlocked_padding;
 unsigned int score_duration;
 
-#include "th02/scorelod.c"
+#include "th02/formats/scoredat/load.cpp"
 
-void pascal near score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
+static void pascal near score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
 	#define on_digit(i, gaiji) { \
 		gaiji_putca((26 + (i * GAIJI_TRAM_W)), y, gaiji, atrb); \
@@ -81,23 +81,19 @@ void pascal near scoredat_date_put(tram_y_t y, int place, tram_atrb2 atrb)
 	text_putsa(64, y, str, atrb);
 }
 
-void pascal near scores_put(int place_to_highlight)
+static void pascal near scores_put(int place_to_highlight)
 {
 	tram_atrb2 atrb = TX_WHITE;
 	int i;
 	gaiji_putsa(22, 2, gbHI_SCORE, TX_GREEN);
 	gaiji_putsa(40, 2, gbcRANKS[rank], TX_GREEN);
-	text_putsa(
-		8, 4,
-		"      Ç®ñºëOÅ@Å@Å@Å@Å@Å@ìæì_Å@Å@Å@ STAGE  TYPE   ì˙ït",
-		TX_GREEN
-	);
+	text_putsa(8, 4, HISCORE_HEADER, TX_GREEN);
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		score_atrb_set(atrb, i, place_to_highlight);
 		gaiji_putsa(12, 7+i, hi.score.g_name[i], atrb);
 		score_put(7+i, hi.score.score[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
-			gaiji_putca(44, 7+i, hi.score.stage[i] + gb_0_, atrb);
+			gaiji_putca(44, 7+i, hi.score.stage[i] + gb_0, atrb);
 		} else {
 			gaiji_putca(44, 7+i, gs_ALL, atrb);
 		}
@@ -107,10 +103,10 @@ void pascal near scores_put(int place_to_highlight)
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		score_atrb_set(atrb, i, place_to_highlight);
 		if(i != 9) {
-			gaiji_putca(9, 7+i, gb_1_ + i, atrb);
+			gaiji_putca(9, (7 + i), (gb_1 + i), atrb);
 		} else {
-			gaiji_putca(8, 16, gb_1_, atrb);
-			gaiji_putca(10, 16, gb_0_, atrb);
+			gaiji_putca(8, 16, gb_1, atrb);
+			gaiji_putca(10, 16, gb_0, atrb);
 		}
 	}
 }
@@ -144,25 +140,38 @@ void pascal near logo_render(void)
 void pascal score_menu(void)
 {
 	int input_allowed = 0;
-	char page = 0;
+	page_t page_shown = 0;
 
+	// ZUN landmine: We get here not too long after VSync, and a VRAM clear of
+	// the visible page might successfully race the beam. But it certainly
+	// won't if we do file I/O first.
 	scoredat_load();
 	graph_accesspage(0);	graph_clear();
 	graph_accesspage(1);	graph_clear();
+
 	if(need_op_h_bft) {
 		need_op_h_bft = 0;
 		super_entry_bfnt("op_h.bft");
 	}
 	palette_entry_rgb_show("op_h.rgb");
 	grc_setclip(128, 96, 512, 304);
+
+	// ZUN bug: Seems redundant since logo_render() starts with the same code.
+	// But note that we're accessing VRAM page 1. The first iteration of the
+	// loop below will *show* page 1 but *render* to page 0. Thus, the first
+	// well-defined frame actually just displays what's drawn here ‚Äì the purple
+	// background without the Êù±ÊñπÂ∞ÅÈ≠îÈå≤ label.
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();
+
 	scores_put(-1);
 	logo_step = 0;
 
+	// ZUN landmine: The beam is certainly at some place within the frame by
+	// now, yielding another tearing line.
 	graph_accesspage(0);
-	page = 1 - page;
+	page_shown = (1 - page_shown);
 	graph_showpage(1);
 
 	do {
@@ -174,8 +183,8 @@ void pascal score_menu(void)
 		}
 		logo_render();
 		frame_delay(1);
-		graph_accesspage(page);
-		graph_showpage(page = 1 - page);
+		graph_accesspage(page_shown);
+		graph_showpage(page_shown = (1 - page_shown));
 	} while(logo_step <= score_duration);
 
 	key_det = 0;

@@ -58,7 +58,7 @@ void zunsoft_init(void)
 	graph_hide();
 	super_entry_bfnt(LOGO_FILENAME);
 	palette_show();
-	palette_black();
+	palette_settone(0);
 	graph_show();
 }
 

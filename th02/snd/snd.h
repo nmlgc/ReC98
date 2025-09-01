@@ -9,28 +9,28 @@ extern "C" {
 extern char snd_interrupt_if_midi;
 extern bool snd_midi_possible;
 #if GAME <= 3
-	typedef enum {
-		SND_BGM_OFF,
-		SND_BGM_FM,
-		SND_BGM_MIDI
-	} snd_bgm_mode_t;
+typedef enum {
+	SND_BGM_OFF,
+	SND_BGM_FM,
+	SND_BGM_MIDI
+} snd_bgm_mode_t;
 
-	extern bool snd_active;
-	extern bool snd_midi_active;
-	extern bool snd_fm_possible;
+extern bool snd_active;
+extern bool snd_midi_active;
+extern bool snd_fm_possible;
 
-	#ifdef __cplusplus
-	static inline bool snd_bgm_active() {
-		return snd_active;
-	}
+#ifdef __cplusplus
+static inline bool snd_bgm_active() {
+	return snd_active;
+}
 
-	static inline bool snd_se_active() {
-		return snd_fm_possible;
-	}
-	#endif
+static inline bool snd_se_active() {
+	return snd_fm_possible;
+}
+#endif
 
-	#define snd_bgm_is_fm() \
-		(snd_midi_active != true)
+#define snd_bgm_is_fm() \
+	(snd_midi_active != true)
 #endif
 
 // Purely returns whether the PMD driver is resident at its interrupt. The
@@ -38,9 +38,9 @@ extern bool snd_midi_possible;
 // snd_determine_mode().
 bool16 snd_pmd_resident(void);
 #if (GAME != 3)
-	// Returns whether the MMD driver is resident at its interrupt. If it is,
-	// ≤TH03 sets [snd_midi_active] to true.
-	bool16 snd_mmd_resident(void);
+// Returns whether the MMD driver is resident at its interrupt. If it is, ≤TH03
+// sets [snd_midi_active] to true.
+bool16 snd_mmd_resident(void);
 #endif
 
 // Checks whether an FM sound source is active, and sets [snd_fm_possible]
@@ -57,23 +57,22 @@ int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 void snd_delay_until_volume(uint8_t volume);
 
 #if (GAME == 2)
-	#define SND_FALLBACK_DELAY_FRAMES 100
+#define SND_FALLBACK_DELAY_FRAMES 100
 
-	// Blocks until the active sound driver has played back the current BGM for
-	// the *total* given number of full measures. Does *not* correspond to a
-	// specific measure of the song; a [measure] within the looping section
-	// would still only be hit once, during the first loop.
-	// If no sound driver is active, the delay is replaced with
-	// frame_delay([SND_FALLBACK_DELAY_FRAMES]).
-	// ZUN landmine: Neither PMD nor MMD reset the internal measure when
-	// stopping playback. If no BGM is playing and the previous one hasn't been
-	// played back for at least the given number of [measures], the function
-	// will deadlock.
-	void snd_delay_until_measure(int measure);
+// Blocks until the active sound driver has played back the current BGM for the
+// *total* given number of full measures. Does *not* correspond to a specific
+// measure of the song; a [measure] within the looping section would still only
+// be hit once, during the first loop.
+// If no sound driver is active, the delay is replaced with
+// frame_delay([SND_FALLBACK_DELAY_FRAMES]).
+// ZUN landmine: Neither PMD nor MMD reset the internal measure when stopping
+// playback. If no BGM is playing and the previous one hasn't been played back
+// for at least the given number of [measures], the function will deadlock.
+void snd_delay_until_measure(int measure);
 #endif
 
 #define snd_kaja_func(func, param) ( \
-	snd_kaja_interrupt(((func) << 8) + (param)) \
+	snd_kaja_interrupt(((func) << 8) | static_cast<uint8_t>(param)) \
 )
 
 typedef enum {
@@ -82,18 +81,17 @@ typedef enum {
 } snd_load_func_t;
 
 #if (GAME <= 3)
-	// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound effect
-	// bank in EFC format ([func] == SND_LOAD_SE) into the respective work
-	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
-	// file name.
-	// [fn] still needs to be null-terminated, despite its fixed length.
-	//
-	// ZUN landmine: The function doesn't stop any currently playing song
-	// before loading the a new one. This can cause glitches when loading from
-	// a slow storage device: If it takes longer than a single period of the
-	// OPN timer to write the full new song to the driver's song buffer, the
-	// driver will play back garbage in the meantime.
-	void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
+// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound effect bank
+// in EFC format ([func] == SND_LOAD_SE) into the respective work buffer of the
+// sound driver. If MIDI is used, 'md' is appended to the file name.
+// [fn] still needs to be null-terminated, despite its fixed length.
+//
+// ZUN landmine: The function doesn't stop any currently playing song before
+// loading the a new one. This can cause glitches when loading from a slow
+// storage device: If it takes longer than a single period of the OPN timer to
+// write the full new song to the driver's song buffer, the driver will play
+// back garbage in the meantime.
+void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 #endif
 
 void snd_se_reset(void);

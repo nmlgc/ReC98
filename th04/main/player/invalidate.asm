@@ -1,6 +1,5 @@
-; void pascal near player_invalidate(void);
-public PLAYER_INVALIDATE
-player_invalidate	proc near
+public @player_invalidate$qv
+@player_invalidate$qv proc near
 @@angle	= byte ptr [bp-1]
 
 	enter	2, 0
@@ -67,4 +66,4 @@ player_invalidate	proc near
 	pop	si
 	leave
 	retn
-player_invalidate	endp
+@player_invalidate$qv endp

@@ -58,7 +58,7 @@ public @piano_fm_part_put_raw
 	mov	_piano_notes_prev.fm[si], ah
 	mov	_piano_notes_cur.fm[si], al
 	call	_piano_part_keys_put_raw
-	mov	ah, GC_RI
+	mov	ah, 5
 	call	@grcg_setcolor_direct_raw$qv
 	mov	al, _piano_notes_cur.fm[si]
 	call	@piano_pressed_key_put
@@ -104,7 +104,7 @@ public _piano_part_keys_put_raw
 _piano_part_keys_put_raw proc near
 	push	di
 	push	si
-	mov	ah, GC_GI
+	mov	ah, 3
 	call	@grcg_setcolor_direct_raw$qv
 	add	di, PIANO_VRAM_LEFT
 	mov	ax, PIANO_KEYS_WHITE
@@ -116,7 +116,7 @@ _piano_part_keys_put_raw proc near
 	add	di, ROW_SIZE - PIANO_VRAM_W
 	dec	dl
 	jnz	short @@white_key_loop
-	mov	ah, GC_RGI
+	mov	ah, 1
 	call	@grcg_setcolor_direct_raw$qv
 	mov	si, offset _PIANO_KEYS_BLACK
 	sub	di, ROW_SIZE * PIANO_H

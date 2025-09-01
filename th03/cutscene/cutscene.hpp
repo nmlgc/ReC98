@@ -8,10 +8,10 @@ bool16 pascal near cutscene_script_load(const char *fn);
 // Frees the cutscene script. No-op in TH04 and TH05, where it's statically
 // allocated.
 #if (GAME == 5)
-	inline void cutscene_script_free() {
-	}
+inline void cutscene_script_free() {
+}
 #else
-	void near cutscene_script_free();
+void near cutscene_script_free();
 #endif
 
 // Runs the loaded cutscene script in a blocking way.

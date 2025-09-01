@@ -14,6 +14,8 @@ typedef enum {
 	PLAYCHAR_CHIYURI = 7,
 	PLAYCHAR_YUMEMI = 8,
 	PLAYCHAR_COUNT = 9,
+
+	PLAYCHAR_COUNT_LOCKED = (PLAYCHAR_COUNT - 2),
 } playchar_t;
 
 typedef unsigned char playchar_paletted_t;
@@ -50,9 +52,12 @@ struct PlaycharPaletted {
 	}
 };
 
+#define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
+
 // Like PlaycharPaletted, but with all IDs shifted up by 1 to reserve 0 for "no
-// character".
-struct PlaycharPalettedOptional {
+// character". Must be `far` because the resident structure contains some
+// fields of this type.
+struct far PlaycharPalettedOptional {
 	unsigned char v;
 
 	int filename_id() const {
@@ -62,8 +67,15 @@ struct PlaycharPalettedOptional {
 	playchar_t char_id() const {
 		return static_cast<playchar_t>(filename_id() / 2);
 	}
-};
 
-#define TO_OPTIONAL_PALETTED(playchar) ((playchar << 1) + 1)
+	// ZUN bloat
+	int char_id_16() const {
+		return (filename_id() / 2);
+	}
+
+	void set(playchar_t playchar) {
+		v = TO_OPTIONAL_PALETTED(playchar);
+	}
+};
 
 #endif /* TH03_PLAYCHAR_HPP */

@@ -16,6 +16,8 @@
 		.386
 		.model use16 large _TEXT
 
+BINARY = 'E'
+
 include ReC98.inc
 include th02/th02.inc
 
@@ -281,13 +283,7 @@ loc_B1C6:
 		call	far ptr	palette_show
 		call	gaiji_restore
 		call	@game_exit$qv
-		pushd	0
-		push	ds
-		push	offset path	; "op"
-		push	ds
-		push	offset path	; "op"
-		call	_execl
-		add	sp, 0Ch
+		call	_execl c, offset path, ds, offset path, ds, large 0
 
 loc_B1FE:
 		pop	bp

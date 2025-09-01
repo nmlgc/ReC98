@@ -9,12 +9,12 @@ extern unsigned char snd_se_frame;
 
 // ZUN bloat: Just use [new_se] directly.
 inline int16_t snd_get_param(int16_t &param) {
-	#if (GAME >= 4)
-		_BX = _SP;
-		return peek(_SS, (_BX + 4));
-	#else
-		return param;
-	#endif
+#if (GAME >= 4)
+	_BX = _SP;
+	return peek(_SS, (_BX + 4));
+#else
+	return param;
+#endif
 }
 
 inline uint16_t snd_load_size() {

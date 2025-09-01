@@ -1,5 +1,6 @@
 #include "platform/x86real/pc98/blitter.hpp"
 #include "platform/x86real/pc98/grcg.hpp"
+#include "platform/grp_clip.hpp"
 #include "th01/main/bullet/pellet.hpp"
 
 /// Constants
@@ -65,6 +66,7 @@ void vector2_to_player_from(
 
 // Sets the velocity for pellet #[i] in the given [group]. Returns true if
 // this was the last pellet for this group.
+// Structurally very similar to the TH02 version.
 bool group_velocity_set(
 	Subpixel &ret_x,
 	Subpixel &ret_y,
@@ -573,7 +575,16 @@ void CPellets::unput_update_render(void)
 
 	Shots.unput_update_render();
 
-	GRCGStaticColor<static_cast<vc_t>(V_WHITE)> grcg(GC_RMW);
+	GRCG grcg(GC_RMW);
+	grcg.set_color_static(V_WHITE);
+	blitter_set_source_region(
+		0, 0, sizeof(sPELLET[0][0][0]), PELLET_H, sizeof(sPELLET[0][0][0])
+	);
+
+	static const LTRB<screen_x_t, screen_y_t> PELLET_CLIP = {
+		CLIP_NO_LEFT, CLIP_NO_TOP, CLIP_NO_RIGHT, RES_Y,
+	};
+	Grp_SetClip(&PELLET_CLIP);
 
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
@@ -587,20 +598,18 @@ void CPellets::unput_update_render(void)
 				if(p->not_rendered) {
 					p->not_rendered = false;
 				}
-				const Blitter __ds* b = blitter_init_clip_b(
-					(screen_left >> BYTE_BITS),
-					screen_top,
-					sizeof(sPELLET[0][0][0]),
-					PELLET_H
+				const Blitter __ds* b = blitter_init_clip(
+					(screen_left >> BYTE_BITS), screen_top
 				);
 				if(b && (p->decay_frame < PELLET_DECAY_FRAMES)) {
 					const int cel = (
 						(p->decay_frame + (PELLET_DECAY_FRAMES_PER_CEL - 1)) /
 						PELLET_DECAY_FRAMES_PER_CEL
 					);
-					b->write(
-						SEG_PLANE_B, &sPELLET[cel][screen_left & BYTE_MASK]
+					blit_source.dots_start.fp = (
+						&sPELLET[cel][screen_left & BYTE_MASK]
 					);
+					b->write(SEG_PLANE_B);
 				}
 			} else {
 				p->not_rendered = true;

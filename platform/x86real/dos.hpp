@@ -8,6 +8,8 @@
 // The structures are limited up to the fields needed by other code.
 // FreeDOS-specific declarations were replaced with reserved bytes.
 
+#include "platform.h"
+
 enum dos_alloc_strategy_t {
 	FIRST_FIT = 0,
 	BEST_FIT  = 1,
@@ -20,6 +22,26 @@ enum dos_mcb_type_t {
 	MCB_NORMAL = 0x4d,
 	MCB_LAST   = 0x5a,
 };
+
+// MZ .EXE binary header
+struct dos_mz_header_t {
+	uint16_t magic;
+	uint16_t extra_bytes;
+	uint16_t page_count;
+	uint16_t reloc_count;
+	uint16_t header_paras;
+	uint16_t min_alloc_paras;
+	uint16_t max_alloc_paras;
+	uint16_t init_ss;
+	uint16_t init_sp;
+	uint16_t checksum;
+	uint16_t init_ip;
+	uint16_t init_cs;
+	uint16_t reloc_offset;
+	uint16_t overlay_num;
+};
+
+#define DOS_MZ_MAGIC 0x5a4d
 
 // Program Segment Prefix
 struct dos_psp_t {

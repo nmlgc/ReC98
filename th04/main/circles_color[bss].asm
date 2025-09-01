@@ -1,2 +1,3 @@
+public _circles_color
 _circles_color	db ?
-	db ? ; word alignment
+	evendata

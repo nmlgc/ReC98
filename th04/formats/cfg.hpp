@@ -27,11 +27,7 @@ struct cfg_options_t {
 #define CFG_LIVES_MAX 6
 #define CFG_LIVES_DEFAULT 3
 
-#if GAME == 5
-	#define CFG_BOMBS_MAX 3
-#else
-	#define CFG_BOMBS_MAX 2
-#endif
+static const int CFG_BOMBS_MAX = ((GAME == 5) ? 3 : 2);
 #define CFG_BOMBS_DEFAULT CFG_BOMBS_MAX
 
 #endif /* TH04_FORMATS_CFG_HPP */

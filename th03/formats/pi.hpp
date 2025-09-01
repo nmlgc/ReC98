@@ -1,7 +1,7 @@
 #include "th02/formats/pi.h"
 #include "planar.h"
 
-#define PI_MASK_COUNT 4
+#define PI_MASK_COUNT 4u
 #define PI_MASK_H 4
 extern const dot_rect_t(16, PI_MASK_H) PI_MASKS[PI_MASK_COUNT];
 

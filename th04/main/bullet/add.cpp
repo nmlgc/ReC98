@@ -1,3 +1,5 @@
+#include "th02/sprites/bullet16.h"
+
 void pascal near bullets_add_regular_raw(void);
 void pascal near bullets_add_special_raw(void);
 
@@ -425,8 +427,11 @@ void near bullet_template_speedtune_for_playperf(void)
 
 unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 {
+	// ZUN bloat: The `static_cast` is not needed and generates an integer
+	// division rather than a bitshift.
 	return (
-		((angle + (ANGLE_PER_SPRITE / 2) - 1) & (0x80 - 1)) / ANGLE_PER_SPRITE
+		static_cast<int>((angle + (ANGLE_PER_SPRITE / 2) - 1) % 0x80u) /
+		ANGLE_PER_SPRITE
 	);
 }
 
@@ -531,14 +536,14 @@ void pascal near bullets_add_regular_raw(void)
 
 	move_state = BMS_REGULAR;
 	if(
-		(bullet_template.speed < to_sp8(BMS_SLOWDOWN_THRESHOLD)) ||
+		(bullet_template.speed < to_sp8(BMS_DECELERATE_THRESHOLD)) ||
 		bullet_clear_time
 	) {
 		if(
 			(bullet_template.group != BG_STACK) &&
 			(bullet_template.group != BG_STACK_AIMED)
 		) {
-			move_state = BMS_SLOWDOWN;
+			move_state = BMS_DECELERATE;
 		}
 	}
 
@@ -547,9 +552,9 @@ void pascal near bullets_add_regular_raw(void)
 		if(bullet->flag == F_FREE) {
 			bullet->flag = F_ALIVE;
 			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
-			bullet->u1.slowdown_time = BMS_SLOWDOWN_FRAMES;
-			bullet->u2.slowdown_speed_delta.v = (
-				to_sp8(BMS_SLOWDOWN_BASE_SPEED) - bullet_template.speed
+			bullet->u1.decelerate_time = BMS_DECELERATE_FRAMES;
+			bullet->u2.decelerate_speed_delta.v = (
+				to_sp8(BMS_DECELERATE_BASE_SPEED) - bullet_template.speed
 			);
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
 			if(group_done) {

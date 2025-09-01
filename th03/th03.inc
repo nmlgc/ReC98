@@ -1,11 +1,7 @@
 include th03/common.inc
-include th03/mem.inc
-include th03/gaiji/gaiji.inc
 include th03/math/randring.inc
 include th03/hardware/input.inc
 include th03/chars.inc
-include th03/formats/cfg.inc
-include th03/formats/cdg.inc
 include th02/score.inc
 include th02/v_colors.inc
 
@@ -17,16 +13,11 @@ KM_KEY_KEY = 0
 KM_JOY_KEY = 1
 KM_KEY_JOY = 2
 
-VS_1P_CPU = 0
-VS_1P_2P = 1
-VS_CPU_CPU = 2
-
 GM_NONE = 0
 GM_STORY = 1
 GM_DEMO = 7Fh
 GM_VS = 80h
 
-STAGE_NONE = -1
 STAGE_ALL = 99
 STAGE_COUNT = 9
 
@@ -52,7 +43,7 @@ resident_t	struc
 	story_lives	db ?
 	show_score_menu	db ?
 	rem_credits	db ?
-	op_skip_animation	db ?
+	op_animation_fast	db ?
 	skill	db ?
 	demo_num	db ?
 resident_t	ends

@@ -6,7 +6,7 @@
 #define pi_put_impl(slot, rowloop_func) \
 	_SI = slot; \
 	_DI = _SI; \
-	_SI <<= 2;	/* *= sizeof(void far *) */  \
+	_SI <<= 2;	/* *= sizeof(void far *) */ \
 	asm { les	si, pi_buffers[si]; } \
 	imul_reg_to_reg(_DI, _DI, sizeof(PiHeader)); \
 	rowloop_func
@@ -26,7 +26,7 @@
 	} \
 	if(quarter_local & 2) { \
 		/* Careful! Parenthesizing this naively leads to overflows, since */ \
-		/* (PI_QUARTER * PI_W) doesn't fit into 16 bits. */\
+		/* (PI_QUARTER_H * PI_W) doesn't fit into 16 bits. */\
 		buffer_offset_seg = ((PI_QUARTER_H / 2) * (PI_W / 16)); \
 	} \
 	_SI <<= 2;	/* *= sizeof(void far *) */ \

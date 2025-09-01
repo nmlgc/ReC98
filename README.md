@@ -72,7 +72,11 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 ## Branches
 
 * [`master`]: ZUN's original code, without mods or bugfixes
-* ▶ **`debloated`: Rearchitected version of ZUN's code that is easier to read and modify, and builds smaller and faster PC-98 binaries. Only removes [bloat] and [landmines]; all [bugs] and [quirks] from ZUN's original code are left in place. Ports should start from this branch, and it's also the recommended base for mods that don't care about similarity to the original binary.** (You are here!)
+* ▶ **`debloated`: Rearchitected version of ZUN's code that is easier to read and modify, and builds smaller and faster PC-98 binaries. Only removes [bloat] and [landmines]; all [bugs] and [quirks] from ZUN's original code are left in place. Ports should start from this branch, and it's also the recommended base for mods that don't care about similarity to the original binary.**
+
+  **This branch also includes the patches from [`th03_no_gdc_frequency_check`] and [`th04_noems_crash_fix`], as these issues are classified as landmines.**
+
+  (You are here!)
 * [`anniversary`]: Takes `debloated` and additionally fixes [bugs], achieving a smoother and flicker-free gameplay experience on the PC-98 platform while still leaving [quirks] in place. Might be an even better starting port for mods and ports.
 * [`BossRush`]
 * [`th03_no_gdc_frequency_check`]: Allows TH03 to be run with the GDC clock set to 5&nbsp;MHz. The original game enforces 2.5&nbsp;MHz, but doesn't functionally require it, even on real hardware.
@@ -229,8 +233,9 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [TH04 Stage 4 Marisa Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
 [two critical bugs in TH01]: https://rec98.nmlgc.net/blog/2022-05-31
 
-[`anniversary`]: https://github.com/nmlgc/ReC98/tree/anniversary
+[`master`]: https://github.com/nmlgc/ReC98/tree/master
 [`debloated`]: https://github.com/nmlgc/ReC98/tree/debloated
+[`anniversary`]: https://github.com/nmlgc/ReC98/tree/anniversary
 [`BossRush`]: https://github.com/nmlgc/ReC98/tree/BossRush
 [`community_choice_fixes`]: https://github.com/nmlgc/ReC98/tree/community_choice_fixes
 [`mem_assign_all`]: https://github.com/nmlgc/ReC98/tree/mem_assign_all
