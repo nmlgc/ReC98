@@ -1,4 +1,4 @@
-#include "th01/formats/cutscene.hpp"
+#include "game/cutscene.hpp"
 
 static const screen_y_t CUTSCENE_PIC_TOP = ((RES_Y / 2) - (CUTSCENE_PIC_H / 2));
 

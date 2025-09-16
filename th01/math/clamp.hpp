@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #define max_macro(a, b) ( \
 	(a > b) ? a : b \
 )
@@ -32,13 +34,13 @@
 	}
 
 #ifdef __cplusplus
-	// This is, in fact, the only way to circumvent 16-bit promotion inside
-	// comparisons between two 8-bit values in C++. I kid you not.
-	static inline char ring_min() {
-		return 0;
-	}
+// This is, in fact, the only way to circumvent 16-bit promotion inside
+// comparisons between two 8-bit values in C++. I kid you not.
+static inline char ring_min() {
+	return 0;
+}
 #else
-	#define ring_min() 0
+#define ring_min() 0
 #endif
 
 #define ring_inc_range(val, ring_min, ring_max) { \
@@ -62,12 +64,22 @@
 	} \
 }
 
+#if (GAME >= 4)
 #define ring_dec_range(val, ring_min, ring_max) { \
 	if(val == (ring_min)) { \
 		(val) = ((ring_max) + 1); \
 	} \
 	(val)--; \
 }
+#else
+#define ring_dec_range(val, ring_min, ring_max) { \
+	if(val == (ring_min)) { \
+		(val) = (ring_max); \
+	} else { \
+		(val)--; \
+	} \
+}
+#endif
 
 #define ring_dec(val, ring_end) \
 	(val)--; \
@@ -80,3 +92,11 @@
 	if(val < 0) { \
 		(val) = ring_end; \
 	}
+
+#define ring_step(var, delta, min, max) { \
+	uint8_t var_prev = var; \
+	var = ((delta < 0) \
+		? ((var_prev <= min) ? max : (var_prev + delta)) \
+		: ((var_prev == max) ? min : (var_prev + delta)) \
+	); \
+}

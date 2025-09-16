@@ -37,8 +37,8 @@ void near score_reset(void)
 // Due to how the branches below are nested, it's not worth it to try working
 // around these warnings.
 #if defined(__TURBOC__) && defined(__MSDOS__)
-	#pragma warn -rch
-	#pragma warn -ccc
+#pragma warn -rch
+#pragma warn -ccc
 #endif
 
 #define score_render_and_process_hiscore_and_extends( \
@@ -118,6 +118,6 @@ void score_grant_current_delta_as_bonus(void)
 }
 
 #if defined(__TURBOC__) && defined(__MSDOS__)
-	#pragma warn .rch
-	#pragma warn .ccc
+#pragma warn .rch
+#pragma warn .ccc
 #endif

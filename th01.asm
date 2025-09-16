@@ -37,6 +37,7 @@ include libs/master.lib/keybios.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_pset.asm
+include libs/master.lib/dos_puts2.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/iatan2.asm
 include libs/master.lib/isqrt.asm

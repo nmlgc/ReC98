@@ -14,15 +14,15 @@
 #include "th02/formats/tile.hpp"
 #include "th03/formats/cdg.h"
 #if (GAME == 5)
-	#include "th05/hardware/input.h"
+#include "th05/hardware/input.h"
 #else
-	#include "th04/hardware/input.h"
+#include "th04/hardware/input.h"
 #endif
 #include "th04/common.h"
 #if (GAME == 4)
-	#include "th04/playchar.h"
-	#include "th04/formats/map.hpp"
-	#include "th04/formats/std.hpp"
+#include "th04/playchar.h"
+#include "th04/formats/map.hpp"
+#include "th04/formats/std.hpp"
 #endif
 #include "th04/main/bg.hpp"
 #include "th04/main/frames.h"
@@ -35,11 +35,11 @@
 
 // A silly TH05 micro-optimization. Could have been 8-bit variables then.
 #if (GAME == 5)
-	typedef tram_x_t dialog_x_t;
-	typedef tram_y_t dialog_y_t;
+typedef tram_x_t dialog_x_t;
+typedef tram_y_t dialog_y_t;
 #else
-	typedef screen_x_t dialog_x_t;
-	typedef screen_y_t dialog_y_t;
+typedef screen_x_t dialog_x_t;
+typedef screen_y_t dialog_y_t;
 #endif
 
 inline dialog_x_t to_dialog_x(screen_x_t screen_x) {
@@ -121,20 +121,20 @@ void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
 
 // Clears the text in the dialog box that starts at the given coordinate.
 #if (GAME == 5)
-	void pascal near dialog_box_wipe(dialog_x_t left, dialog_y_t top);
+void pascal near dialog_box_wipe(dialog_x_t left, dialog_y_t top);
 #else
-	#define dialog_box_wipe(left, top) { \
-		/* ZUN bloat: Could have been calculated a single time. */ \
-		tram_y_t y = to_tram_y(top); \
-		while(y < (to_tram_y(top) + BOX_TRAM_H)) { \
-			tram_x_t x = to_tram_x(left); \
-			while(x < (to_tram_x(left) + TEXT_TRAM_W)) { \
-				text_putca(x, y, ' ', TX_WHITE); \
-				x++; \
-			} \
-			y++; \
+#define dialog_box_wipe(left, top) { \
+	/* ZUN bloat: Could have been calculated a single time. */ \
+	tram_y_t y = to_tram_y(top); \
+	while(y < (to_tram_y(top) + BOX_TRAM_H)) { \
+		tram_x_t x = to_tram_x(left); \
+		while(x < (to_tram_x(left) + TEXT_TRAM_W)) { \
+			text_putca(x, y, ' ', TX_WHITE); \
+			x++; \
 		} \
-	}
+		y++; \
+	} \
+}
 #endif
 
 void near dialog_box_fade_in_animate();
@@ -233,13 +233,13 @@ bool near std_update_done(void)
 bool near std_update_frames_then_animate_dialog_and_activate_boss_if_done(void)
 {
 	if((scroll_speed == 0) && (page_back == 1)) {
-		#if (GAME == 4)
-			if((stage_id == 5) || (stage_id == STAGE_EXTRA)) {
-				cdg_free(CDG_EYECATCH);
-				std_free();
-				map_free();
-			}
-		#endif
+#if (GAME == 4)
+		if((stage_id == 5) || (stage_id == STAGE_EXTRA)) {
+			cdg_free(CDG_EYECATCH);
+			std_free();
+			map_free();
+		}
+#endif
 
 		dialog_animate();
 
@@ -247,13 +247,13 @@ bool near std_update_frames_then_animate_dialog_and_activate_boss_if_done(void)
 		bg_render_not_bombing = boss_bg_render_func;
 		boss_update = boss_update_func;
 		boss_fg_render = boss_fg_render_func;
-		#if (GAME == 4)
-			bgm_title_id = (1 + (stage_id * 2) + 1);
-			if((stage_id == 3) && (playchar != PLAYCHAR_REIMU)) {
-				// TODO: Calculate as (sizeof(BGM_TITLES) - 1)
-				bgm_title_id = 16;
-			}
-		#endif
+#if (GAME == 4)
+		bgm_title_id = (1 + (stage_id * 2) + 1);
+		if((stage_id == 3) && (playchar != PLAYCHAR_REIMU)) {
+			// TODO: Calculate as (sizeof(BGM_TITLES) - 1)
+			bgm_title_id = 16;
+		}
+#endif
 		overlay1 = overlay_boss_bgm_update_and_render;
 		return true;
 	}

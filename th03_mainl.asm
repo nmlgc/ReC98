@@ -16,6 +16,8 @@
 		.386
 		.model use16 large _TEXT
 
+BINARY = 'E'
+
 include ReC98.inc
 include th03/th03.inc
 include th01/hardware/grppsafx.inc
@@ -23,10 +25,9 @@ include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
 
 	extern SCOPY@:proc
-	extern __ctype:byte
 	extern _execl:proc
 
-group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, MAINL_SC_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, STAFF_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -413,12 +414,12 @@ sub_990C	endp
 sub_9A2C	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@dec_bgm_fn	= word ptr -2
 
 		enter	4, 0
 		push	si
-		mov	si, 3A3h
-		mov	[bp+var_2], 3AAh
+		mov	si, offset _PLAYCHAR_BGM_FN
+		mov	[bp+@@dec_bgm_fn], offset aDec_m
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	@pi_palette_apply$qi pascal, 0
@@ -448,13 +449,13 @@ loc_9A8E:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(128 shl 16) or 308
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
@@ -469,13 +470,13 @@ loc_9A8E:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(384 shl 16) or 308
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	1
 		call	palette_black_in
 		mov	vsync_Count1, 0
@@ -577,7 +578,7 @@ loc_9BFB:
 loc_9C1E:
 		push	SND_LOAD_SONG
 		push	ds
-		push	[bp+var_2]
+		push	[bp+@@dec_bgm_fn]
 
 loc_9C25:
 		call	_snd_load
@@ -665,12 +666,11 @@ sub_9CB1	endp
 
 sub_9D20	proc near
 
-var_E		= byte ptr -0Eh
-var_D		= byte ptr -0Dh
+@@fn	= byte ptr -(2 + SHOT_FN_SIZE)
 var_2		= word ptr -2
 arg_0		= word ptr  4
 
-		enter	0Eh, 0
+		enter	(2 + SHOT_FN_SIZE), 0
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
@@ -679,12 +679,12 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_9D2D:
-		mov	al, [si+116h]
-		mov	[bp+si+var_E], al
+		mov	al, _SHOT_FN[si]
+		mov	[bp+si+@@fn], al
 		inc	si
 
 loc_9D35:
-		cmp	si, 0Ch
+		cmp	si, SHOT_FN_SIZE
 		jl	short loc_9D2D
 		les	bx, _resident
 		add	bx, di
@@ -697,20 +697,20 @@ loc_9D35:
 		mov	bx, 10
 		cwd
 		idiv	bx
-		add	al, [bp+var_E]
-		mov	[bp+var_E], al
+		add	al, [bp+@@fn]
+		mov	[bp+@@fn], al
 		mov	ax, [bp+var_2]
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
 
 loc_9D65:
-		mov	al, [bp+var_D]
+		mov	al, [bp+@@fn + 1]
 		add	al, byte ptr [bp+var_2]
-		mov	[bp+var_D], al
+		mov	[bp+@@fn + 1], al
 		push	di
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@fn]
 		push	ax
 		call	sub_9CB1
 		pop	di
@@ -757,7 +757,7 @@ loc_9DAD:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.show_score_menu], 0
 		jz	short loc_9E04
-		call	sub_B7D2
+		call	@regist_menu$qv
 		call	text_clear
 		call	gaiji_restore
 		call	@game_exit$qv
@@ -882,7 +882,7 @@ loc_9F2E:
 loc_9F38:
 		call	cdg_free_all
 		freePISlotLarge	0
-		call	sub_B7D2
+		call	@regist_menu$qv
 		call	sub_9F8D
 		or	ax, ax
 		jnz	short loc_9F85
@@ -961,7 +961,7 @@ loc_9FC8:
 		les	bx, [bp+var_6]
 		add	al, es:[bx]
 		mov	es:[bx], al
-		call	graph_putsa_fx pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
+		call	@graph_putsa_fx$qiiinxuc pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
 		push	1
 		call	palette_black_in
 
@@ -1013,7 +1013,7 @@ loc_A069:
 		dec	es:[bx+resident_t.rem_credits]
 		les	bx, [bp+var_6]
 		dec	byte ptr es:[bx]
-		call	graph_putsa_fx pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
+		call	@graph_putsa_fx$qiiinxuc pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
 		jmp	short loc_A0C5
 ; ---------------------------------------------------------------------------
 
@@ -1061,208 +1061,13 @@ sub_9F8D	endp
 CUTSCENE_TEXT ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
-	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
-		rank:word
 SCOREDAT_TEXT ends
 
 REGIST_TEXT segment byte public 'CODE' use16
-	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
-		rank:word
-	@regist_load_and_put_initial$qv procdesc near
-	@regist_score_enter_from_resident$qv procdesc near
-	@alphabet_put_initial$qv procdesc near
-	@regist_rows_put$qv procdesc near
-	@regist_name_enter$qv procdesc near
+	@regist_menu$qv procdesc near
 REGIST_TEXT ends
 
-mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B74E	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	cx, cx
-		jmp	short loc_B769
-; ---------------------------------------------------------------------------
-
-loc_B758:
-		mov	bx, _entered_place
-		shl	bx, 3
-		add	bx, cx
-		cmp	_hi.SDS_score.SD_name[bx], REGI_SP
-		jnz	short loc_B7A2
-		inc	cx
-
-loc_B769:
-		cmp	cx, SCOREDAT_NAME_LEN
-		jl	short loc_B758
-
-loc_B76E:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
-		mov	ah, 0
-		dec	ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		shl	ax, 3
-		add	ax, 92Eh
-		mov	di, ax
-		mov	cx, (SCOREDAT_NAME_LEN - 1)
-		jmp	short loc_B79C
-; ---------------------------------------------------------------------------
-
-loc_B78B:
-		mov	bx, _entered_place
-		shl	bx, 3
-		add	bx, cx
-		mov	al, [di]
-		mov	_hi.SDS_score.SD_name[bx], al
-		dec	cx
-		inc	di
-
-loc_B79C:
-		or	cx, cx
-		jge	short loc_B78B
-		jmp	short loc_B7CE
-; ---------------------------------------------------------------------------
-
-loc_B7A2:
-		mov	bx, _entered_place
-		shl	bx, 3
-		mov	al, _hi.SDS_score.SD_name[bx]
-		mov	[bp+var_1], al
-		xor	cx, cx
-		jmp	short loc_B7C7
-; ---------------------------------------------------------------------------
-
-loc_B7B4:
-		mov	bx, _entered_place
-		shl	bx, 3
-		add	bx, cx
-		mov	al, _hi.SDS_score.SD_name[bx]
-		cmp	al, [bp+var_1]
-		jnz	short loc_B7CE
-		inc	cx
-
-loc_B7C7:
-		cmp	cx, SCOREDAT_NAME_LEN
-		jl	short loc_B7B4
-		jmp	short loc_B76E
-; ---------------------------------------------------------------------------
-
-loc_B7CE:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B74E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B7D2	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	eax, es:[bx+resident_t.rand]
-		mov	random_seed, eax
-		call	_snd_load c, offset aScore_m, ds, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		call	@scoredat_load_and_decode$q6rank_t pascal, ax
-		les	bx, _resident
-		cmp	es:[bx+resident_t.story_stage], STAGE_NONE
-		jnz	short loc_B819
-		mov	_entered_place, -1
-		jmp	short loc_B81F
-; ---------------------------------------------------------------------------
-
-loc_B819:
-		call	@regist_score_enter_from_resident$qv
-		mov	_entered_place, ax
-
-loc_B81F:
-		call	@regist_load_and_put_initial$qv
-		cmp	_entered_place, -1
-		jnz	short loc_B835
-		call	@regist_rows_put$qv
-		push	2
-		call	palette_black_in
-		jmp	short loc_B858
-; ---------------------------------------------------------------------------
-
-loc_B835:
-		call	@regist_rows_put$qv
-		call	graph_copy_page pascal, 1
-		graph_accesspage 0
-		call	@alphabet_put_initial$qv
-		push	2
-		call	palette_black_in
-		call	@regist_name_enter$qv
-		call	sub_B74E
-		call	@regist_rows_put$qv
-
-loc_B858:
-		call	@input_wait_for_change$qi pascal, 0
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rem_credits], 0
-		jz	short loc_B871
-		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
-		jnz	short loc_B879
-
-loc_B871:
-		kajacall	KAJA_SONG_FADE, 16
-
-loc_B879:
-		push	2
-		call	palette_black_out
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	ah, 0
-		call	@scoredat_encode_and_save$q6rank_t pascal, ax
-		call	super_free
-		graph_accesspage 0
-		graph_showpage al
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		les	bx, _resident
-		cmp	es:[bx+resident_t.rem_credits], 0
-		jz	short loc_B8F1
-		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
-		jz	short loc_B8F1
-		call	@pi_load$qinxc pascal, 0, ds, offset aConti_pi
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
-		call	cdg_load_all pascal, 0, ds, offset aConti_cd2
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_B8F1:
-		call	@pi_load$qinxc pascal, 0, ds, offset aOver_pi_0
-		call	@pi_palette_apply$qi pascal, 0
-		call	@pi_put_8$qiii pascal, large 0, 0
-		freePISlotLarge	0
-		call	_snd_delay_until_volume stdcall, 255
-		pop	cx
-		kajacall	KAJA_SONG_STOP
-		pop	bp
-		retn
-sub_B7D2	endp
-
+STAFF_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1344,7 +1149,7 @@ loc_B9DD:
 		call	sub_C40D
 		les	bx, _resident
 		mov	es:[bx+resident_t.story_stage], STAGE_ALL
-		call	sub_B7D2
+		call	@regist_menu$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rem_credits], 3
 		jnz	short loc_BA66
@@ -1376,58 +1181,11 @@ loc_BA66:
 		retn
 sub_B972	endp
 
+	@FLAKE_PUT$QIII procdesc pascal near \
+		left:word, top:word, cel:word
+STAFF_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA8A	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 0A62h
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	cx, [bp+arg_4]
-		; Hack (and cx, 7)
-		db 081h
-		db 0e1h
-		db 007h
-		db 000h
-		mov	bx, 8
-
-loc_BAC0:
-		mov	ax, [si]
-		ror	ax, cl
-		or	es:[di], ax
-		add	di, 50h	; 'P'
-		add	si, 2
-		dec	bx
-		jnz	short loc_BAC0
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_BA8A	endp
-
+mainl_03_TEXT segment byte public 'CODE' use16
 include th03/formats/cdg_unput_upwards.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1450,32 +1208,35 @@ sub_BB51	proc near
 		retn
 sub_BB51	endp
 
+FLAKE_W = 8
+FLAKE_H = 8
+FLAKE_CELS = 4
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BB66	proc near
+public @flakes_reset$qv
+@flakes_reset$qv proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	ax, ax
 		jmp	short loc_BB78
 ; ---------------------------------------------------------------------------
 
 loc_BB71:
-		mov	byte ptr [si], 0
+		mov	[si+flake_t.FLAKE_alive], 0
 		inc	ax
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BB78:
-		cmp	ax, 50h	; 'P'
+		cmp	ax, FLAKE_COUNT
 		jl	short loc_BB71
 		pop	si
 		pop	bp
 		retn
-sub_BB66	endp
+@flakes_reset$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1490,37 +1251,37 @@ sub_BB80	proc near
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	di, di
 		jmp	loc_BC1A
 ; ---------------------------------------------------------------------------
 
 loc_BB8E:
-		cmp	byte ptr [si], 0
+		cmp	[si+flake_t.FLAKE_alive], 0
 		jnz	loc_BC16
 		mov	ax, di
 		shl	ax, 3
 		cmp	ax, word_10BB2
 		jg	short loc_BC16
-		mov	byte ptr [si], 1
+		mov	[si+flake_t.FLAKE_alive], 1
 		test	di, 3
 		jz	short loc_BBBE
 		call	IRand
-		mov	bx, (632 shl 4)
+		mov	bx, ((RES_X - FLAKE_W) shl 4)
 		cwd
 		idiv	bx
-		mov	[si+2],	dx
-		mov	word ptr [si+4], 0
+		mov	[si+flake_t.FLAKE_left], dx
+		mov	[si+flake_t.FLAKE_top], 0
 		jmp	short loc_BBD1
 ; ---------------------------------------------------------------------------
 
 loc_BBBE:
-		mov	word ptr [si+2], (632 shl 4)
+		mov	[si+flake_t.FLAKE_left], ((RES_X - FLAKE_W) shl 4)
 		call	IRand
-		mov	bx, (392 shl 4)
+		mov	bx, ((RES_Y - FLAKE_H) shl 4)
 		cwd
 		idiv	bx
-		mov	[si+4],	dx
+		mov	[si+flake_t.FLAKE_top],	dx
 
 loc_BBD1:
 		call	IRand
@@ -1530,19 +1291,19 @@ loc_BBD1:
 		add	dl, 50h
 		mov	[bp+@@angle], dl
 		call	IRand
-		mov	bx, 40h
+		mov	bx, (4 shl 4)
 		cwd
 		idiv	bx
-		add	dl, 30h	; '0'
+		add	dl, (3 shl 4)
 		mov	[bp+@@length], dl
 		call	IRand
-		and	ax, 3
-		mov	[si+0Ah], ax
+		and	ax, (FLAKE_CELS - 1)
+		mov	[si+flake_t.FLAKE_cel], ax
 		push	ds
-		lea	ax, [si+6]
+		lea	ax, [si+flake_t.FLAKE_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+8]
+		lea	ax, [si+flake_t.FLAKE_velocity.y]
 		push	ax
 		push	word ptr [bp+@@angle]
 		mov	al, [bp+@@length]
@@ -1552,7 +1313,7 @@ loc_BBD1:
 
 loc_BC16:
 		inc	di
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BC1A:
 		mov	al, byte_106B0
@@ -1574,31 +1335,31 @@ sub_BC29	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	dx, dx
 		jmp	short loc_BC63
 ; ---------------------------------------------------------------------------
 
 loc_BC34:
-		cmp	byte ptr [si], 0
+		cmp	[si+flake_t.FLAKE_alive], 0
 		jz	short loc_BC5F
-		mov	byte ptr [si], 1
-		mov	ax, [si+6]
-		add	[si+2],	ax
-		mov	ax, [si+8]
-		add	[si+4],	ax
-		cmp	word ptr [si+2], 0
+		mov	[si+flake_t.FLAKE_alive], 1
+		mov	ax, [si+flake_t.FLAKE_velocity.x]
+		add	[si+flake_t.FLAKE_left], ax
+		mov	ax, [si+flake_t.FLAKE_velocity.y]
+		add	[si+flake_t.FLAKE_top],	ax
+		cmp	[si+flake_t.FLAKE_left], 0
 		jg	short loc_BC53
-		add	word ptr [si+2], 2780h
+		add	[si+flake_t.FLAKE_left], ((RES_X - FLAKE_W) shl 4)
 
 loc_BC53:
-		cmp	word ptr [si+4], 1880h
+		cmp	[si+flake_t.FLAKE_top], ((RES_Y - FLAKE_H) shl 4)
 		jl	short loc_BC5F
-		sub	word ptr [si+4], 1880h
+		sub	[si+flake_t.FLAKE_top], ((RES_Y - FLAKE_H) shl 4)
 
 loc_BC5F:
 		inc	dx
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BC63:
 		mov	al, byte_106B0
@@ -1620,26 +1381,26 @@ sub_BC6F	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 22C2h
+		mov	si, offset _flakes
 		xor	di, di
 		jmp	short loc_BC98
 ; ---------------------------------------------------------------------------
 
 loc_BC7B:
-		cmp	byte ptr [si], 0
+		cmp	[si+flake_t.FLAKE_alive], 0
 		jz	short loc_BC94
-		mov	ax, [si+2]
+		mov	ax, [si+flake_t.FLAKE_left]
 		sar	ax, 4
-		push	ax
-		mov	ax, [si+4]
+		push	ax	; left
+		mov	ax, [si+flake_t.FLAKE_top]
 		sar	ax, 4
-		push	ax
-		push	word ptr [si+0Ah]
-		call	sub_BA8A
+		push	ax	; top
+		push	[si+flake_t.FLAKE_cel]	; cel
+		call	@flake_put$qiii
 
 loc_BC94:
 		inc	di
-		add	si, 10h
+		add	si, size flake_t
 
 loc_BC98:
 		mov	al, byte_106B0
@@ -1719,10 +1480,10 @@ loc_BCFE:
 		cmp	vsync_Count1, 0
 		jz	short loc_BCFE
 		mov	vsync_Count1, 0
-		graph_showpage byte_10BB4
+		graph_showpage _page_back
 		mov	al, 1
-		sub	al, byte_10BB4
-		mov	byte_10BB4, al
+		sub	al, _page_back
+		mov	_page_back, al
 		graph_accesspage al
 		pop	bp
 		retn
@@ -1747,40 +1508,40 @@ arg_0		= word ptr  4
 		mov	ax, word_10BB2
 		cmp	ax, word_10BBE
 		jg	loc_BEC1
-		push	140h
-		mov	al, byte_10BB4
+		push	(RES_X / 2)
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		call	cdg_unput_for_upwards_motion_e_8
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+27D8h]
+		mov	ax, _stf_center_y_on_page[bx]
 		cmp	ax, word_10BC0
 		jle	short loc_BE66
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_10BBC
 		mov	bx, ax
-		sub	[bx+27D8h], dx
-		mov	al, byte_10BB4
+		sub	_stf_center_y_on_page[bx], dx
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+27D8h]
+		mov	ax, _stf_center_y_on_page[bx]
 		cmp	ax, word_10BC0
 		jge	short loc_BE66
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_10BC0
 		mov	bx, ax
-		mov	[bx+27D8h], dx
+		mov	_stf_center_y_on_page[bx], dx
 
 loc_BE66:
 		mov	ax, word_10BBE
@@ -1813,12 +1574,12 @@ loc_BE84:
 		mov	byte_10BC7, 1
 
 loc_BEA7:
-		push	320
-		mov	al, byte_10BB4
+		push	(RES_X / 2)
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		push	si
 		call	cdg_put_dissolve_e_8
@@ -1850,19 +1611,19 @@ arg_0		= word ptr  4
 		jg	loc_BF78
 		cmp	word_10BB2, 0A0h
 		jge	short loc_BF57
-		push	140h
-		mov	al, byte_10BB4
+		push	(RES_X / 2)
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		call	cdg_unput_for_upwards_motion_e_8
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		dec	word ptr [bx+27D8h]
+		dec	_stf_center_y_on_page[bx]
 		mov	ax, word_10BB2
 		mov	bx, 20
 		cwd
@@ -1886,12 +1647,12 @@ loc_BF18:
 		mov	byte_10BC7, 1
 
 loc_BF3B:
-		push	320
-		mov	al, byte_10BB4
+		push	(RES_X / 2)
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+27D8h]
+		push	_stf_center_y_on_page[bx]
 		push	di
 		push	si
 		call	cdg_put_dissolve_e_8
@@ -1964,36 +1725,36 @@ arg_4		= word ptr  8
 		mov	si, [bp+arg_4]
 		cmp	word_10BBC, 2
 		jnz	short loc_BFE3
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 108h
-		mov	al, byte_10BB4
+		mov	_stf_center_y_on_page[bx], 264
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 107h
+		mov	_stf_center_y_on_page[bx], 263
 		jmp	short loc_C00E
 ; ---------------------------------------------------------------------------
 
 loc_BFE3:
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, 118h
+		mov	dx, 280
 		sub	dx, word_10BC4
 		mov	bx, ax
-		mov	[bx+27D8h], dx
-		mov	al, byte_10BB4
+		mov	_stf_center_y_on_page[bx], dx
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
-		mov	dx, 118h
+		mov	dx, 280
 		sub	dx, word_10BC4
 		mov	bx, ax
-		mov	[bx+27D8h], dx
+		mov	_stf_center_y_on_page[bx], dx
 
 loc_C00E:
 		mov	word_10BB2, 0
@@ -2051,25 +1812,25 @@ arg_4		= word ptr  8
 		mov	si, [bp+arg_4]
 		cmp	word_10BBC, 2
 		jnz	short loc_C0C9
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 108h
-		mov	al, byte_10BB4
+		mov	_stf_center_y_on_page[bx], 264
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 107h
+		mov	_stf_center_y_on_page[bx], 263
 		jmp	short loc_C0D6
 ; ---------------------------------------------------------------------------
 
 loc_C0C9:
-		mov	ax, 118h
+		mov	ax, 280
 		sub	ax, word_10BC4
-		mov	word_10BC8, ax
-		mov	word_10BCA, ax
+		mov	_stf_center_y_on_page[0 * word], ax
+		mov	_stf_center_y_on_page[1 * word], ax
 
 loc_C0D6:
 		mov	word_10BB2, 0
@@ -2119,7 +1880,7 @@ loc_C12A:
 		mov	di, 7
 
 loc_C14A:
-		cmp	byte_10BB4, 0
+		cmp	_page_back, 0
 		jnz	short loc_C155
 		dec	word_10BC2
 
@@ -2181,25 +1942,25 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		cmp	word_10BBC, 2
 		jnz	short loc_C22A
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 108h
-		mov	al, byte_10BB4
+		mov	_stf_center_y_on_page[bx], 264
+		mov	al, _page_back
 		mov	ah, 0
 		xor	ax, 1
 		add	ax, ax
 		mov	bx, ax
-		mov	word ptr [bx+27D8h], 107h
+		mov	_stf_center_y_on_page[bx], 263
 		jmp	short loc_C237
 ; ---------------------------------------------------------------------------
 
 loc_C22A:
-		mov	ax, 118h
+		mov	ax, 280
 		sub	ax, word_10BC4
-		mov	word_10BC8, ax
-		mov	word_10BCA, ax
+		mov	_stf_center_y_on_page[0 * word], ax
+		mov	_stf_center_y_on_page[1 * word], ax
 
 loc_C237:
 		mov	word_10BB2, 0
@@ -2225,11 +1986,11 @@ loc_C25D:
 		call	sub_BCA5
 		or	ax, ax
 		jz	short loc_C25D
-		mov	al, byte_10BB4
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+27D8h]
+		mov	ax, _stf_center_y_on_page[bx]
 		mov	word_10BC2, ax
 		pop	bp
 		retn	6
@@ -2243,7 +2004,7 @@ sub_C1FD	endp
 sub_C288	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@digits	= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -2255,7 +2016,7 @@ var_2		= word ptr -2
 		shl	ax, 2
 		mov	bx, ax
 		pushd	aVERDICT_PLAYCHARS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(360 shl 16) or 199
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	al, _rank
@@ -2263,23 +2024,23 @@ var_2		= word ptr -2
 		shl	ax, 2
 		mov	bx, ax
 		pushd	aVERDICT_RANKS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		mov	si, 408
 		mov	[bp+var_4], 0
-		mov	[bp+var_2], 8
+		mov	[bp+@@digits], SCORE_DIGITS
 		jmp	short loc_C319
 ; ---------------------------------------------------------------------------
 
 loc_C2D5:
-		mov	bx, [bp+var_2]
-		mov	al, [bx+27DCh]
+		mov	bx, [bp+@@digits]
+		mov	al, _score[bx]
 		mov	ah, 0
 		mov	di, ax
 		cmp	[bp+var_4], 0
 		jnz	short loc_C2F7
 		or	di, di
 		jz	short loc_C2F7
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@digits]
 		shl	ax, 3
 		sub	si, ax
 		mov	[bp+var_4], 1
@@ -2292,16 +2053,16 @@ loc_C2F7:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		add	si, 16
 
 loc_C316:
-		dec	[bp+var_2]
+		dec	[bp+@@digits]
 
 loc_C319:
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@digits], 0
 		jg	short loc_C2D5
-		mov	al, _rem_credits
+		mov	al, continues_used
 		mov	ah, 0
 		mov	di, ax
 		push	si
@@ -2309,13 +2070,13 @@ loc_C319:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		push	(408 shl 16) or 248
 		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		mov	al, _skill
 		mov	ah, 0
 		mov	bx, 100
@@ -2333,7 +2094,7 @@ loc_C319:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		add	si, 16
 
 loc_C38D:
@@ -2362,7 +2123,7 @@ loc_C3B4:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		add	si, 16
 
 loc_C3D3:
@@ -2377,9 +2138,9 @@ loc_C3D3:
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
-		call	graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		lea	ax, [si+16]
-		call	graph_putsa_fx pascal, ax, (291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD), ds, offset aU_	; "点"
+		call	@graph_putsa_fx$qiiinxuc pascal, ax, (291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD), ds, offset aU_	; "点"
 		pop	di
 		pop	si
 		leave
@@ -2412,7 +2173,7 @@ loc_C43C:
 		assume es:nothing
 		add	bx, si
 		mov	al, es:[bx+resident_t.pid_winner]
-		mov	[si+27DCh], al
+		mov	_score[si], al
 		inc	si
 
 loc_C44B:
@@ -2421,7 +2182,7 @@ loc_C44B:
 		les	bx, _resident
 		mov	al, 3
 		sub	al, es:[bx+resident_t.rem_credits]
-		mov	_rem_credits, al
+		mov	continues_used, al
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		mov	ah, 0
 		dec	ax
@@ -2433,7 +2194,7 @@ loc_C44B:
 		mov	_rank, al
 		mov	al, es:[bx+resident_t.skill]
 		mov	_skill, al
-		mov	al, byte_10BD3
+		mov	al, _score[7]
 		mov	ah, 0
 		cmp	ax, 3
 		jz	short loc_C48B
@@ -2443,7 +2204,7 @@ loc_C44B:
 ; ---------------------------------------------------------------------------
 
 loc_C48B:
-		mov	al, byte_10BD2
+		mov	al, _score[6]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -2453,7 +2214,7 @@ loc_C48B:
 		mov	_skill, al
 
 loc_C49E:
-		mov	al, byte_10BD2
+		mov	al, _score[6]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -2463,14 +2224,14 @@ loc_C49E:
 		mov	_skill, al
 
 loc_C4B1:
-		cmp	byte_10BD3, 5
+		cmp	_score[7], 5
 		jb	short loc_C4C0
 		mov	al, _skill
 		add	al, 15
 		mov	_skill, al
 
 loc_C4C0:
-		cmp	byte_10BD4, 0
+		cmp	_score[8], 0
 		jz	short loc_C4CC
 		mov	_skill, 100
 
@@ -2511,12 +2272,12 @@ loc_C4D8:
 		call	cdg_load_single_noalpha pascal, 9, ds, offset aStf10_cdg, 0
 		call	cdg_load_single_noalpha pascal, 10, ds, offset aStf2_cdg, 0
 		call	cdg_load_single_noalpha pascal, 11, ds, offset aStf12_cdg, 0
-		call	sub_BB66
+		call	@flakes_reset$qv
 		mov	word_10BB2, 0
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
-		mov	byte_10BB4, 0
+		mov	_page_back, 0
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		kajacall	KAJA_SONG_PLAY
@@ -2594,10 +2355,10 @@ loc_C735:
 		or	ax, ax
 		jz	short loc_C735
 		mov	al, 1
-		sub	al, byte_10BB4
+		sub	al, _page_back
 		graph_accesspage al
 		call	sub_C288
-		graph_accesspage byte_10BB4
+		graph_accesspage _page_back
 		call	sub_C288
 		mov	word_10BB2, 0
 		xor	di, di
@@ -2670,14 +2431,12 @@ include th02/snd/snd.inc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
-	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE:proc
 	extern @game_exit_from_mainl_to_main$qv:proc
-	extern GRAPH_PUTSA_FX:proc
+	extern @GRAPH_PUTSA_FX$QIIINXUC:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern @PI_LOAD$QINXC:proc
 	extern @INPUT_MODE_INTERFACE$QV:proc
-	extern @INPUT_WAIT_FOR_CHANGE$QI:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
 SHARED	ends
@@ -2730,11 +2489,9 @@ CHAR_NAME		dd NAME_REIMU		; "   博麗　靈夢"
 		dd NAME_YUMEMI		; " 　岡崎　夢美"
 word_E502	dw offset aSt_cd2
 word_E504	dw offset aStnx1_pi
-a0016_pi	db '0016.pi',0
-		db    0
-		db    0
-		db    0
-		db    0
+public _SHOT_FN
+_SHOT_FN db '0016.pi', 0, 0, 0, 0, 0
+SHOT_FN_SIZE = ($ - _SHOT_FN)
 a00sl_cd2	db '00sl.cd2',0
 a02sl_cd2	db '02sl.cd2',0
 a04sl_cd2	db '04sl.cd2',0
@@ -2781,7 +2538,8 @@ aLogo1_rgb	db 'logo1.rgb',0
 aSt_cd2		db 'st.cd2',0
 aStnx1_pi	db 'stnx1.pi',0
 aStnx0_pi	db 'stnx0.pi',0
-a00mm_m		db '00mm.m',0
+public _PLAYCHAR_BGM_FN
+_PLAYCHAR_BGM_FN	db '00mm.m',0
 aDec_m		db 'dec.m',0
 aEn2_pi		db 'EN2.pi',0
 aEnemy00_pi	db 'ENEMY00.pi',0
@@ -2854,8 +2612,8 @@ _REGI_PLAYCHAR label byte
 	db REGI_R, REGI_I, REGI_K, REGI_A, REGI_K, REGI_O, regi_sp, regi_sp
 	db REGI_C, REGI_H, REGI_I, REGI_Y, REGI_U, REGI_R, REGI_I, regi_sp
 	db REGI_Y, REGI_U, REGI_M, REGI_E, REGI_M, REGI_I, regi_sp, regi_sp
-public _SCOREDAT_FN
-_SCOREDAT_FN	dw offset aYume_nem
+public _SCOREDAT_FN_PTR
+_SCOREDAT_FN_PTR	dw offset aYume_nem
 public _rank_image_fn, _REGIST_INPUT_HOLD_INIT
 _rank_image_fn	dw offset aRft0_cdg
 _REGIST_INPUT_HOLD_INIT	dw 4 dup(0)
@@ -2871,82 +2629,20 @@ aB@vVfvsb@	db ' 　ちゆり　 ',0
 aB@CF		db ' 　 夢美　  ',0
 aYume_nem	db 'YUME.NEM',0
 aRft0_cdg	db 'rft0.cdg',0
-public _regib_pi, _regi2_bft, _regi1_bft
+public _regib_pi, _regi2_bft, _regi1_bft, _score_m, _conti_pi, _conti_cd2
+public _GAMEOVER_BG_FN
 _regib_pi 	db 'regib.pi',0
 _regi2_bft	db 'regi2.bft',0
 _regi1_bft	db 'regi1.bft',0
-aScore_m	db 'score.m',0
-aConti_pi	db 'conti.pi',0
-aConti_cd2	db 'conti.cd2',0
-aOver_pi_0	db 'over.pi',0
+_score_m	db 'score.m',0
+_conti_pi	db 'conti.pi',0
+_conti_cd2	db 'conti.cd2',0
+_GAMEOVER_BG_FN	db 'over.pi',0
 aOver_m		db 'over.m',0
 		db 0
 off_EE4E	dd a@00ed_txt
 					; "@00ED.TXT"
-		db  3Ch	; <
-		db    0
-		db  7Eh	; ~
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  3Ch	; <
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Ch	; <
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  3Ch	; <
-		db    0
-		db  3Ch	; <
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th03/sprites/flake.asp
 include th03/formats/cdg_put_dissolve[data].asm
 
 aVERDICT_PLAYCHARS label dword
@@ -3047,9 +2743,25 @@ _hi	scoredat_section_t <?>
 include th03/hiscore/regist[bss].asm
 		db 2 dup(?)
 byte_106B0	db ?
-		db 1281 dup(?)
+	evendata
+
+flake_t struc
+	FLAKE_alive   	db ?
+	              	db ?
+	FLAKE_left    	dw ?
+	FLAKE_top     	dw ?
+	FLAKE_velocity	Point <?>
+	FLAKE_cel     	dw ?
+		db 4 dup(?)
+flake_t ends
+
+FLAKE_COUNT = 80
+
+public _flakes, _page_back, _stf_center_y_on_page, _score
+_flakes	flake_t FLAKE_COUNT dup(<?>)
+
 word_10BB2	dw ?
-byte_10BB4	db ?
+_page_back	db ?
 byte_10BB5	db ?
 byte_10BB6	db ?
 		db 5 dup(?)
@@ -3060,14 +2772,10 @@ word_10BC2	dw ?
 word_10BC4	dw ?
 byte_10BC6	db ?
 byte_10BC7	db ?
-word_10BC8	dw ?
-word_10BCA	dw ?
-_rem_credits	db ?
-		db 5 dup(?)
-byte_10BD2	db ?
-byte_10BD3	db ?
-byte_10BD4	db ?
-		db ?
+_stf_center_y_on_page dw 2 dup(?)
+continues_used label byte
+_score db (1 + SCORE_DIGITS) dup(?)
+	evendata
 _rank	db ?
 playchar_10BD7	db ?
 _skill	db ?

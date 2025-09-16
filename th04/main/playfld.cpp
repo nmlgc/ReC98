@@ -3,7 +3,7 @@
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"
 #if (GAME == 5)
-	#include "th02/main/scroll.hpp"
+#include "th02/main/scroll.hpp"
 #endif
 
 extern int8_t playfield_shake_redraw_time;
@@ -31,7 +31,7 @@ inline void shift(
 	// only necessary during the animation, where the other VRAM page will
 	// still display its previous shifted state. It's just easier to always
 	// unconditionally redraw the next two frames, though.
-	playfield_shake_redraw_time = 2;
+	playfield_shake_redraw_time = PAGE_COUNT;
 }
 
 inline void shift_x(egc_shift_func_t *func, bool negate) {
@@ -39,20 +39,19 @@ inline void shift_x(egc_shift_func_t *func, bool negate) {
 }
 
 inline void shift_y(egc_shift_func_t *func, bool negate) {
-	#if (GAME == 5)
-		// Micro-optimization to limit the amount of moved pixels during
-		// bosses.
-		if(scroll_line == 0) {
-			shift(
-				func,
-				PLAYFIELD_TOP,
-				(PLAYFIELD_BOTTOM - 1),
-				negate,
-				playfield_shake_y
-			);
-			return;
-		}
-	#endif
+#if (GAME == 5)
+	// Micro-optimization to limit the amount of moved pixels during bosses.
+	if(scroll_line == 0) {
+		shift(
+			func,
+			PLAYFIELD_TOP,
+			(PLAYFIELD_BOTTOM - 1),
+			negate,
+			playfield_shake_y
+		);
+		return;
+	}
+#endif
 	shift(func, 0, (RES_Y - 1), negate, playfield_shake_y);
 }
 
@@ -65,16 +64,16 @@ void near playfield_shake_update_and_render(void)
 	}
 
 	if(playfield_shake_x < 0) {
-		#if (GAME == 5)
-			// Doubly strong left shaking?
-			egc_shift_left(
-				PLAYFIELD_LEFT,
-				0,
-				(PLAYFIELD_RIGHT - 1),
-				(RES_Y - 1),
-				-playfield_shake_x
-			);
-		#endif
+#if (GAME == 5)
+		// Doubly strong left shaking?
+		egc_shift_left(
+			PLAYFIELD_LEFT,
+			0,
+			(PLAYFIELD_RIGHT - 1),
+			(RES_Y - 1),
+			-playfield_shake_x
+		);
+#endif
 		shift_x(egc_shift_left, true);
 	} else if(playfield_shake_x > 0) {
 		shift_x(egc_shift_right, false);

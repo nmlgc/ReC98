@@ -8,15 +8,6 @@
 #include "pc98.h"
 #include "x86real.h"
 
-// Types
-// -----
-
-// master.lib palettes use twice the bits per RGB component for more
-// toning precision
-typedef RGB<uint8_t, 256> RGB8;
-typedef Palette<RGB8> Palette8;
-/// -----
-
 /// Original functions
 /// ------------------
 
@@ -61,6 +52,7 @@ void MASTER_RET egc_shift_down(
 void MASTER_RET egc_shift_left(
 	screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
 );
+void MASTER_RET egc_shift_left_all(pixel_t dots);
 void MASTER_RET egc_shift_right(
 	screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
 );
@@ -91,7 +83,7 @@ int MASTER_RET gaiji_entry_bfnt(const char MASTER_PTR *filename);
 #define graph_accesspage(p) \
 	outportb(0xA6, p)
 
-extern unsigned graph_VramZoom;
+extern unsigned __cdecl graph_VramZoom;
 
 void MASTER_RET graph_400line(void);
 void MASTER_RET graph_200line(int tail);
@@ -154,7 +146,7 @@ void MASTER_RET grcg_settile_1line(int mode, long tile);
 
 // Just in case this is #included after `th01/hardware/grcg.hpp`...
 #ifndef grcg_off
-	void MASTER_RET grcg_off(void);
+void MASTER_RET grcg_off(void);
 #endif
 
 // Trapezoids
@@ -211,12 +203,6 @@ void MASTER_RET palette_show(void);
 #define palette_100() \
 	palette_settone(100)
 
-#define palette_black() \
-	palette_settone(0)
-
-#define palette_white() \
-	palette_settone(200)
-
 #define palette_set(col, r, g, b) (\
 	Palettes[col].v[0] = (uint8_t)(r), \
 	Palettes[col].v[1] = (uint8_t)(g), \
@@ -230,9 +216,9 @@ void MASTER_RET palette_show(void);
 		sizeof(Palette8) \
 	);
 
-extern Palette8 Palettes;
+extern Palette8 __cdecl Palettes;
 
-extern unsigned int PaletteTone;
+extern unsigned int __cdecl PaletteTone;
 
 int MASTER_RET palette_entry_rgb(const char MASTER_PTR *);
 void MASTER_RET palette_black_in(unsigned speed);
@@ -299,6 +285,7 @@ void MASTER_RET graph_pack_put_8_noclip(
 #define PLANE_INTEN 0xffc7
 
 extern unsigned super_patnum;
+extern void __seg *super_buffer;
 extern unsigned super_patdata[SUPER_MAXPAT];
 extern unsigned super_patsize[SUPER_MAXPAT];
 

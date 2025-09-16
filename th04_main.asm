@@ -27,7 +27,6 @@ include th04/sprites/main_cdg.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th04/main/tile/tile.inc
-include th04/main/bullet/types.inc
 
 bullet_template_delta_t union
 	spread_angle	db ?
@@ -40,9 +39,8 @@ include th04/main/enemy/enemy.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
-	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
+main_01 group SLOWDOWN_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, END_TEXT, CIRCLE_TEXT, TILE_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, BOSS_EXP_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, SCORE_TEXT, BOSS_FG_TEXT
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
@@ -290,7 +288,14 @@ _envp		= dword	ptr  0Ch
 		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short loc_AB86
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
+
+		; ZUN landmine: This is roughly 3.8 KB below what this game would need
+		; when running without an EMS driver, and thus causes the infamous
+		; crash after Reimu's Stage 5 pre-battle dialog.
+		; https://rec98.nmlgc.net/blog/2021-11-29 documents this issue in full
+		; detail.
+		mov	_mem_assign_paras, (320000 shr 4)
+
 		call	@game_init_main$qnxuc pascal, ds, offset aUmx
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
@@ -368,7 +373,7 @@ loc_ABBA:
 
 @@update:
 		call	main_01:pointnums_update
-		call	main_01:circles_update
+		call	@circles_update$qv
 		call	_sparks_update
 		call	main_01:sub_10ABF
 		call	main_01:sub_104B6
@@ -379,7 +384,7 @@ loc_ABBA:
 		call	items_update
 		call	@gather_update$qv
 		call	_stage_render
-		call	main_01:sub_1020A
+		call	@bomb_update_and_render$qv
 		call	_boss_fg_render
 		call	_midboss_render
 		call	main_01:enemies_render
@@ -391,7 +396,7 @@ loc_ABBA:
 		call	main_01:items_render
 		call	main_01:pointnums_render
 		call	main_01:bullets_render
-		call	main_01:circles_render
+		call	@circles_render$qv
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay1
 		call	_overlay2
@@ -583,7 +588,7 @@ loc_ADEA:
 
 loc_ADFC:
 		call	main_01:sub_EEB0
-		call	main_01:sub_12CC7
+		call	@hiscore_load$qv
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
@@ -944,7 +949,7 @@ sub_B1D0	proc near
 		call	main_01:pointnums_init
 		nopcall	main_01:hud_put
 		mov	_bg_render_bombing_func, offset @tiles_render_all$qv
-		call	main_01:tiles_invalidate_reset
+		call	@tiles_invalidate_reset$qv
 		pop	bp
 		retn
 sub_B1D0	endp
@@ -996,10 +1001,10 @@ TILE_SET_TEXT	ends
 
 STD_TEXT	segment	byte public 'CODE' use16
 	@std_load$qv procdesc near
+	@std_free$qv procdesc near
 STD_TEXT	ends
 
-TILE_TEXT	segment	word public 'CODE' use16
-include th04/formats/std.asm
+END_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1267,7 +1272,9 @@ loc_B9D4:
 		pop	bp
 		retn
 @map_free$qv	endp
+END_TEXT ends
 
+CIRCLE_TEXT segment word public 'CODE' use16
 include th04/main/tile/inv.asm
 include th04/main/tile/fill_ini.asm
 
@@ -1452,8 +1459,14 @@ include th04/main/playperf.asm
 include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
 include th04/formats/z_super_roll_put_tiny.asm
-include th04/main/circle.asm
-		db    0
+
+	extern @CIRCLES_ADD_GROWING$QII:proc
+	extern @CIRCLES_ADD_SHRINKING$QII:proc
+	@circles_update$qv procdesc near
+	@circles_render$qv procdesc near
+CIRCLE_TEXT ends
+
+TILE_TEXT segment word public 'CODE' use16
 include th04/main/enemy/inv.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1707,32 +1720,16 @@ locret_C999:
 
 ; ---------------------------------------------------------------------------
 		db    0
+
+PELLET_W = 8
+PELLET_H = 8
+BULLET16_W = 16
+BULLET16_H = 16
+
 include th04/main/bullet/pellet_r.asm
 include th04/main/bullets_gather_inv.asm
-include th04/main/tile/inv_all.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @TILES_RENDER$QV
-@tiles_render$qv	proc near
-		push	bp
-		mov	bp, sp
-		call	@overlay_titles_invalidate$qv
-		call	main_01:player_invalidate
-		call	main_01:sub_10444
-		call	main_01:enemies_invalidate
-		call	main_01:bullets_gather_invalidate
-		call	items_invalidate
-		call	_sparks_invalidate
-		call	main_01:pointnums_invalidate
-		call	_midboss_invalidate
-		call	_stage_invalidate
-		call	@tiles_redraw_invalidated$qv
-		pop	bp
-		retn
-@tiles_render$qv	endp
-
+	@tiles_invalidate_reset$qv procdesc near
+	@TILES_RENDER$QV procdesc near
 	extern @tiles_activate$qv:proc
 TILE_TEXT	ends
 
@@ -3677,7 +3674,7 @@ loc_E787:
 loc_E796:
 		or	di, di
 		jnz	short loc_E7D8
-		call	main_01:sub_12CB5
+		call	@hiscore_continue_enter$qv
 		mov	_power, POWER_MIN
 		mov	_dream_items_collected, 0
 		les	bx, _resident
@@ -4016,7 +4013,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		call	@grcg_setmode_rmw$qv
-		mov	ah, GC_RG
+		mov	ah, 9
 		call	@grcg_setcolor_direct_raw$qv
 		mov	di, 1
 		jmp	short loc_ECC7
@@ -6457,7 +6454,7 @@ var_1		= byte ptr -1
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 56, 0
 		cmp	_bomb_frame, 80
 		ja	short loc_10096
-		mov	_circles_color, GC_RG
+		mov	_circles_color, 9
 		mov	al, _bomb_frame
 		mov	ah, 0
 		add	ax, -48
@@ -6485,7 +6482,7 @@ loc_10096:
 		call	vector2_at
 		push	_drawpoint.x
 		push	_drawpoint.y
-		nopcall	main_01:circles_add_growing
+		nopcall	@circles_add_growing$qii
 		mov	al, 80h
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
@@ -6497,12 +6494,12 @@ loc_10096:
 		call	vector2_at
 		push	_drawpoint.x
 		push	_drawpoint.y
-		nopcall	main_01:circles_add_growing
+		nopcall	@circles_add_growing$qii
 		call	snd_se_play pascal, 9
 
 loc_100FE:
 		call	@grcg_setmode_rmw$qv
-		mov	ah, GC_B
+		mov	ah, 14
 		call	@grcg_setcolor_direct_raw$qv
 		call	bomb_stars_update_and_render_for pascal, PLAYCHAR_REIMU
 		GRCG_OFF_CLOBBERING dx
@@ -6522,7 +6519,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		call	@grcg_setmode_tdw$qv
-		mov	ah, GC_RGI
+		mov	ah, 1
 		call	@grcg_setcolor_direct_raw$qv
 		call	main_01:playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
@@ -6598,12 +6595,12 @@ loc_101D7:
 		mov	ax, [bp+var_2]
 		shl	ax, 4
 		push	ax
-		nopcall	main_01:circles_add_growing
+		nopcall	@circles_add_growing$qii
 		call	snd_se_play pascal, 9
 
 loc_101F4:
 		call	@grcg_setmode_rmw$qv
-		mov	ah, GC_BRG
+		mov	ah, 8
 		call	@grcg_setcolor_direct_raw$qv
 		call	bomb_stars_update_and_render_for pascal, PLAYCHAR_MARISA
 		GRCG_OFF_CLOBBERING dx
@@ -6616,8 +6613,8 @@ bomb_marisa	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1020A	proc near
+public @bomb_update_and_render$qv
+@bomb_update_and_render$qv proc near
 		push	bp
 		mov	bp, sp
 		cmp	_bombing, 0
@@ -6716,7 +6713,7 @@ loc_102F2:
 		mov	_bombing, 0
 		mov	PaletteTone, 100
 		mov	_palette_changed, 1
-		mov	_circles_color, GC_R
+		mov	_circles_color, 13
 
 loc_10307:
 		inc	_bomb_frame
@@ -6724,7 +6721,7 @@ loc_10307:
 loc_1030B:
 		pop	bp
 		retn
-sub_1020A	endp
+@bomb_update_and_render$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6899,8 +6896,8 @@ sub_1042A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_10444	proc near
+public @shots_invalidate$qv
+@shots_invalidate$qv proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6956,7 +6953,7 @@ loc_104B2:
 		pop	si
 		pop	bp
 		retn
-sub_10444	endp
+@shots_invalidate$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7694,10 +7691,10 @@ var_2		= word ptr -2
 		add	si, 20h	; ' '
 		add	di, 18h
 		call	@grcg_setmode_rmw$qv
-		mov	ah, GC_I
+		mov	ah, 7
 		call	@grcg_setcolor_direct_raw$qv
 		call	grcg_circle pascal, si, di, [bp+var_2]
-		mov	ah, GC_BI
+		mov	ah, 6
 		call	@grcg_setcolor_direct_raw$qv
 		push	si
 		push	di
@@ -7768,7 +7765,7 @@ loc_118AE:
 
 loc_118BE:
 		call	@grcg_setmode_rmw$qv
-		mov	ah, GC_RG
+		mov	ah, 9
 		call	@grcg_setcolor_direct_raw$qv
 		mov	[bp+@@spawnraw_p], offset kurumi_spawnrays
 		mov	[bp+@@spawnraw_i], 0
@@ -7894,7 +7891,7 @@ var_2		= word ptr -2
 		mov	ah, V_WHITE
 		call	@grcg_setcolor_direct_raw$qv
 		call	grcg_circle pascal, si, di, [bp+var_2]
-		mov	ah, GC_RG
+		mov	ah, 9
 		call	@grcg_setcolor_direct_raw$qv
 		push	si
 		push	di
@@ -8135,7 +8132,7 @@ loc_11BD1:
 		cmp	[si+yuuka6_safetycircle_t.B6S_flag], SCF_FREE
 		jz	short loc_11C16
 		call	@grcg_setmode_rmw$qv
-		mov	ah, GC_BGI
+		mov	ah, 2
 		call	@grcg_setcolor_direct_raw$qv
 		call	grcg_circlefill pascal, [si+yuuka6_safetycircle_t.B6S_center.x], [si+yuuka6_safetycircle_t.B6S_center.y], [si+yuuka6_safetycircle_t.B6S_radius_filled]
 		cmp	[si+yuuka6_safetycircle_t.B6S_flag], SCF_GROW
@@ -8479,7 +8476,7 @@ sub_11ECB	proc near
 		mov	_palette_changed, 0
 		mov	_bullet_zap_active, 0
 		mov	_stage_graze, 0
-		mov	_circles_color, GC_R
+		mov	_circles_color, 13
 		call	grc_setclip pascal, large (PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		push	offset _shots
 		push	size _shots / 4
@@ -8816,7 +8813,7 @@ loc_122EB:
 
 loc_12309:
 		call	@grcg_setmode_tdw$qv
-		mov	ah, GC_RGI
+		mov	ah, 1
 		call	@grcg_setcolor_direct_raw$qv
 		call	@reimu_marisa_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
@@ -8891,7 +8888,7 @@ loc_12378:
 
 loc_12396:
 		call	@grcg_setmode_tdw$qv
-		mov	ah, GC_BRGI
+		mov	ah, 0
 		call	@grcg_setcolor_direct_raw$qv
 		call	@yuuka5_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
@@ -9061,7 +9058,7 @@ loc_124A7:
 		mov	[bp+var_9], al
 		cmp	byte_2CDD0, 10h
 		jnb	short loc_124D7
-		mov	ah, GC_BRG
+		mov	ah, 8
 		call	@grcg_setcolor_direct_raw$qv
 		test	byte_2CDD0, 1
 		jz	short loc_124C5
@@ -9084,7 +9081,7 @@ loc_124D2:
 ; ---------------------------------------------------------------------------
 
 loc_124D7:
-		mov	ah, GC_RG
+		mov	ah, 9
 		call	@grcg_setcolor_direct_raw$qv
 		cmp	byte_23242, 0
 		jnz	short loc_12508
@@ -9549,7 +9546,7 @@ table_1289F	dw loc_12484
 		call	@grcg_setmode_tdw$qv
 		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_12921
-		mov	ah, GC_RGI
+		mov	ah, 1
 		call	@grcg_setcolor_direct_raw$qv
 		call	main_01:playfield_fill
 		GRCG_OFF_CLOBBERING dx
@@ -9588,7 +9585,7 @@ loc_12921:
 		cwd
 		idiv	bx
 		mov	[bp+@@entrance_cel], al
-		mov	ah, GC_RGI
+		mov	ah, 1
 		call	@grcg_setcolor_direct_raw$qv
 		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12944
@@ -9616,7 +9613,7 @@ loc_12958:
 ; ---------------------------------------------------------------------------
 
 loc_12964:
-		mov	ah, GC_RGI
+		mov	ah, 1
 		call	@grcg_setcolor_direct_raw$qv
 		call	main_01:playfield_fill
 		GRCG_OFF_CLOBBERING dx
@@ -9669,7 +9666,7 @@ loc_12996:
 
 loc_129B4:
 		call	@grcg_setmode_tdw$qv
-		mov	ah, GC_RGI
+		mov	ah, 1
 		call	@grcg_setcolor_direct_raw$qv
 		call	@mugetsu_gengetsu_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
@@ -9704,266 +9701,14 @@ loc_12A05:
 		leave
 		retn
 @mugetsu_gengetsu_bg_render$qv	endp
+BOSS_BG_TEXT ends
 
-include th04/formats/scoredat_recreate.asm
-include th04/formats/scoredat_main.asm
+SCORE_TEXT segment byte public 'CODE' use16
+	@hiscore_continue_enter$qv procdesc near
+	@hiscore_load$qv procdesc near
+SCORE_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12B1E	proc near
-		push	bp
-		mov	bp, sp
-		call	main_01:scoredat_encode pascal, offset _hi
-		push	ds
-		push	offset aGensou_scr_2 ; "GENSOU.SCR"
-		call	file_append
-		mov	al, _rank
-		mov	ah, 0
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		les	bx, _resident
-		cmp	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
-		jnz	short loc_12B5E
-		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
-
-loc_12B5E:
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		call	file_close
-		pop	bp
-		retn
-sub_12B1E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12B71	proc near
-
-var_A		= byte ptr -0Ah
-var_2		= word ptr -2
-
-		enter	0Ah, 0
-		push	si
-		lea	ax, [bp+var_A]
-		push	ss
-		push	ax
-		push	ds
-		push	offset gCONTINUE
-		mov	cx, 8
-		call	SCOPY@
-		mov	[bp+var_2], 9
-		jmp	short loc_12BCF
-; ---------------------------------------------------------------------------
-
-loc_12B8E:
-		mov	si, SCORE_DIGITS - 1
-		jmp	short loc_12BC8
-; ---------------------------------------------------------------------------
-
-loc_12B93:
-		mov	al, _score[si]
-		mov	ah, 0
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	dl, _hi.score.g_score[bx+si]
-		mov	dh, 0
-		add	dx, -gb_0_
-		cmp	ax, dx
-		jg	short loc_12BCC
-		mov	al, _score[si]
-		mov	ah, 0
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	dl, _hi.score.g_score[bx+si]
-		mov	dh, 0
-		add	dx, -gb_0_
-		cmp	ax, dx
-		jl	short loc_12BDC
-		dec	si
-
-loc_12BC8:
-		or	si, si
-		jge	short loc_12B93
-
-loc_12BCC:
-		dec	[bp+var_2]
-
-loc_12BCF:
-		cmp	[bp+var_2], 0
-		jge	short loc_12B8E
-		mov	byte_2CFF2, 0
-		jmp	short loc_12BF2
-; ---------------------------------------------------------------------------
-
-loc_12BDC:
-		cmp	[bp+var_2], 9
-		jnz	short loc_12BEA
-		mov	byte_2CFF2, -1
-		jmp	loc_12CB2
-; ---------------------------------------------------------------------------
-
-loc_12BEA:
-		mov	al, byte ptr [bp+var_2]
-		inc	al
-		mov	byte_2CFF2, al
-
-loc_12BF2:
-		mov	[bp+var_2], 8
-		jmp	short loc_12C43
-; ---------------------------------------------------------------------------
-
-loc_12BF9:
-		mov	si, 7
-		jmp	short loc_12C13
-; ---------------------------------------------------------------------------
-
-loc_12BFE:
-		mov	bx, [bp+var_2]
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	al, _hi.score.g_name[0 * (SCOREDAT_NAME_LEN + 1)][bx+si]
-		mov	bx, [bp+var_2]
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	_hi.score.g_name[1 * (SCOREDAT_NAME_LEN + 1)][bx+si], al
-		dec	si
-
-loc_12C13:
-		or	si, si
-		jge	short loc_12BFE
-		mov	si, 7
-		jmp	short loc_12C31
-; ---------------------------------------------------------------------------
-
-loc_12C1C:
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	al, _hi.score.g_score[0 * SCORE_DIGITS][bx+si]
-		mov	bx, [bp+var_2]
-		shl	bx, 3
-		mov	_hi.score.g_score[1 * SCORE_DIGITS][bx+si], al
-		dec	si
-
-loc_12C31:
-		or	si, si
-		jge	short loc_12C1C
-		mov	bx, [bp+var_2]
-		mov	al, _hi.score.g_stage[0][bx]
-		mov	_hi.score.g_stage[1][bx], al
-		dec	[bp+var_2]
-
-loc_12C43:
-		mov	al, byte_2CFF2
-		mov	ah, 0
-		cmp	ax, [bp+var_2]
-		jle	short loc_12BF9
-		mov	si, 7
-		jmp	short loc_12C65
-; ---------------------------------------------------------------------------
-
-loc_12C52:
-		mov	al, [bp+si+var_A]
-		mov	dl, byte_2CFF2
-		mov	dh, 0
-		imul	dx, (SCOREDAT_NAME_LEN + 1)
-		mov	bx, dx
-		mov	_hi.score.g_name[bx+si], al
-		dec	si
-
-loc_12C65:
-		or	si, si
-		jge	short loc_12C52
-		mov	si, 7
-		jmp	short loc_12C84
-; ---------------------------------------------------------------------------
-
-loc_12C6E:
-		mov	al, _score[si]
-		add	al, gb_0_
-		mov	dl, byte_2CFF2
-		mov	dh, 0
-		shl	dx, 3
-		mov	bx, dx
-		mov	_hi.score.g_score[bx+si], al
-		dec	si
-
-loc_12C84:
-		or	si, si
-		jge	short loc_12C6E
-		cmp	_stage_id, 6
-		jz	short loc_12CA3
-		mov	al, byte_2CFF2
-		mov	ah, 0
-		mov	dl, _stage_id
-		add	dl, gb_1_
-		mov	bx, ax
-		mov	_hi.score.g_stage[bx], dl
-		jmp	short loc_12CAF
-; ---------------------------------------------------------------------------
-
-loc_12CA3:
-		mov	al, byte_2CFF2
-		mov	ah, 0
-		mov	bx, ax
-		mov	_hi.score.g_stage[bx], gb_1_
-
-loc_12CAF:
-		call	main_01:sub_12B1E
-
-loc_12CB2:
-		pop	si
-		leave
-		retn
-sub_12B71	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12CB5	proc near
-		push	bp
-		mov	bp, sp
-		call	_scoredat_load_for_cur
-		cmp	_turbo_mode, 0
-		jz	short loc_12CC5
-		call	main_01:sub_12B71
-
-loc_12CC5:
-		pop	bp
-		retn
-sub_12CB5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12CC7	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	_scoredat_load_for_cur
-		xor	si, si
-		jmp	short loc_12CDD
-; ---------------------------------------------------------------------------
-
-loc_12CD2:
-		mov	al, _hi.score.g_score[si]
-		add	al, -gb_0_
-		mov	_hiscore[si], al
-		inc	si
-
-loc_12CDD:
-		cmp	si, SCORE_DIGITS
-		jl	short loc_12CD2
-		pop	si
-		pop	bp
-		retn
-sub_12CC7	endp
-
+BOSS_FG_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10062,7 +9807,7 @@ loc_12D6D:
 		mov	ah, V_WHITE
 		call	@grcg_setcolor_direct_raw$qv
 		call	main_01:_pellets_render_top
-		mov	ah, GC_RG
+		mov	ah, 9
 		call	@grcg_setcolor_direct_raw$qv
 		call	main_01:_pellets_render_bottom
 		jmp	short @@ret
@@ -10407,7 +10152,7 @@ loc_13083:
 		call	@grcg_setmode_rmw$qv
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_130B6
-		mov	ah, GC_RG
+		mov	ah, 9
 		jmp	short loc_130B8
 ; ---------------------------------------------------------------------------
 
@@ -10443,7 +10188,7 @@ loc_130E9:
 		leave
 		retn
 @gengetsu_fg_render$qv	endp
-BOSS_BG_TEXT	ends
+BOSS_FG_TEXT ends
 
 ; ===========================================================================
 
@@ -11342,7 +11087,7 @@ sub_147DB	proc near
 		add	al, -048h
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
-		mov	_bullet_special_motion_turns_max, 2
+		mov	_bullet_special_turns_max, 2
 		call	_bullets_add_special
 		call	snd_se_play pascal, 9
 
@@ -14089,7 +13834,7 @@ loc_160F4:
 		mov	_bullet_template.BT_angle, 80h
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.count, 32
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
@@ -14138,7 +13883,7 @@ loc_16187:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.count, 32
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
@@ -14206,7 +13951,7 @@ loc_16221:
 ; ---------------------------------------------------------------------------
 
 loc_16228:
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.speed, (1 shl 4)
@@ -14217,7 +13962,7 @@ loc_16228:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_YELLOW
 		mov	_bullet_template.speed, (2 shl 4)
 		call	_bullet_template_tune
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 
 loc_1626B:
 		cmp	_boss_phase_frame, 32 ; default
@@ -14263,7 +14008,7 @@ yuuka5_162A3	proc near
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_template.count, 8
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		jmp	short loc_162EA
 ; ---------------------------------------------------------------------------
 
@@ -14384,7 +14129,7 @@ loc_163B5:
 
 loc_163C6:
 		mov	_circles_color, V_WHITE	; jumptable 000163A9 cases 56,64,72,80
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 
 loc_163D8:
 		mov	al, _gather_template.GT_angle_delta	; jumptable 000163A9 case 40
@@ -14523,7 +14268,7 @@ yuuka5_1653D	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jnz	short loc_1656A
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 		mov	_boss_angle, 16
 		mov	_boss_statebyte[15].BSB_spread_angle, 10h
@@ -15056,7 +14801,7 @@ loc_16A86:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		jmp	short loc_16ADA
 ; ---------------------------------------------------------------------------
 
@@ -16233,7 +15978,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_STAR
 		mov	_bullet_template.speed, (5 shl 4) + 12
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_TO_ANGLE
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_TO_ANGLE
 		call	_bullet_template_tune
 		mov	_bit_fire, offset marisa_bit_fire_17061
 		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 0
@@ -17538,9 +17283,7 @@ loc_18090:
 ; ---------------------------------------------------------------------------
 
 loc_18097:
-		push	_gather_template.GT_center.x ; jumptable 00018067 case 48
-		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_180A9:
@@ -17999,9 +17742,9 @@ loc_183A7:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.speed, (2 shl 4) + 8
-		mov	_bullet_special_motion_turns_max, 2
+		mov	_bullet_special_turns_max, 2
 		mov	_bullet_template_special_angle.BSA_turn_by, -20h
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
@@ -18116,9 +17859,9 @@ mugetsu_184AC	proc near
 ; ---------------------------------------------------------------------------
 
 loc_184C8:
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -18765,7 +18508,7 @@ loc_18AC4:
 		sub	ax, [si+kurumi_spawnray_t.B2S_velocity.y]
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	[bp+var_4], 0
 		mov	_bullet_template.speed, (2 shl 4)
 		jmp	short loc_18AFA
@@ -18783,8 +18526,8 @@ loc_18AFA:
 		jl	short loc_18AEC
 		inc	[si+kurumi_spawnray_t.B2S_flag] ; = B2SF_SHRINK
 		call	snd_se_play pascal, 6
-		mov	_circles_color, GC_RG
-		call	circles_add_growing pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		mov	_circles_color, 9
+		call	@circles_add_growing$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		jmp	short loc_18B4D
 ; ---------------------------------------------------------------------------
 
@@ -18914,7 +18657,7 @@ loc_18BF7:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -18979,7 +18722,7 @@ loc_18C87:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19045,14 +18788,14 @@ loc_18D16:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-12 shl 4)
 		push	ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		leave
@@ -19128,11 +18871,11 @@ loc_18DCF:
 		mov	_bullet_template.BT_origin, eax
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 16
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.speed, (3 shl 4)
 		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		test	byte_259F0, 1
 		jz	short loc_18E19
 		mov	al, 40h
@@ -19184,7 +18927,7 @@ loc_18E54:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19260,7 +19003,7 @@ loc_18EF8:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19337,14 +19080,14 @@ loc_18F9C:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	ax, _boss_pos.cur.x
 		add	ax, (12 shl 4)
 		push	ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -19822,9 +19565,7 @@ loc_19431:
 loc_19444:
 		cmp	_boss_phase_frame, 144
 		jnz	short loc_1945E
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		mov	_circles_color, V_WHITE
 
 loc_1945E:
@@ -20033,9 +19774,7 @@ loc_19647:
 loc_19656:
 		cmp	_boss_phase_frame, 70
 		jnz	short loc_19671
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		mov	_circles_color, V_WHITE
 		jmp	short loc_19682
 ; ---------------------------------------------------------------------------
@@ -20432,7 +20171,7 @@ loc_199BC:
 		jnz	short loc_199ED
 
 loc_199DB:
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 
 loc_199ED:
@@ -20757,7 +20496,7 @@ loc_19D15:
 loc_19D2B:
 		cmp	_boss_phase_frame, 112
 		jnz	short loc_19D44
-		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
+		call	@circles_add_shrinking$qii pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, V_WHITE
 
 loc_19D44:
@@ -21592,14 +21331,10 @@ loc_1A96C:
 ; ---------------------------------------------------------------------------
 
 loc_1A981:
-		push	_gather_template.GT_center.x ; jumptable 0001A926 case 32
-		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	ax, _gather_template.GT_center.x
 		add	ax, (44 shl 4)
-		push	ax
-		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, ax, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1A9A3:
@@ -21680,9 +21415,7 @@ loc_1AA19:
 ; ---------------------------------------------------------------------------
 
 loc_1AA20:
-		push	_gather_template.GT_center.x ; jumptable 0001A9E9 case 64
-		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1AA32:
@@ -21758,12 +21491,12 @@ loc_1AAAD:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (32 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		push	point_25A0C.x
 		mov	ax, point_25A0C.y
 		add	ax, (32 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 
 locret_1AAD2:
@@ -21828,9 +21561,7 @@ loc_1AB31:
 ; ---------------------------------------------------------------------------
 
 loc_1AB38:
-		push	_gather_template.GT_center.x ; jumptable 0001AB04 case 32
-		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1AB4A:
@@ -21884,7 +21615,7 @@ loc_1AB86:
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_group, BG_RING
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.count, 20
 		mov	_bullet_template_special_angle.BSA_turn_by, -40h
 		call	_bullet_template_tune
@@ -21989,7 +21720,7 @@ loc_1ACA5:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (40 shl 4)
 		push	ax
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii
 		mov	_circles_color, V_WHITE
 		leave
 		retn
@@ -22043,7 +21774,7 @@ loc_1ACD9:
 		mov	_bullet_template.BT_origin.x, ax
 		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
 		call	@randring2_next16$qv
@@ -23848,9 +23579,7 @@ loc_1BDFF:
 ; ---------------------------------------------------------------------------
 
 loc_1BE11:
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _boss_pos.cur.x, _boss_pos.cur.y
 		mov	_circles_color, V_WHITE
 
 loc_1BE23:
@@ -26563,9 +26292,7 @@ loc_1EAB9:
 
 loc_1EAC0:
 		mov	_boss_sprite, 132
-		push	_gather_template.GT_center.x
-		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
 
@@ -26973,9 +26700,9 @@ var_1		= byte ptr -1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.speed, (5 shl 4) + 5
 		mov	_bullet_template.BT_angle, 0
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN_AIMED
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN_AIMED
 		mov	al, _boss_statebyte[2].BSB_spread_turns_max
-		mov	_bullet_special_motion_turns_max, al
+		mov	_bullet_special_turns_max, al
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
 		mov	_bullet_template.count, 9
 		mov	_bullet_template.BT_delta.spread_angle, 6
@@ -27071,7 +26798,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 16
 		call	_bullet_template_tune
@@ -27264,7 +26991,7 @@ loc_1F0B0:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
-		mov	_bullet_special_motion_speed_delta, 1
+		mov	_bullet_special_speed_delta, 1
 		call	_bullet_template_tune
 		call	_bullets_add_special
 		push	15
@@ -28226,9 +27953,7 @@ loc_1F94E:
 ; ---------------------------------------------------------------------------
 
 loc_1F955:
-		push	_gather_template.GT_center.x
-		push	_gather_template.GT_center.y
-		call	circles_add_shrinking
+		call	@circles_add_shrinking$qii pascal, _gather_template.GT_center.x, _gather_template.GT_center.y
 		mov	_circles_color, V_WHITE
 
 locret_1F967:
@@ -28561,7 +28286,7 @@ gengetsu_1FB86	proc near
 
 loc_1FBA1:
 		mov	_bullet_template.BT_special_motion, BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM
-		mov	_bullet_special_motion_turns_max, 4
+		mov	_bullet_special_turns_max, 4
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -28634,7 +28359,7 @@ gengetsu_1FC46	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1FC61:
-		mov	_bullet_special_motion_turns_max, 1
+		mov	_bullet_special_turns_max, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -28642,7 +28367,7 @@ loc_1FC61:
 loc_1FC68:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_1FCE0
-		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
+		mov	_bullet_template.BT_special_motion, BSM_DECELERATE_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW
@@ -30145,11 +29870,13 @@ _checkerboard checkerboard_t <>
 
 byte_23242	db 0
 		db    0
-gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
-aGensou_scr	db 'GENSOU.SCR',0
-aGensou_scr_0	db 'GENSOU.SCR',0
-aGensou_scr_1	db 'GENSOU.SCR',0
-aGensou_scr_2	db 'GENSOU.SCR',0
+public _gCONTINUE_
+_gCONTINUE_	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
+public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1, _SCOREDAT_FN_2
+_SCOREDAT_FN	db 'GENSOU.SCR',0
+_SCOREDAT_FN_0	db 'GENSOU.SCR',0
+_SCOREDAT_FN_1	db 'GENSOU.SCR',0
+_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 public _group_fixedspeed
 _group_fixedspeed	db 0
 		db 0
@@ -30459,6 +30186,26 @@ include th04/main/play[bss].asm
 include th04/main/drawpoint[bss].asm
 include th04/main/ems[bss].asm
 include th04/main/slowdown[bss].asm
+
+BG_SINGLE = 000h
+BG_SINGLE_AIMED = 001h
+BG_RANDOM_ANGLE = 01Bh
+BG_RANDOM_ANGLE_AND_SPEED = 01Ch
+BG_RING = 026h
+BG_RING_AIMED = 02Ch
+BG_SPREAD = 02Dh
+BG_SPREAD_AIMED = 02Eh
+BG_STACK = 02Fh
+BG_STACK_AIMED = 030h
+BG_FORCESINGLE = 040h
+BG_FORCESINGLE_AIMED = 041h
+
+BST_PELLET = 1
+BST_BULLET16 = 2
+BST_GATHER_PELLET = 3
+BST_BULLET16_CLOUD_FORWARDS = 4
+BST_BULLET16_CLOUD_BACKWARDS = 5
+
 include th04/main/bullet/template[bss].asm
 include th04/main/midboss/vars[bss].asm
 include th04/main/boss/vars[bss].asm
@@ -30651,8 +30398,9 @@ _bg_shape_flyout_speed	dw ?
 _bg_shape_clip	dw ?
 
 include th04/formats/scoredat[bss].asm
-byte_2CFF2	db ?
-		db ?
+public _entered_place
+_entered_place	db ?
+	evendata
 word_2CFF4	dw ?
 public _group_i_spread_angle
 _group_i_spread_angle	db ?

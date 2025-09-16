@@ -1,0 +1,107 @@
+/// PC-98 sprite and image management
+/// ---------------------------------
+
+#include "game/coords.hpp"
+#include "planar.h"
+
+// Surface classes
+// ---------------
+// Blit functions can only guarantee support for X values that are multiples of
+// 8.
+
+struct GrpSurface {
+	uvram_byte_amount_t w;
+	upixel_t h;
+};
+
+// Surfaces allocated in memory, with each bitplane stored sequentially in a
+// single allocation.
+struct GrpSurface_M : public GrpSurface {
+	seg_t plane_B; // Segment pointer to the first bitplane.
+	uint16_t plane_paras; // Paragraph size of a single bitplane.
+
+	void pascal free(void);
+};
+
+// 1bpp surface allocated to heap memory
+struct GrpSurface_M1 : public GrpSurface_M {
+	// Returns `true` on allocation failure.
+	bool pascal alloc(upixel_t w, upixel_t h);
+
+	// Copies the region from
+	// 	(⌊vram_left/8⌋*8, vram_top)
+	// to
+	// 	((⌊vram_left/8⌋*8)+[w], vram_top+[h])
+	// on the given bitplane of VRAM into this surface.
+	void pascal snap(
+		uscreen_x_t dst_left,
+		uscreen_y_t dst_top,
+		vram_plane_t plane,
+		const LTWH<upixel_t> near *region = nullptr
+	);
+
+	void pascal write(
+		vram_plane_t plane,
+		screen_x_t left,
+		screen_y_t top,
+		const LTWH<upixel_t> near *region = nullptr
+	);
+};
+
+// 4×1bpp surface
+struct GrpSurface_M4 : public GrpSurface_M {
+	// Returns `true` on allocation failure.
+	bool pascal alloc(upixel_t w, upixel_t h);
+
+	// Copies the VRAM region from
+	// 	(⌊vram_left/8⌋*8, vram_top)
+	// to
+	// 	((⌊vram_left/8⌋*8)+[w], vram_top+[h])
+	// into this surface.
+	void pascal snap(
+		uscreen_x_t dst_left,
+		uscreen_y_t dst_top,
+		const LTWH<upixel_t> near *region = nullptr
+	);
+
+	void pascal write(
+		screen_x_t left,
+		screen_y_t top,
+		const LTWH<upixel_t> near *region = nullptr
+	);
+
+	// Helper that writes the given region of the image to the same place in
+	// VRAM.
+	void pascal write_bg_region(
+		upixel_t left, upixel_t top, upixel_t w, upixel_t h
+	);
+
+	void pascal or_masked(
+		screen_x_t left,
+		screen_y_t top,
+		const dots16_t __ds *masks,
+		unsigned int mask_count,
+		const LTWH<upixel_t> near *region = nullptr
+	);
+};
+// ---------------
+
+enum pi_flag_t {
+	PIF_NONE = 0,
+
+	// Skips odd-numbered lines. Required for 4 sets of images in TH03.
+	PIF_LINESKIP = 1,
+};
+
+// Loads the given PI file into the given sprite sheet and optionally returns
+// its palette.
+int pascal GrpSurface_LoadPI(
+	GrpSurface_M4& surf,
+	Palette8 *palette,
+	const char *fn,
+	pi_flag_t flags = PIF_NONE
+);
+
+// Directly blits the given PI file to the top-left corner of VRAM and
+// optionally returns its palette.
+int pascal GrpSurface_BlitBackgroundPI(Palette8 *palette, const char *fn);

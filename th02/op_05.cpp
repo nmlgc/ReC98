@@ -18,25 +18,7 @@ inline char sel_ring_end() {
 char sel = 1;
 int8_t sel_padding = 0;
 
-const shiftjis_t *DESC[SHOTTYPE_COUNT][3] = {
-	" ‰A—z‹Ê‚Ì—Í‚ğg‚í‚È‚¢ ",
-	" L”ÍˆÍ‚Å‚©‚Â‹@“®—Í‚É ",
-	"@‹­‚¢‚‹@“®—Íƒ^ƒCƒv@",
-
-	" @èËŒ‚‚ª—D‚ê‚Ä‚¢‚é @",
-	"@ ƒoƒ‰ƒ“ƒX‚Ìæ‚ê‚½@ ",
-	"@@–hŒäd‹ƒ^ƒCƒv@@",
-
-	" @‰A—z‹Ê‚Ì—Í‚Åí‚¤   ",
-	"@UŒ‚—Í‚ª—D‚ê‚Ä‚¢‚é@",
-	"@@UŒ‚d‹ƒ^ƒCƒv@@"
-};
-const shiftjis_t *CHOOSE = "èË–²‚Ìí“¬ƒXƒ^ƒCƒ‹‚ğA‰º‚Ì‚R‚Â‚©‚ç‚¦‚ç‚ñ‚Å‚Ë";
-const shiftjis_t *EXTRA_NOTE[] = {
-	"’j@ƒGƒLƒXƒgƒ‰ƒXƒe[ƒW‚Å‚ÍA“ïˆÕ“xAƒvƒŒƒCƒ„[Aƒ{ƒ€”‚Í•ÏXo—ˆ‚Ü‚¹‚ñ",
-	"@@@‚»‚ê‚¼‚êA“ïˆÕ“x‚d‚w‚s‚q‚`AƒvƒŒƒCƒ„[‚RlAƒ{ƒ€‚PŒÂ‚Æ‚È‚è‚Ü‚·    "
-};
-const shiftjis_t *CLEARED = "  ™™‚b‚k‚d‚`‚q‚d‚c™™  ";
+#include "th02/shiftjis/m_char.cpp"
 
 char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
@@ -135,7 +117,10 @@ void pascal shottype_menu_init(void)
 			graph_putsa_fx(432, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
-	palette_black();
+	// ZUN landmine: Screen tearing â€“ we most certainly won't come here during
+	// VBLANK.
+	palette_settone(0);
+
 	graph_accesspage(0);
 	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
 	graph_copy_page(1);

@@ -48,7 +48,7 @@ public _sparks_render
 _sparks_render proc near
 	push	si
 	push	di
-	mov	ah, GC_BR
+	mov	ah, 12
 	call	@grcg_setcolor_direct_raw$qv
 	mov	ax, GRAM_400
 	mov	es, ax
@@ -80,8 +80,8 @@ _sparks_render endp
 	even
 
 
-public _sparks_invalidate
-_sparks_invalidate proc near
+public @sparks_invalidate$qv
+@sparks_invalidate$qv proc near
 	push	si
 	push	di
 	mov	_tile_invalidate_box, (SPARK_W shl 16) or SPARK_H
@@ -100,7 +100,7 @@ _sparks_invalidate proc near
 	pop	di
 	pop	si
 	retn
-_sparks_invalidate endp
+@sparks_invalidate$qv endp
 
 
 public _sparks_init

@@ -378,7 +378,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 
 	static dots16_unaligned_t ptnpq_mask_unaligned_zero = { 0x000000 };
 	static dots16_unaligned_t ptnpq_dots_unaligned_zero = { 0x000000 };
-	static Planar<dots8_t *> ptnpq_vram = { nullptr };
+	static Planar<dots8_t far *> ptnpq_vram = { nullptr };
 
 	unsigned int plane;
 	upixel_t y;
@@ -398,7 +398,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 	ptnpq_vram.G = VRAM_PLANE_G;
 	ptnpq_vram.E = VRAM_PLANE_E;
 
-	Planar<dots8_t *> vram_local = ptnpq_vram;
+	Planar<dots8_t far *> vram_local = ptnpq_vram;
 
 	// MODDERS: Yes, should have been || rather than &&...
 	if((left < 0) && (left > (RES_X - PTN_QUARTER_W))) {

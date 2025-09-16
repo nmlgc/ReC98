@@ -412,6 +412,21 @@ void foo(int i) {
 
 ### `-Z` (Suppress register reloads)
 
+* Modulo operations with compile-time power-of-two divisors are turned into
+  `AND (divisor - 1)` in these cases:
+  * For standalone binary `%` operations:
+
+    |           Dividend            |         Divisor         |
+    | :---------------------------: | :---------------------: |
+    | `unsigned (short\|int\|long)` |  `signed (short\|int)`  |
+    | Anything except `signed long` | `unsigned (short\|int)` |
+    |        `unsigned long`        |      `signed long`      |
+    |           Anything            |     `unsigned long`     |
+
+  * For `%=` assignments:
+    * Dividend is `char`, `unsigned char`, or `short/int`, and divisor is
+      `unsigned short/int`
+
 * The tracked contents of `ES` are reset after a conditional statement. If the
   original code had more `LES` instructions than necessary, this indicates a
   specific layout of conditional branches:
@@ -816,6 +831,43 @@ contains one of the following:
   around it.
 
 ## Compiler bugs
+
+* Direct calls to `__fastcall` function pointers through structure pointers
+  returned from a function are miscompiled. The first parameter is written to
+  `AX` before the call to the structure-returning function, where it gets
+  overwritten by the returned pointer. This happens regardless of whether the
+  returned pointer is `near` or `far`, and happens with C++ references as well.
+
+  ```c++
+  struct StructWithFastcallPointer {
+    void (__fastcall near *func)(int);
+  };
+
+  StructWithFastcallPointer example_struct = {};
+
+  StructWithFastcallPointer near* near return_struct(void)
+  {
+    return &example_struct;
+  }
+
+  void test_return_struct(void)
+  {
+    return_struct()->func(0);
+  }
+  ```
+
+  Resulting ASM:
+
+  ```asm
+  @TEST_RETURN_STRUCT$QV proc
+    xor     ax, ax            ; Sets up the 0 parameter for func()
+    call    @RETURN_STRUCT$QV ; AX gets overwritten with the returned pointer
+    mov     bx, ax
+                              ; `xor ax, ax` should have been here
+    call    word ptr [bx]
+    ret
+  @TEST_RETURN_STRUCT$QV endp
+  ```
 
 * Dereferencing a `far` pointer constructed from the `_FS` and `_GS`
   pseudoregisters emits wrong segment prefix opcodes – 0x46 (`INC SI`) and

@@ -264,9 +264,7 @@ void verdict_row_1_to_0_animate(
 	for(int mask = 0; mask < VERDICT_MASK_COUNT; mask++) {
 		for(i = 0; i < len; i++) {
 			verdict_kanji_1_to_0_masked(
-				(left + (i * GLYPH_FULL_W)),
-				top,
-				&sVERDICT_MASKS[mask][0]
+				(left + (i * GLYPH_FULL_W)), top, &sVERDICT_MASKS[mask][0]
 			);
 		}
 		frame_delay(10);
@@ -298,7 +296,7 @@ void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
 			past_leading_zeroes = digit;
 		}
 		if(past_leading_zeroes || (i == (DIGITS - 1))) {
-			str[i] = gaiji_th02_t(gb_0_ + digit);
+			str[i] = gaiji_th02_t(gb_0 + digit);
 		} else {
 			str[i] = gb_SP;
 		}
@@ -382,9 +380,7 @@ void near end_to_staffroll_animate(void)
 {
 	enum {
 		VELOCITY = 4,
-
-		// ZUN bloat: (CUTSCENE_PIC_H - 1) would have been enough.
-		SHIFT_H = (RES_Y - 1 - CUTSCENE_PIC_TOP),
+		CUTSCENE_PIC_BOTTOM = (CUTSCENE_PIC_TOP + CUTSCENE_PIC_H - 1),
 	};
 	end_load("end3.txt");
 	frame_delay(30);
@@ -410,7 +406,7 @@ void near end_to_staffroll_animate(void)
 			left_prev,
 			CUTSCENE_PIC_TOP,
 			(left_prev + CUTSCENE_PIC_W - 1),
-			SHIFT_H,
+			CUTSCENE_PIC_BOTTOM,
 			VELOCITY
 		);
 
@@ -420,7 +416,7 @@ void near end_to_staffroll_animate(void)
 			(left_prev + CUTSCENE_PIC_W - (VELOCITY * 2)),
 			CUTSCENE_PIC_TOP,
 			(left_prev + CUTSCENE_PIC_W - 1),
-			SHIFT_H
+			CUTSCENE_PIC_BOTTOM
 		);
 		grcg_off();
 		frame_delay(1);
@@ -459,7 +455,7 @@ inline void end_load_and_start_animate(const char* text_fn) {
 	end_load(text_fn);
 	snd_load("end1.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
-	palette_black();
+	palette_settone(0);
 	end_pics_load_palette_show("ed01.pi");
 	palette_black_in(2);
 	frame_delay(40);
@@ -822,7 +818,7 @@ inline void staffroll_text_put(
 ) {
 	graph_putsa_fx(
 		(STAFFROLL_TEXT_LEFT + additional_left),
-		(STAFFROLL_TEXT_TOP + pixel_t((row * GLYPH_H))),
+		(STAFFROLL_TEXT_TOP + pixel_t(row * GLYPH_H)),
 		(V_WHITE | FX_WEIGHT_BOLD),
 		str
 	);
@@ -859,11 +855,8 @@ void near staffroll_and_verdict_animate(void)
 	// Move game title and version down to make room for the staff roll text
 	// ---------------------------------------------------------------------
 
-	// ZUN bloat: Calculated in terms of the ENDFT.BFT top position, but
-	// would have saved a lot of [VELOCITY] additions if it was calculated in
-	// terms of the version string's top position instead. (Note that the first
-	// loop iteration is a no-op, so make sure to pull out the frame_delay(1)
-	// call when debloating.)
+	// ZUN bloat: Why not use egc_shift_down() instead? The binary already
+	// links this function.
 	#define endft_top i
 	endft_top = (STAFFROLL_TEXT_TOP - (VELOCITY * 2));
 	while(endft_top < (RES_Y - ENDFT_H)) {
@@ -886,7 +879,7 @@ void near staffroll_and_verdict_animate(void)
 			GAME_VERSION
 		);
 		frame_delay(1);
-		i += VELOCITY;
+		endft_top += VELOCITY;
 	}
 	#undef endft_top
 	// ---------------------------------------------------------------------
@@ -1026,7 +1019,7 @@ void near staffroll_and_verdict_animate(void)
 	// Continues
 	graph_accesspage(1);
 	verdict_label_put(2, VERDICT_LABEL_LEFT, VERDICT_LABEL_CONTINUES);
-	verdict_value_singledigit_put(2, (gb_0_ + resident->continues_used));
+	verdict_value_singledigit_put(2, (gb_0 + resident->continues_used));
 	verdict_row_1_to_0_animate(2);
 	frame_delay(ROW_FRAMES);
 
@@ -1040,14 +1033,14 @@ void near staffroll_and_verdict_animate(void)
 	// Starting lives
 	graph_accesspage(1);
 	verdict_label_put(4, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_LIVES);
-	verdict_value_singledigit_put(4, (gb_1_ + resident->start_lives));
+	verdict_value_singledigit_put(4, (gb_1 + resident->start_lives));
 	verdict_row_1_to_0_animate(4);
 	frame_delay(ROW_FRAMES);
 
 	// Starting bombs
 	graph_accesspage(1);
 	verdict_label_put(5, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_BOMBS);
-	verdict_value_singledigit_put(5, (gb_0_ + resident->start_bombs));
+	verdict_value_singledigit_put(5, (gb_0 + resident->start_bombs));
 	verdict_row_1_to_0_animate(5);
 	frame_delay(ROW_FRAMES + (ROW_FRAMES / 2));
 
@@ -1055,7 +1048,6 @@ void near staffroll_and_verdict_animate(void)
 	graph_accesspage(1);
 	int skill = resident->skill;
 
-	// ZUN bloat: Could have been worked into the mapping below.
 	if(skill > 100) {
 		skill = 100;
 	} else if(skill < 0) {

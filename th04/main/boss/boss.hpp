@@ -11,9 +11,9 @@ static const pixel_t BOSS_W = 64;
 static const pixel_t BOSS_H = 64;
 static const int BOSS_DEFEAT_INVINCIBILITY_FRAMES = 255;
 #if (GAME == 5)
-	static const unsigned long BOSS_BONUS_UNIT_VALUE = 1000;
+static const unsigned long BOSS_BONUS_UNIT_VALUE = 1000;
 #else
-	static const unsigned int BOSS_BONUS_UNIT_VALUE = 1280;
+static const unsigned int BOSS_BONUS_UNIT_VALUE = 1280;
 #endif
 
 static const pixel_t BOSS_HITBOX_DEFAULT_W = ((BOSS_W / 2) - (BOSS_W / 8));
@@ -55,12 +55,12 @@ void pascal near boss_score_bonus(unsigned int units);
 
 // Callbacks. *_func() functions are "activated" by setting the regular
 // function once the boss battle starts.
-extern  farfunc_t_near boss_update;
+extern     func_t_near boss_update;
 extern nearfunc_t_near boss_fg_render;
 
 // Also responsible to set [bg_render_bombing_func] to the
 // [boss_bg_render_func]!
-extern  farfunc_t_near boss_update_func;
+extern     func_t_near boss_update_func;
 
 extern nearfunc_t_near boss_bg_render_func;
 extern nearfunc_t_near boss_fg_render_func;
@@ -115,14 +115,14 @@ enum explosion_type_t {
 
 void pascal near boss_explode_small(explosion_type_t type);
 #if (GAME == 5)
-	void near boss_explode_big_circle(void);
+void near boss_explode_big_circle(void);
 
-	// Wrapper for easy compatibility with TH04 code.
-	inline void boss_explode_big(explosion_type_t type) {
-		boss_explode_big_circle();
-	}
+// Wrapper for easy compatibility with TH04 code.
+inline void boss_explode_big(explosion_type_t type) {
+	boss_explode_big_circle();
+}
 #else
-	void pascal near boss_explode_big(explosion_type_t type);
+void pascal near boss_explode_big(explosion_type_t type);
 #endif
 
 void near explosions_small_update_and_render(void);
@@ -160,13 +160,13 @@ enum boss_defeat_frames_t {
 
 // A dumb helper function…
 #if (GAME == 5)
-	inline void boss_phase_explode_big() {
-		boss.phase++; // = PHASE_BOSS_EXPLODE_BIG
-	}
+inline void boss_phase_explode_big() {
+	boss.phase++; // = PHASE_BOSS_EXPLODE_BIG
+}
 #else
-	inline void boss_phase_explode_big() {
-		boss.phase = PHASE_EXPLODE_BIG;
-	}
+inline void boss_phase_explode_big() {
+	boss.phase = PHASE_EXPLODE_BIG;
+}
 #endif
 
 // …to abstract away the TH04/TH05 difference in *this* dumb helper function.
@@ -192,9 +192,9 @@ enum boss_defeat_frames_t {
 // • Grants the given amount of score [bonus_units] during BDF_BIG if
 //   [boss.phase_state.defeat_bonus] is `true`.
 #if (GAME == 5)
-	void pascal near boss_defeat_update(unsigned int bonus_units);
+void pascal near boss_defeat_update(unsigned int bonus_units);
 #else
-	void near boss_defeat_update(void);
+void near boss_defeat_update(void);
 #endif
 // ---------------
 

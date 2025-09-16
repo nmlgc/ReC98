@@ -1,3 +1,4 @@
+#include "th02/main/midboss/midboss.hpp"
 #include "th04/main/playfld.hpp"
 
 static const pixel_t MIDBOSS_W_MAX = 64;
@@ -18,9 +19,6 @@ struct midboss_stuff_t {
 
 extern midboss_stuff_t midboss;
 
-// Prevents stage enemies from being spawned if `true`.
-extern bool midboss_active;
-
 // Grants a score bonus of [units * MIDBOSS_BONUS_UNIT_VALUE], rendered as one
 // new point number popup per unit around the midboss sprite.
 void pascal near midboss_score_bonus(unsigned int units);
@@ -28,9 +26,9 @@ void pascal near midboss_score_bonus(unsigned int units);
 // Callbacks. *_func() functions are "activated" by setting the regular
 // function once the midboss battle starts.
 extern nearfunc_t_near midboss_invalidate;
-extern  farfunc_t_near midboss_update;
+extern     func_t_near midboss_update;
 extern nearfunc_t_near midboss_render;
-extern  farfunc_t_near midboss_update_func;
+extern     func_t_near midboss_update_func;
 extern nearfunc_t_near midboss_render_func;
 
 void midboss_reset(void);
@@ -85,6 +83,7 @@ void near midboss_defeat_update(void);
 // Renders the default PHASE_EXPLODE_BIG animation.
 void near midboss_defeat_render(void);
 
+#undef MIDBOSS_DEC
 #define MIDBOSS_DEC(stage) \
 	void pascal  far midboss##stage##_update(void); \
 	void pascal near midboss##stage##_render(void);

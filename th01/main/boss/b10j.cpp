@@ -8,7 +8,6 @@
 #include "th01/math/dir.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/vector.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
@@ -349,7 +348,11 @@ void mima_setup(void)
 	boss_palette_snap();
 	ent_still.set_image(0);
 	ent_anim.set_image(C_METEOR);
+
+	// Since we always come here with VRAM fully set to color #0, this is
+	// always a flash from white back to color #0 in boss3.grp.
 	z_palette_white_in();
+
 	ent_still.pos_set((PLAYFIELD_CENTER_X - (MIMA_W / 2)), PLAYFIELD_TOP);
 	ent_still.hitbox_orb_set(
 		((MIMA_W / 8) * 1), ((MIMA_H / 10) * 1),

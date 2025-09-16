@@ -1,9 +1,9 @@
 #if (GAME >= 4)
-	#include "th04/snd/snd.h"
+#include "th04/snd/snd.h"
 #elif (GAME == 3)
-	#include "th03/snd/snd.h"
+#include "th03/snd/snd.h"
 #else
-	#include "th02/snd/snd.h"
+#include "th02/snd/snd.h"
 #endif
 #include "x86real.h"
 

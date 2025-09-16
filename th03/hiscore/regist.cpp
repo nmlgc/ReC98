@@ -1,5 +1,6 @@
 #pragma option -zPgroup_01
 
+#include "th03/hiscore/regist.hpp"
 #include "libs/master.lib/master.hpp"
 #include "game/input.hpp"
 #include "th01/hardware/grppsafx.h"
@@ -9,11 +10,14 @@
 #include "th03/formats/cdg.h"
 #include "th03/formats/pi.hpp"
 #include "th03/hardware/input.h"
+#include "th03/snd/snd.h"
 #include "th03/shiftjis/regist.hpp"
 #include "th03/formats/scoredat.hpp"
 
 #include "th03/formats/score_ld.cpp"
 #include "th03/formats/score_es.cpp"
+
+extern regi_patnum_t REGI_PLAYCHAR[PLAYCHAR_COUNT][SCOREDAT_NAME_LEN];
 
 static const int PLACE_NONE = -1;
 
@@ -74,7 +78,7 @@ void pascal near regi_put(
 extern int entered_place;
 /// -----
 
-void near regist_load_and_put_initial(void)
+void near regist_load_and_put_initial_both(void)
 {
 	enum {
 		RANK_IMAGE_W = 320,
@@ -86,7 +90,7 @@ void near regist_load_and_put_initial(void)
 	extern const char regi2_bft[];
 	extern const char regi1_bft[];
 
-	palette_black();
+	palette_settone(0);
 	graph_accesspage(0);
 	graph_showpage(0);
 
@@ -117,6 +121,10 @@ int near regist_score_enter_from_resident(void)
 	int shift;
 	int c;
 
+	// ZUN bug: This sort loop does not consider the 9th digit, i.e., the
+	// number of continues used. Identical scores with a different number of
+	// used continues will therefore always appear in the order they were
+	// inserted into the list.
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
 		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
 			if(score_digit_as_regi(c) > hi.score.score[place][c + 1]) {
@@ -144,6 +152,10 @@ found:
 		}
 	}
 
+	// regist_rows_unput_and_put() also blits the currently inserted row, so we
+	// must explicitly blank it first. Since we blit all names to both pages,
+	// this ensures that regi_unput() can actually unblit the currently edited
+	// name (and no other one).
 	for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
 		hi.score.name[place][c] = REGI_ASCII(' ');
 	}
@@ -286,8 +298,10 @@ void pascal near regist_row_put_at(screen_x_t left, screen_y_t top, int place)
 	regi_put(left, top, hi.score.stage[place], highlight);
 }
 
-void near regist_rows_put(void)
+void near regist_rows_unput_and_put(void)
 {
+	// ZUN bloat: Way too excessive. The names are the only thing we possibly
+	// change throughout this screen.
 	graph_copy_page(0);
 
 	int place = 0;
@@ -304,7 +318,7 @@ void pascal near regist_row_put(int place)
 	regist_row_put_at(TABLE_LEFT, place_top(place), place);
 }
 
-void near regist_name_enter(void)
+void near regist_name_enter_menu(void)
 {
 	#define cursor_blank(cursor_backwards, top) { \
 		regi_unput(place_left(cursor_backwards), top); \
@@ -445,4 +459,123 @@ void near regist_name_enter(void)
 	}
 
 	#undef on_direction
+}
+
+void near regist_replace_same_letter_name_with_default_for_playchar(void)
+{
+	int i;
+	regi_patnum_t near *def_p;
+
+	// ZUN bloat: "Name is all spaces" is a subset of "all name letters are
+	// identical". By removing this loop and only keeping the one at the
+	// bottom, there's also no need to jump around using `goto`.
+	for(i = 0; i < SCOREDAT_NAME_LEN; i++) {
+		if(hi.score.name[entered_place][i] != REGI_ASCII(' ')) {
+			goto name_is_not_just_spaces;
+		}
+	}
+
+write_default_name_for_playchar:
+	def_p = REGI_PLAYCHAR[resident->playchar_paletted[0].char_id_16()];
+	for(i = (SCOREDAT_NAME_LEN - 1); i >= 0; (i--, def_p++)) {
+		hi.score.name[entered_place][i] = *def_p;
+	}
+	return;
+
+name_is_not_just_spaces:
+	uint8_t first_c = hi.score.name[entered_place][0];
+	for(i = 0; i < SCOREDAT_NAME_LEN; i++) {
+		if(hi.score.name[entered_place][i] != first_c) {
+			return;
+		}
+	}
+	goto write_default_name_for_playchar;
+}
+
+void near regist_menu(void)
+{
+	extern const char score_m[];
+	extern const char conti_pi[];
+	extern const char conti_cd2[];
+	#undef GAMEOVER_BG_FN
+	extern const char GAMEOVER_BG_FN[];
+
+	random_seed = resident->rand; // YUME.NEM key generation uses this RNG!
+
+	snd_load(score_m, SND_LOAD_SONG);
+	snd_kaja_func(KAJA_SONG_PLAY, 0);
+
+	scoredat_load_and_decode(static_cast<rank_t>(resident->rank));
+
+	// ZUN bloat: Checking for [resident->show_score_menu] is clearer and would
+	// remove the need for the [STAGE_NONE] constant.
+	if(resident->story_stage == STAGE_NONE) {
+		entered_place = PLACE_NONE;
+	} else {
+		entered_place = regist_score_enter_from_resident();
+	}
+
+	regist_load_and_put_initial_both();
+	if(entered_place == PLACE_NONE) {
+		regist_rows_unput_and_put();
+		palette_black_in(2);
+	} else {
+		regist_rows_unput_and_put();
+
+		// Necessary here because the rows overlap due to [TABLE_ROW_SPACING] <
+		// [REGI_GLYPH_H]. regi_unput() therefore must include name pixels from
+		// the rows above and below, and can't just blit the background image.
+		// ZUN bloat: Rendering all rows in regist_load_and_put_initial_both()
+		// would have avoided the need for that copy.
+		graph_copy_page(1);
+
+		graph_accesspage(0);
+		alphabet_put_initial();
+		palette_black_in(2);
+
+		regist_name_enter_menu();
+		regist_replace_same_letter_name_with_default_for_playchar();
+		regist_rows_unput_and_put();
+	}
+	input_wait_for_change(0);
+
+	// ZUN quirk: If we're just viewing high scores, we only get the fade if
+	// [resident->rem_credits] either hasn't been initialized yet or happens to
+	// be 0 as a result of previous Story Mode gameplay. Compare viewing high
+	// scores as the first thing you do after starting the process (→ fade)
+	// with viewing high scores after launching into Story Mode and immediately
+	// quitting (→ no fade).
+	if((resident->rem_credits == 0) || (resident->story_stage == STAGE_ALL)) {
+		snd_kaja_func(KAJA_SONG_FADE, 16);
+	}
+
+	palette_black_out(2);
+	scoredat_encode_and_save(static_cast<rank_t>(resident->rank));
+	super_free();
+
+	graph_accesspage(0);
+	graph_showpage(0);
+	palette_settone(0); // ZUN bloat: We've just blacked out.
+
+	// These load calls look like they belong to the respective call site
+	// rather than here. However, loading and blitting that image while the BGM
+	// is fading out is actually a *good* idea because it can completely hide
+	// the usual loading lag if the image loads and blits faster than the BGM
+	// takes to fade out. Since we only get the long BGM fade-out with 0
+	// remaining credits, this is worth the duplication and functional
+	// overreach. (The Continue screen fades rather quickly and doesn't get to
+	// hide its .PI load call.)
+	// ZUN bloat: The same can't be said for the Continue branch though, whose
+	// images should definitely be loaded within the function they belong to.
+	// Inverting the logic here would also avoid needlessly loading the Game
+	// Over image when we're in view-only mode and are about to quit back to
+	// the main menu anyway.
+	if(resident->rem_credits && (resident->story_stage != STAGE_ALL)) {
+		pi_fullres_load_palette_apply_put_free(0, conti_pi);
+		cdg_load_all(0, conti_cd2);
+	} else {
+		pi_fullres_load_palette_apply_put_free(0, GAMEOVER_BG_FN);
+		snd_delay_until_volume(-1);
+		snd_kaja_func(KAJA_SONG_STOP, 0);
+	}
 }

@@ -7,7 +7,7 @@
 
 enum cheeto_flag_t {
 	CF_FREE = 0,
-	CF_SLOWDOWN = 1,
+	CF_DECELERATE = 1,
 	CF_SPEEDUP = 2,
 
 	_cheeto_flag_t_FORCE_UINT8 = 0xFF

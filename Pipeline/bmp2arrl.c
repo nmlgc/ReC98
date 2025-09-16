@@ -1,19 +1,19 @@
 
 #if defined(REC98_PROJECT)
-# include "platform.h" /* see also [https://github.com/nmlgc/ReC98/issues/8] */
+#include "platform.h" /* see also [https://github.com/nmlgc/ReC98/issues/8] */
 #elif defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__) || defined(__TURBOC__)
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned long uint32_t;
 #else
-# include <stdint.h>
+#include <stdint.h>
 #endif
 #if defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__) || defined(__TURBOC__)
 # include <io.h>
 #else
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #endif
 #include <stdlib.h>
 #include <string.h>
@@ -22,12 +22,12 @@ typedef unsigned long uint32_t;
 #include <fcntl.h>
 
 #if defined(__GNUC__)
-# include <endian.h>
+#include <endian.h>
 #else
-# define le16toh(x) (x)
-# define le32toh(x) (x)
-# define htole16(x) (x)
-# define htole32(x) (x)
+#define le16toh(x) (x)
+#define le32toh(x) (x)
+#define htole16(x) (x)
+#define htole32(x) (x)
 #endif
 
 #include "bmp2arrl.h"
@@ -38,7 +38,7 @@ typedef unsigned long uint32_t;
 #define O_BINARY (0)
 #endif
 
-static unsigned char bmp_tmp[128]; /* more than enough */
+static unsigned char bmp_tmp[(640 / 8) * 40]; /* exactly enough */
 
 /*
     typedef struct tagBITMAPFILEHEADER {
@@ -84,8 +84,8 @@ static const char* BMP2ARR_PARAMETERLESS_ERRORS[BMP2ARR_ERROR_COUNT] = {
     /* INVALID_OUTPUT_TYPE      */ "Invalid output type; must be (asm | bin | bmp | c | cpp)",
     /* INVALID_PRESHIFT         */ "Invalid preshift type, must be (outer | inner)",
     /* INVALID_PRESHIFT_WIDTH   */ "Pre-shifting is only supported for 8-pixel wide sprites",
-    /* INVALID_SPRITE_WIDTH     */ "Sprite width must be 8, 16, or 32",
-    /* INVALID_SPRITE_HEIGHT    */ "Sprite height must be between 1 and 32",
+    /* INVALID_SPRITE_WIDTH     */ "Sprite width must be <=640",
+    /* INVALID_SPRITE_HEIGHT    */ "Sprite height must be between 1 and 40",
 
     /* INPUT_OPEN_ERROR         */ NULL,
     /* INPUT_OUT_OF_MEMORY      */ "Not enough memory to read the input BMP",
@@ -271,7 +271,7 @@ static int memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
 static void saveout_write_c_type(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx) {
     if (t->output_type == REC98_OUT_CPP)
         fprintf(sctx->fp,"const dot_rect_t(%d, %d) %s",sctx->bytesperrow * 8,t->sprite_height,t->output_symname != NULL ? t->output_symname : "untitled");
-    else if (t->output_type == REC98_OUT_CPP)
+    else if (t->output_type == REC98_OUT_C)
         fprintf(sctx->fp,"const unsigned char %s",t->output_symname != NULL ? t->output_symname : "untitled");
 
     if (t->flags & PRESHIFT_OUTER)
@@ -589,7 +589,7 @@ enum bmp2arr_error rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (t->bmp == NULL)
         return bmp2arr_error_set(t, OUTPUT_NO_INPUT_LOADED);
 
-    if (t->sprite_width != 8 && t->sprite_width != 16 && t->sprite_width != 32)
+    if (t->sprite_width > 640)
         return bmp2arr_error_set(t, INVALID_SPRITE_WIDTH);
 
     if (t->sprite_height == 0)

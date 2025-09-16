@@ -3,7 +3,7 @@
 
 // Internal .MPN slot structure
 struct mpn_t {
-	mpn_image_t *images;
+	mpn_image_t far *images;
 	size_t count;
 	Palette8 palette;
 	int8_t unused[10]; // ZUN bloat

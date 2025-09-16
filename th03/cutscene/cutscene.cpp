@@ -12,42 +12,40 @@
 #pragma option -zPgroup_01
 
 #include <stddef.h>
+#include "game/cutscene.hpp"
 #include "libs/master.lib/master.hpp"
 #if (GAME >= 4)
-	#include "th01/hardware/grcg.hpp" // ZUN bloat
+#include "th01/hardware/grcg.hpp" // ZUN bloat
 #endif
-#include "th01/formats/cutscene.hpp"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
-	#include "th05/hardware/input.h"
-	#include "th05/formats/pi.hpp"
+#include "th05/hardware/input.h"
+#include "th05/formats/pi.hpp"
 #elif (GAME == 4)
-	#include "th03/formats/pi.hpp"
-	#include "th04/hardware/input.h"
+#include "th03/formats/pi.hpp"
+#include "th04/hardware/input.h"
 #else
-	#include "th03/hardware/input.h"
-	#include "th03/formats/pi.hpp"
+#include "th03/hardware/input.h"
+#include "th03/formats/pi.hpp"
 
-	// Let's rather not have this one global, since it might be wrong in an
-	// in-game context?
-	#define key_det input_sp
+// Let's rather not have this one global, since it might be wrong in an in-game
+// context?
+#define key_det input_sp
 #endif
 #if (GAME == 5)
-	#include "th04/hardware/bgimage.hpp"
-	#include "th04/hardware/grppsafx.h"
-	#include "th04/snd/snd.h"
-	#include "th04/gaiji/gaiji.h"
+#include "th04/hardware/bgimage.hpp"
+#include "th04/hardware/grppsafx.h"
+#include "th04/snd/snd.h"
+#include "th04/gaiji/gaiji.h"
 #elif (GAME == 4)
-	#include "th04/hardware/grppsafx.h"
-	#include "th04/snd/snd.h"
+#include "th04/hardware/grppsafx.h"
+#include "th04/snd/snd.h"
 #else
-	#include "th01/hardware/grppsafx.h"
-	#include "th03/snd/snd.h"
+#include "th01/hardware/grppsafx.h"
+#include "th03/snd/snd.h"
 #endif
 #include "th03/cutscene/cutscene.hpp"
-
-#pragma option -a2
 
 // Constants
 // ---------
@@ -66,6 +64,10 @@ static const vram_byte_amount_t BOX_VRAM_W = (BOX_W / BYTE_DOTS);
 static const screen_x_t BOX_RIGHT = (BOX_LEFT + BOX_W);
 static const screen_y_t BOX_BOTTOM = (BOX_TOP + BOX_H);
 
+#if (GAME == 5)
+static const screen_x_t RETURN_LEFT = (BOX_RIGHT + GLYPH_FULL_W);
+#endif
+
 static const shiftjis_ank_amount_t NAME_LEN = 6;
 static const shiftjis_kanji_amount_t NAME_KANJI_LEN = (
 	NAME_LEN / sizeof(shiftjis_kanji_t)
@@ -77,29 +79,58 @@ static const pixel_t NAME_W = ((NAME_LEN * GLYPH_HALF_W) + GLYPH_FULL_W);
 static const int TEXT_INTERVAL_DEFAULT = ((GAME == 5) ? 2 : 1);
 // ---------
 
-// State
-// -----
+/// State
+/// -----
 
-#if (GAME >= 4)
-	// Statically allocated. MODDERS: TH03's dynamic allocation was better than
-	// hardcoding a maximum size...
-	extern unsigned char script[8192];
-
-	extern unsigned char near *script_p;
-
-	// Required by `script.hpp`.
-	#define script_p script_p
-#else
-	// Dynamically allocated.
-	extern unsigned char far *script;
-
-	#define script_p script
+#if (GAME == 5)
+#define extern
 #endif
 
-extern Planar<dots16_t>* box_bg;
+#if (GAME >= 4)
+// Statically allocated. MODDERS: TH03's dynamic allocation was better than
+// hardcoding a maximum size...
+extern unsigned char script[8192];
+
+extern unsigned char near *script_p;
+
+// Required by `script.hpp`.
+#define script_p script_p
+#else
+// Dynamically allocated.
+extern unsigned char far *script;
+
+#define script_p script
+#endif
+
+extern Planar<dots16_t> far *box_bg;
 
 // Skips any delays during the cutscene if `true`.
 extern bool fast_forward;
+
+#if (GAME == 5)
+static int8_t unused[60]; // ZUN bloat
+
+// String-to-color map
+// -------------------
+// Used to automatically change the text color whenever a specific Shift-JIS
+// code point is encountered.
+
+static const int COLMAP_COUNT = 8;
+
+struct colmap_t {
+	vc_t values[COLMAP_COUNT];
+
+	// Might have been originally meant for a complete character name?
+	ShiftJISKanji keys[COLMAP_COUNT][NAME_KANJI_LEN];
+};
+
+colmap_t colmap;
+#undef extern
+extern unsigned char colmap_count;
+#define extern
+static int8_t padding; // ZUN bloat
+/// -------------------
+#endif
 
 // [y] is always aligned to GLYPH_H pixels.
 extern screen_point_t cursor;
@@ -109,50 +140,32 @@ extern vc_t text_col;
 extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 
 #if (GAME >= 4)
-	#define text_fx graph_putsa_fx_func
+#define text_fx graph_putsa_fx_func
 #endif
 // -----
 
-#if (GAME == 5)
-	// String-to-color map
-	// -------------------
-	// Used to automatically change the text color whenever a specific
-	// Shift-JIS code point is encountered.
-
-	static const int COLMAP_COUNT = 8;
-
-	struct colmap_t {
-		vc_t values[COLMAP_COUNT];
-
-		// Might have been originally meant for a complete character name?
-		ShiftJISKanji keys[COLMAP_COUNT][NAME_KANJI_LEN];
-	};
-
-	extern colmap_t colmap;
-	extern unsigned char colmap_count;
-	// -------------------
-#endif
+#pragma option -a2
 
 // Function ordering fails
 // -----------------------
 
 #if (GAME == 5)
-	// Waits the given amount of frames (0 = forever) for the OK, Shot, or
-	// Cancel button to be pressed, while showing the ⏎ Return key animation
-	// in a blocking way.
-	void pascal near box_wait_animate(int frames_to_wait = 0);
+// Waits the given amount of frames (0 = forever) for the OK, Shot, or Cancel
+// button to be pressed, while showing the ⏎ Return key animation in a blocking
+// way.
+void pascal near box_wait_animate(int frames_to_wait = 0);
 #else
-	#define box_wait_animate(frames_to_wait) { \
-		input_wait_for_change(frames_to_wait); \
-	}
+#define box_wait_animate(frames_to_wait) { \
+	input_wait_for_change(frames_to_wait); \
+}
 
-	void near box_bg_allocate_and_snap(void);
-	void near box_bg_free(void);
+void near box_bg_allocate_and_snap(void);
+void near box_bg_free(void);
 #endif
 #if (GAME >= 4)
-	// Crossfades the text box area from VRAM page 1 to VRAM page 0, spending
-	// [text_interval] frames on each step.
-	void near box_1_to_0_animate(void);
+// Crossfades the text box area from VRAM page 1 to VRAM page 0, spending
+// [text_interval] frames on each step.
+void near box_1_to_0_animate(void);
 #endif
 // -----------------------
 
@@ -174,13 +187,13 @@ extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 // slowed down on every iteration of the script interpreter loop, i.e., between
 // every script command or 2-byte text pair.
 inline void cutscene_input_sense(void) {
-	#if (GAME == 5)
-		input_reset_sense_held();
-	#elif (GAME == 4)
-		input_reset_sense();
-	#elif (GAME == 3)
-		input_mode_interface();
-	#endif
+#if (GAME == 5)
+	input_reset_sense_held();
+#elif (GAME == 4)
+	input_reset_sense();
+#elif (GAME == 3)
+	input_mode_interface();
+#endif
 }
 
 bool16 pascal near cutscene_script_load(const char* fn)
@@ -191,28 +204,28 @@ bool16 pascal near cutscene_script_load(const char* fn)
 		return true;
 	}
 	size_t size = file_size();
-	#if (GAME >= 4)
-		// PORTERS: Required for TH03 on flat memory models as well.
-		// ZUN landmine: Missing an error check if [size] >= sizeof(script);
-		script_p = static_cast<unsigned char near *>(script);
-	#else
-		script = reinterpret_cast<unsigned char far *>(hmem_allocbyte(size));
-	#endif
+#if (GAME >= 4)
+	// PORTERS: Required for TH03 on flat memory models as well.
+	// ZUN landmine: Missing an error check if [size] >= sizeof(script);
+	script_p = static_cast<unsigned char near *>(script);
+#else
+	script = reinterpret_cast<unsigned char far *>(hmem_allocbyte(size));
+#endif
 	file_read(script_p, size);
 	file_close();
 	return false;
 }
 
 #if (GAME <= 4)
-	void near cutscene_script_free(void)
-	{
-		#if (GAME == 3)
-			if(script) {
-				HMem<unsigned char>::free(script);
-				script = nullptr;
-			}
-		#endif
+void near cutscene_script_free(void)
+{
+#if (GAME == 3)
+	if(script) {
+		HMem<unsigned char>::free(script);
+		script = nullptr;
 	}
+#endif
+}
 #endif
 
 // ZUN bloat: Turn into a single global inline function.
@@ -235,161 +248,163 @@ bool16 pascal near cutscene_script_load(const char* fn)
 // (Flipping the visible page on every picture change would have only made
 // everything even more complicated.)
 #if (GAME == 5)
-	#include "th01/hardware/egc.h"
+#include "th01/hardware/egc.h"
 
-	#define pic_copy_to_other(left, top) { \
-		egc_copy_rect_1_to_0_16(left, top, CUTSCENE_PIC_W, CUTSCENE_PIC_H); \
-	}
+#define pic_copy_to_other(left, top) { \
+	egc_copy_rect_1_to_0_16(left, top, CUTSCENE_PIC_W, CUTSCENE_PIC_H); \
+}
 
-	void pascal near pic_put_both_masked(
-		screen_x_t left, vram_y_t top, int quarter, int mask_id
-	)
-	{
-		graph_accesspage(1);
-		pi_put_quarter_masked_8(left, top, CUTSCENE_PIC_SLOT, quarter, mask_id);
-		pic_copy_to_other(left, top);
-	}
+void pascal near pic_put_both_masked(
+	screen_x_t left, vram_y_t top, int quarter, int mask_id
+)
+{
+	graph_accesspage(1);
+	pi_put_quarter_masked_8(left, top, CUTSCENE_PIC_SLOT, quarter, mask_id);
+	pic_copy_to_other(left, top);
+}
 #else
-	void pascal near pic_copy_to_other(screen_x_t left, vram_y_t top)
-	{
-		vram_offset_t vo = vram_offset_shift(left, top);
-		pixel_t y;
-		vram_byte_amount_t vram_x;
+void pascal near pic_copy_to_other(screen_x_t left, vram_y_t top)
+{
+	vram_offset_t vo = vram_offset_shift(left, top);
+	pixel_t y;
+	vram_byte_amount_t vram_x;
 
+	egc_start_copy();
+
+	// Faster than TH01's very slow end_pic_show() version, but still not
+	// as optimal as you can get within the EGC's limited 16-dot tile
+	// register.
+	y = 0;
+	while(y < CUTSCENE_PIC_H) {
+		vram_x = 0;
+		while(vram_x < CUTSCENE_PIC_VRAM_W) {
+			egc_temp_t tmp;
+
+			// ZUN bloat: Remember that the call site temporarily switched
+			// the visible page to page 1, and blitted the image to page 0.
+			graph_accesspage(0);	tmp = egc_chunk(vo);
+			graph_accesspage(1);	egc_chunk(vo) = tmp;
+
+			vram_x += EGC_REGISTER_SIZE;
+			vo += EGC_REGISTER_SIZE;
+		}
+		y++;
+		vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
+	}
+	egc_off();
+
+	// ZUN bloat: All blitting operations in this module access the
+	// intended page before they blit. That's why preliminary state
+	// changes like this one are completely redundant, thankfully.
+	graph_accesspage(0);
+}
+
+void pascal near pic_put_both_masked(
+	screen_x_t left, vram_y_t top, int quarter, int mask_id
+)
+{
+	enum {
+		TEMP_ROW = RES_Y,
+	};
+
+	vram_word_amount_t vram_word;
+	vram_offset_t vo_temp;
+	pi_buffer_p_t row_p;
+
+	pi_buffer_p_init_quarter(row_p, CUTSCENE_PIC_SLOT, quarter);
+
+	// ZUN bloat: See the call site.
+	graph_showpage(1);
+	vram_offset_t vo = vram_offset_shift(left, top);
+	graph_accesspage(0);
+	for(pixel_t y = 0; y < CUTSCENE_PIC_H; y++) {
+		// This actually is much faster than clearing the masked pixels using
+		// the GRCG and doing an unaccelerated 4-plane VRAM OR. See the
+		// `Research/blitperf/xfade` example for a benchmark.
+		graph_pack_put_8_noclip(0, TEMP_ROW, row_p, CUTSCENE_PIC_W);
 		egc_start_copy();
-
-		// Faster than TH01's very slow end_pic_show() version, but still not
-		// as optimal as you can get within the EGC's limited 16-dot tile
-		// register.
-		y = 0;
-		while(y < CUTSCENE_PIC_H) {
-			vram_x = 0;
-			while(vram_x < CUTSCENE_PIC_VRAM_W) {
-				egc_temp_t tmp;
-
-				// ZUN bloat: Remember that the call site temporarily switched
-				// the visible page to page 1, and blitted the image to page 0.
-				graph_accesspage(0);	tmp = egc_chunk(vo);
-				graph_accesspage(1);	egc_chunk(vo) = tmp;
-
-				vram_x += EGC_REGISTER_SIZE;
-				vo += EGC_REGISTER_SIZE;
-			}
-			y++;
-			vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
+		egc_setup_copy_masked(PI_MASKS[mask_id][y % PI_MASK_COUNT]);
+		vo_temp = vram_offset_shift(0, TEMP_ROW);
+		vram_word = 0;
+		while(vram_word < (CUTSCENE_PIC_W / EGC_REGISTER_DOTS)) {
+			egc_chunk(vo) = egc_chunk(vo_temp);
+			vram_word++;
+			vo += EGC_REGISTER_SIZE;
+			vo_temp += EGC_REGISTER_SIZE;
 		}
 		egc_off();
 
-		// ZUN bloat: All blitting operations in this module access the
-		// intended page before they blit. That's why preliminary state
-		// changes like this one are completely redundant, thankfully.
-		graph_accesspage(0);
+		vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
+		pi_buffer_p_offset(row_p, PI_W, 0);
+		pi_buffer_p_normalize(row_p);
+	}
+	graph_showpage(0);
+	pic_copy_to_other(left, top);
+}
+
+#define box_bg_snap_func(p, vo) { \
+	(&box_bg->B)[p++] = VRAM_CHUNK(B, vo, 16); \
+	(&box_bg->B)[p++] = VRAM_CHUNK(R, vo, 16); \
+	(&box_bg->B)[p++] = VRAM_CHUNK(G, vo, 16); \
+	(&box_bg->B)[p++] = VRAM_CHUNK(E, vo, 16); \
+}
+
+#define box_bg_put_func(p, vo) { \
+	VRAM_CHUNK(B, vo, 16) = (&box_bg->B)[p++]; \
+	VRAM_CHUNK(R, vo, 16) = (&box_bg->B)[p++]; \
+	VRAM_CHUNK(G, vo, 16) = (&box_bg->B)[p++]; \
+	VRAM_CHUNK(E, vo, 16) = (&box_bg->B)[p++]; \
+}
+
+#define box_bg_loop(func) /* No braces due to local variable layout */ \
+	size_t p; \
+	vram_y_t src_y; \
+	screen_x_t src_x; \
+	pixel_t dst_y; \
+	vram_byte_amount_t dst_byte; \
+	vram_offset_t vo; \
+	\
+	p = 0; \
+	src_y = BOX_TOP; \
+	dst_y = 0; \
+	while(dst_y < BOX_H) { \
+		src_x = BOX_LEFT; \
+		dst_byte = 0; \
+		while(dst_byte < BOX_VRAM_W) { \
+			vo = vram_offset_shift(src_x, src_y); \
+			func(p, vo); \
+			dst_byte += static_cast<vram_byte_amount_t>(sizeof(dots16_t)); \
+			src_x += 16; \
+		} \
+		dst_y++; \
+		src_y++; \
 	}
 
-	void pascal near pic_put_both_masked(
-		screen_x_t left, vram_y_t top, int quarter, int mask_id
-	)
-	{
-		enum {
-			TEMP_ROW = RES_Y,
-		};
+void near box_bg_allocate_and_snap(void)
+{
+	box_bg_free();
+	graph_accesspage(0);
+	box_bg = HMem< Planar<dots16_t> >::alloc(
+		((BOX_VRAM_W * BOX_H) / sizeof(dots16_t))
+	);
+	box_bg_loop(box_bg_snap_func);
+}
 
-		vram_word_amount_t vram_word;
-		vram_offset_t vo_temp;
-		pi_buffer_p_t row_p;
-
-		pi_buffer_p_init_quarter(row_p, CUTSCENE_PIC_SLOT, quarter);
-
-		// ZUN bloat: See the call site.
-		graph_showpage(1);
-		vram_offset_t vo = vram_offset_shift(left, top);
-		graph_accesspage(0);
-		for(pixel_t y = 0; y < CUTSCENE_PIC_H; y++) {
-			// This might actually be faster than clearing the masked pixels
-			// using the GRCG and doing an unaccelerated 4-plane VRAM OR.
-			graph_pack_put_8_noclip(0, TEMP_ROW, row_p, CUTSCENE_PIC_W);
-			egc_start_copy();
-			egc_setup_copy_masked(PI_MASKS[mask_id][y & (PI_MASK_COUNT - 1)]);
-			vo_temp = vram_offset_shift(0, TEMP_ROW);
-			vram_word = 0;
-			while(vram_word < (CUTSCENE_PIC_W / EGC_REGISTER_DOTS)) {
-				egc_chunk(vo) = egc_chunk(vo_temp);
-				vram_word++;
-				vo += EGC_REGISTER_SIZE;
-				vo_temp += EGC_REGISTER_SIZE;
-			}
-			egc_off();
-
-			vo += (ROW_SIZE - CUTSCENE_PIC_VRAM_W);
-			pi_buffer_p_offset(row_p, PI_W, 0);
-			pi_buffer_p_normalize(row_p);
-		}
-		graph_showpage(0);
-		pic_copy_to_other(left, top);
+void near box_bg_free(void)
+{
+	if(box_bg) {
+		HMem< Planar<dots16_t> >::free(box_bg);
+		box_bg = nullptr;
 	}
+}
 
-	#define box_bg_snap_func(p, vo) { \
-		(&box_bg->B)[p++] = VRAM_CHUNK(B, vo, 16); \
-		(&box_bg->B)[p++] = VRAM_CHUNK(R, vo, 16); \
-		(&box_bg->B)[p++] = VRAM_CHUNK(G, vo, 16); \
-		(&box_bg->B)[p++] = VRAM_CHUNK(E, vo, 16); \
-	}
-
-	#define box_bg_put_func(p, vo) { \
-		VRAM_CHUNK(B, vo, 16) = (&box_bg->B)[p++]; \
-		VRAM_CHUNK(R, vo, 16) = (&box_bg->B)[p++]; \
-		VRAM_CHUNK(G, vo, 16) = (&box_bg->B)[p++]; \
-		VRAM_CHUNK(E, vo, 16) = (&box_bg->B)[p++]; \
-	}
-
-	#define box_bg_loop(func) /* No braces due to local variable layout */ \
-		size_t p; \
-		vram_y_t src_y; \
-		screen_x_t src_x; \
-		pixel_t dst_y; \
-		vram_byte_amount_t dst_byte; \
-		vram_offset_t vo; \
-		\
-		p = 0; \
-		src_y = BOX_TOP; \
-		dst_y = 0; \
-		while(dst_y < BOX_H) { \
-			src_x = BOX_LEFT; \
-			dst_byte = 0; \
-			while(dst_byte < BOX_VRAM_W) { \
-				vo = vram_offset_shift(src_x, src_y); \
-				func(p, vo); \
-				dst_byte += static_cast<vram_byte_amount_t>(sizeof(dots16_t)); \
-				src_x += 16; \
-			} \
-			dst_y++; \
-			src_y++; \
-		}
-
-	void near box_bg_allocate_and_snap(void)
-	{
-		box_bg_free();
-		graph_accesspage(0);
-		box_bg = HMem< Planar<dots16_t> >::alloc(
-			((BOX_VRAM_W * BOX_H) / sizeof(dots16_t))
-		);
-		box_bg_loop(box_bg_snap_func);
-	}
-
-	void near box_bg_free(void)
-	{
-		if(box_bg) {
-			HMem< Planar<dots16_t> >::free(box_bg);
-			box_bg = nullptr;
-		}
-	}
-
-	void near box_bg_put(void)
-	{
-		box_bg_loop(box_bg_put_func);
-	}
+void near box_bg_put(void)
+{
+	box_bg_loop(box_bg_put_func);
+}
 #endif
 
+#undef extern
 #include "th03/formats/script.hpp"
 
 void near cursor_advance_and_animate(void)
@@ -400,9 +415,9 @@ void near cursor_advance_and_animate(void)
 		cursor.x = (BOX_LEFT + NAME_W);
 
 		if(cursor.y >= BOX_BOTTOM) {
-			#if (GAME >= 4)
-				box_1_to_0_animate();
-			#endif
+#if (GAME >= 4)
+			box_1_to_0_animate();
+#endif
 
 			// ZUN quirk: Since [cursor.y] is >= BOX_BOTTOM here, the TH05
 			// Return key animation will be displayed at the right edge of the
@@ -427,122 +442,118 @@ void near cursor_advance_and_animate(void)
 			// will just be blitted on top of old text.
 			// (Not that the feature would have been particularly usable
 			// without this bug, thanks to the assignments above…)
-			#if (GAME != 5)
-				graph_accesspage(1);	box_bg_put();
-				graph_accesspage(0);	box_bg_put();
-			#endif
+#if (GAME != 5)
+			graph_accesspage(1);	box_bg_put();
+			graph_accesspage(0);	box_bg_put();
+#endif
 		}
 	}
 }
 
 #if (GAME >= 4)
-	typedef enum {
-		BOX_MASK_0,
-		BOX_MASK_1,
-		BOX_MASK_2,
-		BOX_MASK_3,
-		BOX_MASK_COPY,
-		BOX_MASK_COUNT,
+typedef enum {
+	BOX_MASK_0,
+	BOX_MASK_1,
+	BOX_MASK_2,
+	BOX_MASK_3,
+	BOX_MASK_COPY,
+	BOX_MASK_COUNT,
 
-		_box_mask_t_FORCE_UINT16 = 0xFFFF
-	} box_mask_t;
+	_box_mask_t_FORCE_UINT16 = 0xFFFF
+} box_mask_t;
 
-	// Copies the text box area from VRAM page 1 to VRAM page 0, applying the
-	// given [mask]. Assumes that the EGC is active, and initialized for a copy.
-	void pascal near box_1_to_0_masked(box_mask_t mask)
-	{
-		extern const dot_rect_t(16, 4) BOX_MASKS[BOX_MASK_COUNT];
-		egc_temp_t tmp;
+// Copies the text box area from VRAM page 1 to VRAM page 0, applying the
+// given [mask]. Assumes that the EGC is active, and initialized for a copy.
+void pascal near box_1_to_0_masked(box_mask_t mask)
+{
+	extern const dot_rect_t(16, 4) BOX_MASKS[BOX_MASK_COUNT];
+	egc_temp_t tmp;
 
-		for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {
-			egc_setup_copy_masked(BOX_MASKS[mask][y & 3]);
+	for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {
+		egc_setup_copy_masked(BOX_MASKS[mask][y & 3]);
 
-			vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
-			pixel_t x = 0;
-			while(x < BOX_W) {
-				graph_accesspage(1);	tmp = egc_chunk(vram_offset);
-				graph_accesspage(0);	egc_chunk(vram_offset) = tmp;
-				x += EGC_REGISTER_DOTS;
-				vram_offset += EGC_REGISTER_SIZE;
-			}
+		vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
+		pixel_t x = 0;
+		while(x < BOX_W) {
+			graph_accesspage(1);	tmp = egc_chunk(vram_offset);
+			graph_accesspage(0);	egc_chunk(vram_offset) = tmp;
+			x += EGC_REGISTER_DOTS;
+			vram_offset += EGC_REGISTER_SIZE;
 		}
 	}
+}
 
-	void near box_1_to_0_animate(void)
-	{
-		// ZUN bloat: box_1_to_0_masked() switches the accessed page anyway.
-		#if (GAME == 5)
-			graph_accesspage(0);
-		#endif
+void near box_1_to_0_animate(void)
+{
+	// ZUN bloat: box_1_to_0_masked() switches the accessed page anyway.
+#if (GAME == 5)
+	graph_accesspage(0);
+#endif
 
-		egc_start_copy();
-		if(!fast_forward) {
-			for(int i = BOX_MASK_0; i < BOX_MASK_COPY; i++) {
-				box_1_to_0_masked(static_cast<box_mask_t>(i));
-				frame_delay(text_interval);
-			}
+	egc_start_copy();
+	if(!fast_forward) {
+		for(int i = BOX_MASK_0; i < BOX_MASK_COPY; i++) {
+			box_1_to_0_masked(static_cast<box_mask_t>(i));
+			frame_delay(text_interval);
 		}
-		box_1_to_0_masked(BOX_MASK_COPY);
-		egc_off();
-
-		#if (GAME == 5)
-			frame_delay(1); // ZUN quirk
-		#endif
 	}
+	box_1_to_0_masked(BOX_MASK_COPY);
+	egc_off();
+
+#if (GAME == 5)
+	frame_delay(1); // ZUN quirk
+#endif
+}
 #endif
 
 #if (GAME == 5)
-	void pascal near box_wait_animate(int frames_to_wait)
-	{
-		enum {
-			LEFT = (BOX_RIGHT + GLYPH_FULL_W),
-		};
+void pascal near box_wait_animate(int frames_to_wait)
+{
+	unsigned int frames_waited = 0;
+	bool16 ignore_frames = false;
 
-		unsigned int frames_waited = 0;
-		bool16 ignore_frames = false;
-
-		while(1) {
-			cutscene_input_sense();
-			if(key_det == INPUT_NONE) {
-				break;
-			}
-			frame_delay(1);
+	while(1) {
+		cutscene_input_sense();
+		if(key_det == INPUT_NONE) {
+			break;
 		}
-
-		if(frames_to_wait == 0) {
-			frames_to_wait = 999;
-			ignore_frames = true;
-		}
-
-		graph_accesspage(0);
-		while(1) {
-			cutscene_input_sense();
-
-			// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
-			// applying boldface… why not just show it on TRAM?
-			bgimage_put_rect_16(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
-
-			if(
-				(frames_to_wait <= 0) ||
-				(key_det & INPUT_OK) ||
-				(key_det & INPUT_SHOT) ||
-				(key_det & INPUT_CANCEL)
-			) {
-				return;
-			}
-			graph_gaiji_putc(
-				LEFT,
-				cursor.y,
-				(ga_RETURN_KEY + ((frames_waited / 8) & (RETURN_KEY_CELS - 1))),
-				V_WHITE
-			);
-			frames_waited++;
-			if(!ignore_frames) {
-				frames_to_wait--;
-			}
-			frame_delay(1);
-		}
+		frame_delay(1);
 	}
+
+	if(frames_to_wait == 0) {
+		frames_to_wait = 999;
+		ignore_frames = true;
+	}
+
+	graph_accesspage(0);
+	while(1) {
+		cutscene_input_sense();
+
+		// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
+		// applying boldface… why not just show it on TRAM?
+		bgimage_put_rect_16(RETURN_LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
+
+		if(
+			(frames_to_wait <= 0) ||
+			(key_det & INPUT_OK) ||
+			(key_det & INPUT_SHOT) ||
+			(key_det & INPUT_CANCEL)
+		) {
+			return;
+		}
+		graph_gaiji_putc(
+			RETURN_LEFT,
+			cursor.y,
+			(ga_RETURN_KEY + ((frames_waited / 8) % RETURN_KEY_CELS)),
+			V_WHITE
+		);
+		frames_waited++;
+		if(!ignore_frames) {
+			frames_to_wait--;
+		}
+		frame_delay(1);
+	}
+}
 #endif
 
 // Called with [script_p] at the character past [c].
@@ -551,12 +562,12 @@ script_ret_t pascal near script_op(unsigned char c)
 	// ZUN bloat: Needed for code generation reasons. The structure of the
 	// conditional branches below ensures that the `return`s have no actual
 	// effect, so this block can just be deleted.
-	#if (GAME == 5)
-		#define palette_black_in(x)  palette_black_in(x);  return CONTINUE;
-		#define palette_black_out(x) palette_black_out(x); return CONTINUE;
-		#define palette_white_in(x)  palette_white_in(x);  return CONTINUE;
-		#define palette_white_out(x) palette_white_out(x); return CONTINUE;
-	#endif
+#if (GAME == 5)
+	#define palette_black_in(x)  palette_black_in(x);  return CONTINUE;
+	#define palette_black_out(x) palette_black_out(x); return CONTINUE;
+	#define palette_white_in(x)  palette_white_in(x);  return CONTINUE;
+	#define palette_white_out(x) palette_white_out(x); return CONTINUE;
+#endif
 
 	int i;
 	int p1;
@@ -582,9 +593,9 @@ script_ret_t pascal near script_op(unsigned char c)
 
 	case 's':
 		c = *script_p;
-		#if (GAME >= 4)
-			box_1_to_0_animate();
-		#endif
+#if (GAME >= 4)
+		box_1_to_0_animate();
+#endif
 		if(c != '-') {
 			script_param_read_number_first(p1, 0);
 			if(!fast_forward) {
@@ -596,46 +607,46 @@ script_ret_t pascal near script_op(unsigned char c)
 		cursor.x = BOX_LEFT;
 		cursor.y = BOX_TOP;
 
-		#if (GAME == 5)
-			graph_accesspage(1);
-			bgimage_put_rect_16(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
+#if (GAME == 5)
+		graph_accesspage(1);
+		bgimage_put_rect_16(BOX_LEFT, BOX_TOP, BOX_W, BOX_H);
 
-			// ZUN bloat: All blitting operations in this module access the
-			// intended page before they blit. That's why preliminary state
-			// changes like this one are completely redundant, thankfully.
-			graph_accesspage(0);
-		#else
-			// High-level overview, point 2)
-			graph_accesspage(1);	box_bg_put();
-			graph_accesspage(0);	box_bg_put();
-		#endif
+		// ZUN bloat: All blitting operations in this module access the
+		// intended page before they blit. That's why preliminary state
+		// changes like this one are completely redundant, thankfully.
+		graph_accesspage(0);
+#else
+		// High-level overview, point 2)
+		graph_accesspage(1);	box_bg_put();
+		graph_accesspage(0);	box_bg_put();
+#endif
 		break;
 
 	case 'c':
-		#if (GAME == 5)
-			// ZUN bloat: Doesn't matter for either '=' or digits.
-			c = tolower(*script_p);
+#if (GAME == 5)
+		// ZUN bloat: Doesn't matter for either '=' or digits.
+		c = tolower(*script_p);
 
-			if(c == '=') {
-				goto colmap_add;
-			}
-		#endif
+		if(c == '=') {
+			goto colmap_add;
+		}
+#endif
 		script_param_read_number_first(p1, V_WHITE);
 		text_col = p1;
 		break;
 
 	case 'b':
 		script_param_read_number_first(p1, WEIGHT_BOLD);
-		#if (GAME >= 4)
-			graph_putsa_fx_func = static_cast<graph_putsa_fx_func_t>(p1);
-		#else
-			switch(p1) {
-			case WEIGHT_NORMAL:	text_fx = FX_WEIGHT_NORMAL;	break;
-			case WEIGHT_HEAVY: 	text_fx = FX_WEIGHT_HEAVY; 	break;
-			case WEIGHT_BOLD:  	text_fx = FX_WEIGHT_BOLD;  	break;
-			case WEIGHT_BLACK: 	text_fx = FX_WEIGHT_BLACK; 	break;
-			}
-		#endif
+#if (GAME >= 4)
+		graph_putsa_fx_func = static_cast<graph_putsa_fx_func_t>(p1);
+#else
+		switch(p1) {
+		case WEIGHT_NORMAL:	text_fx = FX_WEIGHT_NORMAL;	break;
+		case WEIGHT_HEAVY: 	text_fx = FX_WEIGHT_HEAVY; 	break;
+		case WEIGHT_BOLD:  	text_fx = FX_WEIGHT_BOLD;  	break;
+		case WEIGHT_BLACK: 	text_fx = FX_WEIGHT_BLACK; 	break;
+		}
+#endif
 		break;
 
 	case 'w':
@@ -643,9 +654,9 @@ script_ret_t pascal near script_op(unsigned char c)
 		if((c == 'o') || (c == 'i')) {
 			script_op_fade(c, palette_white_in, palette_white_out, p1);
 		} else {
-			#if (GAME >= 4)
-				box_1_to_0_animate();
-			#endif
+#if (GAME >= 4)
+			box_1_to_0_animate();
+#endif
 			script_param_number_default = 64;
 			if(c != 'm') {
 				if(c == 'k') {
@@ -653,18 +664,18 @@ script_ret_t pascal near script_op(unsigned char c)
 				}
 				script_param_read_number_first(p1);
 				if(!fast_forward) {
-					#if (GAME >= 4)
+#if (GAME >= 4)
+					frame_delay(p1);
+#else
+					if(c != 'k')  {
 						frame_delay(p1);
-					#else
-						if(c != 'k')  {
-							frame_delay(p1);
-						} else {
-							input_wait_for_ok(p1);
-						}
-					#endif
-					#if (GAME == 5) // ZUN bloat
-						return CONTINUE;
-					#endif
+					} else {
+						input_wait_for_ok(p1);
+					}
+#endif
+#if (GAME == 5) // ZUN bloat
+					return CONTINUE;
+#endif
 				}
 			} else {
 				script_p++;
@@ -677,15 +688,15 @@ script_ret_t pascal near script_op(unsigned char c)
 				if(!fast_forward) {
 					// ZUN landmine: Does not prevent the potential deadlock
 					// issue with this function.
-					#if (GAME >= 4)
+#if (GAME >= 4)
+					snd_delay_until_measure(p1, p2);
+#else
+					if(c != 'k')  {
 						snd_delay_until_measure(p1, p2);
-					#else
-						if(c != 'k')  {
-							snd_delay_until_measure(p1, p2);
-						} else {
-							input_wait_for_ok_or_measure(p1, p2);
-						}
-					#endif
+					} else {
+						input_wait_for_ok_or_measure(p1, p2);
+					}
+#endif
 				}
 			}
 		}
@@ -719,10 +730,15 @@ script_ret_t pascal near script_op(unsigned char c)
 		} else {
 			script_p++;
 			script_param_read_number_first(p1, 1);
-			snd_kaja_func(KAJA_SONG_FADE, p1);
-			#if (GAME <= 4) // ZUN bloat: `break` or `return`, pick one!
-				return CONTINUE;
-			#endif
+
+			// ZUN landmine: Should restrict [p1] to 8 bits – otherwise, the
+			// parameter would overflow into the function and not make this a
+			// fade. (The regular snd_kaja_func() behaves this way.)
+			snd_kaja_interrupt((KAJA_SONG_FADE << 8) + p1);
+
+#if (GAME <= 4) // ZUN bloat: `break` or `return`, pick one!
+			return CONTINUE;
+#endif
 		}
 		break;
 
@@ -734,24 +750,22 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_param_read_number_first(p1, 0);
 
 			graph_accesspage(1);
-			#if (GAME == 3)
-				// Might look like a ZUN bug, but actually works around the
-				// master.lib bug mentioned in the comment of this function,
-				// which ZUN only fixed for TH04 and TH05. In the original
-				// binary, the ASCII→digit conversion inside
-				// str_consume_up_to_3_digits() is done by ADDing a negative
-				// number, which causes the x86 carry flag to always be set
-				// when we get here and haven't fallen back onto the default
-				// value. Therefore, the bug will always add 1 onto the gaiji
-				// ID, which can be worked around by subtracting 1 from ID
-				// before passing it as a parameter. Once graph_gaiji_putc()
-				// returns, the carry flag happens to be cleared, which is
-				// why the subtraction is not necessary for the call below to
-				// display the intended gaiji.
-				graph_gaiji_putc(cursor.x, cursor.y, (p1 - 1), text_col);
+#if (GAME == 3)
+			// Looks like a ZUN bug, but actually works around the master.lib
+			// bug mentioned in the comment of this function, which ZUN only
+			// fixed for TH04 and TH05. In the original binary, the ASCII→digit
+			// conversion inside str_consume_up_to_3_digits() is done by ADDing
+			// a negative number, which causes the x86 carry flag to always be
+			// set when we get here and haven't fallen back onto the default
+			// value. Therefore, the bug will always add 1 onto the gaiji ID,
+			// which can be worked around by subtracting 1 before passing it as
+			// a parameter. Once graph_gaiji_putc() returns, the carry flag
+			// happens to be cleared, which is why the subtraction is not
+			// necessary for the call below to display the intended gaiji.
+			graph_gaiji_putc(cursor.x, cursor.y, (p1 - 1), text_col);
 
-				graph_accesspage(0);
-			#endif
+			graph_accesspage(0);
+#endif
 			// [text_fx] is also ignored here...
 			graph_gaiji_putc(cursor.x, cursor.y, p1, text_col);
 			// ZUN quirk: No [text_interval]-based delay in TH03.
@@ -764,9 +778,9 @@ script_ret_t pascal near script_op(unsigned char c)
 		// ZUN landmine: Should have also been done in TH04. Without this call,
 		// this command will wait on an invisible text box, and needs to be
 		// preceded by a \vp1 command to actually work as a mid-box pause.
-		#if (GAME == 5)
-			box_1_to_0_animate();
-		#endif
+#if (GAME == 5)
+		box_1_to_0_animate();
+#endif
 
 		script_param_read_number_first(p1, 0);
 		if(!fast_forward) {
@@ -782,22 +796,25 @@ script_ret_t pascal near script_op(unsigned char c)
 	case '@':
 		graph_accesspage(1);	graph_clear();
 		graph_accesspage(0);	graph_clear();
-		#if (GAME == 5)
-			bgimage_snap();
-		#else
-			// ZUN landmine: Missing a box_bg_allocate_and_snap() or equivalent
-			// call. Any future box_bg_put() call will still display the box
-			// area snapped from any previously displayed background image.
-			// This bug therefore effectively restricts usage of this command
-			// to either the beginning of a script (before the first background
-			// image is shown) or its end (after no more new text boxes are
-			// started).
-		#endif
+#if (GAME == 5)
+		bgimage_snap();
+#else
+		// ZUN landmine: Missing a box_bg_allocate_and_snap() or equivalent
+		// call. Any future box_bg_put() call will still display the box area
+		// snapped from any previously displayed background image. This bug
+		// therefore effectively restricts usage of this command to either the
+		// beginning of a script (before the first background image is shown)
+		// or its end (after no more new text boxes are started).
+#endif
 		break;
 
 	case 'p':
 		c = *script_p;
 		script_p++;
+
+		// ZUN landmine: Blitting and palette changes will cause screen tearing
+		// if done outside of VBLANK. It shouldn't be the script's
+		// responsibility to prevent that.
 		if((c == '=') || (c == '@')) {
 			graph_accesspage(1);
 			if(c == '=') {
@@ -806,11 +823,11 @@ script_ret_t pascal near script_op(unsigned char c)
 			pi_put_8(0, 0, CUTSCENE_PIC_SLOT);
 			graph_copy_page(0);
 			graph_accesspage(0);
-			#if (GAME == 5)
-				bgimage_snap();
-			#else
-				box_bg_allocate_and_snap();
-			#endif
+#if (GAME == 5)
+			bgimage_snap();
+#else
+			box_bg_allocate_and_snap();
+#endif
 		} else if(c == '-') {
 			pi_free(CUTSCENE_PIC_SLOT);
 			return CONTINUE;
@@ -821,9 +838,9 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_p--;
 		} else {
 			script_param_read_fn(fn, p1, c);
-			#if (GAME >= 4)
-				pi_free(CUTSCENE_PIC_SLOT);
-			#endif
+#if (GAME >= 4)
+			pi_free(CUTSCENE_PIC_SLOT);
+#endif
 			pi_load(CUTSCENE_PIC_SLOT, fn);
 		}
 		break;
@@ -831,49 +848,49 @@ script_ret_t pascal near script_op(unsigned char c)
 	case '=':
 		script_param_number_default = PI_QUARTER_COUNT;
 		c = *script_p;
+
+		// ZUN landmine: Same screen tearing issues here. TH05's frame_delay()
+		// call prevents them for immediate blitting, but not for crossfading.
 		if(c != '=') {
 			script_param_read_number_first(p1);
-			#if (GAME == 5)
-				frame_delay(1); // ZUN quirk
-				graph_showpage(0);
-				graph_accesspage(1);
-			#else
-				// ZUN bloat: Why did ZUN temporarily switch foreground and
-				// background pages for the duration of this command?! Not only
-				// is it completely unnecessary, it's also downright harmful.
-				// If these lines didn't exist, the entire cutscene system
-				// would have been both much easier to understand *and* more
-				// performant:
-				//
-				// • The intent for both VRAM pages would have been crystal
-				//   clear: Page 0 is always shown and contains the actively
-				//   displayed picture and text, and page 1 is used for
-				//   temporarily storing pixels that are later crossfaded onto
-				//   page 0. Through their mere existence, these lines suggest
-				//   a more complex interplay between the two pages, which
-				//   doesn't actually exist.
-				// • TH03 wouldn't have needed to render text and gaiji to both
-				//   VRAM pages.
-				// • (Technically, TH03 wouldn't have even needed [box_bg] as a
-				//   result, but that was a decent investment regardless –
-				//   inter-page blitting is horribly slow no matter how you do
-				//   it. Also, this buffer does become necessary in TH04 – see
-				//   point 2) in the high-level overview)
-				// • If \vp didn't exist (it's not used by the original scripts
-				//   anyway), the entire system would have only needed a single
-				//   graph_showpage(0) call at the start of cutscene_animate().
-				//
-				// ZUN landmine: Since TH04 renders text to VRAM page 1,
-				// calling \= or \== in the middle of a string of text
-				// temporarily shows any text rendered since the last
-				// box_1_to_0_animate() call if any of the following blit
-				// operations spends more than one frame with page 1 visible.
-				// In practice, this only happens on very underclocked systems
-				// far below the game's target of 66 MHz, but it's a landmine
-				// nonetheless.
-				graph_showpage(1);
-				graph_accesspage(0);
-			#endif
+#if (GAME == 5)
+			frame_delay(1);
+			graph_showpage(0);
+			graph_accesspage(1);
+#else
+			// ZUN bloat: Why did ZUN temporarily switch foreground and
+			// background pages for the duration of this command?! Not only is
+			// it completely unnecessary, it's also downright harmful. If these
+			// lines didn't exist, the entire cutscene system would have been
+			// both much easier to understand *and* more performant:
+			//
+			// • The intent for both VRAM pages would have been crystal clear:
+			//   Page 0 is always shown and contains the actively displayed
+			//   picture and text, and page 1 is used for temporarily storing
+			//   pixels that are later crossfaded onto page 0. Through their
+			//   mere existence, these lines suggest a more complex interplay
+			//   between the two pages, which doesn't actually exist.
+			// • TH03 wouldn't have needed to render text and gaiji to both
+			//   VRAM pages.
+			// • (Technically, TH03 wouldn't have even needed [box_bg] as a
+			//   result, but that was a decent investment regardless –
+			//   inter-page blitting is horribly slow no matter how you do it.
+			//   Also, this buffer does become necessary in TH04 – see point 2)
+			//   in the high-level overview)
+			// • If \vp didn't exist (it's not used by the original scripts
+			//   anyway), the entire system would have only needed a single
+			//   graph_showpage(0) call at the start of cutscene_animate().
+			//
+			// ZUN landmine: Since TH04 renders text to VRAM page 1, calling \=
+			// or \== in the middle of a string of text temporarily shows any
+			// text rendered since the last box_1_to_0_animate() call if any of
+			// the following blit operations spends more than one frame with
+			// page 1 visible. In practice, this only happens on very
+			// underclocked systems far below the game's target of 66 MHz, but
+			// it's a landmine nonetheless.
+			graph_showpage(1);
+			graph_accesspage(0);
+#endif
 			if(p1 < PI_QUARTER_COUNT) {
 				pi_put_quarter_8(
 					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
@@ -899,26 +916,26 @@ script_ret_t pascal near script_op(unsigned char c)
 					frame_delay(p2);
 				}
 			}
-			#if (GAME == 5)
-				graph_accesspage(1);
-				pi_put_quarter_8(
-					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
-				);
-				frame_delay(1); // ZUN quirk
-			#else
-				// ZUN bloat: See above.
-				// ZUN landmine: See above.
-				graph_showpage(1);
-				graph_accesspage(0);
+#if (GAME == 5)
+			graph_accesspage(1);
+			pi_put_quarter_8(
+				CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
+			);
+			frame_delay(1); // ZUN quirk
+#else
+			// ZUN bloat: See above.
+			// ZUN landmine: See above.
+			graph_showpage(1);
+			graph_accesspage(0);
 
-				pi_put_quarter_8(
-					CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
-				);
-			#endif
+			pi_put_quarter_8(
+				CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_SLOT, p1
+			);
+#endif
 		}
-		#if (GAME <= 4)
-			graph_showpage(0); // ZUN bloat: See above.
-		#endif
+#if (GAME <= 4)
+		graph_showpage(0); // ZUN bloat: See above.
+#endif
 		static_assert(CUTSCENE_PIC_W == PI_QUARTER_W);
 		static_assert(CUTSCENE_PIC_H == PI_QUARTER_H);
 		pic_copy_to_other(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP);
@@ -937,26 +954,26 @@ script_ret_t pascal near script_op(unsigned char c)
 		snd_se_play_force(p1);
 		break;
 
-	#if (GAME == 5)
-	colmap_add:
-		script_p++;
-		colmap.keys[colmap_count][0].byte[0] = *script_p;
-		script_p++;
-		colmap.keys[colmap_count][0].byte[1] = *script_p;
+#if (GAME == 5)
+colmap_add:
+	script_p++;
+	colmap.keys[colmap_count][0].byte[0] = *script_p;
+	script_p++;
+	colmap.keys[colmap_count][0].byte[1] = *script_p;
 
-		// ZUN landmine: Jumps over the additional comma separating the two
-		// parameters, and assumes it's always present. Come on!
-		// script_param_read_number_second() exists to handle exactly this
-		// situation in a cleaner way.
-		script_p += 2;
+	// ZUN landmine: Jumps over the additional comma separating the two
+	// parameters, and assumes it's always present. Come on!
+	// script_param_read_number_second() exists to handle exactly this
+	// situation in a cleaner way.
+	script_p += 2;
 
-		script_param_read_number_first(p1, V_WHITE);
+	script_param_read_number_first(p1, V_WHITE);
 
-		// ZUN landmine: No bounds check
-		colmap.values[colmap_count] = p1;
-		colmap_count++;
-		break;
-	#endif
+	// ZUN landmine: No bounds check
+	colmap.values[colmap_count] = p1;
+	colmap_count++;
+	break;
+#endif
 
 	case '$':
 		return STOP;
@@ -968,9 +985,9 @@ void near cutscene_animate(void)
 {
 	extern ShiftJISKanji near CUTSCENE_KANJI[];
 
-	#if (GAME == 5)
-		int gaiji;
-	#endif
+#if (GAME == 5)
+	int gaiji;
+#endif
 	unsigned char c;
 	uint8_t speedup_cycle;
 
@@ -982,17 +999,17 @@ void near cutscene_animate(void)
 	text_col = V_WHITE;
 	text_fx = FX_WEIGHT_BOLD;
 
-	#if (GAME == 3)
-		speedup_cycle = 0;
-	#endif
+#if (GAME == 3)
+	speedup_cycle = 0;
+#endif
 
 	// Necessary because scripts can (and do) show multiple text boxes on the
 	// initially black background.
 	// ZUN landmine: TH05 assumes that they don't, which is true for all
 	// scripts in the original game.
-	#if (GAME != 5)
-		box_bg_allocate_and_snap();
-	#endif
+#if (GAME != 5)
+	box_bg_allocate_and_snap();
+#endif
 
 	fast_forward = false;
 
@@ -1004,9 +1021,9 @@ void near cutscene_animate(void)
 			fast_forward = false;
 		}
 
-		#if (GAME == 5) // ZUN bloat: Should be part of the colmap loop.
-			int i = 0;
-		#endif
+#if (GAME == 5) // ZUN bloat: Should be part of the colmap loop.
+		int i = 0;
+#endif
 
 		// Same iteration code as in TH04's dialog system.
 		c = *(script_p++);
@@ -1023,57 +1040,57 @@ void near cutscene_animate(void)
 			continue;
 		}
 
-		#if (GAME == 5)
-			if(c == '@') {
-				c = tolower(*script_p);
-				script_p++;
-				switch(c) {
-				case 't':
-					gaiji = gs_SWEAT;
-					break;
+#if (GAME == 5)
+		if(c == '@') {
+			c = tolower(*script_p);
+			script_p++;
+			switch(c) {
+			case 't':
+				gaiji = gs_SWEAT;
+				break;
 
-				case 'h':
-					gaiji = gs_HEART_2;
+			case 'h':
+				gaiji = gs_HEART_2;
+				break;
+
+			case '?':
+				gaiji = gs_QUESTION;
+				break;
+
+			case '!':
+				c = *(script_p++);
+				switch(c) {
+				case '!':
+					gaiji = gs_DOUBLE_EXCLAMATION;
 					break;
 
 				case '?':
-					gaiji = gs_QUESTION;
-					break;
-
-				case '!':
-					c = *(script_p++);
-					switch(c) {
-					case '!':
-						gaiji = gs_DOUBLE_EXCLAMATION;
-						break;
-
-					case '?':
-						gaiji = gs_EXCLAMATION_QUESTION;
-						break;
-
-					default:
-						script_p--;
-						gaiji = gs_EXCLAMATION;
-						break;
-					}
+					gaiji = gs_EXCLAMATION_QUESTION;
 					break;
 
 				default:
 					script_p--;
-					script_param_read_number_first(gaiji, gs_NOTES);
+					gaiji = gs_EXCLAMATION;
 					break;
 				}
-				graph_showpage(0);
-				graph_accesspage(1);
+				break;
 
-				// Still ignoring [text_fx].
-				graph_gaiji_putc(cursor.x, cursor.y, gaiji, text_col);
-
-				cursor_advance_and_animate();
-				i = 1; // ZUN bloat
-				continue;
+			default:
+				script_p--;
+				script_param_read_number_first(gaiji, gs_NOTES);
+				break;
 			}
-		#endif
+			graph_showpage(0);
+			graph_accesspage(1);
+
+			// Still ignoring [text_fx].
+			graph_gaiji_putc(cursor.x, cursor.y, gaiji, text_col);
+
+			cursor_advance_and_animate();
+			i = 1; // ZUN bloat
+			continue;
+		}
+#endif
 
 		// Regular kanji
 		kanji.byte[0] = c;
@@ -1081,67 +1098,62 @@ void near cutscene_animate(void)
 		kanji.byte[1] = c;
 		script_p++;
 
-		#if (GAME == 5)
-			if(cursor.x == BOX_LEFT) {
-				for(i = 0; i < colmap_count; i++) {
-					if(colmap.keys[i][0].t == kanji.t) {
-						text_col = colmap.values[i];
-						break;
-					}
+#if (GAME == 5)
+		if(cursor.x == BOX_LEFT) {
+			for(i = 0; i < colmap_count; i++) {
+				if(colmap.keys[i][0].t == kanji.t) {
+					text_col = colmap.values[i];
+					break;
 				}
 			}
-		#endif
+		}
+#endif
 
-		#if (GAME >= 4)
-			graph_showpage(0);
-			graph_accesspage(1);
-			graph_putsa_fx(cursor.x, cursor.y, text_col, kanji.byte);
-
-			// ZUN bloat: All blitting operations in this module access the
-			// intended page before they blit. That's why preliminary state
-			// changes like this one are completely redundant, thankfully.
-			#if (GAME == 5)
-				graph_accesspage(0);
-			#endif
-		#else
-			graph_accesspage(1);
-			graph_putsa_fx(
-				cursor.x, cursor.y, (text_col | text_fx), kanji.byte
-			);
-			graph_accesspage(0);
-			graph_putsa_fx(
-				cursor.x, cursor.y, (text_col | text_fx), kanji.byte
-			);
-		#endif
+#if (GAME >= 4)
+		graph_showpage(0);
+		graph_accesspage(1);
+		graph_putsa_fx(cursor.x, cursor.y, text_col, kanji.byte);
+#else
+		graph_accesspage(1);
+		graph_putsa_fx(cursor.x, cursor.y, (text_col | text_fx), kanji.byte);
+		graph_accesspage(0);
+		graph_putsa_fx(cursor.x, cursor.y, (text_col | text_fx), kanji.byte);
+#endif
+#if (GAME == 5)
+		// ZUN bloat: All blitting operations in this module access the
+		// intended page before they blit. That's why preliminary state
+		// changes like this one are completely redundant, thankfully.
+		graph_accesspage(0);
+#endif
 		cursor_advance_and_animate();
-		#if (GAME == 5)
-			i = 1; // ZUN bloat
-		#endif
+#if (GAME == 5)
+		i = 1; // ZUN bloat
+#endif
 
 		// High-level overview, point 3)
-		#if (GAME == 3)
-			if(fast_forward) {
-				continue;
-			}
-			if(key_det == INPUT_NONE) {
-				frame_delay(text_interval);
-			} else {
-				int speedup_interval = (text_interval / 3);
-				if((speedup_cycle & 1) || speedup_interval) {
-					if(speedup_interval == 0) {
-						speedup_interval++;
-					}
-					frame_delay(speedup_interval);
+#if (GAME == 3)
+		if(fast_forward) {
+			continue;
+		}
+		if(key_det == INPUT_NONE) {
+			frame_delay(text_interval);
+		} else {
+			int speedup_interval = (text_interval / 3);
+			if((speedup_cycle & 1) || speedup_interval) {
+				if(speedup_interval == 0) {
+					speedup_interval++;
 				}
-				speedup_cycle++;
+				frame_delay(speedup_interval);
 			}
-		#endif
+			speedup_cycle++;
+		}
+#endif
 	}
-	#if (GAME == 5)
-		bgimage_free();
-		pi_free(CUTSCENE_PIC_SLOT);
-	#else
-		box_bg_put();
-		box_bg_free();
-	#endif
+#if (GAME == 5)
+	bgimage_free();
+	pi_free(CUTSCENE_PIC_SLOT);
+#else
+	box_bg_put();
+	box_bg_free();
+#endif
 }

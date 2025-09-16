@@ -5,6 +5,7 @@
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th05/main/playperf.hpp"
+#include "th02/sprites/bullet16.h"
 
 bool near bullet_template_clip(void)
 {

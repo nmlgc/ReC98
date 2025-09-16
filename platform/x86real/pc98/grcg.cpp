@@ -3,13 +3,13 @@
 #include "planar.h"
 #include "platform/x86real/pc98/grcg.hpp"
 
-void GRCG::setcolor(vc_t col)
+void __fastcall GRCG::set_color(vc_t /* _AL */)
 {
 	// By shifting each successive bit of [col] into the carry flag and using
 	// tile_register_from_carry(), we get the minimum of three instructions
 	// (SHR, SBB, OUT) per bitplane, with no register spills. Quite a beautiful
 	// optimization!
-	_AH = col;
+	_AH = _AL;
 	outportb(0x7E, tile_register_from_carry(_AH >>= 1));
 	outportb(0x7E, tile_register_from_carry(_AH >>= 1));
 	outportb(0x7E, tile_register_from_carry(_AH >>= 1));

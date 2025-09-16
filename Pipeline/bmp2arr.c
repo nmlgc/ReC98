@@ -1,19 +1,19 @@
 
 #if defined(REC98_PROJECT)
-# include "platform.h" /* see also [https://github.com/nmlgc/ReC98/issues/8] */
+#include "platform.h" /* see also [https://github.com/nmlgc/ReC98/issues/8] */
 #elif defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__) || defined(__TURBOC__)
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned long uint32_t;
 #else
-# include <stdint.h>
+#include <stdint.h>
 #endif
 #if defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__) || defined(__TURBOC__)
-# include <io.h>
+#include <io.h>
 #else
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #endif
 #include <stdlib.h>
 #include <string.h>
@@ -22,12 +22,12 @@ typedef unsigned long uint32_t;
 #include <fcntl.h>
 
 #if defined(__GNUC__)
-# include <endian.h>
+#include <endian.h>
 #else
-# define le16toh(x) (x)
-# define le32toh(x) (x)
-# define htole16(x) (x)
-# define htole32(x) (x)
+#define le16toh(x) (x)
+#define le32toh(x) (x)
+#define htole16(x) (x)
+#define htole32(x) (x)
 #endif
 
 #include "bmp2arrl.h"
@@ -97,7 +97,7 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
                     return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "sh");
 
                 tsk->sprite_height = atoi(a);
-                if (tsk->sprite_height < 1 || tsk->sprite_height > 32)
+                if (tsk->sprite_height < 1 || tsk->sprite_height > 40)
                     return bmp2arr_error_set(tsk, INVALID_SPRITE_HEIGHT);
             }
             else if (!strcmp(a,"u")) {

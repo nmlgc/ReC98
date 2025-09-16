@@ -1,13 +1,14 @@
 #include "platform.h"
 
 #if GAME == 3
-	#define CFG_FN "yume.cfg"
-	struct cfg_options_t {
-		uint8_t bgm_mode;
-		uint8_t key_mode;
-		uint8_t rank;
-		int16_t unused;
-	};
+#define CFG_FN     	"yume.cfg"
+#define CFG_FN_CAPS	"YUME.CFG" // ZUN landmine: Will break on *nix!
+struct cfg_options_t {
+	uint8_t bgm_mode;
+	uint8_t key_mode;
+	uint8_t rank;
+	int16_t unused;
+};
 #endif
 
 #include "th02/formats/cfg.hpp"

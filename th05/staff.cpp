@@ -3,7 +3,7 @@
  * TH05 Staff Roll
  */
 
-#pragma option -zCmaine_01_TEXT
+#pragma option -zCSCORE_TEXT
 
 #include <stddef.h>
 #include "planar.h"

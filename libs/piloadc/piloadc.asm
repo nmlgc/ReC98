@@ -1,4 +1,5 @@
-; The only change in ZUN's fork: The format ID is 'NZ', rather than 'iP'. Lol.
+; ZUN's fork of the PiLoad library, as linked into the original version of
+; TH01. The only change: The format ID is 'NZ', rather than 'iP'. Lol.
 
 ; For compatibility with later TASM versions, "segcs movsw" has also been
 ; spelled out to what it's actually supposed to mean.
@@ -13,48 +14,6 @@
 ;//////////////////////////////////////////////////////////////////////////////
 line	=	1280	;最大横幅
 lin	=	4
-comment	|
-Ｃからの利用
- int	PiLoad(char *name,int buff,int Size,int X,int Y,int tone,int option)
-
-PASCALからの利用
- functuon PiLoad( name:string; buff,Size,X,Y,tone,option:integer):integer;
-
-Assemblerからの利用
- piload0 proc near
-	es:dx	= name(asciz)
-	ds:0	= buff
-	si	= size
-	bx	= x
-	cx	= y
-	al	= tone
-	ah	= option
-
- 引数
-	name	ファイル名
-	buff	バッファのセグメント
-	Size	バッファのサイズ
-	X	表示アドレスのＸ座標
-	Y	表示アドレスのＹ座標
-	tone	トーン（１～１００％）
-	option	オプション（下記のビットで指定）通常は15(01111b)
-	   (lsb)0 .. パレット設定	する／しない = 1/0
-	   	1 .. 常駐パレット設定	する／しない = 1/0
-		2 .. コメント表示	する／しない = 1/0
-		3 .. 画面設定		する／しない = 1/0
-		     (VRAMのON,400/200line設定)
-		4 .. ノート用パレット	する／しない = 1/0
-		5 .. スクロールロード	する／しない = 1/0
-		6 .. 透明色利用		する／しない = 1/0
-
- 戻り値
-	  0	正常終了
-	 -8	バッファが足りない
-	-31	Piではない
-	-32	サポートされていない
-	他	エラー（ＭＳＤＯＳのＤＯＳコールエラー参照)
-
-|
 
 shl1	macro	reg
 	add	reg,reg
@@ -101,7 +60,7 @@ fhandle	=	word ptr ds:[140h]
 bufbgn	=	word ptr ds:[142h]
 bufend	=	word ptr ds:[144h]
 bufsize	=	word ptr ds:[146h]
-yscroll	=	word ptr ds:[148h]
+yscroll	=	word ptr ds:[148h] ; unused
 y_wid2	=	word ptr ds:[14ah]
 x_wid2	=	word ptr ds:[14ch]
 ;bfseg	=	word ptr ds:[14eh]
@@ -746,19 +705,6 @@ maketbl:
 ;	ＭＳ－ＤＯＳ依存部
 ;-----------------------------------------------------------------------------
 fopen:
-comment	;
-	push	si
-	push	dx
-	mov	si,dx
-flop:	lodsb
-	mov	dl,al
-	mov	ah,2
-	int	21h
-	or	dl,dl
-	jnz	flop
-	pop	dx
-	pop	si
-;
 	mov	ax,3d00h
 	int	21h
 	ret

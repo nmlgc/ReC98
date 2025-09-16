@@ -3,7 +3,6 @@
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"

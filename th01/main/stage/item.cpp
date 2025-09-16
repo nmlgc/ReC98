@@ -3,7 +3,6 @@
 #include "th01/math/clamp.hpp"
 #include "th01/math/digit.hpp"
 #include "th01/math/str_val.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/stage/stageobj.hpp"

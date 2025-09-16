@@ -1,5 +1,5 @@
 #include "x86real.h"
-#include "platform/x86real/pc98/palette.hpp"
+#include "platform/palette.hpp"
 
 void palette_show_single(vc_t col, const RGB4& c)
 {

@@ -12,6 +12,7 @@
 #define PLAYFIELD_BORDER 16
 #define PLAYFIELD_LEFT PLAYFIELD_BORDER
 #define PLAYFIELD_TOP PLAYFIELD_BORDER
+static const screen_y_t PLAYFIELD_BOTTOM = (PLAYFIELD_TOP + PLAYFIELD_H);
 
 #define PLAYFIELD_VRAM_H (PLAYFIELD_H / 2)
 
@@ -22,6 +23,16 @@
 #define PLAYFIELD2_CLIP_RIGHT (PLAYFIELD2_CLIP_LEFT + PLAYFIELD_W_BORDERED - 1)
 
 #define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / BYTE_DOTS)
+
+inline screen_x_t playfield_x(pid_t pid, pixel_t x) {
+	return ((PLAYFIELD_LEFT + x) + (pid * PLAYFIELD_W_BORDERED));
+}
+
+inline tram_x_t playfield_tram_x(pid_t pid, pixel_t x) {
+	return (playfield_x(pid, x) / GLYPH_HALF_W);
+}
+
+static const tram_y_t PLAYFIELD_TRAM_TOP = (PLAYFIELD_TOP / GLYPH_H);
 
 // A subpixel X or Y coordinate, width, or height within one of the playfields.
 typedef subpixel_t playfield_subpixel_t;

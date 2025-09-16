@@ -1,4 +1,6 @@
 #include "shiftjis.hpp"
 
-const shiftjis_t *REDUCE_EFFECTS_TITLE = "演出";
-const shiftjis_t *REDUCE_EFFECTS_CHOICES[2] = {"　通常  ", "一部軽減"};
+const shiftjis_t *REDUCE_LABEL = "演出";
+const shiftjis_t *REDUCE_VALUES[2] = {"　通常  ", "一部軽減"};
+
+static const shiftjis_kanji_amount_t REDUCE_VALUE_LEN = 4;

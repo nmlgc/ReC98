@@ -7,6 +7,7 @@
 #include "platform/x86real/pc98/grcg.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/grppsafx.h"
 #include "th01/shiftjis/fwnum.hpp"
 #include "th01/v_colors.hpp"
 
@@ -46,7 +47,7 @@ void graph_putsa_fx(
 	}
 
 	GRCG grcg(GC_RMW);
-	grcg.setcolor(col_and_fx);
+	grcg.set_color(col_and_fx);
 
 	while(str[0]) {
 		font_glyph_t glyph;

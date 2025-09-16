@@ -22,10 +22,7 @@ include ReC98.inc
 include th04/th04.inc
 include th04/hardware/grppsafx.inc
 
-	extern _tolower:proc
-	extern __ctype:byte
-
-group_01 group maine_01_TEXT
+group_01 group maine_01_TEXT, SCORE_TEXT
 
 ; ===========================================================================
 
@@ -36,8 +33,6 @@ _TEXT segment word public 'CODE' use16
 	extern EGC_OFF:proc
 	extern FILE_APPEND:proc
 	extern FILE_CLOSE:proc
-	extern FILE_CREATE:proc
-	extern FILE_EXIST:proc
 	extern FILE_READ:proc
 	extern FILE_ROPEN:proc
 	extern FILE_SEEK:proc
@@ -1678,63 +1673,12 @@ public @verdict_animate$qv
 		pop	bp
 		retn
 @verdict_animate$qv endp
+maine_01_TEXT ends
 
-include th04/formats/scoredat_decode.asm
-include th04/formats/scoredat_encode.asm
-include th04/formats/scoredat_recreate.asm
-include th04/formats/scoredat_load_for.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C316	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	scoredat_encode
-		push	ds
-		push	offset aGensou_scr_2 ; "GENSOU.SCR"
-		call	file_append
-		mov	al, _rank
-		mov	ah, 0
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		cmp	playchar_125B8, PLAYCHAR_REIMU
-		jz	short loc_C350
-		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
-
-loc_C350:
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		xor	si, si
-		jmp	short loc_C3A5
-; ---------------------------------------------------------------------------
-
-loc_C360:
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	scoredat_decode
-		call	scoredat_encode
-		mov	ax, si
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		inc	si
-
-loc_C3A5:
-		cmp	si, 0Ah
-		jl	short loc_C360
-		call	file_close
-		pop	si
-		pop	bp
-		retn
-sub_C316	endp
-
+SCORE_TEXT segment byte public 'CODE' use16
+	@HISCORE_SCOREDAT_LOAD_FOR$Q10PLAYCHAR_T procdesc pascal near \
+		playchar:byte
+	@hiscore_scoredat_save$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1964,7 +1908,7 @@ loc_C531:
 		cmp	ax, si
 		jnz	short loc_C549
 		mov	al, [bp+arg_0]
-		cmp	al, playchar_125B8
+		cmp	al, _playchar
 		jnz	short loc_C549
 		mov	al, 0Ah
 		jmp	short loc_C54B
@@ -2069,7 +2013,7 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_C60E
-		mov	al, playchar_125B8
+		mov	al, _playchar
 		mov	ah, 0
 		cmp	ax, di
 		jnz	short loc_C60E
@@ -2279,7 +2223,7 @@ loc_C73C:
 		cmp	ax, si
 		jnz	short loc_C76E
 		mov	al, byte ptr [bp+arg_0]
-		cmp	al, playchar_125B8
+		cmp	al, _playchar
 		jz	short loc_C787
 
 loc_C76E:
@@ -2453,18 +2397,18 @@ loc_C895:
 		xor	ax, ax
 
 loc_C897:
-		mov	playchar_125B8, al
+		mov	_playchar, al
 		mov	al, 1
-		sub	al, playchar_125B8
+		sub	al, _playchar
 		push	ax
-		call	scoredat_load_for
-		mov	al, playchar_125B8
+		call	@hiscore_scoredat_load_for$q10playchar_t
+		mov	al, _playchar
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
 		push	dx
 		call	sub_C7C9
-		call	scoredat_load_for pascal, word ptr playchar_125B8
+		call	@hiscore_scoredat_load_for$q10playchar_t pascal, word ptr _playchar
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C8CB
@@ -2473,7 +2417,7 @@ loc_C897:
 
 loc_C8CB:
 		call	sub_C3B2
-		mov	al, playchar_125B8
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
@@ -2482,7 +2426,7 @@ loc_C8CB:
 
 loc_C8D9:
 		mov	_entered_place, -1
-		mov	al, playchar_125B8
+		mov	al, _playchar
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
@@ -2722,7 +2666,7 @@ loc_CAF5:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_125B8
+		push	word ptr _playchar
 		push	si
 		call	sub_C665
 
@@ -2742,7 +2686,7 @@ loc_CB1E:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word ptr playchar_125B8
+		push	word ptr _playchar
 		push	si
 		call	sub_C665
 
@@ -2786,12 +2730,12 @@ loc_CB6B:
 ; ---------------------------------------------------------------------------
 
 @@enter:
-		call	sub_C316
+		call	@hiscore_scoredat_save$qv
 		jmp	short loc_CB89
 ; ---------------------------------------------------------------------------
 
 loc_CB7F:
-		call	sub_C316
+		call	@hiscore_scoredat_save$qv
 		call	@input_wait_for_change$qi pascal, 0
 
 loc_CB89:
@@ -2906,7 +2850,7 @@ loc_CC66:
 sub_CBF3	endp
 		db    0
 
-maine_01_TEXT	ends
+SCORE_TEXT	ends
 
 ; ===========================================================================
 
@@ -3004,10 +2948,11 @@ aPicacovVVcvsfT	db '処理落ちによる判定不可',0
 aUde_pi		db 'ude.pi',0
 		db    0
 include th04/hiscore/alphabet[data].asm
-aGensou_scr	db 'GENSOU.SCR',0
-aGensou_scr_0	db 'GENSOU.SCR',0
-aGensou_scr_1	db 'GENSOU.SCR',0
-aGensou_scr_2	db 'GENSOU.SCR',0
+public _SCOREDAT_FN, _SCOREDAT_FN_0, _SCOREDAT_FN_1, _SCOREDAT_FN_2
+_SCOREDAT_FN	db 'GENSOU.SCR',0
+_SCOREDAT_FN_0	db 'GENSOU.SCR',0
+_SCOREDAT_FN_1	db 'GENSOU.SCR',0
+_SCOREDAT_FN_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum2_bft	db 'scnum2.bft',0
 aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0
@@ -3052,7 +2997,8 @@ byte_124EF	db ?
 		db 2 dup(?)
 include th04/formats/scoredat[bss].asm
 include th03/hiscore/regist[bss].asm
+public _rank, _playchar
 _rank	db ?
-playchar_125B8	db ?
+_playchar	db ?
 
 		end

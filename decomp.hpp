@@ -43,23 +43,23 @@ template <class T> union StupidBytewiseWrapperAround {
 }
 
 #if (GAME == 5)
-	#define copy_near_struct_member( \
-		dst, dst_offset, src, src_offset, size, prepare_func \
-	) { \
-		_CX = (size / sizeof(uint16_t)); \
-		asm { push ds; pop es; } \
-		prepare_func(FP_OFF(&dst), dst_offset, FP_OFF(&src), src_offset); \
-		asm { rep movsw; } \
-	}
+#define copy_near_struct_member( \
+	dst, dst_offset, src, src_offset, size, prepare_func \
+) { \
+	_CX = (size / sizeof(uint16_t)); \
+	asm { push ds; pop es; } \
+	prepare_func(FP_OFF(&dst), dst_offset, FP_OFF(&src), src_offset); \
+	asm { rep movsw; } \
+}
 #else
-	#define copy_near_struct_member( \
-		dst, dst_offset, src, src_offset, size, prepare_func \
-	) { \
-		asm { push ds; pop es; } \
-		prepare_func(FP_OFF(&dst), dst_offset, FP_OFF(&src), src_offset); \
-		_CX = (size / sizeof(uint16_t)); \
-		asm { rep movsw; } \
-	}
+#define copy_near_struct_member( \
+	dst, dst_offset, src, src_offset, size, prepare_func \
+) { \
+	asm { push ds; pop es; } \
+	prepare_func(FP_OFF(&dst), dst_offset, FP_OFF(&src), src_offset); \
+	_CX = (size / sizeof(uint16_t)); \
+	asm { rep movsw; } \
+}
 #endif
 // ----------------------------------------------------------------------
 
@@ -69,40 +69,39 @@ template <class T> union StupidBytewiseWrapperAround {
 // binaries, these can be safely deleted. They just make the code worse.
 
 #if defined(__TURBOC__) && defined(__MSDOS__)
-	// Use this function wherever the original code used a immediate 0 literal
-	// that Turbo C++ would optimize away, e.g. in register assignments
-	// (_AX = 0 → XOR AX, AX) or comparisons (_AX == 0 → OR AX, AX). This way,
-	// the compiler is forced to leave space for any potential offset, with the
-	// literal 0 then being spelled out by the linker.
-	template <class T> inline T keep_0(T x) {
-		if(x == 0) {
-			extern void *near address_0;
-			return reinterpret_cast<T>(&address_0);
-		}
-		return x;
+// Use this function wherever the original code used a immediate 0 literal that
+// Turbo C++ would optimize away, e.g. in register assignments
+// (_AX = 0 → XOR AX, AX) or comparisons (_AX == 0 → OR AX, AX). This way, the
+// compiler is forced to leave space for any potential offset, with the literal
+// 0 then being spelled out by the linker.
+template <class T> inline T keep_0(T x) {
+	if(x == 0) {
+		extern void *near address_0;
+		return reinterpret_cast<T>(&address_0);
 	}
+	return x;
+}
 
-	// Bypasses the -Z -3 function parameter optimization, where [x] would be
-	// combined with any potential subsequent 16-bit parameter adjacent in
-	// memory to form a 32-bit PUSH.
-	// (Interestingly, using a template function inlines either too well or
-	// too badly. Only this macro guarantees the intended 16-bit PUSH to be
-	// consistently emitted.)
-	#define inhibit_Z3(x) \
-		*reinterpret_cast<int16_t near *>(reinterpret_cast<uint16_t>(&x))
+// Bypasses the -Z -3 function parameter optimization, where [x] would be
+// combined with any potential subsequent 16-bit parameter adjacent in memory
+// to form a 32-bit PUSH.
+// (Interestingly, using a template function inlines either too well or too
+// badly. Only this macro guarantees the intended 16-bit PUSH to be
+// consistently emitted.)
+#define inhibit_Z3(x) \
+	*reinterpret_cast<int16_t near *>(reinterpret_cast<uint16_t>(&x))
 
-	// Calling an empty inlined function prevents certain jump optimizations.
-	// Returning a value also allows such a barrier to be used for turning
-	// conditional branches with no `else` branch into ternary expressions,
-	// which can lead to different jump optimizations in longer functions.
-	inline bool optimization_barrier(void) {
-		return false;
-	}
-
+// Calling an empty inlined function prevents certain jump optimizations.
+// Returning a value also allows such a barrier to be used for turning
+// conditional branches with no `else` branch into ternary expressions, which
+// can lead to different jump optimizations in longer functions.
+inline bool optimization_barrier(void) {
+	return false;
+}
 #else
-	#define keep_0(x) x
-	#define inhibit_Z3(x) x
-	#define optimization_barrier()
+#define keep_0(x) x
+#define inhibit_Z3(x) x
+#define optimization_barrier()
 #endif
 // ------------------------------------
 
@@ -110,6 +109,7 @@ template <class T> union StupidBytewiseWrapperAround {
 // assembler. Makes no sense to compile with `#pragma inline` (and thus,
 // require a 16-bit TASM) just for those.
 #define MOVSD	__emit__(0x66, 0xA5);
+#define STOSD	__emit__(0x66, 0xAB);
 #define REP  	__emit__(0xF3);
 
 #endif /* DECOMP_HPP */

@@ -16,39 +16,41 @@
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
+#include "th01/sprites/pellet.h"
+#include "th02/sprites/bullet16.h"
 
 #if (GAME == 5)
-	#include "th04/main/item/item.hpp"
-	#include "th05/sprites/main_pat.h"
+#include "th04/main/item/item.hpp"
+#include "th05/sprites/main_pat.h"
 
-	static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 32;
+static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 32;
 
-	// Updates [bullet]'s patnum based on its current angle.
-	void pascal near bullet_update_patnum(bullet_t near &bullet)
-	{
-		unsigned char patnum_base; // main_patnum_t, obviously
+// Updates [bullet]'s patnum based on its current angle.
+void pascal near bullet_update_patnum(bullet_t near &bullet)
+{
+	unsigned char patnum_base; // main_patnum_t, obviously
 
-		if(bullet.patnum < PAT_BULLET16_D) {
-			return;
-		}
-		if(bullet.patnum < (PAT_BULLET16_D_BLUE_last + 1)) {
-			patnum_base = PAT_BULLET16_D_BLUE;
-		} else if(bullet.patnum < (PAT_BULLET16_D_GREEN_last + 1)) {
-			patnum_base = PAT_BULLET16_D_GREEN;
-		} else if(bullet.patnum < (PAT_BULLET16_V_RED_last + 1)) {
-			patnum_base = PAT_BULLET16_V_RED;
-		} else {
-			patnum_base = PAT_BULLET16_V_BLUE;
-		}
-		bullet.patnum = bullet_patnum_for_angle(patnum_base, bullet.angle);
+	if(bullet.patnum < PAT_BULLET16_D) {
+		return;
 	}
+	if(bullet.patnum < (PAT_BULLET16_D_BLUE_last + 1)) {
+		patnum_base = PAT_BULLET16_D_BLUE;
+	} else if(bullet.patnum < (PAT_BULLET16_D_GREEN_last + 1)) {
+		patnum_base = PAT_BULLET16_D_GREEN;
+	} else if(bullet.patnum < (PAT_BULLET16_V_RED_last + 1)) {
+		patnum_base = PAT_BULLET16_V_RED;
+	} else {
+		patnum_base = PAT_BULLET16_V_BLUE;
+	}
+	bullet.patnum = bullet_patnum_for_angle(patnum_base, bullet.angle);
+}
 #else
-	#include "th04/sprites/main_pat.h"
+#include "th04/sprites/main_pat.h"
 
-	static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 24;
+static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 24;
 
-	inline void bullet_update_patnum(bullet_t near &bullet) {
-	}
+inline void bullet_update_patnum(bullet_t near &bullet) {
+}
 #endif
 
 #pragma option -a2
@@ -60,7 +62,7 @@ void pascal near bullet_turn_x(bullet_t near &bullet)
 {
 	bullet.u1.turns_done++;
 	bullet.angle = (0x80 - bullet.angle);
-	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -71,7 +73,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 {
 	bullet.u1.turns_done++;
 	bullet.angle = (/* 0x00 */ - bullet.angle);
-	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -81,7 +83,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 #define bullet_turn_complete(bullet) \
 	bullet_update_patnum(bullet); \
 	bullet.speed_cur = bullet.speed_final; \
-	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) { \
+	if(bullet.u1.turns_done >= bullet_special.turns_max) { \
 		bullet.move_state = BMS_REGULAR; \
 	} \
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -111,7 +113,7 @@ enum bullet_bounce_edge_t {
 void pascal near bullet_update_special(bullet_t near &bullet)
 {
 	switch(bullet.special_motion) {
-	case BSM_SLOWDOWN_THEN_TURN_AIMED:
+	case BSM_DECELERATE_THEN_TURN_AIMED:
 		if(bullet.speed_cur.v != to_sp(0.0f)) {
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
@@ -125,7 +127,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		}
 		break;
 
-	case BSM_SLOWDOWN_THEN_TURN:
+	case BSM_DECELERATE_THEN_TURN:
 		if(bullet.speed_cur.v != to_sp(0.0f)) {
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
@@ -138,10 +140,10 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 
 	case BSM_SPEEDUP:
 		bullet_velocity_set_from_angle_and_speed(bullet);
-		bullet.speed_cur.v += bullet_special_motion.speed_delta.v;
+		bullet.speed_cur.v += bullet_special.speed_delta.v;
 		break;
 
-	case BSM_SLOWDOWN_TO_ANGLE:
+	case BSM_DECELERATE_TO_ANGLE:
 		if(bullet.speed_cur.v != to_sp(0.0f)) {
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			// >= to_sp(2 / 16.0f) would have been cleaner
@@ -181,24 +183,24 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 
 	case BSM_GRAVITY:
 		if(stage_frame_mod2) {
-			bullet.pos.velocity.y.v += bullet_special_motion.speed_delta;
+			bullet.pos.velocity.y.v += bullet_special.speed_delta;
 		}
 		break;
 
-	#if (GAME == 5)
-		case BSM_EXACT_LINEAR:
-			bullet.distance.v += bullet.speed_cur.v;
-			vector2_at(
-				drawpoint,
-				bullet.origin.x.v,
-				bullet.origin.y.v,
-				bullet.distance.v,
-				bullet.angle
-			);
-			bullet.pos.velocity.x.v = (drawpoint.x.v - bullet.pos.cur.x.v);
-			bullet.pos.velocity.y.v = (drawpoint.y.v - bullet.pos.cur.y.v);
-			break;
-	#endif
+#if (GAME == 5)
+	case BSM_EXACT_LINEAR:
+		bullet.distance.v += bullet.speed_cur.v;
+		vector2_at(
+			drawpoint,
+			bullet.origin.x.v,
+			bullet.origin.y.v,
+			bullet.distance.v,
+			bullet.angle
+		);
+		bullet.pos.velocity.x.v = (drawpoint.x.v - bullet.pos.cur.x.v);
+		bullet.pos.velocity.y.v = (drawpoint.y.v - bullet.pos.cur.y.v);
+		break;
+#endif
 	}
 }
 
@@ -206,9 +208,9 @@ void bullets_update(void)
 {
 	int i;
 	int bullets_seen = 0;
-	#if (GAME == 5)
-		pellet_clouds_render_count = 0;
-	#endif
+#if (GAME == 5)
+	pellet_clouds_render_count = 0;
+#endif
 	pellets_render_count = 0;
 	bullet_t near *bullet = &bullets[BULLET_COUNT - 1];
 
@@ -274,36 +276,37 @@ void bullets_update(void)
 					}
 					reinterpret_cast<unsigned char &>(bullet->spawn_state)++;
 					if(bullet->spawn_state >= BSS_CLOUD_END) {
-						#if (GAME == 5)
-							if(!playfield_encloses_yx_lt_ge(
-								bullet->pos.cur.x,
-								bullet->pos.cur.y,
-								BULLET16_W,
-								BULLET16_H
-							)) {
-								bullet->flag = F_REMOVE;
-								continue;
-							}
-						#endif
+#if (GAME == 5)
+						if(!playfield_encloses_yx_lt_ge(
+							bullet->pos.cur.x,
+							bullet->pos.cur.y,
+							BULLET16_W,
+							BULLET16_H
+						)) {
+							bullet->flag = F_REMOVE;
+							continue;
+						}
+#endif
 						bullet->spawn_state = BSS_ACTIVE;
 					}
-					#if (GAME == 5)
-						else if(is_pellet(i)) {
-							pellet_clouds_render[pellet_clouds_render_count++] =
-								bullet;
-						}
-					#endif
+#if (GAME == 5)
+					else if(is_pellet(i)) {
+						pellet_clouds_render[pellet_clouds_render_count++] =
+							bullet;
+					}
+#endif
 					continue;
 				}
 			}
 			if(bullet->move_state == BMS_SPECIAL) {
 				bullet_update_special(*bullet);
-			} else if(bullet->move_state == BMS_SLOWDOWN) {
-				bullet->u1.slowdown_time--;
+			} else if(bullet->move_state == BMS_DECELERATE) {
+				bullet->u1.decelerate_time--;
 				bullet->speed_cur.v = (bullet->speed_final.v + ((
-					bullet->u1.slowdown_time * bullet->u2.slowdown_speed_delta.v
-				) / BMS_SLOWDOWN_FRAMES));
-				if(bullet->u1.slowdown_time == 0) {
+					bullet->u1.decelerate_time *
+					bullet->u2.decelerate_speed_delta.v
+				) / BMS_DECELERATE_FRAMES));
+				if(bullet->u1.decelerate_time == 0) {
 					bullet->speed_cur = bullet->speed_final;
 					bullet->move_state = BMS_REGULAR;
 				}
@@ -371,28 +374,28 @@ void bullets_update(void)
 			}
 		}
 		if(turbo_mode == false) {
-			#if (GAME == 5)
-				slowdown_caused_by_bullets = false;
-				i = 42;
-			#else
-				i = 24;
-				i += playperf;
-			#endif
+#if (GAME == 5)
+			slowdown_caused_by_bullets = false;
+			i = 42;
+#else
+			i = 24;
+			i += playperf;
+#endif
 			i += (rank * 8);
 			if(bullets_seen >= i) {
 				if(!stage_frame_mod2) {
 					slowdown_factor = 2;
-					#if (GAME == 5)
-						slowdown_caused_by_bullets = true;
-					#endif
+#if (GAME == 5)
+					slowdown_caused_by_bullets = true;
+#endif
 				}
 			} else if(bullets_seen >= (i + SLOWDOWN_BULLET_THRESHOLD_UNUSED)) {
 				// Yes, never executed, as the first condition would then have
 				// been true as well
 				slowdown_factor = 2;
-				#if (GAME == 5)
-					slowdown_caused_by_bullets = true;
-				#endif
+#if (GAME == 5)
+				slowdown_caused_by_bullets = true;
+#endif
 			}
 		}
 	} else {
@@ -415,29 +418,29 @@ void bullets_update(void)
 		);
 		score_per_bullet = 1;
 		score_step = 1;
-		#if (GAME == 5)
-			// ZUN quirk: All code below uses TH04's patnum for that sprite.
-			// This causes the decay animation to never actually play in TH05.
-			#define PAT_BULLET_ZAP 72
+#if (GAME == 5)
+		// ZUN quirk: All code below uses TH04's patnum for that sprite.
+		// This causes the decay animation to never actually play in TH05.
+		#define PAT_BULLET_ZAP 72
 
-			score_per_bullet_cap = (rank == RANK_EXTRA)
-				? 1600
-				: select_for_rank(960, 1280, 1280, 1280);
-		#else
-			switch(rank) {
-			case RANK_EASY:
-				score_per_bullet_cap = 1000;
-				break;
-			case RANK_NORMAL:
-			case RANK_HARD:
-			case RANK_LUNATIC:
-				score_per_bullet_cap = 1600;
-				break;
-			case RANK_EXTRA:
-				score_per_bullet_cap = 2000;
-				break;
-			}
-		#endif
+		score_per_bullet_cap = (rank == RANK_EXTRA)
+			? 1600
+			: select_for_rank(960, 1280, 1280, 1280);
+#else
+		switch(rank) {
+		case RANK_EASY:
+			score_per_bullet_cap = 1000;
+			break;
+		case RANK_NORMAL:
+		case RANK_HARD:
+		case RANK_LUNATIC:
+			score_per_bullet_cap = 1600;
+			break;
+		case RANK_EXTRA:
+			score_per_bullet_cap = 2000;
+			break;
+		}
+#endif
 
 		overlay_popup_bonus = 0;
 		for(i = 0; i < BULLET_COUNT; i++, bullet--) {
@@ -450,9 +453,9 @@ void bullets_update(void)
 			// ZUN quirk: Always false in TH05, see above
 			if(patnum < (PAT_BULLET_ZAP + BULLET_DECAY_CELS)) {
 				bullet->patnum = patnum;
-				#if (GAME == 5)
-					bullets_seen++;
-				#endif
+#if (GAME == 5)
+				bullets_seen++;
+#endif
 				continue;
 			}
 			overlay_popup_bonus += score_per_bullet;
@@ -468,12 +471,12 @@ void bullets_update(void)
 			}
 
 			bullet->flag = F_REMOVE;
-			#if (GAME == 5)
-				if(bullet_zap_drop_point_items && ((bullets_seen % 4) == 0)) {
-					items_add(bullet->pos.cur.x, bullet->pos.cur.y, IT_POINT);
-				}
-				bullets_seen++;
-			#endif
+#if (GAME == 5)
+			if(bullet_zap_drop_point_items && ((bullets_seen % 4) == 0)) {
+				items_add(bullet->pos.cur.x, bullet->pos.cur.y, IT_POINT);
+			}
+			bullets_seen++;
+#endif
 		}
 		// Note that this would show only one popup even *if* bullets could
 		// spawn during the zap frames: Popups can be changed at least every

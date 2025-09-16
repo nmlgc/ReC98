@@ -1,4 +1,5 @@
 #include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/grppsafx.h"
 
 // Performs a very slow, unoptimized, 2× nearest-neighbor scale of the
 // rectangle from

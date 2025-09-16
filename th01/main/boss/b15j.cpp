@@ -7,7 +7,6 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grpinv32.hpp"
@@ -170,6 +169,10 @@ void kikuri_load(void)
 	int j;
 
 	pellet_interlace = true;
+
+	// ZUN bloat: Since we come here shortly after process startup, this
+	// unnecessarily captures the initial default state of [z_Palettes].
+	// The actual palette is captured later on in kikuri_main().
 	palette_copy(boss_palette, z_Palettes, i, j); // = boss_palette_snap
 
 	for(i = 0; i < TEAR_COUNT; i++) {

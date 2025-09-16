@@ -1,22 +1,26 @@
 scoredat_func macro nam:req
-	public nam
-	nam	proc near
 	if GAME eq 5
-		arg_bx	near
-		push	si
-		mov 	bx, offset _hi
+		public @&nam&$QV
+		@&nam&$QV proc near
+			arg_bx	near
+			push	si
+			mov 	bx, offset _hi
 	else
-		arg_bx	near, @hi:word
-		push	si
-		mov 	bx, @hi
+		public @&nam&$QP18SCOREDAT_SECTION_T
+		@&nam&$QP18SCOREDAT_SECTION_T proc near
+			arg_bx	near, @hi:word
+			push	si
+			mov 	bx, @hi
 	endif
 		mov	si, bx
 
 	endfunc macro
 		pop 	si
 		ret_bx
-		nam endp
-		if GAME eq 4
+		if GAME eq 5
+			@&nam&$QV endp
+		else
+			@&nam&$QP18SCOREDAT_SECTION_T endp
 			; TODO: Turn into unconditional EVEN once this is a separate
 			; translation unit
 			even

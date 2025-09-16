@@ -12,11 +12,7 @@ struct item_splash_t {
 };
 
 #define ITEM_SPLASH_COUNT 8
-#if GAME == 5
-	#define ITEM_SPLASH_DOTS 32
-#else
-	#define ITEM_SPLASH_DOTS 64
-#endif
+static const int ITEM_SPLASH_DOTS = ((GAME == 5) ? 32 : 64);
 
 extern item_splash_t item_splashes[ITEM_SPLASH_COUNT];
 

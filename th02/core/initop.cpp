@@ -3,7 +3,6 @@
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th02/hardware/vplanset.h"
 #include "th02/shiftjis/fns.hpp"
-#include "th02/mem.h"
 #include "th02/core/initexit.h"
 #include "th02/formats/pf.hpp"
 
@@ -11,7 +10,7 @@ const char pf_fn[] = PF_FN;
 
 int game_init_op(void)
 {
-	if(mem_assign_dos(MEM_ASSIGN_PARAS_OP)) {
+	if(mem_assign_dos(256000 >> 4)) {
 		return 1;
 	}
 	vram_planes_set();

@@ -1,6 +1,6 @@
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/player/orb.hpp"
-#include "th01/math/area.hpp"
+#include "game/coords.hpp"
 #include "game/pf.h"
 
 /// Entities
@@ -20,8 +20,8 @@ public:
 	screen_y_t prev_top;
 	vram_byte_amount_t vram_w;
 	pixel_t h;
-	Area<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
-	Area<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
+	LRTB<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
+	LRTB<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
 	int bos_image_count;
 
 protected:
@@ -355,7 +355,7 @@ public:
 
 	// Loads all images from the .BOS file with the given [fn] inside the
 	// currently active packfile into the given CBossAnim .BOS [slot], and
-	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
+	// keeps the .BOS metadata in this CBossAnim instance. Always returns 0.
 	// Identical to CBossEntity::load() with an added alpha negation loop.
 	int load(const char fn[PF_FN_LEN], int slot);
 

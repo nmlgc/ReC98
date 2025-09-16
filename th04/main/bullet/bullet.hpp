@@ -12,9 +12,9 @@ extern "C" {
 /// -----------------------------------
 
 #if GAME == 5
-	#include "th05/main/bullet/types.h"
+#include "th05/main/bullet/types.h"
 #else
-	#include "th04/main/bullet/types.h"
+#include "th04/main/bullet/types.h"
 #endif
 /// -----------------------------------
 
@@ -25,15 +25,15 @@ static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * BMS_DECAY_FRAMES_PER_CEL)
 
-// Regular bullets with a given speed below BMS_SLOWDOWN_THRESHOLD are set to
-// BMS_SLOWDOWN. This fires them at BMS_SLOWDOWN_BASE_SPEED instead, and then
-// gradually slows them down to their given speed over the next
-// BMS_SLOWDOWN_FRAMES.
+// Regular bullets with a given speed below BMS_DECELERATE_THRESHOLD are set to
+// BMS_DECELERATE. This fires them at BMS_DECELERATE_BASE_SPEED instead, and
+// then gradually slows them down to their given speed over the next
+// BMS_DECELERATE_FRAMES.
 // • In TH04, this is not done for stacks.
-// • In TH05, this is not done for any group with BST_NO_SLOWDOWN set.
-#define BMS_SLOWDOWN_BASE_SPEED 4.5f
-#define BMS_SLOWDOWN_THRESHOLD (BMS_SLOWDOWN_BASE_SPEED - 0.5f)
-#define BMS_SLOWDOWN_FRAMES 32
+// • In TH05, this is not done for any group with BST_NO_DECELERATE set.
+#define BMS_DECELERATE_BASE_SPEED 4.5f
+#define BMS_DECELERATE_THRESHOLD (BMS_DECELERATE_BASE_SPEED - 0.5f)
+#define BMS_DECELERATE_FRAMES 32
 
 enum bullet_spawn_state_t {
 	/// Hitbox is active
@@ -59,8 +59,8 @@ enum bullet_move_state_t {
 	/// Hitbox is active
 	/// ----------------
 
-	// Slows down from BMS_SLOWDOWN_BASE_SPEED to [final_speed]
-	BMS_SLOWDOWN = 0,
+	// Slows down from BMS_DECELERATE_BASE_SPEED to [final_speed]
+	BMS_DECELERATE = 0,
 	// Special processing according to [special_motion]
 	BMS_SPECIAL = 1,
 	// No special processing
@@ -83,42 +83,42 @@ enum bullet_special_motion_t {
 
 	// Slows down the bullet from its initial speed to 0, then aims to the
 	// player and resets to its initial speed.
-	// Affected by [bullet_special_motion.turns_max].
-	BSM_SLOWDOWN_THEN_TURN_AIMED,
+	// Affected by [bullet_special.turns_max].
+	BSM_DECELERATE_THEN_TURN_AIMED,
 
 	// Slows down the bullet from its initial speed to 0, then increases its
 	// angle by [angle.turn_by] and resets to its initial speed.
-	// Affected by [bullet_special_motion.turns_max].
-	BSM_SLOWDOWN_THEN_TURN,
+	// Affected by [bullet_special.turns_max].
+	BSM_DECELERATE_THEN_TURN,
 
-	// Accelerates the speed of the bullet by
-	// [bullet_special_motion.speed_delta] every frame.
+	// Accelerates the speed of the bullet by [bullet_special.speed_delta]
+	// every frame.
 	BSM_SPEEDUP,
 
 	// Slows down the bullet from its initial speed to 0 while turning it
 	// towards [angle.target]. Upon reaching a speed of 0, the bullet
 	// continues flying at that exact angle and resets to its initial speed.
-	BSM_SLOWDOWN_TO_ANGLE,
+	BSM_DECELERATE_TO_ANGLE,
 
 	// Bounces the bullet into the opposite direction if it reaches the
 	// respective edge of the playfield.
-	// Affected by [bullet_special_motion.turns_max].
+	// Affected by [bullet_special.turns_max].
 	BSM_BOUNCE_LEFT_RIGHT,
 	BSM_BOUNCE_TOP_BOTTOM,
 	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM,
 	BSM_BOUNCE_LEFT_RIGHT_TOP,
 
-	// Accelerates the Y velocity of the bullet by
-	// [bullet_special_motion.speed_delta] every two frames.
+	// Accelerates the Y velocity of the bullet by [bullet_special.speed_delta]
+	// every two frames.
 	BSM_GRAVITY,
 
-	#if (GAME == 5)
-		// Exact linear movement along a line; recalculates the bullet position
-		// based on the origin, angle, and distance every frame. Useful if
-		// regular incremental subpixel movement would introduce too much
-		// quantization noise.
-		BSM_EXACT_LINEAR,
-	#endif
+#if (GAME == 5)
+	// Exact linear movement along a line; recalculates the bullet position
+	// based on the origin, angle, and distance every frame. Useful if regular
+	// incremental subpixel movement would introduce too much quantization
+	// noise.
+	BSM_EXACT_LINEAR,
+#endif
 
 	BSM_NONE = 0xFF,
 };
@@ -143,14 +143,14 @@ struct bullet_t {
 	bullet_special_motion_t special_motion;
 	SubpixelLength8 speed_final;
 	union {
-		unsigned char slowdown_time;	// with BMS_SLOWDOWN
-		unsigned char turns_done;   	// with BMS_SPECIAL
+		unsigned char decelerate_time;	// with BMS_DECELERATE
+		unsigned char turns_done;     	// with BMS_SPECIAL
 	} u1;
 	union {
-		// Difference between [speed_final] and the BMS_SLOWDOWN_BASE_SPEED.
-		// Always positive for BMS_SLOWDOWN bullets.
-		SubpixelLength8 slowdown_speed_delta;	// with BMS_SLOWDOWN
-		bullet_special_angle_t angle;        	// with BMS_SPECIAL
+		// Difference between [speed_final] and the BMS_DECELERATE_BASE_SPEED.
+		// Always positive for BMS_DECELERATE bullets.
+		SubpixelLength8 decelerate_speed_delta;	// with BMS_DECELERATE
+		bullet_special_angle_t angle;          	// with BMS_SPECIAL
 	} u2;
 	int patnum;
 
@@ -161,11 +161,6 @@ struct bullet_t {
 #endif
 };
 
-#define PELLET_W 8
-#define PELLET_H 8
-#define BULLET16_W 16
-#define BULLET16_H 16
-
 // Symmetrical around the center point of each bullet, and treated in relation
 // to a 1×1 "hitbox" around the player's center point.
 static const subpixel_t BULLET_KILLBOX_W = TO_SP(8);
@@ -174,8 +169,8 @@ static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
 
 #if GAME == 5
-	#define PELLET_COUNT 180
-	#define BULLET16_COUNT 220
+#define PELLET_COUNT 180
+#define BULLET16_COUNT 220
 
 // Returns the sprite ID of a directional or vector bullet sprite that
 // represents the given [angle], relative to [patnum_base]. While the function
@@ -189,8 +184,8 @@ extern "C++" unsigned char pascal near bullet_patnum_for_angle(
 // Turns every 4th bullet into a point item when zapping bullets.
 extern bool bullet_zap_drop_point_items;
 #else
-	#define PELLET_COUNT 240
-	#define BULLET16_COUNT 200
+#define PELLET_COUNT 240
+#define BULLET16_COUNT 200
 
 // Returns the offset for a directional bullet sprite that shows the given
 // [angle].
@@ -211,7 +206,7 @@ extern union {
 	unsigned char turns_max;
 
 	SubpixelLength8 speed_delta;
-} bullet_special_motion;
+} bullet_special;
 
 /// Template
 /// --------
@@ -337,28 +332,28 @@ extern nearfunc_t_near bullet_template_tune;
 
 // The actual functions for spawning bullets based on the [bullet_template].
 // Both TH04 and TH05 pointlessly use separate functions for spawning "regular"
-// bullets (which receive a move state of BMS_SLOWDOWN or BMS_REGULAR) or
+// bullets (which receive a move state of BMS_DECELERATE or BMS_REGULAR) or
 // "special" ones (which are BMS_SPECIAL).
 #if (GAME == 5)
-	void near bullets_add_regular(void);
-	void near bullets_add_special(void);
+void near bullets_add_regular(void);
+void near bullets_add_special(void);
 
-	// Only used for the revenge bullets fired from Stage 3 Alice's barrier.
-	void far bullets_add_regular_far(void);
+// Only used for the revenge bullets fired from Stage 3 Alice's barrier.
+void far bullets_add_regular_far(void);
 #else
-	// TH04 additionally uses pointless per-difficulty wrappers around these
-	// spawn functions that don't actually do anything difficulty-specific.
-	void pascal near bullets_add_regular_easy(void);
-	void pascal near bullets_add_regular_normal(void);
-	void pascal near bullets_add_regular_hard_lunatic(void);
-	void pascal near bullets_add_special_easy(void);
-	void pascal near bullets_add_special_normal(void);
-	void pascal near bullets_add_special_hard_lunatic(void);
+// TH04 additionally uses pointless per-difficulty wrappers around these spawn
+// functions that don't actually do anything difficulty-specific.
+void pascal near bullets_add_regular_easy(void);
+void pascal near bullets_add_regular_normal(void);
+void pascal near bullets_add_regular_hard_lunatic(void);
+void pascal near bullets_add_special_easy(void);
+void pascal near bullets_add_special_normal(void);
+void pascal near bullets_add_special_hard_lunatic(void);
 
-	// Set to the version of the wrapper functions above that match the
-	// current difficulty.
-	extern nearfunc_t_near bullets_add_regular;
-	extern nearfunc_t_near bullets_add_special;
+// Set to the version of the wrapper functions above that match the current
+// difficulty.
+extern nearfunc_t_near bullets_add_regular;
+extern nearfunc_t_near bullets_add_special;
 #endif
 
 // Further wrappers around the spawn functions that bypass base [speed] tuning
@@ -369,3 +364,6 @@ void near bullets_add_special_fixedspeed(void);
 /// --------
 
 }
+
+// ZUN bloat: Should be separate functions.
+void near bullets_and_gather_invalidate(void);

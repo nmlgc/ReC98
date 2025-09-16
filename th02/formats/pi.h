@@ -1,11 +1,7 @@
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "defconv.h"
 
-#if GAME == 5
-	#define PI_SLOT_COUNT 8
-#else
-	#define PI_SLOT_COUNT 6
-#endif
+static const int PI_SLOT_COUNT = ((GAME == 5) ? 8 : 6);
 
 #define PI_W RES_X
 #define PI_H RES_Y
@@ -53,7 +49,8 @@ typedef uint8_t far *pi_buffer_p_t;
 	p = reinterpret_cast<pi_buffer_p_t>(pi_buffers[slot]);
 
 #define pi_buffer_p_offset(p, x, y) \
-	p += (((y * PI_W) + x) / 2);
+	/* Carefully avoiding overflows… */ \
+	p += ((y * (PI_W / 2u)) + (x / 2u));
 
 #define pi_buffer_p_normalize(p) \
 	p = reinterpret_cast<pi_buffer_p_t>(MK_FP( \

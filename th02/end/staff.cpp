@@ -115,5 +115,5 @@ void pascal staffroll_rotrect_animate(
 	grcg_line(R_LEFT,  R_TOP,    R_RIGHT, R_TOP);
 	grcg_off();
 
-	palette_white();
+	palette_settone(200);
 }

@@ -1,28 +1,10 @@
-#include "platform.h"
-#include "x86real.h"
-#include "planar.h"
 #include "platform/x86real/pc98/egc.hpp"
-#include "platform/x86real/pc98/grcg.hpp"
 #include "platform/x86real/pc98/page.hpp"
-
-enum egc_register_t {
-	EGC_ACTIVEPLANEREG = 0x04A0,
-	EGC_READPLANEREG   = 0x04A2,
-	EGC_MODE_ROP_REG   = 0x04A4,
-	EGC_FGCOLORREG     = 0x04A6,
-	EGC_MASKREG        = 0x04A8,
-	EGC_BGCOLORREG     = 0x04AA,
-	EGC_ADDRRESSREG    = 0x04AC,
-	EGC_BITLENGTHREG   = 0x04AE,
-};
+#include "planar.h"
 
 EGCCopy::EGCCopy()
 {
-	// The EGC does in fact require an active GRCG.
-	// (See PC-9801 Programmers' Bible, p. 456)
-	_outportb_(0x7C, GC_TDW);
-
-	graph_egc_on();
+	egc_activate();
 	outport(EGC_ACTIVEPLANEREG, 0xFFF0);
 	outport(EGC_READPLANEREG, 0x00FF);
 	outport(EGC_MASKREG, 0xFFFF);
@@ -32,8 +14,7 @@ EGCCopy::EGCCopy()
 
 EGCCopy::~EGCCopy()
 {
-	graph_egc_off();
-	_outportb_(0x7C, GC_OFF);
+	egc_deactivate();
 }
 
 // Rectangle blitting

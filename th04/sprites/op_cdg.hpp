@@ -1,9 +1,9 @@
 // CDG slots for TH04's and TH05's OP.EXE
 
 #if (GAME == 5)
-	#include "th05/playchar.h"
+#include "th05/playchar.h"
 #else
-	#include "th04/playchar.h"
+#include "th04/playchar.h"
 #endif
 #include "th04/snd/snd.h"
 #include "th03/formats/cdg.h"
@@ -61,10 +61,10 @@ typedef enum {
 
 	CDG_PIC = 40,
 	CDG_PIC_last = (CDG_PIC + PLAYCHAR_COUNT - 1),
-	#if (GAME == 5)
-		CDG_CLEARED,
-		CDG_PIC_NOT_CLEARED,
-	#endif
+#if (GAME == 5)
+	CDG_CLEARED,
+	CDG_PIC_NOT_CLEARED,
+#endif
 
 	_op_cdg_slot_t_FORCE_INT16 = 0x7FFF
 } op_cdg_slot_t;

@@ -4,8 +4,15 @@
 // scope, and provide the optimal instructions for both dynamic and statically
 // known tiles and colors.
 
+#ifndef PLATFORM_X86REAL_PC98_GRCG_HPP
+#define PLATFORM_X86REAL_PC98_GRCG_HPP
+
 #include "planar.h"
 #include "x86real.h"
+
+// Critical for removing the exception handling code that Turbo C++ 4.0J would
+// generate for the destructor by default.
+#pragma option -x-
 
 // Just in case master.hpp was included before...
 #undef GC_OFF
@@ -37,44 +44,35 @@ struct GRCG {
 		_outportb_(0x7C, (mode | plane_mask));
 	}
 
-	void settile(
+	void set_tile(
 		const dots8_t& b, const dots8_t& r, const dots8_t& g, const dots8_t& e
 	) {
+		set_tile_static(b, r, g, e);
+	}
+
+	void __fastcall set_color(vc_t col);
+
+	// Generates the optimal instructions for setting up the GRCG with a
+	// statically known tile.
+	void set_tile_static(dots8_t b, dots8_t r, dots8_t g, dots8_t e) {
 		outportb(0x7E, b);
 		outportb(0x7E, r);
 		outportb(0x7E, g);
 		outportb(0x7E, e);
 	}
 
-	void setcolor(vc_t col);
+	// Generates the optimal instructions for setting up the GRCG with a
+	// statically known color.
+	void set_color_static(vc_t col) {
+		outportb(0x7E, ((col & 0x1) ? 0xFF : 0x00));
+		outportb(0x7E, ((col & 0x2) ? 0xFF : 0x00));
+		outportb(0x7E, ((col & 0x4) ? 0xFF : 0x00));
+		outportb(0x7E, ((col & 0x8) ? 0xFF : 0x00));
+	}
 
 	~GRCG() {
 		_outportb_(0x7C, GC_OFF);
 	}
 };
 
-// Generates the optimal instructions for setting up the GRCG with a statically
-// known tile.
-template <
-	int TileB, int TileR, int TileG, int TileE
-> struct GRCGStaticTile : public GRCG {
-	GRCGStaticTile(grcg_mode_t mode, grcg_plane_mask_t plane_mask = 0) :
-		GRCG(mode, plane_mask) {
-		outportb(0x7E, TileB);
-		outportb(0x7E, TileR);
-		outportb(0x7E, TileG);
-		outportb(0x7E, TileE);
-	}
-};
-
-// Generates the optimal instructions for setting up the GRCG with a statically
-// known color.
-template <vc_t Col> struct GRCGStaticColor : public GRCG {
-	GRCGStaticColor(grcg_mode_t mode, grcg_plane_mask_t plane_mask = 0) :
-		GRCG(mode, plane_mask) {
-		outportb(0x7E, ((Col & 0x1) ? 0xFF : 0x00));
-		outportb(0x7E, ((Col & 0x2) ? 0xFF : 0x00));
-		outportb(0x7E, ((Col & 0x4) ? 0xFF : 0x00));
-		outportb(0x7E, ((Col & 0x8) ? 0xFF : 0x00));
-	}
-};
+#endif /* PLATFORM_X86REAL_PC98_GRCG_HPP */

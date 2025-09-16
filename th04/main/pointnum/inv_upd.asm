@@ -7,8 +7,8 @@ pointnums_init	endp
 	even
 
 
-public POINTNUMS_INVALIDATE
-pointnums_invalidate	proc near
+public @pointnums_invalidate$qv
+@pointnums_invalidate$qv proc near
 	push	si
 	push	di
 	mov	_tile_invalidate_box.y, POINTNUM_H
@@ -37,7 +37,7 @@ pointnums_invalidate	proc near
 	pop	di
 	pop	si
 	retn
-pointnums_invalidate	endp
+@pointnums_invalidate$qv endp
 	even
 
 

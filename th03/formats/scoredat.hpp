@@ -5,9 +5,6 @@
 
 #define SCOREDAT_FN "YUME.NEM"
 
-#undef SCOREDAT_FN
-extern const char near* SCOREDAT_FN;
-
 static const int SCOREDAT_PLACES = 10;
 static const int SCOREDAT_NAME_LEN = 8;
 
@@ -63,9 +60,9 @@ void near scoredat_decode(void);
 // returns `true` if that data was recreated due to corruption or a nonexistent
 // file.
 #if (BINARY == 'O')
-	bool16 pascal near scoredat_load_and_decode(rank_t rank);
+bool16 pascal near scoredat_load_and_decode(rank_t rank);
 #elif (BINARY == 'L')
-	void pascal near scoredat_load_and_decode(rank_t rank);
+void pascal near scoredat_load_and_decode(rank_t rank);
 #endif
 
 // Calculates the checksum and encrypts [hi] in-place, then saves it to the

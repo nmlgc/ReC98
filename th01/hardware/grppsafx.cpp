@@ -1,10 +1,25 @@
 // Shared parts from all graph_putsa_fx() implementations
 
 #define set_vram_ptr(vram, first_bit, left, top) \
-	vram = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_muldiv(left, top))); \
+	vram = (dots8_t far *)(MK_FP(SEG_PLANE_B, vram_offset_muldiv(left, top))); \
 	first_bit = (left % BYTE_DOTS); \
 
 #define get_glyph(glyph, codepoint, fullwidth, str, left, line) \
+	/** \
+	 * According to p. 105 of the PC-9801 Programmers' Bible, the PC-98 KCG \
+	 * only supports single-byte ANK glyph retrieval within VBLANK, regardless \
+	 * of whether it's in code or dot access mode. Later models such as the \
+	 * PC9821As3 (see https://github.com/joncampbell123/dosbox-x/pull/5814) \
+	 * seem to have lifted this limitation, and no emulator replicates it as \
+	 * of August 2025. Still, it does make sense why ZUN just pulls ANK glyphs \
+	 * from their PC-98-specific alternate location at JIS row 0x29 instead: \
+	 * Even at the ROM level, these are halfwidth glyphs within fullwidth \
+	 * blocks and are thus not affected by the VBLANK restriction, and you get \
+	 * the widest possible hardware compatibility with no further downside. \
+	 * (Well, except that Neko Project's auto-generated default font renders \
+	 * the 0x29 row using these infamous hideous abominations of ASCII glyphs, \
+	 * making text look much worse as a result…) \
+	 */ \
 	if(_ismbblead(str[0])) { \
 		codepoint = _mbcjmstojis(((char)str[0] << 8) + str[1]); \
 		str += 2; \
@@ -23,6 +38,12 @@
 		str += 1; \
 	} \
 	\
+	/** \
+	 * ZUN landmine: This still gets executed if _mbcjmstojis() returned \
+	 * 0x0000 for an illegal Shift-JIS codepoint. In that case, the codepoint \
+	 * calculation overflows to 0xE0, which reliably returns the `=` from \
+	 * NEC's single-byte JIS X 0201 extensions. \
+	 */ \
 	outportb(0xA1, codepoint & 0xFF); \
 	outportb(0xA3, (codepoint >> 8) - 0x20); \
 	if(codepoint >= 0x2921 && codepoint <= 0x2B7E) { \

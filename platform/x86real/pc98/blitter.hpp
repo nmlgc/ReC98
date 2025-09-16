@@ -3,20 +3,42 @@
 
 #include "planar.h"
 
-typedef void (* blit_func_t)(seg_t plane_seg, const void far* sprite);
-
 struct Blitter {
-	blit_func_t write;
-	blit_func_t or;
+	void (__fastcall *write)(seg_t plane_seg);
+	void (__fastcall *write_offscreen)(seg_t plane_seg);
+
+	// Captures pixels from VRAM. Set the blitter source to the VRAM segment
+	// and the *target* segment stride and height, and pass the *target*
+	// segment. (I might rethink this one day.)
+	static void __fastcall near snap(seg_t plane_seg);
 };
 
-// Internals
-// ---------
-// Mainly here because BLITPERF needs access to them to implement custom
-// blitters.
+// Persistent state that defines the region of the blitted sprite.
+struct blit_source_t {
+	// Start of the sprite's bitplane
+	union {
+		struct {
+			uint16_t off;
+			seg_t seg;
+		} part;
+		const void far *fp;
+	} dots_start;
+	vram_byte_amount_t stride;
+	uint16_t offset; // Byte offset to the top-left pixel to be blitted
+	vram_byte_amount_t w;
+	pixel_t h;
+};
 
-static const upixel_t UNROLL_H = 8;
+extern blit_source_t blit_source;
 
+#define blitter_set_source_region(left, top, w_, h_, stride_) { \
+	blit_source.stride = stride_; \
+	blit_source.offset = ((top * stride_) + left); \
+	blit_source.w = w_; \
+	blit_source.h = h_; \
+}
+
+// Temporary state for the current blitter run.
 struct blit_state_t {
 	vram_offset_t vo;
 
@@ -24,64 +46,21 @@ struct blit_state_t {
 	// clipped at the left or top edge of VRAM.
 	uint16_t sprite_offset;
 
-	// Always set to the original width of the sprite. Can be larger than the
-	// blitted width if the sprite is clipped.
-	vram_byte_amount_t sprite_w;
-
-	// 16-bit because it gets loaded into BX anyway.
-	pixel_t loops_remainder;
-
-	int16_t loops_unrolled;
+	vram_byte_amount_t w_clipped;
+	upixel_t h_clipped;
 };
 
 extern blit_state_t blit_state;
 
-#define blitter_body(plane_seg, sprite, func_row, row_p1, row_p2) { \
-	register int16_t loops_unrolled = blit_state.loops_unrolled; \
-	_SI = FP_OFF(sprite); \
-	_SI += blit_state.sprite_offset; \
-	_DI = blit_state.vo; \
-	_DX = blit_state.sprite_w; \
-	_BX = blit_state.loops_remainder; \
-	\
-	/* Turbo C++ 4.0J does not back up DS if the function mutates it. */ \
-	/* [blit_state] can't be accessed anymore beyond this point! */ \
-	_asm { push ds; } \
-	_DS = FP_SEG(sprite); \
-	_ES = plane_seg; \
-	\
-	static_assert(UNROLL_H == 8); \
-	switch(_BX) { \
-	case 0: do { func_row(row_p1, row_p2) \
-	case 7:      func_row(row_p1, row_p2) \
-	case 6:      func_row(row_p1, row_p2) \
-	case 5:      func_row(row_p1, row_p2) \
-	case 4:      func_row(row_p1, row_p2) \
-	case 3:      func_row(row_p1, row_p2) \
-	case 2:      func_row(row_p1, row_p2) \
-	case 1:      func_row(row_p1, row_p2) \
-	/*       */} while(--loops_unrolled > 0); \
-	} \
-	\
-	_asm { pop ds; } \
-}
-// ---------
-
 // Initialization
 // --------------
-// All of these set up blitting of a ([w]*8)×[h]-pixel sprite at the given VRAM
-// offset, cutting it at the respectively checked VRAM boundaries and assuming
-// that it does not touch the others. If the sprite would be cut to a width or
-// height of 0, they return a `nullptr` and leave the blitter in an invalid
-// state.
 
-// Checks all 4 edges of VRAM.
-const Blitter __ds* blitter_init_clip_lrtb(
-	vram_x_t left, vram_y_t top, vram_byte_amount_t w, pixel_t h
-);
+// Sets up blitting of the previously configured sprite region at the given
+// VRAM offset, cutting it to the clipping region set with Grp_SetClip().
+// Returns a blitter if the sprite is visible, or a `nullptr` if it isn't.
+const Blitter __ds* __fastcall blitter_init_clip(vram_x_t left, vram_y_t top);
 
-// Checks the bottom edge of VRAM.
-const Blitter __ds* blitter_init_clip_b(
-	vram_x_t left, vram_y_t top, vram_byte_amount_t w, pixel_t h
-);
+// Sets up blitting of the previously configured sprite region at the given
+// VRAM offset. Always returns a blitter.
+const Blitter __ds& __fastcall blitter_init_noclip(vram_x_t left, vram_y_t top);
 // --------------

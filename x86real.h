@@ -85,19 +85,15 @@ void segread(struct SREGS *__segp);
 /// ----------
 
 #ifdef __cplusplus
-	extern "C" {
-		void interrupt (__far * __cdecl getvect(int __interruptno))(...);
-		void __cdecl setvect(
-			int __interruptno, void interrupt (__far *__isr)(...)
-		);
-		int __cdecl int86(
-			int __intno, union REGS *__inregs, union REGS *__outregs
-		);
-	}
-#else
-	void interrupt (__far * __cdecl getvect(int __interruptno))();
-	void __cdecl setvect(int __interruptno, void interrupt(__far *__isr)());
+extern "C" {
+	void interrupt (__far * __cdecl getvect(int __interruptno))(...);
+	void __cdecl setvect(int __interruptno, void interrupt (__far *__isr)(...));
 	int __cdecl int86(int __intno, union REGS *__inregs, union REGS *__outregs);
+}
+#else
+void interrupt (__far * __cdecl getvect(int __interruptno))();
+void __cdecl setvect(int __interruptno, void interrupt(__far *__isr)());
+int __cdecl int86(int __intno, union REGS *__inregs, union REGS *__outregs);
 #endif
 
 /// ----------
@@ -110,18 +106,18 @@ void segread(struct SREGS *__segp);
 #define FP_OFF(fp)     ((uint16_t)(fp))
 
 #ifdef __cplusplus
-	int16_t inline peek(uint16_t __segment, uint16_t __offset) {
-		return (*((int16_t __far *)MK_FP(__segment, __offset)));
-	}
-	int8_t inline peekb(uint16_t __segment, uint16_t __offset) {
-		return (*((int8_t __far *)MK_FP(__segment, __offset)));
-	}
-	void inline poke(uint16_t __segment, uint16_t __offset, int16_t __value) {
-		(*((int16_t __far *)MK_FP(__segment, __offset)) = __value);
-	}
-	void inline pokeb(uint16_t __segment, uint16_t __offset, int8_t __value) {
-		(*((int8_t __far *)MK_FP(__segment, __offset)) = __value);
-	}
+int16_t inline peek(uint16_t __segment, uint16_t __offset) {
+	return (*((int16_t __far *)MK_FP(__segment, __offset)));
+}
+int8_t inline peekb(uint16_t __segment, uint16_t __offset) {
+	return (*((int8_t __far *)MK_FP(__segment, __offset)));
+}
+void inline poke(uint16_t __segment, uint16_t __offset, int16_t __value) {
+	(*((int16_t __far *)MK_FP(__segment, __offset)) = __value);
+}
+void inline pokeb(uint16_t __segment, uint16_t __offset, int8_t __value) {
+	(*((int8_t __far *)MK_FP(__segment, __offset)) = __value);
+}
 #endif
 /// ----------------
 
@@ -141,15 +137,22 @@ void segread(struct SREGS *__segp);
 // Alternate versions for 8-bit port numbers that don't spill the port number
 // to DX.
 #ifdef __cplusplus
-	#define _outportb_(port, val) { \
-		_AL = val; \
-		__emit__(0xE6, port); /* OUT port, AL */ \
-	}
+#define _outportb_(port, val) { \
+	_AL = val; \
+	__emit__(0xE6, port); /* OUT port, AL */ \
+}
 
-	inline uint8_t _inportb_(uint8_t port) {
-		__emit__(0xE4, port); // IN AL, port
-		return _AL;
-	}
+inline uint8_t _inportb_(uint8_t port) {
+	__emit__(0xE4, port); // IN AL, port
+	return _AL;
+}
+
+// Returns the segment part of the handler for the given interrupt.
+inline void __seg* intvector_segment(uint8_t i) {
+	return reinterpret_cast<void __seg *>(
+		peek(0, ((i * sizeof(void far *)) + sizeof(uint16_t)))
+	);
+}
 #endif
 // --------------------------
 

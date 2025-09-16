@@ -11,9 +11,9 @@
 #include <stddef.h>
 
 #if (GAME == 5)
-	#define EMS_NAME "GENSOEMS"
+#define EMS_NAME "GENSOEMS"
 #else
-	#define EMS_NAME "KAIKIEMS"
+#define EMS_NAME "KAIKIEMS"
 #endif
 
 // Layout
@@ -38,22 +38,20 @@ static const uint32_t EMS_PLAYCHAR_BOMB_BG_OFFSET = 34000;
 static const uint32_t EMS_PLAYCHAR_BOMB_BG_END = (EMS_PLAYCHAR_BOMB_BG_OFFSET +
 	sizeof_planar_rect(BOMB_BG_W_MAX, BOMB_BG_H_MAX)
 );
-#if (GAME == 5)
-	static const uint32_t EMS_FACESET_PLAYCHAR_OFFSET = 100000;
-#else
-	static const uint32_t EMS_FACESET_PLAYCHAR_OFFSET = 94000;
-#endif
+static const uint32_t EMS_FACESET_PLAYCHAR_OFFSET = (
+	(GAME == 5) ? 100000 : 94000
+);
 static const uint32_t EMS_FACESET_PLAYCHAR_END = (EMS_FACESET_PLAYCHAR_OFFSET +
 	(FACESET_PLAYCHAR_COUNT * sizeof_planar_rect(FACE_W, FACE_H))
 );
 #if (GAME == 5)
-	static const uint32_t EMS_FACESET_BOSS_OFFSET = 200000;
-	static const uint32_t EMS_FACESET_BOSS_END = (EMS_FACESET_BOSS_OFFSET +
-		(FACESET_BOSS_COUNT * sizeof_planar_rect(FACE_W, FACE_H))
-	);
-	static const uint32_t EMSSIZE = 320000; /* ZUN symbol [MAGNet2010] */
+static const uint32_t EMS_FACESET_BOSS_OFFSET = 200000;
+static const uint32_t EMS_FACESET_BOSS_END = (EMS_FACESET_BOSS_OFFSET +
+	(FACESET_BOSS_COUNT * sizeof_planar_rect(FACE_W, FACE_H))
+);
+static const uint32_t EMSSIZE = 320000; /* ZUN symbol [MAGNet2010] */
 #else
-	static const uint32_t EMSSIZE = 180000; /* ZUN symbol [MAGNet2010] */
+static const uint32_t EMSSIZE = 180000; /* ZUN symbol [MAGNet2010] */
 #endif
 // ------
 
@@ -72,7 +70,7 @@ void near ems_allocate_and_preload_eyecatch(void);
 void near bomb_bg_load__ems_preload_playchar_cdgs(void);
 
 #if (GAME == 5)
-	void pascal near ems_preload_boss_faceset(const char *fn);
+void pascal near ems_preload_boss_faceset(const char *fn);
 #endif
 
 void near eyecatch_animate(void);
