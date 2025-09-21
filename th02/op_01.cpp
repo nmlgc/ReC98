@@ -586,6 +586,9 @@ void main_update_and_render(void)
 				pi_free(0);
 				palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 
+				// ZUN bug: We should be clearing TRAM at the next VBLANK event
+				// instead of leaving the scoreboard on screen during the
+				// multiple frames this copy is likely to take.
 				graph_copy_page(0);
 				graph_accesspage(0);
 				initialized = false;
