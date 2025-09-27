@@ -154,6 +154,9 @@ void pascal score_menu(void)
 		super_entry_bfnt("op_h.bft");
 	}
 	palette_entry_rgb_show("op_h.rgb");
+
+	// ZUN quirk: grc_setclip() is endpoint-inclusive, so this actually defines
+	// a 385×209-pixel region.
 	grc_setclip(128, 96, 512, 304);
 
 	// ZUN bug: Seems redundant since logo_render() starts with the same code.
@@ -189,7 +192,7 @@ void pascal score_menu(void)
 
 	key_det = 0;
 	frame_delay(20);
-	grc_setclip(0, 0, 639, 399);
+	grc_setclip(0, 0, (RES_X - 1), (RES_Y - 1));
 }
 
 inline char shottype_count() {
