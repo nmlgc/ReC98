@@ -15,17 +15,6 @@ _fast_forward	db ?
 if (GAME ge 4)
 	db 60 dup(?)
 endif
-if (GAME eq 5)
-	COLMAP_COUNT = 8
-
-	colmap_t struc
-		CM_values	db COLMAP_COUNT dup (?)
-		CM_keys	dw (NAME_KANJI_LEN * COLMAP_COUNT) dup (?)
-	colmap_t ends
-
-	public _colmap
-	_colmap	colmap_t <?>
-endif
 	evendata
 
 public _cursor, _text_interval, _text_col, _text_fx

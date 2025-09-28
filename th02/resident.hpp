@@ -32,7 +32,7 @@ struct resident_t {
 	long score_highest;
 };
 
-extern resident_t *resident;
+extern resident_t far *resident;
 
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------

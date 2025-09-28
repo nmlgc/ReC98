@@ -16,11 +16,8 @@ struct spark_t {
 	unsigned int angle;
 };
 
-#if (GAME == 5)
-	#define SPARK_COUNT 64
-#else
-	#define SPARK_COUNT 96
-#endif
+static const int SPARK_COUNT = ((GAME == 5) ? 64 : 96);
+
 // sparks_invalidate() and sparks_init() accidentally still this value in TH05.
 #define SPARK_COUNT_BUG 96
 

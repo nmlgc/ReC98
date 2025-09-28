@@ -26,9 +26,12 @@ void title_flash(void)
 			pi_put_8(0, 0, 2);
 		}
 
-		if(frame % 3 == 0) {
+		// ZUN landmine: Classic screen tearing – pi_put_8() takes a while, so
+		// we're most certainly in the middle of a frame when we get here.
+		// Should be done at the beginning of the loop.
+		if((frame % 3) == 0) {
 			palette_settone(150);
-		} else if(frame % 3 == 1) {
+		} else if((frame % 3) == 1) {
 			palette_settone(100);
 		}
 		frame_delay(1);

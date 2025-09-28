@@ -1,6 +1,13 @@
 #include "platform.h"
 #include <stddef.h>
 
+#if (GAME == 5)
+#define DEMO_N 5000 /* ZUN symbol [MAGNet2010] */
+#define DEMO_N_EXTRA (DEMO_N * 4)
+#else
+#define DEMO_N 4000 /* ZUN symbol [MAGNet2010] */
+#endif
+
 // Properly declared, DEMO?.REC uses this structure:
 template <size_t Frames> struct REC {
 	input_replay_t input[Frames];
@@ -15,7 +22,7 @@ template <size_t Frames> struct REC {
 // as anything more semantic than a meaningless buffer of bytes would just add
 // a lot of unneeded complexity to the one function that reads from this
 // buffer.
-extern uint8_t *DemoBuf; /* ZUN symbol [MAGNet2010] */
+extern uint8_t far *DemoBuf; /* ZUN symbol [MAGNet2010] */
 
 #define demo_end() { \
 	HMem<uint8_t>::free(DemoBuf); \

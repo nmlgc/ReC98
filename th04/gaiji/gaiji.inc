@@ -18,7 +18,6 @@ gs_TEN = 0E6h
 gs_YUME = 0E7h
 gs_TAMA = 0E8h
 gs_ALL = 0E9h
-g_HISCORE_STAGE_EMPTY = 0EFh
 g_NONE = 0FFh
 gs_HEART = 0C9h
 gs_SKULL = 0CAh

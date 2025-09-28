@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "decomp.hpp"
 #include "th01/math/wave.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
 #include "th01/formats/pf.hpp"
@@ -16,13 +15,13 @@
 
 #define BOS_IMAGES_PER_SLOT 8
 
-struct bos_image_t {
+struct bos_word_image_t {
 	Planar<dots16_t *> planes;
 	dots16_t *alpha;
 };
 
-struct bos_t {
-	bos_image_t image[BOS_IMAGES_PER_SLOT];
+struct bos_word_t {
+	bos_word_image_t image[BOS_IMAGES_PER_SLOT];
 };
 
 #define bos_image_new(image, plane_size) \
@@ -38,21 +37,12 @@ struct bos_t {
 		delete[] ptr; \
 	} \
 	ptr = nullptr;
-
-#define bos_free(slot_ptr) \
-	for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) { \
-		bos_image_ptr_free(slot_ptr.image[image].alpha); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.B); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.R); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.G); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.E); \
-	}
 // ---------------
 
 /// Entities
 /// --------
 
-bos_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
+bos_word_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
 bool bos_header_only = false;
 
 void bos_reset_all_broken(void)
@@ -104,7 +94,7 @@ void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 	vram_word_amount_t bos_word_x;
 	vram_y_t intended_y;
 
-	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
+	const bos_word_image_t& bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -142,7 +132,7 @@ void CBossEntity::put_1line(
 	char first_bit = (left & BYTE_MASK);
 	char other_shift = ((1 * BYTE_DOTS) - first_bit);
 
-	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
+	const bos_word_image_t& bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -201,29 +191,29 @@ void CBossEntity::put_1line(
 	}
 }
 void near vram_snap_masked(
-	dots16_t &dst, dots8_t plane[], vram_offset_t vram_offset, dots16_t mask
+	dots16_t far &dst, dots8_t far *plane, vram_offset_t vo, dots16_t mask
 )
 {
-	dst = (reinterpret_cast<dots16_t &>(plane[vram_offset]) & mask);
+	dst = (reinterpret_cast<dots16_t far &>(plane[vo]) & mask);
 }
 
 void near vram_put_bg_fg(
-	sdots16_t fg, dots8_t plane[], vram_offset_t vram_offset, sdots16_t bg_masked
+	sdots16_t fg, dots8_t far *plane, vram_offset_t vo, sdots16_t bg_masked
 )
 {
-	reinterpret_cast<dots16_t &>(plane[vram_offset]) = (fg | bg_masked);
+	reinterpret_cast<dots16_t far &>(plane[vo]) = (fg | bg_masked);
 }
 
 void near vram_put_unaligned_bg_fg(
 	sdots16_t fg,
-	dots8_t plane[],
-	vram_offset_t vram_offset,
+	dots8_t far *plane,
+	vram_offset_t vo,
 	dots16_t bg_masked,
 	char first_bit
 )
 {
 	sdots16_t fg_shifted = (fg >> first_bit) + (fg << (16 - first_bit));
-	reinterpret_cast<dots16_t &>(plane[vram_offset]) = (fg_shifted | bg_masked);
+	reinterpret_cast<dots16_t far &>(plane[vo]) = (fg_shifted | bg_masked);
 }
 
 #define vram_snap_masked_planar(dst, vram_offset, mask) \
@@ -263,7 +253,7 @@ void CBossEntity::unput_and_put_1line(
 	Planar<dots16_t> bg_masked;
 	dots16_t mask_unaligned;
 
-	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
+	const bos_word_image_t& bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -315,7 +305,7 @@ void CBossEntity::unput_and_put_8(
 	vram_y_t intended_y;
 	Planar<dots16_t> bg_masked;
 
-	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
+	const bos_word_image_t& bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -361,7 +351,7 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 	size_t bos_p = 0;
 	vram_y_t intended_y;
 
-	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
+	bos_word_image_t &bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -463,7 +453,7 @@ void CBossEntity::unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const
 	vram_y_t intended_y;
 	int image = bos_image;
 	Planar<dots16_t> bg_masked;
-	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
+	bos_word_image_t &bos = bos_entity_images[bos_slot].image[image];
 
 	// Yes, the macro form. Out of all places that could have required it, it
 	// had to be an originally unused function…
@@ -596,7 +586,7 @@ void bos_entity_free(int slot)
 /// Non-entity animations
 /// ---------------------
 
-bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
+bos_word_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
 
 int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 {
@@ -634,7 +624,7 @@ void CBossAnim::put_8(void) const
 	vram_word_amount_t bos_word_x;
 	vram_y_t intended_y;
 
-	bos_image_t &bos = bos_anim_images[bos_slot].image[bos_image];
+	const bos_word_image_t& bos = bos_anim_images[bos_slot].image[bos_image];
 	if(bos_image >= bos_image_count) {
 		return;
 	}

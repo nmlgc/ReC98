@@ -157,7 +157,11 @@ void arc_file_load(const char fn[PF_FN_LEN])
 		}
 		cur_file_id++;
 	}
+
+	// ZUN landmine: Will access the array out of bounds if the file doesn't
+	// exist.
 	file_pf = &arc_pfs[cur_file_id];
+
 	file_ropen(arc_fn);
 	file_seek(file_pf->offset, SEEK_SET);
 	if((file_pf->type[0] == rle_type[0]) && (file_pf->type[1] == rle_type[1])) {

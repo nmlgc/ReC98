@@ -16,7 +16,7 @@ struct resident_t {
 	// (indicating regular game play progression)
 	unsigned char stage;
 
-	char playchar_ascii;
+	unsigned char playchar_ascii;
 
 	// (used for loading data files, directly inserted into file name
 	// templates)

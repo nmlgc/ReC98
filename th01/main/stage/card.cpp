@@ -2,7 +2,6 @@
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/digit.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/sprites/pellet.h"

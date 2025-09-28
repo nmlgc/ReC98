@@ -1,5 +1,4 @@
 #include "th01/sprites/laser_s.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"

@@ -67,7 +67,7 @@ typedef enum {
 #define BST_CLOUD_FORWARDS 0x02
 #define BST_CLOUD_BACKWARDS 0x03
 
-// Never set BMS_SLOWDOWN, and always fire bullets at the given speed.
+// Never set BMS_DECELERATE, and always fire bullets at the given speed.
 // Can be OR'd into any of the above.
-#define BST_NO_SLOWDOWN 0x10
+#define BST_NO_DECELERATE 0x10
 /// -----------

@@ -56,8 +56,11 @@ typedef enum {
 // relies on this!)
 #define BST_GATHER_ONLY 0
 
+// Conceptually identical to the same constants in TH02, but not worth their
+// own header to avoid the duplication.
 #define BST_PELLET 1	/* ignoring [patnum] */
 #define BST_BULLET16 2
+
 #define BST_GATHER_PELLET 3
 #define BST_BULLET16_CLOUD_FORWARDS 4
 #define BST_BULLET16_CLOUD_BACKWARDS 5

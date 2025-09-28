@@ -47,6 +47,16 @@ These cases should gradually be removed as development goes along, though.
   a nice visual structure, e.g. with multiple calls to the same function with
   varying pixel coordinates.
 
+* The preprocessor branch macros `#if*`, `#el*`, and `#endif` should be at the
+  first column of a line, and their bodies should not receive additional
+  indentation.
+  Our prime use case of preprocessor branches is game-specific code in files
+  used by multiple games. These days, we have LSPs that can highlight and dim
+  code sections depending on the specific game you're investigating, so it
+  makes sense to focus the formatting on the control flow at runtime rather
+  than creating the illusion of more run-time branching that isn't actually
+  there.
+
 * Don't indent `extern "C"` blocks that span the entire file.
 
 * Always use `{ brackets }`, even around single-statement conditional
@@ -388,6 +398,9 @@ These cases should gradually be removed as development goes along, though.
   `frame_delay()` calls: `*_animate`
 * Generic 0-based IDs: `*_id`
 * Generic 1-based IDs, with 0 indicating some sort of absence: `*_num`
+* Random and incomplete collections of data related to a specific concept:
+  `*_stuff`
+  * Can be used for both structures and functions.
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
 * Plain-old-data `struct`s: `struct snake_case_t {}`
@@ -467,6 +480,14 @@ the following assumptions:
 * ZUN's original build of the decompiled game is correctly installed and
   accessible, together with all its original data files.
 * No files of this installation were modified.
+* All configuration or score files are in a state that ZUN's original code
+  could have written, and weren't modified externally (or at least not beyond
+  these constraints).
+  * All score values representable within the original score file format should
+    be considered valid and possible, regardless of whether they can be
+    realistically reached in actual gameplay of the unmodded original game.
+    Hence, rendering issues caused by excessively high scores are bugs, not
+    landmines.
 * All files can be read as intended without I/O errors.
 * The game runs on a clean PC-98 DOS system that matches the official minimum
   system requirements, with enough free memory.

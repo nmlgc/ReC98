@@ -23,9 +23,9 @@ unsigned char pascal near bullet_patnum_for_angle(
 
 	// Yes, this is intended to also cover Yumeko's swords, which start
 	// at a patnum higher than PAT_BULLET16_V. Make sure it stays that way.
-	sizeof(char[1 - 2*!(PAT_SWORD > PAT_BULLET16_V)]);
+	static_assert(PAT_SWORD > PAT_BULLET16_V);
 	if(patnum_base < PAT_BULLET16_V) {
-		angle_low &= (0x80 - 1);
+		angle_low %= 0x80u;
 	}
 
 	angle_high ^= angle_high;

@@ -87,5 +87,5 @@ extern enemy_t near *enemy_cur;
 
 #define ENEMY_POS_RANDOM 999.0f
 
-void pascal near enemies_invalidate(void);
+void near enemies_invalidate(void);
 void pascal near enemies_render(void);

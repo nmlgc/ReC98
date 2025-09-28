@@ -1,5 +1,5 @@
 #if (GAME == 5)
-	#include "th05/sprites/main_pat.h"
+#include "th05/sprites/main_pat.h"
 #endif
 #include "th04/main/player/player.hpp"
 #include "th04/math/randring.hpp"
@@ -15,31 +15,26 @@ SPPoint pascal near shot_velocity_set(
 	SPPoint near* velocity, unsigned char angle
 );
 
-#if (GAME == 5)
-	static const int HITSHOT_FRAMES_PER_CEL = 3;
-#else
-	static const int HITSHOT_FRAMES_PER_CEL = 4;
-#endif
-
+static const int HITSHOT_FRAMES_PER_CEL = ((GAME == 5) ? 3 : 4);
 static const int HITSHOT_FRAMES = (HITSHOT_FRAMES_PER_CEL * HITSHOT_CELS);
 
 #if (GAME == 4)
-	enum shot_flag_th04_t {
-		SF_FREE = 0,
-		SF_ALIVE = 1,
-		SF_HIT = 2,
-		SF_REMOVE = (SF_HIT + HITSHOT_FRAMES),
+enum shot_flag_th04_t {
+	SF_FREE = 0,
+	SF_ALIVE = 1,
+	SF_HIT = 2,
+	SF_REMOVE = (SF_HIT + HITSHOT_FRAMES),
 
-		_shot_flag_th04_t_FORCE_UINT8 = 0xFF
-	};
+	_shot_flag_th04_t_FORCE_UINT8 = 0xFF
+};
 #endif
 
 struct Shot {
-	#if (GAME == 5)
-		entity_flag_t flag;
-	#else
-		shot_flag_th04_t flag;
-	#endif
+#if (GAME == 5)
+	entity_flag_t flag;
+#else
+	shot_flag_th04_t flag;
+#endif
 	char age;
 	PlayfieldMotion pos;
 	// The displayed sprite changes between this one and
@@ -61,16 +56,16 @@ struct Shot {
 		this->pos.cur.x += PLAYER_OPTION_DISTANCE + offset;
 	}
 
-	#if (GAME == 5)
-		void set_option_sprite() {
-			this->patnum_base = PAT_SHOT_SUB;
-		}
+#if (GAME == 5)
+	void set_option_sprite() {
+		this->patnum_base = PAT_SHOT_SUB;
+	}
 
-		void set_option_sprite_and_damage(char damage) {
-			set_option_sprite();
-			this->damage = damage;
-		}
-	#endif
+	void set_option_sprite_and_damage(char damage) {
+		set_option_sprite();
+		this->damage = damage;
+	}
+#endif
 
 	void set_random_angle_forwards(
 		unsigned char min = -0x48, unsigned char max = -0x38
@@ -82,11 +77,7 @@ struct Shot {
 	}
 };
 
-#if (GAME == 5)
-	#define SHOT_COUNT 64
-#else
-	#define SHOT_COUNT 68
-#endif
+static const int SHOT_COUNT = ((GAME == 5) ? 64 : 68);
 
 extern unsigned char shot_time;
 extern Shot near shots[SHOT_COUNT];
@@ -139,6 +130,8 @@ inline int shots_hittest(
 	}
 	return shots_hittest();
 }
+
+void near shots_invalidate(void);
 
 // Also renders hitshots in TH05.
 void near shots_render(void);

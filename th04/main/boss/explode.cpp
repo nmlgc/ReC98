@@ -8,9 +8,9 @@
 #include "th04/formats/super.h"
 #include "th04/main/boss/boss.hpp"
 #if (GAME == 5)
-	#include "th05/sprites/main_pat.h"
+#include "th05/sprites/main_pat.h"
 #else
-	#include "th04/sprites/main_pat.h"
+#include "th04/sprites/main_pat.h"
 #endif
 
 // Structures

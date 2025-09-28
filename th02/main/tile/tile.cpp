@@ -61,7 +61,7 @@ void tiles_stuff_reset(void)
 	static_assert((1 << MAP_BITS_PER_SECTION) == MAP_ROWS_PER_SECTION);
 
 inline tile_image_id_t map_tile_image_at(int section, int row, int x) {
-	return map_section_tiles[section].row[row & (MAP_ROWS_PER_SECTION - 1)][x];
+	return map_section_tiles[section].row[row % MAP_ROWS_PER_SECTION][x];
 }
 
 #include "th02/formats/map.cpp"
@@ -211,8 +211,7 @@ bool16 pascal tiles_scroll_and_egc_render_both(pixel_t speed)
 
 		offset = (map[_BX] * (MAP_ROWS_PER_SECTION * TILES_X));
 		row_offset = (
-			(map_full_row_at_top_of_screen & (MAP_ROWS_PER_SECTION - 1)) *
-			TILES_X
+			(map_full_row_at_top_of_screen % MAP_ROWS_PER_SECTION) * TILES_X
 		);
 		x = 0;
 		while(x < TILES_X) {
