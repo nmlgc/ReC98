@@ -3,7 +3,7 @@
  * TH05 Staff Roll
  */
 
-#pragma option -zCmaine_01_TEXT
+#pragma option -zCSCORE_TEXT
 
 #include <stddef.h>
 #include "planar.h"
@@ -83,7 +83,7 @@ SPPoint orb_trails_center[ORB_TRAIL_COUNT];
 // indices are rendered as PAT_STAR_SMALL.
 SPPoint stars_center[STAR_COUNT];
 
-dots8_t verdict_bitmap[2][VERDICT_SCREEN_H][VERDICT_BITMAP_W / BYTE_DOTS];
+dots8_t __seg *verdict_bitmap;
 // -----
 
 void pascal near space_window_set(

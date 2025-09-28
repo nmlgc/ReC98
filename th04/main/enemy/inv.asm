@@ -1,5 +1,5 @@
-public ENEMIES_INVALIDATE
-enemies_invalidate	proc near
+public @enemies_invalidate$qv
+@enemies_invalidate$qv proc near
 	push	si
 	push	di
 	mov	_tile_invalidate_box, (ENEMY_W shl 16) or ENEMY_H
@@ -20,5 +20,5 @@ enemies_invalidate	proc near
 	pop	di
 	pop	si
 	retn
-enemies_invalidate	endp
+@enemies_invalidate$qv endp
 	even

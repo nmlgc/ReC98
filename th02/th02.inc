@@ -1,5 +1,3 @@
-include th02/mem.inc
-
 include th02/hardware/input.inc
 include th02/math/randring.inc
 include th02/gaiji/gaiji.inc
@@ -43,7 +41,6 @@ mikoconfig_t	ends
 
 ; Player
 ; ------
-MISS_INVINCIBILITY_FRAMES = 220
 CONTINUE_INVINCIBILITY_FRAMES = 200
 ; ------
 

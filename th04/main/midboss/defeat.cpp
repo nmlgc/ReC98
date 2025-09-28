@@ -47,15 +47,15 @@ void near midboss_defeat_update(void)
 	if(midboss.phase == PHASE_EXPLODE_BIG) {
 		if(midboss.phase_frame == ((GAME == 5) ? 1 : 0)) {
 			playfield_shake_anim_time = ((GAME == 5) ? 10 : 12);
-			#if (GAME == 5)
-				// Deferred to midboss_reset() in TH04.
-				midboss_active = false;
-			#endif
+#if (GAME == 5)
+			// Deferred to midboss_reset() in TH04.
+			midboss_active = false;
+#endif
 		}
 
-		#if (GAME == 4)
-			midboss.phase_frame++;
-		#endif
+#if (GAME == 4)
+		midboss.phase_frame++;
+#endif
 
 		if((midboss.phase_frame % 16) == 0) {
 			midboss.sprite++;
@@ -64,10 +64,6 @@ void near midboss_defeat_update(void)
 			}
 		}
 	} else {
-		/* TODO: Replace with the decompiled call
-		 * 	midboss_reset();
-		 * if we ever decide to put that function into the same translation
-		 * unit */
-		_asm { push cs; call near ptr midboss_reset; }
+		midboss_reset();
 	}
 }

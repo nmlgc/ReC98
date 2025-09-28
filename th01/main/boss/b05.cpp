@@ -7,11 +7,9 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/math/vector.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/grp.h"
 #include "th01/sprites/pellet.h"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
@@ -135,22 +133,13 @@ static union {
 
 void singyoku_load(void)
 {
-	svc2 col;
-	int comp;
-
 	singyoku_ent_load();
-
-	grp_palette_load_show("boss1.grp");
-	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
-	stage_palette_set(boss_post_defeat_palette);
-
 	void singyoku_setup(void);
 	singyoku_setup();
 }
 
 void singyoku_setup(void)
 {
-	boss_palette_snap();
 	z_palette_set_all_show(z_Palettes);
 
 	ent.pos_set(PLAYFIELD_RIGHT, PLAYFIELD_TOP, 32);
@@ -549,7 +538,7 @@ void fire_random_downwards_pellets(void)
 	);
 
 	for(int i = 0; i < 10; i++) {
-		unsigned char angle = (irand() & (0x80 - 1));
+		unsigned char angle = (irand() % 0x80u);
 		Pellets.add_single(
 			(ent.cur_center_x() - (PELLET_W / 2)),
 			(ent.cur_center_y() - (PELLET_H / 2)),

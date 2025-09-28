@@ -20,8 +20,8 @@ struct resident_t {
 	uint8_t start_lives;
 	int8_t padding_2;
 	long frame;
-	int unused_1;
-	char unused_2;
+	const char near *pmd_fn; // relative to the data segment of `DEBLOAT.EXE`
+	uint8_t shutdown_flags;
 	unsigned char op_main_retval;
 	bool reduce_effects;
 	char unused_3;
@@ -32,7 +32,7 @@ struct resident_t {
 	long score_highest;
 };
 
-extern resident_t *resident;
+extern resident_t far *resident;
 
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------

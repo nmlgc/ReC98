@@ -1,7 +1,7 @@
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/player/orb.hpp"
-#include "th01/math/area.hpp"
-#include "game/pf.h"
+#include "th01/formats/bos.hpp"
+#include "game/coords.hpp"
 
 /// Entities
 /// --------
@@ -12,17 +12,14 @@
 
 // An individual entity rendered with sprites from a .BOS file. May or may not
 // be animated, and may or may not have a hitbox for collision with the Orb.
-class CBossEntity {
+class CBossEntity : public BOS {
 public:
 	screen_x_t cur_left;
 	screen_y_t cur_top;
 	screen_x_t prev_left;
 	screen_y_t prev_top;
-	vram_byte_amount_t vram_w;
-	pixel_t h;
-	Area<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
-	Area<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
-	int bos_image_count;
+	LRTB<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
+	LRTB<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
 
 protected:
 	int bos_image;
@@ -95,11 +92,6 @@ public:
 	// Additionally clips at the bottom edge of VRAM.
 	void put_8(screen_x_t left, vram_y_t top, int image) const;
 
-	// Precisely restores pixels according to the alpha mask of [image] from
-	// VRAM page 1, starting at (⌊left/8⌋*8, top).
-	// Additionally clips at the top and bottom edges of VRAM.
-	void unput_8(screen_x_t left, vram_y_t top, int image) const;
-
 	// Like put_8(), but restores all pixels in the blitted sprite
 	// rectangle from VRAM page 1 prior to blitting.
 	// Additionally clips at the top and bottom edges of VRAM.
@@ -124,31 +116,6 @@ public:
 	// Like wave_put(), but calls egc_copy_rect_1_to_0_16() for each line
 	// instead.
 	void wave_sloppy_unput(int len, pixel_t amp, int phase) const;
-
-	// Like wave_put(), but calls unput_and_put_1line() for each line instead.
-	void wave_unput_and_put(int image, int len, pixel_t amp, int phase) const;
-
-	// Tries to unblit the two sprites at (left_1, top) and (left_2, top) that
-	// were previously blitted with the given wave function using the EGC, but
-	// fails.
-	void egc_sloppy_wave_unput_double_broken(
-		screen_x_t left_1, vram_y_t top, int unused,
-		int len_1, pixel_t amp_1, int phase_1,
-		screen_x_t left_2,
-		int len_2, pixel_t amp_2, int phase_2
-	) const;
-
-	// Blits the 16×8 pixels of [bos_image] in [bos_slot] starting at
-	// (bos_left, bos_top), relative to the top-left corner of the sprite, to
-	//	((⌊cur_left/8⌋ + bos_left/8⌋) * 8, (cur_top + bos_top))
-	// after precisely restoring pixels according to the alpha mask of the
-	// pixels to be blitted from VRAM page 1.
-	// Additionally clips at the top and bottom edges of VRAM.
-	void unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const;
-
-	// Restores the pixels inside the entire ([vram_w]*8)×[h] rectangle
-	// starting at (cur_left, cur_top) from VRAM page 1.
-	void sloppy_unput(void) const;
 	/// --------
 
 	/// Movement
@@ -343,19 +310,16 @@ extern CBossEntity boss_entity_4;
 // exchange for the alpha plane being pre-negated at load time? No idea why.
 // That 1-instruction negation is certainly not what makes the original code
 // slow.
-class CBossAnim {
+class CBossAnim : public BOS {
 public:
 	screen_x_t left;
 	screen_y_t top;
-	vram_byte_amount_t vram_w;
-	pixel_t h;
-	unsigned char bos_image_count;
 	unsigned char bos_image;
 	unsigned char bos_slot;
 
 	// Loads all images from the .BOS file with the given [fn] inside the
 	// currently active packfile into the given CBossAnim .BOS [slot], and
-	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
+	// keeps the .BOS metadata in this CBossAnim instance. Always returns 0.
 	// Identical to CBossEntity::load() with an added alpha negation loop.
 	int load(const char fn[PF_FN_LEN], int slot);
 

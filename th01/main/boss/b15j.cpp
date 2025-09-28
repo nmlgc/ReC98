@@ -7,7 +7,6 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grpinv32.hpp"
@@ -167,10 +166,8 @@ union {
 void kikuri_load(void)
 {
 	int i;
-	int j;
 
 	pellet_interlace = true;
-	palette_copy(boss_palette, z_Palettes, i, j); // = boss_palette_snap
 
 	for(i = 0; i < TEAR_COUNT; i++) {
 		tear_anim_frame[i] = 0;
@@ -183,9 +180,6 @@ void kikuri_load(void)
 
 void kikuri_setup(void)
 {
-	svc2 col;
-	int comp;
-
 	boss_phase = 0;
 	boss_phase_frame = 0;
 
@@ -193,8 +187,6 @@ void kikuri_setup(void)
 	boss_hp = HP_TOTAL;
 	hud_hp_first_white = HP_PHASE_2_END;
 	hud_hp_first_redwhite = HP_PHASE_5_END;
-
-	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
 }
 
 void kikuri_free(void)
@@ -934,8 +926,6 @@ void kikuri_main(void)
 		boss_phase_frame = 0;
 		y = 0;
 		hit.invincible = false;
-
-		boss_palette_snap();
 
 		// MODDERS: Loop over [flash_colors] instead.
 		z_palette_set_show( 2, RGB4::max(), RGB4::max(), RGB4::max());

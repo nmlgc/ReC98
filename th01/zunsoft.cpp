@@ -3,8 +3,6 @@
  * ZUN Soft logo used in TH01, TH02 and TH03
  */
 
-#pragma option -2 -d- // ZUN bloat
-
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/page.hpp"
@@ -58,7 +56,7 @@ void zunsoft_init(void)
 	graph_hide();
 	super_entry_bfnt(LOGO_FILENAME);
 	palette_show();
-	palette_black();
+	palette_settone(0);
 	graph_show();
 }
 

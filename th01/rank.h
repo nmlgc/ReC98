@@ -10,19 +10,19 @@ typedef enum {
 
 	// Hi Asprey, there is no unused Extra rank in TH01.
 	// (https://www.youtube.com/watch?v=RcjhM4tfPq4&t=169s)
-	#if ((GAME != 1) && (GAME != 3))
-		RANK_EXTRA,
-	#endif
+#if ((GAME != 1) && (GAME != 3))
+	RANK_EXTRA,
+#endif
 
 	RANK_COUNT,
 
-	#if (GAME >= 4)
-		// Triggering the first-launch setup menu via a special rank value...
-		// Definitely unique.
-		RANK_SHOW_SETUP_MENU = 0xFF,
-	#endif
+#if (GAME >= 4)
+	// Triggering the first-launch setup menu via a special rank value...
+	// Definitely unique.
+	RANK_SHOW_SETUP_MENU = 0xFF,
+#endif
 
-	_rank_t_FORCE_INT16 = 0x7FFF
+	_rank_t_FORCE_UINT8 = 0xFF
 } rank_t;
 
 #define RANKS_CAPS { \

@@ -1,11 +1,10 @@
 // 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT and initializes the high score
 // lists.
 
-#pragma option -O- -k- -2
-
 #include "libs/master.lib/master.hpp"
 #include "th01/rank.h"
-#include "th02/formats/scoredat.hpp"
+#include "th02/formats/scoredat/scoredat.hpp"
+#include "th02/formats/scoredat/impl.hpp"
 #include "th02/gaiji/gaiji.h"
 
 scoredat_section_t hi;
@@ -13,7 +12,7 @@ scoredat_section_t hi;
 void pascal scoredat_recreate(void);
 void near scoredat_load(void);
 
-const char *SCOREDAT_FN = "huuhi.dat";
+const char *SCOREDAT_FN_PTR = SCOREDAT_FN; // ZUN bloat: Use the macro.
 unsigned char g_name_first_sum = 0;
 unsigned char stage_sum = 0;
 unsigned char unused_2 = 0; // ZUN bloat
@@ -28,7 +27,7 @@ inline int8_t rank_count(void) {
 
 int pascal scoredat_verify(void)
 {
-	if(!file_exist(SCOREDAT_FN)) {
+	if(!file_exist(SCOREDAT_FN_PTR)) {
 		scoredat_recreate();
 	} else {
 		for(rank = 0; rank < rank_count(); rank++) {
@@ -67,12 +66,9 @@ int pascal scoredat_verify(void)
 	return 0;
 
 remove:
-	file_delete(SCOREDAT_FN);
+	file_delete(SCOREDAT_FN_PTR);
 	return 1;
 }
-
-#pragma codestring "\x90"
-#pragma option -O -k
 
 // Slightly differs from the same function in MAIN.EXE and MAINE.EXE!
 // ZUN bloat: Needlessly micro-optimized. Seriously, I wasted half a week
@@ -117,12 +113,10 @@ place_loop:
 end:
 }
 
-#include "th02/scoreenc.c"
-
 void pascal scoredat_create(void)
 {
 	scoredat_encode();
-	file_create(SCOREDAT_FN);
+	file_create(SCOREDAT_FN_PTR);
 	file_write(&hi, sizeof(hi));
 	file_write(&hi, sizeof(hi));
 	file_write(&hi, sizeof(hi));
@@ -137,4 +131,4 @@ void pascal scoredat_recreate(void)
 	scoredat_create();
 }
 
-#include "th02/scorelod.c"
+#include "th02/formats/scoredat/load.cpp"

@@ -1,5 +1,5 @@
 #include "th04/main/boss/boss.hpp"
-#include "th01/math/area.hpp"
+#include "game/coords.hpp"
 
 // Callbacks
 extern nearfunc_t_near boss_custombullets_render;
@@ -20,7 +20,7 @@ typedef enum {
 	Y_DOWN,
 } y_direction_t;
 
-extern Area<Subpixel, Subpixel> boss_flystep_random_clamp;
+extern LRTB<Subpixel, Subpixel> boss_flystep_random_clamp;
 static const subpixel_t BOSS_FLYSTEP_RANDOM_FIELD_LEFT = TO_SP(
 	(PLAYFIELD_W / 2) - (PLAYFIELD_W / 8)
 );

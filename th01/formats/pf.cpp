@@ -5,16 +5,16 @@
 #include <ctype.h>
 #include "libs/master.lib/master.hpp"
 #include "th01/formats/pf.hpp"
+#include "platform/array.hpp"
 
-#undef arc_file_get
+#undef arc_file_read
 
 static const int FILE_COUNT = 64;
-static const size_t CACHE_SIZE = 0x100;
 
-#define PF_TYPE_COMPRESSED "\x95\x95" // "封" in Shift-JIS
+static const uint16_t PF_TYPE_COMPRESSED = 0x9595; // "封" in Shift-JIS
 
 struct pf_header_t {
-	uint8_t type[2]; // PF_TYPE_COMPRESSED if RLE-compressed
+	uint16_t type; // PF_TYPE_COMPRESSED if RLE-compressed
 	int8_t aux; // Always 3, unused
 	char fn[PF_FN_LEN];
 	int32_t packsize;
@@ -25,16 +25,18 @@ struct pf_header_t {
 
 pf_header_t *arc_pfs;
 pf_header_t *file_pf;
-int cur_file_id;
 int arc_pf_count;
 bool file_compressed;
 uint8_t arc_key;
 
-uint8_t *file_data;
-uint8_t *cache;
+Array<uint8_t, 0x100> cache;
 char arc_fn[PF_FN_LEN];
 size_t file_pos;
 size_t cache_bytes_read;
+
+uint8_t rle_runs;
+uint8_t rle_next_byte;
+uint8_t rle_run_byte;
 
 void arc_load(const char fn[PF_FN_LEN])
 {
@@ -52,7 +54,7 @@ void arc_load(const char fn[PF_FN_LEN])
 	file_read(arc_pfs, (sizeof(pf_header_t) * FILE_COUNT));
 	file_close();
 	for(i = 0; i < FILE_COUNT; i++) {
-		if(arc_pfs[i].type[0] == 0) {
+		if(static_cast<uint8_t>(arc_pfs[i].type) == 0) {
 			break;
 		}
 		for(c = 0; c < PF_FN_LEN; c++) {
@@ -70,17 +72,21 @@ void arc_free(void)
 	delete[] arc_pfs;
 }
 
-bool16 near at_pos_of(const char fn[PF_FN_LEN])
+bool near arc_file_lookup(const char fn_uppercase[PF_FN_LEN])
 {
-	for(int i = 0; i < PF_FN_LEN; i++) {
-		if(arc_pfs[cur_file_id].fn[i] != toupper(fn[i])) {
-			return false;
-		}
-		if(fn[i] == '\0') {
-			return true;
+	file_pf = arc_pfs;
+	for(int file_i = 0; file_i < arc_pf_count; (file_i++, file_pf++)) {
+		for(int i = 0; i < PF_FN_LEN; i++) {
+			if(file_pf->fn[i] != fn_uppercase[i]) {
+				break;
+			}
+			if(fn_uppercase[i] == '\0') {
+				return false;
+			}
 		}
 	}
-	return false;
+	file_pf = nullptr;
+	return true;
 }
 
 // Get it? En*crap*tion?
@@ -91,22 +97,21 @@ void near crapt(uint8_t *buf, size_t size)
 	}
 }
 
-uint8_t near cache_next(void)
+void near cache_refill(void)
 {
-	uint8_t b;
-	if(cache_bytes_read == 0) {
-		file_read(cache, CACHE_SIZE);
-	}
-	b = cache[cache_bytes_read];
-	b ^= arc_key;
-	cache_bytes_read++;
-	if(cache_bytes_read >= CACHE_SIZE) {
-		cache_bytes_read = 0;
-	}
-	return b;
+	file_read(cache.data(), cache.count());
+	cache_bytes_read = 0;
 }
 
-void near unrle(size_t output_size)
+uint8_t near cache_next(void)
+{
+	if(cache_bytes_read >= cache.count()) {
+		cache_refill();
+	}
+	return (cache[cache_bytes_read++] ^ arc_key);
+}
+
+void near unrle(uint8_t *buf, size_t output_size, int advance_buf)
 {
 	// Simple run-length encoding scheme, compressing runs of three or more
 	// identical bytes by replacing arbitrarily many bytes after the third one
@@ -125,83 +130,108 @@ void near unrle(size_t output_size)
 	//               • 0 more
 
 	size_t bytes_written = 0;
-	uint8_t run_byte;
-	uint8_t next_byte = cache_next();
-	uint8_t runs = 0;
-
 	while(bytes_written < output_size) {
-		file_data[bytes_written++] = next_byte;
+		*buf = rle_next_byte;
+		bytes_written++;
+		buf += advance_buf;
 
-		if(runs == 0) {
+		if(rle_runs == 0) {
 			// Literal mode
-			run_byte = next_byte;
-			next_byte = cache_next();
-			if(run_byte == next_byte) {
-				runs = cache_next();
+			rle_run_byte = rle_next_byte;
+			rle_next_byte = cache_next();
+			if(rle_run_byte == rle_next_byte) {
+				rle_runs = cache_next();
 			}
 		} else {
 			// Run mode
-			runs--;
+			rle_runs--;
 		}
 	}
 }
 
-void arc_file_load(const char fn[PF_FN_LEN])
+void near arc_file_rewind(void)
 {
-	const uint8_t rle_type[] = PF_TYPE_COMPRESSED;
-
-	cur_file_id = 0;
-	for(int i = 0; i < arc_pf_count; i++) {
-		if(at_pos_of(fn)) {
-			break;
-		}
-		cur_file_id++;
-	}
-	file_pf = &arc_pfs[cur_file_id];
-	file_ropen(arc_fn);
 	file_seek(file_pf->offset, SEEK_SET);
-	if((file_pf->type[0] == rle_type[0]) && (file_pf->type[1] == rle_type[1])) {
-		file_compressed = true;
-	} else {
-		file_compressed = false;
-	}
 	file_pos = 0;
-	file_data = new uint8_t[file_pf->orgsize];
 	if(file_compressed) {
-		cache = new uint8_t[CACHE_SIZE];
-		cache_bytes_read = 0;
-		unrle(file_pf->orgsize);
-		delete[] cache;
-	} else {
-		file_read(file_data, file_pf->packsize);
-		crapt(file_data, file_pf->packsize);
+		cache_refill();
+		rle_runs = 0;
+		rle_next_byte = cache_next();
 	}
-	file_close();
 }
 
-void arc_file_get(uint8_t *buf, size_t size)
+bool arc_file_open(const char fn[PF_FN_LEN])
 {
-	uint8_t *p = buf;
-	for(size_t i = 0; i < size; i++) {
-		if(file_pos >= file_pf->orgsize) {
+	// Uppercase the filename once
+	char fn_uppercase[PF_FN_LEN];
+	int i;
+	for(i = 0; i < PF_FN_LEN; i++) {
+		char c = fn[i];
+		if(c == '\0') {
 			break;
 		}
-		p[i] = file_data[file_pos];
-		file_pos++;
+		unsigned char c_small_delta;
+		if((c_small_delta = (c - 'a')) < 26) {
+			c = ('A' + c_small_delta);
+		}
+		fn_uppercase[i] = c;
 	}
+	fn_uppercase[i] = '\0';
+
+	if(arc_file_lookup(fn_uppercase)) {
+		return true;
+	}
+	file_ropen(arc_fn);
+	file_compressed = (file_pf->type == PF_TYPE_COMPRESSED);
+	arc_file_rewind();
+	return false;
 }
 
-void arc_file_seek(int8_t pos)
+size_t arc_file_read(uint8_t *buf, size_t size)
 {
+	const int delta = (file_pf->orgsize - file_pos);
+	if(size > delta) {
+		size = delta;
+	}
+	if(file_compressed) {
+		unrle(buf, size, true);
+	} else {
+		file_read(buf, size);
+		crapt(buf, size);
+	}
+	file_pos += size;
+	return size;
+}
+
+size_t arc_file_seek(int pos, int dir)
+{
+	if(dir == SEEK_CUR) {
+		pos += file_pos;
+	}
+	if(pos < 0) {
+		pos = 0;
+	} else if(pos > file_pf->orgsize) {
+		pos = file_pf->orgsize;
+	}
+	if(file_compressed) {
+		const int delta = (pos - file_pos);
+		if(delta < 0) {
+			// Seeking backwards in a compressed stream is awkward and rarely
+			// if ever needed, so let's just rewind.
+			arc_file_rewind();
+			return arc_file_seek(pos, SEEK_SET);
+		} {
+			uint8_t temp;
+			unrle(&temp, delta, false);
+		}
+	} else {
+		file_seek((file_pf->offset + pos), SEEK_SET);
+	}
 	file_pos = pos;
+	return pos;
 }
 
-void arc_file_free(void)
+void arc_file_close(void)
 {
-	delete[] file_data;
-}
-
-int arc_file_size(void)
-{
-	return file_pf->orgsize;
+	file_close();
 }

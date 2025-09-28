@@ -11,6 +11,7 @@ enum vs_mode_t {
 	VS_1P_CPU = 0,
 	VS_1P_2P = 1,
 	VS_CPU_CPU = 2,
+	VS_MODE_COUNT,
 };
 
 enum game_mode_t {
@@ -30,7 +31,8 @@ enum game_mode_t {
 
 // Won't enter [score_last[0]] into YUME.NEM, even if it's high enough for a
 // place. Also used for just showing the high scores from the main menu.
-#define STAGE_NONE -1
+static const uint8_t STAGE_NONE = -1;
+
 #define STAGE_ALL 99
 
 #define CREDIT_LIVES 2
@@ -44,7 +46,7 @@ struct resident_t {
 	PlaycharPalettedOptional playchar_paletted[PLAYER_COUNT];
 	bool is_cpu[PLAYER_COUNT];
 	long rand;
-	int8_t unused_1;
+	uint8_t shutdown_flags;
 	unsigned char bgm_mode;
 	unsigned char key_mode;
 	pid_t pid_winner;
@@ -56,10 +58,11 @@ struct resident_t {
 	unsigned char story_lives;
 	bool show_score_menu;
 	unsigned char rem_credits;
-	bool op_skip_animation;
+	bool op_animation_fast;
 	unsigned char skill;
 	unsigned char demo_num;	// 0 = no demo active
-	int8_t unused_3[198];
+	const char near *pmd_fn; // relative to the data segment of `DEBLOAT.EXE`
+	int8_t unused_3[196];
 };
 
 extern resident_t far *resident;

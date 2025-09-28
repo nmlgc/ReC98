@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include "planar.h"
 #include "th02/hardware/vplanset.h"

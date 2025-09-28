@@ -5,7 +5,7 @@
 struct resident_t {
 	char id[sizeof(RES_ID)];
 	bool zunsoft_shown;
-	int8_t unused_1;
+	uint8_t shutdown_flags;
 	char unknown;
 	unsigned char credit_lives;
 	unsigned char credit_bombs;
@@ -47,7 +47,8 @@ struct resident_t {
 	score_lebcd_t score_highest;
 
 	score_lebcd_t stage_score[MAIN_STAGE_COUNT];
-	int32_t unused_3;
+	const char near *pmd_fn; // relative to the data segment of `DEBLOAT.EXE`
+	int16_t unused_3;
 };
 
 extern resident_t far *resident;

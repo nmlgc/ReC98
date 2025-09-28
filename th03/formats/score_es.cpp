@@ -11,14 +11,13 @@ void pascal near scoredat_encode_and_save(rank_t rank)
 	hi.score.key2 = irand();
 	hi.score.unknown = irand();
 
-	#if (BINARY == 'L')
-		if(
-			(resident->story_stage == STAGE_ALL) &&
-			(resident->rem_credits == 3)
-		) {
-			hi.score.cleared = SCOREDAT_CLEARED;
-		}
-	#endif
+	if(
+		(resident->rank == rank) &&
+		(resident->story_stage == STAGE_ALL) &&
+		(resident->rem_credits == 3)
+	) {
+		hi.score.cleared = SCOREDAT_CLEARED;
+	}
 
 	scoredat_sum(sum, p, i);
 	hi.sum = sum;

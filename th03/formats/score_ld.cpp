@@ -1,20 +1,13 @@
-#if (BINARY == 'L')
-	#define recreated
-	#define loaded
-	void pascal near scoredat_load_and_decode(rank_t rank)
-#else
-	#define recreated true
-	#define loaded false
-	bool16 pascal near scoredat_load_and_decode(rank_t rank)
-#endif
+bool pascal near scoredat_load_and_decode(rank_t rank)
 {
 	if(!file_exist(SCOREDAT_FN)) {
-		// Unnecessary, since scoredat_recreate() would also create the file?
+		// scoredat_recreate() uses file_append(), which fails if the file
+		// doesn't exist yet.
 		file_create(SCOREDAT_FN);
 		file_close();
 
 		scoredat_recreate();
-		return recreated;
+		return true;
 	}
 	file_ropen(SCOREDAT_FN);
 	file_seek((rank * sizeof(scoredat_section_t)), SEEK_SET);
@@ -23,10 +16,7 @@
 	scoredat_decode();
 	if(scoredat_sum_invalid()) {
 		scoredat_recreate();
-		return recreated;
+		return true;
 	}
-	return loaded;
-
-	#undef recreated
-	#undef loaded
+	return false;
 }

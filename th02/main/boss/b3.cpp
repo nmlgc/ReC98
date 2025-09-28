@@ -1,16 +1,7 @@
 /// Stage 3 Boss - Five Magic Stones
 /// --------------------------------
 
-#include "pc98.h"
-
-enum stone_t {
-	STONE_INNER_WEST = 0,
-	STONE_INNER_EAST = 1,
-	STONE_OUTER_WEST = 2,
-	STONE_OUTER_EAST = 3,
-	STONE_NORTH = 4,
-	STONE_COUNT,
-};
+#include "th02/main/boss/b3.hpp"
 
 // Coordinates
 // -----------

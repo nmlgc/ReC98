@@ -1,13 +1,14 @@
+#pragma option -zPop_01
+
+#include "game/bgimage.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/math/clamp.hpp"
-#include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
-	#include "th05/resident.hpp"
-	#include "th05/formats/pi.hpp"
+#include "th05/resident.hpp"
 #else
-	#include "th04/resident.hpp"
-	#include "th03/formats/pi.hpp"
+#include "th04/resident.hpp"
 #endif
 #include "th04/hardware/grppsafx.h"
 #include "th04/hardware/input.h"
@@ -67,7 +68,6 @@ static const screen_x_t HELP_TOP = CHOICE_TOP;
 
 typedef int mswin_tile_amount_t;
 
-static Palette8 palette_unused; // ZUN bloat
 struct {
 	mswin_tile_amount_t w;
 	mswin_tile_amount_t h;
@@ -85,7 +85,7 @@ void pascal near window_dropdown_put(
 	screen_x_t left, screen_y_t bottom_tile_top
 )
 {
-	egc_copy_rect_1_to_0_16(left, bottom_tile_top, window.pixel_w(), MSWIN_H);
+	bgimage.write_bg_region(left, bottom_tile_top, window.pixel_w(), MSWIN_H);
 
 	super_put(left, bottom_tile_top, MSWIN_MIDDLE_LEFT);
 	super_put(left, (bottom_tile_top + DROP_SPEED), MSWIN_LEFT_BOTTOM);
@@ -100,7 +100,7 @@ void pascal near window_dropdown_put(
 
 void pascal near window_rollup_put(screen_x_t left, screen_y_t bottom_tile_top)
 {
-	egc_copy_rect_1_to_0_16(
+	bgimage.write_bg_region(
 		left, (bottom_tile_top + DROP_SPEED), window.pixel_w(), MSWIN_H
 	);
 
@@ -112,11 +112,10 @@ void pascal near window_rollup_put(screen_x_t left, screen_y_t bottom_tile_top)
 	super_put(left, bottom_tile_top, MSWIN_RIGHT_BOTTOM);
 }
 
-void pascal near dropdown(screen_x_t left, screen_y_t top_)
+void pascal near dropdown(screen_x_t left, screen_y_t top)
 {
 	mswin_tile_amount_t i;
 	screen_x_t tile_left = left;
-	screen_y_t top = top_; // ZUN bloat
 
 	super_put(tile_left, top, MSWIN_LEFT_TOP);
 	tile_left += MSWIN_W;
@@ -137,7 +136,7 @@ void pascal near dropdown(screen_x_t left, screen_y_t top_)
 
 void pascal near singleline(screen_x_t left, screen_y_t top)
 {
-	egc_copy_rect_1_to_0_16(left, top, window.pixel_w(), (MSWIN_H * 2));
+	bgimage.write_bg_region(left, top, window.pixel_w(), (MSWIN_H * 2));
 
 	super_put(left, (top + (0 * MSWIN_H)), MSWIN_LEFT_TOP);
 	super_put(left, (top + (1 * MSWIN_H)), MSWIN_LEFT_BOTTOM);
@@ -164,13 +163,14 @@ void pascal near rollup(screen_x_t left, screen_y_t top)
 	}
 }
 
-inline void window_animate(
+void pascal near window_animate(
 	screen_x_t content_left,
 	screen_y_t content_top,
 	pixel_t content_w,
 	int content_lines,
 	void (near pascal *near animate_func)(screen_x_t, screen_y_t)
-) {
+)
+{
 	window.w = (window_w_for_content_w(content_w) / MSWIN_W);
 	if(content_lines != 1) {
 		window.h = (
@@ -185,7 +185,7 @@ inline void window_animate(
 void pascal near bgm_choice_put(int bgm_mode, vc2 col)
 {
 	screen_y_t top = CHOICE_TOP;
-	const shiftjis_t* str;
+	const shiftjis_t near *str;
 	static_assert(SND_BGM_MODE_COUNT == 3);
 	switch(bgm_mode) {
 	case SND_BGM_FM86:	str = BGM_CHOICE_FM86;	top += (0 * GLYPH_H);	break;
@@ -198,7 +198,7 @@ void pascal near bgm_choice_put(int bgm_mode, vc2 col)
 void pascal near se_choice_put(int se_mode, vc2 col)
 {
 	screen_y_t top = CHOICE_TOP;
-	const shiftjis_t* str;
+	const shiftjis_t near *str;
 	static_assert(SND_SE_MODE_COUNT == 3);
 	switch(se_mode) {
 	case SND_SE_FM:  	str = SE_CHOICE_FM;  	top += (0 * GLYPH_H);	break;
@@ -208,121 +208,95 @@ void pascal near se_choice_put(int se_mode, vc2 col)
 	graph_putsa_fx(CHOICE_LEFT, top, col, str);
 }
 
-// ZUN bloat: Could have been inlined into setup_submenu().
-void near bgm_help_put(void)
+unsigned int pascal near setup_submenu(
+	const shiftjis_t *caption,
+	unsigned int choice_count,
+	unsigned int choice_default,
+	void (pascal near *near choice_put)(int, vc2),
+	shiftjis_t near *near help[HELP_LINES],
+	input_t increment_input
+)
 {
+	unsigned int sel;
+	window_animate(CAPTION_LEFT, CAPTION_TOP, CAPTION_W, 1, singleline);
+	graph_putsa_fx(CAPTION_LEFT, CAPTION_TOP, V_WHITE, caption);
+
+	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, dropdown);
+	for(sel = 0; sel < choice_count; sel++) {
+		choice_put(
+			sel, ((sel == choice_default) ? COL_ACTIVE : COL_INACTIVE)
+		);
+	}
+
+	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, dropdown);
+
 	screen_y_t top = HELP_TOP;
 	for(int i = 0; i < HELP_LINES; (i++, top += GLYPH_H)) {
-		graph_putsa_fx(HELP_LEFT, top, V_WHITE, BGM_HELP[i]);
+		graph_putsa_fx(HELP_LEFT, top, V_WHITE, help[i]);
 	}
-}
 
-void near se_help_put(void)
-{
-	screen_y_t top = HELP_TOP;
-	for(int i = 0; i < HELP_LINES; (i++, top += GLYPH_H)) {
-		graph_putsa_fx(HELP_LEFT, top, V_WHITE, SE_HELP[i]);
+	sel = choice_default;
+	while(1) {
+		input_wait_for_change(0);
+		frame_delay(1);
+		if(key_det & (INPUT_OK | INPUT_SHOT)) {
+			break;
+		}
+		if(key_det & increment_input) {
+			choice_put(sel, COL_INACTIVE);
+			if(sel == (choice_count - 1)) {
+				sel = 0;
+			} else {
+				sel++;
+			}
+			choice_put(sel, COL_ACTIVE);
+		}
+		if(key_det & (~increment_input & (INPUT_UP | INPUT_DOWN))) {
+			choice_put(sel, COL_INACTIVE);
+			if(sel == 0) {
+				sel = (choice_count - 1);
+			} else {
+				sel--;
+			}
+			choice_put(sel, COL_ACTIVE);
+		}
 	}
-}
-
-#define setup_submenu( \
-	sel, \
-	caption, \
-	choice_count, \
-	choice_default, \
-	choice_put, \
-	help_put, \
-	increment_input \
-) { \
-	window_animate(CAPTION_LEFT, CAPTION_TOP, CAPTION_W, 1, singleline); \
-	graph_putsa_fx(CAPTION_LEFT, CAPTION_TOP, V_WHITE, caption); \
-	\
-	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, dropdown); \
-	for(sel = 0; sel < choice_count; sel++) { \
-		choice_put( \
-			sel, ((sel == choice_default) ? COL_ACTIVE : COL_INACTIVE) \
-		); \
-	} \
-	\
-	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, dropdown); \
-	help_put(); \
-	\
-	sel = choice_default; \
-	while(1) { \
-		input_wait_for_change(0); \
-		frame_delay(1); \
-		if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) { \
-			break; \
-		} \
-		if(key_det & increment_input) { \
-			choice_put(sel, COL_INACTIVE); \
-			if(sel == (choice_count - 1)) { \
-				sel = 0; \
-			} else { \
-				sel++; \
-			} \
-			choice_put(sel, COL_ACTIVE); \
-		} \
-		if(key_det & (~increment_input & (INPUT_UP | INPUT_DOWN))) { \
-			choice_put(sel, COL_INACTIVE); \
-			if(sel == 0) { \
-				sel = (choice_count - 1); \
-			} else { \
-				sel--; \
-			} \
-			choice_put(sel, COL_ACTIVE); \
-		} \
-	} \
-	\
-	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, rollup); \
-	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, rollup); \
-}
-
-void near setup_bgm_menu(void)
-{
-	int sel;
-	setup_submenu(
-		sel,
-		SETUP_BGM_CAPTION,
-		SND_BGM_MODE_COUNT,
-		SND_BGM_FM86,
-		bgm_choice_put,
-		bgm_help_put,
-		INPUT_UP
-	);
-	resident->bgm_mode = sel;
-}
-
-void near setup_se_menu(void)
-{
-	int sel;
-	setup_submenu(
-		sel,
-		SETUP_SE_CAPTION,
-		SND_SE_MODE_COUNT,
-		SND_SE_FM,
-		se_choice_put,
-		se_help_put,
-		INPUT_DOWN
-	);
-	resident->se_mode = sel;
+	window_animate(HELP_LEFT, HELP_TOP, HELP_W, HELP_LINES, rollup);
+	window_animate(CHOICE_LEFT, CHOICE_TOP, CHOICE_W, choice_count, rollup);
+	return sel;
 }
 
 void near setup_menu(void)
 {
-	palette_black();
+	palette_settone(0);
 	super_entry_bfnt("mswin.bft");
-	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, "ms.pi");
-	graph_copy_page(0);
+	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, "ms.pi");
+	bgimage.write(0, 0);
 	palette_black_in(1);
 
-	setup_bgm_menu();
+	resident->bgm_mode = setup_submenu(
+		SETUP_BGM_CAPTION,
+		SND_BGM_MODE_COUNT,
+		SND_BGM_FM86,
+		bgm_choice_put,
+		BGM_HELP,
+		INPUT_UP
+	);
 	frame_delay(1); // ZUN quirk: Already done after every rollup frame.
 
-	graph_copy_page(0);
-	setup_se_menu();
+	bgimage.write(0, 0);
+
+	resident->se_mode = setup_submenu(
+		SETUP_SE_CAPTION,
+		SND_SE_MODE_COUNT,
+		SND_SE_FM,
+		se_choice_put,
+		SE_HELP,
+		INPUT_DOWN
+	);
 	palette_black_out(1);
 
 	super_free();
+	bgimage.free();
 }

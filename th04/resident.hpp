@@ -16,7 +16,7 @@ struct resident_t {
 	// (indicating regular game play progression)
 	unsigned char stage;
 
-	char playchar_ascii;
+	unsigned char playchar_ascii;
 
 	// (used for loading data files, directly inserted into file name
 	// templates)
@@ -26,7 +26,7 @@ struct resident_t {
 	unsigned char se_mode;
 	char shottype;
 	bool debug;
-	int16_t unused_1; // ZUN bloat
+	const char near *pmd_fn; // relative to the data segment of `DEBLOAT.EXE`
 	score_lebcd_t score_last;
 
 	// (directly inserted into the ending .TXT file name template)
@@ -40,7 +40,7 @@ struct resident_t {
 	unsigned char end_sequence;
 	unsigned char miss_count;
 	unsigned char bombs_used;
-	int8_t unused_2; // ZUN bloat
+	uint8_t shutdown_flags;
 
 	// *Not* spawned. # of enemies that either left the screen or were killed.
 	unsigned int enemies_gone;

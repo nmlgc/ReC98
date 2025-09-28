@@ -54,9 +54,6 @@ graph_putsa_fx	proc far
 	mov	ax, GLYPH_WEIGHT_FUNC_TABLE_2[bx]
 	mov	word ptr cs:grppsafx_glyph_func_2, ax
 
-	mov	ax, _graph_putsa_fx_spacing
-	mov	word ptr cs:grppsafx_glyph_spacing_1, ax
-	mov	word ptr cs:grppsafx_glyph_spacing_2, ax
 	push	ds
 	pop	fs
 	assume fs:_DATA
@@ -114,9 +111,7 @@ grppsafx_glyph_func_1 equ $+1
 	cmp	@@line, GLYPH_H
 	jb	short @@graph_double_loop_kanji
 	sub	di, ROW_SIZE * GLYPH_H
-
-grppsafx_glyph_spacing_1 equ $+1
-	mov	dx, 1234h
+	mov	dx, GLYPH_FULL_W
 
 @@next_char:
 	xor	@@line, @@line
@@ -175,9 +170,7 @@ grppsafx_glyph_func_2 equ $+1
 	sub	di, ROW_SIZE * GLYPH_H
 
 @@dont_print_space:
-grppsafx_glyph_spacing_2 equ $+1
-	mov	dx, 1234h
-	shr	dx, 1
+	mov	dx, GLYPH_HALF_W
 	jmp	short @@next_char
 graph_putsa_fx	endp
 	even
@@ -250,8 +243,7 @@ _grppsafx_mask_2 dw  8888h, 4444h,  2222h, 1111h
 _grppsafx_mask_3 dw 0AAAAh, 4444h, 0AAAAh, 1111h
 _grppsafx_mask_4 dw 0AAAAh, 5555h, 0AAAAh, 5555h
 
-public _graph_putsa_fx_func, _graph_putsa_fx_spacing
+public _graph_putsa_fx_func
 _graph_putsa_fx_func   	dw FX_WEIGHT_BOLD
-_graph_putsa_fx_spacing	dw 16
 
 	end

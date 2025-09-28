@@ -4,7 +4,6 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/hardware/frmdelay.h"
-#include "th01/hardware/egc.h"
 #include "th01/formats/ptn_data.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/sprites/pellet.h"
@@ -333,14 +332,14 @@ void scene_init_and_load(uint8_t id)
 
 	scene_fn[5] = (id + '0');
 
-	arc_file_load(scene_fn);
-	arc_file_get_near(header);
+	arc_file_open(scene_fn);
+	arc_file_read_near(header);
 
 	for(int i = 0; i < STAGES_PER_SCENE; i++) {
-		arc_file_get_near(scene_stage[i].dat);
+		arc_file_read_near(scene_stage[i].dat);
 	}
 
-	arc_file_free();
+	arc_file_close();
 
 	// Preserve the glitch stages, which we hardcoded above, and fill in
 	// dynamic data from overlapping memory locations in the original binary...

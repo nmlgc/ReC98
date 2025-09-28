@@ -26,7 +26,6 @@ loc_B63E:
 	mov	ax, @@origin.x
 	mov	[si+zunsoft_pyro_t.origin.y], ax
 	mov	[si+zunsoft_pyro_t.distance], 0
-	mov	[si+zunsoft_pyro_t.distance_prev], 0
 	call	IRand
 	mov	bx, 224
 	cwd
@@ -69,7 +68,7 @@ zunsoft_update_and_render	proc pascal near
 
 loc_B6A8:
 	cmp	[si+zunsoft_pyro_t.alive], 1
-	jnz	loc_B7B5
+	jnz	@@next
 	inc	[si+zunsoft_pyro_t.frame]
 	mov	al, [si+zunsoft_pyro_t.frame]
 	mov	ah, 0
@@ -85,7 +84,7 @@ loc_B6A8:
 	jb	short loc_B6DB
 	mov	[si+zunsoft_pyro_t.alive], 0
 	mov	[si+zunsoft_pyro_t.frame], 0
-	jmp	loc_B7B5
+	jmp	@@next
 
 loc_B6DB:
 	cmp	[si+zunsoft_pyro_t.frame], 16
@@ -110,8 +109,6 @@ loc_B6FA:
 	call	snd_se_play pascal, 15
 
 loc_B70D:
-	mov	ax, [si+zunsoft_pyro_t.distance]
-	mov	[si+zunsoft_pyro_t.distance_prev], ax
 	mov	ax, [si+zunsoft_pyro_t.speed]
 	add	[si+zunsoft_pyro_t.distance], ax
 	push	[si+zunsoft_pyro_t.origin.x]
@@ -133,11 +130,9 @@ loc_B70D:
 	push	_SinTable8[bx]
 	call	@polar$qiii
 	add	ax, -128
-	jmp	short loc_B799
+	jmp	short @@put
 
 loc_B754:
-	mov	ax, [si+zunsoft_pyro_t.distance]
-	mov	[si+zunsoft_pyro_t.distance_prev], ax
 	mov	ax, [si+zunsoft_pyro_t.speed]
 	add	[si+zunsoft_pyro_t.distance], ax
 	push	[si+zunsoft_pyro_t.origin.x]
@@ -160,7 +155,7 @@ loc_B754:
 	call	@polar$qiii
 	add	ax, -256
 
-loc_B799:
+@@put:
 	mov	@@draw_y, ax
 	mov	ax, @@draw_x
 	mov	bx, 16
@@ -176,7 +171,7 @@ loc_B7AC:
 	push	@@patnum
 	call	super_put_rect
 
-loc_B7B5:
+@@next:
 	inc	di
 	add	si, size zunsoft_pyro_t
 
@@ -253,14 +248,7 @@ public @zunsoft_animate$qv
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	@pi_load$qinxc pascal, 0, ds, offset _zun00_pi
-	call	@pi_palette_apply$qi pascal, 0
-	call	@pi_put_8$qiii pascal, large 0, 0
-if GAME eq 5
-	call	@pi_free$qi pascal, 0
-else
-	freePISlotLarge	0
-endif
+	call	@GrpSurface_BlitBackgroundPI$qn29%Palette$t16%RGB$tuc$ii$256%%nxc pascal, ds, offset Palettes, ds, offset _zun00_pi
 	push	0
 	call	graph_copy_page
 	call	_bgimage_snap

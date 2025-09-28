@@ -1,9 +1,13 @@
 ; PI-related macros. Need to be in a separate file because TASM doesn't seem
 ; to like macro definitions inside segments...
 
-freePISlotLarge	macro slot
+freePISlotLarge macro slot
+if ((GAME le 3) and (BINARY eq 'M'))
 	push	ds
 	push	offset _pi_headers + (slot * size PiHeader)
 	push	large [_pi_buffers + (slot * dPtrSize)]
 	call	graph_pi_free
+else
+	call	@pi_free$qi pascal, slot
+endif
 endm

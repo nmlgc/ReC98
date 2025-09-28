@@ -6,17 +6,16 @@
 #pragma option -zPop_01
 
 #include "libs/master.lib/pc98_gfx.hpp"
+#include "game/bgimage.hpp"
 #include "th01/hardware/grcg.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
-#include "th04/hardware/bgimage.hpp"
 #include "th04/op/clear.hpp"
 #include "th04/op/impl.hpp"
 #include "th04/sprites/op_cdg.hpp"
 #include "th05/resident.hpp"
 #include "th05/op/op.hpp"
 #include "th05/hardware/input.h"
-#include "th05/formats/pi.hpp"
 
 #pragma option -a2
 
@@ -28,22 +27,14 @@ static const pixel_t CLEARED_H = 16;
 static const pixel_t RAISE_W = 8;
 static const pixel_t RAISE_H = 8;
 
-static const screen_x_t REIMU_LEFT = 16;
-static const vram_y_t REIMU_TOP = 48;
-
-static const screen_x_t MARISA_LEFT = 272;
-static const vram_y_t MARISA_TOP = 48;
-
-static const screen_x_t MIMA_LEFT = 160;
-static const vram_y_t MIMA_TOP = 224;
-
-static const screen_x_t YUUKA_LEFT = 400;
-static const vram_y_t YUUKA_TOP = 224;
-
+static const screen_point_t PLAYCHAR_TOPLEFT[PLAYCHAR_COUNT] = {
+	{  16,  48 }, // Reimu
+	{ 272,  48 }, // Marisa
+	{ 160, 224 }, // Mima
+	{ 400, 224 }, // Yuuka
+};
 unsigned char playchar_menu_sel;
-static uint8_t unused_1; // ZUN bloat
 unsigned char playchar_menu_rank;
-static uint8_t unused_0[4]; // ZUN bloat
 bool extra_playable_with[PLAYCHAR_COUNT];
 bool selectable_with[PLAYCHAR_COUNT];
 
@@ -51,128 +42,80 @@ bool selectable_with[PLAYCHAR_COUNT];
 
 void pascal near pic_darken(unsigned char playchar)
 {
-	vram_offset_t vram_offset;
-
-	switch(playchar) {
-	case PLAYCHAR_REIMU:
-		vram_offset = vram_offset_shift(REIMU_LEFT, REIMU_TOP);
-		break;
-	case PLAYCHAR_MARISA:
-		vram_offset = vram_offset_shift(MARISA_LEFT, MARISA_TOP);
-		break;
-	case PLAYCHAR_MIMA:
-		vram_offset = vram_offset_shift(MIMA_LEFT, MIMA_TOP);
-		break;
-	case PLAYCHAR_YUUKA:
-		vram_offset = vram_offset_shift(YUUKA_LEFT, YUUKA_TOP);
-		break;
-	}
+	const screen_point_t topleft = PLAYCHAR_TOPLEFT[playchar];
+	vram_offset_t vram_offset = vram_offset_shift(topleft.x, topleft.y);
 	darken(vram_offset, PIC_W, PIC_H, 1);
 }
 
-void pascal near pic_put(bool16 darkened)
+void pascal near pic_put(int sel, bool16 darkened)
 {
-	screen_x_t pic_left;
-	vram_y_t pic_top;
-	screen_x_t cleared_left;
-	vram_y_t cleared_top;
-
-	#define set_coords(left, top) \
-		pic_left = left; \
-		pic_top = top; \
-		cleared_left = (left + (PIC_W - CLEARED_W)); \
-		cleared_top = (top + (PIC_H - CLEARED_H));
-
-	switch(playchar_menu_sel) {
-	case PLAYCHAR_REIMU: 	set_coords(REIMU_LEFT, REIMU_TOP);  	break;
-	case PLAYCHAR_MARISA:	set_coords(MARISA_LEFT, MARISA_TOP);	break;
-	case PLAYCHAR_MIMA:  	set_coords(MIMA_LEFT, MIMA_TOP);    	break;
-	case PLAYCHAR_YUUKA: 	set_coords(YUUKA_LEFT, YUUKA_TOP);  	break;
-	}
-
-	#define pic_raised_left (pic_left - RAISE_W)
-	#define pic_raised_top  (pic_top  - RAISE_H)
+	const screen_point_t pic_topleft = PLAYCHAR_TOPLEFT[sel];
+	const screen_x_t cleared_left = (pic_topleft.x + PIC_W - CLEARED_W);
+	const screen_y_t cleared_top  = (pic_topleft.y + PIC_H - CLEARED_H);
+	const screen_x_t pic_raised_left = (pic_topleft.x - RAISE_W);
+	const screen_y_t pic_raised_top  = (pic_topleft.y - RAISE_H);
+	const int pic_slot = (selectable_with[sel]
+		? (CDG_PIC + sel)
+		: CDG_PIC_NOT_CLEARED
+	);
 
 	if(!darkened) {
 		// Pic
-		if(selectable_with[playchar_menu_sel]) {
-			cdg_put_noalpha_8(
-				pic_raised_left, pic_raised_top, (CDG_PIC + playchar_menu_sel)
-			);
-		} else {
-			cdg_put_noalpha_8(
-				pic_raised_left, pic_raised_top, CDG_PIC_NOT_CLEARED
-			);
-		}
+		cdg_put_noalpha_8(pic_raised_left, pic_raised_top, pic_slot);
 
 		// Drop shadow
 		grcg_setcolor(GC_RMW, 1);
 		grcg_boxfill_8(
 			(pic_raised_left + PIC_W),
-			pic_top,
-			(pic_left + PIC_W - 1),
+			pic_topleft.y,
+			(pic_topleft.x + PIC_W - 1),
 			(pic_raised_top + PIC_H - 1)
 		);
 		grcg_boxfill_8(
-			pic_left,
+			pic_topleft.x,
 			(pic_raised_top + PIC_H),
-			(pic_left + PIC_W - 1),
-			(pic_top + PIC_H - 1)
+			(pic_topleft.x + PIC_W - 1),
+			(pic_topleft.y + PIC_H - 1)
 		);
 		grcg_off();
 
 		// "Cleared!!" sprite
-		if(cleared_with[playchar_menu_sel][playchar_menu_rank]) {
+		if(cleared_with[sel][playchar_menu_rank]) {
 			cdg_put_8(
 				(cleared_left - RAISE_W), (cleared_top - RAISE_H), CDG_CLEARED
 			);
 		}
 	} else {
 		// Raised area of the highlighted pic
-		bgimage_put_rect_16(pic_raised_left, pic_raised_top, PIC_W, RAISE_H);
-		bgimage_put_rect_16(pic_raised_left, pic_top, RAISE_W, PIC_H);
+		bgimage.write_bg_region(
+			pic_raised_left, pic_raised_top, PIC_W, RAISE_H
+		);
+		bgimage.write_bg_region(pic_raised_left, pic_topleft.y, RAISE_W, PIC_H);
 
 		// Pic
-		if(selectable_with[playchar_menu_sel]) {
-			cdg_put_noalpha_8(pic_left, pic_top, (CDG_PIC + playchar_menu_sel));
-		} else {
-			cdg_put_noalpha_8(pic_left, pic_top, CDG_PIC_NOT_CLEARED);
-		}
+		cdg_put_noalpha_8(pic_topleft.x, pic_topleft.y, pic_slot);
 
 		// "Cleared!!" sprite
-		if(cleared_with[playchar_menu_sel][playchar_menu_rank]) {
+		if(cleared_with[sel][playchar_menu_rank]) {
 			cdg_put_8(cleared_left, cleared_top, CDG_CLEARED);
 		}
 
-		pic_darken(playchar_menu_sel);
+		pic_darken(sel);
 	}
-
-	#undef set_coords
-	#undef pic_raised_top
-	#undef pic_raised_left
 }
 
 void near playchar_menu_put_initial(void)
 {
-	int selected = playchar_menu_sel;
-
 	palette_settone(0);
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, "slb1.pi");
-	graph_copy_page(0);
-	bgimage_snap();
-
-	graph_accesspage(1);
 	graph_showpage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, "slb1.pi");
+	bgimage.write(0, 0);
 
-	int i = PLAYCHAR_REIMU;
-	playchar_menu_sel = PLAYCHAR_REIMU;
-	while(i < PLAYCHAR_COUNT) {
-		pic_put(playchar_menu_sel != selected ? true : false);
-		i++;
-		playchar_menu_sel++;
+	for(int i = PLAYCHAR_REIMU; i < PLAYCHAR_COUNT; i++) {
+		pic_put(i, (i != playchar_menu_sel));
 	}
-	playchar_menu_sel = selected;
+
 	graph_copy_page(0);
 	palette_black_in(1);
 }
@@ -181,9 +124,9 @@ inline void near on_directional_input(uint8_t sel_xorval) {
 	snd_se_play_force(1);
 
 	graph_accesspage(1);
-	pic_put(true);
+	pic_put(playchar_menu_sel, true);
 	playchar_menu_sel ^= sel_xorval;
-	pic_put(false);
+	pic_put(playchar_menu_sel, false);
 	sync_pages_and_delay();
 }
 
@@ -230,13 +173,11 @@ bool16 near playchar_menu(void)
 					snd_se_play_force(11);
 					resident->playchar = playchar_menu_sel;
 					palette_black_out(1);
-					bgimage_free();
 					return false;
 				}
 			}
 			if(key_det & INPUT_CANCEL) {
 				palette_black_out(1);
-				bgimage_free();
 				return true;
 			}
 			input_prev = key_det;

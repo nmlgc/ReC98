@@ -12,8 +12,6 @@
 #include "platform/x86real/pc98/page.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/core/initexit.hpp"
-#include "th01/core/resstuff.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
@@ -25,7 +23,6 @@
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn_data.hpp"
-#include "th01/formats/scoredat.hpp"
 #include "th01/hiscore/regist.hpp"
 #include "th01/main/bonus.hpp"
 #include "th01/main/debug.hpp"
@@ -34,6 +31,7 @@
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/shot.hpp"
 #include "th01/main/boss/entity_a.hpp"
+#include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/card.hpp"
@@ -57,6 +55,8 @@ int8_t rem_bombs = CFG_CREDIT_BOMBS_DEFAULT;
 int rem_lives = 4;
 unsigned long frame_rand;
 // ------------------------------------------------------------
+
+boss_id_t boss_id = BID_NONE;
 
 struct {
 	// Specifies whether PTN_SLOT_STG contains the full set of sprites required
@@ -143,6 +143,16 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 			grp_put(bg_fn, GPF_PALETTE_SHOW);
 		}
 		stage_palette_set(z_Palettes);
+		if(boss_id != BID_NONE) {
+			boss_palette_snap();
+			if((boss_id == BID_ELIS) || (boss_id == BID_KIKURI)) {
+				vc_t col;
+				uint8_t comp;
+				palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
+			} else {
+				boss_post_defeat_palette = z_Palettes;
+			}
+		}
 
 		// Copy the raw background image to page 1, so that
 		// stageobjs_init_and_render() can snap the correct backgrounds.
@@ -212,8 +222,6 @@ void error_resident_invalid(void)
 	printf(ERROR_RESIDENT_INVALID);
 }
 
-int8_t boss_id = BID_NONE; // ACTUAL TYPE: boss_id_t
-
 void boss_free(void)
 {
 	switch(boss_id) {
@@ -260,11 +268,14 @@ int main_main(int, const char *[])
 		error_resident_invalid();
 		return 1;
 	}
-	if(resident_stuff_get(rank, frame_rand, stage_id) == 1) {
+	if( (resident = resident_get()) == nullptr) {
 		error_resident_invalid();
 		return 1;
 	}
 
+	rank = resident->rank;
+	frame_rand = resident->rand;
+	stage_id = resident->stage_id;
 	score = resident->score;
 	extend_next = ((resident->score / SCORE_PER_EXTEND) + 1);
 	irand_init(frame_rand);
@@ -402,12 +413,13 @@ int main_main(int, const char *[])
 			break;
 
 		case ((1 * STAGES_PER_SCENE) + BOSS_STAGE):
-			boss_id = (BID_YUUGENMAGAN + route);
 			if(route == ROUTE_MAKAI) {
+				boss_id = BID_YUUGENMAGAN;
 				strcpy(bgm_fn, "LEGEND.mdt");
 				strcpy(grp_fn, "boss2.grp");
 				yuugenmagan_load();
 			} else {
+				boss_id = BID_MIMA;
 				strcpy(bgm_fn, "LEGEND.mdt");
 				strcpy(grp_fn, "boss3.grp");
 				mima_load();
@@ -416,13 +428,14 @@ int main_main(int, const char *[])
 			break;
 
 		case ((2 * STAGES_PER_SCENE) + BOSS_STAGE):
-			boss_id = (BID_KIKURI + (ROUTE_JIGOKU - route));
 			if(route == ROUTE_JIGOKU) {
+				boss_id = BID_KIKURI;
 				strcpy(bgm_fn, "kami.mdt");
 				strcpy(grp_fn, "boss4.grp");
 				kikuri_load();
 				clear_vram_page_0 = true;
 			} else {
+				boss_id = BID_ELIS;
 				strcpy(bgm_fn, "kami2.mdt");
 				strcpy(grp_fn, "boss5.grp");
 				elis_load();
@@ -431,14 +444,14 @@ int main_main(int, const char *[])
 			break;
 
 		case ((3 * STAGES_PER_SCENE) + BOSS_STAGE):
-			boss_id = (BID_SARIEL + route);
-
 			// ZUN bloat: Both bosses have their own BGM playback calls.
 			if(route == ROUTE_MAKAI) {
+				boss_id = BID_SARIEL;
 				strcpy(bgm_fn, "tensi.mdt");
 				sariel_load_and_init();
 				clear_vram_page_0 = true;
 			} else {
+				boss_id = BID_KONNGARA;
 				strcpy(bgm_fn, "alice.mdt");
 				konngara_init();
 				clear_vram_page_0 = false;
@@ -466,14 +479,14 @@ int main_main(int, const char *[])
 
 		stage_num = (stage_id + 1);
 
-		if((boss_id != BID_SARIEL) && (boss_id != BID_KONNGARA)) {
-			stage_entrance(
-				(stage_id % STAGES_PER_SCENE), grp_fn, clear_vram_page_0
-			);
-		} else if(boss_id == BID_KONNGARA) {
+		if(boss_id == BID_KONNGARA) {
 			konngara_load_and_entrance(0);
 		} else if(boss_id == BID_SARIEL) {
 			sariel_entrance(0);
+		} else {
+			stage_entrance(
+				(stage_id % STAGES_PER_SCENE), grp_fn, clear_vram_page_0
+			);
 		}
 
 		timer_init_for((stage_num - 1), route);

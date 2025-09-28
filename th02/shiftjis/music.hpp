@@ -4,7 +4,7 @@
 
 // ZUN quirk: TH02 first lists all 5 stage themes of the main game, followed by
 // all 5 boss themes.
-const shiftjis_t* MUSIC_CHOICES[] = {
+const shiftjis_t near *MUSIC_CHOICES[] = {
 	"NO.1    " TH02_01,
 	"NO.2    " TH02_02,
 	"NO.3    " TH02_04,
@@ -20,11 +20,11 @@ const shiftjis_t* MUSIC_CHOICES[] = {
 	"NO.13   " TH02_15,
 	"NO.14   " TH02_12,
 	"NO.15   " TH02_13,
-	"           Å@Å@                 ", // ZUN bloat
+	"",
 	"        " TH02_QT,
 };
 
-const char* MUSIC_FILES[] = {
+const char near *MUSIC_FILES[] = {
 	BGM_MENU_MAIN_FN,
 	"stage0.m",
 	"stage1.m",

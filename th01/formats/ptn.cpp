@@ -31,20 +31,16 @@ int8_t ptn_image_count[PTN_SLOT_COUNT] = { 0 };
 
 ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn)
 {
-	union {
-		Palette4 pal;
-		ptn_header_t header;
-	} h;
-
+	ptn_header_t header;
 	pixel_t y;
 	int i;
 	int image_count;
 	ptn_t *ptn;
 
-	arc_file_load(fn);
-	arc_file_get_far(h.header);
+	arc_file_open(fn);
+	arc_file_read_far(header);
 
-	image_count = h.header.image_count;
+	image_count = header.image_count;
 	// MODDERS:
 	/* if(image_count <= 0 || image_count > PTN_IMAGES_PER_SLOT) {
 		return PE_IMAGE_COUNT_INVALID;
@@ -57,13 +53,13 @@ ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn)
 		return PE_OUT_OF_MEMORY;
 	}
 
-	arc_file_get_far(h.pal);
+	arc_file_seek(sizeof(Palette4), SEEK_CUR);
 
 	ptn_image_count[slot] = image_count;
 	ptn = ptn_images[slot];
 	for(i = 0; i < image_count; i++, ptn++) {
-		arc_file_get_far(ptn->unused_zero);
-		arc_file_get_far(ptn->planes);
+		arc_file_seek(sizeof(((ptn_file_image_t *)(0))->unused_zero), SEEK_CUR);
+		arc_file_read_far(ptn->planes);
 		for(y = 0; y < PTN_H; y++) {
 			ptn->alpha[y] = ptn_alpha_from(
 				ptn->planes.B[y],
@@ -73,7 +69,7 @@ ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn)
 			);
 		}
 	}
-	arc_file_free();
+	arc_file_close();
 	return PE_OK;
 }
 
@@ -378,7 +374,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 
 	static dots16_unaligned_t ptnpq_mask_unaligned_zero = { 0x000000 };
 	static dots16_unaligned_t ptnpq_dots_unaligned_zero = { 0x000000 };
-	static Planar<dots8_t *> ptnpq_vram = { nullptr };
+	static Planar<dots8_t far *> ptnpq_vram = { nullptr };
 
 	unsigned int plane;
 	upixel_t y;
@@ -398,7 +394,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 	ptnpq_vram.G = VRAM_PLANE_G;
 	ptnpq_vram.E = VRAM_PLANE_E;
 
-	Planar<dots8_t *> vram_local = ptnpq_vram;
+	Planar<dots8_t far *> vram_local = ptnpq_vram;
 
 	// MODDERS: Yes, should have been || rather than &&...
 	if((left < 0) && (left > (RES_X - PTN_QUARTER_W))) {

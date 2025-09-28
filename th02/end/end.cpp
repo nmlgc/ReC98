@@ -1,15 +1,9 @@
 #include <stddef.h>
 #include "planar.h"
+#include "game/bgimage.hpp"
 #include "libs/master.lib/master.hpp"
-#include "th01/hardware/egc.h"
-
-// ZUN bloat: Needed for code generation reasons in the single graph_putsa_fx()
-// call during the verdict screen that pushes a string pointer with a
-// calculated offset.
-#define const
+#include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/hardware/grppsafx.h"
-#undef const
-
 #include "th02/score.h"
 #include "th02/v_colors.hpp"
 #include "th02/resident.hpp"
@@ -17,7 +11,6 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/end.hpp"
-#include "th02/formats/pi.h"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
 #include "th02/snd/snd.h"
@@ -25,6 +18,7 @@
 #include "th02/shiftjis/end.hpp"
 #include "th02/shiftjis/title.hpp"
 #include "th02/sprites/verdict.hpp"
+#include "th02/sprites/verdict.csp"
 
 #include "th02/gaiji/ranks_c.c"
 
@@ -139,14 +133,18 @@ void pascal near verdict_value_score_put(
 	#undef on_digit
 }
 
-#define verdict_value_singledigit_put(row, gaiji) { \
-	graph_gaiji_putc( \
-		VERDICT_VALUE_SINGLEDIGIT_LEFT, verdict_row_top(row), gaiji, V_WHITE \
-	); \
+void pascal near verdict_value_singledigit_put(int row, int gaiji)
+{
+	graph_gaiji_putc(
+		VERDICT_VALUE_SINGLEDIGIT_LEFT, verdict_row_top(row), gaiji, V_WHITE
+	);
 }
 
-#define verdict_value_gaiji_string_put(row, left, str) { \
-	graph_gaiji_puts(left, verdict_row_top(row), GAIJI_W, str, V_WHITE); \
+void pascal near verdict_value_gaiji_string_put(
+	int row, screen_x_t left, const char *str
+)
+{
+	graph_gaiji_puts(left, verdict_row_top(row), GAIJI_W, str, V_WHITE);
 }
 
 void pascal near line_type(
@@ -235,18 +233,17 @@ void verdict_kanji_1_to_0_masked(
 	Planar<dots_t(VERDICT_MASK_W)> dots;
 	vram_offset_t vo = vram_offset_shift(left, top);
 	for(pixel_t row = 0; row < VERDICT_MASK_H; row++) {
-		// ZUN bloat: Thanks to the blit functions being macros, `mask[row]` is
-		// evaluated a total of 5 times. Once would be enough.
+		const dots16_t row_mask = mask[row];
 		graph_accesspage(1);
 		VRAM_SNAP_PLANAR(dots, vo, VERDICT_MASK_W);
 
 		graph_accesspage(0);
 
 		grcg_setcolor(GC_RMW, 0);
-		grcg_put(vo, mask[row], VERDICT_MASK_W);
+		grcg_put(vo, row_mask, VERDICT_MASK_W);
 		grcg_off();
 
-		vram_or_planar_masked(vo, dots, VERDICT_MASK_W, mask[row]);
+		vram_or_planar_masked(vo, dots, VERDICT_MASK_W, row_mask);
 
 		vo += ROW_SIZE;
 	}
@@ -256,17 +253,10 @@ void verdict_row_1_to_0_animate(
 	screen_x_t left, screen_y_t top, shiftjis_kanji_amount_t len
 )
 {
-	// ZUN bloat: This array is not `static`, and will be needlessly copied
-	// into a local variable at every call to the function.
-	#include "th02/sprites/verdict.csp"
-
-	shiftjis_kanji_amount_t i;
 	for(int mask = 0; mask < VERDICT_MASK_COUNT; mask++) {
-		for(i = 0; i < len; i++) {
+		for(shiftjis_kanji_amount_t i = 0; i < len; i++) {
 			verdict_kanji_1_to_0_masked(
-				(left + (i * GLYPH_FULL_W)),
-				top,
-				&sVERDICT_MASKS[mask][0]
+				(left + (i * GLYPH_FULL_W)), top, &sVERDICT_MASKS[mask][0]
 			);
 		}
 		frame_delay(10);
@@ -281,14 +271,13 @@ inline void verdict_row_1_to_0_animate(
 }
 
 void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
-	int value, // ZUN bloat: Not meant to support unsigned values.
-	gaiji_th02_t str[4]
+	unsigned int value, gaiji_th02_t str[4]
 )
 {
 	enum {
 		DIGITS = 3,
 	};
-	int divisor = 100; // Must match DIGITS!
+	unsigned int divisor = 100; // Must match DIGITS!
 	int8_t digit;
 	uint8_t past_leading_zeroes = 0;
 	int i = 0;
@@ -298,7 +287,7 @@ void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
 			past_leading_zeroes = digit;
 		}
 		if(past_leading_zeroes || (i == (DIGITS - 1))) {
-			str[i] = gaiji_th02_t(gb_0_ + digit);
+			str[i] = gaiji_th02_t(gb_0 + digit);
 		} else {
 			str[i] = gb_SP;
 		}
@@ -309,57 +298,17 @@ void pascal near gaiji_boldfont_str_from_positive_3_digit_value(
 	str[i] = gs_NULL;
 }
 
-// ZUN bloat: Same algorithm as in TH01, same problems. Also could be a
-// single proper function.
-#define pic_put(left, top, rows, quarter, quarter_offset_y) { \
-	uvram_offset_t vram_offset_src = ( \
-		(quarter == 0) ? vram_offset_shift(0, 0) : \
-		(quarter == 1) ? vram_offset_shift(CUTSCENE_PIC_W, 0) : \
-		(quarter == 2) ? vram_offset_shift(0, CUTSCENE_PIC_H) : \
-		/*quarter == 3*/ vram_offset_shift(CUTSCENE_PIC_W, CUTSCENE_PIC_H) \
-	); \
-	uvram_offset_t vram_offset_dst = vram_offset_shift(left, top); \
-	vram_offset_src += (quarter_offset_y * ROW_SIZE); \
-	\
-	egc_start_copy(); \
-	\
-	pixel_t y = quarter_offset_y; \
-	vram_byte_amount_t vram_x; \
-	while(y < (rows + quarter_offset_y)) { \
-		vram_x = 0; \
-		while(vram_x < CUTSCENE_PIC_VRAM_W) { \
-			egc_temp_t d; \
-			\
-			graph_accesspage(1);	d = egc_chunk(vram_offset_src); \
-			graph_accesspage(0);	egc_chunk(vram_offset_dst) = d; \
-			\
-			vram_x += EGC_REGISTER_SIZE; \
-			vram_offset_src += EGC_REGISTER_SIZE; \
-			vram_offset_dst += EGC_REGISTER_SIZE; \
-		} \
-		y++; \
-		vram_offset_dst += (ROW_SIZE - CUTSCENE_PIC_VRAM_W); \
-		vram_offset_src += (ROW_SIZE - CUTSCENE_PIC_VRAM_W); \
-	} \
-	egc_off(); \
-}
-
 void pascal near end_pic_show(int quarter)
 {
-	pic_put(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, CUTSCENE_PIC_H, quarter, 0);
+	bgimage.write(
+		CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &CUTSCENE_QUARTERS[quarter]
+	);
 }
 
-void pascal near staffroll_pic_put(screen_x_t left, screen_y_t top, int quarter)
+void pascal near staffroll_pic_put(int quarter)
 {
-	pic_put(left, top, CUTSCENE_PIC_H, quarter, 0);
-}
-
-void pascal near end_pic_put_rows(
-	int quarter, pixel_t quarter_offset_y, pixel_t rows
-)
-{
-	pic_put(
-		CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, rows, quarter, quarter_offset_y
+	bgimage.write(
+		STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, &CUTSCENE_QUARTERS[quarter]
 	);
 }
 
@@ -382,9 +331,7 @@ void near end_to_staffroll_animate(void)
 {
 	enum {
 		VELOCITY = 4,
-
-		// ZUN bloat: (CUTSCENE_PIC_H - 1) would have been enough.
-		SHIFT_H = (RES_Y - 1 - CUTSCENE_PIC_TOP),
+		CUTSCENE_PIC_BOTTOM = (CUTSCENE_PIC_TOP + CUTSCENE_PIC_H - 1),
 	};
 	end_load("end3.txt");
 	frame_delay(30);
@@ -410,7 +357,7 @@ void near end_to_staffroll_animate(void)
 			left_prev,
 			CUTSCENE_PIC_TOP,
 			(left_prev + CUTSCENE_PIC_W - 1),
-			SHIFT_H,
+			CUTSCENE_PIC_BOTTOM,
 			VELOCITY
 		);
 
@@ -420,7 +367,7 @@ void near end_to_staffroll_animate(void)
 			(left_prev + CUTSCENE_PIC_W - (VELOCITY * 2)),
 			CUTSCENE_PIC_TOP,
 			(left_prev + CUTSCENE_PIC_W - 1),
-			SHIFT_H
+			CUTSCENE_PIC_BOTTOM
 		);
 		grcg_off();
 		frame_delay(1);
@@ -428,39 +375,34 @@ void near end_to_staffroll_animate(void)
 	}
 }
 
-inline void end_pics_load_palette_show(const char *fn) {
-	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, fn);
+void pascal near end_line_type(int line, int frames_per_kanji = 6)
+{
+	line_type(
+		END_LINE_LEFT,
+		END_LINE_TOP,
+		END_LINE_LENGTH,
+		end_text[line],
+		frames_per_kanji
+	);
 }
 
-// Calling line_type(int, int) directly from the loop would add a useless load
-// and store for [line].
-#define end_line_type_raw(line, frames) { \
-	line_type( \
-		END_LINE_LEFT, END_LINE_TOP, END_LINE_LENGTH, end_text[line], frames \
-	); \
-}
-
-inline void end_line_type(int line, int frames_per_kanji = 6) {
-	end_line_type_raw(line, frames_per_kanji);
-}
-
-// ZUN bloat: Spending 3,344 bytes of the code segment on script code is way
-// too much. The most effective first compression step would be to turn the
+// ZUN bloat: The most effective first compression step would be to turn the
 // text color changes into a line-indexed array (similar to the generic face
-// arrays used for in-game dialog), and this into a proper function.
-#define end_lines_type_from_to(first, last) { \
-	for(i = first; i <= last; i++) { \
-		end_line_type_raw(i, 6); \
-	} \
+// arrays used for in-game dialog).
+void near end_lines_type_from_to(int first, int last)
+{
+	for(int i = first; i <= last; i++) {
+		end_line_type(i, 6);
+	}
 }
 
-inline void end_load_and_start_animate(const char* text_fn) {
+void pascal near end_load_and_start_animate(const char* text_fn)
+{
 	end_load(text_fn);
 	snd_load("end1.m", SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
-	palette_black();
-	end_pics_load_palette_show("ed01.pi");
+	palette_settone(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed01.pi");
 	palette_black_in(2);
 	frame_delay(40);
 
@@ -474,8 +416,6 @@ inline void end_load_and_start_animate(const char* text_fn) {
 
 void near end_bad_animate(void)
 {
-	int i;
-
 	end_load_and_start_animate("end1.txt");
 
 	end_pic_show(1);
@@ -501,12 +441,13 @@ void near end_bad_animate(void)
 	enum {
 		VELOCITY = 2,
 	};
-	#define frame i
-	for(frame = 0; frame < (CUTSCENE_PIC_H / VELOCITY); frame++) {
-		// ZUN bloat: Redundant; end_pic_put_rows() returns with VRAM page 0
-		// accessed.
-		graph_accesspage(0);
 
+	static LTWH<upixel_t> q3_src;
+	q3_src.left = CUTSCENE_QUARTERS[3].left;
+	q3_src.top = (CUTSCENE_QUARTERS[3].top + CUTSCENE_PIC_H - VELOCITY);
+	q3_src.w = CUTSCENE_PIC_W;
+	q3_src.h = VELOCITY;
+	while(q3_src.top >= CUTSCENE_QUARTERS[3].top) {
 		egc_shift_down(
 			CUTSCENE_PIC_LEFT,
 			CUTSCENE_PIC_TOP,
@@ -514,12 +455,10 @@ void near end_bad_animate(void)
 			(CUTSCENE_PIC_TOP + CUTSCENE_PIC_H - 1 - VELOCITY),
 			VELOCITY
 		);
-		end_pic_put_rows(
-			3, ((CUTSCENE_PIC_H - VELOCITY) - (frame * VELOCITY)), VELOCITY
-		);
+		bgimage.write(CUTSCENE_PIC_LEFT, CUTSCENE_PIC_TOP, &q3_src);
+		q3_src.top -= VELOCITY;
 		frame_delay(1);
 	}
-	#undef i
 
 	end_line_type(13);
 	line_col_set(V_YELLOW);
@@ -539,7 +478,7 @@ void near end_bad_animate(void)
 	// with the new palette while the shown VRAM page still contains a pic from
 	// the previous .PI file. This only works in the original game because the
 	// palettes of the original ED01.PI and ED02.PI are identical.
-	end_pics_load_palette_show("ed02.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed02.pi");
 	palette_black_out(2);
 
 	if(resident->shottype == 0) {
@@ -606,11 +545,9 @@ void near end_bad_animate(void)
 
 void near end_good_animate(void)
 {
-	int i;
-
 	end_load_and_start_animate("end2.txt");
 
-	end_pics_load_palette_show("ed03.pi");
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed03.pi");
 	end_pic_show(0);
 	palette_black_in(1);
 
@@ -631,8 +568,7 @@ void near end_good_animate(void)
 	end_lines_type_from_to(14, 15);
 	palette_black_out(2);
 
-	end_pics_load_palette_show("ed04.pi");
-	graph_accesspage(0); // ZUN bloat: Redundant, overridden by end_pic_show()
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed04.pi");
 	end_pic_show(0);
 	palette_black_in(2);
 
@@ -676,7 +612,7 @@ void near end_good_animate(void)
 		end_line_type(39);
 		palette_black_out(2);
 
-		end_pics_load_palette_show("ed05.pi");
+		GrpSurface_LoadPI(bgimage, &Palettes, "ed05.pi");
 		end_pic_show(0);
 		palette_black_in(2);
 
@@ -713,7 +649,7 @@ void near end_good_animate(void)
 		end_lines_type_from_to(62, 66);
 		palette_black_out(2);
 
-		end_pics_load_palette_show("ed05.pi");
+		GrpSurface_LoadPI(bgimage, &Palettes, "ed05.pi");
 		end_pic_show(1);
 		palette_black_in(2);
 
@@ -754,16 +690,11 @@ void near end_good_animate(void)
 		end_line_type(83);
 		palette_black_out(2);
 
-		end_pics_load_palette_show("ed05.pi");
+		GrpSurface_LoadPI(bgimage, &Palettes, "ed05.pi");
 		end_pic_show(2);
 		palette_black_in(2);
 
-		end_lines_type_from_to(84, 91);
-
-		// ZUN bloat: Could have been included in the loop. (As if it matters
-		// at this point...)
-		end_line_type(92);
-
+		end_lines_type_from_to(84, 92);
 		line_type_allow_fast_forward_and_automatically_clear_end_line = false;
 		end_line_type(93, 12);
 	}
@@ -806,13 +737,12 @@ void pascal near staffroll_rotrect_and_put_pic_animate(
 )
 {
 	// ZUN landmine: This function always runs immediately after an expensive
-	// operation (640×400 .PI image loading and blitting to VRAM, 320×200 VRAM
-	// inter-page copy, or hardware palette loading from a packed file),
-	// without any frame_delay() before. As the Staff Roll is single-buffered,
-	// this all but ensures a tearing line on the first frame of the rotating
-	// rectangle animation.
+	// operation (640×400 .PI image loading and blitting to VRAM, or hardware
+	// palette loading from a packed file), without any frame_delay() before.
+	// As the Staff Roll is single-buffered, this all but ensures a tearing
+	// line on the first frame of the rotating rectangle animation.
 	staffroll_rotrect_animate(angle_speed, angle_start);
-	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, quarter);
+	staffroll_pic_put(quarter);
 	frame_delay(4);
 	palette_100();
 }
@@ -822,7 +752,7 @@ inline void staffroll_text_put(
 ) {
 	graph_putsa_fx(
 		(STAFFROLL_TEXT_LEFT + additional_left),
-		(STAFFROLL_TEXT_TOP + pixel_t((row * GLYPH_H))),
+		(STAFFROLL_TEXT_TOP + pixel_t(row * GLYPH_H)),
 		(V_WHITE | FX_WEIGHT_BOLD),
 		str
 	);
@@ -859,11 +789,8 @@ void near staffroll_and_verdict_animate(void)
 	// Move game title and version down to make room for the staff roll text
 	// ---------------------------------------------------------------------
 
-	// ZUN bloat: Calculated in terms of the ENDFT.BFT top position, but
-	// would have saved a lot of [VELOCITY] additions if it was calculated in
-	// terms of the version string's top position instead. (Note that the first
-	// loop iteration is a no-op, so make sure to pull out the frame_delay(1)
-	// call when debloating.)
+	// ZUN bloat: Why not use egc_shift_down() instead? The binary already
+	// links this function.
 	#define endft_top i
 	endft_top = (STAFFROLL_TEXT_TOP - (VELOCITY * 2));
 	while(endft_top < (RES_Y - ENDFT_H)) {
@@ -886,7 +813,7 @@ void near staffroll_and_verdict_animate(void)
 			GAME_VERSION
 		);
 		frame_delay(1);
-		i += VELOCITY;
+		endft_top += VELOCITY;
 	}
 	#undef endft_top
 	// ---------------------------------------------------------------------
@@ -902,9 +829,8 @@ void near staffroll_and_verdict_animate(void)
 	);
 	snd_delay_until_measure(13);
 
-	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, "ed06.pi");
-	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed06.pi");
+	palette_show();
 	staffroll_rotrect_and_put_pic_animate(0x04, 0, 0x29);
 	staffroll_text_clear();
 	staffroll_text_put(0, 0, STAFFROLL_PROGRAM);
@@ -917,16 +843,10 @@ void near staffroll_and_verdict_animate(void)
 	staffroll_rotrect_and_put_pic_animate(-0x04, 2, 0x29);
 	snd_delay_until_measure(21);
 
-	// ZUN bloat: Will be immediately overwritten with the animation. (And
-	// we're still on the wrong palette.)
-	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, 3);
-
 	palette_entry_rgb_show("ed06c.rgb");
 	staffroll_rotrect_and_put_pic_animate(0x04, 3, 0x29);
 
-	graph_accesspage(1);
-	pi_fullres_load_put_free(CUTSCENE_PIC_SLOT, "ed07.pi"); // Unchanged palette
-	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, nullptr, "ed07.pi");
 	snd_delay_until_measure(25);
 
 	staffroll_text_clear();
@@ -941,31 +861,17 @@ void near staffroll_and_verdict_animate(void)
 	staffroll_rotrect_and_put_pic_animate(0x08, 1, -0x17);
 	snd_delay_until_measure(33);
 
-	// ZUN bloat: Will be immediately overwritten with the animation. It also
-	// wastes time on the frame, since this isn't double-buffered and
-	// staffroll_rotrect_animate() immediately begins drawing (see the landmine
-	// in that function).
-	staffroll_pic_put(STAFFROLL_PIC_LEFT, STAFFROLL_PIC_TOP, 2);
-
 	staffroll_rotrect_and_put_pic_animate(-0x08, 2, -0x17);
 	snd_delay_until_measure(37);
 
 	staffroll_text_clear();
 	staffroll_text_put(GLYPH_FULL_W, 0, STAFFROLL_MUSIC);
-
-	// ZUN bloat: We're still on this palette. Disk I/O isn't free!
-	palette_entry_rgb_show("ed07b.rgb");
-
 	staffroll_rotrect_and_put_pic_animate(0x08, 3, -0x17);
 
-	graph_accesspage(1);
-	pi_load(CUTSCENE_PIC_SLOT, "ed08.pi");
-	pi_put_8(0, 0, CUTSCENE_PIC_SLOT);
-	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, "ed08.pi");
 	snd_delay_until_measure(41);
 
-	pi_palette_apply(CUTSCENE_PIC_SLOT);
-	pi_free(CUTSCENE_PIC_SLOT);
+	palette_show();
 	staffroll_rotrect_and_put_pic_animate(-0x08, 0, -0x17);
 	snd_delay_until_measure(45);
 
@@ -988,6 +894,7 @@ void near staffroll_and_verdict_animate(void)
 	snd_delay_until_measure(57);
 
 	palette_black_out(4);
+	bgimage.free();
 	/// ----------
 
 	/// Verdict
@@ -1001,7 +908,7 @@ void near staffroll_and_verdict_animate(void)
 	};
 
 	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(CUTSCENE_PIC_SLOT, "ED09.pi");
+	GrpSurface_BlitBackgroundPI(&Palettes, "ED09.pi");
 	graph_copy_page(0);
 	palette_black_in(4);
 	frame_delay(100);
@@ -1026,7 +933,7 @@ void near staffroll_and_verdict_animate(void)
 	// Continues
 	graph_accesspage(1);
 	verdict_label_put(2, VERDICT_LABEL_LEFT, VERDICT_LABEL_CONTINUES);
-	verdict_value_singledigit_put(2, (gb_0_ + resident->continues_used));
+	verdict_value_singledigit_put(2, (gb_0 + resident->continues_used));
 	verdict_row_1_to_0_animate(2);
 	frame_delay(ROW_FRAMES);
 
@@ -1040,14 +947,14 @@ void near staffroll_and_verdict_animate(void)
 	// Starting lives
 	graph_accesspage(1);
 	verdict_label_put(4, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_LIVES);
-	verdict_value_singledigit_put(4, (gb_1_ + resident->start_lives));
+	verdict_value_singledigit_put(4, (gb_1 + resident->start_lives));
 	verdict_row_1_to_0_animate(4);
 	frame_delay(ROW_FRAMES);
 
 	// Starting bombs
 	graph_accesspage(1);
 	verdict_label_put(5, VERDICT_LABEL_LEFT, VERDICT_LABEL_START_BOMBS);
-	verdict_value_singledigit_put(5, (gb_0_ + resident->start_bombs));
+	verdict_value_singledigit_put(5, (gb_0 + resident->start_bombs));
 	verdict_row_1_to_0_animate(5);
 	frame_delay(ROW_FRAMES + (ROW_FRAMES / 2));
 
@@ -1055,7 +962,6 @@ void near staffroll_and_verdict_animate(void)
 	graph_accesspage(1);
 	int skill = resident->skill;
 
-	// ZUN bloat: Could have been worked into the mapping below.
 	if(skill > 100) {
 		skill = 100;
 	} else if(skill < 0) {
@@ -1109,7 +1015,7 @@ void near staffroll_and_verdict_animate(void)
 
 	// Copyright
 	graph_accesspage(1);
-	verdict_label_put(8, VERDICT_LABEL_LEFT, VERDICT_COPYRIGHT "\0all.pi");
+	verdict_label_put(8, VERDICT_LABEL_LEFT, VERDICT_COPYRIGHT);
 	verdict_row_1_to_0_animate(
 		8, ((sizeof(VERDICT_COPYRIGHT) - 1) / sizeof(shiftjis_kanji_t))
 	);
@@ -1117,10 +1023,7 @@ void near staffroll_and_verdict_animate(void)
 	key_delay();
 	palette_black_out(5);
 
-	/* TODO: Replace with the decompiled call
-	* 	extra_unlock_animate();
-	* once that function is part of this translation unit */
-	_asm { nop; push cs; call near ptr extra_unlock_animate; }
+	extra_unlock_animate();
 
 	graph_clear();
 	/// -------

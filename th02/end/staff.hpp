@@ -1,4 +1,4 @@
-#include "th01/formats/cutscene.hpp"
+#include "game/cutscene.hpp"
 
 static const screen_x_t STAFFROLL_PIC_LEFT = (RES_X / 20);
 static const screen_x_t STAFFROLL_PIC_RIGHT = (

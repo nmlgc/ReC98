@@ -1,25 +1,18 @@
 scoredat_func macro nam:req
-	public nam
-	nam	proc near
 	if GAME eq 5
-		arg_bx	near
-		push	si
-		mov 	bx, offset _hi
-	else
-		arg_bx	near, @hi:word
-		push	si
-		mov 	bx, @hi
+		public @&nam&$QV
+		@&nam&$QV proc near
+			arg_bx	near
+			push	si
+			mov 	bx, offset _hi
 	endif
 		mov	si, bx
 
 	endfunc macro
 		pop 	si
 		ret_bx
-		nam endp
-		if GAME eq 4
-			; TODO: Turn into unconditional EVEN once this is a separate
-			; translation unit
-			even
+		if GAME eq 5
+			@&nam&$QV endp
 		endif
 	endm
 endm
@@ -42,22 +35,6 @@ scoredat_func SCOREDAT_DECODE
 		add	[bx], dl
 		mov	cx, size scoredat_t
 		xor	bx, bx
-	else
-		mov	ah, [bx+scoredat_section_t.key2]
-		add	bx, scoredat_section_t.score
-
-	@@decode:
-		mov	al, [bx+1]
-		ror	al, 3
-		xor	al, ah
-		add	al, [si+scoredat_section_t.key1]
-		add	[bx], al
-		inc	bx
-		loop	@@decode
-		mov	al, [si+scoredat_section_t.key1]
-		add	[bx], al
-		xor	bx, bx
-		mov	cx, size scoredat_t
 	endif
 
 	xor	dx, dx

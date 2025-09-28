@@ -30,7 +30,7 @@ void near cheetos_add(void)
 		if((head_p->flag != CF_FREE) || (trail_p->flag != CF_FREE)) {
 			continue;
 		}
-		trail_p->flag = CF_SLOWDOWN;
+		trail_p->flag = CF_DECELERATE;
 		head_p->angle = cheeto_template.angle;
 		head_p->speed = cheeto_template.speed;
 		vector2_near(head_p->pos.velocity, head_p->angle, head_p->speed);
@@ -96,7 +96,7 @@ void near cheetos_update(void)
 			player_is_hit = true;
 		}
 
-		if(trail_p->flag == CF_SLOWDOWN) {
+		if(trail_p->flag == CF_DECELERATE) {
 			head_p->speed.v--; // -= to_sp(1 / 16.0f)
 			if(head_p->speed.v <= to_sp8(0.25f)) {
 				static_cast<unsigned char>(trail_p->flag)++;

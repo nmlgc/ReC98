@@ -35,6 +35,11 @@ enum debug_mode_t {
 	DM_FULL = 3,
 };
 
+enum shutdown_flag_t {
+	SHUTDOWN_NONE = 0x00,
+	SHUTDOWN_MDRV2 = 0x01,
+};
+
 #define RES_ID "ReiidenConfig"
 struct resident_t {
 	char id[sizeof(RES_ID)];
@@ -43,7 +48,7 @@ struct resident_t {
 	int8_t rem_bombs;
 	int8_t credit_lives_extra; // Add 2 for the actual number of lives
 	end_sequence_t end_flag; /* ZUN symbol [Strings] */
-	int8_t unused_1;
+	uint8_t shutdown_flags;
 	route_t route;
 	int8_t rem_lives;
 	int8_t snd_need_init; // ACTUAL TYPE: bool
@@ -64,7 +69,19 @@ struct resident_t {
 	uint16_t point_value;
 };
 
-extern resident_t far *resident;
+extern resident_t __seg *resident;
+
+// Returns an existing instance of the resident structure, or a `nullptr` if it
+// hasn't been allocated. Does *not* assign [resident]!
+resident_t __seg* resident_get(void);
+
+// Allocates and initializes the resident structure if it doesn't exist yet.
+// Returns its pointer on successful allocation, or exits the program
+// otherwise. Does *not* assign [resident]!
+resident_t __seg* resident_get_or_create(void);
+
+// Frees the resident structure if it exists.
+void resident_free(void);
 
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------

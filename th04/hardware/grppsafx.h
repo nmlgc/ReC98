@@ -19,7 +19,6 @@ enum graph_putsa_fx_func_t {
 	_graph_putsa_fx_func_FORCE_INT16 = 0x7FFF
 };
 extern graph_putsa_fx_func_t graph_putsa_fx_func;
-extern pixel_t graph_putsa_fx_spacing;
 
 extern "C" void pascal graph_putsa_fx(
 	screen_x_t left, vram_y_t top, vc2 col, const shiftjis_t *str

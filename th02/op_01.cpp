@@ -6,13 +6,14 @@
 #include <stddef.h>
 #include <process.h>
 #include "libs/master.lib/master.hpp"
+#include "game/bgimage.hpp"
+#include "platform/vblank.hpp"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/core/zunerror.h"
@@ -21,29 +22,26 @@
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 #include "th02/gaiji/gaiji.h"
+#include "th02/gaiji/str.hpp"
 #include "th02/shiftjis/fns.hpp"
 #include "th02/op/op.h"
 #include "th02/op/menu.hpp"
 #include "th02/op/m_music.hpp"
 
-#pragma option -2 -a2
-
 char menu_sel = 0;
 bool in_option = false;
 bool quit = false;
-char unused_1 = 0; // ZUN bloat
 
 static bool main_input_allowed;
 unsigned char snd_bgm_mode;
-static int unused_2; // ZUN bloat
 unsigned int idle_frames;
 unsigned char demo_num;
 resident_t __seg *resident_seg;
 menu_put_func_t menu_put;
 
-// Apparently, declaring variables with `extern` before definining them for
-// real within the same compilation unit causes Turbo C++ to emit *everything*
-// in a different order... really, I couldn't make this up.
+// Apparently, declaring variables with `extern` before defining them for real
+// within the same compilation unit causes Turbo C++ to emit *everything* in a
+// different order... really, I couldn't make this up.
 extern char extra_unlocked;
 extern unsigned int score_duration;
 
@@ -51,7 +49,7 @@ void title_flash(void);
 void pascal score_menu(void);
 void pascal shottype_menu(void);
 
-int cfg_load(void)
+static int cfg_load(void)
 {
 	cfg_t cfg;
 	const char *cfg_fn = CFG_FN;
@@ -112,37 +110,159 @@ void text_wipe(void)
 	text_fillca(' ', TX_BLACK | TX_REVERSE);
 }
 
-void pascal near pi_load_put_8_free_to(const char near *fn, char page)
-{
-	pi_load(0, fn);
-	graph_accesspage(page);
-	pi_palette_apply(0);
-	pi_put_8(0, 0, 0);
-	pi_free(0);
+/// Coordinates
+/// -----------
+
+static const screen_x_t MENU_CENTER_X = (RES_X / 2);
+static const screen_y_t MENU_TOP = 256;
+
+static const pixel_t OPTION_COLUMN_W = 128;
+static const screen_x_t OPTION_LABEL_LEFT = (MENU_CENTER_X - OPTION_COLUMN_W);
+static const tram_x_t OPTION_LABEL_TRAM_LEFT = (
+	OPTION_LABEL_LEFT / GLYPH_HALF_W
+);
+
+// This alignment makes no sense.
+static const screen_x_t MENU_MAIN_RANK_LABEL_LEFT = 208;
+static const screen_x_t MENU_MAIN_RANK_VALUE_LEFT = 304;
+
+// 16 pixels off-center?
+static const screen_x_t OPTION_VALUE_CENTER_X = (
+	MENU_CENTER_X + (OPTION_COLUMN_W / 2) + 16
+);
+
+inline screen_x_t command_left(int gaiji_len) {
+	return (MENU_CENTER_X - ((gaiji_len * GAIJI_W) / 2));
 }
+#define choice_top(row) ( \
+	MENU_TOP + (((row >= 6) ? (row + 1) : row) * GLYPH_H) \
+)
+#define choice_tram_top(row) ( \
+	choice_top(row) / GLYPH_H \
+)
+#define option_value_left(gaiji_len) ( \
+	OPTION_VALUE_CENTER_X - ((gaiji_len * GAIJI_W) / 2) \
+)
+inline tram_x_t option_value_tram_left(int gaiji_len) {
+	return (option_value_left(gaiji_len) / GLYPH_HALF_W);
+}
+#define shadow(v) ( \
+	v + 4 \
+)
+
+static const screen_x_t MENU_LEFT = OPTION_LABEL_LEFT;
+static const pixel_t MENU_W = shadow(OPTION_COLUMN_W * 2);
+static const pixel_t MENU_H = shadow(choice_top(7));
+/// -----------
+
+// Option helpers
+// --------------
+
+#define command_put(sel, str, gaiji_len, atrb) { \
+	gaiji_putsa( \
+		(command_left(gaiji_len) / GLYPH_HALF_W), \
+		choice_tram_top(sel), \
+		str, \
+		atrb \
+	); \
+}
+
+inline void command_put_shadow(
+	int sel, const char *str, shiftjis_kanji_amount_t gaiji_len
+) {
+	graph_gaiji_puts(
+		shadow(command_left(gaiji_len)),
+		shadow(choice_top(sel)),
+		GAIJI_W,
+		str,
+		0
+	);
+}
+
+#define option_label_put(sel, str, atrb) { \
+	gaiji_putsa(OPTION_LABEL_TRAM_LEFT, choice_tram_top(sel), str, atrb); \
+}
+
+inline void option_label_put_shadow(int sel, const char *str) {
+	graph_gaiji_puts(
+		shadow(OPTION_LABEL_LEFT), shadow(choice_top(sel)), GAIJI_W, str, 0
+	);
+}
+
+inline void option_value_unput_shadow(
+	int sel, shiftjis_kanji_amount_t gaiji_len, pixel_t excess_w = 0
+) {
+	bgimage.write_bg_region(
+		option_value_left(gaiji_len),
+		shadow(choice_top(sel)),
+		((gaiji_len * GAIJI_W) + excess_w),
+		GLYPH_H
+	);
+}
+
+#define option_value_put(sel, str, gaiji_len, atrb) { \
+	gaiji_putsa( \
+		option_value_tram_left(gaiji_len), choice_tram_top(sel), str, atrb \
+	); \
+}
+
+#define option_value_put_shadow(sel, str, gaiji_len) { \
+	graph_gaiji_puts( \
+		shadow(option_value_left(gaiji_len)), \
+		shadow(choice_top(sel)), \
+		GAIJI_W, \
+		str, \
+		0 \
+	); \
+}
+
+#define option_digit_unput_and_put(sel, label, digit, atrb) { \
+	option_label_put(sel, label, atrb); \
+	gaiji_putca( \
+		option_value_tram_left(1), choice_tram_top(sel), (gb_0 + digit), atrb \
+	); \
+	option_value_unput_shadow(sel, 1); \
+	graph_gaiji_putc( \
+		shadow(option_value_left(1)), \
+		shadow(choice_top(sel)), \
+		(gb_0 + digit), \
+		0 \
+	); \
+}
+// --------------
 
 void op_animate(void)
 {
 	// Sony Vegas calls this a "Barn Door" transition.
 	int door_x;
 	tram_y_t door_y;
-	const char gbZUN[] = {gb_Z_, gb_U_, gb_N_, 0};
+	const char gbZUN[] = { g_chr_3(gb, Z,U,N), '\0' };
 
 	text_wipe();
 	snd_load("huuma.efc", SND_LOAD_SE);
-	pi_load_put_8_free_to("op2.pi", 1);
-	pi_load_put_8_free_to("op.pi", 0);
+
+	graph_accesspage(1);
+	GrpSurface_LoadPI(bgimage, nullptr, MENU_MAIN_BG_FN);
+	bgimage.write(0, 0);
+	graph_accesspage(0);
+	GrpSurface_BlitBackgroundPI(&Palettes, "op.pi");
+
 	pi_load(0, "opa.pi");
 	pi_load(1, "opb.pi");
 	pi_load(2, "opc.pi");
-	palette_white();
+
+	// The original game didn't have this delay frame. But since this branch
+	// uses the faster PiLoad over master.lib *and* we technically haven't
+	// rendered anything, it's a good investment in exchange for running the
+	// animation below without tearing.
+	frame_delay(1);
 
 	for(door_x = 0; door_x < 40; door_x++) {
+		palette_settone(200 - (door_x * 2));
 		for(door_y = 0; door_y < 25; door_y++) {
 			text_putca(39 - door_x, door_y, ' ', TX_WHITE);
 			text_putca(door_x + 40, door_y, ' ', TX_WHITE);
 		}
-		palette_settone(200 - (door_x * 2));
 		frame_delay(1);
 	}
 	for(door_x = 40; door_x < 50; door_x++) {
@@ -166,20 +286,22 @@ void op_animate(void)
 	frame_delay(18);
 	title_flash();
 
-	palette_white();
-	graph_accesspage(1);
+	palette_settone(200);
+	graph_accesspage(0);
+	bgimage.write(0, 0);
 
-	graph_gaiji_putc(548, 384, gs_COPYRIGHT, 0);
-	graph_gaiji_puts(564, 384, 16, gbZUN, 0);
+	// Note how neither the regular text nor its shadow are aligned to the
+	// 8×16 text grid.
+	graph_gaiji_putc(shadow(544), shadow(380), gs_COPYRIGHT, 0);
+	graph_gaiji_puts(shadow(544 + GAIJI_W), shadow(380), GAIJI_W, gbZUN, 0);
 	graph_gaiji_putc(544, 380, gs_COPYRIGHT, 6);
-	graph_gaiji_puts(560, 380, 16, gbZUN, 6);
-	graph_copy_page(0);
+	graph_gaiji_puts((544 + GAIJI_W), 380, GAIJI_W, gbZUN, 6);
 
 	if(resident->demo_num == 0) {
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	}
 	resident->demo_num = 0;
-	palette_entry_rgb_show("op.rgb");
+	palette_entry_rgb_show(MENU_MAIN_PALETTE_FN);
 	palette_white_in(6);
 }
 
@@ -196,8 +318,6 @@ void pascal near start_init(void)
 	resident->start_power = 0;
 	resident->score = 0;
 	resident->continues_used = 0;
-	resident->unused_3 = 0;
-	resident->unused_1 = 0;
 	resident->demo_num = 0;
 	resident->score_highest = 0;
 }
@@ -205,16 +325,15 @@ void pascal near start_init(void)
 inline void start_exec() {
 	cfg_save();
 	pi_load(0, "ts1.pi");
-	text_clear();
 	shottype_menu();
 	snd_kaja_func(KAJA_SONG_FADE, 15);
 	gaiji_restore();
 	super_free();
 	game_exit();
 	if(resident->debug) {
-		execl("select", "select", 0, 0);
+		execl("select", "select", nullptr);
 	} else {
-		execl("main", "main", 0, 0);
+		execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 	}
 }
 
@@ -235,18 +354,22 @@ void start_demo(void)
 	resident->bgm_mode = snd_bgm_mode;
 	resident->rank = RANK_NORMAL;
 	resident->continues_used = 0;
-	resident->unused_3 = 0;
 	resident->demo_num = demo_num;
 	resident->shottype = 0;
 	cfg_save();
+
+	// ZUN landmine: Clearing TRAM before gaiji_restore() is correct, but doing
+	// this after file I/O means that we most certainly won't come here during
+	// VBLANK.
 	text_clear();
+
 	pi_free(0);
 	pi_free(1);
 	pi_free(2);
 	gaiji_restore();
 	super_free();
 	game_exit();
-	execl("main", "main", 0, 0);
+	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 }
 
 void start_extra(void)
@@ -261,105 +384,99 @@ void start_extra(void)
 	start_exec();
 }
 
-#pragma option -d-
-
 #include "th02/gaiji/ranks_c.c"
-const unsigned char gbHIT_KEY[] = {
-	gb_H_, gb_I_, gb_T_, gb_SP, gb_K_, gb_E_, gb_Y_, 0
-};
-const unsigned char gb7SPACES[] = {
-	gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, 0
-};
 
-const unsigned char gbSTART[] = {
-	gb_S_,gb_T_,gb_A_,gb_R_,gb_T_,    0,    0,    0,    0, 0
-};
+// ZUN bloat: Fixed-size strings ruin any chance of automatically centering
+// these with compile-time calculations.
+
+const char gbSTART[10] = { g_chr_5(gb, S,T,A,R,T), '\0' };
 inline char menu_extra_pos() {
 	return 1;
 }
-const unsigned char gbEXTRA_START[] = {
-	gb_E_,gb_X_,gb_T_,gb_R_,gb_A_,gb_SP,gb_S_,gb_T_,gb_A_,gb_R_,gb_T_, 0
-};
-const unsigned char gbHISCORE[] = {
-	gb_H_,gb_I_,gb_S_,gb_C_,gb_O_,gb_R_,gb_E_,    0,    0, 0
-};
-const unsigned char gbOPTION[] = {
-	gb_O_,gb_P_,gb_T_,gb_I_,gb_O_,gb_N_,    0,    0,    0, 0
-};
-const unsigned char gbQUIT[] = {
-	gb_Q_,gb_U_,gb_I_,gb_T_,    0,    0,    0,    0,    0, 0
-};
-const unsigned char gbRANK[] = {
-	gb_R_,gb_A_,gb_N_,gb_K_,    0,    0,    0,    0,    0, 0
-};
-const unsigned char gbPLAYER[] = {
-	gb_P_,gb_L_,gb_A_,gb_Y_,gb_E_,gb_R_,    0,    0,    0, 0
-};
-const unsigned char gbMUSIC[] = {
-	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_,    0,    0,    0,    0, 0
-};
-const unsigned char gbBOMB[] = {
-	gb_B_,gb_O_,gb_M_,gb_B_,    0,    0,    0,    0,    0, 0
-};
-const unsigned char gbMUSIC_MODE[] = {
-	gb_M_,gb_U_,gb_S_,gb_I_,gb_C_,gb_SP,gb_M_,gb_O_,gb_D_,gb_E_, 0
-};
-const unsigned char gbRESET[] = {
-	gb_R_,gb_E_,gb_S_,gb_E_,gb_T_,    0,    0,    0,    0, 0
-};
+const char gbEXTRA_START[] = { g_chr_11(gb, E,X,T,R,A,_,S,T,A,R,T), '\0' };
+const char gbHISCORE[10] = { g_chr_7(gb, H,I,S,C,O,R,E), '\0' };
+const char gbOPTION[10] = { g_chr_6(gb, O,P,T,I,O,N), '\0' };
+const char gbQUIT[10] = { g_chr_4(gb, Q,U,I,T), '\0' };
+const char gbRANK[10] = { g_chr_4(gb, R,A,N,K), '\0' };
+const char gbPLAYER[10] = { g_chr_6(gb, P,L,A,Y,E,R), '\0' };
+const char gbMUSIC[10] = { g_chr_5(gb, M,U,S,I,C), '\0' };
+const char gbBOMB[10] = { g_chr_4(gb, B,O,M,B), '\0' };
+const char gbMUSIC_MODE[] = { g_chr_10(gb, M,U,S,I,C,_,M,O,D,E), '\0' };
+const char gbRESET[10] = { g_chr_5(gb, R,E,S,E,T), '\0' };
 
-const unsigned char gsRANKS[4][3] = {
-	gs_EA, gs_SY, 0,
-	gs_NOR, gs_MAL, 0,
-	gs_HA, gs_RD, 0,
-	gs_LUN, gs_ATIC, 0
+const char gsRANKS[4][3] = {
+	gs_EA, gs_SY, '\0',
+	gs_NOR, gs_MAL, '\0',
+	gs_HA, gs_RD, '\0',
+	gs_LUN, gs_ATIC, '\0',
 };
 
 const unsigned char gbcBGM_MODE[3][5] = {
-	gb_O_, gb_F_, gb_F_, gb_SP, 0,
-	gb_SP, gb_F_, gb_M_, gb_SP, 0,
-	gb_M_, gb_I_, gb_D_, gb_I_, 0
+	g_chr_4(gb, O,F,F,_), '\0',
+	g_chr_4(gb, _,F,M,_), '\0',
+	g_chr_4(gb, M,I,D,I), '\0',
 };
 
 #include "th02/shiftjis/op_main.hpp"
 
-#pragma option -d
-
 void pascal near main_put_shadow(void)
 {
-	graph_gaiji_puts(284, 260, 16, gbSTART, 0);
-	graph_gaiji_puts(236, 276, 16, gbEXTRA_START, 0);
-	graph_gaiji_puts(268, 292, 16, gbHISCORE, 0);
-	graph_gaiji_puts(276, 308, 16, gbOPTION, 0);
-	graph_gaiji_puts(244, 324, 16, gbMUSIC_MODE, 0);
-	graph_gaiji_puts(292, 340, 16, gbQUIT, 0);
+	command_put_shadow(0, gbSTART, 5);
+	command_put_shadow(1, gbEXTRA_START, (sizeof(gbEXTRA_START) - 1));
+	command_put_shadow(2, gbHISCORE, 7);
+	command_put_shadow(3, gbOPTION, 6);
+	command_put_shadow(4, gbMUSIC_MODE, (sizeof(gbMUSIC_MODE) - 1));
+	command_put_shadow(5, gbQUIT, 4);
 
-	graph_gaiji_puts(212, 372, 16, gbRANK, 0);
-	graph_gaiji_puts(308, 372, 16, gbcRANKS[rank], 0);
+	graph_gaiji_puts(
+		shadow(MENU_MAIN_RANK_LABEL_LEFT),
+		shadow(choice_top(6)),
+		GAIJI_W,
+		gbRANK,
+		0
+	);
+	graph_gaiji_puts(
+		shadow(MENU_MAIN_RANK_VALUE_LEFT),
+		shadow(choice_top(6)),
+		GAIJI_W,
+		gbcRANKS[rank],
+		0
+	);
 }
 
 void pascal near main_put(int sel, tram_atrb2 atrb)
 {
+	// ZUN bloat: Could have been deduplicated.
 	if(sel == 0) {
-		gaiji_putsa(35, 16, gbSTART, atrb);
+		command_put(0, gbSTART, 5, atrb);
 	} else if(sel == 2) {
-		gaiji_putsa(33, 18, gbHISCORE, atrb);
+		command_put(2, gbHISCORE, 7, atrb);
 	} else if(sel == 3) {
-		gaiji_putsa(34, 19, gbOPTION, atrb);
+		command_put(3, gbOPTION, 6, atrb);
 	} else if(sel == 4) {
-		gaiji_putsa(30, 20, gbMUSIC_MODE, atrb);
+		command_put(4, gbMUSIC_MODE, (sizeof(gbMUSIC_MODE) - 1), atrb);
 	} else if(sel == 5) {
-		gaiji_putsa(36, 21, gbQUIT, atrb);
+		command_put(5, gbQUIT, 4, atrb);
 	}
 	if(sel == 1) {
 		if(extra_unlocked) {
-			gaiji_putsa(29, 17, gbEXTRA_START, atrb);
+			command_put(1, gbEXTRA_START, (sizeof(gbEXTRA_START) - 1), atrb);
 		} else {
-			gaiji_putsa(29, 17, gbEXTRA_START, TX_BLUE);
+			command_put(1, gbEXTRA_START, (sizeof(gbEXTRA_START) - 1), TX_BLUE);
 		}
 	}
-	gaiji_putsa(26, 23, gbRANK, TX_GREEN);
-	gaiji_putsa(38, 23, gbcRANKS[rank], TX_GREEN);
+	gaiji_putsa(
+		(MENU_MAIN_RANK_LABEL_LEFT / GLYPH_HALF_W),
+		choice_tram_top(6),
+		gbRANK,
+		TX_GREEN
+	);
+	gaiji_putsa(
+		(MENU_MAIN_RANK_VALUE_LEFT / GLYPH_HALF_W),
+		choice_tram_top(6),
+		gbcRANKS[rank],
+		TX_GREEN
+	);
 }
 
 void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
@@ -378,20 +495,36 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	menu_put(menu_sel, TX_WHITE);
 }
 
+inline void menu_init(
+	bool& initialized, bool& input_allowed, nearfunc_t_near put_shadow
+) {
+	// We get called near the beginning of a frame, and thus have a good chance
+	// of successfully racing the beam with the blitting calls below.
+	graph_showpage(0);
+
+	input_allowed = false;
+	initialized = true;
+	text_clear();
+
+	// Don't overwrite "©ZUN"
+	bgimage.write_bg_region(MENU_LEFT, MENU_TOP, MENU_W, MENU_H);
+
+	put_shadow();
+}
+
+void pascal show_page_0_and_palette(void)
+{
+	graph_showpage(0);
+	palette_show();
+}
+
 void main_update_and_render(void)
 {
 	static bool initialized = false;
 	if(!initialized) {
-		int i;
-		main_input_allowed = false;
-		initialized = true;
-		text_clear();
-		graph_showpage(1);
-		graph_copy_page(0);
-		main_put_shadow();
-		graph_showpage(0);
+		menu_init(initialized, main_input_allowed, main_put_shadow);
 		idle_frames = 0;
-		for(i = 0; i < 6; i++) {
+		for(int i = 0; i < 6; i++) {
 			main_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
 		menu_put = main_put;
@@ -400,8 +533,8 @@ void main_update_and_render(void)
 		main_input_allowed = true;
 	}
 	if(main_input_allowed) {
-		menu_update_vertical(6);
-		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+		menu_update_vertical(key_det, 6);
+		if(key_det & (INPUT_SHOT | INPUT_OK)) {
 			switch(menu_sel) {
 			case 0:
 				start_game();
@@ -411,14 +544,26 @@ void main_update_and_render(void)
 				break;
 			case 2:
 				score_duration = 2000;
-				text_clear();
 				score_menu();
-				graph_accesspage(1);
-				graph_showpage(0);
-				pi_fullres_load_palette_apply_put_free(0, "op2.pi");
-				palette_entry_rgb_show("op.rgb");
-				graph_copy_page(0);
+
 				graph_accesspage(0);
+				graph_showpage(1);
+				bgimage.write(0, 0);
+				palette_entry_rgb(MENU_MAIN_PALETTE_FN);
+
+				// These 19 frames have been removed from the end of
+				// score_menu() on this branch.
+				while(vsync_Count1 < 19) {
+				}
+				frame_delay(1);
+
+				// We can now cleanly show the image we just blitted, in its
+				// intended palette.
+				// ZUN bug: We should be also be clearing TRAM here. In the
+				// original game, the scoreboard is still part of the next
+				// defined frame.
+				graph_showpage(0);
+				palette_show();
 				initialized = false;
 				break;
 			case 3:
@@ -427,8 +572,26 @@ void main_update_and_render(void)
 				initialized = false;
 				break;
 			case 4:
-				text_clear();
 				musicroom_menu();
+
+				graph_accesspage(0);
+				GrpSurface_LoadPI(bgimage, nullptr, MENU_MAIN_BG_FN);
+				bgimage.write(0, 0);
+				palette_entry_rgb(MENU_MAIN_PALETTE_FN);
+
+				// Since ZUN doesn't give us the luxury of even just a single
+				// delay frame for switching back to the Main menu's background
+				// image, we have to do the flip after the frame_delay() in the
+				// loop that called us. This ensures that the game displays at
+				// least one frame of the Music Room's purple-cleared VRAM on
+				// even the hypothetical infinitely fast PC-98 that would
+				// execute everything above within the vertical blanking
+				// interval.
+				// But even then, we still maintain the original frame timing
+				// because even the original game only loads and blits the
+				// *image* here. It only renders the menu text in the next
+				// frame, after the frame_delay() at the call site.
+				vblank_run(show_page_0_and_palette);
 				initialized = false;
 				break;
 			case 5:
@@ -451,67 +614,70 @@ void main_update_and_render(void)
 
 void pascal near option_put_shadow(void)
 {
-	graph_gaiji_puts(196, 260, 16, gbRANK, 0);
-	graph_gaiji_puts(196, 276, 16, gbMUSIC, 0);
-	graph_gaiji_puts(196, 292, 16, gbPLAYER, 0);
-	graph_gaiji_puts(196, 308, 16, gbBOMB, 0);
-	graph_putsa_fx(196, 324, 0, REDUCE_EFFECTS_TITLE);
-	graph_gaiji_puts(284, 340, 16, gbRESET, 0);
-	graph_gaiji_puts(292, 372, 16, gbQUIT, 0);
+	option_label_put_shadow(0, gbRANK);
+	option_label_put_shadow(1, gbMUSIC);
+	option_label_put_shadow(2, gbPLAYER);
+	option_label_put_shadow(3, gbBOMB);
+	graph_putsa_fx(
+		shadow(OPTION_LABEL_LEFT), shadow(choice_top(4)), 0, REDUCE_LABEL
+	);
+	command_put_shadow(5, gbRESET, 5);
+	command_put_shadow(6, gbQUIT, 4);
 }
 
 void pascal near option_put(int sel, tram_atrb2 atrb)
 {
+	// ZUN bug: Some off-by-one widths here.
 	if(sel == 0) {
-		gaiji_putsa(24, 16, gbRANK, atrb);
-		gaiji_putsa(42, 16, gbcRANKS[rank], atrb);
-		graph_copy_rect_1_to_0_16(336, 260, 128, 16);
-		graph_gaiji_puts(340, 260, 16, gbcRANKS[rank], 0);
+		option_label_put(0, gbRANK, atrb);
+		option_value_put(0, gbcRANKS[rank], sizeof(gbcRANKS[0]), atrb);
+		option_value_unput_shadow(0, (sizeof(gbcRANKS[0]) - 1));
+		option_value_put_shadow(0, gbcRANKS[rank], sizeof(gbcRANKS[0]));
 	} else if(sel == 1) {
-		gaiji_putsa(24, 17, gbMUSIC, atrb);
-		gaiji_putsa(47, 17, gbcBGM_MODE[(char)snd_bgm_mode], atrb);
-		graph_copy_rect_1_to_0_16(376, 276, 64, 16);
-		graph_gaiji_puts(380, 276, 16, gbcBGM_MODE[(char)snd_bgm_mode], 0);
+		// Off-by-one, and the MIDI option is way off-center. The OFF option is
+		// correctly centered, though...
+		enum {
+			LEN = (sizeof(gbcBGM_MODE[0]) - 2),
+		};
+		option_label_put(1, gbMUSIC, atrb);
+		option_value_put(1, gbcBGM_MODE[(char)snd_bgm_mode], LEN, atrb);
+		option_value_unput_shadow(1, LEN, 16);
+		option_value_put_shadow(1, gbcBGM_MODE[(char)snd_bgm_mode], LEN);
 	} else if(sel == 2) {
-		gaiji_putsa(24, 18, gbPLAYER, atrb);
-		gaiji_putca(49, 18, lives + 1 + gb_0_, atrb);
-		graph_copy_rect_1_to_0_16(392, 292, 32, 16);
-		graph_gaiji_putc(396, 292, lives + 1 + gb_0_, 0);
+		option_digit_unput_and_put(2, gbPLAYER, (lives + 1), atrb);
 	} else if(sel == 3) {
-		gaiji_putsa(24, 19, gbBOMB, atrb);
-		gaiji_putca(49, 19, bombs + gb_0_, atrb);
-		graph_copy_rect_1_to_0_16(392, 308, 32, 16);
-		graph_gaiji_putc(396, 308, bombs + gb_0_, 0);
+		option_digit_unput_and_put(3, gbBOMB, bombs, atrb);
 	} else if(sel == 4) {
-		text_putsa(24, 20, REDUCE_EFFECTS_TITLE, atrb);
-		text_putsa(
-			45, 20, REDUCE_EFFECTS_CHOICES[resident->reduce_effects], atrb
+		// Placed off-center by 8 pixels.
+		enum {
+			CHOICE_LEFT = (option_value_left(REDUCE_VALUE_LEN) - 8),
+			Y = choice_top(4),
+		};
+		const shiftjis_t near *value = REDUCE_VALUES[resident->reduce_effects];
+		text_putsa(OPTION_LABEL_TRAM_LEFT, (Y / GLYPH_H), REDUCE_LABEL, atrb);
+		text_putsa((CHOICE_LEFT / GLYPH_HALF_W), (Y / GLYPH_H), value, atrb);
+		bgimage.write_bg_region(
+			CHOICE_LEFT, shadow(Y), (REDUCE_VALUE_LEN * GAIJI_W), GLYPH_H
 		);
-		graph_copy_rect_1_to_0_16(360, 324, 128, 16);
-		graph_putsa_fx(
-			364, 324, 0, REDUCE_EFFECTS_CHOICES[resident->reduce_effects]
-		);
+		graph_putsa_fx(shadow(CHOICE_LEFT), shadow(Y), 0, value);
 	} else if(sel == 5) {
-		gaiji_putsa(35, 21, gbRESET, atrb);
+		command_put(5, gbRESET, 5, atrb);
 	} else if(sel == 6) {
-		gaiji_putsa(36, 23, gbQUIT, atrb);
+		command_put(6, gbQUIT, 4, atrb);
 	}
 }
 
 void pascal near snd_bgm_restart(void)
 {
+	snd_kaja_func(KAJA_SONG_STOP, 0);
 	if(snd_bgm_mode == SND_BGM_OFF) {
 		snd_fm_possible = false;
-		snd_kaja_func(KAJA_SONG_STOP, 0);
 		snd_active = false;
-		return;
 	} else if(snd_bgm_mode == SND_BGM_FM) {
-		snd_kaja_func(KAJA_SONG_STOP, 0);
 		snd_midi_active = false;
 		snd_determine_mode();
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	} else if(snd_bgm_mode == SND_BGM_MIDI) {
-		snd_kaja_func(KAJA_SONG_STOP, 0);
 		snd_midi_active = snd_midi_possible;
 		snd_determine_mode();
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
@@ -524,50 +690,14 @@ inline void option_quit(bool &initialized) {
 	initialized = false;
 }
 
-// Circumventing 16-bit promotion inside comparisons between two 8-bit values
-// in Borland C++'s C++ mode...
-inline char option_rank_max()  { return RANK_LUNATIC; }
-inline char option_bgm_max()   { return SND_BGM_MIDI; }
-inline char option_lives_max() { return CFG_LIVES_MAX; }
-inline char option_bombs_max() { return CFG_BOMBS_MAX; }
-
 void option_update_and_render(void)
 {
 	static bool input_allowed = false;
 	static bool initialized = false;
 
-	#define option_change(ring_direction) \
-		option_put(menu_sel, TX_YELLOW); \
-		switch(menu_sel) { \
-		case 0: \
-			ring_direction(rank, option_rank_max()); \
-			break; \
-		case 1: \
-			ring_direction((char)snd_bgm_mode, option_bgm_max()); \
-			snd_bgm_restart(); \
-			break; \
-		case 2: \
-			ring_direction(lives, option_lives_max()); \
-			break; \
-		case 3: \
-			ring_direction(bombs, option_bombs_max()); \
-			break; \
-		case 4: \
-			resident->reduce_effects = (true - resident->reduce_effects); \
-			break; \
-		} \
-		option_put(menu_sel, TX_WHITE);
-
 	if(!initialized) {
-		int i;
-		input_allowed = false;
-		initialized = true;
-		text_clear();
-		graph_showpage(1);
-		graph_copy_page(0);
-		option_put_shadow();
-		graph_showpage(0);
-		for(i = 0; i < 7; i++) {
+		menu_init(initialized, input_allowed, option_put_shadow);
+		for(int i = 0; i < 7; i++) {
 			option_put(i, menu_sel == i ? TX_WHITE : TX_YELLOW);
 		}
 		menu_put = option_put;
@@ -576,14 +706,31 @@ void option_update_and_render(void)
 		input_allowed = 1;
 	}
 	if(input_allowed) {
-		menu_update_vertical(7);
-		if(key_det & INPUT_RIGHT) {
-			option_change(ring_inc);
+		menu_update_vertical(key_det, 7);
+		if(key_det & (INPUT_RIGHT | INPUT_LEFT)) {
+			int8_t delta = ((key_det & INPUT_LEFT) ? -1 : +1);
+			option_put(menu_sel, TX_YELLOW);
+			switch(menu_sel) {
+			case 0:
+				ring_step(rank, delta, RANK_EASY, RANK_LUNATIC);
+				break;
+			case 1:
+				ring_step(snd_bgm_mode, delta, SND_BGM_OFF, SND_BGM_MIDI);
+				snd_bgm_restart();
+				break;
+			case 2:
+				ring_step(lives, delta, 0, CFG_LIVES_MAX);
+				break;
+			case 3:
+				ring_step(bombs, delta, 0, CFG_BOMBS_MAX);
+				break;
+			case 4:
+				resident->reduce_effects = (true - resident->reduce_effects);
+				break;
+			}
+			option_put(menu_sel, TX_WHITE);
 		}
-		if(key_det & INPUT_LEFT) {
-			option_change(ring_dec);
-		}
-		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+		if(key_det & (INPUT_SHOT | INPUT_OK)) {
 			switch(menu_sel) {
 			case 5:
 				rank = RANK_NORMAL;
@@ -594,7 +741,6 @@ void option_update_and_render(void)
 				snd_kaja_func(KAJA_SONG_PLAY ,0);
 				lives = CFG_LIVES_DEFAULT;
 				bombs = CFG_BOMBS_DEFAULT;
-				resident->unused_2 = 1;
 				resident->reduce_effects = false;
 				option_put(0, TX_YELLOW);
 				option_put(1, TX_YELLOW);
@@ -616,7 +762,7 @@ void option_update_and_render(void)
 	}
 }
 
-int main(void)
+int main_op(int, const char *[])
 {
 	unsigned char ret;
 	if(snd_pmd_resident()) {
@@ -644,6 +790,11 @@ int main(void)
 		}
 		score_duration = 350;
 		score_menu();
+
+		// This branch removes 19 frames of delay from the end of score_menu()
+		// to fix the landmine at its other call site.
+		frame_delay(19);
+
 		graph_showpage(0);
 		graph_accesspage(0);
 	}
@@ -660,10 +811,18 @@ int main(void)
 	}
 
 	op_animate();
+
 	pi_load(2, "ts3.pi");
 	pi_load(1, "ts2.pi");
 	key_det = 0;
 	idle_frames = 0;
+
+	// Another frame that wasn't defined in ZUN's original code, but that will
+	// allow us to render the initial frame of the loop below without tearing.
+	// It makes sense to display the title image without text for at least one
+	// frame, especially since the High Score screen and Music Room return code
+	// does the same.
+	frame_delay(1);
 
 	while(!quit) {
 		input_reset_sense();

@@ -1,6 +1,12 @@
 #include "libs/master.lib/master.hpp"
 #include "pc98.h"
 
+// ZUN quirk: All of these functions are inaccurate for negative sine and
+// cosine values. Unlike regular division which always rounds toward zero,
+// arithmetic right shifts round away from zero for negative inputs. This
+// results in slightly smaller negative coordinates than their corresponding
+// positive ones, which breaks many perfect symmetries intended by game code.
+
 template <class P, class T> inline P polar_x(
 	const P center, const P radius, T angle
 ) {

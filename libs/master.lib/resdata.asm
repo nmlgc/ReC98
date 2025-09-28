@@ -98,6 +98,7 @@ RSDEXIST_FOUND:
 endfunc			; }
 
 
+if (GAME eq 1)
 func RESDATA_CREATE	; resdata_create() {
 	push	BP
 	mov	BP,SP
@@ -176,3 +177,4 @@ RSDCREATE_IGNORE:
 	pop	BP
 	ret	(2+DATASIZE)*2
 endfunc			; }
+endif

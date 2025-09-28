@@ -7,7 +7,9 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
@@ -31,27 +33,18 @@ static const screen_y_t PIC_BOTTOM = (PIC_TOP + PIC_H);
 
 static const pixel_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 
-// Loads the ending pictures from the .GRP file [fn] onto graphics page #1,
-// and sets the hardware color palette to the one in [fn]'s header.
 void end_pics_load_palette_show(const char *fn)
 {
 	page_access(1);
 	grp_put(fn, GPF_PALETTE_SHOW);
 }
 
-// Blits the given [quarter] of the set of ending pictures currently loaded
-// onto graphics page #1 to the center of page #0.
-// The quarters are numbered like this:
-// | 0 | 1 |
-// | 2 | 3 |
-// Implemented using EGC inter-page copies, and therefore really slow.
 void end_pic_show(int quarter)
 {
 	egc_start_copy();
 
-	pixel_t src_left = ((quarter % 2) * PIC_W);
-	pixel_t src_top  = ((quarter / 2) * PIC_H);
-	uvram_offset_t vram_offset_src = vram_offset_shift(src_left, src_top);
+	const LTWH<upixel_t> near& src = CUTSCENE_QUARTERS[quarter];
+	uvram_offset_t vram_offset_src = vram_offset_shift(src.left, src.top);
 	uvram_offset_t vram_offset_dst = vram_offset_shift(PIC_LEFT, PIC_TOP);
 	vram_word_amount_t vram_x;
 	pixel_t y;

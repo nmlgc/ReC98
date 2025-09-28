@@ -1,9 +1,10 @@
 #include "th02/hiscore/regist.h"
 #include "th02/main/playfld.hpp"
 #if (BINARY == 'M')
-	#include "th02/main/stage/stage.hpp"
+#include "th02/main/stage/stage.hpp"
 #endif
-#include "th02/formats/scoredat.hpp"
+#include "th02/formats/scoredat/scoredat.hpp"
+#include "th02/formats/scoredat/impl.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/gaiji/score_p.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -69,7 +70,7 @@ static const tram_x_t TABLE_HEADER_NAME_LEFT = (
 // bug, but with both binaries being closer to (inconsistently) left-aligning
 // this one, ZUN's intention is not all too clear.
 static const tram_x_t TABLE_HEADER_SCORE_LEFT = (
-	TABLE_SCORE_LEFT + 1 + (BINARY == 'E')
+	TABLE_SCORE_LEFT + 1 + (BINARY != 'M')
 );
 
 // ZUN bug: Misaligned in MAIN.EXE.
@@ -95,14 +96,14 @@ void scoredat_defaults_set(void)
 	for(int i = 0; i < SCOREDAT_PLACES; i++) {
 		int c;
 
+#if (BINARY == 'M')
 		// ZUN bloat: Probably leftover debug code? This function only ever
 		// gets called if HUUHI.DAT doesn't exist, in which case [hi] can't be
 		// anything other than zero-initialized, and all code that would write
 		// to [cleared] immediately saves this file afterward.
 		// (Also, this could have been done outside the loop!1!!)
-		#if (BINARY == 'M')
-			hi.score.cleared = 0;
-		#endif
+		hi.score.cleared = 0;
+#endif
 
 		hi.score.score[i] = (10000 - (i * 1000));
 		hi.score.stage[i] = (MAIN_STAGE_COUNT - (i >> 1));
@@ -117,9 +118,9 @@ void scoredat_defaults_set(void)
 	}
 }
 
-#include "th02/scorelod.c"
+#include "th02/formats/scoredat/load.cpp"
 
-void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
+static void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 {
 	#define on_digit_at(x, gaiji) { \
 		gaiji_putca(x, y, gaiji, atrb); \
@@ -138,7 +139,7 @@ void pascal score_put(tram_y_t y, score_t score, tram_atrb2 atrb)
 	); \
 }
 
-void pascal near scores_put(int place_to_highlight)
+static void pascal near scores_put(int place_to_highlight)
 {
 	tram_atrb2 atrb = TX_WHITE;
 	int i;
@@ -168,7 +169,7 @@ void pascal near scores_put(int place_to_highlight)
 			gaiji_putca(
 				TABLE_STAGE_X,
 				table_place_y(i),
-				(hi.score.stage[i] + gb_0_),
+				(hi.score.stage[i] + gb_0),
 				atrb
 			);
 		} else {
@@ -179,19 +180,19 @@ void pascal near scores_put(int place_to_highlight)
 		score_atrb_set(atrb, i, place_to_highlight);
 		if(i != (SCOREDAT_PLACES - 1)) {
 			gaiji_putca(
-				TABLE_PLACE_SINGLE_X, table_place_y(i), (gb_1_ + i), atrb
+				TABLE_PLACE_SINGLE_X, table_place_y(i), (gb_1 + i), atrb
 			);
 		} else {
 			gaiji_putca(
 				(TABLE_PLACE_DOUBLE_LEFT + (0 * GAIJI_TRAM_W)),
 				table_place_y(SCOREDAT_PLACES - 1),
-				gb_1_,
+				gb_1,
 				atrb
 			);
 			gaiji_putca(
 				(TABLE_PLACE_DOUBLE_LEFT + (1 * GAIJI_TRAM_W)),
 				table_place_y(SCOREDAT_PLACES - 1),
-				gb_0_,
+				gb_0,
 				atrb
 			);
 		}
@@ -219,19 +220,17 @@ void pascal near scoredat_name_puts(int place, int char_to_highlight)
 	);
 }
 
-#include "th02/scoreenc.c"
-
 void scoredat_save(void)
 {
 	scoredat_encode();
-	file_append(SCOREDAT_FN);
+	file_append(SCOREDAT_FN_PTR);
 	file_seek((rank * sizeof(hi)), SEEK_SET);
 	file_write(&hi, sizeof(hi));
 	file_close();
 }
 
 inline void scoredat_init() {
-	if(!file_exist(SCOREDAT_FN)) {
+	if(!file_exist(SCOREDAT_FN_PTR)) {
 		scoredat_defaults_set();
 	} else {
 		scoredat_load();
@@ -255,10 +254,10 @@ void regist_menu(void)
 	// former binary. The verdict screen also needs the multiplied and
 	// continue-added value and is always shown before this menu, so it *kinda*
 	// makes sense? (Counted as bloat in the header comment.)
-	#if (BINARY == 'M')
-		score *= 10;
-		score += resident->continues_used;
-	#endif
+#if (BINARY == 'M')
+	score *= 10;
+	score += resident->continues_used;
+#endif
 
 	if(hi.score.score[SCOREDAT_PLACES - 1] > score) {
 		scores_put(-1);
@@ -286,11 +285,11 @@ void regist_menu(void)
 
 	// ZUN bloat: Could have also been turned into a parameter to avoid
 	// compiling this twice.
-	#if (BINARY == 'E')
-		hi.score.stage[place] = STAGE_ALL;
-	#else
-		hi.score.stage[place] = (stage_id + 1);
-	#endif
+#if (BINARY == 'M')
+	hi.score.stage[place] = (stage_id + 1);
+#else
+	hi.score.stage[place] = STAGE_ALL;
+#endif
 
 	getdate(&hi.score.date[place]);
 	hi.score.shottype[place] = resident->shottype;

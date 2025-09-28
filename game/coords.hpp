@@ -1,3 +1,6 @@
+#ifndef GAME_COORDS_HPP
+#define GAME_COORDS_HPP
+
 #include "th01/math/subpixel.hpp"
 
 // Coordinates that change from subpixel space to pixel space within the same
@@ -15,3 +18,22 @@ union space_changing_point_t {
 	SPPoint sp;
 	screen_point_t pixel;
 };
+
+template <class Coord> struct LTWH {
+	Coord left;
+	Coord top;
+	Coord w;
+	Coord h;
+};
+
+template <class TX, class TY> struct LRTB {
+	TX left, right;
+	TY top, bottom;
+};
+
+template <class TX, class TY> struct LTRB {
+	TX left, top;
+	TY right, bottom;
+};
+
+#endif /* GAME_COORDS_HPP */

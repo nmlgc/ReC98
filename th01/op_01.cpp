@@ -12,10 +12,10 @@
 #include "game/input.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
-#include "th01/core/resstuff.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
@@ -25,35 +25,6 @@
 #include "th01/shiftjis/debug.hpp"
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/op.hpp"
-
-// Unused. The only thing on the main menu with this color is the "1996 ZUN"
-// text at the bottom... probably part of an effect that we never got to see.
-void snap_col_4(void)
-{
-	static dots8_t* columns[ROW_SIZE];
-	register vram_x_t x;
-	register screen_y_t y;
-	vram_offset_t vram_offset;
-
-	for(x = 0; x < ROW_SIZE; x++) {
-		columns[x] = new dots8_t[RES_Y];
-	}
-	grcg_setcolor_tcr(4);
-	page_access(1);
-
-	for(x = 0; x < ROW_SIZE; x++) {
-		y = 0;
-		vram_offset = x;
-		while(y < RES_Y) {
-			columns[x][y] = VRAM_CHUNK(B, vram_offset, 8);
-			y++;
-			vram_offset += ROW_SIZE;
-		}
-	}
-
-	grcg_off_func();
-	page_access(0);
-}
 
 /// REIIDEN.CFG loading and saving
 /// ------------------------------
@@ -70,23 +41,22 @@ void cfg_load(void)
 {
 	cfg_t cfg_in;
 	bool read_failure = false;
-	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, "rb") ) == nullptr) {
+	if(!file_ropen(CFG_FN)) {
 use_defaults:
 		read_failure = true;
 	}
 	if(!read_failure) {
-		fread(&cfg_in, 1, sizeof(cfg_in), fp);
+		file_read(&cfg_in, sizeof(cfg_in));
 		if(memcmp(cfg_in.id, CFG_ID, sizeof(cfg_in.id))) {
-			fclose(fp);
+			file_close();
 			goto use_defaults;
 		}
 		opts.rank = cfg_in.opts.rank;
 		opts.bgm_mode = cfg_in.opts.bgm_mode;
 		opts.credit_bombs = cfg_in.opts.credit_bombs;
 		opts.credit_lives_extra = cfg_in.opts.credit_lives_extra;
-		fclose(fp);
+		file_close();
 	} else {
 		opts.rank = CFG_RANK_DEFAULT;
 		opts.bgm_mode = CFG_BGM_MODE_DEFAULT;
@@ -97,20 +67,12 @@ use_defaults:
 
 void cfg_save(void)
 {
-	bool write_failure = false;
-	FILE* fp;
-
-	if(( fp = fopen(CFG_FN, "wb") ) == nullptr) {
-		write_failure = true;
+	if(!file_create(CFG_FN)) {
+		return;
 	}
-	if(!write_failure) {
-		fputs(CFG_ID, fp);
-		fputc(opts.rank, fp);
-		fputc(opts.bgm_mode, fp);
-		fputc(opts.credit_bombs, fp);
-		fputc(opts.credit_lives_extra, fp);
-		fclose(fp);
-	}
+	file_write(CFG_ID, sizeof(CFG_ID) - 1);
+	file_write(&opts, sizeof(opts));
+	file_close();
 }
 /// ------------------------------
 
@@ -332,13 +294,19 @@ void title_window_put(void)
 void start_game(bool new_game)
 {
 	cfg_save();
-	resident_create_and_stuff_set(
-		opts.rank,
-		opts.bgm_mode,
-		opts.credit_bombs,
-		opts.credit_lives_extra,
-		frame_rand
-	);
+
+	// If we went through main_setup(), we already allocated a resident
+	// structure, but not it someone launched us via `debloat op` from GAME.BAT
+	// (which you shouldn't do, but still makes sense to support for parity
+	// reasons).
+	resident = resident_get_or_create();
+
+	resident->rank = opts.rank;
+	resident->bgm_mode = opts.bgm_mode;
+	resident->rem_bombs = opts.credit_bombs;
+	resident->credit_lives_extra = opts.credit_lives_extra;
+	resident->rand = frame_rand;
+	resident->score = 0;
 	key_end();
 	mdrv2_bgm_fade_out_nonblock();
 
@@ -803,7 +771,6 @@ int main_op(int argc, const char *argv[])
 	cfg_save();
 	mdrv2_bgm_stop();
 	key_end();
-	resident_free();
 
 	page_access(1);	z_graph_clear();
 	page_access(0);	z_graph_clear();

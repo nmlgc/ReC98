@@ -1,7 +1,7 @@
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/gaiji/gaiji.h"
-#include "th04/formats/scoredat.hpp"
+#include "th04/formats/scoredat/scoredat.hpp"
 
 /// Pattern numbers for the super_*() functions
 /// -------------------------------------------
@@ -31,10 +31,10 @@ typedef enum {
 #define GLYPHBALL_H 16
 
 #if (GLYPHBALL_CLOUD_SPLASH_W < GLYPHBALL_W)
-	#error Original code assumes GLYPHBALL_CLOUD_SPLASH_W >= GLYPHBALL_W
+#error Original code assumes GLYPHBALL_CLOUD_SPLASH_W >= GLYPHBALL_W
 #endif
 #if (GLYPHBALL_CLOUD_SPLASH_H < GLYPHBALL_H)
-	#error Original code assumes GLYPHBALL_CLOUD_SPLASH_H >= GLYPHBALL_H
+#error Original code assumes GLYPHBALL_CLOUD_SPLASH_H >= GLYPHBALL_H
 #endif
 
 typedef enum {

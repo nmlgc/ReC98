@@ -1,4 +1,4 @@
-#pragma option -WX -zCSHARED -k-
+#pragma option -zCSHARED -k-
 
 #include "x86real.h"
 #include "libs/master.lib/master.hpp"

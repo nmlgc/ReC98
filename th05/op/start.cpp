@@ -1,23 +1,23 @@
 #include "libs/master.lib/master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/core/initexit.h"
+#include "th02/formats/pi.h"
 #include "th04/end/end.h"
-#include "th05/formats/pi.hpp"
 #include "th05/op/op.hpp"
 #include "th05/hardware/input.h"
 #include "th04/op/start.hpp"
 
-#define resident_reset_last_highest_and_stage_scores() \
-	int digit; \
-	int stage; \
-	for(digit = 0; digit < SCORE_DIGITS; digit++) { \
-		resident->score_last.digits[digit] = 0; \
-		resident->score_highest.digits[digit] = 0; \
-		\
-		for(stage = 0; stage < MAIN_STAGE_COUNT; stage++) { \
-			resident->stage_score[stage].digits[digit] = 0; \
-		} \
+void near resident_reset_last_highest_and_stage_scores(void)
+{
+	for(int digit = 0; digit < SCORE_DIGITS; digit++) {
+		resident->score_last.digits[digit] = 0;
+		resident->score_highest.digits[digit] = 0;
+
+		for(int stage = 0; stage < MAIN_STAGE_COUNT; stage++) {
+			resident->stage_score[stage].digits[digit] = 0;
+		}
 	}
+}
 
 #define resident_reset_last_and_highest_scores() \
 	for(int digit = 0; digit < SCORE_DIGITS; digit++) { \
@@ -54,6 +54,19 @@ void near start_extra(void)
 	op_exit_into_main(true, false);
 }
 
+struct demo_t {
+	playchar_t playchar;
+	uint8_t stage;
+};
+
+const demo_t DEMOS[5] = {
+	{ PLAYCHAR_REIMU, 3 },
+	{ PLAYCHAR_MARISA, 1 },
+	{ PLAYCHAR_MIMA, 2 },
+	{ PLAYCHAR_YUUKA, 4 },
+	{ PLAYCHAR_MIMA, STAGE_EXTRA },
+};
+
 void near start_demo(void)
 {
 	resident->end_sequence = ES_SCORE;
@@ -81,33 +94,17 @@ void near start_demo(void)
 			return;
 		}
 	}
-	switch(resident->demo_num) {
-	case 1:
-		resident->playchar = PLAYCHAR_REIMU;
-		resident->demo_stage = 3;
-		break;
-	case 2:
-		resident->playchar = PLAYCHAR_MARISA;
-		resident->demo_stage = 1;
-		break;
-	case 3:
-		resident->playchar = PLAYCHAR_MIMA;
-		resident->demo_stage = 2;
-		break;
-	case 4:
-		resident->playchar = PLAYCHAR_YUUKA;
-		resident->demo_stage = 4;
-		break;
-	case 5:
-		resident->playchar = PLAYCHAR_MIMA;
-		resident->demo_stage = STAGE_EXTRA;
+
+	const demo_t near& demo = DEMOS[resident->demo_num - 1];
+	resident->playchar = demo.playchar;
+	resident->demo_stage = demo.stage;
+	if(resident->demo_num == 5) {
 		snd_kaja_func(KAJA_SONG_FADE, 8);
-		break;
 	}
 	resident_reset_last_and_highest_scores();
 	main_cdg_free();
 	cfg_save();
 	palette_black_out(1);
 	game_exit();
-	execl(BINARY_MAIN, BINARY_MAIN, 0, 0);
+	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 }

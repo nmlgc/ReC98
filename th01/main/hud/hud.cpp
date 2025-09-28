@@ -3,7 +3,9 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/grp_text.hpp"
+#include "th01/hardware/grppsafx.h"
 #include "th01/formats/grf.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/hud/hud.hpp"
@@ -37,10 +39,10 @@ static const int16_t MAX_FX = (V_WHITE | FX_WEIGHT_BOLD);
 static const int16_t CUR_FX = (V_WHITE | FX_WEIGHT_BLACK);
 
 #if (PTN_QUARTER_W < GLYPH_FULL_W)
-	#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
+#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
 #endif
 #if (PTN_QUARTER_H < GLYPH_H)
-	#error Original code assumes PTN_QUARTER_H >= GLYPH_H
+#error Original code assumes PTN_QUARTER_H >= GLYPH_H
 #endif
 static const pixel_t COL_W = PTN_QUARTER_W;
 static const pixel_t ROW_H = PTN_QUARTER_H;
@@ -454,7 +456,7 @@ void rank_put(void)
 {
 	static const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS;
 	graph_putsa_fx(
-		(RANK_CENTER_X - (text_extent_fx(V_WHITE, RANKS[rank]) / 2)),
+		(RANK_CENTER_X - (text_extent(RANKS[rank]) / 2)),
 		RANK_TOP,
 		MAX_FX,
 		RANKS[rank]

@@ -1,3 +1,5 @@
+// `th02/shiftjis/bgm.hpp` explains the /**/ convention.
+
 #include "th02/shiftjis/bgm.hpp"
 #include "th03/shiftjis/bgm.hpp"
 #include "th04/shiftjis/bgm.hpp"
@@ -7,29 +9,25 @@
 #include "shiftjis.hpp"
 
 static const unsigned int GAME_COUNT = 5;
-static const unsigned int TRACKS_MAX = 30;
 
 // Corresponds to 36 Shift-JIS code units.
 static const pixel_t TRACKLIST_W = 288;
 
-const shiftjis_t* LABEL_UP     = "             ------ ▲ ------       ";
-const shiftjis_t* LABEL_DOWN   = "             ------ ▼ ------       ";
+const shiftjis_t near *LABEL_UP   = "             ------ ▲ ------"      /**/;
+const shiftjis_t near *LABEL_DOWN = "             ------ ▼ ------"      /**/;
 
 // ZUN bug: TH03's list is the only one that correctly aligns this label.
 #define LABEL_QUIT "タイトルに戻る"
 
-// ZUN bloat
-const shiftjis_t* LABEL_UNUSED = "             ----------------       ";
-
-const shiftjis_t* LABEL_GAME[GAME_COUNT] = {
-	"   第１弾　東方靈異伝  Arrange ver  ",
-	"   第２弾　東方封魔録  Special MIX  ",
-	"   第３弾　東方夢時空  Special MIX  ",
-	"   第４弾　東方幻想郷  Special MIX  ",
-	"   第５弾　東方怪綺談 MysticSquare  ",
+const shiftjis_t near *LABEL_GAME[GAME_COUNT] = {
+	"   第１弾　東方靈異伝  Arrange ver" /**/,
+	"   第２弾　東方封魔録  Special MIX" /**/,
+	"   第３弾　東方夢時空  Special MIX" /**/,
+	"   第４弾　東方幻想郷  Special MIX" /**/,
+	"   第５弾　東方怪綺談 MysticSquare" /**/,
 };
 
-const shiftjis_t* MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
+const shiftjis_t near *MUSIC_CHOICES_TH01[] = {
 	// Only 7 of the 14 tracks have identical strings in TH01:
 	// * 永遠の巫女
 	// * 東方怪奇談
@@ -41,30 +39,31 @@ const shiftjis_t* MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	// And even those are differently spaced and centered in that game. Reusing
 	// their strings would just make both arrays harder to read, and would make
 	// it impossible to see the center alignment.
-	"No.1           A Sacred Lot         ",
-	"No.2            永遠の巫女          ",
-	"No.3    The Positive and Negative   ",
-	"No.4   Highly Responsive to Prayers ",
-	"No.5            東方怪奇談          ",
-	"No.6             天使伝説           ",
-	"No.7        Oriental Magician       ",
-	"No.8           破邪の小太刀         ",
-	"No.9               魔鏡             ",
-	"No.10       the Legend of KAGE      ",
-	"No.11    いざ、倒れ逝くその時まで   ",
-	"No.12      Civilization of Magic    ",
-	"No.13            星幽天使           ",
-	"No.14            アイリス           ",
-	"            " LABEL_QUIT "          ",
-}, {
-	"No.1      " TH02_01 "  ",
-	"No.2      " TH02_02 "  ",
-	"No.3      " TH02_03 "  ",
-	"No.4      " TH02_04 "  ",
-	"No.5      " TH02_05 "  ",
-	"No.6      " TH02_06 "  ",
-	"No.7      " TH02_07 "  ",
-	"No.8      " TH02_08 "  ",
+	"No.1           A Sacred Lot"        /**/,
+	"No.2            永遠の巫女"         /**/,
+	"No.3    The Positive and Negative"  /**/,
+	"No.4   Highly Responsive to Prayers"/**/,
+	"No.5            東方怪奇談"         /**/,
+	"No.6             天使伝説"          /**/,
+	"No.7        Oriental Magician"      /**/,
+	"No.8           破邪の小太刀"        /**/,
+	"No.9               魔鏡"            /**/,
+	"No.10       the Legend of KAGE"     /**/,
+	"No.11    いざ、倒れ逝くその時まで"  /**/,
+	"No.12      Civilization of Magic"   /**/,
+	"No.13            星幽天使"          /**/,
+	"No.14            アイリス"          /**/,
+	"            " LABEL_QUIT            /**/,
+};
+const shiftjis_t near *MUSIC_CHOICES_TH02[] = {
+	"No.1      " TH02_01,
+	"No.2      " TH02_02,
+	"No.3      " TH02_03,
+	"No.4      " TH02_04,
+	"No.5      " TH02_05,
+	"No.6      " TH02_06,
+	"No.7      " TH02_07,
+	"No.8      " TH02_08,
 
 	// ZUN bug: This track presents the only alignment inconsistency between
 	// the original game and the TH05 Music Room. This particular track wasn't
@@ -73,75 +72,78 @@ const shiftjis_t* MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	// Given ZUN's track record when it comes to these inconsistencies, it's a
 	// miracle that all other TH05 strings remained identical, down to even the
 	// precise mixture of fullwidth and halfwidth spaces...
-	"No.9     " TH02_09 "   ",
+	"No.9     " TH02_09,
 
-	"No.10     " TH02_10 "  ",
-	"No.11     " TH02_11 "  ",
-	"No.12     " TH02_12 "  ",
-	"No.13     " TH02_13 "  ",
-	"No.14     " TH02_14 "  ",
-	"No.15     " TH02_15 "  ",
-	"未使用.1         博麗神社境内       ",
-	"未使用.2         　陽落ちて  　     ",
-	"未使用.3         　封魔終演  　     ",
-	"            " LABEL_QUIT "          ",
-}, {
-	"No.1     " TH03_01 "  ",
-	"No.2     " TH03_02 "  ",
-	"No.3     " TH03_03 "  ",
-	"No.4     " TH03_04 "  ",
-	"No.5     " TH03_05 "  ",
-	"No.6     " TH03_06 "  ",
-	"No.7     " TH03_07 "  ",
-	"No.8     " TH03_08 "  ",
-	"No.9     " TH03_09 "  ",
-	"No.10    " TH03_10 "  ",
-	"No.11    " TH03_11 "  ",
-	"No.12    " TH03_12 "  ",
-	"No.13    " TH03_13 "  ",
-	"No.14    " TH03_14 "  ",
-	"No.15    " TH03_15 "  ",
-	"No.16    " TH03_16 "  ",
-	"No.17    " TH03_17 "  ",
-	"No.18    " TH03_18 "  ",
-	"No.19    " TH03_19 "  ",
-	"No.20            勝利デモ           ",
-	"No.21         ゲームオーバー        ",
-	"未使用.1          時の風            ",
-	"未使用.2     スターボウドリーム     ",
-	"未使用.3       Phantasmagoria       ",
-	"              " LABEL_QUIT "        ",
-}, {
-	"No.1   " TH04_01 " ",
-	"No.2   " TH04_02 " ",
-	"No.3   " TH04_03 " ",
-	"No.4   " TH04_04 " ",
-	"No.5   " TH04_05 " ",
-	"No.6   " TH04_06 " ",
-	"No.7   " TH04_07 " ",
-	"No.8   " TH04_08 " ",
-	"No.9   " TH04_09 " ",
-	"No.10  " TH04_10 " ",
-	"No.11  " TH04_11 " ",
-	"No.12  " TH04_12 " ",
-	"No.13  " TH04_13 " ",
-	"No.14  " TH04_14 " ",
-	"No.15  " TH04_15 " ",
-	"No.16  " TH04_16 " ",
-	"No.17  " TH04_17 " ",
-	"No.18  " TH04_18 " ",
-	"No.19  " TH04_19 " ",
-	"No.20  " TH04_20 " ",
-	"No.21  " TH04_21 " ",
-	"No.22  " TH04_22 " ",
-	"未使用.1        Lotus Road          ",
-	"未使用.2       Dreamy pilot         ",
-	"未使用.3      Incomplete Plot       ",
-	"未使用.4        Border Land         ",
-	"未使用.5   Magic Shop of Raspberry  ",
-	"未使用.6       Crescent Dream       ",
-	"            " LABEL_QUIT "          ",
-}, {
+	"No.10     " TH02_10,
+	"No.11     " TH02_11,
+	"No.12     " TH02_12,
+	"No.13     " TH02_13,
+	"No.14     " TH02_14,
+	"No.15     " TH02_15,
+	"未使用.1         博麗神社境内"      /**/,
+	"未使用.2         　陽落ちて"        /**/,
+	"未使用.3         　封魔終演"        /**/,
+	"            " LABEL_QUIT            /**/,
+};
+const shiftjis_t near *MUSIC_CHOICES_TH03[] = {
+	"No.1     " TH03_01,
+	"No.2     " TH03_02,
+	"No.3     " TH03_03,
+	"No.4     " TH03_04,
+	"No.5     " TH03_05,
+	"No.6     " TH03_06,
+	"No.7     " TH03_07,
+	"No.8     " TH03_08,
+	"No.9     " TH03_09,
+	"No.10    " TH03_10,
+	"No.11    " TH03_11,
+	"No.12    " TH03_12,
+	"No.13    " TH03_13,
+	"No.14    " TH03_14,
+	"No.15    " TH03_15,
+	"No.16    " TH03_16,
+	"No.17    " TH03_17,
+	"No.18    " TH03_18,
+	"No.19    " TH03_19,
+	"No.20            勝利デモ"          /**/,
+	"No.21         ゲームオーバー"       /**/,
+	"未使用.1          時の風"           /**/,
+	"未使用.2     スターボウドリーム"    /**/,
+	"未使用.3       Phantasmagoria"      /**/,
+	"              " LABEL_QUIT          /**/,
+};
+const shiftjis_t near *MUSIC_CHOICES_TH04[] = {
+	"No.1   " TH04_01,
+	"No.2   " TH04_02,
+	"No.3   " TH04_03,
+	"No.4   " TH04_04,
+	"No.5   " TH04_05,
+	"No.6   " TH04_06,
+	"No.7   " TH04_07,
+	"No.8   " TH04_08,
+	"No.9   " TH04_09,
+	"No.10  " TH04_10,
+	"No.11  " TH04_11,
+	"No.12  " TH04_12,
+	"No.13  " TH04_13,
+	"No.14  " TH04_14,
+	"No.15  " TH04_15,
+	"No.16  " TH04_16,
+	"No.17  " TH04_17,
+	"No.18  " TH04_18,
+	"No.19  " TH04_19,
+	"No.20  " TH04_20,
+	"No.21  " TH04_21,
+	"No.22  " TH04_22,
+	"未使用.1        Lotus Road"         /**/,
+	"未使用.2       Dreamy pilot"        /**/,
+	"未使用.3      Incomplete Plot"      /**/,
+	"未使用.4        Border Land"        /**/,
+	"未使用.5   Magic Shop of Raspberry" /**/,
+	"未使用.6       Crescent Dream"      /**/,
+	"            " LABEL_QUIT            /**/,
+};
+const shiftjis_t near *MUSIC_CHOICES_TH05[] = {
 	"No.1  " TH05_01,
 	"No.2  " TH05_02,
 	"No.3  " TH05_03,
@@ -165,10 +167,10 @@ const shiftjis_t* MUSIC_CHOICES[GAME_COUNT][TRACKS_MAX] = {{
 	"No.21 " TH05_21,
 	"No.22 " TH05_22,
 	"No.23 " TH05_23,
-	"            " LABEL_QUIT "          ",
-}};
+	"            " LABEL_QUIT            /**/,
+};
 
-const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
+const char near *MUSIC_FILES_TH01[] = {
 	"r_00",
 	"r_01",
 	"r_02",
@@ -183,7 +185,8 @@ const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"r_11",
 	"r_12",
 	"r_13",
-}, {
+};
+const char near *MUSIC_FILES_TH02[] = {
 	"h_op",
 	"h_st00",
 	"h_st00b",
@@ -202,7 +205,8 @@ const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"h_ng00",
 	"h_ng01",
 	"h_ng02",
-}, {
+};
+const char near *MUSIC_FILES_TH03[] = {
 	"y_op",
 	"y_select",
 	"y_00mm",
@@ -227,7 +231,8 @@ const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"y_ng00",
 	"y_ng01",
 	"y_ng02",
-}, {
+};
+const char near *MUSIC_FILES_TH04[] = {
 	"g_op",
 	"g_st00",
 	"g_st10",
@@ -256,7 +261,8 @@ const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"g_ng03",
 	"g_ng04",
 	"g_ng05",
-}, {
+};
+const char near *MUSIC_FILES_TH05[] = {
 	BGM_MENU_MAIN_FN,
 	"st00",
 	"st00b",
@@ -280,4 +286,4 @@ const char* MUSIC_FILES[GAME_COUNT][TRACKS_MAX] = {{
 	"staff",
 	"exed",
 	"name",
-}};
+};

@@ -10,7 +10,7 @@ swords_add proc near
 	call	@playperf_speedtune
 	mov	ah, 0
 	mov	[bp+@@speed], ax
-	mov	_circles_color, GC_RG
+	mov	_circles_color, 9
 	mov	si, offset swords
 	mov	di, 1
 	jmp	short @@next
@@ -22,7 +22,7 @@ swords_add proc near
 	mov	[si+sword_t.flag], F_ALIVE
 	mov	eax, sword_template.pos.cur
 	mov	dword ptr [si+sword_t.pos.cur], eax
-	call	circles_add_shrinking pascal, sword_template.pos.cur.x, sword_template.pos.cur.y
+	call	@circles_add_shrinking$qii pascal, sword_template.pos.cur.x, sword_template.pos.cur.y
 	lea	ax, [si+sword_t.pos.velocity]
 	call	vector2_near pascal, ax, word ptr sword_template.SWORD_angle, [bp+@@speed]
 	mov	al, sword_template.SWORD_angle

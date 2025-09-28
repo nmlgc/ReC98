@@ -40,10 +40,8 @@ void pascal tile_ring_set_vo(
 // entry is nonzero.
 extern bool halftiles_dirty[TILE_FLAGS_Y][TILES_MEMORY_X];
 
-void pascal near tiles_invalidate_reset(void);
-extern "C" {
-void pascal near tiles_invalidate_all(void);
-}
+void near tiles_invalidate_reset(void);
+void near tiles_invalidate_all(void);
 
 // ---------------------------------------------------------------------------
 // tiles_invalidate_around() marks all stage background tiles for redrawing

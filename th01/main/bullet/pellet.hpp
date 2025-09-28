@@ -95,7 +95,7 @@ enum pellet_group_t {
 	PG_5_SPREAD_NARROW,
 
 	// Aimed versions of the n-way spreads above. Expected to have enum values
-	// >= this one!
+	// >= this one! Solved more elegantly than in TH02...
 	PG_AIMED_SPREADS,
 
 	PG_2_SPREAD_WIDE_AIMED = PG_AIMED_SPREADS,

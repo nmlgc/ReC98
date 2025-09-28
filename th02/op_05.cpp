@@ -1,46 +1,25 @@
-#pragma option -2 // ZUN bloat
-
 #include "planar.h"
+#include "platform/vblank.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"
 #include "th02/v_colors.hpp"
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
+#include "game/bgimage.hpp"
 
 inline char sel_ring_end() {
 	return SHOTTYPE_COUNT - 1;
 }
 
 char sel = 1;
-int8_t sel_padding = 0;
 
-const shiftjis_t *DESC[SHOTTYPE_COUNT][3] = {
-	" 陰陽玉の力を使わない ",
-	" 広範囲でかつ機動力に ",
-	"　強い高機動力タイプ　",
-
-	" 　靈撃が優れている 　",
-	"　 バランスの取れた　 ",
-	"　　防御重視タイプ　　",
-
-	" 　陰陽玉の力で戦う   ",
-	"　攻撃力が優れている　",
-	"　　攻撃重視タイプ　　"
-};
-const shiftjis_t *CHOOSE = "靈夢の戦闘スタイルを、下の３つからえらんでね";
-const shiftjis_t *EXTRA_NOTE[] = {
-	"注）　エキストラステージでは、難易度、プレイヤー、ボム数は変更出来ません",
-	"　　　それぞれ、難易度ＥＸＴＲＡ、プレイヤー３人、ボム１個となります    "
-};
-const shiftjis_t *CLEARED = "  ☆☆ＣＬＥＡＲＥＤ☆☆  ";
+#include "th02/shiftjis/m_char.cpp"
 
 char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
-long unused[2]; // ZUN bloat
 
 void copy_pic_back(int sel, int highlight)
 {
@@ -52,21 +31,21 @@ void copy_pic_back(int sel, int highlight)
 			case 1: x = 224; y = 224; break;
 			case 2: x = 432; y = 128; break;
 		}
-		graph_copy_rect_1_to_0_16(x, y, 16, 144);
-		graph_copy_rect_1_to_0_16(x, y, 192, 10);
+		bgimage.write_bg_region(x, y, 16, 144);
+		bgimage.write_bg_region(x, y, 192, 10);
 	} else {
 		switch(sel) {
 			case 0: x = 208; y = 136; break;
 			case 1: x = 416; y = 232; break;
 			case 2: x = 624; y = 136; break;
 		}
-		graph_copy_rect_1_to_0_16(x, y, 16, 144);
+		bgimage.write_bg_region(x, y, 16, 144);
 		switch(sel) {
 			case 0: x =  24; y = 272; break;
 			case 1: x = 232; y = 368; break;
 			case 2: x = 440; y = 272; break;
 		}
-		graph_copy_rect_1_to_0_16(x, y, 192, 8);
+		bgimage.write_bg_region(x, y, 192, 8);
 	}
 }
 
@@ -135,11 +114,11 @@ void pascal shottype_menu_init(void)
 			graph_putsa_fx(432, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
-	palette_black();
+	vblank_run(vblank_palette_black_and_tram_wipe);
+
+	GrpSurface_LoadPI(bgimage, &Palettes, "TSELECT.pi");
 	graph_accesspage(0);
-	pi_fullres_load_palette_apply_put_free(3, "TSELECT.pi");
-	graph_copy_page(1);
-	graph_accesspage(0);
+	bgimage.write(0, 0);
 	if(resident->stage != 5) {
 		draw_cleared_for(cleared_game_with);
 	} else {
@@ -217,6 +196,7 @@ void pascal shottype_menu(void)
 			input_delay = 0;
 		}
 	} while(1);
+	bgimage.free();
 	pi_free(0);
 	pi_free(1);
 	pi_free(2);

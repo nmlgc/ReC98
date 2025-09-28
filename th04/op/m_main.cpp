@@ -1,30 +1,26 @@
 #if (GAME == 5)
-	#include "th05/mem.h"
-	#include "th05/op/start.cpp"
-	#include "th05/shiftjis/fns.hpp"
+#include "th05/op/start.cpp"
+#include "th05/shiftjis/fns.hpp"
 #else
-	#include "th03/shiftjis/fnshared.hpp"
-	#include "th04/mem.h"
-	#include "th04/op/start.cpp"
-	#include "th04/shiftjis/fns.hpp"
+#include "th03/shiftjis/fnshared.hpp"
+#include "th04/op/start.cpp"
+#include "th04/shiftjis/fns.hpp"
 #endif
 
 #include <conio.h>
 #include <string.h>
+#include "game/bgimage.hpp"
+#include "platform/vblank.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grcg.hpp"
-#include "th01/hardware/egc.h"
 #include "th02/v_colors.hpp"
 #include "th02/op/menu.hpp"
 #include "th02/op/m_music.hpp"
 #include "th03/core/initexit.h"
 #include "th04/hardware/grppsafx.h"
 #include "th04/formats/cdg.h"
-#include "th04/shiftjis/fnshared.hpp"
 #include "th04/shiftjis/m_main.hpp"
 #include "th04/sprites/op_cdg.hpp"
-
-#pragma option -a2
 
 enum main_choice_t {
 	MC_GAME,
@@ -122,79 +118,55 @@ const vc2 COL_DESC     = ((GAME == 5) ?  9 : V_WHITE);
 // Globals
 // -------
 
-#if (GAME == 5)
-	static int8_t unused = 0; // ZUN bloat
-#endif
 int8_t menu_sel = 0;
 bool quit = false;
-int8_t main_menu_unused_1 = 1;
-const shiftjis_t* MENU_DESC[] = MENU_DESCRIPTIONS;
-resident_t* resident;
+const shiftjis_t near *MENU_DESC[] = MENU_DESCRIPTIONS;
+resident_t far *resident;
 int8_t in_option; // ACTUAL TYPE: bool
 menu_unput_and_put_func_t menu_unput_and_put;
 // -------
 
-#define command_put(top, slot) { \
-	cdg_put_nocolors_8(COMMAND_LEFT, top, slot); \
+void pascal near command_put(screen_y_t top, int slot)
+{
+	cdg_put_nocolors_8(COMMAND_LEFT, top, slot);
 }
 
 inline void option_label_put(option_choice_t sel, op_cdg_slot_t slot) {
 	cdg_put_nocolors_8(OPTION_LABEL_LEFT, option_choice_top(sel), slot);
 }
 
-#define option_value_put(sel, cdg_value) { \
-	cdg_put_nocolors_8(OPTION_VALUE_LEFT, option_choice_top(sel), cdg_value); \
+void pascal near option_value_put(option_choice_t sel, int cdg_value)
+{
+	cdg_put_nocolors_8(OPTION_VALUE_LEFT, option_choice_top(sel), cdg_value);
 }
 
-#define desc_unput_and_put(desc_id) { \
-	egc_copy_rect_1_to_0_16(0, DESC_TOP, RES_X, GLYPH_H); \
-	graph_putsa_fx_func = FX_WEIGHT_BOLD; \
-	graph_putsa_fx( \
-		(RES_X - GLYPH_FULL_W - (strlen(MENU_DESC[desc_id]) * GLYPH_HALF_W)), \
-		DESC_TOP, \
-		COL_DESC, \
-		MENU_DESC[desc_id] \
-	); \
+void pascal near desc_unput_and_put(int desc_id)
+{
+	bgimage.write_bg_region(0, DESC_TOP, RES_X, GLYPH_H);
+	graph_putsa_fx_func = FX_WEIGHT_BOLD;
+	graph_putsa_fx(
+		(RES_X - GLYPH_FULL_W - (strlen(MENU_DESC[desc_id]) * GLYPH_HALF_W)),
+		DESC_TOP,
+		COL_DESC,
+		MENU_DESC[desc_id]
+	);
 }
 
 void pascal near main_unput_and_put(int sel, vc2 col)
 {
 	screen_y_t top = main_choice_top(sel);
-	egc_copy_rect_1_to_0_16(MENU_MAIN_LEFT, top, MENU_MAIN_W, LABEL_H);
-	grcg_setcolor(GC_RMW, col);
-	int desc_id = sel;
-
-	// ZUN bloat: Could have been deduplicated.
-	switch(sel) {
-	case MC_GAME:
-		command_put(main_choice_top(MC_GAME), CDG_MAIN_GAME);
-		desc_id = (22 + resident->rank);
-		break;
-	case MC_EXTRA:
-		if(!extra_unlocked) {
-			grcg_setcolor(GC_RMW, COL_LOCKED);
-		}
-		command_put(main_choice_top(MC_EXTRA), CDG_MAIN_EXTRA);
-		break;
-	case MC_REGIST_VIEW:
-		command_put(main_choice_top(MC_REGIST_VIEW), CDG_MAIN_REGIST_VIEW);
-		break;
-	case MC_MUSICROOM:
-		command_put(main_choice_top(MC_MUSICROOM), CDG_MAIN_MUSICROOM);
-		break;
-	case MC_OPTION:
-		command_put(main_choice_top(MC_OPTION), CDG_MAIN_OPTION);
-		break;
-	case MC_QUIT:
-		command_put(main_choice_top(MC_QUIT), CDG_QUIT);
-		break;
+	if((sel == MC_EXTRA) && !extra_unlocked) {
+		col = COL_LOCKED;
 	}
+	bgimage.write_bg_region(MENU_MAIN_LEFT, top, MENU_MAIN_W, LABEL_H);
+	grcg_setcolor(GC_RMW, col);
+	command_put(top, (CDG_MAIN + sel));
 	grcg_off();
 
 	if(col == COL_ACTIVE) {
 		cdg_put_8(COMMAND_CURSOR_LEFT_LEFT,  top, CDG_CURSOR_LEFT);
 		cdg_put_8(COMMAND_CURSOR_RIGHT_LEFT, top, CDG_CURSOR_RIGHT);
-		desc_unput_and_put(desc_id);
+		desc_unput_and_put((sel == MC_GAME) ? (22 + resident->rank) : sel);
 	}
 }
 
@@ -210,7 +182,7 @@ void pascal near option_unput_and_put(int sel, vc2 col)
 		top = option_choice_top(OC_QUIT);
 	}
 
-	egc_copy_rect_1_to_0_16(MENU_OPTION_LEFT, top, MENU_OPTION_W, LABEL_H);
+	bgimage.write_bg_region(MENU_OPTION_LEFT, top, MENU_OPTION_W, LABEL_H);
 	grcg_setcolor(GC_RMW, col);
 
 	switch(sel) {
@@ -302,35 +274,37 @@ void pascal near menu_sel_update_and_render(int8_t max, int8_t direction)
 	snd_se_play_force(1);
 }
 
-#define menu_init( \
-	initialized, \
-	input_allowed, \
-	choice_count, \
-	unput_and_put, \
-	other_left, \
-	other_w, \
-	other_bottom \
-) { \
-	input_allowed = false; \
-	\
-	/* ZUN bloat: Excessively wide and tall. */ \
-	egc_copy_rect_1_to_0_16( \
-		other_left, MENU_TOP, (other_w + 32), (other_bottom + 24 - MENU_TOP) \
-	); \
-	\
-	for(int i = 0; i < choice_count; i++) { \
-		unput_and_put(i, ((menu_sel == i) ? COL_ACTIVE : COL_INACTIVE)); \
-	} \
-	menu_unput_and_put = unput_and_put; \
-	initialized = true; \
-	input_allowed = false; /* ZUN bloat: Already done above. */ \
+void pascal near menu_init(
+	bool near& initialized,
+	bool near& input_allowed,
+	int choice_count,
+	menu_unput_and_put_func_t unput_and_put,
+	screen_x_t other_left,
+	pixel_t other_w,
+	screen_y_t other_bottom
+) {
+	input_allowed = false;
+
+	bgimage.write_bg_region(
+		other_left, MENU_TOP, other_w, (other_bottom - MENU_TOP)
+	);
+
+	for(int i = 0; i < choice_count; i++) {
+		unput_and_put(i, ((menu_sel == i) ? COL_ACTIVE : COL_INACTIVE));
+	}
+	menu_unput_and_put = unput_and_put;
+	initialized = true;
 }
 
-inline void return_from_other_screen_to_main(bool& main_initialized, int sel) {
-	graph_accesspage(1);
-	pi_fullres_load_palette_apply_put_free(0, MENU_MAIN_BG_FN);
-	graph_copy_page(0); // switches the accessed page back 0
-	palette_100();
+void pascal near return_from_other_screen_to_main(
+	bool near& main_initialized, int sel
+)
+{
+	graph_accesspage(0);
+	GrpSurface_LoadPI(bgimage, &Palettes, MENU_MAIN_BG_FN);
+	bgimage.write(0, 0);
+	PaletteTone = 100;
+	vblank_run(palette_show);
 	main_initialized = false;
 	in_option = false;
 	menu_sel = sel;
@@ -342,16 +316,13 @@ void near main_update_and_render(void)
 	static bool input_allowed;
 
 	if(!initialized) {
-		main_menu_unused_1 = 0;
-
-		// ZUN bloat: Way too wide.
 		menu_init(
 			initialized,
 			input_allowed,
 			MC_COUNT,
 			main_unput_and_put,
-			(MENU_OPTION_LEFT - 32),
-			(MENU_OPTION_W + 64),
+			MENU_OPTION_LEFT,
+			MENU_OPTION_W,
 			option_choice_top(OC_COUNT)
 		);
 	}
@@ -362,7 +333,7 @@ void near main_update_and_render(void)
 	if(!input_allowed) {
 		return;
 	}
-	menu_update_vertical(MC_COUNT);
+	menu_update_vertical(key_det, MC_COUNT);
 
 	if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) {
 		snd_se_play_force(11);
@@ -380,6 +351,7 @@ void near main_update_and_render(void)
 			initialized = false;
 			break;
 		case MC_MUSICROOM:
+			cdg_free_all();
 			musicroom_menu();
 			main_cdg_load();
 
@@ -407,22 +379,23 @@ void near main_update_and_render(void)
 	}
 }
 
-#define snd_redetermine_modes_and_reload_se() { \
-	snd_determine_modes(resident->bgm_mode, resident->se_mode); \
-	snd_load(SE_FN, SND_LOAD_SE); \
+void snd_redetermine_modes_and_reload_se()
+{
+	snd_determine_modes(resident->bgm_mode, resident->se_mode);
+	snd_load(SE_FN, SND_LOAD_SE);
 }
 
 inline void snd_redetermine_modes_and_restart_bgm(bool also_reload_se) {
 	snd_kaja_func(KAJA_SONG_STOP, 0);
-	#if (GAME == 5)
-		if(also_reload_se) {
-			snd_redetermine_modes_and_reload_se();
-		} else {
-			snd_determine_modes(resident->bgm_mode, resident->se_mode);
-		}
-	#else
+#if (GAME == 5)
+	if(also_reload_se) {
+		snd_redetermine_modes_and_reload_se();
+	} else {
 		snd_determine_modes(resident->bgm_mode, resident->se_mode);
-	#endif
+	}
+#else
+	snd_determine_modes(resident->bgm_mode, resident->se_mode);
+#endif
 	snd_load(BGM_MENU_MAIN_FN, SND_LOAD_SONG);
 	snd_kaja_func(KAJA_SONG_PLAY, 0);
 }
@@ -459,7 +432,7 @@ void near option_update_and_render(void)
 	if(!input_allowed) {
 		return;
 	}
-	menu_update_vertical(OC_COUNT);
+	menu_update_vertical(key_det, OC_COUNT);
 
 	if((key_det & INPUT_OK) || (key_det & INPUT_SHOT)) {
 		switch(menu_sel) {
@@ -482,68 +455,32 @@ void near option_update_and_render(void)
 		}
 	}
 
-	// ZUN bloat: Could have been deduplicated.
-	if(key_det & INPUT_RIGHT) {
+	if(key_det & (INPUT_RIGHT | INPUT_LEFT)) {
 	right:
+		int8_t delta = ((key_det & INPUT_LEFT) ? -1 : +1);
 		switch(menu_sel) {
 		case OC_RANK:
-			ring_inc_range(resident->rank, RANK_EASY, RANK_LUNATIC);
+			ring_step(resident->rank, delta, RANK_EASY, RANK_LUNATIC);
 			break;
 		case OC_LIVES:
-			ring_inc_range(resident->cfg_lives, 1, CFG_LIVES_MAX);
+			ring_step(resident->cfg_lives, delta, 1, CFG_LIVES_MAX);
 			break;
 		case OC_BOMBS:
-			ring_inc_range(resident->cfg_bombs, 0, CFG_BOMBS_MAX);
+			ring_step(resident->cfg_bombs, delta, 0, CFG_BOMBS_MAX);
 			break;
 		case OC_BGM:
-			ring_inc_ge_range(resident->bgm_mode, SND_BGM_OFF, SND_BGM_FM86);
+			ring_step(resident->bgm_mode, delta, SND_BGM_OFF, SND_BGM_FM86);
 			snd_redetermine_modes_and_restart_bgm(false);
 			break;
 		case OC_SE:
-			// ZUN bloat: Come on...
-			if(resident->se_mode == SND_SE_OFF) {
-				resident->se_mode = SND_SE_BEEP;
-			} else {
-				resident->se_mode--;
-			}
+			delta = -delta;
+			ring_step(resident->se_mode, delta, SND_SE_OFF, SND_SE_BEEP);
 
 			// ZUN bug: TH04 does not immediately apply SE mode changes.
 			// (Same below for INPUT_LEFT.)
-			#if (GAME == 5)
-				snd_redetermine_modes_and_reload_se();
-			#endif
-			break;
-		case OC_TURBO_OR_SLOW:
-			resident->turbo_mode = (1 - resident->turbo_mode);
-			break;
-		}
-		option_unput_and_put(menu_sel, COL_ACTIVE);
-	}
-	if(key_det & INPUT_LEFT) {
-		switch(menu_sel) {
-		case OC_RANK:
-			ring_dec_range(resident->rank, RANK_EASY, RANK_LUNATIC);
-			break;
-		case OC_LIVES:
-			ring_dec_range(resident->cfg_lives, 1, CFG_LIVES_MAX);
-			break;
-		case OC_BOMBS:
-			ring_dec_range(resident->cfg_bombs, 0, CFG_BOMBS_MAX);
-			break;
-		case OC_BGM:
-			// ZUN bloat: Come on...
-			if(resident->bgm_mode == SND_BGM_OFF) {
-				resident->bgm_mode = SND_BGM_FM86;
-			} else {
-				resident->bgm_mode--;
-			}
-			snd_redetermine_modes_and_restart_bgm(false);
-			break;
-		case OC_SE:
-			ring_inc_ge_range(resident->se_mode, SND_SE_OFF, SND_SE_BEEP);
-			#if (GAME == 5)
-				snd_redetermine_modes_and_reload_se();
-			#endif
+#if (GAME == 5)
+			snd_redetermine_modes_and_reload_se();
+#endif
 			break;
 		case OC_TURBO_OR_SLOW:
 			resident->turbo_mode = (1 - resident->turbo_mode);
@@ -560,22 +497,21 @@ void near option_update_and_render(void)
 	}
 }
 
-void main(void)
+int main_op(int, const char *[])
 {
 	int idle_frames = 0;
 
 	text_clear();
-	respal_create(); // ZUN bloat: These games don't use resident palettes.
-	mem_assign_paras = MEM_ASSIGN_PARAS_OP;
+	mem_assign_paras = (340768 >> 4);
 	if(game_init_op(OP_AND_END_PF_FN)) {
 		dos_puts2(MEMORY_INSUFFICIENT);
 		getch();
 	}
 
-	#if (GAME == 4)
-		gaiji_backup();
-		gaiji_entry_bfnt(GAIJI_FN);
-	#endif
+#if (GAME == 4)
+	gaiji_backup();
+	gaiji_entry_bfnt(GAIJI_FN);
+#endif
 
 	cfg_load();
 	if(resident->rank == RANK_SHOW_SETUP_MENU) {
@@ -597,13 +533,28 @@ void main(void)
 	}
 	op_animate();
 
-	#if (GAME == 5)
-		main_cdg_load();
-		cleardata_and_regist_view_sprites_load();
-	#else
-		cleardata_and_regist_view_sprites_load();
-		main_cdg_load();
-	#endif
+	main_cdg_load();
+	cleardata_load();
+
+	super_entry_bfnt("scnum.bft");
+
+	// ZUN bug: This call overwrites the master.lib [Palettes] with the palette
+	// from hi_m.bft's palette. In TH05, this file has a different palette than
+	// the one we loaded from OP1.PI earlier during op_animate(), thus
+	// resulting in [Palettes] going out of sync with the hardware palette.
+	// This is merely a landmine in this menu, but then turns into a bug in
+	// regist_view_menu(). As this function calls palette_black_out(), which
+	// operates on [Palettes], it thus fades out a much brighter palette than
+	// the one currently shown if the High Score screen is the first subscreen
+	// entered within a OP.EXE process.
+	// The two most obvious ways of fixing this bug:
+	// 1) Load the sprites inside regist_view_menu()
+	// 2) Call this function before op_animate() and either bump or remove the
+	//    memory limit of OP.EXE ([mem_assign_paras]) accordingly to reserve
+	//    enough room in conventional RAM for both these sprites and all title
+	//    animation cels
+	super_entry_bfnt("hi_m.bft");
+
 	in_option = false;
 	quit = false;
 	menu_sel = 0;
@@ -614,10 +565,10 @@ void main(void)
 			main_update_and_render();
 			if(idle_frames >= 640) {
 				start_demo();
-				#if (GAME == 5)
-					// ZUN bloat: Execution never gets here.
-					idle_frames = 0;
-				#endif
+#if (GAME == 5)
+				// ZUN bloat: Execution never gets here.
+				idle_frames = 0;
+#endif
 			}
 			break;
 
@@ -644,10 +595,11 @@ void main(void)
 	}
 	main_cdg_free();
 	cfg_save_exit();
-	#if (GAME == 4)
-		gaiji_restore();
-	#endif
+#if (GAME == 4)
+	gaiji_restore();
+#endif
 	text_clear();
 	game_exit_to_dos();
-	respal_free(); // ZUN bloat: These games don't use resident palettes.
+
+	return 0;
 }

@@ -9,7 +9,6 @@
 #include "th01/hardware/grcg.hpp"
 #include "th01/hardware/vsync.hpp"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/palette.h"
 
 // Never read from, so it's supposedly only there for debugging purposes?
@@ -91,11 +90,6 @@ inline void graph_access_and_show_0() {
 	page_show(0);
 }
 
-inline void cgrom_code_and_grcg_off() {
-	outportb(0x68, 0xA); // CG ROM code access
-	grcg_off();
-}
-
 inline void z_graph_400line() {
 	REGS regs;
 
@@ -110,26 +104,14 @@ inline void z_graph_400line() {
 	outportb(0x6A, 1);
 }
 
-inline void z_graph_access_and_show_0() {
-	graph_access_and_show_0();
-	cgrom_code_and_grcg_off();
-	z_graph_show();
-}
-
 void z_graph_init()
 {
 	z_graph_400line();
 	z_palette_set_all_show(z_Palettes);
 	graph_access_and_show_0();
 	z_graph_clear_0();
-	cgrom_code_and_grcg_off();
+	grcg_off();
 	z_graph_show();
-}
-
-void graph_400line_access_and_show_0()
-{
-	z_graph_400line();
-	z_graph_access_and_show_0();
 }
 
 void z_graph_exit()
@@ -138,7 +120,7 @@ void z_graph_exit()
 	z_graph_clear_0();
 	graph_access_and_show_0();
 	z_graph_show();
-	cgrom_code_and_grcg_off();
+	grcg_off();
 }
 
 void z_graph_show()
@@ -253,15 +235,6 @@ void z_graph_clear_0(void)
 	page_access(2);	z_graph_clear();
 }
 
-void z_graph_clear_col(svc_t col)
-{
-	dots8_t far *plane = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B);
-
-	grcg_setcolor_rmw(col);
-	memset(plane, 0xFF, PLANE_SIZE);
-	grcg_off_func();
-}
-
 void graph_copy_page_to_other(page_t src)
 {
 	PlanarRow_declare(tmp);
@@ -322,13 +295,6 @@ void z_palette_black_out(void)
 	);
 }
 
-void z_palette_white(void)
-{
-	for(svc2 col = 0; col < COLOR_COUNT; col++) {
-		z_palette_show_single(col, RGB4::max(), RGB4::max(), RGB4::max());
-	}
-}
-
 void z_palette_white_in(void)
 {
 	Palette4 fadepal;
@@ -340,60 +306,7 @@ void z_palette_white_in(void)
 		}
 	);
 }
-
-void z_palette_white_out(void)
-{
-	Palette4 fadepal;
-	memcpy(&fadepal, &z_Palettes, sizeof(Palette4));
-
-	fade_loop(fadepal,
-		if(fadepal[col].v[comp] < fadepal[0].max()) {
-			fadepal[col].v[comp]++;
-		}
-	);
-}
-
-void z_palette_show(void)
-{
-	for(int i = 0; i < COLOR_COUNT; i++) {
-		z_palette_show_single_col(i, z_Palettes[i]);
-	}
-}
 /// -------------
-
-/// Points
-/// ------
-#define VRAM_SBYTE(plane, offset) \
-	*reinterpret_cast<sdots8_t *>(MK_FP(SEG_PLANE_##plane, offset))
-
-void z_grcg_pset(screen_x_t x, vram_y_t y, vc2 col)
-{
-	grcg_setcolor_rmw(col);
-	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & BYTE_MASK));
-	grcg_off_func();
-}
-
-int z_graph_readdot(screen_x_t x, vram_y_t y)
-{
-	int ret;
-	vram_offset_t vram_offset = vram_offset_mulshift(x, y);
-	sdots16_t mask = (0x80 >> (x & BYTE_MASK));
-
-#define test(plane, vram_offset, mask, bit) \
-	if(VRAM_SBYTE(plane, vram_offset) & mask) { \
-		ret |= bit; \
-	}
-
-	ret = 0;
-	test(B, vram_offset, mask, 1);
-	test(R, vram_offset, mask, 2);
-	test(G, vram_offset, mask, 4);
-	test(E, vram_offset, mask, 8);
-	return ret;
-
-#undef test
-}
-/// ------
 
 /// Restorable line drawing
 /// -----------------------
@@ -690,62 +603,6 @@ void graph_r_lineloop_unput(const screen_point_t point[], int count)
 
 /// -----------------------
 
-void z_grcg_boxfill(
-	screen_x_t left,
-	vram_y_t top,
-	screen_x_t right,
-	vram_y_t bottom,
-	vc2 col
-)
-{
-	vram_byte_amount_t x;
-	vram_y_t y;
-	vram_byte_amount_t full_bytes_to_put;
-	int order_tmp;
-	dots8_t left_pixels;
-	dots8_t right_pixels;
-	dots8_t *vram_row;
-
-	fix_order(order_tmp, left, right);
-	fix_order(order_tmp, top, bottom);
-	clip_x(left, right);
-	clip_y(top, bottom);
-
-	grcg_setcolor_rmw(col);
-	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_mulshift(left, top)));
-	for(y = top; y <= bottom; y++) {
-		full_bytes_to_put = ((right >> BYTE_BITS) - (left >> BYTE_BITS));
-		left_pixels = 0xFF >> (left & BYTE_MASK);
-		right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
-
-		if(full_bytes_to_put == 0) {
-			vram_row[0] = (left_pixels & right_pixels);
-		} else {
-			vram_row[0] = left_pixels;
-			for(x = 1; x < full_bytes_to_put; x++) {
-				vram_row[x] = 0xFF;
-			}
-			vram_row[full_bytes_to_put] = right_pixels;
-		}
-		vram_row += ROW_SIZE;
-	}
-	grcg_off_func();
-}
-
-void graph_r_box(
-	screen_x_t left,
-	vram_y_t top,
-	screen_x_t right,
-	vram_y_t bottom,
-	vc2 col
-)
-{
-	graph_r_hline(left, right, top, col);
-	graph_r_vline(left, top, bottom, col);
-	graph_r_vline(right, top, bottom, col);
-	graph_r_hline(left, right, bottom, col);
-}
-
 void graph_move_byterect_interpage(
 	screen_x_t src_left,
 	vram_y_t src_top,
@@ -772,45 +629,5 @@ void graph_move_byterect_interpage(
 		page_access(dst);	PlanarRow_blit(dst, tmp, w);
 		Planes_next_row(src);
 		Planes_next_row(dst);
-	}
-}
-
-void z_palette_fade_from(
-	svc_comp_t from_r, svc_comp_t from_g, svc_comp_t from_b,
-	vc2 keep[COLOR_COUNT],
-	unsigned int step_ms
-)
-{
-	Palette4 fadepal;
-	int i;
-	svc2 col;
-	int comp;
-
-	memset(&fadepal, 0x0, sizeof(fadepal));
-	for(i = 0; i < COLOR_COUNT; i++) {
-		if(!keep[i]) {
-			fadepal[i].c.r = from_r;
-			fadepal[i].c.g = from_g;
-			fadepal[i].c.b = from_b;
-		} else {
-			fadepal[i].c.r = z_Palettes[i].c.r;
-			fadepal[i].c.g = z_Palettes[i].c.g;
-			fadepal[i].c.b = z_Palettes[i].c.b;
-		}
-	}
-	for(i = 0; i < fadepal.range(); i++) {
-		z_vsync_wait();
-		for(col = 0; col < COLOR_COUNT; col++) {
-			for(comp = 0; comp < COMPONENT_COUNT; comp++) {
-				if(fadepal[col].v[comp] != z_Palettes[col].v[comp]) {
-					fadepal.colors[col].v[comp] +=
-						(fadepal[col].v[comp] < z_Palettes[col].v[comp])
-						?  1
-						: -1;
-				}
-			}
-			z_palette_show_single_col(col, fadepal[col]);
-		}
-		delay(step_ms);
 	}
 }

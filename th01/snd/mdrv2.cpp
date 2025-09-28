@@ -3,14 +3,13 @@
  * MDRV2 functions
  */
 
-#include <dos.h>
-#include <fcntl.h>
-#include <io.h>
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
 #include "platform/x86real/spawn.hpp"
+#include "libs/master.lib/master.hpp"
 #include "th01/snd/mdrv2.h"
+#include "x86real.h"
 
 #define MDRV2_FN "MDRV98.COM"
 #define MDRV2_MAGIC "Mdrv2System"
@@ -29,11 +28,6 @@ typedef enum {
 
 static const uint8_t MDRV2 = 0xF2;
 
-inline int16_t mdrv2_segment(void) {
-	// 0000:((0xF2 * 4) + 2)
-	return peek(0, ((MDRV2 * sizeof(void far *)) + sizeof(void near *)));
-}
-
 inline uint16_t mdrv2_call(mdrv2_func_t func) {
 	_AH = func;
 	geninterrupt(MDRV2);
@@ -44,16 +38,10 @@ static int8_t mdrv2_active = false; // ACTUAL TYPE: bool
 
 bool16 mdrv2_resident(void)
 {
-	char s1[sizeof(MDRV2_MAGIC)];
-	const char MAGIC[] = MDRV2_MAGIC;
-	char far *magicp = reinterpret_cast<char far *>(
-		(static_cast<uint32_t>(mdrv2_segment()) << 16) + 0x102
-	);
-
-	for(int i = 0; i < sizeof(s1); i++) {
-		s1[i] = magicp[i];
-	}
-	if(strcmp(s1, MAGIC) != 0) {
+	if(strcmp(
+		reinterpret_cast<char far *>(MK_FP(intvector_segment(MDRV2), 0x102)),
+		MDRV2_MAGIC
+	)) {
 		return false;
 	}
 	return true;
@@ -62,8 +50,8 @@ bool16 mdrv2_resident(void)
 void near mdrv2_load(const char *fn, char func)
 {
 	if(mdrv2_active) {
-		int handle = open(fn, (O_BINARY | O_RDONLY));	// opens a DOS handle
-		int length = filelength(handle);
+		file_ropen(fn);
+		int length = file_size();
 		seg_t block_seg;
 		uint16_t block_off;
 		void far *block;
@@ -72,18 +60,9 @@ void near mdrv2_load(const char *fn, char func)
 		block_seg = FP_SEG(block);
 		block_off = FP_OFF(block);
 
-		_asm {
-			push	ds
-			mov	ax, 0x3F00
-			mov	bx, handle
-			mov	cx, length
-			mov	ds, block_seg
-			mov	dx, block_off
-		}
-		geninterrupt(0x21);
-		_asm { pop	ds; }
+		file_read(block, length);
+		file_close();
 
-		close(handle);
 		_asm {
 			push	ds
 			mov	ah, func
@@ -128,20 +107,6 @@ void mdrv2_bgm_fade_out_nonblock(void)
 	}
 }
 
-void mdrv2_bgm_fade_out_block(void)
-{
-	if(mdrv2_active) {
-		mdrv2_call(MDRV2_MFADE_OUT_BLOCK);
-	}
-}
-
-void mdrv2_bgm_fade_in(void)
-{
-	if(mdrv2_active) {
-		mdrv2_call(MDRV2_MFADE_IN);
-	}
-}
-
 int mdrv2_enable_if_board_installed(void)
 {
 	mdrv2_active = mdrv2_call(MDRV2_CHECK_BOARD);
@@ -163,6 +128,9 @@ static const uint8_t MDRV2_RESERVE_KIB_MAX = (64 - MDRV2_DRIVER_KIB);
 int mdrv2_spawn(uint8_t bgm_data_kib)
 {
 	if((bgm_data_kib < 1) || (bgm_data_kib > MDRV2_RESERVE_KIB_MAX)) {
+		// Would be part of <dos.h>, but we'd rather #include "x86real.h".
+		extern char **__cdecl _argv;
+
 		printf(
 			"%s: MDRV2 reserve size must be between 1 and %d KiB, got %d KiB",
 			_argv[0], MDRV2_RESERVE_KIB_MAX, bgm_data_kib

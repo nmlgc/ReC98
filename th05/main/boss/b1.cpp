@@ -126,7 +126,7 @@ void near pattern_blue_curve_clockwise(void)
 void near pattern_aimed_red_spread_stack(void)
 {
 	if(boss.phase_frame == (PHASE_2_PATTERN_START_FRAME + 16)) {
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
 		bullet_template.group = BG_SPREAD_STACK_AIMED;
 		bullet_template.angle = 0;
@@ -141,7 +141,7 @@ void near pattern_aimed_red_spread_stack(void)
 void near pattern_red_stacks(void)
 {
 	if((boss.phase_frame % 8) == 0) {
-		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
 		bullet_template.group = BG_STACK;
 		bullet_template.angle = (
@@ -202,7 +202,7 @@ static void near phase_3_with_pattern(void)
 void near pattern_pellet_arcs_at_expanding_random_angles(void)
 {
 	if((boss.phase_frame % 8) == 0) {
-		bullet_template.spawn_type = BST_NO_SLOWDOWN;
+		bullet_template.spawn_type = BST_NO_DECELERATE;
 		bullet_template.patnum = 0;
 		bullet_template.group = BG_SPREAD;
 		bullet_template.angle = (
@@ -323,7 +323,7 @@ void near pattern_dense_spreads_and_random_balls_within_laser_walls(void)
 	}
 
 	if(stage_frame_mod16 == 0) {
-		bullet_template.spawn_type = BST_NO_SLOWDOWN;
+		bullet_template.spawn_type = BST_NO_DECELERATE;
 		bullet_template.angle = state->phase_4.spread_angle;
 		bullet_template.group = BG_SPREAD;
 		bullet_template.special_motion = BSM_EXACT_LINEAR;

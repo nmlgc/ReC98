@@ -50,11 +50,6 @@ void grp_palette_black_out(unsigned int frame_delay_per_step);
 void grp_palette_black_in(unsigned int frame_delay_per_step);
 void grp_palette_white_out(unsigned int frame_delay_per_step);
 void grp_palette_white_in(unsigned int frame_delay_per_step);
-
-// Just loads [grp_palette] from the .GRP file with the given [fn], and updates
-// the hardware palette with it. Returns `false` on success, `true` on file
-// opening failure.
-bool grp_palette_load_show(const char *fn);
 // -------
 
 // Displays the .GRP image loaded from [fn] on the currently accessed VRAM

@@ -189,6 +189,7 @@ end
 
 -- Additional generally good compilation flags. Should be used for all code
 -- that does not need to match the original binaries.
+local SEMIOPTIM = { cflags = "-G -k- -x- -DCPU=386" }
 local optimized_cfg = Config:branch({ cflags = "-G -k- -p -x-" })
 
 -- Pipeline
@@ -215,7 +216,7 @@ local bmp2arr = pipeline_tool_cfg:link("bmp2arr", {
 
 ---@class BMPShape
 ---@field [1] string Input .BMP file
----@field [2] "asm" | "cpp" Output format
+---@field [2] "asm" | "c" | "cpp" Output format
 ---@field [3] string Symbol
 ---@field [4] integer Width
 ---@field [5] integer Height
@@ -295,9 +296,8 @@ end
 -- Third-party libraries
 -- ---------------------
 
-local piloadc = Config:branch({ aflags = "/ml" }):build({
-	"libs/piloadc/piloadc.asm"
-})[1]
+local piload_cfg = Config:branch({ aflags = "/ml" })
+local piloadm = piload_cfg:build({ "libs/piloadc/piloadm.asm" })[1]
 local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 	{ "libs/sprite16/sprite16.asm", o = "th03/zunsp.obj" }
 })[1]
@@ -307,17 +307,50 @@ local sprite16 = Config:branch({ aflags = "/dTHIEF" }):build({
 -- --------------
 -- TODO: Turn into a library.
 
-local platform_cfg = optimized_cfg:branch(
-	MODEL_LARGE, { cflags = "-zCPLATFORM_TEXT" }
-)
-local platform_obj = platform_cfg:build({
-	"platform/x86real/noexcept.cpp",
-	"platform/x86real/spawn.cpp",
-	"platform/x86real/pc98/blitter.cpp",
-	"platform/x86real/pc98/egc.cpp",
-	"platform/x86real/pc98/font.cpp",
-	"platform/x86real/pc98/grcg.cpp",
+---@param bundles { [string]: string[] }
+---@param config Config
+---@param inputs_c string[] Newly compiled C inputs
+---@param inputs_asm string[] Previously compiled ASM inputs
+---@return { [string]: string[] }
+function BuildAndBundlePlatform(bundles, config, inputs_c, inputs_asm)
+	local ret = {}
+	local objs = {}
+	for _, input in ipairs(inputs_c) do
+		objs[tup.base(input)] = config:build_uncached(input)
+	end
+	for _, input in ipairs(inputs_asm) do
+		objs[tup.base(input)] = input
+	end
+	for bundle, srcs in pairs(bundles) do
+		ret[bundle] = {}
+		for _, src in pairs(srcs) do
+			ret[bundle] += objs[src]
+		end
+	end
+	return ret
+end
+
+local platform_cfg = optimized_cfg:branch(MODEL_LARGE, {
+	obj_root = "platform/", cflags = "-zCPLATFORM_TEXT -DCPU=386",
 })
+local platform_src
+platform_src += tup.glob("game/*.cpp")
+platform_src += tup.glob("platform/x86real/*.cpp")
+platform_src += tup.glob("platform/x86real/pc98/*.cpp")
+platform_src += tup.glob("libs/kaja/*.cpp")
+local platform_bundles = {
+	cutscene = { "cutscene" },
+	font = { "font", "grcg" },
+	libc_debloat = { "noexcept", "novbuf" },
+	pi_surf = { "pi_surf" },
+	spawn = { "doserror", "spawn" },
+	surf = { "piloadm", "bgimage", "blitter", "grp_clip", "grp_surf" },
+	th01 = { "noexcept", "blitter", "egc", "grp_clip" },
+	vblank = { "vblank" },
+}
+local platform_objs = BuildAndBundlePlatform(
+	platform_bundles, platform_cfg, platform_src, { piloadm }
+)
 -- --------------
 
 -- Games
@@ -353,7 +386,6 @@ local th01_sprites = Sprites({
 	-- So, we're forced to manually unroll them…
 	{ "th01/sprites/laser_s.bmp", "cpp", "sSHOOTOUT_LASER", 16, 8 },
 
-	{ "th01/sprites/mousecur.bmp", "cpp", "sMOUSE_CURSOR", 16, 16 },
 	{ "th01/sprites/pellet.bmp", "cpp", "sPELLET", 8, 8, "-pshf inner" },
 	{ "th01/sprites/pellet_c.bmp", "cpp", "sPELLET_CLOUD", 16, 16 },
 	{ "th01/sprites/pillar.bmp", "cpp", "sPILLAR", 32, 8 },
@@ -365,32 +397,40 @@ local th01_zunsoft = th01:branch(MODEL_TINY):link("zunsoft", {
 	"th01/zunsoft.cpp",
 	"bin/masters.lib",
 })
-local th01_obj
-th01_obj += platform_obj
-th01_obj += {
-	piloadc,
+
+---@type ReC98Input[]
+local obj
+
+obj = {}
+obj += platform_objs.cutscene
+obj += platform_objs.font
+obj += platform_objs.spawn
+obj += platform_objs.th01
+obj += tup.glob("th01/pc98/*.cpp")
+obj += {
+	piloadm,
 	"th01.asm",
-	"th01/entry.cpp",
 	"th01/egc.cpp",
 	"th01/frmdelay.cpp",
-	"th01/game.cpp",
 	"th01/graph.cpp",
 	"th01/grp2xscs.cpp",
 	"th01/grp_text.cpp",
 	"th01/grp.cpp",
+	"th01/grppsafx.cpp",
 	"th01/initexit.cpp",
 	"th01/mdrv2.cpp",
 	"th01/pf.cpp",
 	"th01/planar.cpp",
 	"th01/scoredat.cpp",
 	"th01/regist.cpp",
-	"th01/resstuff.cpp",
+	"th01/resident.cpp",
 	"th01/tram_x16.cpp",
-	{ "th01/vsync.cpp", extra_inputs = th01_sprites["mousecur"] },
+	"th01/vsync.cpp",
 	"th01/ztext.cpp",
 	"th01/op_01.cpp",
 	"th01/input.cpp",
 	"th01/main_01.cpp",
+	"th01/bos.cpp",
 	"th01/ptn.cpp",
 	"th01/grz.cpp",
 	{ "th01/main_09.cpp", extra_inputs = th01_sprites["pellet_c"] },
@@ -431,8 +471,8 @@ th01_obj += {
 	"th01/fuuin_03.cpp",
 }
 optimized_cfg:branch(
-	Subdir("th01/"), MODEL_LARGE, { cflags = "-DGAME=1" }
-):link("anniv", th01_obj)
+	Subdir("th01/"), MODEL_LARGE, { cflags = "-DGAME=1 -DCPU=386" }
+):link("anniv", obj)
 -- ----
 
 -- TH02
@@ -459,54 +499,74 @@ th02:zungen("bin/th02/zun.com", {
 	}) },
 	{ "ZUNSOFT", th01_zunsoft },
 })
-th02:branch(MODEL_LARGE):link("op", {
+
+obj = {}
+obj += platform_objs.cutscene
+obj += platform_objs.font
+obj += platform_objs.libc_debloat
+obj += platform_objs.pi_surf
+obj += platform_objs.spawn
+obj += platform_objs.surf
+obj += platform_objs.vblank
+obj += tup.glob("th02/pc98/*.cpp")
+obj += {
 	"th02/op_01.cpp",
-	"th02/exit_dos.cpp",
-	"th02/zunerror.cpp",
-	"th02/grppsafx.cpp",
-	"th02_op.asm",
-	"th02/vplanset.cpp",
-	"th02/pi_load.cpp",
-	"th02/grp_rect.cpp",
-	"th02/frmdely2.cpp",
-	"th02/input_rs.cpp",
-	"th02/initop.cpp",
-	"th02/exit.cpp",
-	"th02/snd_mmdr.c",
-	"th02/snd_mode.c",
-	"th02/snd_pmdr.c",
-	"th02/snd_load.cpp",
-	"th02/pi_put.cpp",
-	"th02/snd_kaja.cpp",
-	"th02/op_02_3.cpp",
-	"th02/snd_se_r.cpp",
-	"th02/snd_se.cpp",
-	"th02/frmdely1.cpp",
+	"th02.asm",
 	"th02/op_03.cpp",
 	"th02/globals.cpp",
 	"th02/op_04.cpp",
 	"th02/op_05.cpp",
 	"th02/op_music.cpp",
-})
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
+	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
+	"th02/maine022.cpp",
+	"th02/maine_03.cpp",
+	"th02/maine_04.cpp",
+	"th02/staff.cpp",
+
+	-- SHARED
+	"th01/grppsafx.cpp",
+	"th02/exit_dos.cpp",
+	"th02/exit.cpp",
+	"th02/frmdelay.cpp",
+	"th02/initop.cpp",
+	"th02/initmain.cpp",
+	"th02/input_rs.cpp",
+	"th02/keydelay.cpp",
+	"th02/snd_dlym.cpp",
+	"th02/snd_kaja.cpp",
+	"th02/snd_load.cpp",
+	"th02/snd_mmdr.c",
+	"th02/snd_mode.c",
+	"th02/snd_pmdr.c",
+	"th02/snd_se_r.cpp",
+	"th02/snd_se.cpp",
+	"th02/vplanset.cpp",
+	"th02/zunerror.cpp",
+}
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("debloat", obj)
+
+obj = {
 	{ "th02_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["bombpart"],
 		th02_sprites["sparks"],
 		th02_sprites["pointnum"],
 	} },
+	"th02/spark.cpp",
+	"th02/spark_i.asm",
 	"th02/tile.cpp",
 	"th02/pointnum.cpp",
 	"th02/item.cpp",
 	"th02/hud.cpp",
 	"th02/player_b.cpp",
+	"th02/player.cpp",
 	"th02/zunerror.cpp",
 	"th02/keydelay.cpp",
 	"th02/main02_1.cpp",
 	"th02/vplanset.cpp",
 	"th02/pi_load.cpp",
 	"th02/vector.cpp",
-	"th02/frmdely1.cpp",
+	"th02/frmdelay.cpp",
 	"th02/input_rs.cpp",
 	"th02/exit.cpp",
 	"th02/snd_mmdr.c",
@@ -523,34 +583,12 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th02/snd_se.cpp",
 	"th02/main_03.cpp",
 	"th02/hud_ovrl.cpp",
+	"th02/bullet.cpp",
 	"th02/dialog.cpp",
 	"th02/boss_5.cpp",
 	"th02/regist_m.cpp",
-})
-th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
-	{ "th02/end.cpp", extra_inputs = th02_sprites["verdict"] },
-	"th02_maine.asm",
-	"th02/grppsafx.cpp",
-	"th02/keydelay.cpp",
-	"th02/vplanset.cpp",
-	"th02/pi_load.cpp",
-	"th02/frmdely1.cpp",
-	"th02/maine022.cpp",
-	"th02/input_rs.cpp",
-	"th02/exit.cpp",
-	"th02/snd_mmdr.c",
-	"th02/snd_mode.c",
-	"th02/snd_pmdr.c",
-	"th02/snd_load.cpp",
-	"th02/initmain.cpp",
-	"th02/pi_put.cpp",
-	"th02/snd_kaja.cpp",
-	"th02/snd_dlym.cpp",
-	"th02/globals.cpp",
-	"th02/maine_03.cpp",
-	"th02/maine_04.cpp",
-	"th02/staff.cpp",
-})
+}
+th02:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("debloatm", obj)
 -- ----
 
 -- TH03
@@ -558,6 +596,10 @@ th02:branch(MODEL_LARGE, { cflags = "-DBINARY='E'" }):link("maine", {
 
 local th03_sprites = Sprites({
 	{ "th03/sprites/score.bmp", "asm", "sSCORE_FONT", 8, 8, "-u" },
+
+	-- ZUN bloat: Investing 32 bytes just so that the individual rows can be
+	-- loaded with a 16-bit `MOV`…
+	{ "th03/sprites/flake.bmp", "asm", "sFLAKE", 16, 8 },
 })
 
 th03:zungen("bin/th03/zun.com", {
@@ -570,40 +612,64 @@ th03:zungen("bin/th03/zun.com", {
 		"bin/masters.lib",
 	})}
 })
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
+
+obj = {}
+obj += platform_objs.cutscene
+obj += platform_objs.font
+obj += platform_objs.libc_debloat
+obj += platform_objs.pi_surf
+obj += platform_objs.spawn
+obj += platform_objs.surf
+obj += platform_objs.vblank
+obj += tup.glob("th03/pc98/*.cpp")
+obj += {
+	"th03/cfg_lres.cpp",
 	"th03/op_01.cpp",
-	"th03_op2.asm",
+	{ "th03.asm", extra_inputs = th03_sprites["flake"] },
 	"th03/op_music.cpp",
-	"th03/op_02.cpp",
+	"th03/op_main.cpp",
 	"th03/scoredat.cpp",
-	"th03/op_03.cpp",
-	"th03_op.asm",
+	"th03/op_sel.cpp",
+	"th03/mainl_sc.cpp",
+	"th03/cutscene.cpp",
+	"th03/regist.cpp",
+	"th03/staff.cpp",
+
+	-- SHARED
+	"th01/grppsafx.cpp",
 	"th02/exit_dos.cpp",
-	"th02/vplanset.cpp",
+	"th02/frmdelay.cpp",
+	"th02/snd_dlyv.c",
+	"th02/snd_load.cpp",
 	"th02/snd_mode.c",
 	"th02/snd_pmdr.c",
-	"th02/snd_load.cpp",
-	"th03/exit.cpp",
-	"th03/polar.cpp",
-	"th03/cdg_put.asm",
-	"th02/frmdely1.cpp",
-	"th03/input_s.cpp",
-	"th03/pi_put.cpp",
-	"th03/snd_kaja.cpp",
-	"th03/initop.cpp",
+	"th02/snd_se_r.cpp",
+	"th02/vplanset.cpp",
 	"th03/cdg_load.cpp",
-	"th03/grppsafx.cpp",
-	"th03/pi_load.cpp",
-	"th03/inp_m_w.cpp",
 	"th03/cdg_p_na.asm",
+	"th03/cdg_put.asm",
+	"th03/exit.cpp",
+	"th03/exitmain.cpp",
 	"th03/hfliplut.asm",
-	"th02/frmdely2.cpp",
-})
-th03:branch(MODEL_LARGE):link("main", {
+	"th03/initmain.cpp",
+	"th03/initop.cpp",
+	"th03/inp_m_w.cpp",
+	"th03/inp_wait.cpp",
+	"th03/input_s.cpp",
+	"th03/snd_dlym.cpp",
+	"th03/snd_kaja.cpp",
+	"th03/snd_se.cpp",
+	"th03/sprites/pi_mask.cpp",
+	"th03/vector.cpp",
+}
+th03:branch(MODEL_LARGE):link("debloat", obj)
+
+obj = {
 	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
 	"th03/playfld.cpp",
 	"th03/cfg_lres.cpp",
 	"th03/hitcirc.cpp",
+	"th03/hud_stat.cpp",
 	"th03/player_m.cpp",
 	"th03/main_010.cpp",
 	"th03/main_011.cpp",
@@ -613,7 +679,7 @@ th03:branch(MODEL_LARGE):link("main", {
 	"th03/vector.cpp",
 	"th03/exit.cpp",
 	"th03/polar.cpp",
-	"th02/frmdely1.cpp",
+	"th02/frmdelay.cpp",
 	"th03/input_s.cpp",
 	"th02/snd_se_r.cpp",
 	"th03/snd_se.cpp",
@@ -625,41 +691,8 @@ th03:branch(MODEL_LARGE):link("main", {
 	"th03/hfliplut.asm",
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",
-})
-th03:branch(MODEL_LARGE, { cflags = "-DBINARY='L'" }):link("mainl", {
-	"th03/cfg_lres.cpp",
-	"th03/mainl_sc.cpp",
-	"th03_mainl.asm",
-	"th03/cutscene.cpp",
-	"th03/scoredat.cpp",
-	"th03/regist.cpp",
-	"th02/vplanset.cpp",
-	"th02/snd_mode.c",
-	"th02/snd_pmdr.c",
-	"th02/snd_dlyv.c",
-	"th02/snd_load.cpp",
-	"th03/vector.cpp",
-	"th03/exit.cpp",
-	"th03/cdg_put.asm",
-	"th02/frmdely1.cpp",
-	"th03/input_s.cpp",
-	"th03/pi_put.cpp",
-	"th03/pi_put_i.cpp",
-	"th02/snd_se_r.cpp",
-	"th03/snd_se.cpp",
-	"th03/snd_kaja.cpp",
-	"th03/initmain.cpp",
-	"th03/cdg_load.cpp",
-	"th03/exitmain.cpp",
-	"th03/grppsafx.cpp",
-	"th03/snd_dlym.cpp",
-	"th03/inp_wait.cpp",
-	"th03/pi_load.cpp",
-	"th03/pi_put_q.cpp",
-	"th03/inp_m_w.cpp",
-	"th03/cdg_p_na.asm",
-	"th03/hfliplut.asm",
-})
+}
+th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("debloatm", obj)
 -- ----
 
 -- TH04
@@ -680,45 +713,63 @@ local th04_zuncom = th04:zungen("obj/th04/zuncom.bin", {
 	{ "-M", th04:branch(MODEL_TINY):link("memchk", { "th04_memchk.asm" }) },
 })
 th04:comcstm("zun.com", "th04/zun.txt", th04_zuncom, 621381155)
-th04:branch(MODEL_LARGE):link("op", {
+
+obj = {}
+obj += platform_objs.cutscene
+obj += platform_objs.libc_debloat
+obj += platform_objs.pi_surf
+obj += platform_objs.spawn
+obj += platform_objs.surf
+obj += platform_objs.vblank
+obj += tup.glob("th04/pc98/*.cpp")
+obj += {
 	"th04/op_main.cpp",
-	{ "th04_op_master.asm", o = "opm.obj" },
-	"th02/vplanset.cpp",
-	"th02/frmdely1.cpp",
-	"th03/pi_put.cpp",
-	"th03/pi_load.cpp",
-	"th03/hfliplut.asm",
-	"th04/input_w.cpp",
-	"th04/vector.cpp",
-	"th04/snd_pmdr.c",
-	"th04/snd_mmdr.c",
-	"th04/snd_kaja.cpp",
-	"th04/cdg_p_nc.asm",
-	"th04/snd_mode.cpp",
-	"th04/snd_dlym.cpp",
-	"th02/exit_dos.cpp",
-	"th04/snd_load.cpp",
-	"th04/grppsafx.asm",
-	"th04_op2.asm",
-	"th04/cdg_put.asm",
-	"th04/exit.cpp",
-	"th04/initop.cpp",
-	"th04/cdg_p_na.cpp",
-	"th04/input_s.asm",
-	"th02/snd_se_r.cpp",
-	"th04/snd_se.cpp",
-	"th04/egcrect.cpp",
-	"th04/bgimage.cpp",
-	"th04/bgimager.asm",
-	"th04/cdg_load.asm",
-	"th02/frmdely2.cpp",
+	"th04.asm",
+	"th04/cutscene.cpp",
 	"th04/op_setup.cpp",
 	"th04/zunsoft.cpp",
 	"th04/op_music.cpp",
-	"th04_op.asm",
+	"th04/scoredat.cpp",
+	"th04/hi_view.cpp",
+	"th04/op_title.cpp",
 	"th04/m_char.cpp",
-})
-th04:branch(MODEL_LARGE):link("main", {
+	"th04/maine_e.cpp",
+	"th04/staff.cpp",
+
+	-- SHARED
+	"th02/exit_dos.cpp",
+	"th02/frmdelay.cpp",
+	"th02/snd_se_r.cpp",
+	"th02/vplanset.cpp",
+	"th03/hfliplut.asm",
+	"th03/sprites/pi_mask.cpp",
+	"th04/bgimage.cpp",
+	"th04/bgimager.asm",
+	"th04/cdg_load.asm",
+	"th04/cdg_p_na.cpp",
+	"th04/cdg_p_nc.asm",
+	"th04/cdg_p_pl.asm",
+	"th04/cdg_put.asm",
+	"th04/exit.cpp",
+	"th04/grppsafx.asm",
+	"th04/initmain.cpp",
+	"th04/initop.cpp",
+	"th04/input_s.asm",
+	"th04/input_w.cpp",
+	"th04/snd_dlym.cpp",
+	"th04/snd_kaja.cpp",
+	"th04/snd_load.cpp",
+	"th04/snd_mmdr.c",
+	"th04/snd_mode.cpp",
+	"th04/snd_pmdr.c",
+	"th04/snd_se.cpp",
+	"th04/vector.cpp",
+}
+th04:branch(MODEL_LARGE, SEMIOPTIM):link("debloat", obj)
+
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	{ "th04_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -730,6 +781,7 @@ th04:branch(MODEL_LARGE):link("main", {
 	"th04/ems.cpp",
 	"th04/tile_set.cpp",
 	"th04/std.cpp",
+	"th04/circle.cpp",
 	"th04/tile.cpp",
 	"th04/playfld.cpp",
 	"th04/midboss4.cpp",
@@ -745,28 +797,8 @@ th04:branch(MODEL_LARGE):link("main", {
 	"th04/checkerb.cpp",
 	"th04/mb_inv.cpp",
 	"th04/boss_bd.cpp",
-	"th02/vplanset.cpp",
-	"th03/vector.cpp",
-	"th02/frmdely1.cpp",
-	"th03/hfliplut.asm",
-	"th04/mpn_free.cpp",
-	"th04/input_w.cpp",
-	"th04/mpn_l_i.cpp",
-	"th04/vector.cpp",
-	"th04/snd_pmdr.c",
-	"th04/snd_mmdr.c",
-	"th04/snd_kaja.cpp",
-	"th04/snd_mode.cpp",
-	"th04/snd_load.cpp",
-	"th04/cdg_put.asm",
-	"th04/exit.cpp",
-	"th04/initmain.cpp",
-	"th04/cdg_p_na.cpp",
-	"th04/cdg_p_pr.asm",
-	"th04/input_s.asm",
-	"th02/snd_se_r.cpp",
-	"th04/snd_se.cpp",
-	"th04/cdg_load.asm",
+	"th04/scoredat.cpp",
+	"th04/score_rm.cpp",
 	"th04/gather.cpp",
 	"th04/scrolly3.cpp",
 	"th04/motion_3.asm",
@@ -783,39 +815,32 @@ th04:branch(MODEL_LARGE):link("main", {
 	"th04/boss.cpp",
 	"th04/boss_4r.cpp",
 	"th04/boss_x2.cpp",
-})
-th04:branch(MODEL_LARGE):link("maine", {
-	"th04/maine_e.cpp",
-	{ "th04_maine_master.asm", o = "mainem.obj" },
+
+	-- SHARED
+	"th02/frmdelay.cpp",
+	"th02/snd_se_r.cpp",
 	"th02/vplanset.cpp",
-	"th02/frmdely1.cpp",
-	"th03/pi_put.cpp",
-	"th03/pi_load.cpp",
-	"th03/pi_put_q.cpp",
 	"th03/hfliplut.asm",
-	"th04/input_w.cpp",
-	"th04/vector.cpp",
-	"th04/snd_pmdr.c",
-	"th04/snd_mmdr.c",
-	"th04/snd_kaja.cpp",
-	"th04/snd_mode.cpp",
-	"th04/snd_dlym.cpp",
-	"th04/cdg_p_pl.asm",
-	"th04/snd_load.cpp",
-	"th04/grppsafx.asm",
-	"th04_maine.asm",
+	"th03/vector.cpp",
+	"th04/cdg_load.asm",
+	"th04/cdg_p_na.cpp",
+	"th04/cdg_p_pr.asm",
 	"th04/cdg_put.asm",
 	"th04/exit.cpp",
 	"th04/initmain.cpp",
 	"th04/input_s.asm",
-	"th02/snd_se_r.cpp",
+	"th04/input_w.cpp",
+	"th04/mpn_free.cpp",
+	"th04/mpn_l_i.cpp",
+	"th04/snd_kaja.cpp",
+	"th04/snd_load.cpp",
+	"th04/snd_mmdr.c",
+	"th04/snd_mode.cpp",
+	"th04/snd_pmdr.c",
 	"th04/snd_se.cpp",
-	"th04/bgimage.cpp",
-	"th04/bgimager.asm",
-	"th04/cdg_load.asm",
-	"th04/cutscene.cpp",
-	"th04/staff.cpp",
-})
+	"th04/vector.cpp",
+}
+th04:branch(MODEL_LARGE, SEMIOPTIM):link("debloatm", obj)
 -- ----
 
 -- TH05
@@ -839,50 +864,65 @@ local th05_zuncom = th05:zungen("obj/th05/zuncom.bin", {
 	{ "-M", th05:branch(MODEL_ASM):link("memchk", { "th05_memchk.asm" }) },
 })
 th05:comcstm("zun.com", "th05/zun.txt", th05_zuncom, 628731748)
-th05:branch(MODEL_LARGE):link("op", {
+
+obj = {}
+obj += platform_objs.cutscene
+obj += platform_objs.libc_debloat
+obj += platform_objs.spawn
+obj += platform_objs.surf
+obj += platform_objs.vblank
+obj += tup.glob("th05/pc98/*.cpp")
+obj += {
 	"th05/op_main.cpp",
-	{ "th05_op_master.asm", o = "opm.obj" },
-	"th03/hfliplut.asm",
-	"th04/snd_pmdr.c",
-	"th04/snd_mmdr.c",
-	"th04/snd_mode.cpp",
-	"th02/exit_dos.cpp",
-	"th04/grppsafx.asm",
-	{ "th05_op2.asm", extra_inputs = th05_sprites["piano_l"] },
-	"th04/cdg_p_na.cpp",
-	"th02/snd_se_r.cpp",
-	"th04/snd_se.cpp",
-	"th04/bgimage.cpp",
-	"th05/cdg_put.asm",
-	"th04/exit.cpp",
-	"th05/vector.cpp",
-	"th05/musicp_c.cpp",
-	"th05/musicp_a.asm",
-	"th05/bgimager.asm",
-	"th05/snd_load.cpp",
-	"th05/snd_kaja.cpp",
-	"th05/pi_cpp_1.cpp",
-	"th05/pi_asm_1.asm",
-	"th05/pi_cpp_2.cpp",
-	"th05/pi_asm_2.asm",
-	"th05/initop.cpp",
-	"th05/input_s.asm",
-	"th05/inp_h_w.cpp",
-	"th05/snd_dlym.cpp",
-	"th05/cdg_p_nc.cpp",
-	"th05/frmdelay.cpp",
-	"th04/cdg_load.asm",
-	"th05/egcrect.cpp",
+	{ "th05.asm", extra_inputs = th05_sprites["piano_l"] },
+	"th05/cfg.cpp",
 	"th05/op_setup.cpp",
 	"th04/zunsoft.cpp",
-	"th05/cfg.cpp",
 	"th05/op_title.cpp",
 	"th05/op_music.cpp",
-	"th05_op.asm",
+	"th05/scoredat.cpp",
 	"th05/hi_view.cpp",
 	"th05/m_char.cpp",
-})
-th05:branch(MODEL_LARGE):link("main", {
+	"th05/cutscene.cpp",
+	"th05/maine_e.cpp",
+	"th05/staff.cpp",
+	"th05/allcast.cpp",
+	"th05/regist.cpp",
+
+	-- SHARED
+	"th02/exit_dos.cpp",
+	"th02/frmdelay.cpp",
+	"th02/snd_se_r.cpp",
+	"th03/hfliplut.asm",
+	"th03/sprites/pi_mask.cpp",
+	"th04/bgimage.cpp",
+	"th04/cdg_load.asm",
+	"th04/cdg_p_na.cpp",
+	"th04/exit.cpp",
+	"th04/grppsafx.asm",
+	"th04/snd_mmdr.c",
+	"th04/snd_mode.cpp",
+	"th04/snd_pmdr.c",
+	"th04/snd_se.cpp",
+	"th05/bgimager.asm",
+	"th05/cdg_p_nc.cpp",
+	"th05/cdg_put.asm",
+	"th05/initmain.cpp",
+	"th05/initop.cpp",
+	"th05/inp_h_w.cpp",
+	"th05/input_s.asm",
+	"th05/musicp_a.asm",
+	"th05/musicp_c.cpp",
+	"th05/snd_dlym.cpp",
+	"th05/snd_kaja.cpp",
+	"th05/snd_load.cpp",
+	"th05/vector.cpp",
+}
+th05:branch(MODEL_LARGE, SEMIOPTIM):link("debloat", obj)
+
+obj = {}
+obj += platform_objs.libc_debloat
+obj += {
 	{ "th05_main.asm", extra_inputs = {
 		th02_sprites["pellet"],
 		th02_sprites["sparks"],
@@ -893,8 +933,10 @@ th05:branch(MODEL_LARGE):link("main", {
 	"th05/demo.cpp",
 	"th05/ems.cpp",
 	"th05/cfg_lres.cpp",
+	"th05/std.cpp",
 	"th04/tile.cpp",
 	"th05/main010.cpp",
+	"th05/circle.cpp",
 	"th05/f_dialog.cpp",
 	"th05/dialog.cpp",
 	"th05/boss_exp.cpp",
@@ -902,6 +944,7 @@ th05:branch(MODEL_LARGE):link("main", {
 	"th04/mb_inv.cpp",
 	"th04/boss_bd.cpp",
 	"th05/boss_bg.cpp",
+	"th05/score_rm.cpp",
 	"th05/laser_rh.cpp",
 	"th05/p_common.cpp",
 	"th05/p_reimu.cpp",
@@ -923,24 +966,6 @@ th05:branch(MODEL_LARGE):link("main", {
 	"th05/bullet_c.cpp",
 	"th05/bullet.asm",
 	"th05/bullet_t.cpp",
-	"th03/vector.cpp",
-	"th03/hfliplut.asm",
-	"th04/snd_pmdr.c",
-	"th04/snd_mmdr.c",
-	"th04/snd_mode.cpp",
-	"th04/cdg_p_na.cpp",
-	"th02/snd_se_r.cpp",
-	"th04/snd_se.cpp",
-	"th05/cdg_put.asm",
-	"th04/exit.cpp",
-	"th05/vector.cpp",
-	"th05/snd_load.cpp",
-	"th05/snd_kaja.cpp",
-	"th05/initmain.cpp",
-	"th05/input_s.asm",
-	"th05/inp_h_w.cpp",
-	"th05/frmdelay.cpp",
-	"th04/cdg_load.asm",
 	"th04/scrolly3.cpp",
 	"th04/motion_3.asm",
 	"th05/gather.cpp",
@@ -957,42 +982,33 @@ th05:branch(MODEL_LARGE):link("main", {
 	"th05/boss_4.cpp",
 	"th05/boss_6.cpp",
 	"th05/boss_x.cpp",
+	"th05/hud_num.asm",
 	"th05/boss.cpp",
 	"th05/main014.cpp",
-})
-th05:branch(MODEL_LARGE):link("maine", {
-	"th05/maine_e.cpp",
-	{ "th05_maine_master.asm", o = "mainem.obj" },
+
+	-- SHARED
+	"th02/frmdelay.cpp",
+	"th02/snd_se_r.cpp",
 	"th03/hfliplut.asm",
-	"th04/snd_pmdr.c",
+	"th03/vector.cpp",
+	"th04/cdg_load.asm",
+	"th04/cdg_p_na.cpp",
+	"th04/exit.cpp",
 	"th04/snd_mmdr.c",
 	"th04/snd_mode.cpp",
-	"th04/grppsafx.asm",
-	"th05_maine.asm",
-	"th04/cdg_p_na.cpp",
-	"th02/snd_se_r.cpp",
+	"th04/snd_pmdr.c",
 	"th04/snd_se.cpp",
-	"th04/bgimage.cpp",
-	"th04/exit.cpp",
-	"th05/vector.cpp",
-	"th05/bgimager.asm",
-	"th05/snd_load.cpp",
-	"th05/snd_kaja.cpp",
-	"th05/pi_cpp_1.cpp",
-	"th05/pi_asm_1.asm",
-	"th05/pi_cpp_2.cpp",
-	"th05/pi_asm_2.asm",
+	"th05/cdg_put.asm",
 	"th05/initmain.cpp",
-	"th05/input_s.asm",
 	"th05/inp_h_w.cpp",
-	"th05/snd_dlym.cpp",
-	"th05/frmdelay.cpp",
-	"th04/cdg_load.asm",
-	"th05/egcrect.cpp",
-	"th05/cutscene.cpp",
-	"th05/regist.cpp",
-	"th05/staff.cpp",
-})
+	"th05/input_s.asm",
+	"th05/snd_kaja.cpp",
+	"th05/snd_load.cpp",
+	"th05/vector.cpp",
+}
+th05:branch(
+	MODEL_LARGE, SEMIOPTIM, { cflags = "-DBINARY='M'" }
+):link("debloatm", obj)
 -- ----
 
 -- Research
@@ -1005,30 +1021,67 @@ research_cfg:link("holdkey", {
 	"bin/masters.lib",
 })
 
+research_cfg:branch({ cflags = "-DCPU=386" }):link("pi_bench", {
+	"Research/pi_bench.cpp",
+	research_cfg:build_uncached("platform/x86real/noexcept.cpp"),
+	research_cfg:build_uncached("platform/x86real/pc98/blitter.cpp"),
+	research_cfg:build_uncached("platform/x86real/pc98/grp_clip.cpp"),
+	"platform/x86real/pc98/graph.cpp",
+	"bin/masters.lib",
+	piloadm,
+})
+
 local research_sprites = Sprites({
-	{ "Research/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 }
+	{ "Research/blitperf/blitperf.bmp", "cpp", "sBLITPERF", 16, 16 },
+	{ "Research/blitperf/wide.bmp", "c", "sWIDE", 640, 40 },
 })
 
 -- Must be an ordered table to retain the order for `build_dumb.bat`.
-for _, t in pairs({ { "8086", " -1-" }, { "286", " -2" }, { "386", "" } }) do
+for _, t in pairs({ { 86, " -1-" }, { 286, " -2" }, { 386, "" } }) do
+	local cpu_str = string.format("%03d", t[1])
 	local cfg = research_cfg:branch({
-		obj_root = (t[1] .. "/"),
-		cflags = string.format("-DCPU=%s%s", t[1], t[2]),
+		obj_root = (cpu_str .. "/"),
+		cflags = string.format("-DCPU=%d%s", t[1], t[2]),
 	})
-	cfg:link(("blit" .. t[1]), {
-		-- Bypass `PreviousOutputForSource` by explicitly building each unit.
-		cfg:build_uncached({ "Research/blitperf.cpp", extra_inputs = {
+	-- Bypass `PreviousOutputForSource` by explicitly building each unit.
+	local obj = {
+		cfg:build_uncached({ "Research/blitperf/blitperf.cpp", extra_inputs = {
 			research_sprites["blitperf"],
-			th01_sprites["pellet"],
 		} }),
 		cfg:build_uncached("platform/x86real/noexcept.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/blitter.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/font.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/graph.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/grcg.cpp"),
+		cfg:build_uncached("platform/x86real/pc98/grp_clip.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/palette.cpp"),
 		cfg:build_uncached("platform/x86real/pc98/vsync.cpp"),
-	})
+	}
+
+	local if_shift = {
+		cfg:build_uncached({ "Research/blitperf/if_shift.cpp", extra_inputs = {
+			th01_sprites["pellet"],
+		} }),
+	}
+	cfg:link(("ifshf" .. cpu_str), tup_append_assignment(if_shift, obj))
+
+	local wide = {
+		cfg:build_uncached({ "Research/blitperf/wide.cpp", extra_inputs = {
+			research_sprites["wide"],
+		} }),
+		cfg:build_uncached({ "Research/blitperf/wide_b.cpp" }),
+	}
+	cfg:link(("wide" .. cpu_str), tup_append_assignment(wide, obj))
+
+	local masked = {
+		piloadm,
+		cfg:build_uncached({ "Research/blitperf/xfade.cpp"}),
+		cfg:build_uncached({ "Research/blitperf/xfade_b.cpp"}),
+		cfg:build_uncached({ "platform/x86real/pc98/egc.cpp"}),
+		cfg:build_uncached({ "platform/x86real/pc98/grp_surf.cpp"}),
+		"bin/masters.lib",
+	}
+	cfg:link(("xfade" .. cpu_str), tup_append_assignment(masked, obj))
 end
 -- --------
 
