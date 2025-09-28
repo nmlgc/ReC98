@@ -458,11 +458,27 @@ void pascal near cursor_put(pid2 pid, vc_t col)
 	graph_gaiji_puts(left, (top + GLYPH_H), GAIJI_W, g_CURSOR_BOTTOM[pid], col);
 }
 
+void pascal palette_white_in_async(void)
+{
+	palette_show();
+	if(PaletteTone == 100) {
+		vsync_proc_reset();
+		return;
+	}
+	PaletteTone -= 6;
+	if(PaletteTone <= 100) {
+		PaletteTone = 100;
+	}
+}
+
 void pascal near select_confirm(pid_t pid, bool palette_id)
 {
+	// Run both the white-in effect and the .CDG file load in parallel
+	PaletteTone = 200;
+	vsync_proc_set(palette_white_in_async);
+
 	playchar_t playchar = sel[pid];
 	resident->playchar_paletted[pid].set(playchar, palette_id);
-	palette_white_in(1);
 
 	static_assert(PLAYER_COUNT == 2);
 	if(sel_confirmed[1 - pid] && (
@@ -478,6 +494,9 @@ void pascal near select_confirm(pid_t pid, bool palette_id)
 	static_assert(PLAYER_COUNT == 2);
 	sel_confirmed[pid] = true;
 	input_locked[pid] = true;
+
+	while(vsync_proc_get() == palette_white_in_async) {
+	}
 }
 
 void pascal near select_update_player(input_t input, pid2 pid)
