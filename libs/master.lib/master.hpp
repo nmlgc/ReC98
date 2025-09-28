@@ -4,6 +4,7 @@
 #ifndef MASTER_HPP
 #define MASTER_HPP
 
+#include "platform.h"
 #include "libs/master.lib/func.hpp"
 
 /// Original functions (only contains those actually called from ZUN code)
@@ -216,13 +217,13 @@ void MASTER_RET respal_free(void);
 extern volatile unsigned int __cdecl vsync_Count1, vsync_Count2;
 
 #define vsync_proc_set(proc) { \
-	extern void (far pascal *__cdecl vsync_Proc)(void); \
+	extern func_t __cdecl vsync_Proc; \
 	disable(); \
 	vsync_Proc = proc; \
 	enable(); \
 }
 #define vsync_proc_reset() { \
-	extern void (far pascal *__cdecl vsync_Proc)(void); \
+	extern func_t __cdecl vsync_Proc; \
 	disable(); \
 	vsync_Proc = nullptr; \
 	enable(); \
@@ -289,6 +290,11 @@ template <class T> struct ResData {
 		));
 	}
 };
+
+inline func_t vsync_proc_get(void) {
+	extern func_t __cdecl vsync_Proc;
+	return vsync_Proc;
+}
 #endif
 /// ------------------
 
