@@ -476,12 +476,12 @@ loc_9A94:
 		test	_round_or_result_frame, 1023
 		jnz	short loc_9AB5
 		call	@randring_fill$qv
-		cmp	_p1.miss_damage_next, 6
+		cmp	_p1.miss_damage_next, MISS_DAMAGE_MAX
 		jnb	short loc_9AAA
 		inc	_p1.miss_damage_next
 
 loc_9AAA:
-		cmp	_p2.miss_damage_next, 6
+		cmp	_p2.miss_damage_next, MISS_DAMAGE_MAX
 		jnb	short loc_9AB5
 		inc	_p2.miss_damage_next
 

@@ -7,18 +7,15 @@
 
 #include "th03/main/player/ch_shot.hpp"
 #include "th03/main/player/gauge.hpp"
+#include "th03/main/player/hearts.hpp"
 #include "th03/main/player/shot.hpp"
 #include "th03/main/chars/speed.hpp"
 #include "th03/main/collmap.hpp"
 #include "th03/main/playfld.hpp"
 #include "th03/hardware/input.h"
 
-#define HALFHEARTS_MAX 10
-
 #define ROUND_START_INVINCIBILITY_FRAMES 50
-
 #define MISS_INVINCIBILITY_FRAMES 110
-#define MISS_DAMAGE_MAX 6
 #define KNOCKBACK_FRAMES 64
 
 #define SPELL_AUTOFIRE_FRAMES 128
@@ -29,7 +26,7 @@ struct player_stuff_t {
 	bool is_hit;
 	uint8_t unused_1; // ZUN bloat
 	unsigned char invincibility_time;
-	char halfhearts;
+	shalfhearts_t halfhearts;
 	PlaycharPalettedOptional playchar_paletted;
 	speed_t speed_base;
 	shot_mode_t shot_mode;
@@ -74,7 +71,7 @@ struct player_stuff_t {
 
 	unsigned int combo_bonus_max;
 	unsigned char combo_hits_max;
-	unsigned char miss_damage_next;
+	halfhearts_t miss_damage_next;
 	unsigned int cpu_frame;
 
 	unsigned char gauge_attacks_fired;
