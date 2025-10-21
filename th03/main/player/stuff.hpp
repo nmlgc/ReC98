@@ -71,7 +71,7 @@ struct player_stuff_t {
 
 	unsigned int combo_bonus_max;
 	unsigned char combo_hits_max;
-	halfhearts_t miss_damage_next;
+	halfhearts_t hit_damage_next;
 	unsigned int cpu_frame;
 
 	unsigned char gauge_attacks_fired;

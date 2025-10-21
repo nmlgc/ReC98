@@ -476,14 +476,14 @@ loc_9A94:
 		test	_round_or_result_frame, 1023
 		jnz	short loc_9AB5
 		call	@randring_fill$qv
-		cmp	_p1.miss_damage_next, MISS_DAMAGE_MAX
+		cmp	_p1.hit_damage_next, HIT_DAMAGE_MAX
 		jnb	short loc_9AAA
-		inc	_p1.miss_damage_next
+		inc	_p1.hit_damage_next
 
 loc_9AAA:
-		cmp	_p2.miss_damage_next, MISS_DAMAGE_MAX
+		cmp	_p2.hit_damage_next, HIT_DAMAGE_MAX
 		jnb	short loc_9AB5
-		inc	_p2.miss_damage_next
+		inc	_p2.hit_damage_next
 
 loc_9AB5:
 		cmp	_round_or_result_frame, 2000
@@ -1220,7 +1220,7 @@ loc_A148:
 		mov	[si+player_stuff_t.center.y], ((PLAYFIELD_H - 32) shl 4)
 		mov	[si+player_stuff_t.gauge_charged], 0
 		mov	[si+player_stuff_t.shot_active], SA_ENABLED
-		mov	[si+player_stuff_t.miss_damage_next], 1
+		mov	[si+player_stuff_t.hit_damage_next], 1
 		mov	[bp+@@i], 0
 		jmp	short loc_A1BD
 ; ---------------------------------------------------------------------------
@@ -7325,13 +7325,13 @@ loc_E1FD:
 		cbw
 		shl	ax, 7
 		mov	bx, ax
-		cmp	_players[bx].miss_damage_next, 3
+		cmp	_players[bx].hit_damage_next, 3
 		jbe	short loc_E221
 		mov	al, [bp+var_2]
 		cbw
 		shl	ax, 7
 		mov	bx, ax
-		dec	_players[bx].miss_damage_next
+		dec	_players[bx].hit_damage_next
 
 loc_E221:
 		mov	al, [si+7]
