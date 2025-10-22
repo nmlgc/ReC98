@@ -98,3 +98,9 @@ extern PlayfieldPoint player_hittest_collision_top;
 // [player_cur->is_hit] and [player_hittest_collision_top] if such a collision
 // was found. Uses [pid.curent].
 void near pascal player_hittest(collmap_tile_amount_t hitbox_size);
+
+// Determine the damage for the next hit taken by [player] and updates
+// [miss_damage_next] for both players. Uses [pid.curent].
+shalfhearts_t near pascal players_hit_damage_update(
+	player_stuff_t near& player_hit
+);

@@ -7,6 +7,7 @@
 
 // Player ID. ZUN bloat: Only keep `pid_t`.
 typedef unsigned char pid_t;
+typedef int8_t spid_t;
 typedef int16_t pid2;
 
 #define PLAYER_COUNT 2

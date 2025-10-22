@@ -6892,8 +6892,7 @@ loc_DDCE:
 		mov	ah, 0
 		push	ax	; pid
 		nopcall	@hitcircles_player_add$qiii
-		push	si
-		call	sub_E1D5
+		call	@players_hit_damage_update$qr14player_stuff_t pascal, si
 		mov	dl, [si+7]
 		sub	dl, al
 		mov	[si+7],	dl
@@ -7275,7 +7274,7 @@ loc_E0BF:
 		nopcall	sub_CDBD
 
 loc_E0EF:
-		call	sub_E24B
+		call	@story_skill_decrement$qv
 
 @@ret:
 		pop	si
@@ -7285,99 +7284,12 @@ player_bomb	endp
 
 	@PLAYER_HITTEST$QI procdesc pascal near \
 		hitbox_size:word
+	@PLAYERS_HIT_DAMAGE_UPDATE$QR14PLAYER_STUFF_T procdesc pascal near \
+		player_hit:word
+	@story_skill_decrement$qv procdesc near
 main_010_TEXT	ends
 
 P_SHOT_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E1D5	proc near
-
-var_2		= byte ptr -2
-@@damage		= byte ptr -1
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		mov	si, [bp+arg_0]
-		mov	al, 1
-		sub	al, _pid_PID_current
-		mov	[bp+var_2], al
-		cmp	byte ptr [si+15h], 0
-		jnz	short loc_E1F3
-		mov	al, [si+73h]
-		jmp	short loc_E1FD
-; ---------------------------------------------------------------------------
-
-loc_E1F3:
-		mov	al, [si+73h]
-		mov	[bp+@@damage], al
-		add	al, _cpu_hit_damage_additional
-
-loc_E1FD:
-		mov	[bp+@@damage], al
-		mov	byte ptr [si+73h], 3
-		mov	al, [bp+var_2]
-		cbw
-		shl	ax, 7
-		mov	bx, ax
-		cmp	_players[bx].hit_damage_next, 3
-		jbe	short loc_E221
-		mov	al, [bp+var_2]
-		cbw
-		shl	ax, 7
-		mov	bx, ax
-		dec	_players[bx].hit_damage_next
-
-loc_E221:
-		mov	al, [si+7]
-		cbw
-		push	ax
-		mov	al, [bp+@@damage]
-		cbw
-		pop	dx
-		sub	dx, ax
-		jg	short loc_E240
-		mov	al, [si+7]
-		cbw
-		cmp	ax, 1
-		jle	short loc_E240
-		mov	al, [si+7]
-		dec	al
-		mov	[bp+@@damage], al
-
-loc_E240:
-		call	sub_E24B
-		mov	al, [bp+@@damage]
-		pop	si
-		leave
-		retn	2
-sub_E1D5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E24B	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_pid_PID_current, 0
-		jnz	short loc_E264
-		les	bx, _resident
-		cmp	es:[bx+resident_t.skill], 0
-		jbe	short loc_E264
-		dec	es:[bx+resident_t.skill]
-
-loc_E264:
-		pop	bp
-		retn
-sub_E24B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
