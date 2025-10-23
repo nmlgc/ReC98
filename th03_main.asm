@@ -1198,7 +1198,7 @@ loc_A117:
 ; ---------------------------------------------------------------------------
 
 loc_A148:
-		mov	byte ptr [di+4AD6h], 0
+		mov	_enemies_alive[di], 0
 		les	bx, _resident
 		add	bx, di
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted]
@@ -16029,7 +16029,7 @@ arg_0		= word ptr  4
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+4AD6h], 0
+		cmp	_enemies_alive[bx], 0
 		jnz	short locret_13CC3
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -16222,8 +16222,8 @@ loc_13DDC:
 		jl	short loc_13DA5
 		mov	byte_1F55A, 0
 		mov	byte_1F55B, 0
-		mov	byte_22036, 0
-		mov	byte_22037, 0
+		mov	_enemies_alive[0], 0
+		mov	_enemies_alive[1], 0
 		pop	si
 		leave
 		retf
@@ -20434,8 +20434,8 @@ sub_1609E	proc far
 		push	si
 		push	di
 		mov	word_2203C, 3ED6h
-		mov	byte_22036, 0
-		mov	byte_22037, 0
+		mov	_enemies_alive[0], 0
+		mov	_enemies_alive[1], 0
 		xor	si, si
 		jmp	short loc_16129
 ; ---------------------------------------------------------------------------
@@ -20460,7 +20460,7 @@ loc_160D1:
 		mov	al, [bx+8]
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+4AD6h]
+		inc	_enemies_alive[bx]
 		mov	bx, word_2203C
 		cmp	byte ptr [bx], 1
 		jnz	short loc_16123
@@ -33204,8 +33204,8 @@ word_21670	dw ?
 byte_21672	db ?
 byte_21673	db ?
 		db 2498 dup(?)
-byte_22036	db ?
-byte_22037	db ?
+public _enemies_alive
+_enemies_alive	db PLAYER_COUNT dup(?)
 		db 2 dup(?)
 
 public _explosion_hittest_against
