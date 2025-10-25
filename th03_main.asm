@@ -16038,7 +16038,7 @@ arg_0		= word ptr  4
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+1FFAh]
+		mov	al, _formation_p[bx]
 		mov	[bp+var_1], al
 		mov	al, _round_speed
 		mov	ah, 0
@@ -16048,7 +16048,7 @@ arg_0		= word ptr  4
 		mov	byte_1F520, al
 		mov	al, [bp+var_1]
 		mov	ah, 0
-		mov	es, word_1F556
+		mov	es, _formation_type_ring
 		mov	bx, ax
 		mov	al, es:[bx]
 		mov	ah, 0
@@ -16056,7 +16056,7 @@ arg_0		= word ptr  4
 		push	[bp+arg_0]
 		mov	al, [bp+var_1]
 		mov	ah, 0
-		mov	es, word_1F558
+		mov	es, _formation_pos_type_ring
 		mov	bx, ax
 		mov	al, es:[bx]
 		push	ax
@@ -16064,7 +16064,7 @@ arg_0		= word ptr  4
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+1FFAh]
+		inc	_formation_p[bx]
 
 locret_13CC3:
 		leave
@@ -16098,7 +16098,7 @@ sub_13CC7	endp
 
 sub_13CDD	proc far
 
-var_A		= word ptr -0Ah
+@@formation_i	= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -16120,12 +16120,10 @@ var_4		= word ptr -4
 		push	300h
 		call	hmem_allocbyte
 		mov	word_1F554, ax
-		push	100h
-		call	hmem_allocbyte
-		mov	word_1F556, ax
-		push	100h
-		call	hmem_allocbyte
-		mov	word_1F558, ax
+		call	hmem_allocbyte pascal, (FORMATION_RING_SIZE * byte)
+		mov	_formation_type_ring, ax
+		call	hmem_allocbyte pascal, (FORMATION_RING_SIZE * byte)
+		mov	_formation_pos_type_ring, ax
 		mov	ax, word_1F51E
 		mov	word_1F522, ax
 		push	ax
@@ -16134,7 +16132,7 @@ var_4		= word ptr -4
 		call	file_read
 		call	file_close
 		xor	si, si
-		mov	[bp+var_A], 0
+		mov	[bp+@@formation_i], 0
 
 loc_13D41:
 		mov	es, word_1F522
@@ -16142,7 +16140,7 @@ loc_13D41:
 		mov	[bp+var_6], ax
 		cmp	[bp+var_6], 0
 		jz	short loc_13D92
-		mov	bx, [bp+var_A]
+		mov	bx, [bp+@@formation_i]
 		mov	al, byte ptr [bp+var_6]
 		mov	[bx+1FC4h], al
 		add	si, 2
@@ -16156,7 +16154,7 @@ loc_13D62:
 		mov	ah, 0
 		mov	[bp+var_8], ax
 		inc	si
-		mov	bx, [bp+var_A]
+		mov	bx, [bp+@@formation_i]
 		shl	bx, 4
 		add	bx, bx
 		mov	es, word_1F554
@@ -16170,13 +16168,13 @@ loc_13D62:
 loc_13D88:
 		cmp	di, [bp+var_6]
 		jl	short loc_13D62
-		inc	[bp+var_A]
+		inc	[bp+@@formation_i]
 		jmp	short loc_13D41
 ; ---------------------------------------------------------------------------
 
 loc_13D92:
-		mov	al, byte ptr [bp+var_A]
-		mov	byte_1F55C, al
+		mov	al, byte ptr [bp+@@formation_i]
+		mov	_formation_count, al
 		pop	di
 		pop	si
 		leave
@@ -16201,7 +16199,7 @@ var_1		= byte ptr -1
 
 loc_13DA5:
 		call	IRand
-		mov	dl, byte_1F55C
+		mov	dl, _formation_count
 		mov	dh, 0
 		push	dx
 		cwd
@@ -16211,21 +16209,21 @@ loc_13DA5:
 		mov	al, [bp+var_1]
 		cmp	al, [bp+var_2]
 		jz	short loc_13DA5
-		mov	es, word_1F556
+		mov	es, _formation_type_ring
 		mov	es:[si], al
 		mov	[bp+var_2], al
 		call	IRand
 		and	al, 1
-		shl	al, 7
-		mov	es, word_1F558
+		shl	al, 7 ; *= EPT_DO_NOT_MIRROR_X
+		mov	es, _formation_pos_type_ring
 		mov	es:[si], al
 		inc	si
 
 loc_13DDC:
-		cmp	si, 100h
+		cmp	si, FORMATION_RING_SIZE
 		jl	short loc_13DA5
-		mov	byte_1F55A, 0
-		mov	byte_1F55B, 0
+		mov	_formation_p[0], 0
+		mov	_formation_p[1], 0
 		mov	_enemies_alive[0], 0
 		mov	_enemies_alive[1], 0
 		pop	si
@@ -16245,10 +16243,8 @@ sub_13DF9	proc far
 		call	hmem_free
 		push	word_1F554
 		call	hmem_free
-		push	word_1F556
-		call	hmem_free
-		push	word_1F558
-		call	hmem_free
+		call	hmem_free pascal, _formation_type_ring
+		call	hmem_free pascal, _formation_pos_type_ring
 		pop	bp
 		retf
 sub_13DF9	endp
@@ -32994,13 +32990,19 @@ word_1F51E	dw ?
 byte_1F520	db ?
 		db ?
 word_1F522	dw ?
+
+FORMATION_RING_SIZE = 256
+
+public _formation_type_ring, _formation_pos_type_ring, _formation_p
+public _formation_count
+
 		db 48 dup(?)
 word_1F554	dw ?
-word_1F556	dw ?
-word_1F558	dw ?
-byte_1F55A	db ?
-byte_1F55B	db ?
-byte_1F55C	db ?
+_formation_type_ring	dw ?
+_formation_pos_type_ring	dw ?
+_formation_p	db PLAYER_COUNT dup(?)
+_formation_count	db ?
+
 		db 779 dup(?)
 word_1F868	dw ?
 		db 720 dup(?)
