@@ -16001,7 +16001,7 @@ arg_4		= word ptr  8
 loc_13C37:
 		mov	bx, si
 		add	bx, bx
-		mov	es, word_1F554
+		mov	es, _formation_scripts
 		push	word ptr es:[bx]
 		push	[bp+arg_2]
 		push	[bp+arg_0]
@@ -16011,7 +16011,7 @@ loc_13C37:
 
 loc_13C52:
 		mov	bx, [bp+arg_4]
-		mov	al, [bx+1FC4h]
+		mov	al, _formation_enemy_count[bx]
 		cmp	al, byte_1F51D
 		ja	short loc_13C37
 		pop	si
@@ -16098,9 +16098,11 @@ sub_13CC7	endp
 
 sub_13CDD	proc far
 
+FORMATION_ENEMIES_MAX = 16
+
 @@formation_i	= word ptr -0Ah
 var_8		= word ptr -8
-var_6		= word ptr -6
+@@enemy_count	= word ptr -6
 var_4		= word ptr -4
 
 		enter	0Ah, 0
@@ -16116,16 +16118,15 @@ var_4		= word ptr -4
 		call	file_read
 		push	[bp+var_4]
 		call	hmem_allocbyte
-		mov	word_1F51E, ax
-		push	300h
-		call	hmem_allocbyte
-		mov	word_1F554, ax
+		mov	_enedat_2, ax
+		call	hmem_allocbyte pascal, (FORMATIONS_MAX * FORMATION_ENEMIES_MAX * word)
+		mov	_formation_scripts, ax
 		call	hmem_allocbyte pascal, (FORMATION_RING_SIZE * byte)
 		mov	_formation_type_ring, ax
 		call	hmem_allocbyte pascal, (FORMATION_RING_SIZE * byte)
 		mov	_formation_pos_type_ring, ax
-		mov	ax, word_1F51E
-		mov	word_1F522, ax
+		mov	ax, _enedat_2
+		mov	_enedat, ax
 		push	ax
 		push	0
 		push	[bp+var_4]
@@ -16135,29 +16136,29 @@ var_4		= word ptr -4
 		mov	[bp+@@formation_i], 0
 
 loc_13D41:
-		mov	es, word_1F522
+		mov	es, _enedat
 		mov	ax, es:[si]
-		mov	[bp+var_6], ax
-		cmp	[bp+var_6], 0
+		mov	[bp+@@enemy_count], ax
+		cmp	[bp+@@enemy_count], 0
 		jz	short loc_13D92
 		mov	bx, [bp+@@formation_i]
-		mov	al, byte ptr [bp+var_6]
-		mov	[bx+1FC4h], al
+		mov	al, byte ptr [bp+@@enemy_count]
+		mov	_formation_enemy_count[bx], al
 		add	si, 2
 		xor	di, di
 		jmp	short loc_13D88
 ; ---------------------------------------------------------------------------
 
 loc_13D62:
-		mov	es, word_1F522
+		mov	es, _enedat
 		mov	al, es:[si]
 		mov	ah, 0
 		mov	[bp+var_8], ax
 		inc	si
 		mov	bx, [bp+@@formation_i]
-		shl	bx, 4
+		shl	bx, 4 ; *= FORMATION_ENEMIES_MAX
 		add	bx, bx
-		mov	es, word_1F554
+		mov	es, _formation_scripts
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -16166,7 +16167,7 @@ loc_13D62:
 		inc	di
 
 loc_13D88:
-		cmp	di, [bp+var_6]
+		cmp	di, [bp+@@enemy_count]
 		jl	short loc_13D62
 		inc	[bp+@@formation_i]
 		jmp	short loc_13D41
@@ -16239,10 +16240,8 @@ sub_13D9C	endp
 sub_13DF9	proc far
 		push	bp
 		mov	bp, sp
-		push	word_1F522
-		call	hmem_free
-		push	word_1F554
-		call	hmem_free
+		call	hmem_free pascal, _enedat
+		call	hmem_free pascal, _formation_scripts
 		call	hmem_free pascal, _formation_type_ring
 		call	hmem_free pascal, _formation_pos_type_ring
 		pop	bp
@@ -16447,7 +16446,7 @@ var_2		= word ptr -2
 		shl	ax, 7
 		add	ax, offset _players
 		mov	[bp+@@player], ax
-		mov	es, word_1F51E
+		mov	es, _enedat_2
 		mov	ax, [di+0Eh]
 		mov	[bp+var_6], ax
 		mov	ax, [di+0Ah]
@@ -32986,22 +32985,24 @@ include th02/math/randring[bss].asm
 word_1F51A	dw ?
 byte_1F51C	db ?
 byte_1F51D	db ?
-word_1F51E	dw ?
+
+public _enedat_2, _enedat
+_enedat_2	dw ?
 byte_1F520	db ?
-		db ?
-word_1F522	dw ?
+	evendata
+_enedat	dw ?
 
 FORMATION_RING_SIZE = 256
+FORMATIONS_MAX = 24
 
-public _formation_type_ring, _formation_pos_type_ring, _formation_p
-public _formation_count
-
-		db 48 dup(?)
-word_1F554	dw ?
-_formation_type_ring	dw ?
+public _formation_enemy_count, _formation_scripts, _formation_type_ring
+public _formation_pos_type_ring, _formation_p, _formation_count
+_formation_enemy_count  	db (FORMATIONS_MAX * 2) dup(?)
+_formation_scripts      	dw ?
+_formation_type_ring    	dw ?
 _formation_pos_type_ring	dw ?
-_formation_p	db PLAYER_COUNT dup(?)
-_formation_count	db ?
+_formation_p            	db PLAYER_COUNT dup(?)
+_formation_count        	db ?
 
 		db 779 dup(?)
 word_1F868	dw ?
