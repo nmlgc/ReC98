@@ -961,12 +961,12 @@ var_6		= dword	ptr -6
 
 loc_9EF4:
 		mov	bx, di
-		imul	bx, 30h
-		mov	byte ptr [bx+3ED6h], 0
+		imul	bx, size efe_t
+		mov	_efes[bx+efe_t.EFE_flag], EFF_FREE
 		inc	di
 
 loc_9EFF:
-		cmp	di, 40h
+		cmp	di, EFE_COUNT
 		jl	short loc_9EF4
 		xor	di, di
 		jmp	short loc_9F1D
@@ -7346,18 +7346,18 @@ loc_E31F:
 loc_E326:
 		cmp	ax, SHOTPAIR_COUNT
 		jl	short loc_E31F
-		mov	di, 3ED6h
+		mov	di, offset _efes
 		xor	ax, ax
 		jmp	short loc_E339
 ; ---------------------------------------------------------------------------
 
 loc_E332:
-		mov	byte ptr [di], 0
+		mov	[di+efe_t.EFE_flag], EFF_FREE
 		inc	ax
-		add	di, 30h	; '0'
+		add	di, size efe_t
 
 loc_E339:
-		cmp	ax, 40h
+		cmp	ax, EFE_COUNT
 		jl	short loc_E332
 		mov	_round_frame, 0
 		mov	_round_or_result_frame, 0
@@ -16257,7 +16257,7 @@ sub_13E22	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, word_2203C
+		mov	si, _efe_p
 		mov	cx, [si+10h]
 		mov	al, _enemy_speed
 		mov	ah, 0
@@ -16339,14 +16339,14 @@ sub_13EA8	proc near
 		mov	bp, sp
 		push	es
 		push	ds
-		mov	ax, word_2203C
+		mov	ax, _efe_p
 		add	ax, 10h
 		push	ax
 		push	ds
-		mov	ax, word_2203C
+		mov	ax, _efe_p
 		add	ax, 12h
 		push	ax
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		push	word ptr [bx+19h]
 		mov	al, [bx+1Fh]
 		mov	ah, 0
@@ -16365,7 +16365,7 @@ sub_13EA8	endp
 sub_13ED1	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+1Ah]
 		cbw
 		shl	ax, 9
@@ -16380,7 +16380,7 @@ sub_13ED1	proc near
 		cwd
 		idiv	bx
 		add	cx, ax
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		add	[bx+18h], cx
 		pop	bp
 		retn
@@ -16439,7 +16439,7 @@ var_2		= word ptr -2
 		enter	0Eh, 0
 		push	si
 		push	di
-		mov	di, word_2203C
+		mov	di, _efe_p
 		mov	al, [di+8]
 		mov	[bp+var_B], al
 		mov	ah, 0
@@ -20246,13 +20246,13 @@ var_5		= byte ptr -5
 
 		enter	6, 0
 		push	si
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+6]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	si, [bx+82Ch]
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+7]
 		mov	ah, 0
 		mov	dl, [bx+6]
@@ -20275,7 +20275,7 @@ var_5		= byte ptr -5
 		mov	dh, 0
 		sub	ax, dx
 		mov	[bp+@@left], ax
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+4]
 		sar	ax, 4
 		add	ax, 16
@@ -20297,7 +20297,7 @@ sub_15F2A	endp
 sub_15F9D	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 0Ah
 		jnz	short loc_15FB6
 		mov	byte ptr [bx], 0Ah
@@ -20307,7 +20307,7 @@ sub_15F9D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_15FB6:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 20h ; ' '
 		jnz	short loc_15FC5
 		mov	byte ptr [bx], 9
@@ -20316,7 +20316,7 @@ loc_15FB6:
 ; ---------------------------------------------------------------------------
 
 loc_15FC5:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 24h ; '$'
 		jb	short loc_15FD2
 		mov	byte ptr [bx], 0
@@ -20340,7 +20340,7 @@ var_1		= byte ptr -1
 		enter	6, 0
 		push	si
 		push	di
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 0Ah
 		jnb	short loc_15FF4
 		mov	al, [bx+6]
@@ -20352,7 +20352,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_15FF4:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 20h ; ' '
 		jnb	short loc_1602C
 		mov	al, [bx+1]
@@ -20361,7 +20361,7 @@ loc_15FF4:
 		cwd
 		idiv	bx
 		mov	[bp+var_1], al
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+6]
 		mov	ah, 0
 		shl	ax, 3
@@ -20376,7 +20376,7 @@ loc_15FF4:
 ; ---------------------------------------------------------------------------
 
 loc_1602C:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 24h ; '$'
 		jnb	short loc_16044
 		mov	al, [bx+6]
@@ -20386,7 +20386,7 @@ loc_1602C:
 		mov	di, [bx+834h]
 
 loc_16044:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+9]
 		mov	ah, 0
 		add	ax, 16
@@ -20401,7 +20401,7 @@ loc_16044:
 		sar	ax, 1
 		mov	_sprite16_put_h, ax
 		sar	si, 1
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		push	word ptr [bx+2]	; x
 		mov	al, [bx+8]
 		mov	ah, 0
@@ -20409,7 +20409,7 @@ loc_16044:
 		call	@playfield_fg_x_to_screen$qii
 		sub	ax, si
 		mov	[bp+@@left], ax
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+4]
 		sar	ax, 4
 		add	ax, 16
@@ -20432,7 +20432,7 @@ sub_1609E	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	word_2203C, 3ED6h
+		mov	_efe_p, 3ED6h
 		mov	_enemies_alive[0], 0
 		mov	_enemies_alive[1], 0
 		xor	si, si
@@ -20440,10 +20440,10 @@ sub_1609E	proc far
 ; ---------------------------------------------------------------------------
 
 loc_160B7:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 0
 		jz	short loc_16123
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		inc	byte ptr [bx+1]
 		cmp	byte ptr [bx], 9
 		jb	short loc_160D1
@@ -20455,12 +20455,12 @@ loc_160D1:
 		call	sub_13F2C
 		or	al, al
 		jnz	short loc_16123
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+8]
 		mov	ah, 0
 		mov	bx, ax
 		inc	_enemies_alive[bx]
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 1
 		jnz	short loc_16123
 		mov	al, [bx+9]
@@ -20470,7 +20470,7 @@ loc_160D1:
 		cwd
 		idiv	bx
 		mov	di, ax
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+2]
 		mov	_collmap_center.x, ax
 		mov	ax, [bx+4]
@@ -20483,7 +20483,7 @@ loc_160D1:
 
 loc_16123:
 		inc	si
-		add	word_2203C, 30h	; '0'
+		add	_efe_p, 30h	; '0'
 
 loc_16129:
 		cmp	si, 28h	; '('
@@ -20510,10 +20510,10 @@ sub_1615D	proc near
 
 		enter	6, 0
 		push	si
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	word ptr [bx+4], 0
 		jle	loc_164AA
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+9], 10h
 		jz	short loc_16184
 		mov	al, [bx+9]
@@ -20527,14 +20527,14 @@ loc_16184:
 		mov	si, (10 shl 4)
 
 loc_16187:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+8]
 		mov	[bp+@@pid], al
 		mov	ah, 0
 		mov	bx, ax
 		cmp	_damage_all_on[bx], 0
 		jz	short loc_16212
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	byte ptr [bx+7], 0
 		mov	byte ptr [bx], 9
 		mov	al, [bp+@@pid]
@@ -20542,7 +20542,7 @@ loc_16187:
 		mov	bx, ax
 		mov	al, _chain_ring_p[bx]
 		mov	[bp+@@chain_slot], al
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -20577,7 +20577,7 @@ loc_16187:
 ; ---------------------------------------------------------------------------
 
 loc_16212:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+2]
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [bx+4]
@@ -20591,14 +20591,14 @@ loc_16212:
 		nopcall	sub_158F5
 		or	al, al
 		jz	loc_164AA
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+7], 0
 		jz	short loc_16257
 		cmp	byte_26356, 0
 		jz	loc_1649B
 
 loc_16257:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	byte ptr [bx], 9
 		mov	byte_220C3, 1
 		cmp	byte_2203B, 0
@@ -20608,7 +20608,7 @@ loc_16257:
 		mov	bx, ax
 		mov	al, _chain_ring_p[bx]
 		mov	[bp+@@chain_slot], al
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -20646,7 +20646,7 @@ loc_162D5:
 		call	gauge_avail_add pascal, word ptr [bp+@@pid], 32
 		mov	al, chain_slot_220C2
 		mov	[bp+@@chain_slot], al
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -20682,7 +20682,7 @@ loc_1630B:
 		push	ax
 		push	word ptr [bp+@@pid]
 		call	sub_165B5
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+2]
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bx+4]
@@ -20813,11 +20813,11 @@ loc_1646E:
 		push	ax
 		call	sub_1816D
 		push	word ptr [bp+@@pid]
-		push	word_2203C
+		push	_efe_p
 		call	sub_1654E
 
 loc_16484:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+6]
 		mov	ah, 0
 		imul	ax, 10
@@ -20826,11 +20826,11 @@ loc_16484:
 ; ---------------------------------------------------------------------------
 
 loc_1649B:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		dec	byte ptr [bx+7]
 
 loc_164A2:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	byte ptr [bx+1], 0
 
 loc_164AA:
@@ -20853,20 +20853,20 @@ sub_164AD	proc near
 		mov	bp, sp
 		push	si
 		mov	_explosion_hittest_against, EHA_ENEMY
-		mov	word_2203C, 4626h
+		mov	_efe_p, 4626h
 		mov	si, 27h	; '''
 		jmp	short loc_164D3
 ; ---------------------------------------------------------------------------
 
 loc_164C1:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 1
 		jnz	short loc_164CD
 		call	sub_1615D
 
 loc_164CD:
 		dec	si
-		sub	word_2203C, 30h	; '0'
+		sub	_efe_p, 30h	; '0'
 
 loc_164D3:
 		or	si, si
@@ -20886,13 +20886,13 @@ sub_164DA	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	word_2203C, 3ED6h
+		mov	_efe_p, 3ED6h
 		xor	di, di
 		jmp	short loc_16545
 ; ---------------------------------------------------------------------------
 
 loc_164E9:
-		mov	si, word_2203C
+		mov	si, _efe_p
 		cmp	byte ptr [si], 0
 		jz	short loc_1653F
 		cmp	byte ptr [si], 3
@@ -20932,7 +20932,7 @@ loc_1653C:
 
 loc_1653F:
 		inc	di
-		add	word_2203C, 30h	; '0'
+		add	_efe_p, 30h	; '0'
 
 loc_16545:
 		cmp	di, 28h	; '('
@@ -20984,13 +20984,13 @@ arg_2		= byte ptr  6
 		add	ax, dx
 		mov	bx, ax
 		mov	byte ptr [bx+4B1Eh], 0
-		mov	ax, word_2203C
+		mov	ax, _efe_p
 		mov	[bp+var_2], ax
 		mov	ax, [bp+arg_0]
-		mov	word_2203C, ax
+		mov	_efe_p, ax
 		nopcall	sub_17DAE
 		mov	ax, [bp+var_2]
-		mov	word_2203C, ax
+		mov	_efe_p, ax
 
 locret_165B1:
 		leave
@@ -21162,7 +21162,7 @@ var_C		= word ptr -0Ch
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@i	= word ptr -2
 
 		enter	0Eh, 0
 		push	si
@@ -21181,42 +21181,42 @@ loc_16725:
 		mov	[bp+var_E], al
 
 loc_16730:
-		mov	si, 3ED6h
+		mov	si, offset _efes
 		mov	byte_2203B, 0
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	loc_16974
 ; ---------------------------------------------------------------------------
 
 loc_16740:
-		cmp	byte ptr [si], 9
+		cmp	[si+efe_t.EFE_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jb	loc_1696E
 		cmp	_explosion_hittest_against, EHA_ENEMY
 		jnz	short loc_16769
-		cmp	byte ptr [si], 9
+		cmp	[si+efe_t.EFE_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jz	loc_1696E
-		mov	al, [si]
+		mov	al, [si+efe_t.EFE_flag]
 		mov	ah, 0
-		mov	dl, [si+6]
+		mov	dl, [si+efe_t.EFE_explosion_max_enemy_hits_half]
 		mov	dh, 0
 		add	dx, dx
-		add	dx, 0Ah
+		add	dx, EFF_EXPLOSION_HITTING_ENEMIES
 		cmp	ax, dx
 		jge	loc_1696E
 
 loc_16769:
-		mov	al, [si+8]
+		mov	al, [si+efe_t.EFE_pid]
 		cmp	al, _hitbox_pid
 		jnz	loc_1696E
-		test	byte ptr [si+1], 3
+		test	[si+efe_t.EFE_frame], 3
 		jnz	loc_1696E
-		mov	al, [si+9]
+		mov	al, [si+efe_t.EFE_size_pixels]
 		mov	ah, 0
 		imul	ax, 6
 		mov	[bp+var_8], ax
-		mov	ax, [si+2]
+		mov	ax, [si+efe_t.EFE_center.x]
 		sub	ax, [bp+var_8]
 		mov	[bp+var_4], ax
-		mov	ax, [si+4]
+		mov	ax, [si+efe_t.EFE_center.y]
 		sub	ax, [bp+var_8]
 		mov	[bp+var_6], ax
 		mov	ax, _hitbox_right
@@ -21235,11 +21235,11 @@ loc_16769:
 		mov	ax, _hitbox_origin_topleft.y
 		cmp	ax, [bp+var_6]
 		jg	loc_1696E
-		mov	al, [si+1Ch]
+		mov	al, [si+efe_t.EFE_chain_slot]
 		mov	chain_slot_220C2, al
 		cmp	_explosion_hittest_against, EHA_ENEMY
 		jnz	short loc_167DF
-		inc	byte ptr [si]
+		inc	[si+efe_t.EFE_flag]
 		jmp	loc_16966
 ; ---------------------------------------------------------------------------
 
@@ -21425,11 +21425,11 @@ loc_16966:
 		mov	byte_2203B, 1
 
 loc_1696E:
-		inc	[bp+var_2]
-		add	si, 30h	; '0'
+		inc	[bp+@@i]
+		add	si, size efe_t
 
 loc_16974:
-		cmp	[bp+var_2], 40h
+		cmp	[bp+@@i], EFE_COUNT
 		jl	loc_16740
 		mov	al, byte ptr [bp+var_C]
 		pop	di
@@ -21488,7 +21488,7 @@ loc_169B4:
 		cmp	[si+1Eh], dl
 		jnb	short loc_169EB
 		mov	dl, [si+1Eh]
-		mov	word_2203C, si
+		mov	_efe_p, si
 		or	dl, dl
 		jz	short loc_169F4
 
@@ -21510,7 +21510,7 @@ loc_169F4:
 ; ---------------------------------------------------------------------------
 
 loc_16A0C:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+2]
 		add	ax, 0FF00h
 		mov	word_2142E, ax
@@ -22682,7 +22682,7 @@ var_4		= word ptr -4
 		enter	8, 0
 		push	si
 		push	di
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	di, [bx+2]
 		mov	ax, [bx+4]
 		mov	[bp+var_6], ax
@@ -22701,7 +22701,7 @@ loc_17DD4:
 		mov	[si+2],	di
 		mov	ax, [bp+var_6]
 		mov	[si+4],	ax
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+8]
 		mov	[si+8],	al
 		push	1Fh
@@ -22846,7 +22846,7 @@ var_5		= byte ptr -5
 		enter	6, 0
 		push	si
 		push	di
-		mov	si, word_2203C
+		mov	si, _efe_p
 		mov	al, [si+1]
 		and	al, 7
 		mov	[bp+var_6], al
@@ -22917,7 +22917,7 @@ sub_17EF7	endp
 sub_17F9F	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 0Eh
 		jnz	short loc_17FB1
 		mov	byte ptr [bx], 0Ah
@@ -22926,7 +22926,7 @@ sub_17F9F	proc near
 ; ---------------------------------------------------------------------------
 
 loc_17FB1:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 20h ; ' '
 		jnz	short loc_17FC0
 		mov	byte ptr [bx], 9
@@ -22935,7 +22935,7 @@ loc_17FB1:
 ; ---------------------------------------------------------------------------
 
 loc_17FC0:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 24h ; '$'
 		jb	short loc_17FCD
 		mov	byte ptr [bx], 0
@@ -22958,7 +22958,7 @@ var_1		= byte ptr -1
 
 		enter	6, 0
 		push	si
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 0Ch
 		jnb	short loc_17FE4
 		mov	si, word_1DDA6
@@ -22966,7 +22966,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_17FE4:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 20h ; ' '
 		jnb	short loc_1800B
 		mov	al, [bx+1]
@@ -22984,7 +22984,7 @@ loc_17FE4:
 ; ---------------------------------------------------------------------------
 
 loc_1800B:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+1], 24h ; '$'
 		jnb	short loc_18019
 		mov	si, word_1DDAC
@@ -22992,7 +22992,7 @@ loc_1800B:
 loc_18019:
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 32
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		push	word ptr [bx+2]	; x
 		mov	al, [bx+8]
 		mov	ah, 0
@@ -23000,7 +23000,7 @@ loc_18019:
 		call	@playfield_fg_x_to_screen$qii
 		add	ax, -32
 		mov	[bp+@@left], ax
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+4]
 		sar	ax, 4
 		add	ax, -8
@@ -23023,16 +23023,16 @@ sub_18059	proc far
 		push	di
 		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
 		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
-		mov	word_2203C, 4656h
+		mov	_efe_p, 4656h
 		xor	di, di
 		jmp	loc_18162
 ; ---------------------------------------------------------------------------
 
 loc_18075:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 0
 		jz	loc_1815C
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		inc	byte ptr [bx+1]
 		cmp	byte ptr [bx], 9
 		jb	short loc_18092
@@ -23041,7 +23041,7 @@ loc_18075:
 ; ---------------------------------------------------------------------------
 
 loc_18092:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 1
 		jnz	short loc_18100
 		mov	si, [bx+2]
@@ -23057,19 +23057,19 @@ loc_18092:
 		jl	short loc_180C5
 
 loc_180BB:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	byte ptr [bx], 0
 		jmp	loc_1815C
 ; ---------------------------------------------------------------------------
 
 loc_180C5:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	[bx+2],	si
 		mov	si, [bx+4]
 		add	si, [bx+12h]
 		cmp	si, 1800h
 		jge	short loc_180BB
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	[bx+4],	si
 		cmp	byte ptr [bx], 1
 		jnz	short loc_1815C
@@ -23085,7 +23085,7 @@ loc_180C5:
 ; ---------------------------------------------------------------------------
 
 loc_18100:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 2
 		jnz	short loc_1815C
 		mov	si, [bx+2]
@@ -23096,7 +23096,7 @@ loc_18100:
 		jg	short loc_1814C
 
 loc_1811A:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	ax, [bx+14h]
 		mov	[bx+2],	ax
 		mov	word ptr [bx+4], 0
@@ -23112,12 +23112,12 @@ loc_1811A:
 ; ---------------------------------------------------------------------------
 
 loc_18143:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	[bx+16h], si
 		jge	short loc_1811A
 
 loc_1814C:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	[bx+2],	si
 		mov	si, [bx+4]
 		add	si, [bx+12h]
@@ -23125,7 +23125,7 @@ loc_1814C:
 
 loc_1815C:
 		inc	di
-		add	word_2203C, 30h	; '0'
+		add	_efe_p, 30h	; '0'
 
 loc_18162:
 		cmp	di, 18h
@@ -23173,7 +23173,7 @@ arg_2		= word ptr  6
 		shl	ax, 4
 		mov	bx, ax
 		mov	byte ptr [bx+si+4B3Eh],	0
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		push	word ptr [bx+2]
 		push	word ptr [bx+4]
 		push	[bp+arg_2]
@@ -23199,17 +23199,17 @@ var_1		= byte ptr -1
 		push	si
 		mov	_hitbox_radius.x, (12 shl 4)
 		mov	_hitbox_radius.y, (10 shl 4)
-		mov	word_2203C, 4AA6h
+		mov	_efe_p, 4AA6h
 		mov	_variant, FV_RED
 		mov	si, 3Fh	; '?'
 		jmp	loc_1836D
 ; ---------------------------------------------------------------------------
 
 loc_181E5:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 1
 		jnz	loc_18367
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+6]
 		mov	_explosion_hittest_against, al
 		mov	al, [bx+8]
@@ -23224,7 +23224,7 @@ loc_181E5:
 		nopcall	sub_158F5
 		or	al, al
 		jz	loc_18367
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx+7], 0
 		jz	short loc_1823A
 		cmp	byte_2203B, 0
@@ -23233,7 +23233,7 @@ loc_181E5:
 		jz	loc_18353
 
 loc_1823A:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	al, [bx+20h]
 		mov	byte_26358, al
 		cmp	byte_2203B, 0
@@ -23283,7 +23283,7 @@ loc_18275:
 		add	ax, dx
 		mov	bx, ax
 		mov	byte ptr [bx+4B3Eh], 0
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		push	word ptr [bx+2]
 		push	word ptr [bx+4]
 		push	word ptr [bp+@@pid]
@@ -23319,7 +23319,7 @@ loc_182D6:
 		add	dx, bx
 		mov	bx, dx
 		mov	[bx+4B3Eh], al
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	byte ptr [bx], 0
 		push	word ptr [bp+@@pid]
 		mov	al, [bp+@@pid]
@@ -23345,17 +23345,17 @@ loc_18345:
 ; ---------------------------------------------------------------------------
 
 loc_18353:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		dec	byte ptr [bx+7]
 
 loc_1835A:
 		mov	byte_26357, 1
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		mov	byte ptr [bx+1], 0
 
 loc_18367:
 		dec	si
-		sub	word_2203C, 30h	; '0'
+		sub	_efe_p, 30h	; '0'
 
 loc_1836D:
 		cmp	si, 28h	; '('
@@ -23378,16 +23378,16 @@ sub_1837C	proc far
 		call	sub_181C3
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	word_2203C, 4656h
+		mov	_efe_p, 4656h
 		xor	si, si
 		jmp	short loc_183B9
 ; ---------------------------------------------------------------------------
 
 loc_18399:
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 0
 		jz	short loc_183B3
-		mov	bx, word_2203C
+		mov	bx, _efe_p
 		cmp	byte ptr [bx], 9
 		jnb	short loc_183B0
 		call	sub_17EF7
@@ -23399,7 +23399,7 @@ loc_183B0:
 
 loc_183B3:
 		inc	si
-		add	word_2203C, 30h	; '0'
+		add	_efe_p, 30h	; '0'
 
 loc_183B9:
 		cmp	si, 18h
@@ -33197,21 +33197,28 @@ word_2142E	dw ?
 word_21430	dw ?
 		db 2 dup(?)
 word_21434	dw ?
-		db 298 dup(?)
-word_21560	dw ?
-word_21562	dw ?
-dword_21564	dd ?
-word_21568	dw ?
-word_2156A	dw ?
-		db 256 dup(?)
-byte_2166C	db ?
+
+EFF_FREE = 0
+EFF_EXPLOSION_IGNORING_ENEMIES = 9
+EFF_EXPLOSION_HITTING_ENEMIES = 10
+
+efe_t struct
+	EFE_flag                         	db ?
+	EFE_frame                        	db ?
+	EFE_center                       	Point <?>
+	EFE_explosion_max_enemy_hits_half	db ?
 		db ?
-word_2166E	dw ?
-word_21670	dw ?
-byte_21672	db ?
-byte_21673	db ?
-		db 2498 dup(?)
-public _enemies_alive
+	EFE_pid                          	db ?
+	EFE_size_pixels                  	db ?
+		db 18 dup (?)
+	EFE_chain_slot                   	db ?
+		db 19 dup(?)
+efe_t ends
+
+EFE_COUNT = 64
+
+public _efes, _enemies_alive, _efe_p
+_efes	efe_t EFE_COUNT dup(<?>)
 _enemies_alive	db PLAYER_COUNT dup(?)
 		db 2 dup(?)
 
@@ -33219,7 +33226,7 @@ public _explosion_hittest_against
 _explosion_hittest_against	db ?
 
 byte_2203B	db ?
-word_2203C	dw ?
+_efe_p	dw ?
 
 CHAIN_RING_SIZE = 16
 
