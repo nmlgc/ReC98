@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, BULLET_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, E_ENEMY_TEXT, BULLET_TEXT, main_04__TEXT
 
 ; ===========================================================================
 
@@ -15970,7 +15970,7 @@ COLLMAP_TEXT	segment byte public 'CODE' use16
 	extern @collmap_set_slope_striped$qv:proc
 COLLMAP_TEXT	ends
 
-PELLET_PUT segment byte public 'CODE' use16
+E_ENEMY_TEXT segment byte public 'CODE' use16
 
 EPT_CLIP_X = 01h
 EPT_CLIP_BOTTOM = 02h
@@ -15982,17 +15982,17 @@ EPT_DO_NOT_MIRROR_X = 80h
 
 sub_13C1E	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@pos_type	= word ptr  4
+@@pid	= word ptr  6
+@@formation_type	= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@formation_type]
 		shl	ax, 4
 		mov	si, ax
-		mov	al, byte ptr [bp+arg_4]
+		mov	al, byte ptr [bp+@@formation_type]
 		mov	_enemy_formation_type, al
 		mov	_enemy_formation_i, 0
 		jmp	short loc_13C52
@@ -16003,14 +16003,14 @@ loc_13C37:
 		add	bx, bx
 		mov	es, _formation_scripts
 		push	word ptr es:[bx]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	sub_15EDB
+		push	[bp+@@pid]
+		push	[bp+@@pos_type]
+		nopcall	@enemies_add$qpucucuc
 		inc	_enemy_formation_i
 		inc	si
 
 loc_13C52:
-		mov	bx, [bp+arg_4]
+		mov	bx, [bp+@@formation_type]
 		mov	al, _formation_enemy_count[bx]
 		cmp	al, _enemy_formation_i
 		ja	short loc_13C37
@@ -16027,15 +16027,15 @@ sub_13C1E	endp
 sub_13C64	proc near
 
 var_1		= byte ptr -1
-arg_0		= word ptr  4
+@@pid	= word ptr  4
 
 		enter	2, 0
-		mov	al, byte ptr [bp+arg_0]
+		mov	al, byte ptr [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
 		cmp	_enemies_alive[bx], 0
 		jnz	short locret_13CC3
-		mov	al, byte ptr [bp+arg_0]
+		mov	al, byte ptr [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, _formation_p[bx]
@@ -16052,16 +16052,16 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		mov	al, es:[bx]
 		mov	ah, 0
-		push	ax
-		push	[bp+arg_0]
+		push	ax	; formation_type
+		push	[bp+@@pid]	; pid
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	es, _formation_pos_type_ring
 		mov	bx, ax
 		mov	al, es:[bx]
-		push	ax
+		push	ax	; pos_type
 		call	sub_13C1E
-		mov	al, byte ptr [bp+arg_0]
+		mov	al, byte ptr [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
 		inc	_formation_p[bx]
@@ -16081,10 +16081,8 @@ sub_13CC7	proc far
 		mov	bp, sp
 		cmp	_hud_start_flag, HSF_DONE
 		jnz	short loc_13CDB
-		push	0
-		call	sub_13C64
-		push	1
-		call	sub_13C64
+		call	sub_13C64 pascal, 0
+		call	sub_13C64 pascal, 1
 
 loc_13CDB:
 		pop	bp
@@ -20178,59 +20176,10 @@ loc_15E45:
 @combos_update_and_render$qv endp
 
 include th03/main/player/gauge_avail_add.asm
+E_ENEMY_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15EDB	proc far
-
-@@pos_type   	= byte ptr  6
-@@pid        	= byte ptr  8
-@@script_base	= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, offset enemies
-		xor	dx, dx
-		jmp	short loc_15F20
-; ---------------------------------------------------------------------------
-
-loc_15EE6:
-		cmp	[si+enemy_t.ENEMY_flag], EFF_FREE
-		jnz	short loc_15F1C
-		mov	[si+enemy_t.ENEMY_flag], EF_RUNNING_UNSPAWNED
-		mov	[si+enemy_t.ENEMY_script_ip], 0
-		mov	[si+enemy_t.ENEMY_script_op_frame], 0
-		mov	[si+enemy_t.ENEMY_loop_i], 0
-		mov	ax, [bp+@@script_base]
-		mov	[si+enemy_t.ENEMY_script_base], ax
-		mov	al, [bp+@@pid]
-		mov	[si+enemy_t.ENEMY_pid], al
-		mov	al, _enemy_formation_type
-		mov	[si+enemy_t.ENEMY_formation_type], al
-		mov	al, _enemy_formation_i
-		mov	[si+enemy_t.ENEMY_formation_i], al
-		mov	al, [bp+@@pos_type]
-		mov	[si+enemy_t.ENEMY_pos_type], al
-		jmp	short loc_15F25
-; ---------------------------------------------------------------------------
-
-loc_15F1C:
-		inc	dx
-		add	si, size efe_t
-
-loc_15F20:
-		cmp	dx, ENEMY_COUNT
-		jl	short loc_15EE6
-
-loc_15F25:
-		pop	si
-		pop	bp
-		retf	6
-sub_15EDB	endp
-
+PELLET_PUT segment byte public 'CODE' use16
+	extern @ENEMIES_ADD$QPUCUCUC:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 

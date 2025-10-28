@@ -655,6 +655,7 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th03/inp_m_w.cpp",
 	"th03/collmap.asm",
 	"th03/bullet.cpp",
+	"th03/e_enemy.cpp",
 	"th03/hfliplut.asm",
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",

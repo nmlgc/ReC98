@@ -119,3 +119,25 @@ extern enemy_pos_type_t __seg *formation_pos_type_ring;
 extern uint8_t formation_p[PLAYER_COUNT];
 extern uint8_t formation_count;
 // -----
+
+void pascal enemies_add(
+	uint8_t near *script_base, pid_t pid, enemy_pos_type_t pos_type
+)
+{
+	enemy_t near *p = enemies;
+	for(int i = 0; i < ENEMY_COUNT; (i++, p++)) {
+		if(p->flag != EFF_FREE) {
+			continue;
+		}
+		p->flag = EF_RUNNING_UNSPAWNED;
+		p->script_ip = 0;
+		p->script_op_frame = 0;
+		p->loop_i = 0;
+		p->script_base = script_base;
+		p->pid = pid;
+		p->formation_type = enemy_formation_type;
+		p->formation_i = enemy_formation_i;
+		p->pos_type = pos_type;
+		break;
+	}
+}
