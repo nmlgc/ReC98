@@ -141,3 +141,24 @@ void pascal enemies_add(
 		break;
 	}
 }
+
+#define p (efe_p.enemy)
+
+void near enemy_put(void)
+{
+	sprite16_offset_t so = SO_ENEMIES[p->size_words() - 1];
+
+	// Should use `p->size_words()` rather than the ugly underlying field, but
+	// can't due to code generation issues. Doesn't really count as bloat
+	// though, since `size_words()` was definitely our abstraction.
+	so -= (p->hp * p->explosion_max_enemy_hits_half * (16 / BYTE_DOTS));
+
+	screen_x_t left;
+	screen_y_t top;
+	pixel_length_8_t size_half = (p->size_pixels / 2);
+	left = (playfield_fg_x_to_screen(p->center.x, p->pid) - size_half);
+	top  = (playfield_fg_y_to_screen(p->center.y, p->pid) - size_half);
+	sprite16_put(left, top, so);
+}
+
+#undef p

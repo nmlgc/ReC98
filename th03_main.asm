@@ -20180,62 +20180,7 @@ E_ENEMY_TEXT ends
 
 PELLET_PUT segment byte public 'CODE' use16
 	extern @ENEMIES_ADD$QPUCUCUC:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15F2A	proc near
-
-var_5		= byte ptr -5
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_size_words]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	si, (_SO_ENEMIES - word)[bx]
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_hp]
-		mov	ah, 0
-		mov	dl, [bx+enemy_t.ENEMY_size_words]
-		mov	dh, 0
-		imul	dx
-		add	ax, ax
-		sub	si, ax
-		mov	al, [bx+enemy_t.ENEMY_size_pixels]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[bp+var_5], al
-		push	[bx+enemy_t.ENEMY_center.x]	; x
-		mov	al, [bx+enemy_t.ENEMY_pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@left], ax
-		mov	bx, _efe_p
-		mov	ax, [bx+enemy_t.ENEMY_center.y]
-		sar	ax, 4
-		add	ax, 16
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, si
-		pop	si
-		leave
-		retn
-sub_15F2A	endp
-
+	@enemy_put$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20871,7 +20816,7 @@ loc_16526:
 loc_16532:
 		cmp	[si+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
 		jnz	short loc_1653C
-		call	sub_15F2A
+		call	@enemy_put$qv
 		jmp	short loc_1653F
 ; ---------------------------------------------------------------------------
 
