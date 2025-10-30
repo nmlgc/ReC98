@@ -1,4 +1,5 @@
 #include "th03/main/enemy/efe.hpp"
+#include "th03/sprites/main_s16.hpp"
 
 // Position flags
 // --------------
@@ -86,6 +87,8 @@ static const int FORMATION_RING_SIZE = 256;
 // Arbitrary limitations to avoid more precise buffer size calculations.
 static const int FORMATION_ENEMIES_MAX = 16;
 static const int FORMATIONS_MAX = 24;
+
+extern const sprite16_offset_t SO_ENEMIES[];
 // ---------
 
 // State

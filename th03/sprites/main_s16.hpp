@@ -2,6 +2,8 @@
 
 #include "th03/main/sprite16.hpp"
 
+static const int EXPLOSION_CELS = 4;
+
 #define XY(x, y) ((y * ROW_SIZE) + (x / BYTE_DOTS))
 
 static const pixel_t PELLET_CLOUD_W = 32;
@@ -22,3 +24,5 @@ static const sprite16_offset_t SO_BULLET16 = XY(64, 0);
 static const sprite16_offset_t SO_HITCIRCLE = XY(128, 80);
 
 static const sprite16_offset_t SO_PELLET_CLOUD = XY(528, 80);
+
+extern const sprite16_offset_t SO_EXPLOSIONS[][EXPLOSION_CELS];

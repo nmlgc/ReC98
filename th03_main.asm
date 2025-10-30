@@ -20249,7 +20249,7 @@ var_5		= byte ptr -5
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	si, [bx+82Ch]
+		mov	si, (_SO_ENEMIES - word)[bx]
 		mov	bx, _efe_p
 		mov	al, [bx+enemy_t.ENEMY_hp]
 		mov	ah, 0
@@ -20345,7 +20345,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		shl	ax, 3
 		mov	bx, ax
-		mov	di, [bx+82Eh]
+		mov	di, (_SO_EXPLOSIONS - (EXPLOSION_CELS * word))[bx]
 		jmp	short loc_16044
 ; ---------------------------------------------------------------------------
 
@@ -20369,7 +20369,7 @@ loc_15FF4:
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		mov	di, [bx+830h]
+		mov	di, (_SO_EXPLOSIONS - (EXPLOSION_CELS * word) + (1 * word))[bx]
 		jmp	short loc_16044
 ; ---------------------------------------------------------------------------
 
@@ -20381,7 +20381,7 @@ loc_1602C:
 		mov	ah, 0
 		shl	ax, 3
 		mov	bx, ax
-		mov	di, [bx+834h]
+		mov	di, (_SO_EXPLOSIONS - (EXPLOSION_CELS * word) + (3 * word))[bx]
 
 loc_16044:
 		mov	bx, _efe_p
@@ -22960,7 +22960,7 @@ var_1		= byte ptr -1
 		mov	bx, _efe_p
 		cmp	[bx+fireball_t.FIREBALL_enemy], 12
 		jnb	short loc_17FE4
-		mov	si, word_1DDA6
+		mov	si, _SO_EXPLOSION_64X64
 		jmp	short loc_18019
 ; ---------------------------------------------------------------------------
 
@@ -22978,7 +22978,7 @@ loc_17FE4:
 		and	ax, 1
 		add	ax, ax
 		mov	bx, ax
-		mov	si, [bx+848h]
+		mov	si, (_SO_EXPLOSION_64X64 + (1 * word))[bx]
 		jmp	short loc_18019
 ; ---------------------------------------------------------------------------
 
@@ -22986,7 +22986,7 @@ loc_1800B:
 		mov	bx, _efe_p
 		cmp	[bx+fireball_t.FIREBALL_enemy], 36
 		jnb	short loc_18019
-		mov	si, word_1DDAC
+		mov	si, (_SO_EXPLOSION_64X64 + (3 * word))
 
 loc_18019:
 		mov	_sprite16_put_w, (64 / 16)
@@ -32784,47 +32784,41 @@ gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL db 8Dh, 8Eh, 8Fh, 92h, 93h, 94h, 95h
 asc_1DD5A	db '                                ',0
 		db 0
 include th03/main/player/combo[data].asm
-		db 0
-		db  86h
-		db  20h
-		db  0Ch
-		db  23h	; #
-		db 0A2h
-		db  20h
-		db  18h
-		db  28h	; (
-		db  20h
-		db  28h	; (
-		db  24h	; $
-		db  28h	; (
-		db  20h
-		db  2Dh	; -
-		db  24h	; $
-		db  2Dh	; -
-		db 0A8h	; ¨
-		db  20h
-		db  28h	; (
-		db  28h	; (
-		db 0A8h	; ¨
-		db  2Fh	; /
-		db 0AEh
-		db  34h	; 4
-word_1DDA6	dw 20AEh
-		db 0AEh
-		db  2Ah	; *
-		db 0B6h
-		db  20h
-word_1DDAC	dw 2AB6h
-		db    0
-		db  32h	; 2
-		db  0Ah
-		db  32h	; 2
-		db  14h
-		db  32h	; 2
-		db  1Eh
-		db  32h	; 2
+	evendata
+
+EXPLOSION_CELS = 4
+
+public _SO_ENEMIES, _SO_EXPLOSIONS
+label _SO_ENEMIES word
+	dw ((104 * ROW_SIZE) + ( 48 / BYTE_DOTS))	; 16x16
+	dw ((112 * ROW_SIZE) + ( 96 / BYTE_DOTS))	; 32x32
+	dw ((104 * ROW_SIZE) + (272 / BYTE_DOTS))	; 48x48
+	dw ((128 * ROW_SIZE) + (192 / BYTE_DOTS))	; 64x64
+label _SO_EXPLOSIONS word
+label _SO_EXPLOSION_32X32 word
+	dw ((128 * ROW_SIZE) + (256 / BYTE_DOTS))
+	dw ((128 * ROW_SIZE) + (288 / BYTE_DOTS))
+	dw ((144 * ROW_SIZE) + (256 / BYTE_DOTS))
+	dw ((144 * ROW_SIZE) + (288 / BYTE_DOTS))
+label _SO_EXPLOSION_48X48 word
+	dw ((104 * ROW_SIZE) + (320 / BYTE_DOTS))
+	dw ((128 * ROW_SIZE) + (320 / BYTE_DOTS))
+	dw ((152 * ROW_SIZE) + (320 / BYTE_DOTS))
+	dw ((168 * ROW_SIZE) + (368 / BYTE_DOTS))
+label _SO_EXPLOSION_64X64 word
+	dw ((104 * ROW_SIZE) + (368 / BYTE_DOTS))
+	dw ((136 * ROW_SIZE) + (368 / BYTE_DOTS))
+	dw ((104 * ROW_SIZE) + (432 / BYTE_DOTS))
+	dw ((136 * ROW_SIZE) + (432 / BYTE_DOTS))
+label _SO_EXPLOSION_80X80 word
+	dw ((160 * ROW_SIZE) + (  0 / BYTE_DOTS))
+	dw ((160 * ROW_SIZE) + ( 80 / BYTE_DOTS))
+	dw ((160 * ROW_SIZE) + (160 / BYTE_DOTS))
+	dw ((160 * ROW_SIZE) + (240 / BYTE_DOTS))
+
 public _chain_ring_p
 _chain_ring_p	db	PLAYER_COUNT dup(0)
+
 include th03/sprites/score.asp
 include th03/main/5_powers_of_10[data].asm
 		db  6Ch	; l
