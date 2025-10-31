@@ -20181,43 +20181,7 @@ E_ENEMY_TEXT ends
 PELLET_PUT segment byte public 'CODE' use16
 	extern @ENEMIES_ADD$QPUCUCUC:proc
 	@enemy_put$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15F9D	proc near
-		push	bp
-		mov	bp, sp
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_frame], 10
-		jnz	short loc_15FB6
-		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_HITTING_ENEMIES
-		call	snd_se_play pascal, 3
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_15FB6:
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_frame], 32
-		jnz	short loc_15FC5
-		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_15FC5:
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_frame], 36
-		jb	short loc_15FD2
-		mov	[bx+enemy_t.ENEMY_flag], EFF_FREE
-
-loc_15FD2:
-		pop	bp
-		retn
-sub_15F9D	endp
-
+	@enemy_explosion_flag_update$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20339,7 +20303,7 @@ loc_160B7:
 		inc	[bx+enemy_t.ENEMY_frame]
 		cmp	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jb	short loc_160D1
-		call	sub_15F9D
+		call	@enemy_explosion_flag_update$qv
 		jmp	short loc_16123
 ; ---------------------------------------------------------------------------
 

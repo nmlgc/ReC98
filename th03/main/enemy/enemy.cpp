@@ -1,4 +1,5 @@
 #include "th03/main/enemy/efe.hpp"
+#include "th03/snd/snd.h"
 #include "th03/sprites/main_s16.hpp"
 
 // Position flags
@@ -159,6 +160,24 @@ void near enemy_put(void)
 	left = (playfield_fg_x_to_screen(p->center.x, p->pid) - size_half);
 	top  = (playfield_fg_y_to_screen(p->center.y, p->pid) - size_half);
 	sprite16_put(left, top, so);
+}
+
+enum enemy_explosion_flag_keyframe_t {
+	KEYFRAME_HIT_ENEMIES = 10,
+	KEYFRAME_DECAY = 32,
+	KEYFRAME_DONE = 36,
+};
+
+void near enemy_explosion_flag_update(void)
+{
+	if(p->frame == KEYFRAME_HIT_ENEMIES) {
+		p->flag = EFF_EXPLOSION_HITTING_ENEMIES;
+		snd_se_play(3);
+	} else if(p->frame == KEYFRAME_DECAY) {
+		p->flag = EFF_EXPLOSION_IGNORING_ENEMIES;
+	} else if(p->frame >= KEYFRAME_DONE) {
+		p->flag = EFF_FREE;
+	}
 }
 
 #undef p
