@@ -1,4 +1,4 @@
-#include "platform.h"
+#include "th01/math/subpixel.hpp"
 
 // Round-relative frame counter. Resets to 0 when winning or losing.
 extern unsigned long round_frame;

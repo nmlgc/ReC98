@@ -468,9 +468,9 @@ loc_9A62:
 		mov	_round_frame_mod2, al
 		test	byte ptr _round_or_result_frame, 63
 		jnz	short loc_9AC9
-		cmp	byte_23AF8, 7Fh
+		cmp	_round_speed, (ROUND_SPEED_MAX - 1)
 		jnb	short loc_9A94
-		inc	byte_23AF8
+		inc	_round_speed
 
 loc_9A94:
 		test	_round_or_result_frame, 1023
@@ -725,7 +725,7 @@ loc_9C93:
 loc_9CAB:
 		mov	_demo_frame, 0
 		mov	fp_1E6EA, offset sub_9AD6
-		mov	byte_23AF8, 40h
+		mov	_round_speed, (4 shl 4)
 		mov	byte_23E3C, 0
 		mov	_gba_boss_level, 8
 		mov	_gba_gauge_level[0], 9
@@ -1084,7 +1084,7 @@ loc_9FFA:
 @@easy:
 		mov	al, byte_207E3
 		shl	al, 4
-		mov	byte_23AF8, al
+		mov	_round_speed, al
 		mov	byte_23E3C, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
@@ -1104,7 +1104,7 @@ loc_9FFA:
 @@normal:
 		mov	al, byte_207E3
 		shl	al, 5
-		mov	byte_23AF8, al
+		mov	_round_speed, al
 		mov	byte_23E3C, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
@@ -1120,8 +1120,8 @@ loc_9FFA:
 @@hard:
 		mov	al, byte_207E3
 		shl	al, 5
-		add	al, 20h	; ' '
-		mov	byte_23AF8, al
+		add	al, (2 shl 4)
+		mov	_round_speed, al
 		mov	byte_23E3C, 8
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
@@ -1143,7 +1143,7 @@ loc_A0A2:
 ; ---------------------------------------------------------------------------
 
 @@lunatic:
-		mov	byte_23AF8, 60h
+		mov	_round_speed, (6 shl 4)
 		mov	byte_23E3C, 18h
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
@@ -1164,9 +1164,9 @@ loc_A0E4:
 		mov	_gba_gauge_level[1], al
 
 loc_A0E7:
-		cmp	byte_23AF8, 80h
+		cmp	_round_speed, ROUND_SPEED_MAX
 		jb	short loc_A0F3
-		mov	byte_23AF8, 7Fh
+		mov	_round_speed, (ROUND_SPEED_MAX - 1)
 
 loc_A0F3:
 		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
@@ -16120,9 +16120,9 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		mov	al, [bx+1FFAh]
 		mov	[bp+var_1], al
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
-		mov	bx, 20h	; ' '
+		mov	bx, (2 shl 4)
 		cwd
 		idiv	bx
 		mov	byte_1F520, al
@@ -16486,7 +16486,7 @@ arg_0		= byte ptr  4
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		imul	bx
 		mov	bx, ax
@@ -20784,9 +20784,9 @@ loc_1630B:
 		mov	angle_23E43, 0
 		mov	al, [bp+@@pid]
 		mov	_pid_other, al
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
-		mov	bx, 20h	; ' '
+		mov	bx, (2 shl 4)
 		cwd
 		idiv	bx
 		mov	[bp+@@hitcombo_slot], al
@@ -21051,9 +21051,9 @@ arg_2		= byte ptr  6
 		mov	bx, ax
 		mov	al, [bx+4B1Eh]
 		mov	ah, 0
-		mov	dl, byte_23AF8
+		mov	dl, _round_speed
 		mov	dh, 0
-		mov	bx, 10h
+		mov	bx, (1 shl 4)
 		push	ax
 		mov	ax, dx
 		cwd
@@ -21391,17 +21391,17 @@ loc_1685C:
 		call	@score_add$quiuc
 
 loc_16865:
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		add	[bp+@@bonus], ax
-		cmp	byte_23AF8, 30h	; '0'
+		cmp	_round_speed, (3 shl 4)
 		ja	short loc_16879
 		sar	[bp+@@bonus], 1
 		jmp	short loc_16886
 ; ---------------------------------------------------------------------------
 
 loc_16879:
-		cmp	byte_23AF8, 60h
+		cmp	_round_speed, (6 shl 4)
 		jb	short loc_16886
 		mov	ax, [bp+@@bonus]
 		add	[bp+@@bonus], ax
@@ -23454,7 +23454,7 @@ loc_1787E:
 		push	dx	; pid
 		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+var_6], ax
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -24122,7 +24122,7 @@ loc_17DD4:
 		mov	[si+8],	al
 		push	1Fh
 		call	@randring2_next16_and$qui
-		mov	dl, byte_23AF8
+		mov	dl, _round_speed
 		mov	dh, 0
 		push	ax
 		mov	ax, dx
@@ -24195,7 +24195,7 @@ loc_17E83:
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
 		mov	di, ax
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -24572,9 +24572,9 @@ arg_2		= word ptr  6
 		mov	bx, ax
 		mov	al, [bx+si+4B3Eh]
 		mov	ah, 0
-		mov	dl, byte_23AF8
+		mov	dl, _round_speed
 		mov	dh, 0
-		mov	bx, 20h	; ' '
+		mov	bx, (2 shl 4)
 		push	ax
 		mov	ax, dx
 		cwd
@@ -24679,9 +24679,9 @@ loc_18275:
 		mov	bx, ax
 		mov	al, [bx+4B3Eh]
 		mov	ah, 0
-		mov	dl, byte_23AF8
+		mov	dl, _round_speed
 		mov	dh, 0
-		mov	bx, 20h	; ' '
+		mov	bx, (2 shl 4)
 		push	ax
 		mov	ax, dx
 		cwd
@@ -28602,7 +28602,7 @@ arg_6		= word ptr  0Ah
 		push	ds
 		lea	ax, [si+8]
 		push	ax
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -29065,7 +29065,7 @@ loc_1A58A:
 		lea	ax, [si+8]
 		push	ax
 		push	word ptr [bp+@@angle]
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -35138,10 +35138,13 @@ _pid_PID_current  	label byte
 _pid_PID_so_attack	label byte
 _pid	db ?
 	evendata
-public _round_frame, _round_or_result_frame
+
+ROUND_SPEED_MAX = (8 shl 4)
+
+public _round_frame, _round_or_result_frame, _round_speed
 _round_frame	dd ?
 _round_or_result_frame	dw ?
-byte_23AF8	db ?
+_round_speed	db ?
 byte_23AF9	db ?
 byte_23AFA	db ?
 		db ?
