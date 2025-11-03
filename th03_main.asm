@@ -20182,102 +20182,7 @@ PELLET_PUT segment byte public 'CODE' use16
 	extern @ENEMIES_ADD$QPUCUCUC:proc
 	@enemy_put$qv procdesc near
 	@enemy_explosion_flag_update$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15FD4	proc near
-
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_1		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_frame], 10
-		jnb	short loc_15FF4
-		mov	al, [bx+enemy_t.ENEMY_size_words]
-		mov	ah, 0
-		shl	ax, 3
-		mov	bx, ax
-		mov	di, (_SO_EXPLOSIONS - (EXPLOSION_CELS * word))[bx]
-		jmp	short loc_16044
-; ---------------------------------------------------------------------------
-
-loc_15FF4:
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_frame], 32
-		jnb	short loc_1602C
-		mov	al, [bx+enemy_t.ENEMY_frame]
-		mov	ah, 0
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_size_words]
-		mov	ah, 0
-		shl	ax, 3
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		and	dx, 1
-		add	dx, dx
-		add	ax, dx
-		mov	bx, ax
-		mov	di, (_SO_EXPLOSIONS - (EXPLOSION_CELS * word) + (1 * word))[bx]
-		jmp	short loc_16044
-; ---------------------------------------------------------------------------
-
-loc_1602C:
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_frame], 36
-		jnb	short loc_16044
-		mov	al, [bx+enemy_t.ENEMY_size_words]
-		mov	ah, 0
-		shl	ax, 3
-		mov	bx, ax
-		mov	di, (_SO_EXPLOSIONS - (EXPLOSION_CELS * word) + (3 * word))[bx]
-
-loc_16044:
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_size_pixels]
-		mov	ah, 0
-		add	ax, 16
-		mov	si, ax
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	_sprite16_put_w, al
-		mov	ax, si
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sprite16_put_h, ax
-		sar	si, 1
-		mov	bx, _efe_p
-		push	[bx+enemy_t.ENEMY_center.x]	; x
-		mov	al, [bx+enemy_t.ENEMY_pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		sub	ax, si
-		mov	[bp+@@left], ax
-		mov	bx, _efe_p
-		mov	ax, [bx+enemy_t.ENEMY_center.y]
-		sar	ax, 4
-		add	ax, 16
-		sub	ax, si
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, di
-		pop	di
-		pop	si
-		leave
-		retn
-sub_15FD4	endp
-
+	@enemy_explosion_put$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20785,7 +20690,7 @@ loc_16532:
 ; ---------------------------------------------------------------------------
 
 loc_1653C:
-		call	sub_15FD4
+		call	@enemy_explosion_put$qv
 
 loc_1653F:
 		inc	di

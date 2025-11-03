@@ -180,4 +180,37 @@ void near enemy_explosion_flag_update(void)
 	}
 }
 
+void near enemy_explosion_put(void)
+{
+	sprite16_offset_t so;
+	pixel_t size;
+	uint8_t cel;
+
+	if(p->frame < KEYFRAME_HIT_ENEMIES) {
+		so = SO_EXPLOSIONS[p->size_words() - 1][0];
+	} else if(p->frame < KEYFRAME_DECAY) {
+		cel = (p->frame / 4);
+		so = SO_EXPLOSIONS[p->size_words() - 1][1 + (cel & 1)];
+	} else if(p->frame < KEYFRAME_DONE) {
+		// ZUN bloat: ^ The condition doesn't need to duplicate the keyframe.
+		so = SO_EXPLOSIONS[p->size_words() - 1][3];
+	}
+
+	size = (p->size_pixels + 16);
+	sprite16_put_size.w.v = to_vram_word(size);
+	sprite16_put_size.h = (size / 2);
+
+	// ZUN bloat: A separate variable doesn't hurt.
+	#define size_half size
+	size_half >>= 1;
+
+	screen_x_t left;
+	screen_y_t top;
+	left = (playfield_fg_x_to_screen(p->center.x, p->pid) - size_half);
+	top  = (playfield_fg_y_to_screen(p->center.y, p->pid) - size_half);
+	sprite16_put(left, top, so);
+
+	#undef size_half
+}
+
 #undef p
