@@ -15972,6 +15972,10 @@ COLLMAP_TEXT	ends
 
 PELLET_PUT segment byte public 'CODE' use16
 
+EPT_CLIP_X = 01h
+EPT_CLIP_BOTTOM = 02h
+EPT_DO_NOT_MIRROR_X = 80h
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
