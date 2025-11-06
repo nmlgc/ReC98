@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, E_ENEMY_TEXT, BULLET_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, main_04__TEXT
 
 ; ===========================================================================
 
@@ -564,7 +564,7 @@ var_2		= word ptr -2
 		mov	random_seed, eax
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	graph_copy_page pascal, 0
-		call	sub_13CDD
+		call	@enemy_formations_load$qv
 		mov	byte_207E3, 0
 		call	sub_9EBF
 		call	_hflip_lut_generate
@@ -15970,7 +15970,7 @@ COLLMAP_TEXT	segment byte public 'CODE' use16
 	extern @collmap_set_slope_striped$qv:proc
 COLLMAP_TEXT	ends
 
-E_ENEMY_TEXT segment byte public 'CODE' use16
+ENEMY_2_TEXT segment byte public 'CODE' use16
 
 EPT_CLIP_X = 01h
 EPT_CLIP_BOTTOM = 02h
@@ -16088,98 +16088,10 @@ loc_13CDB:
 		pop	bp
 		retf
 sub_13CC7	endp
+ENEMY_2_TEXT ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13CDD	proc far
-
-FORMATION_ENEMIES_MAX = 16
-
-@@formation_i	= word ptr -0Ah
-var_8		= word ptr -8
-@@enemy_count	= word ptr -6
-var_4		= word ptr -4
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		push	ds
-		push	offset aEnedat_dat ; "ENEDAT.DAT"
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_4]
-		push	ax
-		push	4
-		call	file_read
-		push	[bp+var_4]
-		call	hmem_allocbyte
-		mov	_enedat_2, ax
-		call	hmem_allocbyte pascal, (FORMATIONS_MAX * FORMATION_ENEMIES_MAX * word)
-		mov	_formation_scripts, ax
-		call	hmem_allocbyte pascal, (FORMATION_RING_SIZE * byte)
-		mov	_formation_type_ring, ax
-		call	hmem_allocbyte pascal, (FORMATION_RING_SIZE * byte)
-		mov	_formation_pos_type_ring, ax
-		mov	ax, _enedat_2
-		mov	_enedat, ax
-		push	ax
-		push	0
-		push	[bp+var_4]
-		call	file_read
-		call	file_close
-		xor	si, si
-		mov	[bp+@@formation_i], 0
-
-loc_13D41:
-		mov	es, _enedat
-		mov	ax, es:[si]
-		mov	[bp+@@enemy_count], ax
-		cmp	[bp+@@enemy_count], 0
-		jz	short loc_13D92
-		mov	bx, [bp+@@formation_i]
-		mov	al, byte ptr [bp+@@enemy_count]
-		mov	_formation_enemy_count[bx], al
-		add	si, 2
-		xor	di, di
-		jmp	short loc_13D88
-; ---------------------------------------------------------------------------
-
-loc_13D62:
-		mov	es, _enedat
-		mov	al, es:[si]
-		mov	ah, 0
-		mov	[bp+var_8], ax
-		inc	si
-		mov	bx, [bp+@@formation_i]
-		shl	bx, 4 ; *= FORMATION_ENEMIES_MAX
-		add	bx, bx
-		mov	es, _formation_scripts
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	es:[bx], si
-		add	si, [bp+var_8]
-		inc	di
-
-loc_13D88:
-		cmp	di, [bp+@@enemy_count]
-		jl	short loc_13D62
-		inc	[bp+@@formation_i]
-		jmp	short loc_13D41
-; ---------------------------------------------------------------------------
-
-loc_13D92:
-		mov	al, byte ptr [bp+@@formation_i]
-		mov	_formation_count, al
-		pop	di
-		pop	si
-		leave
-		retf
-sub_13CDD	endp
-
+E_ENEMY_TEXT segment byte public 'CODE' use16
+	extern @enemy_formations_load$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32241,8 +32153,9 @@ a00ch_bf2	db '00ch.bf2',0
 		db 0FCh
 		db 0FFh
 		db 0FEh
-aEnedat_dat	db 'ENEDAT.DAT',0
-		db 0
+public _ENEDAT_DAT
+_ENEDAT_DAT	db 'ENEDAT.DAT',0
+	evendata
 angles_1DBD8	db 192, 182, 202, 192, 176, 208
 		db    0
 		db    4

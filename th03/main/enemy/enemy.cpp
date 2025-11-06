@@ -1,6 +1,8 @@
 #include "th03/main/enemy/efe.hpp"
+#include "th03/formats/enedat.hpp"
 #include "th03/snd/snd.h"
 #include "th03/sprites/main_s16.hpp"
+#include "libs/master.lib/master.hpp"
 
 // Position flags
 // --------------
@@ -214,3 +216,52 @@ void near enemy_explosion_put(void)
 }
 
 #undef p
+#pragma codeseg ENEMY_2_TEXT // ZUN bloat
+
+void enemy_formations_load(void)
+{
+	enedat_header_t header;
+
+	extern const char ENEDAT_DAT[];
+	file_ropen(ENEDAT_DAT);
+	file_read(&header, sizeof(header));
+	enedat_2 = static_cast<uint8_t __seg *>(hmem_allocbyte(header.size));
+	formation_scripts = HMem<enemy_script_p>::alloc(
+		FORMATIONS_MAX * FORMATION_ENEMIES_MAX
+	);
+	formation_type_ring = HMem<uint8_t>::alloc(FORMATION_RING_SIZE);
+	formation_pos_type_ring = HMem<enemy_pos_type_t>::alloc(
+		FORMATION_RING_SIZE
+	);
+	enedat = enedat_2;
+	file_read(enedat, header.size);
+	file_close();
+
+	unsigned int enedat_p = 0;
+	int enemy_i;
+	int enemy_count;
+	unsigned int script_size;
+	int formation_i = 0;
+	while(1) {
+		// ZUN landmine: Not validated against [FORMATION_ENEMIES_MAX].
+		enemy_count = *reinterpret_cast<uint16_t *>(&enedat[enedat_p]);
+		if(enemy_count == 0) {
+			break;
+		}
+
+		formation_enemy_count[formation_i] = enemy_count;
+		enedat_p += sizeof(uint16_t);
+		for(enemy_i = 0; enemy_i < enemy_count; enemy_i++) {
+			script_size = enedat[enedat_p];
+			enedat_p++;
+			*(
+				formation_scripts + (formation_i * FORMATION_ENEMIES_MAX) +
+				enemy_i
+			) = reinterpret_cast<uint8_t near *>(enedat_p);
+
+			enedat_p += script_size;
+		}
+		formation_i++;
+	};
+	formation_count = formation_i;
+}
