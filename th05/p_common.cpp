@@ -12,35 +12,35 @@
 
 char near shot_cycle_init(void)
 {
-	char cycle_flag = 0;
+	char cycle = 0;
 	switch(shot_time) {
 	case 18:
-		cycle_flag = SC_6X | SC_3X | SC_2X | SC_1X;
+		cycle = SC_6X | SC_3X | SC_2X | SC_1X;
 		snd_se_play(1);
 		break;
 	case 15:
-		cycle_flag = SC_6X;
+		cycle = SC_6X;
 		break;
 	case 12:
-		cycle_flag = SC_6X | SC_3X;
+		cycle = SC_6X | SC_3X;
 		snd_se_play(1);
 		break;
 	case  9:
-		cycle_flag = SC_6X | SC_2X;
+		cycle = SC_6X | SC_2X;
 		break;
 	case  6:
-		cycle_flag = SC_6X | SC_3X;
+		cycle = SC_6X | SC_3X;
 		snd_se_play(1);
 		break;
 	case  3:
-		cycle_flag = SC_6X;
+		cycle = SC_6X;
 		break;
 	default:
 		return 0;
 	}
 	shot_ptr = shots;
 	shot_last_id = 0;
-	return cycle_flag;
+	return cycle;
 }
 
 void pascal near shot_l0(void)

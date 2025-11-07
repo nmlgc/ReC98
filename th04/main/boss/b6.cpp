@@ -105,7 +105,7 @@ struct safetycircle_t {
 // These indicate the state of the last completed animation, and are only used
 // to decide whether to trigger a transition to a different state via one of
 // the _anim_* functions.
-enum yuuka6_sprite_state_t {
+enum yuuka6_sprite_flag_t {
 	VANISHED = 0,
 	PARASOL_BACK_OPEN = 1,
 	PARASOL_BACK_CLOSED = 2,
@@ -115,7 +115,7 @@ enum yuuka6_sprite_state_t {
 };
 
 extern int yuuka6_anim_frame;
-extern yuuka6_sprite_state_t yuuka6_sprite_state;
+extern yuuka6_sprite_flag_t yuuka6_sprite_flag;
 extern uint8_t phase2_fly_path;
 
 void pascal near chasecrosses_add(

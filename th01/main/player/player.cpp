@@ -349,12 +349,12 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 {
 	#define swing_deflection_frames	player_swing_deflection_frames
 
-	enum bomb_state_t {
-		BS_NONE = 0,
-		BS_START = 2,
-		BS_ACTIVE = 3,
+	enum bomb_flag_t {
+		BF_NONE = 0,
+		BF_START = 2,
+		BF_ACTIVE = 3,
 
-		_bomb_state_t_FORCE_INT16 = 0x7FFF
+		_bomb_flag_t_FORCE_INT16 = 0x7FFF
 	};
 
 	static struct {
@@ -378,8 +378,8 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 	static int8_t mode = M_REGULAR; // mode_t
 	static x_direction_t dash_direction = X_LEFT;
-	static int8_t bomb_state = BS_NONE; // ACTUAL TYPE: bomb_state_t
-	static bool bombing = false; // ZUN bloat: Already covered by bomb_state_t
+	static int8_t bomb_flag = BF_NONE; // ACTUAL TYPE: bomb_flag_t
+	static bool bombing = false; // ZUN bloat: Already covered by bomb_flag_t
 	static int8_t combo_enabled = false; // ACTUAL TYPE: bool
 	extern int8_t swing_deflection_frames;
 	static submode_t submode;
@@ -406,7 +406,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		mode = M_REGULAR;
 		submode.initial = -1;
 		dash_direction = X_LEFT;
-		bomb_state = BS_NONE;
+		bomb_flag = BF_NONE;
 		bomb_damaging = false;
 		player_sliding = false;
 		player_deflecting = false;
@@ -425,10 +425,10 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 	dash_cycle.v++;
 	dash_cycle.v &= (DASH_FRAMES - 1);
-	if(((rem_bombs != 0) || bombing) && (bomb_state >= BS_START)) {
-		if(bomb_state == BS_START) {
+	if(((rem_bombs != 0) || bombing) && (bomb_flag >= BF_START)) {
+		if(bomb_flag == BF_START) {
 			bomb_frames = 0;
-			bomb_state = BS_ACTIVE;
+			bomb_flag = BF_ACTIVE;
 			player_deflecting = true;
 			bombing = true;
 			rem_bombs--;
@@ -436,7 +436,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		}
 		orb_player_hittest(1);
 		bomb_done = bomb_update_and_render(bomb_frames);
-		bomb_state = (bomb_done == false) ? BS_ACTIVE : BS_NONE;
+		bomb_flag = (bomb_done == false) ? BF_ACTIVE : BF_NONE;
 		if(bomb_done) {
 			bombing = false;
 			input_bomb = false;
@@ -448,14 +448,14 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		input_shot = false;
 		input_strike = false;
 		mode = M_REGULAR;
-		if(bomb_state == BS_NONE) {
+		if(bomb_flag == BF_NONE) {
 			player_deflecting = false;
 		}
 	} else if(
 		// Yes, not `< M_SPECIAL_FIRST`.
 		(input_bomb == true) && (mode != M_SPECIAL_FIRST) && (rem_bombs != 0)
 	) {
-		bomb_state = BS_START;
+		bomb_flag = BF_START;
 		input_bomb = false;
 		pellet_speed_raise(0.025f);
 	} else if(mode == M_REGULAR) {

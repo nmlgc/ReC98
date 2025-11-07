@@ -9734,7 +9734,7 @@ bullets_render	proc near
 @@sprite_bullet_loop:
 		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	@@sprite_bullet_next
-		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
+		cmp	[si+bullet_t.spawn_flag], BSF_CLOUD_BACKWARDS
 		ja	short loc_12D24
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
@@ -9780,9 +9780,9 @@ loc_12D5C:
 		mov	[bp+@@patnum], (PAT_CLOUD_BULLET16_BLUE - 1)
 
 loc_12D6D:
-		mov	al, [si+bullet_t.spawn_state]
+		mov	al, [si+bullet_t.spawn_flag]
 		mov	ah, 0
-		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
+		mov	bx, (BSF_CLOUD_FRAMES / BULLET_CLOUD_CELS)
 		cwd
 		idiv	bx
 		add	[bp+@@patnum], ax
@@ -21137,14 +21137,14 @@ yuuka6_1A439	proc near
 		mov	di, [bp+@@y]
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1A457
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jz	short loc_1A461
 		call	_yuuka6_anim_vanish
 		jmp	short loc_1A461
 ; ---------------------------------------------------------------------------
 
 loc_1A457:
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jnz	short loc_1A461
 		call	_yuuka6_anim_appear
 
@@ -21237,7 +21237,7 @@ yuuka6_1A4A8	endp
 yuuka6_1A503	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jnz	short loc_1A512
 		call	_yuuka6_anim_appear
 		jmp	short loc_1A539
@@ -21585,7 +21585,7 @@ word_1AB4D	dw    10h,   12h,   14h,   20h
 yuuka6_1AB5D	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AB6A
 		call	_yuuka6_anim_parasol_back_close
 
@@ -21649,14 +21649,14 @@ var_1		= byte ptr -1
 		enter	2, 0
 		cmp	_boss_phase_frame, 48
 		jge	short loc_1ABFF
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	loc_1AC96
 		call	_yuuka6_anim_parasol_back_pull_left
 		jmp	loc_1AC96
 ; ---------------------------------------------------------------------------
 
 loc_1ABFF:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_LEFT
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_LEFT
 		jnz	loc_1AC96
 		call	_yuuka6_anim_parasol_left_spin_back
 		cmp	_boss_phase_frame, 80
@@ -21741,7 +21741,7 @@ yuuka6_1ABE5	endp
 yuuka6_1ACCC	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1ACD9
 		call	_yuuka6_anim_parasol_back_open
 
@@ -21807,14 +21807,14 @@ yuuka6_1AD6F	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AD91
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AD85
 		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1ADCC
 ; ---------------------------------------------------------------------------
 
 loc_1AD85:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1ADCC
 		call	_yuuka6_anim_parasol_back_pull_forward
 		jmp	short loc_1ADCC
@@ -21832,7 +21832,7 @@ loc_1AD91:
 loc_1ADA6:
 		cmp	_boss_phase_frame, 288
 		jl	short loc_1ADCC
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1ADBA
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1ADCC
@@ -21928,14 +21928,14 @@ yuuka6_1AE8F	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AEB7
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AEA5
 		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1AEAF
 ; ---------------------------------------------------------------------------
 
 loc_1AEA5:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1AEAF
 		call	_yuuka6_anim_parasol_back_pull_forward
 
@@ -21981,7 +21981,7 @@ loc_1AEB7:
 loc_1AF33:
 		cmp	_boss_phase_frame, 128
 		jl	short loc_1AF59
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1AF47
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1AF59
@@ -22033,14 +22033,14 @@ yuuka6_1AFA8	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AFD0
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AFBE
 		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1AFC8
 ; ---------------------------------------------------------------------------
 
 loc_1AFBE:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1AFC8
 		call	_yuuka6_anim_parasol_back_pull_forward
 
@@ -22100,7 +22100,7 @@ loc_1AFD0:
 loc_1B06E:
 		cmp	_boss_phase_frame, 128
 		jl	short loc_1B094
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1B082
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1B094
@@ -22129,7 +22129,7 @@ yuuka6_1B099	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jg	short loc_1B0AF
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_SHIELD
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_SHIELD
 		jz	short loc_1B125
 		call	_yuuka6_anim_parasol_shield
 		jmp	short loc_1B125
@@ -22423,14 +22423,14 @@ yuuka6_1B313	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1B339
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1B32A
 		call	_yuuka6_anim_parasol_back_close
 		jmp	loc_1B3DD
 ; ---------------------------------------------------------------------------
 
 loc_1B32A:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	loc_1B3DD
 		call	_yuuka6_anim_parasol_back_pull_forward
 		jmp	loc_1B3DD
@@ -22478,7 +22478,7 @@ loc_1B391:
 loc_1B3B7:
 		cmp	_boss_phase_frame, 192
 		jl	short loc_1B3DD
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1B3CB
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1B3DD
@@ -22590,7 +22590,7 @@ loc_1B4EB:
 		mov	_boss_phase_end_hp, 10600
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
-		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		call	@randring2_next16_and$qui pascal, (YUUKA6_PHASE2_FLY_PATHS - 1)
 		mov	_yuuka6_phase2_fly_path, al
 		jmp	loc_1B8EA
@@ -22712,7 +22712,7 @@ loc_1B623:
 
 loc_1B634:
 		inc	_boss_phase_frame
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jz	short loc_1B645
 		call	_yuuka6_anim_vanish
 		jmp	loc_1B8EA
@@ -22754,7 +22754,7 @@ loc_1B694:
 		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
-		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		mov	byte_25A1B, 1
 		mov	byte_25A02, -1
 		jmp	loc_1B8EA
@@ -22869,7 +22869,7 @@ loc_1B78E:
 		mov	_boss_mode, 0
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
-		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		mov	byte_25A1B, 1
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -30153,8 +30153,8 @@ byte_25A02	db ?
 byte_25A03	db ?
 byte_25A04	db ?
 		db ?
-public _yuuka6_sprite_state, _yuuka6_phase2_fly_path
-_yuuka6_sprite_state	db ?
+public _yuuka6_sprite_flag, _yuuka6_phase2_fly_path
+_yuuka6_sprite_flag	db ?
 _yuuka6_phase2_fly_path	db ?
 byte_25A08	db ?
 		db ?

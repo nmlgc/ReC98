@@ -41,7 +41,7 @@ BULLET_A_TEXT	segment	word public 'CODE' use16
 ; Identical to TH04's decompiled version, except for:
 ; • regular and special bullets being handled within the same function,
 ; • the TH05-specific changes to the spawn types, and
-; • the TH05-specific changes related to BMS_DECELERATE (see bullet.hpp)
+; • the TH05-specific changes related to BMF_DECELERATE (see bullet.hpp)
 public _bullets_add_raw
 _bullets_add_raw proc near
 	@@group_done	equ <cl>
@@ -86,50 +86,50 @@ _bullets_add_raw proc near
 	jnz	short @@is_bullet16
 	mov	si, offset _pellets[(PELLET_COUNT - 1) * size bullet_t]
 	mov	di, PELLET_COUNT
-	jmp	short @@determine_spawn_state
+	jmp	short @@determine_spawn_flag
 ; ---------------------------------------------------------------------------
 
 @@is_bullet16:
 	mov	si, offset _bullets16[(BULLET16_COUNT - 1) * size bullet_t]
 	mov	di, BULLET16_COUNT
 
-@@determine_spawn_state:
-	mov	dl, BSS_GRAZEABLE
+@@determine_spawn_flag:
+	mov	dl, BSF_GRAZEABLE
 	mov	al, _bullet_template.spawn_type
 	and	al, (BST_NO_DECELERATE - 1)
 	cmp	al, BST_CLOUD_BACKWARDS
 	jz	short @@is_cloud_backwards
 	cmp	al, BST_CLOUD_FORWARDS
-	jnz	short @@determine_move_state
-	mov	dl, BSS_CLOUD_FORWARDS
-	jmp	short @@determine_move_state
+	jnz	short @@determine_move_flag
+	mov	dl, BSF_CLOUD_FORWARDS
+	jmp	short @@determine_move_flag
 ; ---------------------------------------------------------------------------
 
 @@is_cloud_backwards:
-	mov	dl, BSS_CLOUD_BACKWARDS
+	mov	dl, BSF_CLOUD_BACKWARDS
 
-@@determine_move_state:
+@@determine_move_flag:
 	cmp	_group_is_special, 0
 	; If special, we don't care about AL, as the code path that contains
-	; @@move_state is never taken. so any garbage in AL doesn't matter.
-	; (Jumping over the @@move_state assignment would have surely been
+	; @@move_flag is never taken. so any garbage in AL doesn't matter.
+	; (Jumping over the @@move_flag assignment would have surely been
 	; prettier, though!)
-	jnz	short @@got_both_spawn_and_move_states
+	jnz	short @@got_both_spawn_and_move_flags
 
-	mov	al, BMS_REGULAR
-	cmp	_bullet_template.speed, (BMS_DECELERATE_BASE_SPEED - 8)
+	mov	al, BMF_REGULAR
+	cmp	_bullet_template.speed, (BMF_DECELERATE_BASE_SPEED - 8)
 	jb	short @@speed_below_slowdown_threshold
 	cmp	_bullet_clear_time, 0
-	jz	short @@got_both_spawn_and_move_states
+	jz	short @@got_both_spawn_and_move_flags
 
 @@speed_below_slowdown_threshold:
 	test	_bullet_template.spawn_type, BST_NO_DECELERATE
-	jnz	short @@got_both_spawn_and_move_states
-	xor	al, al	; BMS_DECELERATE
+	jnz	short @@got_both_spawn_and_move_flags
+	xor	al, al	; BMF_DECELERATE
 
-@@got_both_spawn_and_move_states:
-	mov	cs:@@spawn_state, dl
-	mov	cs:@@move_state, al
+@@got_both_spawn_and_move_flags:
+	mov	cs:@@spawn_flag, dl
+	mov	cs:@@move_flag, al
 	mov	_group_i, 0
 	jmp	short $+2
 
@@ -138,17 +138,17 @@ _bullets_add_raw proc near
 	jnz	@@next
 	mov	[si+bullet_t.flag], F_ALIVE
 
-	@@spawn_state = byte ptr $+3
-	mov	[si+bullet_t.spawn_state], 123
+	@@spawn_flag = byte ptr $+3
+	mov	[si+bullet_t.spawn_flag], 123
 	mov	eax, _bullet_template.BT_origin
 	mov	dword ptr [si+bullet_t.pos.cur], eax
 	cmp	_group_is_special, 0
 	jnz	short @@init_special
 
-	@@move_state = byte ptr $+3
-	mov	[si+bullet_t.move_state], 123
-	mov	[si+bullet_t.decelerate_time], BMS_DECELERATE_FRAMES
-	mov	al, BMS_DECELERATE_BASE_SPEED
+	@@move_flag = byte ptr $+3
+	mov	[si+bullet_t.move_flag], 123
+	mov	[si+bullet_t.decelerate_time], BMF_DECELERATE_FRAMES
+	mov	al, BMF_DECELERATE_BASE_SPEED
 	sub	al, _bullet_template.speed
 	mov	[si+bullet_t.decelerate_speed_delta], al
 	jmp	short @@init_common
@@ -156,7 +156,7 @@ _bullets_add_raw proc near
 
 @@init_special:
 	mov	dword ptr [si+bullet_t.BULLET_origin], eax
-	mov	[si+bullet_t.move_state], BMS_SPECIAL
+	mov	[si+bullet_t.move_flag], BMF_SPECIAL
 	mov	[si+bullet_t.distance], 0
 	mov	[si+bullet_t.BULLET_ax], 0
 	mov	al, _bullet_template_special_angle

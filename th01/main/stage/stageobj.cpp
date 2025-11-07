@@ -805,38 +805,38 @@ void obstacles_update_and_render(bool16 reset)
 
 static const int TURRET_COOLDOWN_FRAMES = 7;
 
-enum turret_state_t {
-	TS_READY = 0,
-	TS_WARMUP = 1,
-	TS_FIRE = 2,
-	TS_COOLDOWN = 3,
-	TS_DONE = (TS_COOLDOWN + TURRET_COOLDOWN_FRAMES),
+enum turret_flag_t {
+	TF_READY = 0,
+	TF_WARMUP = 1,
+	TF_FIRE = 2,
+	TF_COOLDOWN = 3,
+	TF_DONE = (TF_COOLDOWN + TURRET_COOLDOWN_FRAMES),
 
-	_turret_state_t_FORCE_INT16 = 0x7FFF
+	_turret_flag_t_FORCE_INT16 = 0x7FFF
 };
 
 void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 {
-	static turret_state_t *turret_state;
+	static turret_flag_t *turret_flag;
 
 	if(reset == true) {
-		if(turret_state) {
-			delete[] turret_state;
-			turret_state = nullptr;
+		if(turret_flag) {
+			delete[] turret_flag;
+			turret_flag = nullptr;
 		}
 		if(obstacles.count != 0) {
-			turret_state = new turret_state_t[obstacles.count];
+			turret_flag = new turret_flag_t[obstacles.count];
 		}
 		for(
 			obstacle_slot = 0;
 			obstacle_slot < obstacles.count;
 			obstacle_slot++
 		) {
-			turret_state[obstacle_slot] = TS_READY;
+			turret_flag[obstacle_slot] = TF_READY;
 		}
 		return;
 	}
-	if(turret_state[obstacle_slot] == TS_READY) {
+	if(turret_flag[obstacle_slot] == TF_READY) {
 		// MODDERS: This assumes that PTN_TURRET_FIRING only adds or changes
 		// pixels compared to PTN_TURRET, and doesn't remove any. Unblit the
 		// previous portal sprite to ensure this.
@@ -846,12 +846,12 @@ void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		graph_accesspage_func(0);
 		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
 
-		turret_state[obstacle_slot] = TS_WARMUP;
-	} else if(turret_state[obstacle_slot] == TS_WARMUP) {
+		turret_flag[obstacle_slot] = TF_WARMUP;
+	} else if(turret_flag[obstacle_slot] == TF_WARMUP) {
 		if((obstacles.frames[obstacle_slot].fire_cycle % 10) == 9) {
-			turret_state[obstacle_slot] = TS_FIRE;
+			turret_flag[obstacle_slot] = TF_FIRE;
 		}
-	} else if(turret_state[obstacle_slot] == TS_FIRE) {
+	} else if(turret_flag[obstacle_slot] == TF_FIRE) {
 		uint8_t group; // ACTUAL TYPE: pellet_group_t
 		switch(obstacles.type[obstacle_slot]) {
 			case OT_TURRET_SLOW_1_AIMED:
@@ -897,16 +897,16 @@ void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		// (Also, same lazy blitting issue as we've had the first time.)
 		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
 
-		turret_state[obstacle_slot] = TS_COOLDOWN;
+		turret_flag[obstacle_slot] = TF_COOLDOWN;
 	} else {
-		reinterpret_cast<int &>(turret_state[obstacle_slot])++;
-		if(turret_state[obstacle_slot] >= TS_DONE) {
+		reinterpret_cast<int &>(turret_flag[obstacle_slot])++;
+		if(turret_flag[obstacle_slot] >= TF_DONE) {
 			graph_accesspage_func(1);
 			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
 			graph_accesspage_func(0);
 			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
 
-			turret_state[obstacle_slot] = TS_READY;
+			turret_flag[obstacle_slot] = TF_READY;
 			obstacles.frames[obstacle_slot].fire_cycle = 0;
 		}
 	}

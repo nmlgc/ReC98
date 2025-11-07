@@ -398,6 +398,7 @@ These cases should gradually be removed as development goes along, though.
   `frame_delay()` calls: `*_animate`
 * Generic 0-based IDs: `*_id`
 * Generic 1-based IDs, with 0 indicating some sort of absence: `*_num`
+* State machine enums with discrete values: `*_flag`
 * Random and incomplete collections of data related to a specific concept:
   `*_stuff`
   * Can be used for both structures and functions.

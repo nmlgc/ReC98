@@ -24,7 +24,6 @@ include th03/arg_bx.inc
 include th03/th03.inc
 include th03/main/playfld.inc
 include th03/main/collmap.inc
-include th03/main/player/bomb.inc
 include th03/sprites/main_s16.inc
 include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
@@ -7241,7 +7240,7 @@ player_bomb	proc near
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jnz	short @@ret
 		cmp	[si+player_stuff_t.hyper_active], 0
 		jnz	short @@ret
@@ -7250,7 +7249,7 @@ player_bomb	proc near
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_PREPARING
+		mov	_bomb_flag[bx], BF_PREPARING
 		dec	[si+player_stuff_t.bombs]
 		mov	[si+player_stuff_t.invincibility_time], BOMB_FRAMES
 		push	word ptr _pid_PID_current
@@ -17701,7 +17700,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -18591,17 +18590,17 @@ sub_1501E	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_1505C
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -18621,7 +18620,7 @@ loc_1505C:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -18642,17 +18641,17 @@ reimu_1508C	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_150ED
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -18718,7 +18717,7 @@ loc_15132:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -18803,7 +18802,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -19757,7 +19756,7 @@ loc_159DD:
 		mov	al, pid_20E3A
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	short loc_159F8
 		test	byte ptr _round_or_result_frame, 1
 		jnz	short loc_159F8
@@ -19797,7 +19796,7 @@ var_2		= word ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -22405,17 +22404,17 @@ mima_17043	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_170A5
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -22504,7 +22503,7 @@ loc_17129:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -22582,7 +22581,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -23722,7 +23721,7 @@ loc_17A7A:
 		jz	short loc_17ADC
 		mov	bh, 0
 		mov	bl, [si+10h]
-		add	bx, offset _bomb_state
+		add	bx, offset _bomb_flag
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17AD6
 		mov	bh, 0
@@ -24466,7 +24465,7 @@ loc_18092:
 		mov	al, [bx+8]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jnz	short loc_180BB
 		cmp	si, 0FF00h
 		jle	short loc_180BB
@@ -24850,7 +24849,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -25048,17 +25047,17 @@ ellen_185AB	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_1860D
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -25147,7 +25146,7 @@ loc_18698:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -25247,7 +25246,7 @@ var_2		= word ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -25480,7 +25479,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
@@ -25684,7 +25683,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -25905,7 +25904,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
@@ -35117,8 +35116,15 @@ _collmap_bottomright	Point <?>
 _collmap_pid	db ?
 		db 5 dup(?)
 _collmap	db (PLAYER_COUNT * COLLMAP_SIZE) dup(?)
-public _bomb_state, _player_speed_base, _player_velocity
-_bomb_state	db PLAYER_COUNT dup(?)
+
+BOMB_FRAMES = 180
+
+BF_INACTIVE = 0
+BF_PREPARING = 1
+BF_ACTIVE = 2
+
+public _bomb_flag, _player_speed_base, _player_velocity
+_bomb_flag	db PLAYER_COUNT dup(?)
 _player_speed_base	speed_t <?>
 _player_velocity  	SPPoint8 <?>
 public _player_cur, _cpu_hit_damage_additional, _damage_all_enemies_on

@@ -3585,7 +3585,7 @@ sub_100C6	proc near
 loc_100DE:
 		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	loc_1016B
-		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
+		cmp	[si+bullet_t.spawn_flag], BSF_CLOUD_BACKWARDS
 		ja	short loc_10108
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
@@ -3629,9 +3629,9 @@ loc_10146:
 		mov	di, (PAT_CLOUD_BULLET16_RED - 1)
 
 loc_10149:
-		mov	al, [si+bullet_t.spawn_state]
+		mov	al, [si+bullet_t.spawn_flag]
 		mov	ah, 0
-		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
+		mov	bx, (BSF_CLOUD_FRAMES / BULLET_CLOUD_CELS)
 		cwd
 		idiv	bx
 		add	di, ax
@@ -3660,9 +3660,9 @@ loc_1018A:
 		mov	bx, _pellet_clouds_render_count
 		add	bx, bx
 		mov	si, _pellet_clouds_render[bx]
-		mov	al, [si+bullet_t.spawn_state]
+		mov	al, [si+bullet_t.spawn_flag]
 		mov	ah, 0
-		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
+		mov	bx, (BSF_CLOUD_FRAMES / BULLET_CLOUD_CELS)
 		cwd
 		idiv	bx
 		add	ax, (PAT_CLOUD_PELLET - 1)
@@ -19577,9 +19577,9 @@ _shinki_bg_type_b_initialized	db 0
 _shinki_bg_spinline_frames	dw 0
 _shinki_bg_type_c_initialized	db 0
 _shinki_bg_type_d_initialized	db 0
-public _exalice_hexagrams_state
-_exalice_hexagrams_state	db 0
-		db 0
+public _hexagrams_flag
+_hexagrams_flag	db 0
+	evendata
 include th04/main/player/shot_laser[data].asm
 include th05/formats/bb_cheeto[data].asm
 ; char aMaine[]

@@ -442,7 +442,7 @@ bool near bullet_template_clip(void)
 		// If a newly spawned bullet wouldn't fully decay during the remaining
 		// time, let's simply not spawn it at all? This way, they don't award
 		// score points either.
-		(bullet_clear_time <= (BMS_DECAY_FRAMES + 1)) // differs from TH05!
+		(bullet_clear_time <= (BMF_DECAY_FRAMES + 1)) // differs from TH05!
 	) {
 		return true;
 	}
@@ -468,18 +468,18 @@ bool near bullet_template_clip(void)
 	return false;
 }
 
-#define bullet_set_spawn_vars(ptr, available, spawn_state, spawn_type) \
-	spawn_state = BSS_GRAZEABLE; \
+#define bullet_set_spawn_vars(ptr, available, spawn_flag, spawn_type) \
+	spawn_flag = BSF_GRAZEABLE; \
 	switch(spawn_type) { \
 	case BST_PELLET: \
 		ptr = &pellets[PELLET_COUNT - 1]; \
 		available = PELLET_COUNT; \
 		break; \
 	case BST_BULLET16_CLOUD_BACKWARDS: \
-		spawn_state = BSS_CLOUD_BACKWARDS; \
+		spawn_flag = BSF_CLOUD_BACKWARDS; \
 		goto bullet16; \
 	case BST_BULLET16_CLOUD_FORWARDS: \
-		spawn_state = BSS_CLOUD_FORWARDS; \
+		spawn_flag = BSF_CLOUD_FORWARDS; \
 		goto bullet16; \
 	default: \
 	bullet16: \
@@ -488,12 +488,12 @@ bool near bullet_template_clip(void)
 		break; \
 	}
 
-#define bullet_init_from_template(bullet, group_done, group_i, spawn_state) \
+#define bullet_init_from_template(bullet, group_done, group_i, spawn_flag) \
 	bullet->age = 0; \
 	bullet->pos.cur = bullet_template.origin; \
 	bullet->from_group = bullet_template.group; \
 	bullet->patnum = bullet_template.patnum; \
-	bullet->spawn_state = static_cast<bullet_spawn_state_t>(spawn_state); \
+	bullet->spawn_flag = static_cast<bullet_spawn_flag_t>(spawn_flag); \
 	\
 	group_done = bullet_velocity_and_angle_set(group_i); \
 	\
@@ -511,9 +511,9 @@ void pascal near bullets_add_regular_raw(void)
 	bullet_t near *bullet;
 	int group_i;
 	int bullets_available;
-	unsigned char move_state;
+	unsigned char move_flag;
 	bool group_done;
-	unsigned char spawn_state; // MODDERS: Should be bullet_spawn_state_t
+	unsigned char spawn_flag; // MODDERS: Should be bullet_spawn_flag_t
 
 	if(bullet_template.spawn_type == BST_GATHER_PELLET) {
 		gather_template.center = bullet_template.origin;
@@ -531,19 +531,19 @@ void pascal near bullets_add_regular_raw(void)
 	}
 
 	bullet_set_spawn_vars(
-		bullet, bullets_available, spawn_state, bullet_template.spawn_type
+		bullet, bullets_available, spawn_flag, bullet_template.spawn_type
 	);
 
-	move_state = BMS_REGULAR;
+	move_flag = BMF_REGULAR;
 	if(
-		(bullet_template.speed < to_sp8(BMS_DECELERATE_THRESHOLD)) ||
+		(bullet_template.speed < to_sp8(BMF_DECELERATE_THRESHOLD)) ||
 		bullet_clear_time
 	) {
 		if(
 			(bullet_template.group != BG_STACK) &&
 			(bullet_template.group != BG_STACK_AIMED)
 		) {
-			move_state = BMS_DECELERATE;
+			move_flag = BMF_DECELERATE;
 		}
 	}
 
@@ -551,12 +551,12 @@ void pascal near bullets_add_regular_raw(void)
 	while(bullets_available > 0) {
 		if(bullet->flag == F_FREE) {
 			bullet->flag = F_ALIVE;
-			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
-			bullet->u1.decelerate_time = BMS_DECELERATE_FRAMES;
+			bullet->move_flag = static_cast<bullet_move_flag_t>(move_flag);
+			bullet->u1.decelerate_time = BMF_DECELERATE_FRAMES;
 			bullet->u2.decelerate_speed_delta.v = (
-				to_sp8(BMS_DECELERATE_BASE_SPEED) - bullet_template.speed
+				to_sp8(BMF_DECELERATE_BASE_SPEED) - bullet_template.speed
 			);
-			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
+			bullet_init_from_template(bullet, group_done, group_i, spawn_flag);
 			if(group_done) {
 				break;
 			}
@@ -573,24 +573,24 @@ void pascal near bullets_add_special_raw(void)
 	int group_i;
 	int bullets_available;
 	bool group_done;
-	bullet_spawn_state_t spawn_state;
+	bullet_spawn_flag_t spawn_flag;
 
 	if(bullet_template_clip()) {
 		return;
 	}
 
 	bullet_set_spawn_vars(
-		bullet, bullets_available, spawn_state, bullet_template.spawn_type
+		bullet, bullets_available, spawn_flag, bullet_template.spawn_type
 	);
 	group_i = 0;
 	while(bullets_available > 0) {
 		if(bullet->flag == F_FREE) {
 			bullet->flag = F_ALIVE;
-			bullet->move_state = BMS_SPECIAL;
+			bullet->move_flag = BMF_SPECIAL;
 			bullet->special_motion = bullet_template.special_motion;
 			bullet->u1.turns_done = 0;
 			bullet->u2.angle.v = bullet_template_special_angle.v;
-			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
+			bullet_init_from_template(bullet, group_done, group_i, spawn_flag);
 			if(group_done) {
 				break;
 			}

@@ -674,22 +674,22 @@ void pascal near exalice_grcg_hexagram_put(subpixel_t radius, int angle)
 
 void near exalice_hexagrams_update_and_render(void)
 {
-	enum exalice_hexagrams_state_t {
+	enum hexagrams_flag_t {
 		UNINITIALIZED = 0,
 		TURN_RIGHT = 1,
 		TURN_LEFT = 2,
-		STATE_COUNT,
+		FLAG_COUNT,
 	};
-	extern exalice_hexagrams_state_t exalice_hexagrams_state;
+	extern hexagrams_flag_t hexagrams_flag;
 	int i;
 
 	lineset_t near &set = linesets[0];
-	if(exalice_hexagrams_state == UNINITIALIZED) {
+	if(hexagrams_flag == UNINITIALIZED) {
 		for(i = 0; i < (LINESET_LINE_COUNT - 1); i++) {
 			set.radius[i].set(1.0f);
 			set.angle[i] = 0x00;
 		}
-		exalice_hexagrams_state = TURN_RIGHT;
+		hexagrams_flag = TURN_RIGHT;
 	}
 	for(i = (LINESET_LINE_COUNT - 2); i > 0; i--) {
 		set.radius[i] = set.radius[i - 1];
@@ -698,11 +698,11 @@ void near exalice_hexagrams_update_and_render(void)
 	set.radius[0] += 5.0f;
 	if(set.radius[0].v >= to_sp(320.0f)) {
 		set.radius[0].set(1.0f);
-		exalice_hexagrams_state = static_cast<exalice_hexagrams_state_t>(
-			STATE_COUNT - exalice_hexagrams_state
+		hexagrams_flag = static_cast<hexagrams_flag_t>(
+			FLAG_COUNT - hexagrams_flag
 		);
 	}
-	if(exalice_hexagrams_state == TURN_RIGHT) {
+	if(hexagrams_flag == TURN_RIGHT) {
 		set.angle[0] += 0x01;
 	} else {
 		set.angle[0] -= 0x01;
