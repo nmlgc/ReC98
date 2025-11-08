@@ -193,7 +193,7 @@ loc_9724:
 ; ---------------------------------------------------------------------------
 
 loc_974D:
-		call	sub_13DF9
+		call	@enemy_formations_free$qv
 		kajacall	KAJA_SONG_STOP
 		or	si, si
 		jnz	short loc_9764
@@ -16093,22 +16093,7 @@ ENEMY_2_TEXT ends
 E_ENEMY_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_load$qv:proc
 	extern @enemy_formations_randomize$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13DF9	proc far
-		push	bp
-		mov	bp, sp
-		call	hmem_free pascal, _enedat
-		call	hmem_free pascal, _formation_scripts
-		call	hmem_free pascal, _formation_type_ring
-		call	hmem_free pascal, _formation_pos_type_ring
-		pop	bp
-		retf
-sub_13DF9	endp
-
+	extern @enemy_formations_free$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 

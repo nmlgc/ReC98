@@ -296,3 +296,11 @@ void enemy_formations_randomize(void)
 	enemies_alive[0] = 0;
 	enemies_alive[1] = 0;
 }
+
+void enemy_formations_free(void)
+{
+	hmem_free(enedat);
+	hmem_free(formation_scripts);
+	hmem_free(formation_type_ring);
+	hmem_free(formation_pos_type_ring);
+}
