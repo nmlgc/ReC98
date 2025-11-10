@@ -1258,7 +1258,7 @@ loc_A1BD:
 loc_A206:
 		cmp	di, PLAYER_COUNT
 		jl	loc_A148
-		call	sub_13D9C
+		call	@enemy_formations_randomize$qv
 		pop	di
 		pop	si
 		leave
@@ -16092,56 +16092,7 @@ ENEMY_2_TEXT ends
 
 E_ENEMY_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_load$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13D9C	proc far
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		jmp	short loc_13DDC
-; ---------------------------------------------------------------------------
-
-loc_13DA5:
-		call	IRand
-		mov	dl, _formation_count
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_1], dl
-		mov	al, [bp+var_1]
-		cmp	al, [bp+var_2]
-		jz	short loc_13DA5
-		mov	es, _formation_type_ring
-		mov	es:[si], al
-		mov	[bp+var_2], al
-		call	IRand
-		and	al, 1
-		shl	al, 7 ; *= EPT_DO_NOT_MIRROR_X
-		mov	es, _formation_pos_type_ring
-		mov	es:[si], al
-		inc	si
-
-loc_13DDC:
-		cmp	si, FORMATION_RING_SIZE
-		jl	short loc_13DA5
-		mov	_formation_p[0], 0
-		mov	_formation_p[1], 0
-		mov	_enemies_alive[0], 0
-		mov	_enemies_alive[1], 0
-		pop	si
-		leave
-		retf
-sub_13D9C	endp
-
+	extern @enemy_formations_randomize$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32662,7 +32613,6 @@ _enemy_speed	db ?
 	evendata
 _enedat	dw ?
 
-FORMATION_RING_SIZE = 256
 FORMATIONS_MAX = 24
 
 public _formation_enemy_count, _formation_scripts, _formation_type_ring

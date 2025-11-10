@@ -1,3 +1,4 @@
+#include "th03/main/enemy/enemy.hpp"
 #include "th03/main/enemy/efe.hpp"
 #include "th03/formats/enedat.hpp"
 #include "th03/snd/snd.h"
@@ -264,4 +265,34 @@ void enemy_formations_load(void)
 		formation_i++;
 	};
 	formation_count = formation_i;
+}
+
+void enemy_formations_randomize(void)
+{
+	uint8_t next;
+
+	// ZUN landmine: Uninitialized. In ZUN's original binary, this variable is
+	// allocated to a stack address that always holds a value of 0x5E. That
+	// value comes from the lower 8 bits of the [InitStart] constant that the
+	// C0 entry point assigns to `SI`, which is then callee-saved onto the
+	// stack by every function that uses `SI` from the start of the program to
+	// the first call of this function.
+	// Should be initialized to `formation_count` to ensure deterministic RNG
+	// behavior.
+	uint8_t prev;
+
+	for(int i = 0; i < FORMATION_RING_SIZE; i++) {
+		do {
+			next = (irand() % formation_count);
+		} while(next == prev);
+		formation_type_ring[i] = next;
+		prev = next;
+
+		formation_pos_type_ring[i] = ((irand() & 1) * EPT_DO_NOT_MIRROR_X);
+	}
+	static_assert(PLAYER_COUNT == 2);
+	formation_p[0] = 0;
+	formation_p[1] = 0;
+	enemies_alive[0] = 0;
+	enemies_alive[1] = 0;
 }
