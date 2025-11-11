@@ -951,7 +951,7 @@ var_6		= dword	ptr -6
 		mov	byte_26356, 0
 		mov	byte_1FBC2, 0
 		mov	byte_1FBC3, 0
-		mov	byte_1F520, 0
+		mov	_enemy_speed, 0
 		call	sub_E313
 		call	@randring_fill$qv
 		call	@bullets_reset$qv
@@ -16045,7 +16045,7 @@ arg_0		= word ptr  4
 		mov	bx, (2 shl 4)
 		cwd
 		idiv	bx
-		mov	byte_1F520, al
+		mov	_enemy_speed, al
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	es, _formation_type_ring
@@ -16259,7 +16259,7 @@ sub_13E22	proc near
 		push	si
 		mov	si, word_2203C
 		mov	cx, [si+10h]
-		mov	al, byte_1F520
+		mov	al, _enemy_speed
 		mov	ah, 0
 		imul	cx
 		mov	bx, 9
@@ -16293,7 +16293,7 @@ loc_13E58:
 
 loc_13E6C:
 		mov	cx, [si+12h]
-		mov	al, byte_1F520
+		mov	al, _enemy_speed
 		mov	ah, 0
 		imul	cx
 		mov	bx, 9
@@ -16373,7 +16373,7 @@ sub_13ED1	proc near
 		cwd
 		idiv	bx
 		mov	cx, ax
-		mov	al, byte_1F520
+		mov	al, _enemy_speed
 		mov	ah, 0
 		imul	cx
 		mov	bx, 9
@@ -16682,7 +16682,7 @@ loc_14168:
 		mov	[bp+var_2], ax
 		shl	ax, 7
 		mov	[di+4],	ax
-		mov	al, byte_1F520
+		mov	al, _enemy_speed
 		mov	ah, 0
 		add	ax, [bp+var_6]
 		mov	bx, ax
@@ -16693,7 +16693,7 @@ loc_14187:
 		mov	al, [di+6]
 		shl	al, 4
 		mov	[di+9],	al
-		mov	al, byte_1F520
+		mov	al, _enemy_speed
 		mov	ah, 0
 		add	ax, [bp+var_6]
 		mov	bx, ax
@@ -16803,7 +16803,7 @@ loc_1423E:
 		sub	ax, dx
 		sar	ax, 1
 		imul	ax, 3
-		mov	dl, byte_1F520
+		mov	dl, _enemy_speed
 		mov	dh, 0
 		push	ax
 		mov	ax, dx
@@ -32986,9 +32986,9 @@ word_1F51A	dw ?
 byte_1F51C	db ?
 byte_1F51D	db ?
 
-public _enedat_2, _enedat
+public _enedat_2, _enedat, _enemy_speed
 _enedat_2	dw ?
-byte_1F520	db ?
+_enemy_speed	db ?
 	evendata
 _enedat	dw ?
 
