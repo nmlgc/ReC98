@@ -16094,87 +16094,7 @@ E_ENEMY_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_load$qv:proc
 	extern @enemy_formations_randomize$qv:proc
 	extern @enemy_formations_free$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13E22	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, _efe_p
-		mov	cx, [si+enemy_t.ENEMY_velocity.x]
-		mov	al, _enemy_speed
-		mov	ah, 0
-		imul	cx
-		mov	bx, 9
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, cx
-		add	ax, ax
-		mov	bx, 3
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	cx, dx
-		test	[si+enemy_t.ENEMY_pos_type], EPT_DO_NOT_MIRROR_X
-		jz	short loc_13E55
-		add	[si+enemy_t.ENEMY_center.x], cx
-		jmp	short loc_13E58
-; ---------------------------------------------------------------------------
-
-loc_13E55:
-		sub	[si+enemy_t.ENEMY_center.x], cx
-
-loc_13E58:
-		test	[si+enemy_t.ENEMY_pos_type], EPT_CLIP_X
-		jz	short loc_13E6C
-		cmp	[si+enemy_t.ENEMY_center.x], (-32 shl 4)
-		jle	short loc_13EA0
-		cmp	[si+enemy_t.ENEMY_center.x], ((PLAYFIELD_W + 32) shl 4)
-		jge	short loc_13EA0
-
-loc_13E6C:
-		mov	cx, [si+enemy_t.ENEMY_velocity.y]
-		mov	al, _enemy_speed
-		mov	ah, 0
-		imul	cx
-		mov	bx, 9
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, cx
-		add	ax, ax
-		mov	bx, 3
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	cx, dx
-		add	[si+enemy_t.ENEMY_center.y], cx
-		test	[si+enemy_t.ENEMY_pos_type], EPT_CLIP_BOTTOM
-		jz	short loc_13E9C
-		cmp	[si+enemy_t.ENEMY_center.y], ((PLAYFIELD_H + 32) shl 4)
-		jge	short loc_13EA0
-
-loc_13E9C:
-		mov	al, 0
-		jmp	short loc_13EA5
-; ---------------------------------------------------------------------------
-
-loc_13EA0:
-		mov	[si+enemy_t.ENEMY_flag], EFF_FREE
-		mov	al, 1
-
-loc_13EA5:
-		pop	si
-		pop	bp
-		retn
-sub_13E22	endp
-
+	@enemy_move_and_clip$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16330,7 +16250,7 @@ loc_13F7C:
 		call	sub_13EA8
 
 loc_13F9A:
-		call	sub_13E22
+		call	@enemy_move_and_clip$qv
 		or	al, al
 		jnz	loc_14136	; jumptable 00013F78 case 0
 		mov	bx, [bp+var_6]
@@ -16371,7 +16291,7 @@ loc_13FFC:
 ; ---------------------------------------------------------------------------
 
 loc_14004:
-		call	sub_13E22	; jumptable 00013F78 case 6
+		call	@enemy_move_and_clip$qv	; jumptable 00013F78 case 6
 		or	al, al
 		jnz	loc_14136	; jumptable 00013F78 case 0
 		jmp	loc_140A8	; jumptable 00013F78 case 3
@@ -16386,7 +16306,7 @@ loc_14010:
 		call	sub_13EA8
 
 loc_14023:
-		call	sub_13E22
+		call	@enemy_move_and_clip$qv
 		or	al, al
 		jnz	loc_14136	; jumptable 00013F78 case 0
 		mov	bx, [bp+var_6]
@@ -16433,7 +16353,7 @@ loc_1408B:
 		mov	[bp+var_7], 5
 
 loc_14099:
-		call	sub_13E22
+		call	@enemy_move_and_clip$qv
 		or	al, al
 		jnz	loc_14136	; jumptable 00013F78 case 0
 		call	sub_13ED1
@@ -16484,7 +16404,7 @@ loc_140CE:
 		mov	[di+enemy_t.ENEMY_velocity.y], ax
 
 loc_1411B:
-		call	sub_13E22
+		call	@enemy_move_and_clip$qv
 		or	al, al
 		jnz	short loc_14136	; jumptable 00013F78 case 0
 		call	sub_13ED1

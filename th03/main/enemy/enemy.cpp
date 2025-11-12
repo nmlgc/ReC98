@@ -304,3 +304,55 @@ void enemy_formations_free(void)
 	hmem_free(formation_type_ring);
 	hmem_free(formation_pos_type_ring);
 }
+
+// ZUN quirk: The addition of these two expressions is a convoluted, slow, and
+// bizarrely inaccurate way of expressing
+//
+// 	(([v] * ([enemy_speed] + 6)) / 9)
+//
+// with the added inaccuracy of two integer divisions causing the result to be
+// off by 1 at regular intervals.
+// (The result for [v] == 1.0f and [enemy_speed] == 3 is 0.9375f, not the 1.0f
+// you'd get from the simplified formula.)
+inline subpixel_t enemy_speedtune_1(subpixel_t v) {
+	return ((enemy_speed * v) / 9);
+}
+inline subpixel_t enemy_speedtune_2(subpixel_t v) {
+	return ((2 * v) / 3);
+}
+
+bool near enemy_move_and_clip(void)
+{
+	enemy_t near& p = *efe_p.enemy;
+	subpixel_t velocity;
+
+	velocity = p.velocity.x.v;
+	velocity = (enemy_speedtune_1(velocity) + enemy_speedtune_2(velocity));
+	if(p.pos_type & EPT_DO_NOT_MIRROR_X) {
+		p.center.x.v += velocity;
+	} else {
+		p.center.x.v -= velocity;
+	}
+	if(p.pos_type & EPT_CLIP_X) {
+		if(
+			(p.center.x.v <= to_sp(-32.0f)) ||
+			(p.center.x.v >= to_sp(PLAYFIELD_W + 32.0f))
+		) {
+			goto clip;
+		}
+	}
+
+	velocity = p.velocity.y.v;
+	velocity = (enemy_speedtune_1(velocity) + enemy_speedtune_2(velocity));
+	p.center.y.v += velocity;
+	if(p.pos_type & EPT_CLIP_BOTTOM) {
+		if((p.center.y.v >= to_sp(PLAYFIELD_H + 32.0f))) {
+			goto clip;
+		}
+	}
+	return false;
+
+clip:
+	p.flag = EFF_FREE;
+	return true;
+}
