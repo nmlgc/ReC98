@@ -16096,35 +16096,7 @@ E_ENEMY_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_free$qv:proc
 	@enemy_move_and_clip$qv procdesc near
 	@enemy_velocity_set_from_angle_an$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13ED1	proc near
-		push	bp
-		mov	bp, sp
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_angle_speed]
-		cbw
-		shl	ax, 9
-		mov	bx, 3
-		cwd
-		idiv	bx
-		mov	cx, ax
-		mov	al, _enemy_speed
-		mov	ah, 0
-		imul	cx
-		mov	bx, 9
-		cwd
-		idiv	bx
-		add	cx, ax
-		mov	bx, _efe_p
-		add	[bx+enemy_t.ENEMY_angle_wide], cx
-		pop	bp
-		retn
-sub_13ED1	endp
-
+	@enemy_angle_update$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16329,7 +16301,7 @@ loc_14099:
 		call	@enemy_move_and_clip$qv
 		or	al, al
 		jnz	loc_14136	; jumptable 00013F78 case 0
-		call	sub_13ED1
+		call	@enemy_angle_update$qv
 		jmp	loc_1423E	; default
 ; ---------------------------------------------------------------------------
 
@@ -16380,7 +16352,7 @@ loc_1411B:
 		call	@enemy_move_and_clip$qv
 		or	al, al
 		jnz	short loc_14136	; jumptable 00013F78 case 0
-		call	sub_13ED1
+		call	@enemy_angle_update$qv
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+4]
 		mov	[bp+var_8], al

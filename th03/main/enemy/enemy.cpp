@@ -365,4 +365,32 @@ void near enemy_velocity_set_from_angle_and_speed(void)
 	asm { push es; } // ZUN bloat: Yes, no point to this at all...
 	vector2(p.velocity.x.v, p.velocity.y.v, p.angle.split.coarse, p.speed);
 	asm { pop es; } // …or to this.
+
+	#undef p
+}
+
+void near enemy_angle_update(void)
+{
+	#define p (*efe_p.enemy)
+
+	// Looks like the tuning done for speeds, except that this instance of
+	// enemy_speedtune_1() receives the result of an inlined version of
+	// enemy_speedtune_2() instead of [p.angle_speed], resulting in smaller
+	// angles as [enemy_speed] increases.
+	//
+	// Also note how a signed 16-bit integer is technically not enough to cover
+	// the entire scaled range of possible [angle_speed] values here. The extra
+	// factor of 2 means that the 8-bit [angle_speed] gets left-shifted by 9
+	// bits, causing [speed_wide] to already overflow into negative numbers for
+	// angle speeds ≥0x40 rather than ≥0x80. Hence, [speed_wide] would have
+	// needed to hold at least 17 bits to store the correct un-truncated result
+	// here.
+	// Then again, who would seriously use angle speeds of 90° *per frame*. -8
+	// and +8 are the highest speeds used in the original scripts. So this is
+	// neither a quirk nor a landmine.
+	int16_t speed_wide = ((p.angle_speed * (0x100 * 2)) / 3);
+	speed_wide += enemy_speedtune_1(speed_wide);
+	p.angle.wide += speed_wide;
+
+	#undef p
 }
