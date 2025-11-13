@@ -1,6 +1,7 @@
 #include "th03/main/enemy/enemy.hpp"
 #include "th03/main/enemy/efe.hpp"
 #include "th03/formats/enedat.hpp"
+#include "th03/math/vector.hpp"
 #include "th03/snd/snd.h"
 #include "th03/sprites/main_s16.hpp"
 #include "libs/master.lib/master.hpp"
@@ -355,4 +356,13 @@ bool near enemy_move_and_clip(void)
 clip:
 	p.flag = EFF_FREE;
 	return true;
+}
+
+void near enemy_velocity_set_from_angle_and_speed(void)
+{
+	#define p (*efe_p.enemy)
+
+	asm { push es; } // ZUN bloat: Yes, no point to this at all...
+	vector2(p.velocity.x.v, p.velocity.y.v, p.angle.split.coarse, p.speed);
+	asm { pop es; } // …or to this.
 }

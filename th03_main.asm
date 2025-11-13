@@ -16095,34 +16095,7 @@ E_ENEMY_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_randomize$qv:proc
 	extern @enemy_formations_free$qv:proc
 	@enemy_move_and_clip$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13EA8	proc near
-		push	bp
-		mov	bp, sp
-		push	es
-		push	ds
-		mov	ax, _efe_p
-		add	ax, ENEMY_velocity.x
-		push	ax
-		push	ds
-		mov	ax, _efe_p
-		add	ax, ENEMY_velocity.y
-		push	ax
-		mov	bx, _efe_p
-		push	word ptr [bx+enemy_t.ENEMY_angle_coarse]
-		mov	al, [bx+enemy_t.ENEMY_speed]
-		mov	ah, 0
-		push	ax
-		call	vector2
-		pop	es
-		pop	bp
-		retn
-sub_13EA8	endp
-
+	@enemy_velocity_set_from_angle_an$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16247,7 +16220,7 @@ loc_13F7C:
 		mov	al, es:[bx+1]
 		mov	[di+enemy_t.ENEMY_angle_coarse], al
 		mov	[di+enemy_t.ENEMY_angle_fine], 0
-		call	sub_13EA8
+		call	@enemy_velocity_set_from_angle_an$qv
 
 loc_13F9A:
 		call	@enemy_move_and_clip$qv
@@ -16303,7 +16276,7 @@ loc_14010:
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+1]
 		mov	[di+enemy_t.ENEMY_speed], al
-		call	sub_13EA8
+		call	@enemy_velocity_set_from_angle_an$qv
 
 loc_14023:
 		call	@enemy_move_and_clip$qv
@@ -16330,7 +16303,7 @@ loc_14058:
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+2]
 		mov	[di+enemy_t.ENEMY_speed], al
-		call	sub_13EA8
+		call	@enemy_velocity_set_from_angle_an$qv
 		mov	bx, [bp+var_6]
 		cmp	byte ptr es:[bx], 0Ah
 		jnz	short loc_1408B
