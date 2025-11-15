@@ -1,5 +1,6 @@
 #include "th03/main/enemy/enemy.hpp"
 #include "th03/main/enemy/efe.hpp"
+#include "th03/main/difficul.hpp"
 #include "th03/formats/enedat.hpp"
 #include "th03/math/vector.hpp"
 #include "th03/snd/snd.h"
@@ -393,4 +394,16 @@ void near enemy_angle_update(void)
 	p.angle.wide += speed_wide;
 
 	#undef p
+}
+
+subpixel_length_8_t pascal near chain_pellet_speed(subpixel_length_8_t base)
+{
+	int v = base;
+	v *= round_speed;
+	v >>= (SUBPIXEL_BITS + 3);
+	v += base;
+	if(v >= (ROUND_SPEED_MAX + 1)) {
+		v = ROUND_SPEED_MAX;
+	}
+	return v;
 }

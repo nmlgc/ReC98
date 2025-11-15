@@ -16097,39 +16097,8 @@ E_ENEMY_TEXT segment byte public 'CODE' use16
 	@enemy_move_and_clip$qv procdesc near
 	@enemy_velocity_set_from_angle_an$qv procdesc near
 	@enemy_angle_update$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13EFF	proc near
-
-arg_0		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	cl, [bp+arg_0]
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _round_speed
-		mov	ah, 0
-		imul	bx
-		mov	bx, ax
-		sar	bx, 7
-		mov	al, cl
-		mov	ah, 0
-		add	bx, ax
-		cmp	bx, 80h
-		jl	short loc_13F26
-		mov	bx, 7Fh
-
-loc_13F26:
-		mov	al, bl
-		pop	bp
-		retn	2
-sub_13EFF	endp
-
+	@CHAIN_PELLET_SPEED$QUC procdesc pascal near \
+		base:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20161,8 +20130,7 @@ loc_1630B:
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bx+enemy_t.ENEMY_center.y]
 		mov	_bullet_template.BT_center.y, ax
-		push	18h
-		call	sub_13EFF
+		call	@chain_pellet_speed$quc pascal, ((1 shl 4) + 8)
 		mov	_bullet_template.BT_speed, al
 		mov	_bullet_template.BT_angle, 0
 		mov	al, [bp+@@pid]
