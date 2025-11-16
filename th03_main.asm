@@ -233,12 +233,12 @@ loc_977E:
 		call	sub_1797F
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_1FE70
+		call	exatt_update_p1
 		call	p1_1F32E
 		call	p1_205CE
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_1FE7C
+		call	exatt_update_p2
 		call	p2_1F332
 		call	p2_205D2
 		call	@hitcircles_update$qv
@@ -309,11 +309,11 @@ loc_986C:
 		call	@hitcircles_render$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_1FE74
+		call	exatt_render_p1
 		call	_chargeshot_render_p1
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_1FE80
+		call	exatt_render_p2
 		call	_chargeshot_render_p2
 		mov	_pid_PID_current, 0
 		push	offset _p1
@@ -1598,9 +1598,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A5E2
-		setfarfp	p1_1FE6C, reimu_1A27E
-		setfarfp	p1_1FE70, reimu_1A4E0
-		setfarfp	p1_1FE74, reimu_1A5F9
+		setfarfp	exatt_add_p1, @exatt_add_reimu$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_reimu$qv
+		setfarfp	exatt_render_p1, @exatt_render_reimu$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_reimu
 		setfarfp	_chargeshot_update_p1, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p1, chargeshot_render_reimu
@@ -1617,9 +1617,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A5E2:
-		setfarfp	p2_1FE78, reimu_1A27E
-		setfarfp	p2_1FE7C, reimu_1A4E0
-		setfarfp	p2_1FE80, reimu_1A5F9
+		setfarfp	exatt_add_p2, @exatt_add_reimu$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_reimu$qv
+		setfarfp	exatt_render_p2, @exatt_render_reimu$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_reimu
 		setfarfp	_chargeshot_update_p2, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p2, chargeshot_render_reimu
@@ -1663,9 +1663,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A77A
-		setfarfp	p1_1FE6C, mima_1A62B
-		setfarfp	p1_1FE70, mima_1A745
-		setfarfp	p1_1FE74, mima_1A8D3
+		setfarfp	exatt_add_p1, @exatt_add_mima$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_mima$qv
+		setfarfp	exatt_render_p1, @exatt_render_mima$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_mima
 		setfarfp	_chargeshot_update_p1, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p1, chargeshot_render_mima
@@ -1682,9 +1682,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A77A:
-		setfarfp	p2_1FE78, mima_1A62B
-		setfarfp	p2_1FE7C, mima_1A745
-		setfarfp	p2_1FE80, mima_1A8D3
+		setfarfp	exatt_add_p2, @exatt_add_mima$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_mima$qv
+		setfarfp	exatt_render_p2, @exatt_render_mima$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_mima
 		setfarfp	_chargeshot_update_p2, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p2, chargeshot_render_mima
@@ -1728,9 +1728,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A912
-		setfarfp	p1_1FE6C, marisa_19ABC
-		setfarfp	p1_1FE70, marisa_19C36
-		setfarfp	p1_1FE74, marisa_19D31
+		setfarfp	exatt_add_p1, @exatt_add_marisa$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_marisa$qv
+		setfarfp	exatt_render_p1, @exatt_render_marisa$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_marisa
 		setfarfp	_chargeshot_update_p1, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p1, chargeshot_render_marisa
@@ -1747,9 +1747,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A912:
-		setfarfp	p2_1FE78, marisa_19ABC
-		setfarfp	p2_1FE7C, marisa_19C36
-		setfarfp	p2_1FE80, marisa_19D31
+		setfarfp	exatt_add_p2, @exatt_add_marisa$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_marisa$qv
+		setfarfp	exatt_render_p2, @exatt_render_marisa$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_marisa
 		setfarfp	_chargeshot_update_p2, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p2, chargeshot_render_marisa
@@ -1793,9 +1793,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AAAA
-		setfarfp	p1_1FE6C, ellen_193EF
-		setfarfp	p1_1FE70, ellen_1961D
-		setfarfp	p1_1FE74, ellen_197F3
+		setfarfp	exatt_add_p1, @exatt_add_ellen$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_ellen$qv
+		setfarfp	exatt_render_p1, @exatt_render_ellen$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_ellen
 		setfarfp	_chargeshot_update_p1, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p1, chargeshot_render_ellen
@@ -1812,9 +1812,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_AAAA:
-		setfarfp	p2_1FE78, ellen_193EF
-		setfarfp	p2_1FE7C, ellen_1961D
-		setfarfp	p2_1FE80, ellen_197F3
+		setfarfp	exatt_add_p2, @exatt_add_ellen$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_ellen$qv
+		setfarfp	exatt_render_p2, @exatt_render_ellen$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_ellen
 		setfarfp	_chargeshot_update_p2, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p2, chargeshot_render_ellen
@@ -1858,9 +1858,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AC42
-		setfarfp	p1_1FE6C, kotohime_19D60
-		setfarfp	p1_1FE70, kotohime_19FEF
-		setfarfp	p1_1FE74, kotohime_1A14E
+		setfarfp	exatt_add_p1, @exatt_add_kotohime$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_kotohime$qv
+		setfarfp	exatt_render_p1, @exatt_render_kotohime$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_kotohime
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kotohime
@@ -1877,9 +1877,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_AC42:
-		setfarfp	p2_1FE78, kotohime_19D60
-		setfarfp	p2_1FE7C, kotohime_19FEF
-		setfarfp	p2_1FE80, kotohime_1A14E
+		setfarfp	exatt_add_p2, @exatt_add_kotohime$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_kotohime$qv
+		setfarfp	exatt_render_p2, @exatt_render_kotohime$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_kotohime
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kotohime
@@ -1923,9 +1923,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_ADDA
-		setfarfp	p1_1FE6C, kana_19825
-		setfarfp	p1_1FE70, kana_19999
-		setfarfp	p1_1FE74, kana_19A8D
+		setfarfp	exatt_add_p1, @exatt_add_kana$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_kana$qv
+		setfarfp	exatt_render_p1, @exatt_render_kana$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_kana
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kana
@@ -1942,9 +1942,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_ADDA:
-		setfarfp	p2_1FE78, kana_19825
-		setfarfp	p2_1FE7C, kana_19999
-		setfarfp	p2_1FE80, kana_19A8D
+		setfarfp	exatt_add_p2, @exatt_add_kana$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_kana$qv
+		setfarfp	exatt_render_p2, @exatt_render_kana$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_kana
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kana
@@ -1988,9 +1988,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AF72
-		setfarfp	p1_1FE6C, rikako_1AFA2
-		setfarfp	p1_1FE70, rikako_1B105
-		setfarfp	p1_1FE74, rikako_1B231
+		setfarfp	exatt_add_p1, @exatt_add_rikako$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_rikako$qv
+		setfarfp	exatt_render_p1, @exatt_render_rikako$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_rikako
 		setfarfp	_chargeshot_update_p1, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p1, chargeshot_render_rikako
@@ -2007,9 +2007,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_AF72:
-		setfarfp	p2_1FE78, rikako_1AFA2
-		setfarfp	p2_1FE7C, rikako_1B105
-		setfarfp	p2_1FE80, rikako_1B231
+		setfarfp	exatt_add_p2, @exatt_add_rikako$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_rikako$qv
+		setfarfp	exatt_render_p2, @exatt_render_rikako$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_rikako
 		setfarfp	_chargeshot_update_p2, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p2, chargeshot_render_rikako
@@ -2053,9 +2053,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B10A
-		setfarfp	p1_1FE6C, chiyuri_18FEA
-		setfarfp	p1_1FE70, chiyuri_19260
-		setfarfp	p1_1FE74, chiyuri_1938A
+		setfarfp	exatt_add_p1, @exatt_add_chiyuri$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_chiyuri$qv
+		setfarfp	exatt_render_p1, @exatt_render_chiyuri$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_chiyuri
 		setfarfp	_chargeshot_update_p1, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p1, chargeshot_render_chiyuri
@@ -2072,9 +2072,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_B10A:
-		setfarfp	p2_1FE78, chiyuri_18FEA
-		setfarfp	p2_1FE7C, chiyuri_19260
-		setfarfp	p2_1FE80, chiyuri_1938A
+		setfarfp	exatt_add_p2, @exatt_add_chiyuri$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_chiyuri$qv
+		setfarfp	exatt_render_p2, @exatt_render_chiyuri$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_chiyuri
 		setfarfp	_chargeshot_update_p2, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p2, chargeshot_render_chiyuri
@@ -2118,9 +2118,9 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B2A2
-		setfarfp	p1_1FE6C, yumemi_1A902
-		setfarfp	p1_1FE70, yumemi_1AE2E
-		setfarfp	p1_1FE74, yumemi_1AF72
+		setfarfp	exatt_add_p1, @exatt_add_yumemi$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_yumemi$qv
+		setfarfp	exatt_render_p1, @exatt_render_yumemi$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_yumemi
 		setfarfp	_chargeshot_update_p1, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p1, chargeshot_render_yumemi
@@ -2137,9 +2137,9 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_B2A2:
-		setfarfp	p2_1FE78, yumemi_1A902
-		setfarfp	p2_1FE7C, yumemi_1AE2E
-		setfarfp	p2_1FE80, yumemi_1AF72
+		setfarfp	exatt_add_p2, @exatt_add_yumemi$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_yumemi$qv
+		setfarfp	exatt_render_p2, @exatt_render_yumemi$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_yumemi
 		setfarfp	_chargeshot_update_p2, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p2, chargeshot_render_yumemi
@@ -26118,8 +26118,8 @@ main_06_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_18FEA	proc far
+public @EXATT_ADD_CHIYURI$QIIUC
+@exatt_add_chiyuri$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -26179,14 +26179,14 @@ loc_19054:
 		pop	si
 		pop	bp
 		retf	6
-chiyuri_18FEA	endp
+@exatt_add_chiyuri$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1905A	proc near
+chiyuri_1905A	proc near
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -26396,14 +26396,14 @@ loc_1925C:
 		pop	si
 		leave
 		retn
-sub_1905A	endp
+chiyuri_1905A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_19260	proc far
+public @exatt_update_chiyuri$qv
+@exatt_update_chiyuri$qv proc far
 
 @@pid_other		= byte ptr -3
 var_2		= word ptr -2
@@ -26547,14 +26547,14 @@ loc_1937F:
 		pop	si
 		leave
 		retf
-chiyuri_19260	endp
+@exatt_update_chiyuri$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1938A	proc far
+public @exatt_render_chiyuri$qv
+@exatt_render_chiyuri$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -26571,7 +26571,7 @@ loc_193A0:
 		mov	bx, word_2028A
 		cmp	byte ptr [bx], 0
 		jz	short loc_193AC
-		call	sub_1905A
+		call	chiyuri_1905A
 
 loc_193AC:
 		add	si, 2
@@ -26583,7 +26583,7 @@ loc_193B4:
 		pop	si
 		pop	bp
 		retf
-chiyuri_1938A	endp
+@exatt_render_chiyuri$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26627,8 +26627,8 @@ sub_193BC	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_193EF	proc far
+public @EXATT_ADD_ELLEN$QIIUC
+@exatt_add_ellen$qiiuc proc far
 
 var_7		= byte ptr -7
 var_6		= byte ptr -6
@@ -26721,7 +26721,7 @@ loc_194A4:
 		pop	si
 		leave
 		retf	6
-ellen_193EF	endp
+@exatt_add_ellen$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26790,7 +26790,7 @@ sub_194A9	endp
 
 ; Attributes: bp-based frame
 
-sub_19510	proc near
+ellen_19510	proc near
 
 var_9		= word ptr -9
 @@left		= word ptr -8
@@ -26910,14 +26910,14 @@ loc_19619:
 		pop	si
 		leave
 		retn
-sub_19510	endp
+ellen_19510	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1961D	proc far
+public @exatt_update_ellen$qv
+@exatt_update_ellen$qv proc far
 
 @@pid_other		= byte ptr -5
 var_4		= word ptr -4
@@ -27115,14 +27115,14 @@ loc_197E7:
 		pop	si
 		leave
 		retf
-ellen_1961D	endp
+@exatt_update_ellen$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_197F3	proc far
+public @exatt_render_ellen$qv
+@exatt_render_ellen$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27141,7 +27141,7 @@ loc_1980A:
 		cmp	byte ptr [bx], 0
 		jz	short loc_19818
 		mov	word_1FB3A, si
-		call	sub_19510
+		call	ellen_19510
 
 loc_19818:
 		inc	di
@@ -27154,14 +27154,14 @@ loc_1981C:
 		pop	si
 		pop	bp
 		retf
-ellen_197F3	endp
+@exatt_render_ellen$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_19825	proc far
+public @EXATT_ADD_KANA$QIIUC
+@exatt_add_kana$qiiuc proc far
 
 var_2		= word ptr -2
 arg_0		= word ptr  6
@@ -27221,7 +27221,7 @@ loc_19890:
 		pop	si
 		leave
 		retf	6
-kana_19825	endp
+@exatt_add_kana$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27280,7 +27280,7 @@ sub_19896	endp
 
 ; Attributes: bp-based frame
 
-sub_198DD	proc near
+kana_198DD	proc near
 
 var_5		= word ptr -5
 @@top		= word ptr -4
@@ -27367,14 +27367,14 @@ loc_19995:
 		pop	si
 		leave
 		retn
-sub_198DD	endp
+kana_198DD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_19999	proc far
+public @exatt_update_kana$qv
+@exatt_update_kana$qv proc far
 
 @@pid_other		= byte ptr -5
 @@vector_y		= word ptr -4
@@ -27484,14 +27484,14 @@ loc_19A82:
 		pop	si
 		leave
 		retf
-kana_19999	endp
+@exatt_update_kana$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_19A8D	proc far
+public @exatt_render_kana$qv
+@exatt_render_kana$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27509,7 +27509,7 @@ loc_19AA3:
 		cmp	byte ptr [si], 0
 		jz	short loc_19AAF
 		mov	word_2028A, si
-		call	sub_198DD
+		call	kana_198DD
 
 loc_19AAF:
 		inc	di
@@ -27522,14 +27522,14 @@ loc_19AB3:
 		pop	si
 		pop	bp
 		retf
-kana_19A8D	endp
+@exatt_render_kana$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_19ABC	proc far
+public @EXATT_ADD_MARISA$QIIUC
+@exatt_add_marisa$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -27577,7 +27577,7 @@ loc_19B00:
 		pop	si
 		pop	bp
 		retf	6
-marisa_19ABC	endp
+@exatt_add_marisa$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27637,7 +27637,7 @@ sub_19B06	endp
 
 ; Attributes: bp-based frame
 
-sub_19B4F	proc near
+marisa_19B4F	proc near
 
 var_5		= byte ptr -5
 @@top		= word ptr -4
@@ -27748,14 +27748,14 @@ loc_19C32:
 		pop	si
 		leave
 		retn
-sub_19B4F	endp
+marisa_19B4F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_19C36	proc far
+public @exatt_update_marisa$qv
+@exatt_update_marisa$qv proc far
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -27875,14 +27875,14 @@ loc_19D25:
 		pop	si
 		leave
 		retf
-marisa_19C36	endp
+@exatt_update_marisa$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_19D31	proc far
+public @exatt_render_marisa$qv
+@exatt_render_marisa$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27900,7 +27900,7 @@ loc_19D47:
 		cmp	byte ptr [si], 0
 		jz	short loc_19D53
 		mov	word_2028A, si
-		call	sub_19B4F
+		call	marisa_19B4F
 
 loc_19D53:
 		inc	di
@@ -27913,14 +27913,14 @@ loc_19D57:
 		pop	si
 		pop	bp
 		retf
-marisa_19D31	endp
+@exatt_render_marisa$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_19D60	proc far
+public @EXATT_ADD_KOTOHIME$QIIUC
+@exatt_add_kotohime$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -27980,7 +27980,7 @@ loc_19DCD:
 		pop	si
 		pop	bp
 		retf	6
-kotohime_19D60	endp
+@exatt_add_kotohime$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28034,7 +28034,7 @@ sub_19DD3	endp
 
 ; Attributes: bp-based frame
 
-sub_19E2A	proc near
+kotohime_19E2A	proc near
 
 var_5		= word ptr -5
 @@x		= word ptr -2
@@ -28127,14 +28127,14 @@ loc_19EF5:
 		pop	si
 		leave
 		retn
-sub_19E2A	endp
+kotohime_19E2A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19EF9	proc near
+kotohime_19EF9	proc near
 		push	bp
 		mov	bp, sp
 		call	snd_se_play pascal, 3
@@ -28149,14 +28149,14 @@ sub_19EF9	proc near
 		call	sub_CDBD
 		pop	bp
 		retn
-sub_19EF9	endp
+kotohime_19EF9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19F1F	proc near
+kotohime_19F1F	proc near
 
 var_1		= byte ptr -1
 
@@ -28208,14 +28208,14 @@ loc_19F7F:
 		pop	si
 		leave
 		retn
-sub_19F1F	endp
+kotohime_19F1F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19F87	proc near
+kotohime_19F87	proc near
 
 var_1		= byte ptr -1
 
@@ -28267,14 +28267,14 @@ loc_19FE7:
 		pop	si
 		leave
 		retn
-sub_19F87	endp
+kotohime_19F87	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_19FEF	proc far
+public @exatt_update_kotohime$qv
+@exatt_update_kotohime$qv proc far
 
 @@pid_other		= byte ptr -1
 
@@ -28308,7 +28308,7 @@ loc_1A020:
 		jl	loc_1A0DA
 		cmp	byte ptr [si+12h], 4
 		jnz	short loc_1A07A
-		call	sub_19EF9
+		call	kotohime_19EF9
 		cmp	byte ptr [si+11h], 0
 		jz	loc_1A0D5
 		mov	byte_23E42, 1Ch
@@ -28321,7 +28321,7 @@ loc_1A020:
 		mov	word_23E3E, ax
 		mov	ax, [si+4]
 		mov	word_23E40, ax
-		call	sub_19F1F
+		call	kotohime_19F1F
 		jmp	short loc_1A0D5
 ; ---------------------------------------------------------------------------
 
@@ -28332,14 +28332,14 @@ loc_1A07A:
 		jnz	short loc_1A08B
 
 loc_1A086:
-		call	sub_19EF9
+		call	kotohime_19EF9
 		jmp	short loc_1A0D5
 ; ---------------------------------------------------------------------------
 
 loc_1A08B:
 		cmp	byte ptr [si+12h], 10h
 		jnz	short loc_1A0D5
-		call	sub_19EF9
+		call	kotohime_19EF9
 		mov	byte_23E42, 18h
 		call	@randring_far_next16$qv
 		mov	angle_23E43, al
@@ -28359,7 +28359,7 @@ loc_1A08B:
 ; ---------------------------------------------------------------------------
 
 loc_1A0CF:
-		call	sub_19F87
+		call	kotohime_19F87
 
 loc_1A0D2:
 		mov	byte ptr [si], 0
@@ -28423,14 +28423,14 @@ loc_1A143:
 		pop	si
 		leave
 		retf
-kotohime_19FEF	endp
+@exatt_update_kotohime$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1A14E	proc far
+public @exatt_render_kotohime$qv
+@exatt_render_kotohime$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -28447,7 +28447,7 @@ loc_1A164:
 		mov	bx, word_2028A
 		cmp	byte ptr [bx], 0
 		jz	short loc_1A170
-		call	sub_19E2A
+		call	kotohime_19E2A
 
 loc_1A170:
 		inc	si
@@ -28459,7 +28459,7 @@ loc_1A176:
 		pop	si
 		pop	bp
 		retf
-kotohime_1A14E	endp
+@exatt_render_kotohime$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28483,7 +28483,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	0
-		call	p1_1FE6C
+		call	exatt_add_p1
 		jmp	short loc_1A1A1
 ; ---------------------------------------------------------------------------
 
@@ -28491,7 +28491,7 @@ loc_1A199:
 		push	si
 		push	di
 		push	1
-		call	p2_1FE78
+		call	exatt_add_p2
 
 loc_1A1A1:
 		pop	di
@@ -28626,8 +28626,8 @@ sub_1A1ED	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_1A27E	proc far
+public @EXATT_ADD_REIMU$QIIUC
+@exatt_add_reimu$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -28677,7 +28677,7 @@ loc_1A2C8:
 		pop	si
 		pop	bp
 		retf	6
-reimu_1A27E	endp
+@exatt_add_reimu$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28833,7 +28833,7 @@ sub_1A377	endp
 
 ; Attributes: bp-based frame
 
-sub_1A3C4	proc near
+reimu_1A3C4	proc near
 
 var_5		= byte ptr -5
 @@top		= word ptr -4
@@ -28930,7 +28930,7 @@ loc_1A48D:
 		pop	si
 		leave
 		retn
-sub_1A3C4	endp
+reimu_1A3C4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28968,8 +28968,8 @@ sub_1A491	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_1A4E0	proc far
+public @exatt_update_reimu$qv
+@exatt_update_reimu$qv proc far
 
 @@angle		= byte ptr -1
 
@@ -29098,14 +29098,14 @@ loc_1A5E9:
 		pop	si
 		leave
 		retf
-reimu_1A4E0	endp
+@exatt_update_reimu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_1A5F9	proc far
+public @exatt_render_reimu$qv
+@exatt_render_reimu$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -29123,7 +29123,7 @@ loc_1A60F:
 		cmp	byte ptr [si], 0
 		jz	short loc_1A61E
 		mov	word_2028A, si
-		call	sub_1A3C4
+		call	reimu_1A3C4
 		inc	byte ptr [si+1]
 
 loc_1A61E:
@@ -29137,14 +29137,14 @@ loc_1A622:
 		pop	si
 		pop	bp
 		retf
-reimu_1A5F9	endp
+@exatt_render_reimu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_1A62B	proc far
+public @EXATT_ADD_MIMA$QIIUC
+@exatt_add_mima$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -29196,14 +29196,14 @@ loc_1A67E:
 		pop	si
 		pop	bp
 		retf	6
-mima_1A62B	endp
+@exatt_add_mima$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A684	proc near
+mima_1A684	proc near
 
 var_5		= word ptr -5
 @@top		= word ptr -4
@@ -29296,14 +29296,14 @@ loc_1A741:
 		pop	si
 		leave
 		retn
-sub_1A684	endp
+mima_1A684	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_1A745	proc far
+public @exatt_update_mima$qv
+@exatt_update_mima$qv proc far
 
 @@pid_other		= byte ptr -7
 var_6		= word ptr -6
@@ -29485,14 +29485,14 @@ loc_1A8C7:
 		pop	si
 		leave
 		retf
-mima_1A745	endp
+@exatt_update_mima$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_1A8D3	proc far
+public @exatt_render_mima$qv
+@exatt_render_mima$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -29510,7 +29510,7 @@ loc_1A8E9:
 		cmp	byte ptr [si], 0
 		jz	short loc_1A8F5
 		mov	word_2028A, si
-		call	sub_1A684
+		call	mima_1A684
 
 loc_1A8F5:
 		inc	di
@@ -29523,14 +29523,14 @@ loc_1A8F9:
 		pop	si
 		pop	bp
 		retf
-mima_1A8D3	endp
+@exatt_render_mima$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1A902	proc far
+public @EXATT_ADD_YUMEMI$QIIUC
+@exatt_add_yumemi$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -29583,7 +29583,7 @@ loc_1A959:
 		pop	si
 		pop	bp
 		retf	6
-yumemi_1A902	endp
+@exatt_add_yumemi$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29643,7 +29643,7 @@ sub_1A95F	endp
 
 ; Attributes: bp-based frame
 
-sub_1A9B0	proc near
+yumemi_1A9B0	proc near
 
 var_A		= word ptr -0Ah
 var_8		= byte ptr -8
@@ -30156,14 +30156,14 @@ loc_1AE2A:
 		pop	si
 		leave
 		retn
-sub_1A9B0	endp
+yumemi_1A9B0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1AE2E	proc far
+public @exatt_update_yumemi$qv
+@exatt_update_yumemi$qv proc far
 
 @@pid_other		= byte ptr -1
 
@@ -30301,14 +30301,14 @@ loc_1AF67:
 		pop	si
 		leave
 		retf
-yumemi_1AE2E	endp
+@exatt_update_yumemi$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1AF72	proc far
+public @exatt_render_yumemi$qv
+@exatt_render_yumemi$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -30325,7 +30325,7 @@ loc_1AF88:
 		mov	bx, word_2028A
 		cmp	byte ptr [bx], 0
 		jz	short loc_1AF94
-		call	sub_1A9B0
+		call	yumemi_1A9B0
 
 loc_1AF94:
 		inc	si
@@ -30337,14 +30337,14 @@ loc_1AF9A:
 		pop	si
 		pop	bp
 		retf
-yumemi_1AF72	endp
+@exatt_render_yumemi$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1AFA2	proc far
+public @EXATT_ADD_RIKAKO$QIIUC
+@exatt_add_rikako$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -30400,7 +30400,7 @@ loc_1B000:
 		pop	si
 		pop	bp
 		retf	6
-rikako_1AFA2	endp
+@exatt_add_rikako$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -30463,7 +30463,7 @@ sub_1B006	endp
 
 ; Attributes: bp-based frame
 
-sub_1B05A	proc near
+rikako_1B05A	proc near
 
 var_5		= word ptr -5
 var_4		= word ptr -4
@@ -30542,14 +30542,14 @@ loc_1B101:
 		pop	si
 		leave
 		retn
-sub_1B05A	endp
+rikako_1B05A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1B105	proc far
+public @exatt_update_rikako$qv
+@exatt_update_rikako$qv proc far
 
 var_7		= byte ptr -7
 var_6		= byte ptr -6
@@ -30684,14 +30684,14 @@ loc_1B221:
 		pop	si
 		leave
 		retf
-rikako_1B105	endp
+@exatt_update_rikako$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1B231	proc far
+public @exatt_render_rikako$qv
+@exatt_render_rikako$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -30709,7 +30709,7 @@ loc_1B247:
 		cmp	byte ptr [si], 0
 		jz	short loc_1B253
 		mov	word_2028A, si
-		call	sub_1B05A
+		call	rikako_1B05A
 
 loc_1B253:
 		inc	di
@@ -30722,7 +30722,7 @@ loc_1B257:
 		pop	si
 		pop	bp
 		retf
-rikako_1B231	endp
+@exatt_render_rikako$qv endp
 
 main_06_TEXT	ends
 
@@ -34974,12 +34974,16 @@ byte_1FE5A	db ?
 byte_1FE62	db ?
 		db 7 dup(?)
 word_1FE6A	dw ?
-p1_1FE6C	dd ?
-p1_1FE70	dd ?
-p1_1FE74	dd ?
-p2_1FE78	dd ?
-p2_1FE7C	dd ?
-p2_1FE80	dd ?
+
+public _exatt_funcs
+_exatt_funcs label byte
+exatt_add_p1	dd ?
+exatt_update_p1	dd ?
+exatt_render_p1	dd ?
+exatt_add_p2	dd ?
+exatt_update_p2	dd ?
+exatt_render_p2	dd ?
+
 		db 4 dup(?)
 public _pid_current
 _pid_current	db ?
