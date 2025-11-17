@@ -21482,75 +21482,10 @@ E_FIREB_TEXT segment byte public 'CODE' use16
 	extern @fireballs_add$qv:proc
 	@fireball_put$qv procdesc near
 	@fireball_explosion_flag_update$qv procdesc near
+	@fireball_explosion_put$qv procdesc near
 E_FIREB_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17FCF	proc near
-
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_1		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_enemy], 12
-		jnb	short loc_17FE4
-		mov	si, _SO_EXPLOSION_64X64
-		jmp	short loc_18019
-; ---------------------------------------------------------------------------
-
-loc_17FE4:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_enemy], 32
-		jnb	short loc_1800B
-		mov	al, [bx+fireball_t.FIREBALL_enemy]
-		mov	ah, 0
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		mov	ah, 0
-		and	ax, 1
-		add	ax, ax
-		mov	bx, ax
-		mov	si, (_SO_EXPLOSION_64X64 + (1 * word))[bx]
-		jmp	short loc_18019
-; ---------------------------------------------------------------------------
-
-loc_1800B:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_enemy], 36
-		jnb	short loc_18019
-		mov	si, (_SO_EXPLOSION_64X64 + (3 * word))
-
-loc_18019:
-		mov	_sprite16_put_w, (64 / 16)
-		mov	_sprite16_put_h, 32
-		mov	bx, _efe_p
-		push	[bx+fireball_t.FIREBALL_center.x]	; x
-		mov	al, [bx+fireball_t.FIREBALL_pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -32
-		mov	[bp+@@left], ax
-		mov	bx, _efe_p
-		mov	ax, [bx+fireball_t.FIREBALL_center.y]
-		sar	ax, 4
-		add	ax, -8
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, si
-		pop	si
-		leave
-		retn
-sub_17FCF	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21935,7 +21870,7 @@ loc_18399:
 ; ---------------------------------------------------------------------------
 
 loc_183B0:
-		call	sub_17FCF
+		call	@fireball_explosion_put$qv
 
 loc_183B3:
 		inc	si

@@ -29,3 +29,4 @@ static const sprite16_offset_t SO_HITCIRCLE = XY(128, 80);
 static const sprite16_offset_t SO_PELLET_CLOUD = XY(528, 80);
 
 extern const sprite16_offset_t SO_EXPLOSIONS[][EXPLOSION_CELS];
+#define SO_EXPLOSIONS_64X64 SO_EXPLOSIONS[2]

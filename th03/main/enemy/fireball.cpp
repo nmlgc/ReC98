@@ -221,6 +221,10 @@ void near fireball_put(void)
 
 void near fireball_explosion_flag_update(void)
 {
+	// ZUN quirk: 14 is two frames after we start rendering a different
+	// sprite. This is why we don't use keyframes here, unlike for enemies.
+	// (And yes, it's also one cycle later than enemy-originating explosions
+	// start hitting enemies.)
 	if(p->frame == 14) {
 		p->flag = EFF_EXPLOSION_HITTING_ENEMIES;
 	} else if(p->frame == 32) {
@@ -228,4 +232,29 @@ void near fireball_explosion_flag_update(void)
 	} else if(p->frame >= 36) {
 		p->flag = EFF_FREE;
 	}
+}
+
+void near fireball_explosion_put(void)
+{
+	sprite16_offset_t so;
+	uint8_t cycle;
+
+	static_assert(EXPLOSION_CELS == 4);
+	if(p->frame < 12) {
+		so = SO_EXPLOSIONS_64X64[0];
+	} else if(p->frame < 32) {
+		cycle = (p->frame / 4);
+		so = SO_EXPLOSIONS_64X64[1 + (cycle & 1)];
+	} else if(p->frame < 36) {
+		// ZUN bloat: ^ The condition doesn't need to duplicate the keyframe.
+		so = SO_EXPLOSIONS_64X64[3];
+	}
+	sprite16_put_size.set(64, 64);
+
+	screen_x_t left;
+	screen_y_t top;
+	left = (playfield_fg_x_to_screen(p->center.x, p->pid) - (64 / 2));
+	top  = (playfield_fg_y_to_screen(p->center.y, p->pid) - (48 / 2));
+
+	sprite16_put(left, top, so);
 }
