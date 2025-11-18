@@ -617,7 +617,7 @@ void bullets_update(void)
 		_BH = 0, _BL = p->pid, _BX += FP_OFF(ptr), *((uint8_t near *)(_BX)) \
 	)
 
-	collmap_tile_h = 1;
+	collmap_tile_h.v = 1;
 	explosion_hittest_against = EHA_PELLET;
 
 	// ZUN bloat: A `for` loop would have been more readable.

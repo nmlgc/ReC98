@@ -253,7 +253,7 @@ loc_977E:
 		call	@enemy_formations_update$qv
 		call	@bullets_update$qv
 		call	sub_1609E
-		call	sub_18059
+		call	@fireballs_update$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	gba_gauge_pattern_pellet_p1
@@ -21481,136 +21481,11 @@ BULLET_TEXT ends
 E_FIREB_TEXT segment byte public 'CODE' use16
 	extern @fireballs_add$qv:proc
 	@fireball_put$qv procdesc near
-	@fireball_explosion_flag_update$qv procdesc near
 	@fireball_explosion_put$qv procdesc near
+	extern @fireballs_update$qv:proc
 E_FIREB_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18059	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
-		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
-		mov	_efe_p, offset fireballs
-		xor	di, di
-		jmp	loc_18162
-; ---------------------------------------------------------------------------
-
-loc_18075:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_flag], EFF_FREE
-		jz	loc_1815C
-		mov	bx, _efe_p
-		inc	[bx+fireball_t.FIREBALL_enemy]
-		cmp	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		jb	short loc_18092
-		call	@fireball_explosion_flag_update$qv
-		jmp	loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_18092:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_flag], FF_FALL
-		jnz	short loc_18100
-		mov	si, [bx+fireball_t.FIREBALL_center.x]
-		add	si, [bx+fireball_t.FIREBALL_velocity.x]
-		mov	al, [bx+fireball_t.FIREBALL_pid]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_bomb_flag[bx], BF_INACTIVE
-		jnz	short loc_180BB
-		cmp	si, (-16 shl 4)
-		jle	short loc_180BB
-		cmp	si, ((PLAYFIELD_W + 16) shl 4)
-		jl	short loc_180C5
-
-loc_180BB:
-		mov	bx, _efe_p
-		mov	[bx+fireball_t.FIREBALL_flag], EFF_FREE
-		jmp	loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_180C5:
-		mov	bx, _efe_p
-		mov	[bx+fireball_t.FIREBALL_center.x], si
-		mov	si, [bx+fireball_t.FIREBALL_center.y]
-		add	si, [bx+fireball_t.FIREBALL_velocity.y]
-		cmp	si, ((PLAYFIELD_H + PLAYFIELD_BORDER) shl 4)
-		jge	short loc_180BB
-		mov	bx, _efe_p
-		mov	[bx+fireball_t.FIREBALL_center.y], si
-		cmp	[bx+fireball_t.FIREBALL_flag], FF_FALL
-		jnz	short loc_1815C
-		mov	ax, [bx+fireball_t.FIREBALL_center.x]
-		mov	_collmap_center.x, ax
-		mov	ax, [bx+fireball_t.FIREBALL_center.y]
-		add	ax, (8 shl 4)
-		mov	_collmap_center.y, ax
-		mov	al, [bx+fireball_t.FIREBALL_pid]
-		mov	_collmap_pid, al
-		nopcall	@collmap_set_rect_striped$qv
-		jmp	short loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_18100:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_flag], FF_TRANSFER
-		jnz	short loc_1815C
-		mov	si, [bx+fireball_t.FIREBALL_center.x]
-		add	si, [bx+fireball_t.FIREBALL_velocity.x]
-		cmp	[bx+fireball_t.FIREBALL_pid], 0
-		jnz	short loc_18143
-		cmp	[bx+fireball_t.FIREBALL_target_center_x_for_origin_pid], si
-		jg	short loc_1814C
-
-loc_1811A:
-		mov	bx, _efe_p
-		mov	ax, [bx+fireball_t.FIREBALL_target_center_x_for_target_pid]
-		mov	[bx+fireball_t.FIREBALL_center.x], ax
-		mov	[bx+fireball_t.FIREBALL_center.y], 0
-		mov	[bx+fireball_t.FIREBALL_velocity.x], 0
-		mov	al, [bx+fireball_t.FIREBALL_fall_velocity_y]
-		mov	ah, 0
-		mov	[bx+fireball_t.FIREBALL_velocity.y], ax
-		mov	[bx+fireball_t.FIREBALL_flag], FF_FALL
-		mov	al, 1
-		sub	al, [bx+fireball_t.FIREBALL_pid]
-		mov	[bx+fireball_t.FIREBALL_pid], al
-		jmp	short loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_18143:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_target_center_x_for_origin_pid], si
-		jge	short loc_1811A
-
-loc_1814C:
-		mov	bx, _efe_p
-		mov	[bx+fireball_t.FIREBALL_center.x], si
-		mov	si, [bx+fireball_t.FIREBALL_center.y]
-		add	si, [bx+fireball_t.FIREBALL_velocity.y]
-		mov	[bx+fireball_t.FIREBALL_center.y], si
-
-loc_1815C:
-		inc	di
-		add	_efe_p, size efe_t
-
-loc_18162:
-		cmp	di, FIREBALL_COUNT
-		jl	loc_18075
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_18059	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31713,7 +31588,6 @@ enemy_t struct
 enemy_t ends
 
 FF_FALL = 1
-FF_TRANSFER = 2
 
 fireball_t struct
 	FIREBALL_flag                          	db ?

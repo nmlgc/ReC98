@@ -1,5 +1,8 @@
+#pragma option -zPmain_04
+
 #include "th03/main/enemy/expl.hpp"
 #include "th03/main/enemy/efe.hpp"
+#include "th03/main/player/bomb.hpp"
 #include "th03/main/player/stuff.hpp"
 #include "th03/main/difficul.hpp"
 #include "th03/main/round.hpp"
@@ -257,4 +260,91 @@ void near fireball_explosion_put(void)
 	top  = (playfield_fg_y_to_screen(p->center.y, p->pid) - (48 / 2));
 
 	sprite16_put(left, top, so);
+}
+
+void fireballs_update(void)
+{
+	playfield_subpixel_t next;
+	int i;
+
+	// Players can only collide with falling fireballs.
+	collmap_stripe_tile_w.set(FALL_W / 2);
+	collmap_tile_h.set(FALL_H / 2);
+
+	p = fireballs;
+	for(i = 0; i < FIREBALL_COUNT; (i++, p++)) {
+		if(p->flag == EFF_FREE) {
+			continue;
+		}
+		p->frame++;
+
+		if(p->flag >= EFF_EXPLOSION_IGNORING_ENEMIES) {
+			fireball_explosion_flag_update();
+		} else if(p->flag == FF_FALL) {
+			next = p->center.x.v;
+			next += p->velocity.x.v;
+			if(
+				(bomb_flag[p->pid] != BF_INACTIVE) ||
+				(next <= to_sp(          0 - (FALL_W / 2))) ||
+				(next >= to_sp(PLAYFIELD_W + (FALL_W / 2)))
+			) {
+free_and_continue:
+				p->flag = EFF_FREE;
+				continue;
+			}
+			p->center.x.v = next;
+
+			next = p->center.y.v;
+			next += p->velocity.y.v;
+			if(next >= to_sp(PLAYFIELD_H + (FALL_H / 2))) {
+				goto free_and_continue;
+			}
+			p->center.y.v = next;
+
+			// ZUN bloat: We are already on the [FF_FALL] branch.
+			if(p->flag == FF_FALL) {
+				collmap_center.x = p->center.x;
+				collmap_center.y.v = (
+					p->center.y.v + to_sp(FALL_H / 4)
+				);
+				collmap_pid = p->pid;
+
+				/* TODO: Replace with the decompiled call
+				 * 	collmap_set_rect_striped();
+				 * once that function is part of the same segment */
+				_asm { nop; push cs; call near ptr collmap_set_rect_striped; }
+			}
+		} else if(p->flag == FF_TRANSFER) {
+			next = p->center.x.v;
+			next += p->velocity.x.v;
+
+			// ZUN bloat: There are better ways of checking the coordinate than
+			// hardcoding the assumption of the physical layout together with
+			// the expected horizontal velocity.
+			static_assert(PLAYER_COUNT == 2);
+			if(p->pid == 0) {
+				if(p->target_center_x_for_origin_pid.v <= next) {
+switch_to_fall:
+					p->center.x = p->target_center_x_for_target_pid;
+					p->center.y.set(0.0f);
+					p->velocity.x.set(0.0f);
+					p->velocity.y.v = p->fall_velocity_y;
+					p->flag = FF_FALL;
+					p->pid = (1 - p->pid);
+					continue;
+				}
+			} else {
+				if(p->target_center_x_for_origin_pid.v >= next) {
+					goto switch_to_fall;
+				}
+			}
+
+			p->center.x.v = next;
+
+			// ZUN bloat: Could have been a one-liner.
+			next = p->center.y.v;
+			next += p->velocity.y.v;
+			p->center.y.v = next;
+		}
+	}
 }
