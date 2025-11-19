@@ -1604,7 +1604,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_reimu
 		setfarfp	_chargeshot_update_p1, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p1, chargeshot_render_reimu
-		setfarfp	p1_2029C, reimu_14CE3
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_reimu$qv
 		setfarfp	p1_202A4, reimu_14FEE
 		setfarfp	p1_202AC, reimu_15006
 		setfarfp	p1_1F32E, reimu_11033
@@ -1623,7 +1623,7 @@ loc_A5E2:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_reimu
 		setfarfp	_chargeshot_update_p2, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p2, chargeshot_render_reimu
-		setfarfp	p2_202A0, reimu_14CE3
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_reimu$qv
 		setfarfp	p2_202A8, reimu_14FEE
 		setfarfp	p2_202B0, reimu_15006
 		setfarfp	p2_1F332, reimu_11033
@@ -1669,7 +1669,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_mima
 		setfarfp	_chargeshot_update_p1, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p1, chargeshot_render_mima
-		setfarfp	p1_2029C, mima_15597
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_mima$qv
 		setfarfp	p1_202A4, mima_158C5
 		setfarfp	p1_202AC, mima_158DD
 		setfarfp	p1_1F32E, mima_FED8
@@ -1688,7 +1688,7 @@ loc_A77A:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_mima
 		setfarfp	_chargeshot_update_p2, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p2, chargeshot_render_mima
-		setfarfp	p2_202A0, mima_15597
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_mima$qv
 		setfarfp	p2_202A8, mima_158C5
 		setfarfp	p2_202B0, mima_158DD
 		setfarfp	p2_1F332, mima_FED8
@@ -1734,7 +1734,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_marisa
 		setfarfp	_chargeshot_update_p1, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p1, chargeshot_render_marisa
-		setfarfp	p1_2029C, marisa_14487
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_marisa$qv
 		setfarfp	p1_202A4, marisa_14885
 		setfarfp	p1_202AC, marisa_1489D
 		setfarfp	p1_1F32E, marisa_F848
@@ -1753,7 +1753,7 @@ loc_A912:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_marisa
 		setfarfp	_chargeshot_update_p2, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p2, chargeshot_render_marisa
-		setfarfp	p2_202A0, marisa_14487
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_marisa$qv
 		setfarfp	p2_202A8, marisa_14885
 		setfarfp	p2_202B0, marisa_1489D
 		setfarfp	p2_1F332, marisa_F848
@@ -1799,7 +1799,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_ellen
 		setfarfp	_chargeshot_update_p1, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p1, chargeshot_render_ellen
-		setfarfp	p1_2029C, ellen_1B903
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_ellen$qv
 		setfarfp	p1_202A4, ellen_1BC1D
 		setfarfp	p1_202AC, ellen_1BC35
 		setfarfp	p1_1F32E, ellen_116B6
@@ -1818,7 +1818,7 @@ loc_AAAA:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_ellen
 		setfarfp	_chargeshot_update_p2, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p2, chargeshot_render_ellen
-		setfarfp	p2_202A0, ellen_1B903
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_ellen$qv
 		setfarfp	p2_202A8, ellen_1BC1D
 		setfarfp	p2_202B0, ellen_1BC35
 		setfarfp	p2_1F332, ellen_116B6
@@ -1864,7 +1864,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_kotohime
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kotohime
-		setfarfp	p1_2029C, kotohime_1C22E
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kotohime$qv
 		setfarfp	p1_202A4, kotohime_1C3DA
 		setfarfp	p1_202AC, kotohime_1C3F2
 		setfarfp	p1_1F32E, kotohime_11E48
@@ -1883,7 +1883,7 @@ loc_AC42:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_kotohime
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kotohime
-		setfarfp	p2_202A0, kotohime_1C22E
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kotohime$qv
 		setfarfp	p2_202A8, kotohime_1C3DA
 		setfarfp	p2_202B0, kotohime_1C3F2
 		setfarfp	p2_1F332, kotohime_11E48
@@ -1929,7 +1929,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_kana
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kana
-		setfarfp	p1_2029C, kana_1BE52
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kana$qv
 		setfarfp	p1_202A4, kana_1C128
 		setfarfp	p1_202AC, kana_1C140
 		setfarfp	p1_1F32E, kana_12FE8
@@ -1948,7 +1948,7 @@ loc_ADDA:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_kana
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kana
-		setfarfp	p2_202A0, kana_1BE52
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kana$qv
 		setfarfp	p2_202A8, kana_1C128
 		setfarfp	p2_202B0, kana_1C140
 		setfarfp	p2_1F332, kana_12FE8
@@ -1994,7 +1994,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_rikako
 		setfarfp	_chargeshot_update_p1, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p1, chargeshot_render_rikako
-		setfarfp	p1_2029C, rikako_1C66B
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_rikako$qv
 		setfarfp	p1_202A4, rikako_1C8DA
 		setfarfp	p1_202AC, rikako_1C8F2
 		setfarfp	p1_1F32E, rikako_13661
@@ -2013,7 +2013,7 @@ loc_AF72:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_rikako
 		setfarfp	_chargeshot_update_p2, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p2, chargeshot_render_rikako
-		setfarfp	p2_202A0, rikako_1C66B
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_rikako$qv
 		setfarfp	p2_202A8, rikako_1C8DA
 		setfarfp	p2_202B0, rikako_1C8F2
 		setfarfp	p2_1F332, rikako_13661
@@ -2059,7 +2059,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_chiyuri
 		setfarfp	_chargeshot_update_p1, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p1, chargeshot_render_chiyuri
-		setfarfp	p1_2029C, chiyuri_1B3B0
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_chiyuri$qv
 		setfarfp	p1_202A4, chiyuri_1B623
 		setfarfp	p1_202AC, chiyuri_1B63B
 		setfarfp	p1_1F32E, chiyuri_126A8
@@ -2078,7 +2078,7 @@ loc_B10A:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_chiyuri
 		setfarfp	_chargeshot_update_p2, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p2, chargeshot_render_chiyuri
-		setfarfp	p2_202A0, chiyuri_1B3B0
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_chiyuri$qv
 		setfarfp	p2_202A8, chiyuri_1B623
 		setfarfp	p2_202B0, chiyuri_1B63B
 		setfarfp	p2_1F332, chiyuri_126A8
@@ -2124,7 +2124,7 @@ arg_0		= word ptr  4
 		setfarfp	_p1.chargeshot_add, chargeshot_add_yumemi
 		setfarfp	_chargeshot_update_p1, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p1, chargeshot_render_yumemi
-		setfarfp	p1_2029C, yumemi_16B0C
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_yumemi$qv
 		setfarfp	p1_202A4, yumemi_16FC0
 		setfarfp	p1_202AC, yumemi_16FD8
 		setfarfp	p1_1F32E, yumemi_1070A
@@ -2143,7 +2143,7 @@ loc_B2A2:
 		setfarfp	_p2.chargeshot_add, chargeshot_add_yumemi
 		setfarfp	_chargeshot_update_p2, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p2, chargeshot_render_yumemi
-		setfarfp	p2_202A0, yumemi_16B0C
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_yumemi$qv
 		setfarfp	p2_202A8, yumemi_16FC0
 		setfarfp	p2_202B0, yumemi_16FD8
 		setfarfp	p2_1F332, yumemi_1070A
@@ -17176,8 +17176,8 @@ chargeshot_update_marisa	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_14487	proc far
+public @chargeshot_hittest_marisa$qv
+@chargeshot_hittest_marisa$qv proc far
 
 var_1		= byte ptr -1
 
@@ -17248,7 +17248,7 @@ loc_1450E:
 		pop	si
 		leave
 		retf
-marisa_14487	endp
+@chargeshot_hittest_marisa$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18209,8 +18209,8 @@ reimu_chargeshot_14C8C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_14CE3	proc far
+public @chargeshot_hittest_reimu$qv
+@chargeshot_hittest_reimu$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -18282,7 +18282,7 @@ loc_14D80:
 		pop	si
 		pop	bp
 		retf
-reimu_14CE3	endp
+@chargeshot_hittest_reimu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19226,8 +19226,8 @@ chargeshot_update_mima	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_15597	proc far
+public @chargeshot_hittest_mima$qv
+@chargeshot_hittest_mima$qv proc far
 
 var_1		= byte ptr -1
 
@@ -19292,7 +19292,7 @@ loc_15619:
 		pop	si
 		leave
 		retf
-mima_15597	endp
+@chargeshot_hittest_mima$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19744,12 +19744,12 @@ loc_159B2:
 loc_159CC:
 		cmp	_hitbox_pid, 0
 		jnz	short loc_159D9
-		call	p1_2029C
+		call	chargeshot_hittest_p1
 		jmp	short loc_159DD
 ; ---------------------------------------------------------------------------
 
 loc_159D9:
-		call	p2_202A0
+		call	chargeshot_hittest_p2
 
 loc_159DD:
 		add	[bp+var_5], al
@@ -21738,8 +21738,8 @@ chargeshot_update_yumemi	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16B0C	proc far
+public @chargeshot_hittest_yumemi$qv
+@chargeshot_hittest_yumemi$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -21808,7 +21808,7 @@ loc_16BB2:
 		pop	si
 		pop	bp
 		retf
-yumemi_16B0C	endp
+@chargeshot_hittest_yumemi$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -30936,8 +30936,8 @@ chiyuri_chargeshot_1B35F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B3B0	proc far
+public @chargeshot_hittest_chiyuri$qv
+@chargeshot_hittest_chiyuri$qv proc far
 
 var_1		= byte ptr -1
 
@@ -30997,7 +30997,7 @@ loc_1B420:
 		pop	si
 		leave
 		retf
-chiyuri_1B3B0	endp
+@chargeshot_hittest_chiyuri$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31621,8 +31621,8 @@ ellen_chargeshot_1B8A6	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1B903	proc far
+public @chargeshot_hittest_ellen$qv
+@chargeshot_hittest_ellen$qv proc far
 
 var_1		= byte ptr -1
 
@@ -31676,7 +31676,7 @@ loc_1B96E:
 		pop	si
 		leave
 		retf
-ellen_1B903	endp
+@chargeshot_hittest_ellen$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32290,8 +32290,8 @@ kana_chargeshot_1BDF8	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1BE52	proc far
+public @chargeshot_hittest_kana$qv
+@chargeshot_hittest_kana$qv proc far
 
 var_2		= word ptr -2
 
@@ -32377,7 +32377,7 @@ loc_1BEEF:
 		pop	si
 		leave
 		retf
-kana_1BE52	endp
+@chargeshot_hittest_kana$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32802,8 +32802,8 @@ kotohime_chargeshot_1C1E9	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C22E	proc far
+public @chargeshot_hittest_kotohime$qv
+@chargeshot_hittest_kotohime$qv proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _hitbox_pid
@@ -32846,7 +32846,7 @@ loc_1C291:
 		mov	al, 0
 		pop	bp
 		retf
-kotohime_1C22E	endp
+@chargeshot_hittest_kotohime$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33377,8 +33377,8 @@ rikako_chargeshot_1C62A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C66B	proc far
+public @chargeshot_hittest_rikako$qv
+@chargeshot_hittest_rikako$qv proc far
 
 var_2		= word ptr -2
 
@@ -33444,7 +33444,7 @@ loc_1C6E4:
 		pop	si
 		leave
 		retf
-rikako_1C66B	endp
+@chargeshot_hittest_rikako$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34990,9 +34990,18 @@ _pid_current	db ?
 	evendata
 		db 1024 dup(?)
 word_2028A	dw ?
-include th03/main/player/chargeshot[bss].asm
-p1_2029C	dd ?
-p2_202A0	dd ?
+
+public _chargeshot_update, _chargeshot_render, _chargeshot_hittest
+_chargeshot_update label dword
+_chargeshot_update_p1	dd ?
+_chargeshot_update_p2	dd ?
+_chargeshot_render label dword
+_chargeshot_render_p1	dd ?
+_chargeshot_render_p2	dd ?
+_chargeshot_hittest label dword
+chargeshot_hittest_p1	dd ?
+chargeshot_hittest_p2	dd ?
+
 p1_202A4	dd ?
 p2_202A8	dd ?
 p1_202AC	dd ?
