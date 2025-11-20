@@ -582,6 +582,10 @@ local th03_sprites = Sprites({
 	-- ZUN bloat: Investing 32 bytes just so that the individual rows can be
 	-- loaded with a 16-bit `MOV`…
 	{ "th03/sprites/flake.bmp", "asm", "sFLAKE", 16, 8 },
+
+	-- Double-preshifting just to ensure word-aligned VRAM writes? Was this
+	-- really worth the added 384 bytes?
+	{ "th03/sprites/pellet.bmp", "asm", "sPELLET", 32, 4 },
 })
 
 th03:zungen("bin/th03/zun.com", {
@@ -624,7 +628,10 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='O'" }):link("op", {
 	"th02/frmdely2.cpp",
 })
 th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
-	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
+	{ "th03_main.asm", extra_inputs = {
+		th03_sprites["pellet"],
+		th03_sprites["score"],
+	} },
 	"th03/playfld.cpp",
 	"th03/cfg_lres.cpp",
 	"th03/hitcirc.cpp",
@@ -647,6 +654,7 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th03/pi_load.cpp",
 	"th03/inp_m_w.cpp",
 	"th03/collmap.asm",
+	"th03/bullet.cpp",
 	"th03/hfliplut.asm",
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",

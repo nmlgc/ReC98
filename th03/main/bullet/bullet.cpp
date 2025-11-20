@@ -1,4 +1,7 @@
 #include "th03/main/bullet/bullet.hpp"
+#include "th03/sprites/pellet.h"
+#include "decomp.hpp"
+#include <stddef.h>
 
 enum bullet_flag_t {
 	BF_FREE = 0,
@@ -75,3 +78,83 @@ extern bullet_trail_t bullet_trail_ring[TRAIL_RING_SIZE];
 // assigned to a bullet with trail sprites.
 extern uint8_t bullet_trail_ring_i;
 // -----
+
+#pragma codeseg PELLET_PUT main_04
+#pragma option -k-
+#pragma warn -rch
+
+void __fastcall near grcg_pellet_put(
+	screen_x_t /* _AX */, size_t cel_offset, vram_y_t top
+)
+{
+	#define left _AX
+	#define _AX static_cast<int16_t>(_AX)
+
+	_SI = left;
+
+	// ZUN bloat: _DI = vram_offset_shift_fast((left & ~1), top)
+	_AX = left;
+	_AX >>= 4;
+	asm { shl ax, 1 };
+	top <<= 6;
+	_AX += top;
+	static_cast<uvram_y_t>(top) >>= 2;
+	_AX += top;
+	_DI = _AX;
+
+	// ZUN bloat: `_SI = (FP_OFF(&sPELLET[cel][_SI % (PRESHIFT * 2)])`.
+	static_assert(sizeof(sPELLET[0][0]) == 16);
+	_SI &= ((PRESHIFT * 2) - 1);
+	_SI <<= 4;
+	_SI += FP_OFF(&sPELLET);
+	_SI += cel_offset;
+
+	// ZUN bloat: Since this is a signed comparison that will be `true` for all
+	// negative numbers, this is *probably* supposed to defend against the
+	// General Protection Fault that would arise when overflowing an unaligned
+	// destination pointer of a 32-bit write? But even if ZUN wrote a much
+	// clearer `< 0` comparison, the playfield border would still cover every
+	// possible (partially) negative position. The smallest still visible
+	/// pellet coordinate would be
+	//
+	// 	[left] = (((PLAYFIELD_BORDER - PELLET_W) + 1) = 9, and
+	// 	[top] = (((PLAYFIELD_BORDER / 2) - PELLET_H) + 1) = 5,
+	//
+	// which translates to a VRAM offset of 404, far away from any danger of
+	// overflowing. It would have made more sense to just clip any pellets
+	// below that offset.
+	if(_AX < 8) {
+		goto narrow;
+	}
+
+	static_assert(sizeof(sPELLET[0][0][0]) == 4);
+	static_assert(PELLET_VRAM_H == 4);
+wide:
+	MOVSD
+	_DI += (ROW_SIZE - sizeof(dots32_t));
+	MOVSD
+	_DI += (ROW_SIZE - sizeof(dots32_t));
+	MOVSD
+	_DI += (ROW_SIZE - sizeof(dots32_t));
+	MOVSD
+	return;
+	_asm { nop };
+
+narrow:
+	asm { movsw }
+	_SI += (sizeof(pellet_dots_t) - 2);
+	_DI += (ROW_SIZE - sizeof(dots16_t));
+	asm { movsw }
+	_SI += (sizeof(pellet_dots_t) - 2);
+	_DI += (ROW_SIZE - sizeof(dots16_t));
+	asm { movsw }
+	_SI += (sizeof(pellet_dots_t) - 2);
+	_DI += (ROW_SIZE - sizeof(dots16_t));
+	asm { movsw }
+
+	#undef _AX
+	#undef left
+}
+
+#pragma option -k.
+#pragma warn +rch
