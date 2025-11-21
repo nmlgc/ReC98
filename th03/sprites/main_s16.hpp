@@ -4,6 +4,8 @@
 
 #define XY(x, y) ((y * ROW_SIZE) + (x / BYTE_DOTS))
 
+static const unsigned int BULLET16_TRAIL_CELS = 3;
+
 // Base position for all attack sprites
 static const sprite16_offset_t SO_ATTACK_P1 = XY(0,   0);
 static const sprite16_offset_t SO_ATTACK_P2 = XY(320, 0);

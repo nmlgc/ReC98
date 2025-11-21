@@ -22775,7 +22775,7 @@ loc_1738B:
 loc_17396:
 		cmp	ax, 140h
 		jl	short loc_1738B
-		mov	byte_26353, 0
+		mov	_bullet_trail_ring_i, 0
 		pop	bp
 		retf
 sub_17384	endp
@@ -23385,15 +23385,15 @@ loc_177DE:
 		mov	[si+17h], al
 		cmp	byte_23E51, 0
 		jz	short loc_1786C
-		mov	al, byte_26353
+		mov	al, _bullet_trail_ring_i
 		mov	ah, 0
-		imul	ax, 18h
-		add	ax, 8972h
+		imul	ax, size bullet_trail_t
+		add	ax, offset _bullet_trail_ring
 		mov	[si+18h], ax
-		inc	byte_26353
-		cmp	byte_26353, 30h	; '0'
+		inc	_bullet_trail_ring_i
+		cmp	_bullet_trail_ring_i, TRAIL_RING_SIZE
 		jb	short loc_17843
-		mov	byte_26353, 0
+		mov	_bullet_trail_ring_i, 0
 
 loc_17843:
 		xor	di, di
@@ -23406,17 +23406,17 @@ loc_17847:
 		add	ax, [si+18h]
 		mov	dx, word_23E3E
 		mov	bx, ax
-		mov	[bx], dx
+		mov	[bx+bullet_trail_t.BT_center_x], dx
 		mov	ax, di
 		add	ax, ax
 		add	ax, [si+18h]
 		mov	dx, word_23E40
 		mov	bx, ax
-		mov	[bx+0Ch], dx
+		mov	[bx+bullet_trail_t.BT_center_y], dx
 		inc	di
 
 loc_17867:
-		cmp	di, 6
+		cmp	di, TRAIL_POINT_COUNT
 		jl	short loc_17847
 
 loc_1786C:
@@ -23578,21 +23578,21 @@ sub_1799D	proc near
 		mov	bp, sp
 		push	si
 		add	bx, [si+18h]
-		mov	dx, [bx+8]
-		mov	[bx+0Ah], dx
-		cmp	dx, 0FF80h
+		mov	dx, [bx+(word * 4)]
+		mov	[bx+(word * 5)], dx
+		cmp	dx, (-8 shl 4)
 		jle	short loc_179D1
 		cmp	dx, word_26354
 		jge	short loc_179D1
-		mov	dx, [bx+6]
-		mov	[bx+8],	dx
-		mov	dx, [bx+4]
-		mov	[bx+6],	dx
-		mov	dx, [bx+2]
-		mov	[bx+4],	dx
-		mov	dx, [bx]
-		mov	[bx+2],	dx
-		mov	[bx], cx
+		mov	dx, [bx+(word * 3)]
+		mov	[bx+(word * 4)], dx
+		mov	dx, [bx+(word * 2)]
+		mov	[bx+(word * 3)], dx
+		mov	dx, [bx+(word * 1)]
+		mov	[bx+(word * 2)], dx
+		mov	dx, [bx+(word * 0)]
+		mov	[bx+(word * 1)], dx
+		mov	[bx+(word * 0)], cx
 		clc
 		jmp	short loc_179D2
 ; ---------------------------------------------------------------------------
@@ -23929,7 +23929,7 @@ loc_17C27:
 		mov	bx, [bp+var_C]
 		add	ax, [bx+18h]
 		mov	bx, ax
-		push	word ptr [bx]	; x
+		push	[bx+bullet_trail_t.BT_center_x]	; x
 		mov	bx, [bp+var_C]
 		mov	al, [bx+10h]
 		mov	ah, 0
@@ -23942,7 +23942,7 @@ loc_17C27:
 		mov	bx, [bp+var_C]
 		add	ax, [bx+18h]
 		mov	bx, ax
-		mov	ax, [bx+0Ch]
+		mov	ax, [bx+bullet_trail_t.BT_center_y]
 		sar	ax, 4
 		add	ax, 8
 		mov	[bp+@@top], ax
@@ -35214,9 +35214,21 @@ byte_23E4E	db ?
 byte_23E4F	db ?
 byte_23E50	db ?
 byte_23E51	db ?
-		db 9472 dup(?)
+
+TRAIL_POINT_COUNT = 6
+TRAIL_RING_SIZE = 48
+
+bullet_trail_t struc
+	BT_center_x dw TRAIL_POINT_COUNT dup(?)
+	BT_center_y dw TRAIL_POINT_COUNT dup(?)
+bullet_trail_t ends
+
+public _bullet_trail_ring, _bullet_trail_ring_i
+		db 8320 dup(?)
+_bullet_trail_ring	bullet_trail_t TRAIL_RING_SIZE dup(<?>)
 byte_26352	db ?
-byte_26353	db ?
+_bullet_trail_ring_i	db ?
+
 word_26354	dw ?
 byte_26356	db ?
 byte_26357	db ?
