@@ -22794,12 +22794,12 @@ sub_17384	proc far
 
 loc_1738B:
 		mov	bx, ax
-		imul	bx, 1Ah
-		mov	byte ptr [bx+68F2h], 0
+		imul	bx, size bullet_t
+		mov	_bullets[bx].BULLET_flag, BF_FREE
 		inc	ax
 
 loc_17396:
-		cmp	ax, 140h
+		cmp	ax, BULLET_COUNT
 		jl	short loc_1738B
 		mov	_bullet_trail_ring_i, 0
 		pop	bp
@@ -23295,6 +23295,9 @@ off_176D6	dw offset loc_17628
 		dw offset loc_175A3
 		dw offset loc_175EE
 
+BAT_NONE = 00h
+BAT_Y = 80h
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -23302,7 +23305,7 @@ off_176D6	dw offset loc_17628
 sub_17730	proc far
 
 var_E		= byte ptr -0Eh
-var_D		= byte ptr -0Dh
+@@flag	= byte ptr -0Dh
 var_C		= byte ptr -0Ch
 var_B		= byte ptr -0Bh
 @@length		= word ptr -0Ah
@@ -23326,7 +23329,7 @@ var_2		= word ptr -2
 		jle	loc_1795E
 		cmp	word_23E3E, 1280h
 		jge	loc_1795E
-		mov	si, 68F2h
+		mov	si, offset _bullets
 		mov	al, byte_23E4E
 		mov	ah, 0
 		sub	ax, 2
@@ -23338,7 +23341,7 @@ var_2		= word ptr -2
 
 loc_17780:
 		mov	[bp+var_C], 1
-		mov	[bp+var_D], 1
+		mov	[bp+@@flag], 1
 		jmp	short loc_177AF
 ; ---------------------------------------------------------------------------
 
@@ -23352,19 +23355,19 @@ loc_1778E:
 		mov	word_23E4C, ax
 
 loc_17799:
-		mov	[bp+var_D], 2
+		mov	[bp+@@flag], 2
 		jmp	short loc_177AF
 ; ---------------------------------------------------------------------------
 
 loc_1779F:
 		mov	[bp+var_C], 1
-		mov	[bp+var_D], 2
+		mov	[bp+@@flag], 2
 		jmp	short loc_177AF
 ; ---------------------------------------------------------------------------
 
 loc_177A9:
 		mov	al, byte_23E4E
-		mov	[bp+var_D], al
+		mov	[bp+@@flag], al
 
 loc_177AF:
 		mov	al, byte_23E42
@@ -23388,34 +23391,34 @@ loc_177D6:
 ; ---------------------------------------------------------------------------
 
 loc_177DE:
-		cmp	byte ptr [si], 0
+		cmp	[si+bullet_t.BULLET_flag], BF_FREE
 		jnz	loc_17949
-		mov	al, [bp+var_D]
-		mov	[si], al
-		mov	byte ptr [si+1], 0
+		mov	al, [bp+@@flag]
+		mov	[si+bullet_t.BULLET_flag], al
+		mov	[si+bullet_t.BULLET_age], 0
 		mov	ax, word_23E3E
-		mov	[si+2],	ax
+		mov	[si+bullet_t.BULLET_center.x], ax
 		mov	ax, word_23E40
-		mov	[si+4],	ax
+		mov	[si+bullet_t.BULLET_center.y], ax
 		mov	al, byte_23E45
-		mov	[si+11h], al
+		mov	[si+bullet_t.BULLET_group_next], al
 		mov	al, _pid_other
-		mov	[si+10h], al
+		mov	[si+bullet_t.BULLET_pid], al
 		mov	ax, word_23E4C
-		mov	[si+12h], ax
+		mov	[si+bullet_t.BULLET_sprite_offset], ax
 		mov	al, byte_23E50
-		mov	[si+16h], al
+		mov	[si+bullet_t.BULLET_is_animated], al
 		mov	al, byte_23E4F
-		mov	[si+15h], al
+		mov	[si+bullet_t.BULLET_is_collidable], al
 		mov	al, byte_23E51
-		mov	[si+17h], al
+		mov	[si+bullet_t.BULLET_has_trail], al
 		cmp	byte_23E51, 0
 		jz	short loc_1786C
 		mov	al, _bullet_trail_ring_i
 		mov	ah, 0
 		imul	ax, size bullet_trail_t
 		add	ax, offset _bullet_trail_ring
-		mov	[si+18h], ax
+		mov	[si+bullet_t.BULLET_trail], ax
 		inc	_bullet_trail_ring_i
 		cmp	_bullet_trail_ring_i, TRAIL_RING_SIZE
 		jb	short loc_17843
@@ -23429,13 +23432,13 @@ loc_17843:
 loc_17847:
 		mov	ax, di
 		add	ax, ax
-		add	ax, [si+18h]
+		add	ax, [si+bullet_t.BULLET_trail]
 		mov	dx, word_23E3E
 		mov	bx, ax
 		mov	[bx+bullet_trail_t.BT_center_x], dx
 		mov	ax, di
 		add	ax, ax
-		add	ax, [si+18h]
+		add	ax, [si+bullet_t.BULLET_trail]
 		mov	dx, word_23E40
 		mov	bx, ax
 		mov	[bx+bullet_trail_t.BT_center_y], dx
@@ -23449,15 +23452,15 @@ loc_1786C:
 		cmp	[bp+var_C], 0
 		jz	short loc_1787A
 		mov	al, byte_23E46
-		mov	[si+14h], al
+		mov	[si+bullet_t.BULLET_accel_type], al
 		jmp	short loc_1787E
 ; ---------------------------------------------------------------------------
 
 loc_1787A:
-		mov	byte ptr [si+14h], 0
+		mov	[si+bullet_t.BULLET_accel_type], BAT_NONE
 
 loc_1787E:
-		cmp	[bp+var_D], 3
+		cmp	[bp+@@flag], 3
 		jnz	loc_17914
 		push	word_23E3E	; x
 		mov	al, _pid_other
@@ -23465,9 +23468,9 @@ loc_1787E:
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
 		mov	[bp+var_8], ax
-		call	@randring2_next16_mod$qui pascal, (288 shl 4)
+		call	@randring2_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	[bp+var_6], ax
-		mov	[si+6],	ax
+		mov	[si+bullet_t.BULLET_target_center_x_for_target_pid], ax
 		push	ax	; x
 		mov	al, _pid_other
 		mov	ah, 0
@@ -23494,10 +23497,10 @@ loc_1787E:
 		push	ax
 		push	0
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.BULLET_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+bullet_t.BULLET_velocity.y]
 		push	ax
 		push	[bp+@@length]
 		call	vector2_between_plus
@@ -23506,11 +23509,11 @@ loc_1787E:
 		mov	ah, 0
 		push	ax	; pid
 		call	@screen_x_to_playfield$qii
-		mov	[si+8],	ax
+		mov	[si+bullet_t.BULLET_target_center_x_for_origin_pid], ax
 		mov	al, angle_23E43
-		mov	[si+0Fh], al
+		mov	[si+bullet_t.BULLET_angle_next], al
 		mov	al, byte_23E42
-		mov	[si+0Eh], al
+		mov	[si+bullet_t.BULLET_speed_next], al
 		jmp	short loc_17958
 ; ---------------------------------------------------------------------------
 
@@ -23519,16 +23522,16 @@ loc_17914:
 		call	sub_173A2
 		mov	[bp+var_B], al
 		mov	ax, point_23E48.x
-		mov	[si+0Ah], ax
+		mov	[si+bullet_t.BULLET_velocity.x], ax
 		mov	ax, point_23E48.y
-		mov	[si+0Ch], ax
+		mov	[si+bullet_t.BULLET_velocity.y], ax
 		mov	al, byte_26352
-		mov	[si+0Fh], al
+		mov	[si+bullet_t.BULLET_angle_next], al
 		mov	al, byte_23E42
-		mov	[si+0Eh], al
-		cmp	[bp+var_D], 4
+		mov	[si+bullet_t.BULLET_speed_next], al
+		cmp	[bp+@@flag], 4
 		jnz	short loc_17940
-		mov	word ptr [si+12h], 1942h
+		mov	[si+bullet_t.BULLET_sprite_offset], ((80 * ROW_SIZE) + (528 / BYTE_DOTS))
 
 loc_17940:
 		cmp	[bp+var_B], 0
@@ -23537,10 +23540,10 @@ loc_17940:
 
 loc_17949:
 		inc	[bp+var_2]
-		add	si, 1Ah
+		add	si, size bullet_t
 
 loc_1794F:
-		cmp	[bp+var_2], 140h
+		cmp	[bp+var_2], BULLET_COUNT
 		jl	loc_177DE
 
 loc_17958:
@@ -23603,7 +23606,7 @@ sub_1799D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		add	bx, [si+18h]
+		add	bx, [si+bullet_t.BULLET_trail]
 		mov	dx, [bx+(word * 4)]
 		mov	[bx+(word * 5)], dx
 		cmp	dx, (-8 shl 4)
@@ -23641,15 +23644,15 @@ sub_179D5	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, [si]
+		mov	al, [si+bullet_t.BULLET_flag]
 		mov	byte_23E4E, al
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.BULLET_center.x]
 		mov	word_23E3E, ax
-		mov	ax, [si+4]
+		mov	ax, [si+bullet_t.BULLET_center.y]
 		mov	word_23E40, ax
-		mov	ax, [si+0Eh]
+		mov	ax, word ptr [si++bullet_t.BULLET_speed_next]
 		mov	word ptr byte_23E42, ax
-		mov	ax, [si+10h]
+		mov	ax, word ptr [si+bullet_t.BULLET_pid]
 		mov	word ptr _pid_other, ax
 		call	sub_17730
 		pop	si
@@ -23668,13 +23671,13 @@ sub_179FD	proc near
 		push	si
 		push	di
 		mov	di, si
-		mov	al, [di+14h]
+		mov	al, [di+bullet_t.BULLET_accel_type]
 		mov	ah, 0
-		cmp	ax, 80h
+		cmp	ax, BAT_Y
 		jnz	short loc_17A17
-		cmp	word ptr [di+0Ch], 50h ; 'P'
+		cmp	[di+bullet_t.BULLET_velocity.y], (5 shl 4)
 		jge	short loc_17A17
-		inc	word ptr [di+0Ch]
+		inc	[di+bullet_t.BULLET_velocity.y]
 
 loc_17A17:
 		pop	di
@@ -23700,76 +23703,76 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], 0
 		mov	_collmap_tile_h, 1
 		mov	_explosion_hittest_mode, EHM_PELLET
-		mov	di, 141h
-		mov	ax, 68F2h
-		add	ax, 0FFE6h
+		mov	di, (BULLET_COUNT + 1)
+		mov	ax, offset _bullets
+		add	ax, -size bullet_t
 		mov	si, ax
 
 loc_17A3D:
-		add	si, 1Ah
+		add	si, size bullet_t
 		dec	di
 		mov	ax, di
 		or	ax, ax
 		jz	loc_17BCD
-		cmp	byte ptr [si], 0
+		cmp	[si+bullet_t.BULLET_flag], BF_FREE
 		jz	short loc_17A3D
-		cmp	byte ptr [si], 5
+		cmp	[si+bullet_t.BULLET_flag], BF_INVALID
 		jnb	short loc_17A3D
 		inc	[bp+var_1]
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si], 4
+		inc	[si+bullet_t.BULLET_age]
+		cmp	[si+bullet_t.BULLET_flag], BF_PELLET_CLOUD
 		jnz	short loc_17A7A
-		mov	al, [si+1]
+		mov	al, [si+bullet_t.BULLET_age]
 		and	al, 3
 		jnz	short loc_17A3D
-		mov	ax, [si+12h]
+		mov	ax, [si+bullet_t.BULLET_sprite_offset]
 		add	ax, 4
-		cmp	ax, 194Eh
+		cmp	ax, ((80 * ROW_SIZE) + (624 / BYTE_DOTS))
 		jl	short loc_17A75
-		mov	byte ptr [si], 1
+		mov	[si+bullet_t.BULLET_flag], BF_PELLET
 		jmp	short loc_17A3D
 ; ---------------------------------------------------------------------------
 
 loc_17A75:
-		mov	[si+12h], ax
+		mov	[si+bullet_t.BULLET_sprite_offset], ax
 		jmp	short loc_17A3D
 ; ---------------------------------------------------------------------------
 
 loc_17A7A:
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.BULLET_center.x]
 		mov	cx, ax
-		add	ax, [si+0Ah]
-		cmp	byte ptr [si], 3
+		add	ax, [si+bullet_t.BULLET_velocity.x]
+		cmp	[si+bullet_t.BULLET_flag], BF_PELLET_TRANSFER
 		jz	short loc_17ADC
 		mov	bh, 0
-		mov	bl, [si+10h]
+		mov	bl, [si+bullet_t.BULLET_pid]
 		add	bx, offset _bomb_flag
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17AD6
 		mov	bh, 0
-		mov	bl, [si+10h]
+		mov	bl, [si+bullet_t.BULLET_pid]
 		add	bx, offset _damage_all_on
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17AD6
-		cmp	byte ptr [si+17h], 0
+		cmp	[si+bullet_t.BULLET_has_trail], 0
 		jz	short loc_17ACC
-		cmp	ax, 0FF80h
+		cmp	ax, (-8 shl 4)
 		jle	short loc_17AB5
-		cmp	ax, 1280h
+		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
 		jge	short loc_17ABA
 		jmp	short loc_17ABD
 ; ---------------------------------------------------------------------------
 
 loc_17AB5:
-		mov	ax, 0FF80h
+		mov	ax, (-8 shl 4)
 		jmp	short loc_17ABD
 ; ---------------------------------------------------------------------------
 
 loc_17ABA:
-		mov	ax, 1280h
+		mov	ax, ((PLAYFIELD_W + 8) shl 4)
 
 loc_17ABD:
-		mov	word_26354, 1280h
+		mov	word_26354, ((PLAYFIELD_W + 8) shl 4)
 		xor	bx, bx
 		call	sub_1799D
 		jb	short loc_17AD6
@@ -23777,27 +23780,27 @@ loc_17ABD:
 ; ---------------------------------------------------------------------------
 
 loc_17ACC:
-		cmp	ax, 0FF80h
+		cmp	ax, (-8 shl 4)
 		jle	short loc_17AD6
-		cmp	ax, 1280h
+		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
 		jl	short loc_17AEF
 
 loc_17AD6:
-		mov	byte ptr [si], 0
+		mov	[si+bullet_t.BULLET_flag], BF_FREE
 		jmp	loc_17A3D
 ; ---------------------------------------------------------------------------
 
 loc_17ADC:
-		mov	bl, [si+10h]
+		mov	bl, [si+bullet_t.BULLET_pid]
 		or	bl, bl
 		jnz	short loc_17AEA
-		cmp	ax, [si+8]
+		cmp	ax, [si+bullet_t.BULLET_target_center_x_for_origin_pid]
 		jl	short loc_17B15
 		jmp	short loc_17AF1
 ; ---------------------------------------------------------------------------
 
 loc_17AEA:
-		cmp	ax, [si+8]
+		cmp	ax, [si+bullet_t.BULLET_target_center_x_for_origin_pid]
 		jle	short loc_17AF1
 
 loc_17AEF:
@@ -23805,53 +23808,53 @@ loc_17AEF:
 ; ---------------------------------------------------------------------------
 
 loc_17AF1:
-		mov	byte ptr [si], 4
-		xor	byte ptr [si+10h], 1
-		mov	dx, [si+6]
-		mov	[si+2],	dx
-		mov	word ptr [si+4], 20h ; ' '
-		add	byte ptr [si+0Eh], 8
+		mov	[si+bullet_t.BULLET_flag], BF_PELLET_CLOUD
+		xor	[si+bullet_t.BULLET_pid], 1
+		mov	dx, [si+bullet_t.BULLET_target_center_x_for_target_pid]
+		mov	[si+bullet_t.BULLET_center.x], dx
+		mov	[si+bullet_t.BULLET_center.y], (2 shl 4)
+		add	[si+bullet_t.BULLET_speed_next], 8
 		mov	byte_23E47, 0
 		call	sub_179D5
-		mov	byte ptr [si], 0
+		mov	[si+bullet_t.BULLET_flag], BF_FREE
 		jmp	loc_17BCA
 ; ---------------------------------------------------------------------------
 
 loc_17B15:
-		mov	[si+2],	ax
-		mov	ax, [si+4]
+		mov	[si+bullet_t.BULLET_center.x], ax
+		mov	ax, [si+bullet_t.BULLET_center.y]
 		mov	cx, ax
-		add	ax, [si+0Ch]
-		cmp	byte ptr [si+17h], 0
+		add	ax, [si+bullet_t.BULLET_velocity.y]
+		cmp	[si+bullet_t.BULLET_has_trail], 0
 		jz	short loc_17B36
-		mov	word_26354, 1780h
-		mov	bx, 0Ch
+		mov	word_26354, ((PLAYFIELD_H + 8) shl 4)
+		mov	bx, bullet_trail_t.BT_center_y
 		call	sub_1799D
 		jb	short loc_17B40
 		jmp	short loc_17B46
 ; ---------------------------------------------------------------------------
 
 loc_17B36:
-		cmp	ax, 0FF80h
+		cmp	ax, (-8 shl 4)
 		jle	short loc_17B40
-		cmp	ax, 1780h
+		cmp	ax, ((PLAYFIELD_H + 8) shl 4)
 		jl	short loc_17B46
 
 loc_17B40:
-		mov	byte ptr [si], 0
+		mov	[si+bullet_t.BULLET_flag], BF_FREE
 		jmp	loc_17A3D
 ; ---------------------------------------------------------------------------
 
 loc_17B46:
-		mov	[si+4],	ax
-		cmp	byte ptr [si+14h], 0
+		mov	[si+bullet_t.BULLET_center.y], ax
+		cmp	[si+bullet_t.BULLET_accel_type], BAT_NONE
 		jz	short loc_17B52
 		call	sub_179FD
 
 loc_17B52:
-		cmp	byte ptr [si], 1
+		cmp	[si+bullet_t.BULLET_flag], BF_PELLET
 		jnz	short loc_17BA9
-		mov	dx, [si+2]
+		mov	dx, [si+bullet_t.BULLET_center.x]
 		sub	dx, (6 shl 4)
 		sub	ax, (6 shl 4)
 		mov	_hitbox_origin_topleft.x, dx
@@ -23860,37 +23863,37 @@ loc_17B52:
 		add	ax, (12 shl 4)
 		mov	_hitbox_right, dx
 		mov	_hitbox_bottom, ax
-		mov	bl, [si+10h]
+		mov	bl, [si+bullet_t.BULLET_pid]
 		mov	_hitbox_pid, bl
 		call	@explosions_hittest$qv
 		or	al, al
 		jz	short loc_17BA9
 		mov	bh, 0
-		mov	bl, [si+10h]
+		mov	bl, [si+bullet_t.BULLET_pid]
 		xor	bl, 1
 		add	bx, offset _gba_flag_active
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17BA3
-		mov	byte ptr [si], 3
-		mov	byte ptr [si+11h], 1Dh
-		mov	byte ptr [si+0Fh], 0
+		mov	[si+bullet_t.BULLET_flag], BF_PELLET_TRANSFER
+		mov	[si+bullet_t.BULLET_group_next], 1Dh
+		mov	[si+bullet_t.BULLET_angle_next], 0
 		call	sub_179D5
 
 loc_17BA3:
-		mov	byte ptr [si], 0
+		mov	[si+bullet_t.BULLET_flag], BF_FREE
 		jmp	loc_17A3D
 ; ---------------------------------------------------------------------------
 
 loc_17BA9:
-		cmp	byte ptr [si], 3
+		cmp	[si+bullet_t.BULLET_flag], BF_PELLET_TRANSFER
 		jz	short loc_17BCA
-		cmp	byte ptr [si+15h], 0
+		cmp	[si+bullet_t.BULLET_is_collidable], 0
 		jz	short loc_17BCA
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.BULLET_center.x]
 		mov	_collmap_topleft.x, ax
-		mov	ax, [si+4]
+		mov	ax, [si+bullet_t.BULLET_center.y]
 		mov	_collmap_topleft.y, ax
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.BULLET_pid]
 		mov	_collmap_pid, al
 		call	@collmap_set_vline$qv
 
@@ -23913,7 +23916,7 @@ sub_17A1B	endp
 sub_17BD1	proc far
 
 var_D		= byte ptr -0Dh
-var_C		= word ptr -0Ch
+@@bullet_p	= word ptr -0Ch
 var_A		= word ptr -0Ah
 @@sprite_offset		= word ptr -8
 @@top		= word ptr -6
@@ -23930,19 +23933,19 @@ var_2		= word ptr -2
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	[bp+var_C], 68F2h
+		mov	[bp+@@bullet_p], offset _bullets
 		mov	[bp+var_D], 0
 		mov	[bp+var_2], 0
 		jmp	loc_17CD9
 ; ---------------------------------------------------------------------------
 
 loc_17C06:
-		mov	bx, [bp+var_C]
-		cmp	byte ptr [bx], 2
+		mov	bx, [bp+@@bullet_p]
+		cmp	[bx+bullet_t.BULLET_flag], BF_BULLET16
 		jnz	loc_17CC6
-		mov	ax, [bx+12h]
+		mov	ax, [bx+bullet_t.BULLET_sprite_offset]
 		mov	[bp+@@sprite_offset], ax
-		cmp	byte ptr [bx+17h], 0
+		cmp	[bx+bullet_t.BULLET_has_trail], 0
 		jz	short loc_17C7D
 		add	[bp+@@sprite_offset], 6
 		mov	[bp+var_A], 5
@@ -23952,12 +23955,12 @@ loc_17C06:
 loc_17C27:
 		mov	ax, [bp+var_A]
 		add	ax, ax
-		mov	bx, [bp+var_C]
-		add	ax, [bx+18h]
+		mov	bx, [bp+@@bullet_p]
+		add	ax, [bx+bullet_t.BULLET_trail]
 		mov	bx, ax
 		push	[bx+bullet_trail_t.BT_center_x]	; x
-		mov	bx, [bp+var_C]
-		mov	al, [bx+10h]
+		mov	bx, [bp+@@bullet_p]
+		mov	al, [bx+bullet_t.BULLET_pid]
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
@@ -23965,8 +23968,8 @@ loc_17C27:
 		mov	[bp+@@left], ax
 		mov	ax, [bp+var_A]
 		add	ax, ax
-		mov	bx, [bp+var_C]
-		add	ax, [bx+18h]
+		mov	bx, [bp+@@bullet_p]
+		add	ax, [bx+bullet_t.BULLET_trail]
 		mov	bx, ax
 		mov	ax, [bx+bullet_trail_t.BT_center_y]
 		sar	ax, 4
@@ -23981,22 +23984,22 @@ loc_17C77:
 		jg	short loc_17C27
 
 loc_17C7D:
-		mov	bx, [bp+var_C]
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+10h]
+		mov	bx, [bp+@@bullet_p]
+		push	[bx+bullet_t.BULLET_center.x]	; x
+		mov	al, [bx+bullet_t.BULLET_pid]
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
 		add	ax, -8
 		mov	[bp+@@left], ax
-		mov	bx, [bp+var_C]
-		mov	ax, [bx+4]
+		mov	bx, [bp+@@bullet_p]
+		mov	ax, [bx+bullet_t.BULLET_center.y]
 		sar	ax, 4
 		add	ax, 8
 		mov	[bp+@@top], ax
-		cmp	byte ptr [bx+16h], 0
+		cmp	[bx+bullet_t.BULLET_is_animated], 0
 		jz	short loc_17CB6
-		mov	al, [bx+1]
+		mov	al, [bx+bullet_t.BULLET_age]
 		mov	ah, 0
 		and	ax, 3
 		add	ax, ax
@@ -24008,17 +24011,17 @@ loc_17CB6:
 ; ---------------------------------------------------------------------------
 
 loc_17CC6:
-		mov	bx, [bp+var_C]
-		cmp	byte ptr [bx], 4
+		mov	bx, [bp+@@bullet_p]
+		cmp	[bx+bullet_t.BULLET_flag], BF_PELLET_CLOUD
 		jnz	short loc_17CD2
 		mov	[bp+var_D], 1
 
 loc_17CD2:
 		inc	[bp+var_2]
-		add	[bp+var_C], 1Ah
+		add	[bp+@@bullet_p], size bullet_t
 
 loc_17CD9:
-		cmp	[bp+var_2], 140h
+		cmp	[bp+var_2], BULLET_COUNT
 		jl	loc_17C06
 		cmp	[bp+var_D], 0
 		jz	short loc_17D56
@@ -24030,34 +24033,34 @@ loc_17CD9:
 		int	SPRITE16
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
-		mov	[bp+var_C], 68F2h
+		mov	[bp+@@bullet_p], offset _bullets
 		mov	[bp+var_2], 0
 		jmp	short loc_17D48
 ; ---------------------------------------------------------------------------
 
 loc_17D0D:
-		mov	bx, [bp+var_C]
-		cmp	byte ptr [bx], 4
+		mov	bx, [bp+@@bullet_p]
+		cmp	[bx+bullet_t.BULLET_flag], BF_PELLET_CLOUD
 		jnz	short loc_17D41
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+10h]
+		push	[bx+bullet_t.BULLET_center.x]	; x
+		mov	al, [bx+bullet_t.BULLET_pid]
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
 		add	ax, -16
 		mov	[bp+@@left], ax
-		mov	bx, [bp+var_C]
-		mov	ax, [bx+4]
+		mov	bx, [bp+@@bullet_p]
+		mov	ax, [bx+bullet_t.BULLET_center.y]
 		sar	ax, 4
 		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, word ptr [bx+12h]
+		call	sprite16_put pascal, [bp+@@left], ax, [bx+bullet_t.BULLET_sprite_offset]
 
 loc_17D41:
 		inc	[bp+var_2]
-		add	[bp+var_C], 1Ah
+		add	[bp+@@bullet_p], size bullet_t
 
 loc_17D48:
-		cmp	[bp+var_2], 140h
+		cmp	[bp+var_2], BULLET_COUNT
 		jl	short loc_17D0D
 		mov	dx, 0
 		mov	ah, SPRITE16_SET_MONO
@@ -24066,26 +24069,26 @@ loc_17D48:
 loc_17D56:
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		mov	ax, 0A800h
+		mov	ax, SEG_PLANE_B
 		mov	es, ax
 		assume es:nothing
-		mov	si, 68F2h
+		mov	si, offset _bullets
 		mov	di, 0
 
 loc_17D71:
-		test	byte ptr [si], 1
+		test	[si+bullet_t.BULLET_flag], 1
 		jz	short loc_17D9C
-		push	word ptr [si+2]	; x
-		mov	al, [si+10h]
+		push	[si+bullet_t.BULLET_center.x]	; x
+		mov	al, [si+bullet_t.BULLET_pid]
 		xor	ah, ah
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
 		add	ax, -4
-		mov	bx, [si+4]
+		mov	bx, [si+bullet_t.BULLET_center.y]
 		sar	bx, 5
 		add	bx, 6
 		xor	dx, dx
-		cmp	byte ptr [si], 1
+		cmp	[si+bullet_t.BULLET_flag], BF_PELLET
 		jz	short loc_17D99
 		mov	dh, 1
 
@@ -24093,9 +24096,9 @@ loc_17D99:
 		call	sub_16FF0
 
 loc_17D9C:
-		add	si, 1Ah
+		add	si, size bullet_t
 		inc	di
-		cmp	di, 140h
+		cmp	di, BULLET_COUNT
 		jb	short loc_17D71
 		GRCG_OFF_VIA_XOR ax
 		pop	di
@@ -35241,16 +35244,43 @@ byte_23E4F	db ?
 byte_23E50	db ?
 byte_23E51	db ?
 
+BF_FREE = 0
+BF_PELLET = 1
+BF_BULLET16 = 2
+BF_PELLET_TRANSFER = 3
+BF_PELLET_CLOUD = 4
+BF_INVALID = 5
+
 TRAIL_POINT_COUNT = 6
 TRAIL_RING_SIZE = 48
+BULLET_COUNT = 320
 
 bullet_trail_t struc
 	BT_center_x dw TRAIL_POINT_COUNT dup(?)
 	BT_center_y dw TRAIL_POINT_COUNT dup(?)
 bullet_trail_t ends
 
-public _bullet_trail_ring, _bullet_trail_ring_i
-		db 8320 dup(?)
+bullet_t struc
+	BULLET_flag                          	db ?
+	BULLET_age                           	db ?
+	BULLET_center                        	Point <?>
+	BULLET_target_center_x_for_target_pid	dw ?
+	BULLET_target_center_x_for_origin_pid	dw ?
+	BULLET_velocity                      	Point <?>
+	BULLET_speed_next                    	db ?
+	BULLET_angle_next                    	db ?
+	BULLET_pid                           	db ?
+	BULLET_group_next                    	db ?
+	BULLET_sprite_offset                 	dw ?
+	BULLET_accel_type                    	db ?
+	BULLET_is_collidable                 	db ?
+	BULLET_is_animated                   	db ?
+	BULLET_has_trail                     	db ?
+	BULLET_trail                         	dw ?
+bullet_t ends
+
+public _bullets, _bullet_trail_ring, _bullet_trail_ring_i
+_bullets	bullet_t BULLET_COUNT dup(<?>)
 _bullet_trail_ring	bullet_trail_t TRAIL_RING_SIZE dup(<?>)
 byte_26352	db ?
 _bullet_trail_ring_i	db ?

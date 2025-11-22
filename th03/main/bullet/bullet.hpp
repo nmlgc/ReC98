@@ -4,6 +4,7 @@
 // Constants
 // ---------
 
+static const int BULLET_COUNT = 320;
 static const int TRAIL_POINTS_PER_SPRITE = 2;
 static const int TRAIL_POINT_COUNT = (
 	TRAIL_POINTS_PER_SPRITE * BULLET16_TRAIL_CELS
@@ -75,3 +76,17 @@ enum bullet_group_t {
 
 	_bullet_group_t_FORCE_UINT8 = 0xFF
 };
+
+// Acceleration flags
+// ------------------
+
+typedef uint8_t bullet_accel_type_t;
+
+static const bullet_accel_type_t BAT_NONE = 0x00;
+
+// Accelerates the Y velocity on each frame, up to a maximum of
+// [BULLET_ACCEL_Y_VELOCITY_MAX].
+static const bullet_accel_type_t BAT_Y = 0x80;
+
+static const subpixel_length_8_t BULLET_ACCEL_Y_VELOCITY_MAX = TO_SP(5);
+// ------------------
