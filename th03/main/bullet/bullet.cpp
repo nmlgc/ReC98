@@ -158,3 +158,12 @@ narrow:
 
 #pragma option -k.
 #pragma warn +rch
+#pragma codeseg
+
+void bullets_reset(void)
+{
+	for(int i = 0; i < BULLET_COUNT; i++) {
+		bullets[i].flag = BF_FREE;
+	}
+	bullet_trail_ring_i = 0;
+}

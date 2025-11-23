@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, BULLET_TEXT, main_04__TEXT
 
 ; ===========================================================================
 
@@ -954,7 +954,7 @@ var_6		= dword	ptr -6
 		mov	byte_1F520, 0
 		call	sub_E313
 		call	@randring_fill$qv
-		call	sub_17384
+		call	@bullets_reset$qv
 		xor	di, di
 		jmp	short loc_9EFF
 ; ---------------------------------------------------------------------------
@@ -22339,7 +22339,7 @@ gba_gauge_pattern_bullet_yumemi endp
 	@grcg_pellet_put$qiuii procdesc near
 PELLET_PUT ends
 
-main_04__TEXT segment byte public 'CODE' use16
+BULLET_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22742,31 +22742,10 @@ BT_BULLET16_CUSTOM_WITH_ACCEL = 8
 BAT_NONE = 00h
 BAT_Y = 80h
 
-; =============== S U B	R O U T	I N E =======================================
+	extern @bullets_reset$qv:proc
+BULLET_TEXT ends
 
-; Attributes: bp-based frame
-
-sub_17384	proc far
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		jmp	short loc_17396
-; ---------------------------------------------------------------------------
-
-loc_1738B:
-		mov	bx, ax
-		imul	bx, size bullet_t
-		mov	_bullets[bx].BULLET_flag, BF_FREE
-		inc	ax
-
-loc_17396:
-		cmp	ax, BULLET_COUNT
-		jl	short loc_1738B
-		mov	_bullet_trail_ring_i, 0
-		pop	bp
-		retf
-sub_17384	endp
-
+main_04__TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 

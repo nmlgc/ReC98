@@ -150,3 +150,5 @@ struct bullet_template_t {
 	bool has_trail;
 };
 extern bullet_template_t bullet_template;
+
+void bullets_reset(void);
