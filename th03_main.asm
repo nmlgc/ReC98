@@ -8475,25 +8475,25 @@ loc_F619:
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_F683
 		mov	al, byte_1FE50
-		mov	angle_23E43, al
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_17730
 		mov	al, byte_1F39F
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		call	sub_17730
 		mov	al, byte_1FE50
 		add	al, 7
@@ -8597,15 +8597,15 @@ marisa_F72D	proc near
 		test	byte ptr word_1F3B0, 1Fh
 		jnz	short loc_F7A8
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		cmp	_gba_boss_level, 8
 		jnb	short loc_F768
 		mov	al, byte_1F3A0
@@ -8614,10 +8614,10 @@ marisa_F72D	proc near
 
 loc_F768:
 		mov	al, byte_1F3A2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_1F3A3
-		mov	byte_23E47, al
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		call	sub_17730
 		mov	al, byte_1F3A3
 		mov	ah, 0
@@ -8626,15 +8626,15 @@ loc_F768:
 		cwd
 		pop	bx
 		idiv	bx
-		add	al, angle_23E43
-		mov	angle_23E43, al
+		add	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A4
 
 loc_F795:
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
-		mov	byte_23E4E, 4
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
 		call	sub_17730
 
 loc_F7A8:
@@ -9128,18 +9128,18 @@ loc_FBB5:
 		jnz	loc_FC51
 		call	snd_se_play pascal, 3
 		mov	al, byte_20E28
-		mov	angle_23E43, al
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
 		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_is_animated, 1
 		mov	al, byte_20E28
 		add	al, 9
 		mov	byte_20E28, al
@@ -9153,16 +9153,16 @@ loc_FBB5:
 		div	bx
 		or	dx, dx
 		jnz	short loc_FC49
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 0Fh
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_4_SPREAD_MEDIUM
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_20E29
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		mov	al, 80h
 		sub	al, byte_20E29
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 
 loc_FC49:
@@ -9209,10 +9209,10 @@ loc_FC88:
 
 loc_FC91:
 		mov	ax, word_1F33E
-		add	ax, 180h
+		add	ax, (24 shl 4)
 		mov	si, ax
 		mov	ax, word_1F340
-		add	ax, 0FE00h
+		add	ax, (-32 shl 4)
 		mov	di, ax
 		cmp	word_1F3B0, 20h	; ' '
 		jz	short loc_FCB6
@@ -9236,34 +9236,34 @@ loc_FCC6:
 		jbe	loc_FD6D
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_FD12
-		mov	angle_23E43, 0
-		mov	byte_23E45, 1Ch
-		mov	word_23E3E, si
-		mov	word_23E40, di
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE_AND_SPEED
+		mov	_bullet_template.BT_center.x, si
+		mov	_bullet_template.BT_center.y, di
 		mov	al, byte_1F3A0
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
 		call	sub_17730
-		mov	byte_23E4E, 1
+		mov	_bullet_template.BT_type, BT_PELLET
 		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_FD12:
 		cmp	word_1F3B0, 40h
 		jnz	short loc_FD47
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 25h ; '%'
-		mov	word_23E3E, si
-		mov	word_23E40, di
-		mov	byte_23E42, 20h ; ' '
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_32_RING
+		mov	_bullet_template.BT_center.x, si
+		mov	_bullet_template.BT_center.y, di
+		mov	_bullet_template.BT_speed, (2 shl 4)
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
 		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_FD47:
 		test	byte ptr word_1F3B0, 1
@@ -9332,29 +9332,29 @@ loc_FDAC:
 		pop	dx
 		cmp	dx, ax
 		jnz	short loc_FDCB
-		mov	byte_23E45, 12h
+		mov	_bullet_template.BT_group, BG_4_SPREAD_MEDIUM_AIMED
 		jmp	short loc_FDD0
 ; ---------------------------------------------------------------------------
 
 loc_FDCB:
-		mov	byte_23E45, 18h
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM_AIMED
 
 loc_FDD0:
 		call	snd_se_play pascal, 10
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_angle, 0
 		mov	ax, word_1F33E
-		add	ax, 180h
-		mov	word_23E3E, ax
+		add	ax, (24 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0FE00h
-		mov	word_23E40, ax
-		mov	byte_23E42, 58h ; 'X'
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
-		mov	byte_23E51, 1
+		add	ax, (-32 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, ((5 shl 4) + 8)
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
+		mov	_bullet_template.BT_has_trail, 1
 		call	sub_17730
-		mov	byte_23E51, 0
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_has_trail, 0
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_FE11:
 		cmp	word_1F3B0, 96h
@@ -9403,20 +9403,20 @@ loc_FE54:
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, angle_20E2B
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, angle_20E2B
 		add	al, 40h
-		mov	angle_23E43, al
-		mov	byte_23E4E, 4
-		mov	byte_23E45, 21h ; '!'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
+		mov	_bullet_template.BT_group, BG_2_RING
 		mov	al, byte_1F3A5
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		call	sub_17730
 		call	snd_se_play pascal, 10
 		mov	al, byte_20E2A
@@ -9486,7 +9486,7 @@ loc_FF2B:
 		call	sub_F512
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		inc	word_1F3B0
 		mov	al, byte_1F34F
 		mov	ah, 0
@@ -9937,7 +9937,7 @@ loc_1035A:
 		jnb	short loc_10376
 		push	word_20E50
 		push	word_20E52
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CE5B
@@ -9952,7 +9952,7 @@ loc_10376:
 		jnz	short loc_103A5
 		push	word_20E50
 		push	word_20E52
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
@@ -9962,19 +9962,19 @@ loc_10376:
 loc_103A5:
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_103EC
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_20E4E
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	ax, word_20E50
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_20E52
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
 		add	al, byte_20E4C
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_1F3A0
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		call	sub_17730
 		mov	al, byte_20E4D
 		add	byte_20E4E, al
@@ -10005,13 +10005,13 @@ yumemi_10405	proc near
 		cmp	word_1F3B0, 1
 		jnz	short loc_10456
 		mov	byte_1F353, 1
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
 		mov	ax, _players[bx].center.x
 		mov	point_1F342.x, ax
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -10036,7 +10036,7 @@ loc_10456:
 		jnz	loc_1050D
 		push	point_1F342.x
 		push	point_1F342.y
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CE5B
@@ -10051,7 +10051,7 @@ loc_1047F:
 		jnz	short loc_104A7
 		push	word_20E50
 		push	word_20E52
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
@@ -10062,24 +10062,23 @@ loc_104A7:
 		jnz	short loc_104F6
 		call	snd_se_play pascal, 3
 		mov	ax, word_20E50
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_20E52
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_20E4E
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		push	1Fh
 		call	@randring_far_next16_and$qui
 		add	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	1
 		call	@randring_far_next16_and$qui
 		inc	al
-		mov	byte_23E4E, al
-		push	5
-		call	@randring_far_next16_mod$qui
+		mov	_bullet_template.BT_type, al
+		call	@randring_far_next16_mod$qui pascal, 5
 		mov	bx, ax
-		mov	al, [bx+792h]
-		mov	byte_23E45, al
+		mov	al, yumemi_group_1DCF2[bx]
+		mov	_bullet_template.BT_group, al
 		call	sub_17730
 
 loc_104F6:
@@ -10112,39 +10111,39 @@ yumemi_1050F	proc near
 		div	bx
 		or	dx, dx
 		jnz	short loc_105A1
-		mov	byte_23E45, 20h ; ' '
-		mov	byte_23E42, 20h ; ' '
+		mov	_bullet_template.BT_group, BG_4_RING
+		mov	_bullet_template.BT_speed, (2 shl 4)
 		push	1
 		call	@randring_far_next16_and$qui
 		inc	al
-		mov	byte_23E4E, al
+		mov	_bullet_template.BT_type, al
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0FE00h
-		mov	word_23E40, ax
+		add	ax, (-32 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F340
-		add	ax, 200h
-		mov	word_23E40, ax
+		add	ax, (32 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
-		add	ax, 0FE00h
-		mov	word_23E3E, ax
+		add	ax, (-32 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
-		add	ax, 200h
-		mov	word_23E3E, ax
+		add	ax, (32 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		call	sub_17730
 
 loc_105A1:
@@ -10186,13 +10185,13 @@ loc_105D4:
 
 loc_105E1:
 		mov	byte_1F354, 2
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
 		mov	ax, _players[bx].center.x
 		mov	point_1F342.x, ax
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -10209,7 +10208,7 @@ loc_105E1:
 		mov	byte_1F353, 1
 		push	point_1F342.x
 		push	point_1F342.y
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CE5B
@@ -10254,38 +10253,37 @@ yumemi_10669	proc near
 		div	bx
 		or	dx, dx
 		jnz	short loc_106F5
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		cmp	word_1F3B0, 40h
 		jnb	short loc_106B8
 		mov	ax, word_20E50
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_20E52
-		mov	word_23E40, ax
-		mov	angle_23E43, -40h
-		mov	byte_23E42, 60h
-		mov	byte_23E45, 16h
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_angle, -40h
+		mov	_bullet_template.BT_speed, (6 shl 4)
+		mov	_bullet_template.BT_group, BG_5_SPREAD_WIDE
 		call	sub_17730
-		mov	byte_23E45, 10h
+		mov	_bullet_template.BT_group, BG_4_SPREAD_WIDE
 		call	sub_17730
 
 loc_106B8:
 		cmp	word_1F3B0, 20h	; ' '
 		jb	short loc_106F5
-		mov	byte_23E45, 0
-		mov	byte_23E42, 24h ; '$'
-		mov	word_23E40, 0
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_speed, ((2 shl 4) + 4)
+		mov	_bullet_template.BT_center.y, 0
 		xor	si, si
 		jmp	short loc_106F0
 ; ---------------------------------------------------------------------------
 
 loc_106D3:
-		push	1200h
-		call	@randring_far_next16_mod$qui
-		mov	word_23E3E, ax
+		call	@randring_far_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		push	3Fh ; '?'
 		call	@randring_far_next16_and$qui
 		add	al, 20h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		inc	si
 
@@ -10359,7 +10357,7 @@ loc_10761:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_F512
 		inc	word_1F3B0
 		mov	ax, word_1F33E
@@ -10944,33 +10942,33 @@ loc_10C8D:
 		div	bx
 		or	dx, dx
 		jnz	loc_10D57
-		mov	byte_23E4E, 4
-		mov	byte_23E45, 0
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
+		mov	_bullet_template.BT_group, BG_1
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, [bp+@@angle]
 		add	al, al
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_23DC7
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		mov	al, [bp+@@angle]
 		add	al, al
 		add	al, 80h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, [bp+@@angle]
 		add	al, 80h
 		mov	[bp+@@angle], al
@@ -10978,13 +10976,13 @@ loc_10C8D:
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 
 loc_10D57:
@@ -11022,24 +11020,24 @@ reimu_10DA0	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		cmp	word_1F3B0, 40h
 		jnb	short loc_10DEF
 		cmp	_round_frame_mod16, 0
 		jnz	short loc_10E14
-		mov	angle_23E43, 20h
-		mov	byte_23E45, 8
+		mov	_bullet_template.BT_angle, 20h
+		mov	_bullet_template.BT_group, BG_3_SPREAD_NARROW
 		call	sub_17730
-		mov	angle_23E43, 60h
+		mov	_bullet_template.BT_angle, 60h
 
 loc_10DE8:
 		call	sub_17730
@@ -11052,8 +11050,8 @@ loc_10DEF:
 		jnb	short loc_10E09
 		cmp	_round_frame_mod16, 0
 		jnz	short loc_10E14
-		mov	byte_23E45, 15h
-		mov	angle_23E43, 40h
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM
+		mov	_bullet_template.BT_angle, 40h
 		jmp	short loc_10DE8
 ; ---------------------------------------------------------------------------
 
@@ -11189,21 +11187,21 @@ loc_10F26:
 		mov	byte_23DC8, al
 		cmp	_round_frame_mod16, 0
 		jnz	loc_10FCE
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F3A4
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		call	sub_17730
 		jmp	short loc_10FCE
 ; ---------------------------------------------------------------------------
@@ -11264,23 +11262,23 @@ reimu_10FD1	proc near
 		jnb	short loc_11026
 		test	byte ptr word_1F3B0, 0Fh
 		jnz	short loc_11031
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte ptr word_1F3B0
-		mov	angle_23E43, al
-		mov	byte_23E45, 0Eh
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_4_SPREAD_NARROW
 		call	sub_17730
 		mov	al, 78h
 		sub	al, byte ptr word_1F3B0
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		pop	bp
 		retn
@@ -11808,21 +11806,21 @@ loc_1148D:
 		cmp	word_1F3B0, 1Ch
 		jb	loc_11544
 		mov	al, byte_23DE2
-		mov	angle_23E43, al
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	word_23E4C, 8
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_sprite_offset, (64 / BYTE_DOTS)
 		cmp	_pid_current, 0
 		jz	short loc_114D1
-		add	word_23E4C, 280h
+		add	_bullet_template.BT_sprite_offset, (8 * ROW_SIZE)
 
 loc_114D1:
 		cmp	word_1F3B0, 24h	; '$'
@@ -11845,7 +11843,7 @@ loc_114F3:
 		mov	al, byte_23DE2
 		add	al, 8
 		mov	byte_23DE2, al
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		inc	si
 
 loc_11504:
@@ -12008,33 +12006,33 @@ ellen_11620	proc near
 		cmp	dx, 1
 		jnz	short loc_116A2
 		call	snd_se_play pascal, 10
-		mov	byte_23E45, 0Eh
+		mov	_bullet_template.BT_group, BG_4_SPREAD_NARROW
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_23DE3
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
-		mov	byte_23E4E, 1
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_PELLET
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_17730
 		mov	al, byte_23DE3
 		add	al, 80h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		mov	al, byte_1F3A1
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		call	sub_17730
 		mov	al, byte_23DE3
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		mov	al, byte_23DE3
 		add	al, 10h
@@ -12553,7 +12551,7 @@ arg_0		= word ptr  4
 
 		enter	6, 0
 		push	si
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		xor	si, si
 		jmp	short loc_11B43
 ; ---------------------------------------------------------------------------
@@ -12562,7 +12560,7 @@ loc_11ACF:
 		cmp	[bp+arg_0], 0
 		jz	short loc_11ADD
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 
 loc_11ADD:
 		mov	ax, si
@@ -12587,9 +12585,9 @@ loc_11ADD:
 		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bp+var_4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		inc	si
 
@@ -12630,9 +12628,9 @@ loc_11B6B:
 		inc	byte_1F354
 		cmp	byte_1F354, 40h
 		jbe	short loc_11BC4
-		mov	byte_23E45, 24h ; '$'
+		mov	_bullet_template.BT_group, BG_16_RING
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	1
 		call	kotohime_11AC1
 		call	snd_se_play pascal, 3
@@ -12681,16 +12679,16 @@ loc_11BE5:
 		inc	byte_1F354
 		cmp	byte_1F354, 40h
 		jbe	short loc_11C5D
-		mov	byte_23E45, 5
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_group, BG_2_SPREAD_NARROW_AIMED
+		mov	_bullet_template.BT_angle, 0
 		mov	al, byte_1F3A2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	0
 		call	kotohime_11AC1
-		mov	byte_23E45, 18h
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM_AIMED
+		mov	_bullet_template.BT_angle, 0
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	0
 		call	kotohime_11AC1
 		call	snd_se_play pascal, 3
@@ -12729,44 +12727,44 @@ kotohime_11C5F	proc near
 		cmp	dx, 1
 		jnz	loc_11D06
 		call	snd_se_play pascal, 3
-		mov	byte_23E4E, 1
+		mov	_bullet_template.BT_type, BT_PELLET
 		mov	al, byte ptr word_1F3B0
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
-		mov	byte_23E45, 26h ; '&'
-		mov	byte_23E47, 4
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_group, BG_RING
+		mov	_bullet_template.BT_count, 4
 		mov	ax, word_1F33E
-		add	ax, 0FD00h
-		mov	word_23E3E, ax
+		add	ax, (-48 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		mov	ax, word_1F33E
-		add	ax, 0FE80h
-		mov	word_23E3E, ax
+		add	ax, (-24 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0C0h
-		mov	word_23E40, ax
+		add	ax, (12 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 180h
-		mov	word_23E40, ax
+		add	ax, (24 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		mov	ax, word_1F33E
-		add	ax, 180h
-		mov	word_23E3E, ax
+		add	ax, (24 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0C0h
-		mov	word_23E40, ax
+		add	ax, (12 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		mov	ax, word_1F33E
-		add	ax, 300h
-		mov	word_23E3E, ax
+		add	ax, (48 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 
 loc_11D06:
@@ -12814,8 +12812,8 @@ loc_11D37:
 		inc	byte_1F354
 		cmp	byte_1F354, 40h
 		jbe	loc_11E44
-		mov	byte_23E45, 0
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		xor	di, di
 		jmp	loc_11E18
 ; ---------------------------------------------------------------------------
@@ -12843,9 +12841,9 @@ loc_11D77:
 		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bp+var_4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		xor	si, si
 		jmp	short loc_11E0E
 ; ---------------------------------------------------------------------------
@@ -12861,7 +12859,7 @@ loc_11DDB:
 		idiv	bx
 		add	al, [bp+var_5]
 		add	al, 40h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, si
 		imul	ax, 30h
 		mov	dl, byte_1F3A5
@@ -12870,8 +12868,8 @@ loc_11DDB:
 		cwd
 		pop	bx
 		idiv	bx
-		add	al, 10h
-		mov	byte_23E42, al
+		add	al, (1 shl 4)
+		mov	_bullet_template.BT_speed, al
 		call	sub_17730
 		inc	si
 
@@ -12979,7 +12977,7 @@ loc_11EC0:
 		mov	[bp+@@pid_other], al
 		call	sub_F512
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		inc	word_1F3B0
 		mov	al, byte_1F34F
 		mov	ah, 0
@@ -13416,10 +13414,10 @@ loc_12282:
 		mov	byte_1F353, 20h	; ' '
 
 loc_1229A:
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 0
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_1
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		cmp	byte_23DE5, 0
 		jnz	short loc_122CC
 		mov	al, byte_23DE4
@@ -13443,39 +13441,39 @@ loc_122CC:
 
 loc_122E5:
 		mov	ax, word_1F33E
-		add	ax, 380h
-		mov	word_23E3E, ax
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_23DE4
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 380h
-		mov	word_23E40, ax
-		mov	al, angle_23E43
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		mov	al, _bullet_template.BT_angle
 		add	al, 40h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		mov	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	al, angle_23E43
+		mov	_bullet_template.BT_center.y, ax
+		mov	al, _bullet_template.BT_angle
 		add	al, 40h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
-		mov	al, angle_23E43
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		mov	al, _bullet_template.BT_angle
 		add	al, 40h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 
 locret_12353:
@@ -13516,43 +13514,43 @@ chiyuri_12355	proc near
 
 loc_1239D:
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 25h ; '%'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_32_RING
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		call	sub_17730
 		cmp	_gba_boss_level, 8
 		jb	short loc_12423
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 23h ; '#'
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_8_RING
 		mov	al, byte_1F3A1
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	ax, word_1F33E
-		add	ax, 380h
-		mov	word_23E3E, ax
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		call	sub_17730
 		mov	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		call	sub_17730
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 380h
-		mov	word_23E40, ax
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 		mov	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		call	sub_17730
 
 loc_12423:
@@ -13583,19 +13581,19 @@ loc_12447:
 		cmp	word_1F3B0, 30h	; '0'
 		jnz	short loc_12496
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 26h ; '&'
-		mov	byte_23E47, 30h	; '0'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_RING
+		mov	_bullet_template.BT_count, 48
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
-		mov	byte_23E51, 1
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_has_trail, 1
 		call	sub_17730
-		mov	byte_23E51, 0
+		mov	_bullet_template.BT_has_trail, 0
 		mov	byte_1F34F, 1
 		mov	word_1F3B0, 0
 		mov	byte_1F353, 20h	; ' '
@@ -13638,11 +13636,11 @@ chiyuri_12498	proc near
 		push	ax
 		call	sub_CE5B
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E45, 0
-		mov	byte_23E4E, 1
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_type, BT_PELLET
 		mov	al, byte_1F3A4
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		xor	si, si
 		jmp	short loc_12546
 ; ---------------------------------------------------------------------------
@@ -13658,8 +13656,8 @@ loc_124F5:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13670,15 +13668,15 @@ loc_124F5:
 		idiv	bx
 		mov	dl, 60h
 		sub	dl, al
-		mov	angle_23E43, dl
+		mov	_bullet_template.BT_angle, dl
 		call	sub_17730
 		mov	al, 0
-		sub	al, angle_23E43
-		mov	angle_23E43, al
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_12546:
@@ -13701,8 +13699,8 @@ loc_12553:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13713,15 +13711,15 @@ loc_12553:
 		idiv	bx
 		mov	dl, 60h
 		sub	dl, al
-		mov	angle_23E43, dl
+		mov	_bullet_template.BT_angle, dl
 		call	sub_17730
 		mov	al, 0
-		sub	al, angle_23E43
-		mov	angle_23E43, al
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, -2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_125A4:
@@ -13752,11 +13750,11 @@ loc_125B0:
 		push	ax
 		call	sub_CE5B
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_center.x, ax
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	al, byte_1F3A4
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		xor	si, si
 		jmp	short loc_1263F
 ; ---------------------------------------------------------------------------
@@ -13772,8 +13770,8 @@ loc_125FF:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13783,11 +13781,11 @@ loc_125FF:
 		pop	bx
 		idiv	bx
 		add	al, -20h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_1263F:
@@ -13810,8 +13808,8 @@ loc_1264C:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13821,11 +13819,11 @@ loc_1264C:
 		pop	bx
 		idiv	bx
 		add	al, -20h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, -2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_1268C:
@@ -13898,9 +13896,9 @@ loc_12700:
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
 		call	sub_F512
-		mov	byte_23E50, 0
+		mov	_bullet_template.BT_is_animated, 0
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		inc	word_1F3B0
 		mov	al, byte_1F34F
 		mov	ah, 0
@@ -14035,13 +14033,13 @@ loc_1284C:
 ; ---------------------------------------------------------------------------
 
 loc_12859:
-		mov	byte_23E50, 1	; jumptable 00012744 case 255
+		mov	_bullet_template.BT_is_animated, 1	; jumptable 00012744 case 255
 		leave
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_12860:
-		mov	byte_23E50, 1	; default
+		mov	_bullet_template.BT_is_animated, 1	; default
 		test	byte ptr _round_or_result_frame, 3
 		jnz	short loc_12871
 		mov	ax, 1
@@ -14556,16 +14554,16 @@ loc_12C8B:
 		push	word_1F340
 		push	0A0h
 		call	kana_19896
-		mov	byte_23E4E, 7
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT_WITH_ACCEL
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F39F
-		mov	byte_23E47, al
-		mov	byte_23E46, 80h
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_accel_type, BAT_Y
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E42, 30h ; '0'
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, (3 shl 4)
 		call	sub_17730
 		call	snd_se_play pascal, 10
 		pop	bp
@@ -14623,12 +14621,12 @@ loc_12D7B:
 		jb	loc_12E5E
 		cmp	word_1F3B0, 50h	; 'P'
 		jnb	loc_12E5E
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_RING
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		cmp	word_1F3B0, 28h	; '('
 		jnz	short loc_12DC5
 		push	word_1F33E
@@ -14637,7 +14635,7 @@ loc_12D7B:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte_23E42, 10h
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		mov	al, byte_1F3A0
 		jmp	loc_12E4D
 ; ---------------------------------------------------------------------------
@@ -14651,27 +14649,27 @@ loc_12DC5:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte_23E42, 28h ; '('
+		mov	_bullet_template.BT_speed, ((2 shl 4) + 8)
 		mov	al, byte_1F3A1
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		call	sub_17730
 		call	snd_se_play pascal, 10
-		mov	byte_23E4E, 1
-		mov	angle_23E43, 20h
-		mov	byte_23E42, 10h
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_angle, 20h
+		mov	_bullet_template.BT_speed, (1 shl 4)
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		xor	si, si
 		jmp	short loc_12E24
 ; ---------------------------------------------------------------------------
 
 loc_12E0E:
 		call	sub_17730
-		mov	al, angle_23E43
+		mov	al, _bullet_template.BT_angle
 		add	al, 6
-		mov	angle_23E43, al
-		mov	al, byte_23E42
+		mov	_bullet_template.BT_angle, al
+		mov	al, _bullet_template.BT_speed
 		add	al, 3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_12E24:
@@ -14689,11 +14687,11 @@ loc_12E2B:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte_23E42, 38h ; '8'
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 8)
 		mov	al, byte_1F3A2
 
 loc_12E4D:
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		call	sub_17730
 		call	snd_se_play pascal, 10
 		jmp	short loc_12E75
@@ -14749,15 +14747,15 @@ loc_12EB0:
 		push	word_1F340
 		push	word ptr [bp+var_1]
 		call	kana_19896
-		mov	byte_23E4E, 4
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F3A4
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E42, 30h ; '0'
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, (3 shl 4)
 		call	sub_17730
 		call	snd_se_play pascal, 10
 
@@ -14841,17 +14839,17 @@ loc_12F77:
 		jnb	short loc_12FCF
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_12FBF
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 26h ; '&'
-		mov	byte_23E47, 5
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_RING
+		mov	_bullet_template.BT_count, 5
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F3A5
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_23DE6
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		call	snd_se_play pascal, 10
 
@@ -14939,7 +14937,7 @@ loc_1304F:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_F512
 		inc	word_1F3B0
 		mov	al, byte_1F34F
@@ -15363,9 +15361,9 @@ loc_133DE:
 		sub	dx, ax
 		push	dx
 		call	sub_CDBD
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 16h
-		mov	byte_23E42, 1Ch
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_5_SPREAD_WIDE
+		mov	_bullet_template.BT_speed, ((1 shl 4) + 12)
 		push	1
 		call	@randring_far_next16_and$qui
 		or	ax, ax
@@ -15397,16 +15395,16 @@ loc_13426:
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, [bp+@@angle]
 		add	al, [bp+var_2]
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 		inc	si
 
@@ -15507,25 +15505,25 @@ loc_13532:
 loc_1353F:
 		cmp	word_1F3B0, 40h
 		jnz	short loc_1358F
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F3A1
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E42, 20h ; ' '
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, (2 shl 4)
 		xor	si, si
 		jmp	short loc_13581
 ; ---------------------------------------------------------------------------
 
 loc_1356B:
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	al, byte_23E42
+		mov	_bullet_template.BT_angle, al
+		mov	al, _bullet_template.BT_speed
 		add	al, 8
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		call	sub_17730
 		inc	si
 
@@ -15595,20 +15593,20 @@ loc_135CD:
 		push	1
 		call	@randring_far_next16_and$qui
 		inc	al
-		mov	byte_23DE9, al
+		mov	bullet_type_23DE9, al
 
 loc_135F8:
-		mov	al, byte_23DE9
-		mov	byte_23E4E, al
-		mov	byte_23E45, 0Eh
+		mov	al, bullet_type_23DE9
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_group, BG_4_SPREAD_NARROW
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_23DE8
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		cmp	[bp+var_1], 1
 		jz	short loc_13633
 		cmp	[bp+var_1], 5
@@ -15623,7 +15621,7 @@ loc_13633:
 		call	sub_17730
 		mov	al, byte_23DE8
 		add	al, 80h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
 
 loc_1364C:
@@ -15686,7 +15684,7 @@ loc_136AB:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_F512
 		inc	word_1F3B0
 		mov	al, byte_1F34F
@@ -17431,12 +17429,12 @@ chargeshot_render_marisa	endp
 
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		push	si
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_146C6
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -17490,20 +17488,20 @@ loc_14723:
 		inc	dx
 		cmp	ax, dx
 		jnz	loc_14880
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2884h]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
-		mov	byte_23E42, 38h ; '8'
-		mov	byte_23E45, 0
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 8)
+		mov	_bullet_template.BT_group, BG_1
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -17555,17 +17553,17 @@ loc_147BA:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_147F5
-		mov	angle_23E43, 20h
-		mov	word_23E3E, 0
+		mov	_bullet_template.BT_angle, 20h
+		mov	_bullet_template.BT_center.x, 0
 		xor	si, si
 		jmp	short loc_147EE
 ; ---------------------------------------------------------------------------
 
 loc_147E0:
 		nopcall	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, -6
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_147EE:
@@ -17585,17 +17583,17 @@ loc_147F5:
 		idiv	bx
 		cmp	dx, 0Ch
 		jnz	short loc_14850
-		mov	angle_23E43, 60h
-		mov	word_23E3E, 1200h
+		mov	_bullet_template.BT_angle, 60h
+		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
 		xor	si, si
 		jmp	short loc_1482A
 ; ---------------------------------------------------------------------------
 
 loc_1481C:
 		nopcall	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, -6
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_1482A:
@@ -17655,7 +17653,7 @@ gba_gauge_pattern_pellet_marisa	proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1489B
-		call	@gauge_pattern_marisa$quc pascal, 1
+		call	@gauge_pattern_marisa$quc pascal, BT_PELLET
 
 loc_1489B:
 		pop	bp
@@ -17675,7 +17673,7 @@ gba_gauge_pattern_bullet_marisa	proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_148B3
-		call	@gauge_pattern_marisa$quc pascal, 2
+		call	@gauge_pattern_marisa$quc pascal, BT_BULLET16_DEFAULT
 
 loc_148B3:
 		pop	bp
@@ -18375,11 +18373,11 @@ chargeshot_render_reimu	endp
 
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type	= byte ptr  4
 
 		enter	2, 0
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_14E51
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -18435,15 +18433,15 @@ loc_14EB3:
 		inc	dx
 		cmp	ax, dx
 		jnz	locret_14FEA
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
-		mov	word_23E40, 80h
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_center.y, (8 shl 4)
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
-		mov	byte_23E42, 20h ; ' '
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_speed, (2 shl 4)
+		mov	_bullet_template.BT_angle, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -18461,15 +18459,15 @@ loc_14EB3:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_14F52
-		mov	byte_23E45, 18h
-		mov	word_23E3E, 200h
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM_AIMED
+		mov	_bullet_template.BT_center.x, (32 shl 4)
 		push	2000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
 		nopcall	sub_17730
-		mov	word_23E3E, 1000h
+		mov	_bullet_template.BT_center.x, (256 shl 4)
 		push	10000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -18488,22 +18486,22 @@ loc_14F52:
 		idiv	bx
 		cmp	dx, 10h
 		jnz	short loc_14FBD
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
-		mov	byte_23E42, 32h ; '2'
-		mov	word_23E3E, 400h
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 2)
+		mov	_bullet_template.BT_center.x, (64 shl 4)
 		push	4000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
 		nopcall	sub_17730
-		mov	word_23E3E, 0E00h
+		mov	_bullet_template.BT_center.x, ((PLAYFIELD_W - 64) shl 4)
 		push	0E000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -18548,7 +18546,7 @@ gba_gauge_pattern_pellet_reimu proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_15004
-		call	@gauge_pattern_reimu$quc pascal, 1
+		call	@gauge_pattern_reimu$quc pascal, BT_PELLET
 
 loc_15004:
 		pop	bp
@@ -18568,7 +18566,7 @@ gba_gauge_pattern_bullet_reimu proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1501C
-		call	@gauge_pattern_reimu$quc pascal, 2
+		call	@gauge_pattern_reimu$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1501C:
 		pop	bp
@@ -19407,11 +19405,11 @@ chargeshot_render_mima	endp
 
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= word ptr  4
+@@type		= word ptr  4
 
 		enter	2, 0
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_156F8
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -19501,38 +19499,38 @@ loc_15786:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_15894
-		mov	al, byte ptr [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, byte ptr [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+3792h], 7
 		jbe	short loc_157DD
-		mov	word_23E3E, 200h
+		mov	_bullet_template.BT_center.x, (32 shl 4)
 		jmp	short loc_157E3
 ; ---------------------------------------------------------------------------
 
 loc_157DD:
-		mov	word_23E3E, 1000h
+		mov	_bullet_template.BT_center.x, (256 shl 4)
 
 loc_157E3:
-		mov	word_23E40, 100h
+		mov	_bullet_template.BT_center.y, (16 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+3790h]
-		mov	angle_23E43, al
-		mov	byte_23E50, 0
-		mov	byte_23E45, 14h
-		push	word_23E3E
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_is_animated, 0
+		mov	_bullet_template.BT_group, BG_5_SPREAD_NARROW
+		push	_bullet_template.BT_center.x
 		push	100h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -19549,15 +19547,15 @@ loc_157E3:
 		idiv	bx
 		or	dx, dx
 		jz	short loc_15878
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
-		mov	byte_23E42, 36h ; '6'
-		push	word_23E3E
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 6)
+		push	_bullet_template.BT_center.x
 		push	100h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -19574,7 +19572,7 @@ loc_15878:
 		mov	dh, 0
 		mov	bx, dx
 		add	[bx+3790h], al
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_15894:
 		mov	al, _pid_current
@@ -19614,7 +19612,7 @@ gba_gauge_pattern_pellet_mima proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_158DB
-		call	@gauge_pattern_mima$quc pascal, 1
+		call	@gauge_pattern_mima$quc pascal, BT_PELLET
 
 loc_158DB:
 		pop	bp
@@ -19634,7 +19632,7 @@ gba_gauge_pattern_bullet_mima proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_158F3
-		call	@gauge_pattern_mima$quc pascal, 2
+		call	@gauge_pattern_mima$quc pascal, BT_BULLET16_DEFAULT
 
 loc_158F3:
 		pop	bp
@@ -20769,15 +20767,15 @@ loc_1630B:
 		call	sub_165B5
 		mov	bx, word_2203C
 		mov	ax, [bx+2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bx+4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		push	18h
 		call	sub_13EFF
-		mov	byte_23E42, al
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_angle, 0
 		mov	al, [bp+@@pid]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, _round_speed
 		mov	ah, 0
 		mov	bx, (2 shl 4)
@@ -20806,7 +20804,7 @@ loc_1638E:
 		sub	bx, dx
 		cmp	ax, bx
 		jg	short loc_163DA
-		mov	byte_23E45, 1Dh
+		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
 		nopcall	sub_17971
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -20857,7 +20855,7 @@ loc_163DA:
 		mov	[bx+4B1Eh], al
 		test	[bp+@@hitcombo], 1
 		jnz	short loc_1646E
-		mov	byte_23E45, 1Dh
+		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
 		nopcall	sub_17971
 		jmp	short loc_16459
 ; ---------------------------------------------------------------------------
@@ -22078,13 +22076,13 @@ chargeshot_render_yumemi	endp
 var_4		= word ptr -4
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= word ptr  4
+@@type		= word ptr  4
 
 		enter	4, 0
 		push	si
 		push	di
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_16DE0
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -22152,24 +22150,24 @@ loc_16E42:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_16F8F
-		mov	al, byte ptr [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, byte ptr [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	angle_23E43, 0
-		mov	byte_23E45, 2Ch ; ','
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -22206,46 +22204,46 @@ loc_16EE7:
 loc_16EEF:
 		mov	si, 0C00h	; jumptable 00016EDB case 16
 		mov	di, 500h
-		mov	word_23E3E, 900h
-		mov	word_23E40, 200h
+		mov	_bullet_template.BT_center.x, (144 shl 4)
+		mov	_bullet_template.BT_center.y, (32 shl 4)
 		jmp	short loc_16F61	; default
 ; ---------------------------------------------------------------------------
 
 loc_16F03:
 		mov	si, 600h	; jumptable 00016EDB case 24
 		mov	di, 380h
-		mov	word_23E3E, 600h
+		mov	_bullet_template.BT_center.x, (96 shl 4)
 		jmp	short loc_16F1D
 ; ---------------------------------------------------------------------------
 
 loc_16F11:
 		mov	si, 0C00h	; jumptable 00016EDB case 32
 		mov	di, 380h
-		mov	word_23E3E, 0C00h
+		mov	_bullet_template.BT_center.x, (192 shl 4)
 
 loc_16F1D:
-		mov	word_23E40, 500h
+		mov	_bullet_template.BT_center.y, (80 shl 4)
 		jmp	short loc_16F61	; default
 ; ---------------------------------------------------------------------------
 
 loc_16F25:
 		mov	si, 900h	; jumptable 00016EDB case 40
 		mov	di, 680h
-		mov	word_23E3E, 600h
+		mov	_bullet_template.BT_center.x, (96 shl 4)
 
 loc_16F31:
-		mov	word_23E40, 380h
+		mov	_bullet_template.BT_center.y, (56 shl 4)
 		jmp	short loc_16F61	; default
 ; ---------------------------------------------------------------------------
 
 loc_16F39:
-		mov	word_23E3E, 0C00h ; jumptable 00016EDB case 48
+		mov	_bullet_template.BT_center.x, (192 shl 4) ; jumptable 00016EDB case 48
 		jmp	short loc_16F31
 ; ---------------------------------------------------------------------------
 
 loc_16F41:
-		mov	word_23E3E, 900h ; jumptable 00016EDB case 56
-		mov	word_23E40, 680h
+		mov	_bullet_template.BT_center.x, (144 shl 4) ; jumptable 00016EDB case 56
+		mov	_bullet_template.BT_center.y, (104 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -22311,7 +22309,7 @@ gba_gauge_pattern_pellet_yumemi	proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_16FD6
-		call	@gauge_pattern_yumemi$quc pascal, 1
+		call	@gauge_pattern_yumemi$quc pascal, BT_PELLET
 
 loc_16FD6:
 		pop	bp
@@ -22331,7 +22329,7 @@ gba_gauge_pattern_bullet_yumemi	proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_16FEE
-		call	@gauge_pattern_yumemi$quc pascal, 2
+		call	@gauge_pattern_yumemi$quc pascal, BT_BULLET16_DEFAULT
 
 loc_16FEE:
 		pop	bp
@@ -22781,6 +22779,15 @@ BG_RING = 38
 BG_RING_AIMED = 44
 BG_2_SPREAD_HORIZONTALLY_SYMMETRIC = 34
 
+BT_PELLET = 1
+BT_BULLET16_DEFAULT = 2
+BT_PELLET_TRANSFER = 3
+BT_PELLET_CLOUD = 4
+BT_BULLET16_DEFAULT_WITH_ACCEL = 7
+BT_BULLET16_CUSTOM_WITH_ACCEL = 8
+BAT_NONE = 00h
+BAT_Y = 80h
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -22831,21 +22838,21 @@ arg_0		= word ptr  4
 		xor	di, di
 		mov	[bp+var_7], 0
 		mov	[bp+var_8], 8
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
 		mov	ax, _players[bx].center.x
 		mov	[bp+@@center_x], ax
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
 		mov	ax, _players[bx].center.y
 		mov	[bp+@@center_y], ax
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		mov	[bp+@@length], al
-		mov	al, byte_23E45
+		mov	al, _bullet_template.BT_group
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 2Ch	; ','
@@ -22877,7 +22884,7 @@ loc_17410:
 		mov	di, 1
 
 loc_17421:
-		cmp	byte_23E45, 4
+		cmp	_bullet_template.BT_group, (BG_2_SPREAD_NARROW_AIMED - 1)
 		ja	loc_1767D
 		jmp	loc_176A8
 ; ---------------------------------------------------------------------------
@@ -22913,7 +22920,7 @@ loc_17450:
 		mov	di, 1
 
 loc_17461:
-		cmp	byte_23E45, 0Ah
+		cmp	_bullet_template.BT_group, (BG_3_SPREAD_NARROW_AIMED - 1)
 		ja	loc_1767D
 		jmp	loc_176A8
 ; ---------------------------------------------------------------------------
@@ -22965,7 +22972,7 @@ loc_174A9:
 		mov	di, 1
 
 loc_174C1:
-		cmp	byte_23E45, 10h
+		cmp	_bullet_template.BT_group, (BG_4_SPREAD_NARROW_AIMED - 1)
 		ja	loc_1767D
 		jmp	loc_176A8
 ; ---------------------------------------------------------------------------
@@ -23022,7 +23029,7 @@ loc_17512:
 		mov	di, 1
 
 loc_17527:
-		cmp	byte_23E45, 16h
+		cmp	_bullet_template.BT_group, (BG_5_SPREAD_NARROW_AIMED - 1)
 		ja	loc_1767D
 		jmp	loc_176A8
 ; ---------------------------------------------------------------------------
@@ -23069,14 +23076,14 @@ loc_1755B:
 loc_17581:
 		mov	ax, si
 		shl	ax, 8
-		mov	dl, byte_23E47
+		mov	dl, _bullet_template.BT_count
 		mov	dh, 0
 		push	dx
 		cwd
 		pop	bx
 		idiv	bx
 		mov	[bp+var_2], ax
-		mov	al, byte_23E47
+		mov	al, _bullet_template.BT_count
 		mov	ah, 0
 		dec	ax
 		cmp	ax, si
@@ -23125,14 +23132,14 @@ loc_175CB:
 loc_175EE:
 		mov	ax, si
 		shl	ax, 8
-		mov	dl, byte_23E47
+		mov	dl, _bullet_template.BT_count
 		mov	dh, 0
 		push	dx
 		cwd
 		pop	bx
 		idiv	bx
 		mov	[bp+var_2], ax
-		mov	al, byte_23E47
+		mov	al, _bullet_template.BT_count
 		mov	ah, 0
 		dec	ax
 		cmp	ax, si
@@ -23148,7 +23155,7 @@ loc_1760D:
 ; ---------------------------------------------------------------------------
 
 loc_17619:
-		mov	al, angle_23E43
+		mov	al, _bullet_template.BT_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, 80h
@@ -23170,7 +23177,7 @@ loc_1762D:
 loc_17638:
 		call	@randring2_next16$qv
 		mov	[bp+var_2], ax
-		mov	al, byte_23E47
+		mov	al, _bullet_template.BT_count
 		mov	ah, 0
 		cmp	ax, si
 		jg	short loc_176A8
@@ -23184,7 +23191,7 @@ loc_17649:
 		call	@randring2_next16_and$qui
 		add	al, [bp+@@length]
 		mov	[bp+@@length], al
-		mov	al, byte_23E47
+		mov	al, _bullet_template.BT_count
 		mov	ah, 0
 		cmp	ax, si
 		jg	short loc_176A8
@@ -23196,7 +23203,7 @@ loc_17665:
 		call	@randring2_next16_and$qui
 		mov	[bp+var_2], ax
 		sub	[bp+var_2], 10h
-		mov	al, byte_23E47
+		mov	al, _bullet_template.BT_count
 		mov	ah, 0
 		cmp	ax, si
 		jg	short loc_1767D
@@ -23205,17 +23212,17 @@ loc_1767A:
 		mov	di, 1
 
 loc_1767D:
-		push	word_23E3E
-		push	word_23E40
+		push	_bullet_template.BT_center.x
+		push	_bullet_template.BT_center.y
 		push	[bp+@@center_x]
 		push	[bp+@@center_y]
 		mov	al, byte ptr [bp+var_2]
-		add	al, angle_23E43
+		add	al, _bullet_template.BT_angle
 		push	ax
 		push	ds
-		push	offset point_23E48.x
+		push	offset _bullet_template.BT_velocity_tmp.x
 		push	ds
-		push	offset point_23E48.y
+		push	offset _bullet_template.BT_velocity_tmp.y
 		mov	al, [bp+@@length]
 		mov	ah, 0
 		push	ax
@@ -23225,11 +23232,11 @@ loc_1767D:
 
 loc_176A8:
 		push	ds
-		push	offset point_23E48.x
+		push	offset _bullet_template.BT_velocity_tmp.x
 		push	ds
-		push	offset point_23E48.y
+		push	offset _bullet_template.BT_velocity_tmp.y
 		mov	al, byte ptr [bp+var_2]
-		add	al, angle_23E43
+		add	al, _bullet_template.BT_angle
 		push	ax
 		mov	al, [bp+@@length]
 		mov	ah, 0
@@ -23238,7 +23245,7 @@ loc_176A8:
 
 loc_176C3:
 		mov	al, byte ptr [bp+var_2]
-		add	al, angle_23E43
+		add	al, _bullet_template.BT_angle
 		mov	byte_26352, al
 		mov	ax, di
 		pop	di
@@ -23295,9 +23302,6 @@ off_176D6	dw offset loc_17628
 		dw offset loc_175A3
 		dw offset loc_175EE
 
-BAT_NONE = 00h
-BAT_Y = 80h
-
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -23321,16 +23325,16 @@ var_2		= word ptr -2
 		push	di
 		mov	[bp+var_4], 0
 		mov	[bp+var_C], 0
-		cmp	word_23E40, 0FF80h
+		cmp	_bullet_template.BT_center.y, (-8 shl 4)
 		jle	loc_1795E
-		cmp	word_23E40, 1780h
+		cmp	_bullet_template.BT_center.y, ((PLAYFIELD_H + 8) shl 4)
 		jge	loc_1795E
-		cmp	word_23E3E, 0FF80h
+		cmp	_bullet_template.BT_center.x, (-8 shl 4)
 		jle	loc_1795E
-		cmp	word_23E3E, 1280h
+		cmp	_bullet_template.BT_center.x, ((PLAYFIELD_W + 8) shl 4)
 		jge	loc_1795E
 		mov	si, offset _bullets
-		mov	al, byte_23E4E
+		mov	al, _bullet_template.BT_type
 		mov	ah, 0
 		sub	ax, 2
 		mov	bx, ax
@@ -23351,8 +23355,8 @@ loc_1778A:
 loc_1778E:
 		mov	al, _pid_PID_so_attack
 		mov	ah, 0
-		add	ax, 8
-		mov	word_23E4C, ax
+		add	ax, (64 / BYTE_DOTS)
+		mov	_bullet_template.BT_sprite_offset, ax
 
 loc_17799:
 		mov	[bp+@@flag], 2
@@ -23366,24 +23370,24 @@ loc_1779F:
 ; ---------------------------------------------------------------------------
 
 loc_177A9:
-		mov	al, byte_23E4E
+		mov	al, _bullet_template.BT_type
 		mov	[bp+@@flag], al
 
 loc_177AF:
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		mov	[bp+var_E], al
 		mov	al, byte_23E3C
-		add	byte_23E42, al
-		cmp	byte_23E42, 80h
+		add	_bullet_template.BT_speed, al
+		cmp	_bullet_template.BT_speed, (8 shl 4)
 		jbe	short loc_177CA
-		mov	byte_23E42, 80h
+		mov	_bullet_template.BT_speed, (8 shl 4)
 		jmp	short loc_177D6
 ; ---------------------------------------------------------------------------
 
 loc_177CA:
-		cmp	byte_23E42, 10h
+		cmp	_bullet_template.BT_speed, (1 shl 4)
 		jnb	short loc_177D6
-		mov	byte_23E42, 10h
+		mov	_bullet_template.BT_speed, (1 shl 4)
 
 loc_177D6:
 		mov	[bp+var_2], 0
@@ -23396,23 +23400,23 @@ loc_177DE:
 		mov	al, [bp+@@flag]
 		mov	[si+bullet_t.BULLET_flag], al
 		mov	[si+bullet_t.BULLET_age], 0
-		mov	ax, word_23E3E
+		mov	ax, _bullet_template.BT_center.x
 		mov	[si+bullet_t.BULLET_center.x], ax
-		mov	ax, word_23E40
+		mov	ax, _bullet_template.BT_center.y
 		mov	[si+bullet_t.BULLET_center.y], ax
-		mov	al, byte_23E45
+		mov	al, _bullet_template.BT_group
 		mov	[si+bullet_t.BULLET_group_next], al
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	[si+bullet_t.BULLET_pid], al
-		mov	ax, word_23E4C
+		mov	ax, _bullet_template.BT_sprite_offset
 		mov	[si+bullet_t.BULLET_sprite_offset], ax
-		mov	al, byte_23E50
+		mov	al, _bullet_template.BT_is_animated
 		mov	[si+bullet_t.BULLET_is_animated], al
-		mov	al, byte_23E4F
+		mov	al, _bullet_template.BT_is_collidable
 		mov	[si+bullet_t.BULLET_is_collidable], al
-		mov	al, byte_23E51
+		mov	al, _bullet_template.BT_has_trail
 		mov	[si+bullet_t.BULLET_has_trail], al
-		cmp	byte_23E51, 0
+		cmp	_bullet_template.BT_has_trail, 0
 		jz	short loc_1786C
 		mov	al, _bullet_trail_ring_i
 		mov	ah, 0
@@ -23433,13 +23437,13 @@ loc_17847:
 		mov	ax, di
 		add	ax, ax
 		add	ax, [si+bullet_t.BULLET_trail]
-		mov	dx, word_23E3E
+		mov	dx, _bullet_template.BT_center.x
 		mov	bx, ax
 		mov	[bx+bullet_trail_t.BT_center_x], dx
 		mov	ax, di
 		add	ax, ax
 		add	ax, [si+bullet_t.BULLET_trail]
-		mov	dx, word_23E40
+		mov	dx, _bullet_template.BT_center.y
 		mov	bx, ax
 		mov	[bx+bullet_trail_t.BT_center_y], dx
 		inc	di
@@ -23451,7 +23455,7 @@ loc_17867:
 loc_1786C:
 		cmp	[bp+var_C], 0
 		jz	short loc_1787A
-		mov	al, byte_23E46
+		mov	al, _bullet_template.BT_accel_type
 		mov	[si+bullet_t.BULLET_accel_type], al
 		jmp	short loc_1787E
 ; ---------------------------------------------------------------------------
@@ -23462,8 +23466,8 @@ loc_1787A:
 loc_1787E:
 		cmp	[bp+@@flag], 3
 		jnz	loc_17914
-		push	word_23E3E	; x
-		mov	al, _pid_other
+		push	_bullet_template.BT_center.x	; x
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
@@ -23472,7 +23476,7 @@ loc_1787E:
 		mov	[bp+var_6], ax
 		mov	[si+bullet_t.BULLET_target_center_x_for_target_pid], ax
 		push	ax	; x
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
@@ -23505,14 +23509,14 @@ loc_1787E:
 		push	[bp+@@length]
 		call	vector2_between_plus
 		push	[bp+var_6]	; x
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@screen_x_to_playfield$qii
 		mov	[si+bullet_t.BULLET_target_center_x_for_origin_pid], ax
-		mov	al, angle_23E43
+		mov	al, _bullet_template.BT_angle
 		mov	[si+bullet_t.BULLET_angle_next], al
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		mov	[si+bullet_t.BULLET_speed_next], al
 		jmp	short loc_17958
 ; ---------------------------------------------------------------------------
@@ -23521,13 +23525,13 @@ loc_17914:
 		push	[bp+var_4]
 		call	sub_173A2
 		mov	[bp+var_B], al
-		mov	ax, point_23E48.x
+		mov	ax, _bullet_template.BT_velocity_tmp.x
 		mov	[si+bullet_t.BULLET_velocity.x], ax
-		mov	ax, point_23E48.y
+		mov	ax, _bullet_template.BT_velocity_tmp.y
 		mov	[si+bullet_t.BULLET_velocity.y], ax
 		mov	al, byte_26352
 		mov	[si+bullet_t.BULLET_angle_next], al
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		mov	[si+bullet_t.BULLET_speed_next], al
 		cmp	[bp+@@flag], 4
 		jnz	short loc_17940
@@ -23548,7 +23552,7 @@ loc_1794F:
 
 loc_17958:
 		mov	al, [bp+var_E]
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 
 loc_1795E:
 		pop	di
@@ -23574,7 +23578,7 @@ off_17963	dw offset loc_1778E
 sub_17971	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte_23E4E, 3
+		mov	_bullet_template.BT_type, BT_PELLET_TRANSFER
 		call	sub_17730
 		pop	bp
 		retf
@@ -23588,11 +23592,11 @@ sub_17971	endp
 sub_1797F	proc far
 		push	bp
 		mov	bp, sp
-		mov	angle_23E43, 0
-		mov	byte_23E47, 0
-		mov	byte_23E50, 1
-		mov	byte_23E4F, 1
-		mov	byte_23E51, 0
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_count, 0
+		mov	_bullet_template.BT_is_animated, 1
+		mov	_bullet_template.BT_is_collidable, 1
+		mov	_bullet_template.BT_has_trail, 0
 		pop	bp
 		retf
 sub_1797F	endp
@@ -23645,15 +23649,15 @@ sub_179D5	proc near
 		mov	bp, sp
 		push	si
 		mov	al, [si+bullet_t.BULLET_flag]
-		mov	byte_23E4E, al
+		mov	_bullet_template.BT_type, al
 		mov	ax, [si+bullet_t.BULLET_center.x]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [si+bullet_t.BULLET_center.y]
-		mov	word_23E40, ax
-		mov	ax, word ptr [si++bullet_t.BULLET_speed_next]
-		mov	word ptr byte_23E42, ax
+		mov	_bullet_template.BT_center.y, ax
+		mov	ax, word ptr [si+bullet_t.BULLET_speed_next]
+		mov	word ptr _bullet_template.BT_speed, ax
 		mov	ax, word ptr [si+bullet_t.BULLET_pid]
-		mov	word ptr _pid_other, ax
+		mov	word ptr _bullet_template.BT_pid, ax
 		call	sub_17730
 		pop	si
 		pop	bp
@@ -23814,7 +23818,7 @@ loc_17AF1:
 		mov	[si+bullet_t.BULLET_center.x], dx
 		mov	[si+bullet_t.BULLET_center.y], (2 shl 4)
 		add	[si+bullet_t.BULLET_speed_next], 8
-		mov	byte_23E47, 0
+		mov	_bullet_template.BT_count, 0
 		call	sub_179D5
 		mov	[si+bullet_t.BULLET_flag], BF_FREE
 		jmp	loc_17BCA
@@ -27451,21 +27455,21 @@ loc_199C6:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_19A49
-		mov	byte_23E4E, 8
-		mov	angle_23E43, 40h
-		mov	byte_23E45, 0
-		mov	byte_23E46, 80h
+		mov	_bullet_template.BT_type, BT_BULLET16_CUSTOM_WITH_ACCEL
+		mov	_bullet_template.BT_angle, 40h
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_accel_type, BAT_Y
 		mov	al, _pid_PID_so_attack
 		mov	ah, 0
-		add	ax, 1680h
-		mov	word_23E4C, ax
-		mov	byte_23E42, 10h
+		add	ax, (72 * ROW_SIZE)
+		mov	_bullet_template.BT_sprite_offset, ax
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		mov	ax, [si+2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [si+4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_17730
 
 loc_19A49:
@@ -28192,13 +28196,13 @@ var_1		= byte ptr -1
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D5Ah]
-		mov	byte_23E4E, al
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -28213,18 +28217,18 @@ loc_19F5D:
 		mov	[bp+var_1], 0Ch
 
 loc_19F61:
-		mov	byte_23E42, 10h
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		xor	si, si
 		jmp	short loc_19F7F
 ; ---------------------------------------------------------------------------
 
 loc_19F6A:
 		call	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+var_1]
-		add	angle_23E43, al
+		add	_bullet_template.BT_angle, al
 		inc	si
 
 loc_19F7F:
@@ -28251,14 +28255,14 @@ var_1		= byte ptr -1
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D5Ah]
-		mov	byte_23E4E, al
-		mov	byte_23E42, 10h
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -28279,11 +28283,11 @@ loc_19FCE:
 
 loc_19FD2:
 		call	sub_17730
-		mov	al, byte_23E42
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+var_1]
-		add	angle_23E43, al
+		add	_bullet_template.BT_angle, al
 		inc	si
 
 loc_19FE7:
@@ -28336,16 +28340,16 @@ loc_1A020:
 		call	kotohime_19EF9
 		cmp	byte ptr [si+11h], 0
 		jz	loc_1A0D5
-		mov	byte_23E42, 1Ch
+		mov	_bullet_template.BT_speed, ((1 shl 4) + 12)
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, [si+2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [si+4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	kotohime_19F1F
 		jmp	short loc_1A0D5
 ; ---------------------------------------------------------------------------
@@ -28365,20 +28369,20 @@ loc_1A08B:
 		cmp	byte ptr [si+12h], 10h
 		jnz	short loc_1A0D5
 		call	kotohime_19EF9
-		mov	byte_23E42, 18h
+		mov	_bullet_template.BT_speed, ((1 shl 4) + 8)
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, [si+2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [si+4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		cmp	byte ptr [si+11h], 0
 		jnz	short loc_1A0CF
-		mov	byte_23E4E, 2
-		mov	byte_23E47, 0Ah
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_count, 10
 		call	sub_17730
 		jmp	short loc_1A0D2
 ; ---------------------------------------------------------------------------
@@ -31088,12 +31092,12 @@ chargeshot_render_chiyuri	endp
 
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		push	si
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1B4A3
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -31171,7 +31175,7 @@ loc_1B502:
 		add	ax, ax
 		mov	bx, ax
 		add	word ptr [bx+1F54h], 180h
-		add	si, 180h
+		add	si, (24 shl 4)
 		push	si
 		push	0
 		mov	al, [bp+@@pid_other]
@@ -31193,10 +31197,10 @@ loc_1B57C:
 		mov	bx, ax
 		test	byte ptr [bx+1F58h], 1
 		jz	short loc_1B5E3
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -31206,19 +31210,19 @@ loc_1B57C:
 		cwd
 		idiv	bx
 		shl	dl, 2
-		add	dl, 18h
-		mov	byte_23E42, dl
-		mov	byte_23E45, 1
-		mov	angle_23E43, 0
-		mov	word_23E40, 0
-		mov	word_23E3E, si
-		mov	byte_23E50, 0
+		add	dl, ((1 shl 4) + 8)
+		mov	_bullet_template.BT_speed, dl
+		mov	_bullet_template.BT_group, BG_1_AIMED
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_center.y, 0
+		mov	_bullet_template.BT_center.x, si
+		mov	_bullet_template.BT_is_animated, 0
 		call	sub_17730
-		mov	ax, 1200h
+		mov	ax, (PLAYFIELD_W shl 4)
 		sub	ax, si
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_1B5E3:
 		mov	al, _pid_current
@@ -31261,7 +31265,7 @@ gba_gauge_pattern_pellet_chiyuri proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1B639
-		call	@gauge_pattern_chiyuri$quc pascal, 1
+		call	@gauge_pattern_chiyuri$quc pascal, BT_PELLET
 
 loc_1B639:
 		pop	bp
@@ -31281,7 +31285,7 @@ gba_gauge_pattern_bullet_chiyuri proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1B651
-		call	@gauge_pattern_chiyuri$quc pascal, 2
+		call	@gauge_pattern_chiyuri$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1B651:
 		pop	bp
@@ -31763,11 +31767,11 @@ chargeshot_render_ellen	endp
 
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1B9F6
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -31843,35 +31847,35 @@ loc_1BA77:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1BC0E
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
-		mov	word_23E40, 80h
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_center.y, (8 shl 4)
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		cmp	word ptr [bx+1FFEh], 0
 		jle	loc_1BB55
-		mov	angle_23E43, 0
-		mov	byte_23E42, 38h ; '8'
-		mov	byte_23E45, 2Ch ; ','
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 8)
+		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
-		mov	word_23E40, 0
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_center.y, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+1FFEh]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		push	ax
 		push	0
 		mov	al, [bp+@@pid_other]
@@ -31885,7 +31889,7 @@ loc_1BA77:
 		mov	dx, 1200h
 		mov	bx, ax
 		sub	dx, [bx+1FFEh]
-		mov	word_23E3E, dx
+		mov	_bullet_template.BT_center.x, dx
 		push	dx
 		push	0
 		mov	al, [bp+@@pid_other]
@@ -31909,21 +31913,21 @@ loc_1BB55:
 		cmp	word ptr [bx+2002h], 900h
 		jge	loc_1BBFA
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
-		mov	byte_23E45, 24h ; '$'
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_group, BG_16_RING
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2002h]
-		mov	word_23E40, ax
-		mov	word_23E3E, 0
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_center.x, 0
 		push	0
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31935,7 +31939,7 @@ loc_1BB55:
 		push	ax
 		call	sub_CE0C
 		call	sub_17730
-		mov	word_23E3E, 1200h
+		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
 		push	1200h
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31948,7 +31952,7 @@ loc_1BB55:
 		call	sub_CE0C
 		call	sub_17730
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -31989,7 +31993,7 @@ gba_gauge_pattern_pellet_ellen proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1BC33
-		call	@gauge_pattern_ellen$quc pascal, 1
+		call	@gauge_pattern_ellen$quc pascal, BT_PELLET
 
 loc_1BC33:
 		pop	bp
@@ -32009,7 +32013,7 @@ gba_gauge_pattern_bullet_ellen proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1BC4B
-		call	@gauge_pattern_ellen$quc pascal, 2
+		call	@gauge_pattern_ellen$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1BC4B:
 		pop	bp
@@ -32467,11 +32471,11 @@ chargeshot_render_kana	endp
 
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1BF78
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -32557,27 +32561,27 @@ loc_1BFF3:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	word_23E40, 0
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_center.y, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2676h]
-		mov	word_23E3E, ax
-		mov	byte_23E45, 0
-		mov	angle_23E43, 40h
+		mov	_bullet_template.BT_center.x, ax
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_angle, 40h
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		call	sub_17730
-		push	word_23E3E
+		push	_bullet_template.BT_center.x
 		push	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -32589,9 +32593,9 @@ loc_1BFF3:
 		mov	dx, 1200h
 		mov	bx, ax
 		sub	dx, [bx+2676h]
-		mov	word_23E3E, dx
+		mov	_bullet_template.BT_center.x, dx
 		call	sub_17730
-		push	word_23E3E
+		push	_bullet_template.BT_center.x
 		push	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -32663,7 +32667,7 @@ gba_gauge_pattern_pellet_kana proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C13E
-		call	@gauge_pattern_kana$quc pascal, 1
+		call	@gauge_pattern_kana$quc pascal, BT_PELLET
 
 loc_1C13E:
 		pop	bp
@@ -32683,7 +32687,7 @@ gba_gauge_pattern_bullet_kana proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C156
-		call	@gauge_pattern_kana$quc pascal, 2
+		call	@gauge_pattern_kana$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1C156:
 		pop	bp
@@ -32912,11 +32916,11 @@ chargeshot_render_kotohime	endp
 @gauge_pattern_kotohime$quc proc near
 
 @@flag_expected	= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1C2F6
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -32961,7 +32965,7 @@ loc_1C2F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
-		mov	dl, [bp+arg_0]
+		mov	dl, [bp+@@type]
 		mov	bx, ax
 		mov	[bx+2D5Ah], dl
 		leave
@@ -33032,7 +33036,7 @@ gba_gauge_pattern_pellet_kotohime proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C3F0
-		call	@gauge_pattern_kotohime$quc pascal, 1
+		call	@gauge_pattern_kotohime$quc pascal, BT_PELLET
 
 loc_1C3F0:
 		pop	bp
@@ -33052,7 +33056,7 @@ gba_gauge_pattern_bullet_kotohime proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C408
-		call	@gauge_pattern_kotohime$quc pascal, 2
+		call	@gauge_pattern_kotohime$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1C408:
 		pop	bp
@@ -33524,11 +33528,11 @@ chargeshot_render_rikako	endp
 
 @@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1C75F
 		mov	al, [bp+@@flag_expected]
 		add	al, GBAF_PELLET_TO_BULLET
@@ -33609,12 +33613,12 @@ loc_1C7CA:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	word_23E40, 0
-		mov	byte_23E45, 1
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_center.y, 0
+		mov	_bullet_template.BT_group, BG_1_AIMED
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -33625,22 +33629,22 @@ loc_1C7CA:
 		idiv	bx
 		mov	dl, 20h	; ' '
 		sub	dl, al
-		mov	angle_23E43, dl
+		mov	_bullet_template.BT_angle, dl
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
-		mov	word_23E3E, 0
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_center.x, 0
 		call	sub_17730
-		mov	word_23E3E, 1200h
+		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
 		call	sub_17730
-		mov	al, angle_23E43
+		mov	al, _bullet_template.BT_angle
 		neg	al
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_17730
-		mov	word_23E3E, 0
+		mov	_bullet_template.BT_center.x, 0
 		call	sub_17730
 		pushd	0
 		mov	al, [bp+@@pid_other]
@@ -33692,7 +33696,7 @@ gba_gauge_pattern_pellet_rikako	proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C8F0
-		call	@gauge_pattern_rikako$quc pascal, 1
+		call	@gauge_pattern_rikako$quc pascal, BT_PELLET
 
 loc_1C8F0:
 		pop	bp
@@ -33712,7 +33716,7 @@ gba_gauge_pattern_bullet_rikako	proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C908
-		call	@gauge_pattern_rikako$quc pascal, 2
+		call	@gauge_pattern_rikako$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1C908:
 		pop	bp
@@ -34199,11 +34203,13 @@ angles_1DBD8	db 192, 182, 202, 192, 176, 208
 		db  40h
 		db 0EBh
 		db  95h
-		db    8
-		db  0Eh
-		db    2
-		db  14h
-		db    0
+yumemi_group_1DCF2 label byte
+	db BG_3_SPREAD_NARROW
+	db BG_4_SPREAD_NARROW
+	db BG_2_SPREAD_NARROW
+	db BG_5_SPREAD_NARROW
+	db BG_1
+
 		db    0
 byte_1DCF8	db 0
 byte_1DCF9	db 0
@@ -35217,7 +35223,7 @@ byte_23DE5	db ?
 byte_23DE6	db ?
 byte_23DE7	db ?
 byte_23DE8	db ?
-byte_23DE9	db ?
+bullet_type_23DE9	db ?
 score_23DEA	dw ?
 word_23DEC	dw ?
 word_23DEE	dw ?
@@ -35227,22 +35233,26 @@ byte_23DF9	db ?
 		db 64 dup(?)
 word_23E3A	dw ?
 byte_23E3C	db ?
-		db ?
-word_23E3E	dw ?
-word_23E40	dw ?
-byte_23E42	db ?
-angle_23E43	db ?
-public _pid_other
-_pid_other	db ?
-byte_23E45	db ?
-byte_23E46	db ?
-byte_23E47	db ?
-point_23E48	Point <?>
-word_23E4C	dw ?
-byte_23E4E	db ?
-byte_23E4F	db ?
-byte_23E50	db ?
-byte_23E51	db ?
+	evendata
+
+bullet_template_t struc
+	BT_center       	Point <?>
+	BT_speed        	db ?
+	BT_angle        	db ?
+	BT_pid          	db ?
+	BT_group        	db ?
+	BT_accel_type   	db ?
+	BT_count        	db ?
+	BT_velocity_tmp 	Point <?>
+	BT_sprite_offset	dw ?
+	BT_type         	db ?
+	BT_is_collidable	db ?
+	BT_is_animated  	db ?
+	BT_has_trail    	db ?
+bullet_template_t ends
+
+public _bullet_template
+_bullet_template bullet_template_t <?>
 
 BF_FREE = 0
 BF_PELLET = 1

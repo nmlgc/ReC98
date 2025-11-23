@@ -35,8 +35,8 @@ enum bullet_group_or_special_motion_t {
 	// ------
 	// Supported for both pellets and 16×16 bullets, and subject to the same
 	// description that applies to TH01's `pellet_group_t`. The resulting
-	// angles and speeds can be freely offset via the angle and speed
-	// parameters to the bullet_add_*() functions.
+	// angles and speeds are further offset by the angle and speed parameters
+	// to the bullet_add_*() functions.
 
 	BG_1 = 0x20,
 	BG_1_AIMED = 0x19,
