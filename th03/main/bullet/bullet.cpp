@@ -1,7 +1,15 @@
+#pragma option -zPmain_04 -G
+
 #include "th03/main/bullet/bullet.hpp"
+#include "th03/main/player/stuff.hpp"
+#include "th03/math/randring.hpp"
+#include "th03/math/vector.hpp"
 #include "th03/sprites/pellet.h"
+#include "th02/main/bullet/impl.hpp"
 #include "decomp.hpp"
 #include <stddef.h>
+
+#pragma option -a2
 
 enum bullet_flag_t {
 	BF_FREE = 0,
@@ -73,6 +81,10 @@ struct bullet_t {
 extern bullet_t bullets[BULLET_COUNT];
 
 extern bullet_trail_t bullet_trail_ring[TRAIL_RING_SIZE];
+
+// ZUN bloat: group_velocity_set() should have just received a mutable
+// reference to the bullet, like in TH02.
+extern unsigned char bullet_group_i_angle;
 
 // Index of the next `bullet_trail_t` instance within [bullet_trail_ring] to be
 // assigned to a bullet with trail sprites.
@@ -166,4 +178,113 @@ void bullets_reset(void)
 		bullets[i].flag = BF_FREE;
 	}
 	bullet_trail_ring_i = 0;
+}
+
+bool16 pascal near group_velocity_set(int i)
+{
+	bool16 done;
+
+	int16_t i_angle = 0;
+
+	// ZUN bloat: A `PlayfieldPoint` has less duplication and better codegen.
+	PlayfieldSubpixel aim_x;
+	PlayfieldSubpixel aim_y;
+
+	// Due to this default, invalid group values will cause the spawn functions
+	// to repeatedly call this function, until it completely filled the pellet
+	// array with identical aimed bullets, moving at the same velocity.
+	// (Not really a ZUN bug until we can discover a game state where this can
+	// actually happen.)
+	done = false;
+
+	uint8_t ring_remaining = 0;
+	uint8_t ring_i_shift = 8;
+	aim_x = players[bullet_template.pid].center.x;
+	aim_y = players[bullet_template.pid].center.y;
+
+	subpixel_length_8_t speed = bullet_template.speed;
+
+	switch(bullet_template.group) {
+	bullet_group_2_3_4_5_spreads_impl(i_angle, done, bullet_template.group, i);
+
+	// ZUN bloat: Removing code duplication from the ring count, while adding
+	// code duplication for the aimed case below...
+	case BG_32_RING: ring_remaining = 16; ring_i_shift--;	// fallthrough
+	case BG_16_RING: ring_remaining += 8; ring_i_shift--;	// fallthrough
+	case BG_8_RING:  ring_remaining += 4; ring_i_shift--;	// fallthrough
+	case BG_4_RING:  ring_remaining += 2; ring_i_shift--;	// fallthrough
+	case BG_2_RING:
+		ring_remaining += 1;
+		ring_i_shift--;
+		i_angle = (i << ring_i_shift);
+		if(ring_remaining <= i) {
+			done = true;
+		}
+		goto no_aim;
+
+	case BG_RING:
+		bullet_group_ring_impl(i_angle, done, i, bullet_template.count, no_aim);
+
+	case BG_32_RING_AIMED: ring_remaining = 16; ring_i_shift--;	// fallthrough
+	case BG_16_RING_AIMED: ring_remaining += 8; ring_i_shift--;	// fallthrough
+	case BG_8_RING_AIMED:  ring_remaining += 4; ring_i_shift--;	// fallthrough
+	case BG_4_RING_AIMED:  ring_remaining += 2; ring_i_shift--;	// fallthrough
+	case BG_2_RING_AIMED:
+		ring_remaining += 1;
+		ring_i_shift--;
+		i_angle = (i << ring_i_shift);
+		if(ring_remaining <= i) {
+			done = true;
+		}
+		goto aim;
+
+	case BG_RING_AIMED:
+		bullet_group_ring_impl(i_angle, done, i, bullet_template.count, aim);
+
+	bullet_groups_shared_between_th02_and_th03_impl(
+		i_angle,
+		done,
+		bullet_template.angle,
+		i,
+		bullet_template.count,
+		randring2_next16
+	);
+
+	case BG_RANDOM_CONSTRAINED_ANGLE_AIMED:
+		i_angle = randring2_next16_ge_lt(0x00, 0x20);
+		i_angle -= 0x10;
+		if(i >= bullet_template.count) {
+			done = true;
+		}
+		goto aim;
+
+	case BG_1_AIMED:
+		done = true;
+		goto aim;
+
+	default:
+	aim:
+		vector2_between_plus(
+			bullet_template.center.x,
+			bullet_template.center.y,
+			aim_x,
+			aim_y,
+			(i_angle + bullet_template.angle),
+			bullet_template.velocity_tmp.x.v,
+			bullet_template.velocity_tmp.y.v,
+			speed
+		);
+		break;
+
+	no_aim:
+		vector2(
+			bullet_template.velocity_tmp.x.v,
+			bullet_template.velocity_tmp.y.v,
+			(i_angle + bullet_template.angle),
+			speed
+		);
+	}
+
+	bullet_group_i_angle = (i_angle + bullet_template.angle);
+	return done;
 }

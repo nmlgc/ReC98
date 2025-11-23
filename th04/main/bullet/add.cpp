@@ -1,3 +1,4 @@
+#include "th02/main/bullet/impl.hpp"
 #include "th02/sprites/bullet16.h"
 
 void pascal near bullets_add_regular_raw(void);
@@ -332,17 +333,14 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 		goto aim;
 
 	case BG_RING:
-		angle = ((group_i * 0x100) / bullet_template.count);
-		if(last_bullet_in_group(group_i)) {
-			done = true;
-		}
-		goto no_aim;
+		bullet_group_ring_impl(
+			angle, done, group_i, bullet_template.count, no_aim
+		);
+
 	case BG_RING_AIMED:
-		angle = ((group_i * 0x100) / bullet_template.count);
-		if(last_bullet_in_group(group_i)) {
-			done = true;
-		}
-		goto aim;
+		bullet_group_ring_impl(
+			angle, done, group_i, bullet_template.count, aim
+		);
 
 	// All these 16-bit randring operations seem to waste 8 bits of randomness,
 	// but each next16 call only advances the pointer by one byte anyway.

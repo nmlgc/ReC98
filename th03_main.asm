@@ -22743,497 +22743,11 @@ BAT_NONE = 00h
 BAT_Y = 80h
 
 	extern @bullets_reset$qv:proc
+	@GROUP_VELOCITY_SET$QI procdesc pascal near \
+		group_i:word
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_173A2	proc near
-
-@@length		= byte ptr -9
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-@@center_y		= word ptr -6
-@@center_x		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Ah
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	[bp+var_2], 0
-		xor	di, di
-		mov	[bp+var_7], 0
-		mov	[bp+var_8], 8
-		mov	al, _bullet_template.BT_pid
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		mov	ax, _players[bx].center.x
-		mov	[bp+@@center_x], ax
-		mov	al, _bullet_template.BT_pid
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		mov	ax, _players[bx].center.y
-		mov	[bp+@@center_y], ax
-		mov	al, _bullet_template.BT_speed
-		mov	[bp+@@length], al
-		mov	al, _bullet_template.BT_group
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, 2Ch	; ','
-		ja	loc_1767D
-		add	bx, bx
-		jmp	cs:off_176D6[bx]
-
-loc_173F9:
-		add	[bp+var_2], 3
-
-loc_173FD:
-		add	[bp+var_2], 3
-
-loc_17401:
-		or	si, si
-		jnz	short loc_17410
-		mov	ax, [bp+var_2]
-		add	ax, 3
-		mov	[bp+var_2], ax
-		jmp	short loc_17421
-; ---------------------------------------------------------------------------
-
-loc_17410:
-		cmp	si, 1
-		jnz	short loc_17421
-		mov	ax, 0FFFDh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	di, 1
-
-loc_17421:
-		cmp	_bullet_template.BT_group, (BG_2_SPREAD_NARROW_AIMED - 1)
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_1742D:
-		add	[bp+var_2], 8
-
-loc_17431:
-		add	[bp+var_2], 8
-
-loc_17435:
-		or	si, si
-		jnz	short loc_17440
-		mov	[bp+var_2], 0
-		jmp	short loc_17461
-; ---------------------------------------------------------------------------
-
-loc_17440:
-		cmp	si, 1
-		jnz	short loc_17450
-		mov	ax, [bp+var_2]
-		add	ax, 8
-		mov	[bp+var_2], ax
-		jmp	short loc_17461
-; ---------------------------------------------------------------------------
-
-loc_17450:
-		cmp	si, 2
-		jnz	short loc_17461
-		mov	ax, 0FFF8h
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	di, 1
-
-loc_17461:
-		cmp	_bullet_template.BT_group, (BG_3_SPREAD_NARROW_AIMED - 1)
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_1746D:
-		add	[bp+var_2], 6
-
-loc_17471:
-		add	[bp+var_2], 6
-
-loc_17475:
-		or	si, si
-		jnz	short loc_17484
-		mov	ax, [bp+var_2]
-		add	ax, 3
-		mov	[bp+var_2], ax
-		jmp	short loc_174C1
-; ---------------------------------------------------------------------------
-
-loc_17484:
-		cmp	si, 1
-		jnz	short loc_17494
-		mov	ax, 0FFFDh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		jmp	short loc_174C1
-; ---------------------------------------------------------------------------
-
-loc_17494:
-		cmp	si, 2
-		jnz	short loc_174A9
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, [bp+var_2]
-		add	ax, 9
-		mov	[bp+var_2], ax
-		jmp	short loc_174C1
-; ---------------------------------------------------------------------------
-
-loc_174A9:
-		cmp	si, 3
-		jnz	short loc_174C1
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, [bp+var_2]
-		mov	dx, 0FFF7h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	di, 1
-
-loc_174C1:
-		cmp	_bullet_template.BT_group, (BG_4_SPREAD_NARROW_AIMED - 1)
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_174CD:
-		add	[bp+var_2], 6
-
-loc_174D1:
-		add	[bp+var_2], 6
-
-loc_174D5:
-		or	si, si
-		jnz	short loc_174E0
-		mov	[bp+var_2], 0
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_174E0:
-		cmp	si, 1
-		jnz	short loc_174F0
-		mov	ax, [bp+var_2]
-		add	ax, 6
-		mov	[bp+var_2], ax
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_174F0:
-		cmp	si, 2
-		jnz	short loc_17500
-		mov	ax, 0FFFAh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_17500:
-		cmp	si, 3
-		jnz	short loc_17512
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, 0Ch
-		mov	[bp+var_2], ax
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_17512:
-		cmp	si, 4
-		jnz	short loc_17527
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		mov	dx, 0FFF4h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	di, 1
-
-loc_17527:
-		cmp	_bullet_template.BT_group, (BG_5_SPREAD_NARROW_AIMED - 1)
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17533:
-		mov	[bp+var_7], 10h
-		dec	[bp+var_8]
-
-loc_1753A:
-		mov	al, [bp+var_7]
-		add	al, 8
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_17545:
-		mov	al, [bp+var_7]
-		add	al, 4
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_17550:
-		mov	al, [bp+var_7]
-		add	al, 2
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_1755B:
-		mov	al, [bp+var_7]
-		inc	al
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-		mov	ax, si
-		mov	cl, [bp+var_8]
-		shl	ax, cl
-		mov	[bp+var_2], ax
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		cmp	ax, si
-		jg	loc_176A8
-		mov	di, 1
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17581:
-		mov	ax, si
-		shl	ax, 8
-		mov	dl, _bullet_template.BT_count
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	al, _bullet_template.BT_count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	loc_176A8
-		jmp	loc_17628
-; ---------------------------------------------------------------------------
-
-loc_175A3:
-		mov	[bp+var_7], 10h
-		dec	[bp+var_8]
-
-loc_175AA:
-		mov	al, [bp+var_7]
-		add	al, 8
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_175B5:
-		mov	al, [bp+var_7]
-		add	al, 4
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_175C0:
-		mov	al, [bp+var_7]
-		add	al, 2
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_175CB:
-		mov	al, [bp+var_7]
-		inc	al
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-		mov	ax, si
-		mov	cl, [bp+var_8]
-		shl	ax, cl
-		mov	[bp+var_2], ax
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		cmp	ax, si
-		jg	loc_1767D
-		jmp	loc_1767A
-; ---------------------------------------------------------------------------
-
-loc_175EE:
-		mov	ax, si
-		shl	ax, 8
-		mov	dl, _bullet_template.BT_count
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	al, _bullet_template.BT_count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	short loc_1767D
-		jmp	short loc_1767A
-; ---------------------------------------------------------------------------
-
-loc_1760D:
-		or	si, si
-		jnz	short loc_17619
-		mov	[bp+var_2], 0
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17619:
-		mov	al, _bullet_template.BT_angle
-		mov	ah, 0
-		add	ax, ax
-		mov	dx, 80h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-
-loc_17628:
-		mov	di, 1
-		jmp	short loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_1762D:
-		call	@randring2_next16$qv
-		mov	[bp+var_2], ax
-		mov	di, 1
-		jmp	short loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17638:
-		call	@randring2_next16$qv
-		mov	[bp+var_2], ax
-		mov	al, _bullet_template.BT_count
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_176A8
-		jmp	short loc_17628
-; ---------------------------------------------------------------------------
-
-loc_17649:
-		call	@randring2_next16$qv
-		mov	[bp+var_2], ax
-		push	1Fh
-		call	@randring2_next16_and$qui
-		add	al, [bp+@@length]
-		mov	[bp+@@length], al
-		mov	al, _bullet_template.BT_count
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_176A8
-		jmp	short loc_17628
-; ---------------------------------------------------------------------------
-
-loc_17665:
-		push	1Fh
-		call	@randring2_next16_and$qui
-		mov	[bp+var_2], ax
-		sub	[bp+var_2], 10h
-		mov	al, _bullet_template.BT_count
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_1767D
-
-loc_1767A:
-		mov	di, 1
-
-loc_1767D:
-		push	_bullet_template.BT_center.x
-		push	_bullet_template.BT_center.y
-		push	[bp+@@center_x]
-		push	[bp+@@center_y]
-		mov	al, byte ptr [bp+var_2]
-		add	al, _bullet_template.BT_angle
-		push	ax
-		push	ds
-		push	offset _bullet_template.BT_velocity_tmp.x
-		push	ds
-		push	offset _bullet_template.BT_velocity_tmp.y
-		mov	al, [bp+@@length]
-		mov	ah, 0
-		push	ax
-		call	vector2_between_plus
-		jmp	short loc_176C3
-; ---------------------------------------------------------------------------
-
-loc_176A8:
-		push	ds
-		push	offset _bullet_template.BT_velocity_tmp.x
-		push	ds
-		push	offset _bullet_template.BT_velocity_tmp.y
-		mov	al, byte ptr [bp+var_2]
-		add	al, _bullet_template.BT_angle
-		push	ax
-		mov	al, [bp+@@length]
-		mov	ah, 0
-		push	ax
-		call	vector2
-
-loc_176C3:
-		mov	al, byte ptr [bp+var_2]
-		add	al, _bullet_template.BT_angle
-		mov	byte_26352, al
-		mov	ax, di
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_173A2	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_176D6	dw offset loc_17628
-		dw offset loc_1767A
-		dw offset loc_17401
-		dw offset loc_173FD
-		dw offset loc_173F9
-		dw offset loc_17401
-		dw offset loc_173FD
-		dw offset loc_173F9
-		dw offset loc_17435
-		dw offset loc_17431
-		dw offset loc_1742D
-		dw offset loc_17435
-		dw offset loc_17431
-		dw offset loc_1742D
-		dw offset loc_17475
-		dw offset loc_17471
-		dw offset loc_1746D
-		dw offset loc_17475
-		dw offset loc_17471
-		dw offset loc_1746D
-		dw offset loc_174D5
-		dw offset loc_174D1
-		dw offset loc_174CD
-		dw offset loc_174D5
-		dw offset loc_174D1
-		dw offset loc_174CD
-		dw offset loc_1762D
-		dw offset loc_17638
-		dw offset loc_17649
-		dw offset loc_17665
-		dw offset loc_1767D
-		dw offset loc_1767D
-		dw offset loc_17550
-		dw offset loc_1755B
-		dw offset loc_1760D
-		dw offset loc_17545
-		dw offset loc_1753A
-		dw offset loc_17533
-		dw offset loc_17581
-		dw offset loc_175CB
-		dw offset loc_175C0
-		dw offset loc_175B5
-		dw offset loc_175AA
-		dw offset loc_175A3
-		dw offset loc_175EE
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23244,11 +22758,11 @@ sub_17730	proc far
 var_E		= byte ptr -0Eh
 @@flag	= byte ptr -0Dh
 var_C		= byte ptr -0Ch
-var_B		= byte ptr -0Bh
+@@done	= byte ptr -0Bh
 @@length		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@group_i	= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -23256,7 +22770,7 @@ var_2		= word ptr -2
 		sub	sp, 0Eh
 		push	si
 		push	di
-		mov	[bp+var_4], 0
+		mov	[bp+@@group_i], 0
 		mov	[bp+var_C], 0
 		cmp	_bullet_template.BT_center.y, (-8 shl 4)
 		jle	loc_1795E
@@ -23455,14 +22969,13 @@ loc_1787E:
 ; ---------------------------------------------------------------------------
 
 loc_17914:
-		push	[bp+var_4]
-		call	sub_173A2
-		mov	[bp+var_B], al
+		call	@group_velocity_set$qi pascal, [bp+@@group_i]
+		mov	[bp+@@done], al
 		mov	ax, _bullet_template.BT_velocity_tmp.x
 		mov	[si+bullet_t.BULLET_velocity.x], ax
 		mov	ax, _bullet_template.BT_velocity_tmp.y
 		mov	[si+bullet_t.BULLET_velocity.y], ax
-		mov	al, byte_26352
+		mov	al, _bullet_group_i_angle
 		mov	[si+bullet_t.BULLET_angle_next], al
 		mov	al, _bullet_template.BT_speed
 		mov	[si+bullet_t.BULLET_speed_next], al
@@ -23471,9 +22984,9 @@ loc_17914:
 		mov	[si+bullet_t.BULLET_sprite_offset], ((80 * ROW_SIZE) + (528 / BYTE_DOTS))
 
 loc_17940:
-		cmp	[bp+var_B], 0
+		cmp	[bp+@@done], 0
 		jnz	short loc_17958
-		inc	[bp+var_4]
+		inc	[bp+@@group_i]
 
 loc_17949:
 		inc	[bp+var_2]
@@ -34713,10 +34226,10 @@ bullet_t struc
 	BULLET_trail                         	dw ?
 bullet_t ends
 
-public _bullets, _bullet_trail_ring, _bullet_trail_ring_i
+public _bullets, _bullet_trail_ring, _bullet_group_i_angle, _bullet_trail_ring_i
 _bullets	bullet_t BULLET_COUNT dup(<?>)
 _bullet_trail_ring	bullet_trail_t TRAIL_RING_SIZE dup(<?>)
-byte_26352	db ?
+_bullet_group_i_angle	db ?
 _bullet_trail_ring_i	db ?
 
 word_26354	dw ?

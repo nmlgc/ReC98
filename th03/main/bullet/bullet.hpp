@@ -42,6 +42,20 @@ enum bullet_type_t {
 	_bullet_type_t_FORCE_UINT8 = 0xFF
 };
 
+// Based on TH02's `bullet_group_or_special_motion_t`, with the following
+// changes:
+//
+// • No special motion types
+// • No ultra-wide aimed 2-spread
+// • New aimed variants for the fixed power-of-2 ring types, which remained
+//   unused in the final game
+// • A new aimed and non-aimed N-ring type. Technically obsoletes TH02's fixed
+//   power-of-2 types, but ZUN still kept using those throughout the game,
+//   presumably to avoid mutating [bullet_template.count] in pattern code.
+// • A new [BG_RANDOM_CONSTRAINED_ANGLE_AIMED] type. This type would reappear
+//   in TH04's bullet system despite not being used in that game, proving that
+//   TH04's overhauled system was indeed based on TH03's.
+//
 // The resulting angles and speeds are further offset by the [angle] and
 // [speed] fields from the bullet template.
 enum bullet_group_t {
@@ -134,7 +148,10 @@ struct bullet_template_t {
 	// Only used for groups that don't imply a fixed number of bullets.
 	uint8_t count;
 
+	// ZUN bloat: group_velocity_set() should have just received a mutable
+	// reference to the bullet, like in TH02.
 	SPPoint velocity_tmp;
+
 	sprite16_offset_t sprite_offset;
 	bullet_type_t type;
 	bool is_collidable;
