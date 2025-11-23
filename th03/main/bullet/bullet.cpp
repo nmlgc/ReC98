@@ -72,6 +72,9 @@ struct bullet_t {
 	PlayfieldSubpixel target_center_x_for_origin_pid;
 
 	SPPoint velocity;
+
+	// The `_next` fields are only read when spawning derived bullet groups via
+	// bullets_add_next_from_p().
 	SubpixelLength8 speed_next;
 	unsigned char angle_next;
 	pid_t pid;
@@ -513,6 +516,51 @@ void __fastcall near bullet_trail_update_and_clip(
 	asm { stc }
 
 	#undef tmp
+}
+
+// ZUN bloat: Ironically, both call sites mutate [p] before calling this
+// function, and then remove [p]. Why not just mutate the template directly
+// then? Instead, we get this function that only sets half of the template and
+// is hard to name as a result.
+void near bullets_add_next_from_p(void)
+{
+	static_assert(BF_PELLET_TRANSFER == BT_PELLET_TRANSFER);
+	static_assert(BF_PELLET_CLOUD == BT_PELLET_CLOUD);
+	bullet_template.type = static_cast<bullet_type_t>(p->flag);
+
+	// ZUN bloat: Assigning the entire `PlayfieldPoint` generates better code.
+	bullet_template.center.x = p->center.x;
+	bullet_template.center.y = p->center.y;
+
+	// ZUN landmine: These copies of [speed], [angle], [pid], and [group] will
+	// break once the structure layout changes. I won't define stuttery "speed
+	// and angle" and "PID and group" structures and mess up the rest of the
+	// code just to have well-defined assignments here.
+	// For searchability:
+	// 	bullet_template.speed = p->speed_next;
+	// 	bullet_template.angle = p->angle_next;
+	// 	bullet_template.group = p->group_next;
+	// 	bullet_template.pid = p->pid;
+	#define template_offset(field) offsetof(bullet_template_t, field)
+	#define instance_offset(field) offsetof(bullet_t, field)
+	static_assert(
+		(template_offset(angle) - template_offset(speed)) ==
+		(instance_offset(angle_next) - instance_offset(speed_next))
+	);
+	*reinterpret_cast<uint16_t *>(&bullet_template.speed) = (
+		*reinterpret_cast<uint16_t *>(&p->speed_next)
+	);
+	static_assert(
+		(template_offset(group) - template_offset(pid)) ==
+		(instance_offset(group_next) - instance_offset(pid))
+	);
+	*reinterpret_cast<uint16_t *>(&bullet_template.pid) = (
+		*reinterpret_cast<uint16_t *>(&p->pid)
+	);
+	#undef instance_offset
+	#undef template_offset
+
+	bullets_add();
 }
 
 #undef coord_prev

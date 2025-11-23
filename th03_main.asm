@@ -22746,34 +22746,10 @@ BAT_Y = 80h
 	extern @bullets_add_transfer_pellet$qv:proc
 	extern @bullet_template_reset_stuff$qv:proc
 	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t procdesc near
+	@bullets_add_next_from_p$qv procdesc near
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_179D5	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	al, [si+bullet_t.BULLET_flag]
-		mov	_bullet_template.BT_type, al
-		mov	ax, [si+bullet_t.BULLET_center.x]
-		mov	_bullet_template.BT_center.x, ax
-		mov	ax, [si+bullet_t.BULLET_center.y]
-		mov	_bullet_template.BT_center.y, ax
-		mov	ax, word ptr [si+bullet_t.BULLET_speed_next]
-		mov	word ptr _bullet_template.BT_speed, ax
-		mov	ax, word ptr [si+bullet_t.BULLET_pid]
-		mov	word ptr _bullet_template.BT_pid, ax
-		call	@bullets_add$qv
-		pop	si
-		pop	bp
-		retn
-sub_179D5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22929,7 +22905,7 @@ loc_17AF1:
 		mov	[si+bullet_t.BULLET_center.y], (2 shl 4)
 		add	[si+bullet_t.BULLET_speed_next], 8
 		mov	_bullet_template.BT_count, 0
-		call	sub_179D5
+		call	@bullets_add_next_from_p$qv
 		mov	[si+bullet_t.BULLET_flag], BF_FREE
 		jmp	loc_17BCA
 ; ---------------------------------------------------------------------------
@@ -22991,7 +22967,7 @@ loc_17B52:
 		mov	[si+bullet_t.BULLET_flag], BF_PELLET_TRANSFER
 		mov	[si+bullet_t.BULLET_group_next], 1Dh
 		mov	[si+bullet_t.BULLET_angle_next], 0
-		call	sub_179D5
+		call	@bullets_add_next_from_p$qv
 
 loc_17BA3:
 		mov	[si+bullet_t.BULLET_flag], BF_FREE
