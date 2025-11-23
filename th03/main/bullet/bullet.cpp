@@ -1,15 +1,37 @@
 #pragma option -zPmain_04 -G
 
 #include "th03/main/bullet/bullet.hpp"
+#include "th03/main/player/cur.hpp"
 #include "th03/main/player/stuff.hpp"
+#include "th03/main/difficul.hpp"
+#include "th03/main/hitbox.hpp"
 #include "th03/math/randring.hpp"
 #include "th03/math/vector.hpp"
 #include "th03/sprites/pellet.h"
 #include "th02/main/bullet/impl.hpp"
+#include "th02/sprites/bullet16.h"
 #include "decomp.hpp"
 #include <stddef.h>
 
 #pragma option -a2
+
+// Constants
+// ---------
+
+// ZUN quirk: 16×16 bullets are clipped as soon as they are no longer visible.
+// Reusing the same clipping coordinates for 8×8 pellets, however, means that
+// these stay alive for slightly longer than you might expect.
+inline void verify_bullet16_size(void) {
+	static_assert(BULLET16_W == BULLET16_H);
+}
+static const playfield_subpixel_t CENTER_MIN = TO_SP(-(BULLET16_W / 2));
+static const playfield_subpixel_t CENTER_X_MAX = TO_SP(
+	PLAYFIELD_W + (BULLET16_W / 2)
+);
+static const playfield_subpixel_t CENTER_Y_MAX = TO_SP(
+	PLAYFIELD_H + (BULLET16_H / 2)
+);
+// ---------
 
 enum bullet_flag_t {
 	BF_FREE = 0,
@@ -287,4 +309,168 @@ bool16 pascal near group_velocity_set(int i)
 
 	bullet_group_i_angle = (i_angle + bullet_template.angle);
 	return done;
+}
+
+void bullets_add(void)
+{
+	bullet_t near *p;
+	int trail_i;
+	int bullet_i;
+	int group_i = 0;
+	union {
+		PlayfieldSubpixel playfield;
+		screen_x_t screen;
+	} target_center_x;
+	screen_x_t origin_center_x_screen;
+	Subpixel speed;
+	bool done;
+	bool accel = false;
+	uint8_t flag; // ACTUAL TYPE: bullet_flag_t
+
+	if(
+		(bullet_template.center.y.v <= CENTER_MIN) ||
+		(bullet_template.center.y.v >= CENTER_Y_MAX) ||
+		(bullet_template.center.x.v <= CENTER_MIN) ||
+		(bullet_template.center.x.v >= CENTER_X_MAX)
+	) {
+		return;
+	}
+
+	p = bullets;
+	switch(bullet_template.type) {
+	case BT_PELLET_WITH_ACCEL:
+		accel = true;
+		flag = BF_PELLET;
+		break;
+
+	case BT_BULLET16_DEFAULT_WITH_ACCEL:
+		accel = true;
+		// fallthrough
+	case BT_BULLET16_DEFAULT:
+		bullet_template.sprite_offset = (pid.so_attack + SO_BULLET16);
+		flag = BF_BULLET16;
+		break;
+
+	case BT_BULLET16_CUSTOM:
+		flag = BF_BULLET16;
+		break;
+
+	case BT_BULLET16_CUSTOM_WITH_ACCEL:
+		accel = true;
+		flag = BF_BULLET16;
+		break;
+
+	default:
+		static_assert(BT_PELLET == BF_PELLET);
+		static_assert(BT_PELLET_TRANSFER == BF_PELLET_TRANSFER);
+		static_assert(BT_PELLET_CLOUD == BF_PELLET_CLOUD);
+		flag = bullet_template.type;
+		break;
+	}
+
+	SubpixelLength8 speed_orig = bullet_template.speed;
+	bullet_template.speed.v += bullet_base_speed.v;
+	if(bullet_template.speed.v > to_sp8(8.0f)) {
+		bullet_template.speed.v = to_sp8(8.0f);
+	} else if(bullet_template.speed.v < to_sp8(1.0f)) {
+		bullet_template.speed.v = to_sp8(1.0f);
+	}
+
+	for(bullet_i = 0; bullet_i < BULLET_COUNT; (bullet_i++, p++)) {
+		if(p->flag != BF_FREE) {
+			continue;
+		}
+		p->flag = static_cast<bullet_flag_t>(flag);
+		p->age = 0;
+
+		// ZUN bloat: A template structure would have been nice!
+		p->center.x = bullet_template.center.x;
+		p->center.y = bullet_template.center.y;
+		p->group_next = bullet_template.group;
+		p->pid = bullet_template.pid;
+		p->sprite_offset = bullet_template.sprite_offset;
+		p->is_animated = bullet_template.is_animated;
+		p->is_collidable = bullet_template.is_collidable;
+		p->has_trail = bullet_template.has_trail;
+
+		if(bullet_template.has_trail) {
+			p->trail = &bullet_trail_ring[bullet_trail_ring_i++];
+			if(bullet_trail_ring_i >= TRAIL_RING_SIZE) {
+				bullet_trail_ring_i = 0;
+			}
+			for(trail_i = 0; trail_i < TRAIL_POINT_COUNT; trail_i++) {
+				p->trail->center_x.v[trail_i] = bullet_template.center.x;
+				p->trail->center_y.v[trail_i] = bullet_template.center.y;
+			}
+		}
+
+		if(accel) {
+			p->accel_type = bullet_template.accel_type;
+		} else {
+			p->accel_type = BAT_NONE;
+		}
+
+		if(flag == BF_PELLET_TRANSFER) {
+			origin_center_x_screen = playfield_fg_x_to_screen(
+				bullet_template.center.x, bullet_template.pid
+			);
+
+			// ZUN bloat: Directly assigning [p->target_center_x_for_target_pid]
+			// would have reduced [target_center_x] from a `union` to the
+			// single screen-space value calculated below.
+			target_center_x.playfield.v = randring2_next16_mod_ge_lt_sp(
+				0, PLAYFIELD_W
+			);
+			p->target_center_x_for_target_pid.v = target_center_x.playfield.v;
+
+			// ZUN quirk: Using a pixel-space function loses subpixel precision
+			// for the following angle calculation, as well as for the target
+			// check in the update function.
+			static_assert(PLAYER_COUNT == 2);
+			target_center_x.screen = playfield_fg_x_to_screen(
+				target_center_x.playfield.v, (1 - bullet_template.pid)
+			);
+
+			speed.v = (to_sp(4.375f) + (round_speed / 3));
+
+			// Assumes that Y coordinates don't change between playfields.
+			vector2_between_plus(
+				TO_SP(origin_center_x_screen),
+				p->center.y,
+				TO_SP(target_center_x.screen),
+				randring2_next16_ge_lt_sp(0.0f, 16.0f),
+				0,
+				p->velocity.x.v,
+				p->velocity.y.v,
+				speed
+			);
+			p->target_center_x_for_origin_pid.v = screen_x_to_playfield(
+				target_center_x.screen, bullet_template.pid
+			);
+			p->angle_next = bullet_template.angle;
+			p->speed_next = bullet_template.speed;
+			break;
+		} else {
+			done = group_velocity_set(group_i);
+			p->velocity.x = bullet_template.velocity_tmp.x;
+			p->velocity.y = bullet_template.velocity_tmp.y;
+			p->angle_next = bullet_group_i_angle;
+			p->speed_next = bullet_template.speed;
+			if(flag == BF_PELLET_CLOUD) {
+				p->sprite_offset = SO_PELLET_CLOUD;
+			}
+			if(done) {
+				break;
+			}
+			group_i++;
+		}
+	}
+
+	bullet_template.speed = speed_orig;
+}
+
+void bullets_add_transfer_pellet(void)
+{
+	bullet_template.type = BT_PELLET_TRANSFER;
+	bullets_add();
 }

@@ -46,7 +46,12 @@ enum bullet_type_t {
 // changes:
 //
 // • No special motion types
+// • No invalid zero value (although passing invalid groups to bullets_add*()
+//   is still broken in the same way it was in TH01 and TH02)
 // • No ultra-wide aimed 2-spread
+// • No pre-made support for stacks. This simplifies the semantics of the
+//   randomized groups and removes the asterisk that TH02 required in their
+//   documentation.
 // • New aimed variants for the fixed power-of-2 ring types, which remained
 //   unused in the final game
 // • A new aimed and non-aimed N-ring type. Technically obsoletes TH02's fixed
@@ -169,3 +174,10 @@ struct bullet_template_t {
 extern bullet_template_t bullet_template;
 
 void bullets_reset(void);
+
+// Spawns new bullets based on the [bullet_template].
+void bullets_add(void);
+
+// Like bullets_add(), but overrides [bullet_template.type] with
+// [BT_PELLET_TRANSFER].
+void bullets_add_transfer_pellet(void);

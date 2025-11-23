@@ -8487,14 +8487,14 @@ loc_F619:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_bullet_template.BT_pid, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_1F39F
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		mov	_bullet_template.BT_speed, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_1FE50
 		add	al, 7
 		mov	byte_1FE50, al
@@ -8618,7 +8618,7 @@ loc_F768:
 		mov	al, byte_1F3A3
 		mov	_bullet_template.BT_count, al
 		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_1F3A3
 		mov	ah, 0
 		push	ax
@@ -8635,7 +8635,7 @@ loc_F795:
 		mov	al, byte_1F3A1
 		mov	_bullet_template.BT_speed, al
 		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_F7A8:
 		cmp	word_1F3B0, 82h
@@ -9138,7 +9138,7 @@ loc_FBB5:
 		mov	_bullet_template.BT_speed, al
 		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	_bullet_template.BT_is_animated, 0
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_is_animated, 1
 		mov	al, byte_20E28
 		add	al, 9
@@ -9159,11 +9159,11 @@ loc_FBB5:
 		mov	_bullet_template.BT_speed, al
 		mov	al, byte_20E29
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, 80h
 		sub	al, byte_20E29
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_FC49:
 		mov	al, byte_20E29
@@ -9246,9 +9246,9 @@ loc_FCC6:
 		mov	_bullet_template.BT_speed, al
 		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	_bullet_template.BT_is_animated, 0
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_type, BT_PELLET
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_is_animated, 1
 
 loc_FD12:
@@ -9262,7 +9262,7 @@ loc_FD12:
 		mov	_bullet_template.BT_speed, (2 shl 4)
 		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	_bullet_template.BT_is_animated, 0
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_is_animated, 1
 
 loc_FD47:
@@ -9352,7 +9352,7 @@ loc_FDD0:
 		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	_bullet_template.BT_is_animated, 0
 		mov	_bullet_template.BT_has_trail, 1
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_has_trail, 0
 		mov	_bullet_template.BT_is_animated, 1
 
@@ -9417,7 +9417,7 @@ loc_FE54:
 		mov	_bullet_template.BT_group, BG_2_RING
 		mov	al, byte_1F3A5
 		mov	_bullet_template.BT_speed, al
-		call	sub_17730
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 		mov	al, byte_20E2A
 		add	angle_20E2B, al
@@ -9975,7 +9975,7 @@ loc_103A5:
 		mov	_bullet_template.BT_speed, al
 		mov	al, byte_1F3A0
 		mov	_bullet_template.BT_count, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_20E4D
 		add	byte_20E4E, al
 		mov	al, byte_20E4C
@@ -10079,7 +10079,7 @@ loc_104A7:
 		mov	bx, ax
 		mov	al, yumemi_group_1DCF2[bx]
 		mov	_bullet_template.BT_group, al
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_104F6:
 		cmp	word_1F3B0, 60h
@@ -10124,13 +10124,13 @@ yumemi_1050F	proc near
 		mov	ax, word_1F340
 		add	ax, (-32 shl 4)
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F340
 		add	ax, (32 shl 4)
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
@@ -10138,13 +10138,13 @@ yumemi_1050F	proc near
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
 		add	ax, (32 shl 4)
 		mov	_bullet_template.BT_center.x, ax
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_105A1:
 		cmp	word_1F3B0, 60h
@@ -10263,9 +10263,9 @@ yumemi_10669	proc near
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.BT_speed, (6 shl 4)
 		mov	_bullet_template.BT_group, BG_5_SPREAD_WIDE
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_group, BG_4_SPREAD_WIDE
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_106B8:
 		cmp	word_1F3B0, 20h	; ' '
@@ -10284,7 +10284,7 @@ loc_106D3:
 		call	@randring_far_next16_and$qui
 		add	al, 20h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		inc	si
 
 loc_106F0:
@@ -10964,7 +10964,7 @@ loc_10C8D:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, [bp+@@angle]
 		add	al, al
 		add	al, 80h
@@ -10983,7 +10983,7 @@ loc_10C8D:
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_10D57:
 		test	byte ptr word_1F3B0, 1
@@ -11036,11 +11036,11 @@ reimu_10DA0	proc near
 		jnz	short loc_10E14
 		mov	_bullet_template.BT_angle, 20h
 		mov	_bullet_template.BT_group, BG_3_SPREAD_NARROW
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_angle, 60h
 
 loc_10DE8:
-		call	sub_17730
+		call	@bullets_add$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -11202,7 +11202,7 @@ loc_10F26:
 		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F3A4
 		mov	_bullet_template.BT_count, al
-		call	sub_17730
+		call	@bullets_add$qv
 		jmp	short loc_10FCE
 ; ---------------------------------------------------------------------------
 
@@ -11275,11 +11275,11 @@ reimu_10FD1	proc near
 		mov	al, byte ptr word_1F3B0
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_4_SPREAD_NARROW
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, 78h
 		sub	al, byte ptr word_1F3B0
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -11839,7 +11839,7 @@ loc_114E1:
 ; ---------------------------------------------------------------------------
 
 loc_114F3:
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE2
 		add	al, 8
 		mov	byte_23DE2, al
@@ -11860,7 +11860,7 @@ loc_1150B:
 
 loc_11519:
 		call	snd_se_play pascal, 3
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE2
 		add	al, 8
 		mov	byte_23DE2, al
@@ -12019,21 +12019,21 @@ ellen_11620	proc near
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_bullet_template.BT_pid, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE3
 		add	al, 80h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_1F3A1
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		mov	_bullet_template.BT_speed, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE3
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE3
 		add	al, 10h
 		mov	byte_23DE3, al
@@ -12588,7 +12588,7 @@ loc_11ADD:
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bp+var_4]
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		inc	si
 
 loc_11B43:
@@ -12739,33 +12739,33 @@ kotohime_11C5F	proc near
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		add	ax, (-24 shl 4)
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
 		add	ax, (12 shl 4)
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
 		add	ax, (24 shl 4)
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		add	ax, (24 shl 4)
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
 		add	ax, (12 shl 4)
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		add	ax, (48 shl 4)
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_11D06:
 		cmp	word_1F3B0, 60h
@@ -12870,7 +12870,7 @@ loc_11DDB:
 		idiv	bx
 		add	al, (1 shl 4)
 		mov	_bullet_template.BT_speed, al
-		call	sub_17730
+		call	@bullets_add$qv
 		inc	si
 
 loc_11E0E:
@@ -13447,7 +13447,7 @@ loc_122E5:
 		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_23DE4
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
@@ -13456,7 +13456,7 @@ loc_122E5:
 		mov	al, _bullet_template.BT_angle
 		add	al, 40h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		add	ax, (-56 shl 4)
 		mov	_bullet_template.BT_center.x, ax
@@ -13465,7 +13465,7 @@ loc_122E5:
 		mov	al, _bullet_template.BT_angle
 		add	al, 40h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
@@ -13474,7 +13474,7 @@ loc_122E5:
 		mov	al, _bullet_template.BT_angle
 		add	al, 40h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 
 locret_12353:
 		leave
@@ -13523,7 +13523,7 @@ loc_1239D:
 		mov	_bullet_template.BT_group, BG_32_RING
 		mov	al, byte_1F3A1
 		mov	_bullet_template.BT_speed, al
-		call	sub_17730
+		call	@bullets_add$qv
 		cmp	_gba_boss_level, 8
 		jb	short loc_12423
 		mov	_bullet_template.BT_type, BT_PELLET
@@ -13537,21 +13537,21 @@ loc_1239D:
 		mov	ax, word_1F33E
 		add	ax, (56 shl 4)
 		mov	_bullet_template.BT_center.x, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		add	ax, (-56 shl 4)
 		mov	_bullet_template.BT_center.x, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
 		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
 		add	ax, (56 shl 4)
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, word_1F340
 		add	ax, (-56 shl 4)
 		mov	_bullet_template.BT_center.y, ax
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_12423:
 		pop	bp
@@ -13592,7 +13592,7 @@ loc_12447:
 		mov	al, byte_1F3A3
 		mov	_bullet_template.BT_speed, al
 		mov	_bullet_template.BT_has_trail, 1
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_has_trail, 0
 		mov	byte_1F34F, 1
 		mov	word_1F3B0, 0
@@ -13669,11 +13669,11 @@ loc_124F5:
 		mov	dl, 60h
 		sub	dl, al
 		mov	_bullet_template.BT_angle, dl
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, 0
 		sub	al, _bullet_template.BT_angle
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, 2
 		mov	_bullet_template.BT_speed, al
@@ -13712,11 +13712,11 @@ loc_12553:
 		mov	dl, 60h
 		sub	dl, al
 		mov	_bullet_template.BT_angle, dl
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, 0
 		sub	al, _bullet_template.BT_angle
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, -2
 		mov	_bullet_template.BT_speed, al
@@ -13782,7 +13782,7 @@ loc_125FF:
 		idiv	bx
 		add	al, -20h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, 2
 		mov	_bullet_template.BT_speed, al
@@ -13820,7 +13820,7 @@ loc_1264C:
 		idiv	bx
 		add	al, -20h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, -2
 		mov	_bullet_template.BT_speed, al
@@ -14564,7 +14564,7 @@ loc_12C8B:
 		mov	ax, word_1F340
 		mov	_bullet_template.BT_center.y, ax
 		mov	_bullet_template.BT_speed, (3 shl 4)
-		call	sub_17730
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 		pop	bp
 		retn
@@ -14652,7 +14652,7 @@ loc_12DC5:
 		mov	_bullet_template.BT_speed, ((2 shl 4) + 8)
 		mov	al, byte_1F3A1
 		mov	_bullet_template.BT_count, al
-		call	sub_17730
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 		mov	_bullet_template.BT_type, BT_PELLET
 		mov	_bullet_template.BT_angle, 20h
@@ -14663,7 +14663,7 @@ loc_12DC5:
 ; ---------------------------------------------------------------------------
 
 loc_12E0E:
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_angle
 		add	al, 6
 		mov	_bullet_template.BT_angle, al
@@ -14692,7 +14692,7 @@ loc_12E2B:
 
 loc_12E4D:
 		mov	_bullet_template.BT_count, al
-		call	sub_17730
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 		jmp	short loc_12E75
 ; ---------------------------------------------------------------------------
@@ -14756,7 +14756,7 @@ loc_12EB0:
 		mov	ax, word_1F340
 		mov	_bullet_template.BT_center.y, ax
 		mov	_bullet_template.BT_speed, (3 shl 4)
-		call	sub_17730
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 
 loc_12EED:
@@ -14850,7 +14850,7 @@ loc_12F77:
 		mov	_bullet_template.BT_speed, al
 		mov	al, byte_23DE6
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 
 loc_12FBF:
@@ -15405,7 +15405,7 @@ loc_13426:
 		mov	al, [bp+@@angle]
 		add	al, [bp+var_2]
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		inc	si
 
 loc_13483:
@@ -15524,7 +15524,7 @@ loc_1356B:
 		mov	al, _bullet_template.BT_speed
 		add	al, 8
 		mov	_bullet_template.BT_speed, al
-		call	sub_17730
+		call	@bullets_add$qv
 		inc	si
 
 loc_13581:
@@ -15618,11 +15618,11 @@ loc_135F8:
 
 loc_13633:
 		call	snd_se_play pascal, 10
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE8
 		add	al, 80h
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_1364C:
 		cmp	word_1F3B0, 80h
@@ -17560,7 +17560,7 @@ loc_147BA:
 ; ---------------------------------------------------------------------------
 
 loc_147E0:
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, -6
 		mov	_bullet_template.BT_speed, al
@@ -17590,7 +17590,7 @@ loc_147F5:
 ; ---------------------------------------------------------------------------
 
 loc_1481C:
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, -6
 		mov	_bullet_template.BT_speed, al
@@ -18466,14 +18466,14 @@ loc_14EB3:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 		mov	_bullet_template.BT_center.x, (256 shl 4)
 		push	10000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_14F52:
 		mov	al, _pid_current
@@ -18500,14 +18500,14 @@ loc_14F52:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 		mov	_bullet_template.BT_center.x, ((PLAYFIELD_W - 64) shl 4)
 		push	0E000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_14FBD:
 		mov	al, _pid_current
@@ -19536,7 +19536,7 @@ loc_157E3:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -19561,7 +19561,7 @@ loc_157E3:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_15878:
 		mov	al, _pid_current
@@ -20805,7 +20805,7 @@ loc_1638E:
 		cmp	ax, bx
 		jg	short loc_163DA
 		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
-		nopcall	sub_17971
+		nopcall	@bullets_add_transfer_pellet$qv
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
@@ -20856,7 +20856,7 @@ loc_163DA:
 		test	[bp+@@hitcombo], 1
 		jnz	short loc_1646E
 		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
-		nopcall	sub_17971
+		nopcall	@bullets_add_transfer_pellet$qv
 		jmp	short loc_16459
 ; ---------------------------------------------------------------------------
 
@@ -22270,7 +22270,7 @@ loc_16F7C:
 		mov	bx, ax
 		cmp	byte ptr [bx+4B7Eh], 10h
 		jb	short loc_16F8F
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_16F8F:
 		mov	al, _pid_current
@@ -22735,7 +22735,6 @@ BG_2_SPREAD_HORIZONTALLY_SYMMETRIC = 34
 
 BT_PELLET = 1
 BT_BULLET16_DEFAULT = 2
-BT_PELLET_TRANSFER = 3
 BT_PELLET_CLOUD = 4
 BT_BULLET16_DEFAULT_WITH_ACCEL = 7
 BT_BULLET16_CUSTOM_WITH_ACCEL = 8
@@ -22743,293 +22742,11 @@ BAT_NONE = 00h
 BAT_Y = 80h
 
 	extern @bullets_reset$qv:proc
-	@GROUP_VELOCITY_SET$QI procdesc pascal near \
-		group_i:word
+	extern @bullets_add$qv:proc
+	extern @bullets_add_transfer_pellet$qv:proc
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17730	proc far
-
-var_E		= byte ptr -0Eh
-@@flag	= byte ptr -0Dh
-var_C		= byte ptr -0Ch
-@@done	= byte ptr -0Bh
-@@length		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-@@group_i	= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Eh
-		push	si
-		push	di
-		mov	[bp+@@group_i], 0
-		mov	[bp+var_C], 0
-		cmp	_bullet_template.BT_center.y, (-8 shl 4)
-		jle	loc_1795E
-		cmp	_bullet_template.BT_center.y, ((PLAYFIELD_H + 8) shl 4)
-		jge	loc_1795E
-		cmp	_bullet_template.BT_center.x, (-8 shl 4)
-		jle	loc_1795E
-		cmp	_bullet_template.BT_center.x, ((PLAYFIELD_W + 8) shl 4)
-		jge	loc_1795E
-		mov	si, offset _bullets
-		mov	al, _bullet_template.BT_type
-		mov	ah, 0
-		sub	ax, 2
-		mov	bx, ax
-		cmp	bx, 6
-		ja	short loc_177A9
-		add	bx, bx
-		jmp	cs:off_17963[bx]
-
-loc_17780:
-		mov	[bp+var_C], 1
-		mov	[bp+@@flag], 1
-		jmp	short loc_177AF
-; ---------------------------------------------------------------------------
-
-loc_1778A:
-		mov	[bp+var_C], 1
-
-loc_1778E:
-		mov	al, _pid_PID_so_attack
-		mov	ah, 0
-		add	ax, (64 / BYTE_DOTS)
-		mov	_bullet_template.BT_sprite_offset, ax
-
-loc_17799:
-		mov	[bp+@@flag], 2
-		jmp	short loc_177AF
-; ---------------------------------------------------------------------------
-
-loc_1779F:
-		mov	[bp+var_C], 1
-		mov	[bp+@@flag], 2
-		jmp	short loc_177AF
-; ---------------------------------------------------------------------------
-
-loc_177A9:
-		mov	al, _bullet_template.BT_type
-		mov	[bp+@@flag], al
-
-loc_177AF:
-		mov	al, _bullet_template.BT_speed
-		mov	[bp+var_E], al
-		mov	al, _bullet_base_speed
-		add	_bullet_template.BT_speed, al
-		cmp	_bullet_template.BT_speed, (8 shl 4)
-		jbe	short loc_177CA
-		mov	_bullet_template.BT_speed, (8 shl 4)
-		jmp	short loc_177D6
-; ---------------------------------------------------------------------------
-
-loc_177CA:
-		cmp	_bullet_template.BT_speed, (1 shl 4)
-		jnb	short loc_177D6
-		mov	_bullet_template.BT_speed, (1 shl 4)
-
-loc_177D6:
-		mov	[bp+var_2], 0
-		jmp	loc_1794F
-; ---------------------------------------------------------------------------
-
-loc_177DE:
-		cmp	[si+bullet_t.BULLET_flag], BF_FREE
-		jnz	loc_17949
-		mov	al, [bp+@@flag]
-		mov	[si+bullet_t.BULLET_flag], al
-		mov	[si+bullet_t.BULLET_age], 0
-		mov	ax, _bullet_template.BT_center.x
-		mov	[si+bullet_t.BULLET_center.x], ax
-		mov	ax, _bullet_template.BT_center.y
-		mov	[si+bullet_t.BULLET_center.y], ax
-		mov	al, _bullet_template.BT_group
-		mov	[si+bullet_t.BULLET_group_next], al
-		mov	al, _bullet_template.BT_pid
-		mov	[si+bullet_t.BULLET_pid], al
-		mov	ax, _bullet_template.BT_sprite_offset
-		mov	[si+bullet_t.BULLET_sprite_offset], ax
-		mov	al, _bullet_template.BT_is_animated
-		mov	[si+bullet_t.BULLET_is_animated], al
-		mov	al, _bullet_template.BT_is_collidable
-		mov	[si+bullet_t.BULLET_is_collidable], al
-		mov	al, _bullet_template.BT_has_trail
-		mov	[si+bullet_t.BULLET_has_trail], al
-		cmp	_bullet_template.BT_has_trail, 0
-		jz	short loc_1786C
-		mov	al, _bullet_trail_ring_i
-		mov	ah, 0
-		imul	ax, size bullet_trail_t
-		add	ax, offset _bullet_trail_ring
-		mov	[si+bullet_t.BULLET_trail], ax
-		inc	_bullet_trail_ring_i
-		cmp	_bullet_trail_ring_i, TRAIL_RING_SIZE
-		jb	short loc_17843
-		mov	_bullet_trail_ring_i, 0
-
-loc_17843:
-		xor	di, di
-		jmp	short loc_17867
-; ---------------------------------------------------------------------------
-
-loc_17847:
-		mov	ax, di
-		add	ax, ax
-		add	ax, [si+bullet_t.BULLET_trail]
-		mov	dx, _bullet_template.BT_center.x
-		mov	bx, ax
-		mov	[bx+bullet_trail_t.BT_center_x], dx
-		mov	ax, di
-		add	ax, ax
-		add	ax, [si+bullet_t.BULLET_trail]
-		mov	dx, _bullet_template.BT_center.y
-		mov	bx, ax
-		mov	[bx+bullet_trail_t.BT_center_y], dx
-		inc	di
-
-loc_17867:
-		cmp	di, TRAIL_POINT_COUNT
-		jl	short loc_17847
-
-loc_1786C:
-		cmp	[bp+var_C], 0
-		jz	short loc_1787A
-		mov	al, _bullet_template.BT_accel_type
-		mov	[si+bullet_t.BULLET_accel_type], al
-		jmp	short loc_1787E
-; ---------------------------------------------------------------------------
-
-loc_1787A:
-		mov	[si+bullet_t.BULLET_accel_type], BAT_NONE
-
-loc_1787E:
-		cmp	[bp+@@flag], 3
-		jnz	loc_17914
-		push	_bullet_template.BT_center.x	; x
-		mov	al, _bullet_template.BT_pid
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	[bp+var_8], ax
-		call	@randring2_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
-		mov	[bp+var_6], ax
-		mov	[si+bullet_t.BULLET_target_center_x_for_target_pid], ax
-		push	ax	; x
-		mov	al, _bullet_template.BT_pid
-		mov	ah, 0
-		mov	dx, 1
-		sub	dx, ax
-		push	dx	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	[bp+var_6], ax
-		mov	al, _round_speed
-		mov	ah, 0
-		mov	bx, 3
-		cwd
-		idiv	bx
-		add	ax, 46h	; 'F'
-		mov	[bp+@@length], ax
-		mov	ax, [bp+var_8]
-		shl	ax, 4
-		push	ax
-		push	word ptr [si+4]
-		mov	ax, [bp+var_6]
-		shl	ax, 4
-		push	ax
-		call	@randring2_next16_and$qui pascal, 255
-		push	ax
-		push	0
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.x]
-		push	ax
-		push	ds
-		lea	ax, [si+bullet_t.BULLET_velocity.y]
-		push	ax
-		push	[bp+@@length]
-		call	vector2_between_plus
-		push	[bp+var_6]	; x
-		mov	al, _bullet_template.BT_pid
-		mov	ah, 0
-		push	ax	; pid
-		call	@screen_x_to_playfield$qii
-		mov	[si+bullet_t.BULLET_target_center_x_for_origin_pid], ax
-		mov	al, _bullet_template.BT_angle
-		mov	[si+bullet_t.BULLET_angle_next], al
-		mov	al, _bullet_template.BT_speed
-		mov	[si+bullet_t.BULLET_speed_next], al
-		jmp	short loc_17958
-; ---------------------------------------------------------------------------
-
-loc_17914:
-		call	@group_velocity_set$qi pascal, [bp+@@group_i]
-		mov	[bp+@@done], al
-		mov	ax, _bullet_template.BT_velocity_tmp.x
-		mov	[si+bullet_t.BULLET_velocity.x], ax
-		mov	ax, _bullet_template.BT_velocity_tmp.y
-		mov	[si+bullet_t.BULLET_velocity.y], ax
-		mov	al, _bullet_group_i_angle
-		mov	[si+bullet_t.BULLET_angle_next], al
-		mov	al, _bullet_template.BT_speed
-		mov	[si+bullet_t.BULLET_speed_next], al
-		cmp	[bp+@@flag], 4
-		jnz	short loc_17940
-		mov	[si+bullet_t.BULLET_sprite_offset], ((80 * ROW_SIZE) + (528 / BYTE_DOTS))
-
-loc_17940:
-		cmp	[bp+@@done], 0
-		jnz	short loc_17958
-		inc	[bp+@@group_i]
-
-loc_17949:
-		inc	[bp+var_2]
-		add	si, size bullet_t
-
-loc_1794F:
-		cmp	[bp+var_2], BULLET_COUNT
-		jl	loc_177DE
-
-loc_17958:
-		mov	al, [bp+var_E]
-		mov	_bullet_template.BT_speed, al
-
-loc_1795E:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17730	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_17963	dw offset loc_1778E
-		dw offset loc_177A9
-		dw offset loc_177A9
-		dw offset loc_17799
-		dw offset loc_17780
-		dw offset loc_1778A
-		dw offset loc_1779F
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17971	proc far
-		push	bp
-		mov	bp, sp
-		mov	_bullet_template.BT_type, BT_PELLET_TRANSFER
-		call	sub_17730
-		pop	bp
-		retf
-sub_17971	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23104,7 +22821,7 @@ sub_179D5	proc near
 		mov	word ptr _bullet_template.BT_speed, ax
 		mov	ax, word ptr [si+bullet_t.BULLET_pid]
 		mov	word ptr _bullet_template.BT_pid, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		pop	si
 		pop	bp
 		retn
@@ -26916,7 +26633,7 @@ loc_199C6:
 		mov	_bullet_template.BT_center.y, ax
 		mov	al, [bp+@@pid_other]
 		mov	_bullet_template.BT_pid, al
-		call	sub_17730
+		call	@bullets_add$qv
 
 loc_19A49:
 		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [si+2], word ptr [si+4]
@@ -27669,7 +27386,7 @@ loc_19F61:
 ; ---------------------------------------------------------------------------
 
 loc_19F6A:
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, 2
 		mov	_bullet_template.BT_speed, al
@@ -27728,7 +27445,7 @@ loc_19FCE:
 ; ---------------------------------------------------------------------------
 
 loc_19FD2:
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_speed
 		add	al, 2
 		mov	_bullet_template.BT_speed, al
@@ -27829,7 +27546,7 @@ loc_1A08B:
 		jnz	short loc_1A0CF
 		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	_bullet_template.BT_count, 10
-		call	sub_17730
+		call	@bullets_add$qv
 		jmp	short loc_1A0D2
 ; ---------------------------------------------------------------------------
 
@@ -30663,11 +30380,11 @@ loc_1B57C:
 		mov	_bullet_template.BT_center.y, 0
 		mov	_bullet_template.BT_center.x, si
 		mov	_bullet_template.BT_is_animated, 0
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	ax, (PLAYFIELD_W shl 4)
 		sub	ax, si
 		mov	_bullet_template.BT_center.x, ax
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_is_animated, 1
 
 loc_1B5E3:
@@ -31328,7 +31045,7 @@ loc_1BA77:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -31342,7 +31059,7 @@ loc_1BA77:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -31384,7 +31101,7 @@ loc_1BB55:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
 		push	1200h
 		mov	al, _pid_current
@@ -31396,7 +31113,7 @@ loc_1BB55:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	al, _pid_current
@@ -32026,7 +31743,7 @@ loc_1BFF3:
 		mov	bx, ax
 		mov	al, [bx+2D59h]
 		mov	_bullet_template.BT_speed, al
-		call	sub_17730
+		call	@bullets_add$qv
 		push	_bullet_template.BT_center.x
 		push	0
 		mov	al, [bp+@@pid_other]
@@ -32040,7 +31757,7 @@ loc_1BFF3:
 		mov	bx, ax
 		sub	dx, [bx+2676h]
 		mov	_bullet_template.BT_center.x, dx
-		call	sub_17730
+		call	@bullets_add$qv
 		push	_bullet_template.BT_center.x
 		push	0
 		mov	al, [bp+@@pid_other]
@@ -33083,15 +32800,15 @@ loc_1C7CA:
 		mov	al, [bx+2D59h]
 		mov	_bullet_template.BT_speed, al
 		mov	_bullet_template.BT_center.x, 0
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _bullet_template.BT_angle
 		neg	al
 		mov	_bullet_template.BT_angle, al
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	_bullet_template.BT_center.x, 0
-		call	sub_17730
+		call	@bullets_add$qv
 		pushd	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
