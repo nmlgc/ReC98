@@ -726,7 +726,7 @@ loc_9CAB:
 		mov	_demo_frame, 0
 		mov	fp_1E6EA, offset sub_9AD6
 		mov	_round_speed, (4 shl 4)
-		mov	byte_23E3C, 0
+		mov	_bullet_base_speed, 0
 		mov	_gba_boss_level, 8
 		mov	_gba_gauge_level[0], 9
 		mov	_gba_gauge_level[1], 9
@@ -1085,7 +1085,7 @@ loc_9FFA:
 		mov	al, byte_207E3
 		shl	al, 4
 		mov	_round_speed, al
-		mov	byte_23E3C, 0
+		mov	_bullet_base_speed, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
 		mov	ah, 0
@@ -1105,7 +1105,7 @@ loc_9FFA:
 		mov	al, byte_207E3
 		shl	al, 5
 		mov	_round_speed, al
-		mov	byte_23E3C, 0
+		mov	_bullet_base_speed, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
 		mov	dl, byte_207E3
@@ -1122,7 +1122,7 @@ loc_9FFA:
 		shl	al, 5
 		add	al, (2 shl 4)
 		mov	_round_speed, al
-		mov	byte_23E3C, 8
+		mov	_bullet_base_speed, 8
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
 		mov	dl, byte_207E3
@@ -1144,7 +1144,7 @@ loc_A0A2:
 
 @@lunatic:
 		mov	_round_speed, (6 shl 4)
-		mov	byte_23E3C, 18h
+		mov	_bullet_base_speed, ((1 shl 4) + 8)
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
 		mov	dl, byte_207E3
@@ -23376,7 +23376,7 @@ loc_177A9:
 loc_177AF:
 		mov	al, _bullet_template.BT_speed
 		mov	[bp+var_E], al
-		mov	al, byte_23E3C
+		mov	al, _bullet_base_speed
 		add	_bullet_template.BT_speed, al
 		cmp	_bullet_template.BT_speed, (8 shl 4)
 		jbe	short loc_177CA
@@ -35232,7 +35232,8 @@ include th03/main/player/win[bss].asm
 byte_23DF9	db ?
 		db 64 dup(?)
 word_23E3A	dw ?
-byte_23E3C	db ?
+public _bullet_base_speed, _bullet_template
+_bullet_base_speed	db ?
 	evendata
 
 bullet_template_t struc

@@ -8,3 +8,6 @@
 extern subpixel_length_8_t round_speed;
 
 static const subpixel_length_8_t ROUND_SPEED_MAX = TO_SP(8);
+
+// Added to the calculated speed of each bullet.
+extern SubpixelLength8 bullet_base_speed;
