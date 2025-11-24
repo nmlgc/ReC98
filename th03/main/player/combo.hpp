@@ -40,7 +40,7 @@ extern unsigned char hitcombo_ring[PLAYER_COUNT][HITCOMBO_RING_SIZE];
 // Tries to update [pid]'s combo with the current hit combo value in the given
 // [slot], adding the given amount of bonus points. Returns the new total
 // bonus value.
-unsigned int pascal hitcombo_commit(
+unsigned int pascal near hitcombo_commit(
 	pid_t pid, unsigned char slot, unsigned int bonus_to_add
 );
 /// ----------------

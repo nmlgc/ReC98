@@ -7782,7 +7782,7 @@ loc_E6D6:
 		jge	short loc_E716
 		push	score_23DEA
 		push	[bp+@@pid]
-		nopcall	score_add
+		nopcall	@score_add$quiuc
 		movzx	eax, score_23DEA
 		sub	score_23DF0, eax
 		jmp	short loc_E733
@@ -7793,7 +7793,7 @@ loc_E716:
 		jle	short loc_E733
 		push	word ptr score_23DF0
 		push	[bp+@@pid]
-		nopcall	score_add
+		nopcall	@score_add$quiuc
 		mov	score_23DF0, 0
 
 loc_E733:
@@ -8111,7 +8111,7 @@ loc_F32F:
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
-		call	score_add
+		call	@score_add$quiuc
 		mov	al, 0
 		jmp	short loc_F350
 ; ---------------------------------------------------------------------------
@@ -8819,7 +8819,7 @@ loc_F8F5:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -9552,7 +9552,7 @@ loc_FFA2:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -10457,7 +10457,7 @@ loc_1081A:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -11411,7 +11411,7 @@ loc_110FB:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -12157,7 +12157,7 @@ loc_11763:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (24 shl 4)
 		mov	_hitbox_radius.y, (24 shl 4)
@@ -13045,7 +13045,7 @@ loc_11F34:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -14082,7 +14082,7 @@ loc_128AD:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -15007,7 +15007,7 @@ loc_130C0:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -15750,7 +15750,7 @@ loc_13717:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
@@ -16050,9 +16050,9 @@ RANDRING_NEXT_DEF _FAR, far
 main_04_TEXT	ends
 
 COLLMAP_TEXT	segment byte public 'CODE' use16
-	extern _collmap_set_rect_striped:proc
-	extern _collmap_set_vline:proc
-	extern _collmap_set_slope_striped:proc
+	extern @collmap_set_rect_striped$qv:proc
+	extern @collmap_set_vline$qv:proc
+	extern @collmap_set_slope_striped$qv:proc
 COLLMAP_TEXT	ends
 
 main_04__TEXT	segment	byte public 'CODE' use16
@@ -20037,8 +20037,8 @@ yumemi_bomb	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-combo_add	proc far
+public @COMBO_ADD$QUCUCUI
+@combo_add$qucucui proc far
 
 var_8		= word ptr -8
 var_5		= byte ptr -5
@@ -20118,7 +20118,7 @@ loc_15D3F:
 		pop	si
 		leave
 		retf	6
-combo_add	endp
+@combo_add$qucucui endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20255,7 +20255,7 @@ loc_15E45:
 		lea	ax, [di+4]
 		call	text_puts pascal, ax, 3, ds, offset _aBONUS_FRAME_SPACES
 		mov	[si+combo_t.hits], 0
-		call	score_add pascal, [si+combo_t.bonus], [bp+@@pid]
+		call	@score_add$quiuc pascal, [si+combo_t.bonus], [bp+@@pid]
 		mov	[si+combo_t.bonus], 0
 
 @@player_next:
@@ -20571,7 +20571,7 @@ loc_160D1:
 		mov	_collmap_tile_h, di
 		mov	al, [bx+8]
 		mov	_collmap_pid, al
-		nopcall	_collmap_set_rect_striped
+		nopcall	@collmap_set_rect_striped$qv
 
 loc_16123:
 		inc	si
@@ -20769,7 +20769,7 @@ loc_1630B:
 		mov	ah, 0
 		shl	ax, 4
 		push	ax
-		call	hitcombo_commit
+		call	@hitcombo_commit$qucucui
 		mov	[bp+@@bonus_total], ax
 		push	ax
 		push	word ptr [bp+@@pid]
@@ -20913,7 +20913,7 @@ loc_16484:
 		mov	al, [bx+6]
 		mov	ah, 0
 		imul	ax, 10
-		call	score_add pascal, ax, word ptr [bp+@@pid]
+		call	@score_add$quiuc pascal, ax, word ptr [bp+@@pid]
 		jmp	short loc_164A2
 ; ---------------------------------------------------------------------------
 
@@ -21389,7 +21389,7 @@ loc_16846:
 
 loc_1685C:
 		push	word ptr pid_20E3A
-		call	score_add
+		call	@score_add$quiuc
 
 loc_16865:
 		mov	al, byte_23AF8
@@ -21499,7 +21499,7 @@ loc_16916:
 		mov	[bx+4B3Eh], al
 
 loc_16945:
-		call	hitcombo_commit pascal, word ptr pid_20E3A, word ptr hitcombo_slot_220C2, [bp+@@bonus]
+		call	@hitcombo_commit$qucucui pascal, word ptr pid_20E3A, word ptr hitcombo_slot_220C2, [bp+@@bonus]
 		mov	[bp+@@bonus], ax
 		push	ax
 		push	word ptr pid_20E3A
@@ -23871,7 +23871,7 @@ loc_17BA9:
 		mov	_collmap_topleft.y, ax
 		mov	al, [si+10h]
 		mov	_collmap_pid, al
-		call	_collmap_set_vline
+		call	@collmap_set_vline$qv
 
 loc_17BCA:
 		jmp	loc_17A3D
@@ -24497,7 +24497,7 @@ loc_180C5:
 		mov	_collmap_center.y, ax
 		mov	al, [bx+8]
 		mov	_collmap_pid, al
-		nopcall	_collmap_set_rect_striped
+		nopcall	@collmap_set_rect_striped$qv
 		jmp	short loc_1815C
 ; ---------------------------------------------------------------------------
 
@@ -24747,7 +24747,7 @@ loc_182D6:
 		push	ax
 		call	sub_1816D
 		call	gauge_avail_add pascal, word ptr [bp+@@pid], 16
-		call	score_add pascal, 50, word ptr [bp+@@pid]
+		call	@score_add$quiuc pascal, 50, word ptr [bp+@@pid]
 
 loc_18341:
 		call	sub_17DAE
@@ -26469,7 +26469,7 @@ loc_192DB:
 		add	si, 20h	; ' '
 		mov	ax, [si+2]
 		mov	_collmap_bottomright.x, ax
-		call	_collmap_set_slope_striped
+		call	@collmap_set_slope_striped$qv
 		jmp	short loc_1930C
 ; ---------------------------------------------------------------------------
 
@@ -27049,7 +27049,7 @@ loc_19740:
 		mov	_collmap_center.x, ax
 		mov	ax, [di+10h]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_197DC
 ; ---------------------------------------------------------------------------
 
@@ -27827,7 +27827,7 @@ loc_19C9B:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_19D1C
 ; ---------------------------------------------------------------------------
 
@@ -28388,7 +28388,7 @@ loc_1A0DA:
 		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_1A13A
 ; ---------------------------------------------------------------------------
 
@@ -28954,13 +28954,13 @@ arg_2		= word ptr  6
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		sub	_collmap_center.x, (12 shl 4)
 		mov	_collmap_stripe_tile_w, (8 / COLLMAP_TILE_W)
 		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		add	_collmap_center.x, (24 shl 4)
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		pop	bp
 		retn	4
 sub_1A491	endp
@@ -29441,7 +29441,7 @@ loc_1A868:
 		mov	_collmap_center.x, di
 		mov	ax, [bp+@@center_y]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_1A8BE
 ; ---------------------------------------------------------------------------
 
@@ -30249,7 +30249,7 @@ loc_1AE9D:
 		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	ax, [si+14h]
 		shl	ax, 2
 		add	ax, [si+4]
@@ -30261,7 +30261,7 @@ loc_1AE9D:
 		idiv	bx
 		add	ax, [si+14h]
 		mov	_collmap_tile_h, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_1AF60
 ; ---------------------------------------------------------------------------
 
