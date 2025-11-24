@@ -11,4 +11,5 @@ extern struct {
 	PlayfieldPoint radius;
 	PlayfieldSubpixel right;
 	PlayfieldSubpixel bottom;
+	pid_t pid;
 } hitbox;

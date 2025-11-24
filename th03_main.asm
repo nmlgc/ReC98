@@ -8823,7 +8823,7 @@ loc_F8F5:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -9556,7 +9556,7 @@ loc_FFA2:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -10461,7 +10461,7 @@ loc_1081A:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -11415,7 +11415,7 @@ loc_110FB:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -12161,7 +12161,7 @@ loc_11763:
 		mov	_hitbox_radius.x, (24 shl 4)
 		mov	_hitbox_radius.y, (24 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -13049,7 +13049,7 @@ loc_11F34:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -14086,7 +14086,7 @@ loc_128AD:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -15011,7 +15011,7 @@ loc_130C0:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -15754,7 +15754,7 @@ loc_13717:
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
@@ -17183,7 +17183,7 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 32h
 		add	ax, 288Ah
@@ -17226,7 +17226,7 @@ loc_144AF:
 		mov	ax, _hitbox_origin_topleft.y
 		add	ax, _hitbox_radius.y
 		push	ax	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -18220,7 +18220,7 @@ reimu_14CE3	proc far
 		jnz	loc_14D7E
 
 loc_14CF7:
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2D6Ah
@@ -18259,7 +18259,7 @@ loc_14D0A:
 		jg	short loc_14D73
 		push	word ptr [bx+2]	; center_x
 		push	word ptr [bx+10h]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -19233,7 +19233,7 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+38C4h], 0
@@ -19244,7 +19244,7 @@ var_1		= byte ptr -1
 
 loc_155AE:
 		mov	[bp+var_1], 0
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 96h
 		add	ax, 3796h
@@ -19273,7 +19273,7 @@ loc_155C5:
 		jg	short loc_1560B
 		push	word ptr [bx+2]	; center_x
 		push	ax	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -19698,7 +19698,7 @@ loc_15950:
 		cmp	[si+shotpair_t.SP_alive], 1
 		jnz	short loc_159AC
 		mov	al, [si+shotpair_t.pid]
-		cmp	al, pid_20E3A
+		cmp	al, _hitbox_pid
 		jnz	short loc_159AC
 		mov	ax, [si+shotpair_t.topleft.x]
 		add	ax, (16 shl 4)
@@ -19723,7 +19723,7 @@ loc_15950:
 		mov	[bp+var_5], al
 		push	di	; center_x
 		push	[bp+@@center_y]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -19742,7 +19742,7 @@ loc_159B2:
 		add	[bp+var_5], al
 
 loc_159CC:
-		cmp	pid_20E3A, 0
+		cmp	_hitbox_pid, 0
 		jnz	short loc_159D9
 		call	p1_2029C
 		jmp	short loc_159DD
@@ -19753,7 +19753,7 @@ loc_159D9:
 
 loc_159DD:
 		add	[bp+var_5], al
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		mov	bx, ax
 		cmp	_bomb_flag[bx], BF_INACTIVE
@@ -20676,7 +20676,7 @@ loc_16212:
 		mov	_hitbox_radius.x, si
 		mov	_hitbox_radius.y, si
 		mov	al, [bx+8]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		cmp	_hitbox_origin_center.y, 0
 		jl	loc_164AA
 		nopcall	sub_158F5
@@ -21292,7 +21292,7 @@ loc_16740:
 
 loc_16769:
 		mov	al, [si+8]
-		cmp	al, pid_20E3A
+		cmp	al, _hitbox_pid
 		jnz	loc_1696E
 		test	byte ptr [si+1], 3
 		jnz	loc_1696E
@@ -21331,7 +21331,7 @@ loc_16769:
 ; ---------------------------------------------------------------------------
 
 loc_167DF:
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
 		mov	dl, hitcombo_slot_220C2
@@ -21345,7 +21345,7 @@ loc_167DF:
 		inc	[bp+@@hitcombo]
 
 loc_16801:
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
 		mov	dl, hitcombo_slot_220C2
@@ -21387,7 +21387,7 @@ loc_16846:
 		push	80
 
 loc_1685C:
-		push	word ptr pid_20E3A
+		push	word ptr _hitbox_pid
 		call	@score_add$quiuc
 
 loc_16865:
@@ -21407,7 +21407,7 @@ loc_16879:
 		add	[bp+@@bonus], ax
 
 loc_16886:
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
 		mov	dl, hitcombo_slot_220C2
@@ -21419,7 +21419,7 @@ loc_16886:
 		add	[di], al
 		mov	al, [di]
 		mov	[bp+@@hitcombo], al
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
 		mov	dl, hitcombo_slot_220C2
@@ -21429,13 +21429,13 @@ loc_16886:
 		mov	di, ax
 		cmp	[bp+var_E], 1
 		jnz	short loc_168C8
-		push	word ptr pid_20E3A
+		push	word ptr _hitbox_pid
 		push	4
 		jmp	short loc_168D5
 ; ---------------------------------------------------------------------------
 
 loc_168C8:
-		push	word ptr pid_20E3A
+		push	word ptr _hitbox_pid
 		mov	al, [bp+var_E]
 		mov	ah, 0
 		imul	ax, 3
@@ -21467,7 +21467,7 @@ loc_168F2:
 		mov	al, [di]
 		add	al, 2
 		mov	[di], al
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
 		mov	dl, hitcombo_slot_220C2
@@ -21479,7 +21479,7 @@ loc_168F2:
 ; ---------------------------------------------------------------------------
 
 loc_16916:
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
 		mov	dl, hitcombo_slot_220C2
@@ -21488,7 +21488,7 @@ loc_16916:
 		mov	bx, ax
 		mov	al, [bx+4B3Eh]
 		add	al, 2
-		mov	dl, pid_20E3A
+		mov	dl, _hitbox_pid
 		mov	dh, 0
 		shl	dx, 4
 		mov	bl, hitcombo_slot_220C2
@@ -21498,12 +21498,12 @@ loc_16916:
 		mov	[bx+4B3Eh], al
 
 loc_16945:
-		call	@hitcombo_commit$qucucui pascal, word ptr pid_20E3A, word ptr hitcombo_slot_220C2, [bp+@@bonus]
+		call	@hitcombo_commit$qucucui pascal, word ptr _hitbox_pid, word ptr hitcombo_slot_220C2, [bp+@@bonus]
 		mov	[bp+@@bonus], ax
 		push	ax
-		push	word ptr pid_20E3A
+		push	word ptr _hitbox_pid
 		call	sub_165B5
-		push	word ptr pid_20E3A
+		push	word ptr _hitbox_pid
 		push	si
 		call	sub_1654E
 
@@ -21743,7 +21743,7 @@ yumemi_16B0C	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 6
 		add	ax, 4B80h
@@ -21793,7 +21793,7 @@ loc_16B69:
 		jl	short loc_16BB0
 		push	_hitbox_origin_topleft.x	; center_x
 		push	_hitbox_origin_topleft.y	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -23839,7 +23839,7 @@ loc_17B52:
 		mov	_hitbox_right, dx
 		mov	_hitbox_bottom, ax
 		mov	bl, [si+10h]
-		mov	pid_20E3A, bl
+		mov	_hitbox_pid, bl
 		call	sub_1670D
 		or	al, al
 		jz	short loc_17BA9
@@ -24636,7 +24636,7 @@ loc_181E5:
 		add	ax, (3 shl 4)
 		mov	_hitbox_origin_center.y, ax
 		mov	al, [bp+@@pid]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		nopcall	sub_158F5
 		or	al, al
 		jz	loc_18367
@@ -27037,7 +27037,7 @@ loc_19740:
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, [di+2]
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [di+10h]
@@ -28376,7 +28376,7 @@ loc_1A0DA:
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, [si+2]
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
@@ -28981,7 +28981,7 @@ reimu_1A4E0	proc far
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, 1
 		sub	al, _pid_current
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 9
@@ -29426,7 +29426,7 @@ loc_1A83A:
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	_hitbox_origin_center.x, di
 		mov	ax, [bp+@@center_y]
 		mov	_hitbox_origin_center.y, ax
@@ -30221,7 +30221,7 @@ loc_1AE8B:
 loc_1AE9D:
 		mov	byte_20E2C, 1
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, [si+14h]
 		shl	ax, 3
 		mov	_hitbox_radius.x, ax
@@ -30573,7 +30573,7 @@ var_6		= byte ptr -6
 		mov	byte_20E2C, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		xor	di, di
 		jmp	loc_1B221
 ; ---------------------------------------------------------------------------
@@ -30944,7 +30944,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 30h
 		add	ax, 1F84h
@@ -30977,7 +30977,7 @@ loc_1B3CB:
 		jg	short loc_1B417
 		push	word ptr [si+2]	; center_x
 		push	word ptr [si+4]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -31629,7 +31629,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		mov	[bp+var_1], 0
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2008h
@@ -31655,7 +31655,7 @@ loc_1B91F:
 		jg	short loc_1B968
 		push	word ptr [bx+4]	; center_x
 		push	ax	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -32298,12 +32298,12 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+282Eh], 0
 		jz	loc_1BEED
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 0D8h
 		add	ax, 267Ch
@@ -32348,7 +32348,7 @@ loc_1BE81:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+di+1Ah]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -32806,7 +32806,7 @@ sub_1C1E9	endp
 kotohime_1C22E	proc far
 		push	bp
 		mov	bp, sp
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 3
 		add	ax, 28FAh
@@ -32833,7 +32833,7 @@ kotohime_1C22E	proc far
 		add	ax, _hitbox_radius.x
 		push	ax	; center_x
 		push	word ptr [bx+4]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -33385,7 +33385,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+3928h], 0
@@ -33396,7 +33396,7 @@ var_2		= word ptr -2
 
 loc_1C683:
 		mov	[bp+var_2], 0
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 18h
 		add	ax, 38F6h
@@ -33424,7 +33424,7 @@ loc_1C699:
 		jg	short loc_1C6D8
 		push	word ptr [si]	; center_x
 		push	word ptr [si+2]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -35036,7 +35036,7 @@ _hitbox_origin_topleft label Point
 _hitbox_radius	Point <?>
 _hitbox_right 	dw ?
 _hitbox_bottom	dw ?
-pid_20E3A	db ?
+_hitbox_pid	db ?
 	evendata
 byte_20E3C	db ?
 byte_20E3D	db ?
