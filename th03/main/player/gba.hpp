@@ -31,3 +31,6 @@ extern farfunc_t_near gba_gauge_pattern_bullet[PLAYER_COUNT];
 // can confirm how they use this variable.
 static const uint8_t GBA_BOSS_LEVEL_MAX = 16;
 extern uint8_t gba_boss_level;
+
+extern farfunc_t_near gba_boss_update[PLAYER_COUNT];
+extern farfunc_t_near gba_boss_render[PLAYER_COUNT];

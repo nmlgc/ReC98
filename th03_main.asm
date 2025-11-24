@@ -234,12 +234,12 @@ loc_977E:
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	exatt_update_p1
-		call	p1_1F32E
+		call	gba_boss_update_p1
 		call	p1_205CE
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	exatt_update_p2
-		call	p2_1F332
+		call	gba_boss_update_p2
 		call	p2_205D2
 		call	@hitcircles_update$qv
 		call	@shots_update$qv
@@ -299,10 +299,10 @@ loc_986C:
 		call	bomb_p2
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_1F336
+		call	gba_boss_render_p1
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_1F33A
+		call	gba_boss_render_p2
 		call	@shots_render$qv
 		call	sub_164DA
 		call	sub_1837C
@@ -1607,8 +1607,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_reimu$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_reimu
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_reimu
-		setfarfp	p1_1F32E, reimu_11033
-		setfarfp	p1_1F336, reimu_113A9
+		setfarfp	gba_boss_update_p1, gba_boss_update_reimu
+		setfarfp	gba_boss_render_p1, gba_boss_render_reimu
 		setfarfp	p1_205CE, reimu_1508C
 		setfarfp	bomb_p1, reimu_bomb
 		mov	_p1.hyper_func, offset hyper_reimu
@@ -1626,8 +1626,8 @@ loc_A5E2:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_reimu$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_reimu
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_reimu
-		setfarfp	p2_1F332, reimu_11033
-		setfarfp	p2_1F33A, reimu_113A9
+		setfarfp	gba_boss_update_p2, gba_boss_update_reimu
+		setfarfp	gba_boss_render_p2, gba_boss_render_reimu
 		setfarfp	p2_205D2, reimu_1508C
 		setfarfp	bomb_p2, reimu_bomb
 		mov	_p2.hyper_func, offset hyper_reimu
@@ -1672,8 +1672,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_mima$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_mima
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_mima
-		setfarfp	p1_1F32E, mima_FED8
-		setfarfp	p1_1F336, mima_10263
+		setfarfp	gba_boss_update_p1, gba_boss_update_mima
+		setfarfp	gba_boss_render_p1, gba_boss_render_mima
 		setfarfp	p1_205CE, mima_17043
 		setfarfp	bomb_p1, mima_bomb
 		mov	_p1.hyper_func, offset hyper_mima
@@ -1691,8 +1691,8 @@ loc_A77A:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_mima$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_mima
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_mima
-		setfarfp	p2_1F332, mima_FED8
-		setfarfp	p2_1F33A, mima_10263
+		setfarfp	gba_boss_update_p2, gba_boss_update_mima
+		setfarfp	gba_boss_render_p2, gba_boss_render_mima
 		setfarfp	p2_205D2, mima_17043
 		setfarfp	bomb_p2, mima_bomb
 		mov	_p2.hyper_func, offset hyper_mima
@@ -1737,8 +1737,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_marisa$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_marisa
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_marisa
-		setfarfp	p1_1F32E, marisa_F848
-		setfarfp	p1_1F336, marisa_FAE8
+		setfarfp	gba_boss_update_p1, gba_boss_update_marisa
+		setfarfp	gba_boss_render_p1, gba_boss_render_marisa
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, marisa_bomb
 		mov	_p1.hyper_func, offset hyper_marisa
@@ -1756,8 +1756,8 @@ loc_A912:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_marisa$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_marisa
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_marisa
-		setfarfp	p2_1F332, marisa_F848
-		setfarfp	p2_1F33A, marisa_FAE8
+		setfarfp	gba_boss_update_p2, gba_boss_update_marisa
+		setfarfp	gba_boss_render_p2, gba_boss_render_marisa
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, marisa_bomb
 		mov	_p2.hyper_func, offset hyper_marisa
@@ -1802,8 +1802,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_ellen$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_ellen
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_ellen
-		setfarfp	p1_1F32E, ellen_116B6
-		setfarfp	p1_1F336, ellen_11A01
+		setfarfp	gba_boss_update_p1, gba_boss_update_ellen
+		setfarfp	gba_boss_render_p1, gba_boss_render_ellen
 		setfarfp	p1_205CE, ellen_185AB
 		setfarfp	bomb_p1, ellen_bomb
 		mov	_p1.hyper_func, offset hyper_ellen
@@ -1821,8 +1821,8 @@ loc_AAAA:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_ellen$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_ellen
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_ellen
-		setfarfp	p2_1F332, ellen_116B6
-		setfarfp	p2_1F33A, ellen_11A01
+		setfarfp	gba_boss_update_p2, gba_boss_update_ellen
+		setfarfp	gba_boss_render_p2, gba_boss_render_ellen
 		setfarfp	p2_205D2, ellen_185AB
 		setfarfp	bomb_p2, ellen_bomb
 		mov	_p2.hyper_func, offset hyper_ellen
@@ -1867,8 +1867,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kotohime$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_kotohime
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_kotohime
-		setfarfp	p1_1F32E, kotohime_11E48
-		setfarfp	p1_1F336, kotohime_12140
+		setfarfp	gba_boss_update_p1, gba_boss_update_kotohime
+		setfarfp	gba_boss_render_p1, gba_boss_render_kotohime
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, kotohime_bomb
 		mov	_p1.hyper_func, offset hyper_kotohime
@@ -1886,8 +1886,8 @@ loc_AC42:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kotohime$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_kotohime
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_kotohime
-		setfarfp	p2_1F332, kotohime_11E48
-		setfarfp	p2_1F33A, kotohime_12140
+		setfarfp	gba_boss_update_p2, gba_boss_update_kotohime
+		setfarfp	gba_boss_render_p2, gba_boss_render_kotohime
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, kotohime_bomb
 		mov	_p2.hyper_func, offset hyper_kotohime
@@ -1932,8 +1932,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kana$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_kana
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_kana
-		setfarfp	p1_1F32E, kana_12FE8
-		setfarfp	p1_1F336, kana_132FE
+		setfarfp	gba_boss_update_p1, gba_boss_update_kana
+		setfarfp	gba_boss_render_p1, gba_boss_render_kana
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, kana_bomb
 		mov	_p1.hyper_func, offset hyper_kana
@@ -1951,8 +1951,8 @@ loc_ADDA:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kana$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_kana
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_kana
-		setfarfp	p2_1F332, kana_12FE8
-		setfarfp	p2_1F33A, kana_132FE
+		setfarfp	gba_boss_update_p2, gba_boss_update_kana
+		setfarfp	gba_boss_render_p2, gba_boss_render_kana
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, kana_bomb
 		mov	_p2.hyper_func, offset hyper_kana
@@ -1997,8 +1997,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_rikako$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_rikako
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_rikako
-		setfarfp	p1_1F32E, rikako_13661
-		setfarfp	p1_1F336, rikako_1398B
+		setfarfp	gba_boss_update_p1, gba_boss_update_rikako
+		setfarfp	gba_boss_render_p1, gba_boss_render_rikako
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, rikako_bomb
 		mov	_p1.hyper_func, offset hyper_rikako
@@ -2016,8 +2016,8 @@ loc_AF72:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_rikako$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_rikako
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_rikako
-		setfarfp	p2_1F332, rikako_13661
-		setfarfp	p2_1F33A, rikako_1398B
+		setfarfp	gba_boss_update_p2, gba_boss_update_rikako
+		setfarfp	gba_boss_render_p2, gba_boss_render_rikako
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, rikako_bomb
 		mov	_p2.hyper_func, offset hyper_rikako
@@ -2062,8 +2062,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_chiyuri$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_chiyuri
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_chiyuri
-		setfarfp	p1_1F32E, chiyuri_126A8
-		setfarfp	p1_1F336, chiyuri_12B99
+		setfarfp	gba_boss_update_p1, gba_boss_update_chiyuri
+		setfarfp	gba_boss_render_p1, gba_boss_render_chiyuri
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, chiyuri_bomb
 		mov	_p1.hyper_func, offset hyper_chiyuri
@@ -2081,8 +2081,8 @@ loc_B10A:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_chiyuri$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_chiyuri
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_chiyuri
-		setfarfp	p2_1F332, chiyuri_126A8
-		setfarfp	p2_1F33A, chiyuri_12B99
+		setfarfp	gba_boss_update_p2, gba_boss_update_chiyuri
+		setfarfp	gba_boss_render_p2, gba_boss_render_chiyuri
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, chiyuri_bomb
 		mov	_p2.hyper_func, offset hyper_chiyuri
@@ -2127,8 +2127,8 @@ arg_0		= word ptr  4
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_yumemi$qv
 		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_yumemi
 		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_yumemi
-		setfarfp	p1_1F32E, yumemi_1070A
-		setfarfp	p1_1F336, yumemi_10BAB
+		setfarfp	gba_boss_update_p1, gba_boss_update_yumemi
+		setfarfp	gba_boss_render_p1, gba_boss_render_yumemi
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, yumemi_bomb
 		mov	_p1.hyper_func, offset hyper_yumemi
@@ -2146,8 +2146,8 @@ loc_B2A2:
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_yumemi$qv
 		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_yumemi
 		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_yumemi
-		setfarfp	p2_1F332, yumemi_1070A
-		setfarfp	p2_1F33A, yumemi_10BAB
+		setfarfp	gba_boss_update_p2, gba_boss_update_yumemi
+		setfarfp	gba_boss_render_p2, gba_boss_render_yumemi
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, yumemi_bomb
 		mov	_p2.hyper_func, offset hyper_yumemi
@@ -8459,7 +8459,7 @@ marisa_F5AF	endp
 
 ; Attributes: bp-based frame
 
-sub_F5FE	proc near
+marisa_F5FE	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_1F353, 1
@@ -8510,14 +8510,14 @@ loc_F673:
 loc_F683:
 		pop	bp
 		retn
-sub_F5FE	endp
+marisa_F5FE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F685	proc near
+marisa_F685	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -8532,7 +8532,7 @@ sub_F685	proc near
 		jnz	short loc_F6BA
 		push	801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	1180h
 		jmp	short loc_F706
 ; ---------------------------------------------------------------------------
@@ -8542,7 +8542,7 @@ loc_F6BA:
 		jnz	short loc_F6D4
 		push	3801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0E80h
 		jmp	short loc_F706
 ; ---------------------------------------------------------------------------
@@ -8552,7 +8552,7 @@ loc_F6D4:
 		jnz	short loc_F6EE
 		push	6801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0B80h
 		jmp	short loc_F706
 ; ---------------------------------------------------------------------------
@@ -8562,13 +8562,13 @@ loc_F6EE:
 		jnz	short loc_F713
 		push	9801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	880h
 
 loc_F706:
 		push	1700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -8583,14 +8583,14 @@ loc_F713:
 locret_F72B:
 		leave
 		retn
-sub_F685	endp
+marisa_F685	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F72D	proc near
+marisa_F72D	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -8646,14 +8646,14 @@ loc_F7A8:
 loc_F7BB:
 		pop	bp
 		retn
-sub_F72D	endp
+marisa_F72D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F7BD	proc near
+marisa_F7BD	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -8668,7 +8668,7 @@ sub_F7BD	proc near
 		jnz	short loc_F7F0
 		push	2001700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	1000h
 		jmp	short loc_F822
 ; ---------------------------------------------------------------------------
@@ -8678,7 +8678,7 @@ loc_F7F0:
 		jnz	short loc_F80A
 		push	5001700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0D00h
 		jmp	short loc_F822
 ; ---------------------------------------------------------------------------
@@ -8688,13 +8688,13 @@ loc_F80A:
 		jnz	short loc_F82F
 		push	8001700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0A00h
 
 loc_F822:
 		push	1700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -8709,14 +8709,14 @@ loc_F82F:
 locret_F846:
 		leave
 		retn
-sub_F7BD	endp
+marisa_F7BD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_F848	proc far
+public gba_boss_update_marisa
+gba_boss_update_marisa proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -8787,22 +8787,22 @@ loc_F8D9:
 ; ---------------------------------------------------------------------------
 
 loc_F8DE:
-		call	sub_F5FE	; jumptable 0000F8BF cases 2-5
+		call	marisa_F5FE	; jumptable 0000F8BF cases 2-5
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
 loc_F8E3:
-		call	sub_F685	; jumptable 0000F8BF cases 8-10
+		call	marisa_F685	; jumptable 0000F8BF cases 8-10
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
 loc_F8E8:
-		call	sub_F72D	; jumptable 0000F8BF cases 11-16
+		call	marisa_F72D	; jumptable 0000F8BF cases 11-16
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
 loc_F8ED:
-		call	sub_F7BD	; jumptable 0000F8BF cases 6,7,17
+		call	marisa_F7BD	; jumptable 0000F8BF cases 6,7,17
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
@@ -8838,7 +8838,7 @@ loc_F8F5:
 locret_F953:
 		leave			; jumptable 0000F8BF case 255
 		retf
-marisa_F848	endp
+gba_boss_update_marisa endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -8872,7 +8872,7 @@ word_F956	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_F9A6	proc near
+marisa_F9A6	proc near
 
 @@pid_other		= byte ptr -3
 var_2		= word ptr -2
@@ -8956,14 +8956,14 @@ loc_FA6D:
 		pop	si
 		leave
 		retn
-sub_F9A6	endp
+marisa_F9A6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FA71	proc near
+marisa_FA71	proc near
 
 @@pid_other		= byte ptr -3
 @@top		= word ptr -2
@@ -9007,14 +9007,14 @@ arg_0		= word ptr  4
 		pop	si
 		leave
 		retn	2
-sub_FA71	endp
+marisa_FA71	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_FAE8	proc far
+public gba_boss_render_marisa
+gba_boss_render_marisa proc far
 
 @@pid_other		= byte ptr -1
 
@@ -9044,7 +9044,7 @@ loc_FB1E:
 		mov	dx, 0C8h
 		sub	dx, ax
 		push	dx
-		call	sub_FA71
+		call	marisa_FA71
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9052,7 +9052,7 @@ loc_FB1E:
 loc_FB35:
 		cmp	byte_1F34F, -1
 		jz	short loc_FB41
-		call	sub_F9A6
+		call	marisa_F9A6
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9063,7 +9063,7 @@ loc_FB41:
 locret_FB44:
 		leave
 		retf
-marisa_FAE8	endp
+gba_boss_render_marisa endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9108,7 +9108,7 @@ mima_FB46	endp
 
 ; Attributes: bp-based frame
 
-sub_FB95	proc near
+mima_FB95	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 2
@@ -9180,14 +9180,14 @@ loc_FC51:
 loc_FC69:
 		pop	bp
 		retn
-sub_FB95	endp
+mima_FB95	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FC6B	proc near
+mima_FC6B	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -9282,14 +9282,14 @@ loc_FD6D:
 		pop	si
 		leave
 		retn
-sub_FC6B	endp
+mima_FC6B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FD71	proc near
+mima_FD71	proc near
 
 var_1		= byte ptr -1
 
@@ -9366,14 +9366,14 @@ loc_FE11:
 locret_FE29:
 		leave
 		retn
-sub_FD71	endp
+mima_FD71	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FE2B	proc near
+mima_FE2B	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -9431,14 +9431,14 @@ loc_FEC4:
 loc_FED6:
 		pop	bp
 		retn
-sub_FE2B	endp
+mima_FE2B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_FED8	proc far
+public gba_boss_update_mima
+gba_boss_update_mima proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -9520,22 +9520,22 @@ loc_FF86:
 ; ---------------------------------------------------------------------------
 
 loc_FF8B:
-		call	sub_FB95	; jumptable 0000FF6C cases 2-5
+		call	mima_FB95	; jumptable 0000FF6C cases 2-5
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
 loc_FF90:
-		call	sub_FC6B	; jumptable 0000FF6C cases 6-10
+		call	mima_FC6B	; jumptable 0000FF6C cases 6-10
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
 loc_FF95:
-		call	sub_FD71	; jumptable 0000FF6C cases 11-13
+		call	mima_FD71	; jumptable 0000FF6C cases 11-13
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
 loc_FF9A:
-		call	sub_FE2B	; jumptable 0000FF6C cases 14-17
+		call	mima_FE2B	; jumptable 0000FF6C cases 14-17
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
@@ -9571,7 +9571,7 @@ loc_FFA2:
 locret_10000:
 		leave			; jumptable 0000FF6C case 255
 		retf
-mima_FED8	endp
+gba_boss_update_mima endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -9605,7 +9605,7 @@ word_10003	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_10053	proc near
+mima_10053	proc near
 
 @@pid_other		= byte ptr -3
 @@sprite_offset		= word ptr -2
@@ -9725,14 +9725,14 @@ loc_10180:
 		pop	si
 		leave
 		retn
-sub_10053	endp
+mima_10053	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10184	proc near
+mima_10184	proc near
 
 @@pid_other		= byte ptr -7
 @@top		= word ptr -6
@@ -9801,14 +9801,14 @@ arg_2		= word ptr  6
 		pop	si
 		leave
 		retn	4
-sub_10184	endp
+mima_10184	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_10263	proc far
+public gba_boss_render_mima
+gba_boss_render_mima proc far
 
 @@pid_other		= byte ptr -1
 
@@ -9841,7 +9841,7 @@ loc_10299:
 		mov	ax, word_1F3B0
 		imul	ax, 3
 		push	ax
-		call	sub_10184
+		call	mima_10184
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9849,7 +9849,7 @@ loc_10299:
 loc_102B7:
 		cmp	byte_1F34F, -1
 		jz	short loc_102C3
-		call	sub_10053
+		call	mima_10053
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9860,7 +9860,7 @@ loc_102C3:
 locret_102C6:
 		leave
 		retf
-mima_10263	endp
+gba_boss_render_mima endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9908,7 +9908,7 @@ yumemi_102C8	endp
 
 ; Attributes: bp-based frame
 
-sub_10324	proc near
+yumemi_10324	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -9992,14 +9992,14 @@ loc_103EC:
 loc_10403:
 		pop	bp
 		retn
-sub_10324	endp
+yumemi_10324	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10405	proc near
+yumemi_10405	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -10092,14 +10092,14 @@ loc_104F6:
 loc_1050D:
 		pop	bp
 		retn
-sub_10405	endp
+yumemi_10405	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1050F	proc near
+yumemi_1050F	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -10156,14 +10156,14 @@ loc_105A1:
 loc_105B3:
 		pop	bp
 		retn
-sub_1050F	endp
+yumemi_1050F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_105B5	proc near
+yumemi_105B5	proc near
 		push	bp
 		mov	bp, sp
 		cmp	byte_1F355, 0
@@ -10215,7 +10215,7 @@ loc_105E1:
 		call	sub_CE5B
 		push	point_1F342.x
 		push	point_1F342.y
-		call	sub_1A95F
+		call	yumemi_1A95F
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -10233,14 +10233,14 @@ loc_10647:
 loc_10667:
 		pop	bp
 		retn
-sub_105B5	endp
+yumemi_105B5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10669	proc near
+yumemi_10669	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -10303,14 +10303,14 @@ loc_10707:
 		pop	si
 		pop	bp
 		retn
-sub_10669	endp
+yumemi_10669	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1070A	proc far
+public gba_boss_update_yumemi
+gba_boss_update_yumemi proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -10410,27 +10410,27 @@ loc_107E2:
 ; ---------------------------------------------------------------------------
 
 loc_107E7:
-		call	sub_10324	; jumptable 000107AE cases 2-4
+		call	yumemi_10324	; jumptable 000107AE cases 2-4
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107EC:
-		call	sub_10405	; jumptable 000107AE cases 7-9
+		call	yumemi_10405	; jumptable 000107AE cases 7-9
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107F1:
-		call	sub_1050F	; jumptable 000107AE cases 11-14
+		call	yumemi_1050F	; jumptable 000107AE cases 11-14
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107F6:
-		call	sub_105B5	; jumptable 000107AE cases 15-17
+		call	yumemi_105B5	; jumptable 000107AE cases 15-17
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107FB:
-		call	sub_10669	; jumptable 000107AE cases 5,6,10
+		call	yumemi_10669	; jumptable 000107AE cases 5,6,10
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
@@ -10476,7 +10476,7 @@ loc_1081A:
 locret_10878:
 		leave			; jumptable 000107AE case 255
 		retf
-yumemi_1070A	endp
+gba_boss_update_yumemi endp
 
 ; ---------------------------------------------------------------------------
 word_1087A	dw	0,     1,     2,     3
@@ -10509,7 +10509,7 @@ word_1087A	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_108CA	proc near
+yumemi_108CA	proc near
 
 @@pid_other		= byte ptr -7
 var_6		= word ptr -6
@@ -10631,14 +10631,14 @@ loc_10A13:
 		pop	si
 		leave
 		retn
-sub_108CA	endp
+yumemi_108CA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10A17	proc near
+yumemi_10A17	proc near
 
 var_4		= byte ptr -4
 @@pid_other		= byte ptr -3
@@ -10811,14 +10811,14 @@ loc_10BA0:
 		pop	si
 		leave
 		retn
-sub_10A17	endp
+yumemi_10A17	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_10BAB	proc far
+public gba_boss_render_yumemi
+gba_boss_render_yumemi proc far
 
 @@pid_other		= byte ptr -1
 
@@ -10843,7 +10843,7 @@ loc_10BD5:
 loc_10BE1:
 		cmp	byte_1F34F, 0
 		jnz	short loc_10BED
-		call	sub_10A17
+		call	yumemi_10A17
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -10851,7 +10851,7 @@ loc_10BE1:
 loc_10BED:
 		cmp	byte_1F34F, -1
 		jz	short loc_10BF9
-		call	sub_108CA
+		call	yumemi_108CA
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -10862,7 +10862,7 @@ loc_10BF9:
 locret_10BFC:
 		leave
 		retf
-yumemi_10BAB	endp
+gba_boss_render_yumemi endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10907,7 +10907,7 @@ reimu_10BFE	endp
 
 ; Attributes: bp-based frame
 
-sub_10C4D	proc near
+reimu_10C4D	proc near
 
 @@angle		= byte ptr -1
 
@@ -11011,14 +11011,14 @@ loc_10D62:
 locret_10D9E:
 		leave
 		retn
-sub_10C4D	endp
+reimu_10C4D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10DA0	proc near
+reimu_10DA0	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -11064,14 +11064,14 @@ loc_10E09:
 loc_10E14:
 		pop	bp
 		retn
-sub_10DA0	endp
+reimu_10DA0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10E16	proc near
+reimu_10E16	proc near
 
 @@angle		= byte ptr -1
 
@@ -11233,7 +11233,7 @@ loc_10F85:
 		add	bx, bx
 		push	word ptr [bx+6876h]
 		push	word ptr [bp+@@angle]
-		call	sub_1A2CE
+		call	reimu_1A2CE
 		inc	si
 
 loc_10FB5:
@@ -11249,14 +11249,14 @@ loc_10FCE:
 		pop	si
 		leave
 		retn
-sub_10E16	endp
+reimu_10E16	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10FD1	proc near
+reimu_10FD1	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -11293,14 +11293,14 @@ loc_11026:
 loc_11031:
 		pop	bp
 		retn
-sub_10FD1	endp
+reimu_10FD1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_11033	proc far
+public gba_boss_update_reimu
+gba_boss_update_reimu proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -11379,22 +11379,22 @@ loc_110E0:
 		jmp	word ptr cs:[bx+24h] ; switch jump
 
 loc_110E4:
-		call	sub_10C4D	; jumptable 000110E0 cases 2-6
+		call	reimu_10C4D	; jumptable 000110E0 cases 2-6
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
 loc_110E9:
-		call	sub_10DA0	; jumptable 000110E0 cases 8-10,13
+		call	reimu_10DA0	; jumptable 000110E0 cases 8-10,13
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
 loc_110EE:
-		call	sub_10E16	; jumptable 000110E0 cases 15-17
+		call	reimu_10E16	; jumptable 000110E0 cases 15-17
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
 loc_110F3:
-		call	sub_10FD1	; jumptable 000110E0 cases 7,11,12,14
+		call	reimu_10FD1	; jumptable 000110E0 cases 7,11,12,14
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
@@ -11430,7 +11430,7 @@ loc_110FB:
 locret_11159:
 		leave			; jumptable 000110E0 case 255
 		retf
-reimu_11033	endp
+gba_boss_update_reimu endp
 
 ; ---------------------------------------------------------------------------
 word_1115B	dw	2,     3,     4,     5
@@ -11461,7 +11461,7 @@ word_1115B	dw	2,     3,     4,     5
 
 ; Attributes: bp-based frame
 
-sub_111A3	proc near
+reimu_111A3	proc near
 
 var_6		= byte ptr -6
 @@pid_other		= byte ptr -5
@@ -11569,14 +11569,14 @@ loc_112A2:
 		pop	si
 		leave
 		retn
-sub_111A3	endp
+reimu_111A3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_112A6	proc near
+reimu_112A6	proc near
 
 @@pid_other		= byte ptr -6
 var_5		= byte ptr -5
@@ -11680,14 +11680,14 @@ loc_113A3:
 		pop	si
 		leave
 		retn	4
-sub_112A6	endp
+reimu_112A6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_113A9	proc far
+public gba_boss_render_reimu
+gba_boss_render_reimu proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -11701,7 +11701,7 @@ reimu_113A9	proc far
 		mov	dx, 0C80h
 		sub	dx, ax
 		push	dx
-		call	sub_112A6
+		call	reimu_112A6
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -11709,7 +11709,7 @@ reimu_113A9	proc far
 loc_113D1:
 		cmp	byte_1F34F, -1
 		jz	short loc_113DD
-		call	sub_111A3
+		call	reimu_111A3
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -11720,7 +11720,7 @@ loc_113DD:
 loc_113E0:
 		pop	bp
 		retf
-reimu_113A9	endp
+gba_boss_render_reimu endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11767,7 +11767,7 @@ ellen_113E2	endp
 
 ; Attributes: bp-based frame
 
-sub_11439	proc near
+ellen_11439	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -11878,14 +11878,14 @@ loc_11544:
 		pop	si
 		leave
 		retn
-sub_11439	endp
+ellen_11439	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11547	proc near
+ellen_11547	proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -11930,7 +11930,7 @@ loc_115A1:
 		push	word_1F340
 		push	word ptr [bp+var_2]
 		push	2
-		call	sub_194A9
+		call	ellen_194A9
 		inc	si
 		mov	al, byte_1F3A0
 		mov	ah, 0
@@ -11963,7 +11963,7 @@ loc_115E2:
 		push	word_1F340
 		push	word ptr [bp+var_2]
 		push	0FEh
-		call	sub_194A9
+		call	ellen_194A9
 		inc	si
 		mov	al, byte_1F3A0
 		mov	ah, 0
@@ -11987,14 +11987,14 @@ loc_1161D:
 		pop	si
 		leave
 		retn
-sub_11547	endp
+ellen_11547	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11620	proc near
+ellen_11620	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -12049,14 +12049,14 @@ loc_116A2:
 loc_116B4:
 		pop	bp
 		retn
-sub_11620	endp
+ellen_11620	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_116B6	proc far
+public gba_boss_update_ellen
+gba_boss_update_ellen proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -12130,17 +12130,17 @@ loc_1174C:
 ; ---------------------------------------------------------------------------
 
 loc_11751:
-		call	sub_11439	; jumptable 00011732 cases 2-5
+		call	ellen_11439	; jumptable 00011732 cases 2-5
 		jmp	short loc_11763	; default
 ; ---------------------------------------------------------------------------
 
 loc_11756:
-		call	sub_11547	; jumptable 00011732 cases 6-10
+		call	ellen_11547	; jumptable 00011732 cases 6-10
 		jmp	short loc_11763	; default
 ; ---------------------------------------------------------------------------
 
 loc_1175B:
-		call	sub_11620	; jumptable 00011732 cases 11-17
+		call	ellen_11620	; jumptable 00011732 cases 11-17
 		jmp	short loc_11763	; default
 ; ---------------------------------------------------------------------------
 
@@ -12176,7 +12176,7 @@ loc_11763:
 locret_117C1:
 		leave			; jumptable 00011732 case 255
 		retf
-ellen_116B6	endp
+gba_boss_update_ellen endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -12210,7 +12210,7 @@ word_117C4	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_11814	proc near
+ellen_11814	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -12255,14 +12255,14 @@ arg_0		= word ptr  4
 		pop	si
 		leave
 		retn	2
-sub_11814	endp
+ellen_11814	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11885	proc near
+ellen_11885	proc near
 
 @@pid_other		= byte ptr -5
 @@top		= word ptr -4
@@ -12303,7 +12303,7 @@ loc_118CB:
 		idiv	bx
 		mov	si, dx
 		push	dx
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_118F6
@@ -12311,7 +12311,7 @@ loc_118CB:
 
 loc_118F6:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_11902
@@ -12319,19 +12319,19 @@ loc_118F6:
 
 loc_11902:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		pop	di
 		pop	si
 		leave
 		retn
-sub_11885	endp
+ellen_11885	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1190A	proc near
+ellen_1190A	proc near
 
 var_8		= word ptr -8
 @@sprite_offset		= word ptr -6
@@ -12356,7 +12356,7 @@ arg_4		= word ptr  8
 		idiv	bx
 		mov	si, dx
 		push	dx
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_11936
@@ -12364,7 +12364,7 @@ arg_4		= word ptr  8
 
 loc_11936:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_11942
@@ -12372,7 +12372,7 @@ loc_11936:
 
 loc_11942:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		cmp	_round_frame_mod2, 0
 		jz	short loc_11956
 		cmp	word_1F3B0, 40h
@@ -12437,14 +12437,14 @@ loc_119FB:
 		pop	si
 		leave
 		retn	6
-sub_1190A	endp
+ellen_1190A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_11A01	proc far
+public gba_boss_render_ellen
+gba_boss_render_ellen proc far
 
 @@pid_other		= byte ptr -1
 
@@ -12479,7 +12479,7 @@ loc_11A37:
 		mov	ax, word_1F3B0
 		imul	ax, 3
 		push	ax
-		call	sub_1190A
+		call	ellen_1190A
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -12487,7 +12487,7 @@ loc_11A37:
 loc_11A5C:
 		cmp	byte_1F34F, -1
 		jz	short loc_11A68
-		call	sub_11885
+		call	ellen_11885
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -12498,7 +12498,7 @@ loc_11A68:
 locret_11A6B:
 		leave
 		retf
-ellen_11A01	endp
+gba_boss_render_ellen endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12544,7 +12544,7 @@ kotohime_11A6D	endp
 
 ; Attributes: bp-based frame
 
-sub_11AC1	proc near
+kotohime_11AC1	proc near
 
 @@angle		= byte ptr -5
 var_4		= word ptr -4
@@ -12601,14 +12601,14 @@ loc_11B43:
 		pop	si
 		leave
 		retn	2
-sub_11AC1	endp
+kotohime_11AC1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11B51	proc near
+kotohime_11B51	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -12634,7 +12634,7 @@ loc_11B6B:
 		mov	al, byte_1F39F
 		mov	byte_23E42, al
 		push	1
-		call	sub_11AC1
+		call	kotohime_11AC1
 		call	snd_se_play pascal, 3
 		mov	byte_1F353, 0
 		mov	byte_1F34F, 1
@@ -12650,14 +12650,14 @@ loc_11BBC:
 loc_11BC4:
 		pop	bp
 		retn
-sub_11B51	endp
+kotohime_11B51	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11BC6	proc near
+kotohime_11BC6	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -12686,13 +12686,13 @@ loc_11BE5:
 		mov	al, byte_1F3A2
 		mov	byte_23E42, al
 		push	0
-		call	sub_11AC1
+		call	kotohime_11AC1
 		mov	byte_23E45, 18h
 		mov	angle_23E43, 0
 		mov	al, byte_1F3A1
 		mov	byte_23E42, al
 		push	0
-		call	sub_11AC1
+		call	kotohime_11AC1
 		call	snd_se_play pascal, 3
 		mov	byte_1F353, 0
 		mov	byte_1F34F, 1
@@ -12708,14 +12708,14 @@ loc_11C55:
 loc_11C5D:
 		pop	bp
 		retn
-sub_11BC6	endp
+kotohime_11BC6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11C5F	proc near
+kotohime_11C5F	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -12778,14 +12778,14 @@ loc_11D06:
 loc_11D18:
 		pop	bp
 		retn
-sub_11C5F	endp
+kotohime_11C5F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11D1A	proc near
+kotohime_11D1A	proc near
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -12903,14 +12903,14 @@ loc_11E44:
 		pop	si
 		leave
 		retn
-sub_11D1A	endp
+kotohime_11D1A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_11E48	proc far
+public gba_boss_update_kotohime
+gba_boss_update_kotohime proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -13013,22 +13013,22 @@ loc_11F18:
 ; ---------------------------------------------------------------------------
 
 loc_11F1D:
-		call	sub_11B51	; jumptable 00011EFE cases 2-6
+		call	kotohime_11B51	; jumptable 00011EFE cases 2-6
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
 loc_11F22:
-		call	sub_11BC6	; jumptable 00011EFE cases 7-9
+		call	kotohime_11BC6	; jumptable 00011EFE cases 7-9
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
 loc_11F27:
-		call	sub_11C5F	; jumptable 00011EFE cases 12-14
+		call	kotohime_11C5F	; jumptable 00011EFE cases 12-14
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
 loc_11F2C:
-		call	sub_11D1A	; jumptable 00011EFE cases 10,11,15-17
+		call	kotohime_11D1A	; jumptable 00011EFE cases 10,11,15-17
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
@@ -13064,7 +13064,7 @@ loc_11F34:
 locret_11F92:
 		leave			; jumptable 00011EFE case 255
 		retf
-kotohime_11E48	endp
+gba_boss_update_kotohime endp
 
 ; ---------------------------------------------------------------------------
 word_11F94	dw	0,     1,     2,     3
@@ -13097,7 +13097,7 @@ word_11F94	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_11FE4	proc near
+kotohime_11FE4	proc near
 
 @@angle		= byte ptr -7
 var_6		= word ptr -6
@@ -13169,14 +13169,14 @@ loc_12095:
 		pop	si
 		leave
 		retn	2
-sub_11FE4	endp
+kotohime_11FE4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_120A0	proc near
+kotohime_120A0	proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -13210,20 +13210,20 @@ loc_120E4:
 		mov	al, byte_1F3A0
 		mov	ah, 0
 		push	ax
-		call	sub_11FE4
+		call	kotohime_11FE4
 
 loc_12100:
 		pop	si
 		leave
 		retn
-sub_120A0	endp
+kotohime_120A0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12103	proc near
+kotohime_12103	proc near
 
 arg_0		= word ptr  4
 
@@ -13244,20 +13244,20 @@ loc_12114:
 		mov	ax, [bp+arg_0]
 		mov	word_1F356, ax
 		push	8
-		call	sub_11FE4
+		call	kotohime_11FE4
 		mov	byte_1F353, 0
 
 loc_1213C:
 		pop	bp
 		retn	2
-sub_12103	endp
+kotohime_12103	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_12140	proc far
+public gba_boss_render_kotohime
+gba_boss_render_kotohime proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -13286,7 +13286,7 @@ loc_12172:
 		sub	dx, ax
 		shl	dx, 4
 		push	dx
-		call	sub_12103
+		call	kotohime_12103
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -13294,7 +13294,7 @@ loc_12172:
 loc_1218C:
 		cmp	byte_1F34F, -1
 		jz	short loc_12198
-		call	sub_120A0
+		call	kotohime_120A0
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -13305,7 +13305,7 @@ loc_12198:
 loc_1219B:
 		pop	bp
 		retf
-kotohime_12140	endp
+gba_boss_render_kotohime endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13352,7 +13352,7 @@ chiyuri_1219D	endp
 
 ; Attributes: bp-based frame
 
-sub_121F5	proc near
+chiyuri_121F5	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -13481,14 +13481,14 @@ loc_122E5:
 locret_12353:
 		leave
 		retn
-sub_121F5	endp
+chiyuri_121F5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12355	proc near
+chiyuri_12355	proc near
 		push	bp
 		mov	bp, sp
 		mov	al, byte_1F3A2
@@ -13558,14 +13558,14 @@ loc_1239D:
 loc_12423:
 		pop	bp
 		retn
-sub_12355	endp
+chiyuri_12355	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12425	proc near
+chiyuri_12425	proc near
 		push	bp
 		mov	bp, sp
 		test	byte ptr word_1F3B0, 7
@@ -13603,14 +13603,14 @@ loc_12447:
 loc_12496:
 		pop	bp
 		retn
-sub_12425	endp
+chiyuri_12425	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12498	proc near
+chiyuri_12498	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -13841,14 +13841,14 @@ loc_126A5:
 		pop	si
 		leave
 		retn
-sub_12498	endp
+chiyuri_12498	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_126A8	proc far
+public gba_boss_update_chiyuri
+gba_boss_update_chiyuri proc far
 
 var_4		= word ptr -4
 var_2		= byte ptr -2
@@ -14008,22 +14008,22 @@ loc_1280B:
 ; ---------------------------------------------------------------------------
 
 loc_12838:
-		call	sub_121F5	; jumptable 00012744 cases 2-5
+		call	chiyuri_121F5	; jumptable 00012744 cases 2-5
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
 loc_1283D:
-		call	sub_12355	; jumptable 00012744 cases 6-9
+		call	chiyuri_12355	; jumptable 00012744 cases 6-9
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
 loc_12842:
-		call	sub_12425	; jumptable 00012744 cases 10-13
+		call	chiyuri_12425	; jumptable 00012744 cases 10-13
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
 loc_12847:
-		call	sub_12498	; jumptable 00012744 cases 14-17
+		call	chiyuri_12498	; jumptable 00012744 cases 14-17
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
@@ -14101,7 +14101,7 @@ loc_128AD:
 locret_1290B:
 		leave
 		retf
-chiyuri_126A8	endp
+gba_boss_update_chiyuri endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -14135,7 +14135,7 @@ word_1290E	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_1295E	proc near
+chiyuri_1295E	proc near
 
 @@angle		= byte ptr -9
 var_8		= word ptr -8
@@ -14200,14 +14200,14 @@ loc_12A04:
 		pop	si
 		leave
 		retn
-sub_1295E	endp
+chiyuri_1295E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12A10	proc near
+chiyuri_12A10	proc near
 
 @@top		= word ptr -2
 
@@ -14292,21 +14292,21 @@ loc_12AD4:
 		push	V_WHITE
 
 loc_12AD6:
-		call	sub_12B38
+		call	chiyuri_12B38
 
 loc_12AD9:
 		pop	di
 		pop	si
 		leave
 		retn
-sub_12A10	endp
+chiyuri_12A10	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12ADD	proc near
+chiyuri_12ADD	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -14351,20 +14351,20 @@ loc_12B24:
 
 loc_12B2F:
 		mov	byte_1F355, al
-		call	sub_1295E
+		call	chiyuri_1295E
 
 loc_12B35:
 		pop	si
 		pop	bp
 		retn
-sub_12ADD	endp
+chiyuri_12ADD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12B38	proc near
+chiyuri_12B38	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -14401,14 +14401,14 @@ sub_12B38	proc near
 		int	SPRITE16
 		leave
 		retn	2
-sub_12B38	endp
+chiyuri_12B38	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_12B99	proc far
+public gba_boss_render_chiyuri
+gba_boss_render_chiyuri proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -14431,7 +14431,7 @@ loc_12BBF:
 loc_12BCB:
 		cmp	byte_1F34F, 0
 		jnz	short loc_12BD7
-		call	sub_12ADD
+		call	chiyuri_12ADD
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -14439,7 +14439,7 @@ loc_12BCB:
 loc_12BD7:
 		cmp	byte_1F34F, -1
 		jz	short loc_12BE3
-		call	sub_12A10
+		call	chiyuri_12A10
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -14456,7 +14456,7 @@ loc_12BE3:
 loc_12BF9:
 		pop	bp
 		retf
-chiyuri_12B99	endp
+gba_boss_render_chiyuri endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14502,7 +14502,7 @@ kana_12BFB	endp
 
 ; Attributes: bp-based frame
 
-sub_12C4F	proc near
+kana_12C4F	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -14543,19 +14543,19 @@ loc_12C8B:
 		push	word_1F33E
 		push	word_1F340
 		push	0E0h
-		call	sub_19896
+		call	kana_19896
 		push	word_1F33E
 		push	word_1F340
 		push	8
-		call	sub_19896
+		call	kana_19896
 		push	word_1F33E
 		push	word_1F340
 		push	78h ; 'x'
-		call	sub_19896
+		call	kana_19896
 		push	word_1F33E
 		push	word_1F340
 		push	0A0h
-		call	sub_19896
+		call	kana_19896
 		mov	byte_23E4E, 7
 		mov	byte_23E45, 26h ; '&'
 		mov	al, byte_1F39F
@@ -14582,14 +14582,14 @@ loc_12D1E:
 loc_12D35:
 		pop	bp
 		retn
-sub_12C4F	endp
+kana_12C4F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12D37	proc near
+kana_12D37	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -14710,14 +14710,14 @@ loc_12E75:
 		pop	si
 		leave
 		retn
-sub_12D37	endp
+kana_12D37	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12E78	proc near
+kana_12E78	proc near
 
 var_1		= byte ptr -1
 
@@ -14748,7 +14748,7 @@ loc_12EB0:
 		push	word_1F33E
 		push	word_1F340
 		push	word ptr [bp+var_1]
-		call	sub_19896
+		call	kana_19896
 		mov	byte_23E4E, 4
 		mov	byte_23E45, 26h ; '&'
 		mov	al, byte_1F3A4
@@ -14771,14 +14771,14 @@ loc_12EED:
 locret_12F04:
 		leave
 		retn
-sub_12E78	endp
+kana_12E78	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12F06	proc near
+kana_12F06	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -14874,14 +14874,14 @@ loc_12FCF:
 loc_12FE6:
 		pop	bp
 		retn
-sub_12F06	endp
+kana_12F06	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_12FE8	proc far
+public gba_boss_update_kana
+gba_boss_update_kana proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -14974,22 +14974,22 @@ loc_130A4:
 ; ---------------------------------------------------------------------------
 
 loc_130A9:
-		call	sub_12C4F	; jumptable 0001308A cases 2-4
+		call	kana_12C4F	; jumptable 0001308A cases 2-4
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
 loc_130AE:
-		call	sub_12D37	; jumptable 0001308A cases 7-12
+		call	kana_12D37	; jumptable 0001308A cases 7-12
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
 loc_130B3:
-		call	sub_12E78	; jumptable 0001308A cases 13-15
+		call	kana_12E78	; jumptable 0001308A cases 13-15
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
 loc_130B8:
-		call	sub_12F06	; jumptable 0001308A cases 5,6,16,17
+		call	kana_12F06	; jumptable 0001308A cases 5,6,16,17
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
@@ -15026,7 +15026,7 @@ loc_130C0:
 locret_13122:
 		leave			; jumptable 0001308A case 255
 		retf
-kana_12FE8	endp
+gba_boss_update_kana endp
 
 ; ---------------------------------------------------------------------------
 word_13124	dw	0,     1,     2,     3
@@ -15059,7 +15059,7 @@ word_13124	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_13174	proc near
+kana_13174	proc near
 
 @@top		= word ptr -2
 
@@ -15138,14 +15138,14 @@ loc_1321F:
 		pop	si
 		leave
 		retn
-sub_13174	endp
+kana_13174	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13223	proc near
+kana_13223	proc near
 
 @@angle		= byte ptr -7
 var_6		= word ptr -6
@@ -15229,14 +15229,14 @@ loc_132FA:
 		pop	si
 		leave
 		retn
-sub_13223	endp
+kana_13223	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_132FE	proc far
+public gba_boss_render_kana
+gba_boss_render_kana proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -15259,7 +15259,7 @@ loc_13324:
 loc_13330:
 		cmp	byte_1F34F, 0
 		jnz	short loc_1333C
-		call	sub_13223
+		call	kana_13223
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -15267,7 +15267,7 @@ loc_13330:
 loc_1333C:
 		cmp	byte_1F34F, -1
 		jz	short loc_13348
-		call	sub_13174
+		call	kana_13174
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -15278,7 +15278,7 @@ loc_13348:
 loc_1334B:
 		pop	bp
 		retf
-kana_132FE	endp
+gba_boss_render_kana endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15325,7 +15325,7 @@ rikako_1334D	endp
 
 ; Attributes: bp-based frame
 
-sub_133A5	proc near
+rikako_133A5	proc near
 
 var_2		= byte ptr -2
 @@angle		= byte ptr -1
@@ -15429,14 +15429,14 @@ loc_134A7:
 		pop	si
 		leave
 		retn
-sub_133A5	endp
+rikako_133A5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_134AA	proc near
+rikako_134AA	proc near
 
 var_1		= byte ptr -1
 
@@ -15492,7 +15492,7 @@ loc_1350E:
 		push	word_1F33E
 		push	word_1F340
 		push	word ptr [bp+var_1]
-		call	sub_1B006
+		call	rikako_1B006
 		inc	si
 
 loc_13532:
@@ -15549,14 +15549,14 @@ loc_135A1:
 		pop	si
 		leave
 		retn
-sub_134AA	endp
+rikako_134AA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_135A4	proc near
+rikako_135A4	proc near
 
 var_1		= byte ptr -1
 
@@ -15635,14 +15635,14 @@ loc_1364C:
 locret_1365F:
 		leave
 		retn
-sub_135A4	endp
+rikako_135A4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_13661	proc far
+public gba_boss_update_rikako
+gba_boss_update_rikako proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -15721,17 +15721,17 @@ loc_13700:
 ; ---------------------------------------------------------------------------
 
 loc_13705:
-		call	sub_133A5	; jumptable 000136E6 cases 2-5
+		call	rikako_133A5	; jumptable 000136E6 cases 2-5
 		jmp	short loc_13717	; default
 ; ---------------------------------------------------------------------------
 
 loc_1370A:
-		call	sub_134AA	; jumptable 000136E6 cases 7-12
+		call	rikako_134AA	; jumptable 000136E6 cases 7-12
 		jmp	short loc_13717	; default
 ; ---------------------------------------------------------------------------
 
 loc_1370F:
-		call	sub_135A4	; jumptable 000136E6 cases 6,13-17
+		call	rikako_135A4	; jumptable 000136E6 cases 6,13-17
 		jmp	short loc_13717	; default
 ; ---------------------------------------------------------------------------
 
@@ -15769,7 +15769,7 @@ loc_13717:
 locret_1377C:
 		leave			; jumptable 000136E6 case 255
 		retf
-rikako_13661	endp
+gba_boss_update_rikako endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -15803,7 +15803,7 @@ word_1377F	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_137CF	proc near
+rikako_137CF	proc near
 
 @@angle		= byte ptr -9
 var_8		= word ptr -8
@@ -15892,14 +15892,14 @@ loc_138AA:
 		pop	si
 		leave
 		retn
-sub_137CF	endp
+rikako_137CF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_138B3	proc near
+rikako_138B3	proc near
 
 @@angle		= byte ptr -7
 var_6		= word ptr -6
@@ -15983,14 +15983,14 @@ loc_13987:
 		pop	si
 		leave
 		retn
-sub_138B3	endp
+rikako_138B3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1398B	proc far
+public gba_boss_render_rikako
+gba_boss_render_rikako proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -16013,7 +16013,7 @@ loc_139B1:
 loc_139BD:
 		cmp	byte_1F34F, 0
 		jnz	short loc_139C9
-		call	sub_138B3
+		call	rikako_138B3
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -16021,7 +16021,7 @@ loc_139BD:
 loc_139C9:
 		cmp	byte_1F34F, -1
 		jz	short loc_139D5
-		call	sub_137CF
+		call	rikako_137CF
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -16032,7 +16032,7 @@ loc_139D5:
 loc_139D8:
 		pop	bp
 		retf
-rikako_1398B	endp
+gba_boss_render_rikako endp
 
 main_03_TEXT	ends
 
@@ -26720,7 +26720,7 @@ loc_194A4:
 
 ; Attributes: bp-based frame
 
-sub_194A9	proc far
+ellen_194A9	proc far
 
 arg_0		= byte ptr  6
 arg_2		= byte ptr  8
@@ -26775,7 +26775,7 @@ loc_1950B:
 		pop	si
 		pop	bp
 		retf	8
-sub_194A9	endp
+ellen_194A9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27220,7 +27220,7 @@ loc_19890:
 
 ; Attributes: bp-based frame
 
-sub_19896	proc far
+kana_19896	proc far
 
 arg_0		= byte ptr  6
 arg_2		= word ptr  8
@@ -27265,7 +27265,7 @@ loc_198D8:
 		pop	si
 		pop	bp
 		retf	6
-sub_19896	endp
+kana_19896	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27576,7 +27576,7 @@ loc_19B00:
 
 ; Attributes: bp-based frame
 
-sub_19B06	proc far
+marisa_19B06	proc far
 
 arg_0		= byte ptr  6
 arg_2		= word ptr  8
@@ -27622,7 +27622,7 @@ loc_19B4A:
 		pop	si
 		pop	bp
 		retf	6
-sub_19B06	endp
+marisa_19B06	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28676,7 +28676,7 @@ loc_1A2C8:
 
 ; Attributes: bp-based frame
 
-sub_1A2CE	proc far
+reimu_1A2CE	proc far
 
 @@angle		= word ptr  6
 arg_2		= word ptr  8
@@ -28732,7 +28732,7 @@ loc_1A324:
 		pop	si
 		pop	bp
 		retf	6
-sub_1A2CE	endp
+reimu_1A2CE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29582,7 +29582,7 @@ loc_1A959:
 
 ; Attributes: bp-based frame
 
-sub_1A95F	proc far
+yumemi_1A95F	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -29628,7 +29628,7 @@ loc_1A9AB:
 		pop	si
 		pop	bp
 		retf	4
-sub_1A95F	endp
+yumemi_1A95F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -30399,7 +30399,7 @@ loc_1B000:
 
 ; Attributes: bp-based frame
 
-sub_1B006	proc far
+rikako_1B006	proc far
 
 arg_0		= byte ptr  6
 arg_2		= word ptr  8
@@ -30448,7 +30448,7 @@ loc_1B055:
 		pop	si
 		pop	bp
 		retf	6
-sub_1B006	endp
+rikako_1B006	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34850,10 +34850,15 @@ word_1F326	dw ?
 word_1F328	dw ?
 word_1F32A	dw ?
 word_1F32C	dw ?
-p1_1F32E	dd ?
-p2_1F332	dd ?
-p1_1F336	dd ?
-p2_1F33A	dd ?
+
+public _gba_boss_update, _gba_boss_render
+_gba_boss_update label
+gba_boss_update_p1	dd ?
+gba_boss_update_p2	dd ?
+_gba_boss_render label
+gba_boss_render_p1	dd ?
+gba_boss_render_p2	dd ?
+
 word_1F33E	dw ?
 word_1F340	dw ?
 point_1F342	Point <?>
