@@ -12,7 +12,7 @@ enum bomb_flag_t {
 extern bomb_flag_t bomb_flag[PLAYER_COUNT];
 extern unsigned char bomb_frame[PLAYER_COUNT];
 
-extern bool damage_all_enemies_on[PLAYFIELD_COUNT];
+extern bool damage_all_on[PLAYFIELD_COUNT];
 
 // Drops a bomb or uses a hyper, if possible.
 void pascal near player_bomb(player_t near *player);

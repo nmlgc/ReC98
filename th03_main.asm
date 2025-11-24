@@ -1250,7 +1250,7 @@ loc_A1BD:
 		mov	bx, di
 		add	bx, bx
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	_damage_all_enemies_on[di], 0
+		mov	_damage_all_on[di], 0
 		mov	byte ptr [di+798h], 0
 		inc	di
 		add	si, size player_stuff_t
@@ -3285,7 +3285,7 @@ arg_0		= word ptr  4
 		mov	ah, 0
 		mov	bx, 1
 		sub	bx, ax
-		mov	_damage_all_enemies_on[bx], 1
+		mov	_damage_all_on[bx], 1
 		mov	word_20E42, 0
 		jmp	short loc_C12C
 ; ---------------------------------------------------------------------------
@@ -6506,12 +6506,12 @@ loc_DA68:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_damage_all_enemies_on[bx], 0
+		cmp	_damage_all_on[bx], 0
 		jz	short loc_DA81
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		dec	_damage_all_enemies_on[bx]
+		dec	_damage_all_on[bx]
 
 loc_DA81:
 		cmp	byte_20E3C, 2
@@ -7263,7 +7263,7 @@ loc_E0BF:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_damage_all_enemies_on[bx], 1
+		mov	_damage_all_on[bx], 1
 		call	snd_se_play pascal, 7
 		mov	al, [si+player_stuff_t.playchar_paletted]
 		mov	[si+player_stuff_t.hyper_active], al
@@ -20623,7 +20623,7 @@ loc_16187:
 		mov	[bp+@@pid], al
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_damage_all_enemies_on[bx], 0
+		cmp	_damage_all_on[bx], 0
 		jz	short loc_16212
 		mov	bx, word_2203C
 		mov	byte ptr [bx+7], 0
@@ -23726,7 +23726,7 @@ loc_17A7A:
 		jnz	short loc_17AD6
 		mov	bh, 0
 		mov	bl, [si+10h]
-		add	bx, offset _damage_all_enemies_on
+		add	bx, offset _damage_all_on
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17AD6
 		cmp	byte ptr [si+17h], 0
@@ -35127,10 +35127,10 @@ public _bomb_flag, _player_speed_base, _player_velocity
 _bomb_flag	db PLAYER_COUNT dup(?)
 _player_speed_base	speed_t <?>
 _player_velocity  	SPPoint8 <?>
-public _player_cur, _cpu_hit_damage_additional, _damage_all_enemies_on
+public _player_cur, _cpu_hit_damage_additional, _damage_all_on
 _player_cur	dw ?
 _cpu_hit_damage_additional	db ?
-_damage_all_enemies_on	db PLAYFIELD_COUNT dup(?)
+_damage_all_on	db PLAYFIELD_COUNT dup(?)
 		db ?
 include th02/hardware/pages[bss].asm
 public _pid
