@@ -63,6 +63,7 @@ void collmap_set_rect_striped();
 // • [collmap_topleft] (X and Y)
 // • [collmap_tile_h] (height of the line)
 // • [collmap_pid]
+// ZUN bloat: Only used for bullets, which only need a single tile.
 void collmap_set_vline();
 
 // Sets all bits on every [COLLMAP_SLOPE_VSTRIPE_DISTANCE]th row of a

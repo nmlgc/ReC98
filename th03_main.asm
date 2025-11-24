@@ -251,7 +251,7 @@ loc_977E:
 		call	_chargeshot_update_p2
 		call	sub_BB12
 		call	sub_13CC7
-		call	sub_17A1B
+		call	@bullets_update$qv
 		call	sub_1609E
 		call	sub_18059
 		mov	_pid_current, 0
@@ -16048,7 +16048,6 @@ main_04_TEXT	ends
 
 COLLMAP_TEXT	segment byte public 'CODE' use16
 	extern @collmap_set_rect_striped$qv:proc
-	extern @collmap_set_vline$qv:proc
 	extern @collmap_set_slope_striped$qv:proc
 COLLMAP_TEXT	ends
 
@@ -22738,241 +22737,16 @@ BT_BULLET16_DEFAULT = 2
 BT_PELLET_CLOUD = 4
 BT_BULLET16_DEFAULT_WITH_ACCEL = 7
 BT_BULLET16_CUSTOM_WITH_ACCEL = 8
-BAT_NONE = 00h
 BAT_Y = 80h
 
 	extern @bullets_reset$qv:proc
 	extern @bullets_add$qv:proc
 	extern @bullets_add_transfer_pellet$qv:proc
 	extern @bullet_template_reset_stuff$qv:proc
-	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t procdesc near
-	@bullets_add_next_from_p$qv procdesc near
-	@bullet_update_velocity_y$qv procdesc near
+	extern @bullets_update$qv:proc
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17A1B	proc far
-
-var_1		= byte ptr -1
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	[bp+var_1], 0
-		mov	_collmap_tile_h, 1
-		mov	_explosion_hittest_mode, EHM_PELLET
-		mov	di, (BULLET_COUNT + 1)
-		mov	ax, offset _bullets
-		add	ax, -size bullet_t
-		mov	si, ax
-
-loc_17A3D:
-		add	si, size bullet_t
-		dec	di
-		mov	ax, di
-		or	ax, ax
-		jz	loc_17BCD
-		cmp	[si+bullet_t.BULLET_flag], BF_FREE
-		jz	short loc_17A3D
-		cmp	[si+bullet_t.BULLET_flag], BF_INVALID
-		jnb	short loc_17A3D
-		inc	[bp+var_1]
-		inc	[si+bullet_t.BULLET_age]
-		cmp	[si+bullet_t.BULLET_flag], BF_PELLET_CLOUD
-		jnz	short loc_17A7A
-		mov	al, [si+bullet_t.BULLET_age]
-		and	al, 3
-		jnz	short loc_17A3D
-		mov	ax, [si+bullet_t.BULLET_sprite_offset]
-		add	ax, 4
-		cmp	ax, ((80 * ROW_SIZE) + (624 / BYTE_DOTS))
-		jl	short loc_17A75
-		mov	[si+bullet_t.BULLET_flag], BF_PELLET
-		jmp	short loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17A75:
-		mov	[si+bullet_t.BULLET_sprite_offset], ax
-		jmp	short loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17A7A:
-		mov	ax, [si+bullet_t.BULLET_center.x]
-		mov	cx, ax
-		add	ax, [si+bullet_t.BULLET_velocity.x]
-		cmp	[si+bullet_t.BULLET_flag], BF_PELLET_TRANSFER
-		jz	short loc_17ADC
-		mov	bh, 0
-		mov	bl, [si+bullet_t.BULLET_pid]
-		add	bx, offset _bomb_flag
-		cmp	byte ptr [bx], 0
-		jnz	short loc_17AD6
-		mov	bh, 0
-		mov	bl, [si+bullet_t.BULLET_pid]
-		add	bx, offset _damage_all_on
-		cmp	byte ptr [bx], 0
-		jnz	short loc_17AD6
-		cmp	[si+bullet_t.BULLET_has_trail], 0
-		jz	short loc_17ACC
-		cmp	ax, (-8 shl 4)
-		jle	short loc_17AB5
-		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
-		jge	short loc_17ABA
-		jmp	short loc_17ABD
-; ---------------------------------------------------------------------------
-
-loc_17AB5:
-		mov	ax, (-8 shl 4)
-		jmp	short loc_17ABD
-; ---------------------------------------------------------------------------
-
-loc_17ABA:
-		mov	ax, ((PLAYFIELD_W + 8) shl 4)
-
-loc_17ABD:
-		mov	_coord_max, ((PLAYFIELD_W + 8) shl 4)
-		xor	bx, bx
-		call	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t
-		jb	short loc_17AD6
-		jmp	short loc_17AEF
-; ---------------------------------------------------------------------------
-
-loc_17ACC:
-		cmp	ax, (-8 shl 4)
-		jle	short loc_17AD6
-		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
-		jl	short loc_17AEF
-
-loc_17AD6:
-		mov	[si+bullet_t.BULLET_flag], BF_FREE
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17ADC:
-		mov	bl, [si+bullet_t.BULLET_pid]
-		or	bl, bl
-		jnz	short loc_17AEA
-		cmp	ax, [si+bullet_t.BULLET_target_center_x_for_origin_pid]
-		jl	short loc_17B15
-		jmp	short loc_17AF1
-; ---------------------------------------------------------------------------
-
-loc_17AEA:
-		cmp	ax, [si+bullet_t.BULLET_target_center_x_for_origin_pid]
-		jle	short loc_17AF1
-
-loc_17AEF:
-		jmp	short loc_17B15
-; ---------------------------------------------------------------------------
-
-loc_17AF1:
-		mov	[si+bullet_t.BULLET_flag], BF_PELLET_CLOUD
-		xor	[si+bullet_t.BULLET_pid], 1
-		mov	dx, [si+bullet_t.BULLET_target_center_x_for_target_pid]
-		mov	[si+bullet_t.BULLET_center.x], dx
-		mov	[si+bullet_t.BULLET_center.y], (2 shl 4)
-		add	[si+bullet_t.BULLET_speed_next], 8
-		mov	_bullet_template.BT_count, 0
-		call	@bullets_add_next_from_p$qv
-		mov	[si+bullet_t.BULLET_flag], BF_FREE
-		jmp	loc_17BCA
-; ---------------------------------------------------------------------------
-
-loc_17B15:
-		mov	[si+bullet_t.BULLET_center.x], ax
-		mov	ax, [si+bullet_t.BULLET_center.y]
-		mov	cx, ax
-		add	ax, [si+bullet_t.BULLET_velocity.y]
-		cmp	[si+bullet_t.BULLET_has_trail], 0
-		jz	short loc_17B36
-		mov	_coord_max, ((PLAYFIELD_H + 8) shl 4)
-		mov	bx, bullet_trail_t.BT_center_y
-		call	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t
-		jb	short loc_17B40
-		jmp	short loc_17B46
-; ---------------------------------------------------------------------------
-
-loc_17B36:
-		cmp	ax, (-8 shl 4)
-		jle	short loc_17B40
-		cmp	ax, ((PLAYFIELD_H + 8) shl 4)
-		jl	short loc_17B46
-
-loc_17B40:
-		mov	[si+bullet_t.BULLET_flag], BF_FREE
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17B46:
-		mov	[si+bullet_t.BULLET_center.y], ax
-		cmp	[si+bullet_t.BULLET_accel_type], BAT_NONE
-		jz	short loc_17B52
-		call	@bullet_update_velocity_y$qv
-
-loc_17B52:
-		cmp	[si+bullet_t.BULLET_flag], BF_PELLET
-		jnz	short loc_17BA9
-		mov	dx, [si+bullet_t.BULLET_center.x]
-		sub	dx, (6 shl 4)
-		sub	ax, (6 shl 4)
-		mov	_hitbox_origin_topleft.x, dx
-		mov	_hitbox_origin_topleft.y, ax
-		add	dx, (12 shl 4)
-		add	ax, (12 shl 4)
-		mov	_hitbox_right, dx
-		mov	_hitbox_bottom, ax
-		mov	bl, [si+bullet_t.BULLET_pid]
-		mov	_hitbox_pid, bl
-		call	@explosions_hittest$qv
-		or	al, al
-		jz	short loc_17BA9
-		mov	bh, 0
-		mov	bl, [si+bullet_t.BULLET_pid]
-		xor	bl, 1
-		add	bx, offset _gba_flag_active
-		cmp	byte ptr [bx], 0
-		jnz	short loc_17BA3
-		mov	[si+bullet_t.BULLET_flag], BF_PELLET_TRANSFER
-		mov	[si+bullet_t.BULLET_group_next], 1Dh
-		mov	[si+bullet_t.BULLET_angle_next], 0
-		call	@bullets_add_next_from_p$qv
-
-loc_17BA3:
-		mov	[si+bullet_t.BULLET_flag], BF_FREE
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17BA9:
-		cmp	[si+bullet_t.BULLET_flag], BF_PELLET_TRANSFER
-		jz	short loc_17BCA
-		cmp	[si+bullet_t.BULLET_is_collidable], 0
-		jz	short loc_17BCA
-		mov	ax, [si+bullet_t.BULLET_center.x]
-		mov	_collmap_topleft.x, ax
-		mov	ax, [si+bullet_t.BULLET_center.y]
-		mov	_collmap_topleft.y, ax
-		mov	al, [si+bullet_t.BULLET_pid]
-		mov	_collmap_pid, al
-		call	@collmap_set_vline$qv
-
-loc_17BCA:
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17BCD:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17A1B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33809,9 +33583,7 @@ _bullet_template bullet_template_t <?>
 BF_FREE = 0
 BF_PELLET = 1
 BF_BULLET16 = 2
-BF_PELLET_TRANSFER = 3
 BF_PELLET_CLOUD = 4
-BF_INVALID = 5
 
 TRAIL_POINT_COUNT = 6
 TRAIL_RING_SIZE = 48

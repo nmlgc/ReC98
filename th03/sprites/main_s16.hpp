@@ -4,6 +4,9 @@
 
 #define XY(x, y) ((y * ROW_SIZE) + (x / BYTE_DOTS))
 
+static const pixel_t PELLET_CLOUD_W = 32;
+static const pixel_t PELLET_CLOUD_H = 32;
+static const int PELLET_CLOUD_CELS = 3;
 static const unsigned int BULLET16_CELS = 4;
 static const unsigned int BULLET16_TRAIL_CELS = 3;
 

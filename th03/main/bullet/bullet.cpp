@@ -1,8 +1,11 @@
 #pragma option -zPmain_04 -G
 
 #include "th03/main/bullet/bullet.hpp"
+#include "th03/main/player/bomb.hpp"
 #include "th03/main/player/cur.hpp"
+#include "th03/main/player/gba.hpp"
 #include "th03/main/player/stuff.hpp"
+#include "th03/main/enemy/expl.hpp"
 #include "th03/main/difficul.hpp"
 #include "th03/main/hitbox.hpp"
 #include "th03/math/randring.hpp"
@@ -10,6 +13,7 @@
 #include "th03/sprites/pellet.h"
 #include "th02/main/bullet/impl.hpp"
 #include "th02/sprites/bullet16.h"
+#include "platform/x86real/flags.hpp"
 #include "decomp.hpp"
 #include <stddef.h>
 
@@ -364,6 +368,11 @@ void bullets_add(void)
 		break;
 
 	default:
+		// We really should either fail or just not handle invalid bullet
+		// types, and provide proper `case`s for these three. Instead, this
+		// code explicitly creates the possibility of spawning bullets with
+		// invalid flags, forcing bullets_update() to defend against them.
+		// More on this whole issue in that function.
 		static_assert(BT_PELLET == BF_PELLET);
 		static_assert(BT_PELLET_TRANSFER == BF_PELLET_TRANSFER);
 		static_assert(BT_PELLET_CLOUD == BF_PELLET_CLOUD);
@@ -524,6 +533,14 @@ void __fastcall near bullet_trail_update_and_clip(
 // is hard to name as a result.
 void near bullets_add_next_from_p(void)
 {
+	// ZUN bloat: For example, which sprite do we get if [p->flag] happens to
+	// be [BF_BULLET16]? We could *technically* use [BT_BULLET16_CUSTOM] to use
+	// the template's [sprite_offset], but that would violate soundness: That
+	// type is not a valid `bullet_flag_t` value, and bullets_update() treats
+	// is as invalid. [BF_BULLET16], however, would always result in PID 1's
+	// sprite since this function is always called with ([pid.so_attack] ==
+	// [SO_ATTACK_P2]). The cast obscures that this function was really only
+	// ever meant to be used for pellets.
 	static_assert(BF_PELLET_TRANSFER == BT_PELLET_TRANSFER);
 	static_assert(BF_PELLET_CLOUD == BT_PELLET_CLOUD);
 	bullet_template.type = static_cast<bullet_type_t>(p->flag);
@@ -579,6 +596,269 @@ void near bullet_update_velocity_y(void)
 	}
 
 	#undef p_
+}
+
+void bullets_update(void)
+{
+	#define coord_next static_cast<playfield_subpixel_t>(_AX)
+
+	// ZUN bloat: Unused, and could overflow because [BULLETS_COUNT] is larger
+	// than 255.
+	uint8_t alive = 0;
+
+	// ZUN bloat: Yes, directly assigning [p->pid] to BX would have generated
+	// better code, but then you *keep* BX instead of always adding the base
+	// pointer to it…
+	#define pid_subscript(ptr) ( \
+		_BH = 0, _BL = p->pid, _BX += FP_OFF(ptr), *((uint8_t near *)(_BX)) \
+	)
+
+	collmap_tile_h = 1;
+	explosion_hittest_mode = EHM_PELLET;
+
+	// ZUN bloat: A `for` loop would have been more readable.
+	int i = (BULLET_COUNT + 1);
+	p = (bullets - 1);
+	while(1) {
+		p++;
+
+		// ZUN bloat: `if(--i == 0)` compiles into DEC+JZ. This… doesn't.
+		_AX = --i;
+		if(static_cast<int16_t>(_AX) == 0) {
+			break;
+		}
+
+		// Yes, bullets with invalid flags are treated as nonexistent here, but
+		// not in bullets_add(), and will therefore take up space in [bullets]
+		// until the next call to bullets_reset(). bullets_add()'s `default`
+		// case might very well accidentally spawn such invalid bullets under
+		// certain circumstance; players have reported several bugs in TH03
+		// that seem to be caused by out-of-bounds structure accesses, so we
+		// can't rule out as of November 2025.
+		// TODO: Revisit this once we've completely RE'd the game and then
+		// classify the existence of [BF_INVALID] as bloat or a quirk.
+		if((p->flag == BF_FREE) || (p->flag >= BF_INVALID)) {
+			continue;
+		}
+		alive++;
+		p->age++;
+
+		if(p->flag == BF_PELLET_CLOUD) {
+			// ZUN bloat: `if((p->age & 3) == 0)`
+			_AL = (p->age & 3);
+			if(FLAGS_ZERO) {
+				#define so_next static_cast<vram_byte_amount_t>(_AX)
+				so_next = (p->sprite_offset + XY(PELLET_CLOUD_W, 0));
+				if(so_next >= (
+					SO_PELLET_CLOUD +
+					XY((PELLET_CLOUD_W * PELLET_CLOUD_CELS), 0)
+				)) {
+					p->flag = BF_PELLET;
+				} else {
+					p->sprite_offset = so_next;
+				}
+				#undef so_next
+			}
+			continue;
+		}
+
+		// X coordinate
+		// ------------
+
+		coord_next = p->center.x;
+		coord_prev = coord_next;
+		coord_next += p->velocity.x.v;
+
+		if(p->flag != BF_PELLET_TRANSFER) {
+			// ZUN bloat: `if(
+			// 	(bomb_flag[p->pid] != BF_INACTIVE) || damage_all_on[p->pid]
+			// )`
+			if(
+				(pid_subscript(bomb_flag) != BF_INACTIVE) ||
+				pid_subscript(damage_all_on)
+			) {
+				goto remove_x;
+			} else if(p->has_trail) {
+				if(coord_next > CENTER_MIN) {
+					if(coord_next < CENTER_X_MAX) {
+						goto clamp_done;
+					} else {
+						goto clamp_max;
+					}
+				} else {
+					goto clamp_min;
+				}
+				clamp_min:	coord_next = CENTER_MIN;  	goto clamp_done;
+				clamp_max:	coord_next = CENTER_X_MAX;
+				clamp_done:
+
+				coord_max.v = CENTER_X_MAX;
+				_BX = offsetof(bullet_trail_t, center_x);
+				bullet_trail_update_and_clip(
+					_AX,
+					_DX,
+					reinterpret_cast<bullet_trail_coords_t near *>(_BX)
+				);
+				if(FLAGS_CARRY) {
+					goto remove_x;
+				}
+				optimization_barrier();
+				goto passed_x_checks;
+			} else {
+				if((coord_next <= CENTER_MIN) || (coord_next >= CENTER_X_MAX)) {
+					goto remove_x;
+				}
+			}
+			optimization_barrier();
+			goto passed_x_checks;
+
+		remove_x:
+			_SI = _SI;
+			p->flag = BF_FREE;
+			continue;
+		} else {
+			// ZUN bloat: There are better ways of checking the coordinate than
+			// hardcoding the assumption of the physical layout together with
+			// the expected horizontal movement direction.
+			static_assert(PLAYER_COUNT == 2);
+			_BL = p->pid;
+			if(_BL == 0) {
+				if(coord_next >= p->target_center_x_for_origin_pid.v) {
+					goto transfer;
+				} else {
+					goto passed_x_checks;
+				}
+			} else {
+				if(coord_next <= p->target_center_x_for_origin_pid.v) {
+					goto transfer;
+				} else {
+					optimization_barrier();
+					goto passed_x_checks;
+				}
+			}
+
+		transfer:
+			p->flag = BF_PELLET_CLOUD;
+			p->pid ^= 1;
+
+			// ZUN bloat
+			_DX = p->target_center_x_for_target_pid.v;
+			p->center.x.v = _DX;
+
+			// ZUN quirk: Yup, overriding the random Y position the bullet
+			// aimed for when it spawned.
+			p->center.y.set(2.0f);
+
+			p->speed_next += 0.5f;
+			bullet_template.count = 0;
+			bullets_add_next_from_p();
+			p->flag = BF_FREE;
+			goto next;
+		}
+	passed_x_checks:
+		p->center.x.v = coord_next;
+		// ------------
+
+		// Y coordinate
+		// ------------
+
+		coord_next = p->center.y;
+		coord_prev = coord_next;
+		coord_next += p->velocity.y.v;
+
+		if(p->has_trail) {
+			coord_max.v = CENTER_Y_MAX;
+			_BX = offsetof(bullet_trail_t, center_y);
+			bullet_trail_update_and_clip(
+				_AX, _DX, reinterpret_cast<bullet_trail_coords_t near *>(_BX)
+			);
+			if(FLAGS_CARRY) {
+				goto remove_y;
+			}
+			optimization_barrier();
+			goto passed_y_checks;
+		} else if((coord_next > CENTER_MIN) && (coord_next < CENTER_Y_MAX)) {
+			goto passed_y_checks;
+		}
+	remove_y:
+		p->flag = BF_FREE;
+		continue;
+
+	passed_y_checks:
+		p->center.y.v = coord_next;
+		if(p->accel_type != BAT_NONE) {
+			bullet_update_velocity_y();
+		}
+		// ------------
+
+		// Pellet collision with explosions
+		if(p->flag == BF_PELLET) {
+			enum {
+				HITBOX_SIZE = TO_SP(12),
+			};
+
+			#define coord_y coord_next
+			#define coord_x static_cast<playfield_subpixel_t>(_DX)
+
+			coord_x = p->center.x;
+			coord_x -= (HITBOX_SIZE / 2);
+			coord_y = coord_next;
+			coord_y -= (HITBOX_SIZE / 2);
+			hitbox.origin.topleft.x.v = coord_x;
+			hitbox.origin.topleft.y.v = coord_y;
+
+			coord_x += HITBOX_SIZE;
+			coord_y += HITBOX_SIZE;
+			hitbox.right.v = coord_x;
+			hitbox.bottom.v = coord_y;
+
+			#undef coord_x
+			#undef coord_y
+
+			// ZUN bloat: One byte more than through AL, as Turbo C++ 4.0J
+			// would usually generate...
+			_BL = p->pid;
+			hitbox.pid = _BL;
+
+			/* TODO: Replace with the decompiled call
+			 * 	explosions_hittest();
+			 * once the segmentation allows us to, if ever */
+			asm { push cs; call near ptr explosions_hittest; }
+			if(_AL != 0) {
+				static_assert(PLAYER_COUNT == 2);
+				// ZUN bloat: `if(gba_flag_active[p->pid ^ 1] == GBAF_NONE)`
+				_BH = 0;
+				_BL = p->pid;
+				_BL ^= 1;
+				_BX += FP_OFF(gba_flag_active);
+				if(*reinterpret_cast<uint8_t near *>(_BX) == GBAF_NONE) {
+					p->flag = BF_PELLET_TRANSFER;
+					p->group_next = BG_RANDOM_CONSTRAINED_ANGLE_AIMED;
+					p->angle_next = 0x00;
+					bullets_add_next_from_p();
+				}
+				p->flag = BF_FREE;
+				continue;
+			}
+		}
+
+		// Non-transfer bullet collision with players
+		if((p->flag != BF_PELLET_TRANSFER) && p->is_collidable) {
+			collmap_topleft.x = p->center.x;
+			collmap_topleft.y = p->center.y;
+			collmap_pid = p->pid;
+
+			/* TODO: Replace with the decompiled call
+			 * 	collmap_set_vline();
+			 * once the segmentation allows us to, if ever */
+			_asm { push cs; call near ptr collmap_set_vline; }
+		}
+	next:
+		_AX = _AX;
+	};
+
+	#undef pid_subscript
+	#undef coord_next
 }
 
 #undef coord_prev

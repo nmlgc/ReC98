@@ -184,3 +184,5 @@ void bullets_add(void);
 // Like bullets_add(), but overrides [bullet_template.type] with
 // [BT_PELLET_TRANSFER].
 void bullets_add_transfer_pellet(void);
+
+void bullets_update(void);
