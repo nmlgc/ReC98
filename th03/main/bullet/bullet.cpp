@@ -563,5 +563,23 @@ void near bullets_add_next_from_p(void)
 	bullets_add();
 }
 
+void near bullet_update_velocity_y(void)
+{
+	// ZUN bloat: Reserving a register across functions, and then assigning
+	// another one...
+	#define p_ reinterpret_cast<bullet_t near *>(_DI)
+	p_ = p;
+
+	switch(p_->accel_type) {
+	case BAT_Y:
+		if(p_->velocity.y.v < BULLET_ACCEL_Y_VELOCITY_MAX) {
+			p_->velocity.y += 0.0625f;
+		}
+		break;
+	}
+
+	#undef p_
+}
+
 #undef coord_prev
 #undef p

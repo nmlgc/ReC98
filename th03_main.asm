@@ -22747,35 +22747,10 @@ BAT_Y = 80h
 	extern @bullet_template_reset_stuff$qv:proc
 	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t procdesc near
 	@bullets_add_next_from_p$qv procdesc near
+	@bullet_update_velocity_y$qv procdesc near
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_179FD	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, si
-		mov	al, [di+bullet_t.BULLET_accel_type]
-		mov	ah, 0
-		cmp	ax, BAT_Y
-		jnz	short loc_17A17
-		cmp	[di+bullet_t.BULLET_velocity.y], (5 shl 4)
-		jge	short loc_17A17
-		inc	[di+bullet_t.BULLET_velocity.y]
-
-loc_17A17:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_179FD	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22939,7 +22914,7 @@ loc_17B46:
 		mov	[si+bullet_t.BULLET_center.y], ax
 		cmp	[si+bullet_t.BULLET_accel_type], BAT_NONE
 		jz	short loc_17B52
-		call	sub_179FD
+		call	@bullet_update_velocity_y$qv
 
 loc_17B52:
 		cmp	[si+bullet_t.BULLET_flag], BF_PELLET
