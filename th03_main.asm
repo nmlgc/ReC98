@@ -1246,7 +1246,7 @@ loc_A1BD:
 		mov	byte ptr [si+player_stuff_t.boss_attacks_fired], 0
 		mov	byte ptr [si+player_stuff_t.boss_attacks_reversed], 0
 		mov	byte ptr [si+player_stuff_t.boss_panics_fired], 0
-		mov	byte ptr [di+2D54h], 0
+		mov	_gba_flag_active[di], GBAF_NONE
 		mov	bx, di
 		add	bx, bx
 		mov	_playfield_fg_shift_x[bx], 0
@@ -4650,7 +4650,7 @@ loc_CADF:
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 5
+		cmp	_gba_flag_next[bx], GBAF_BOSS
 		jz	short loc_CB47
 		lea	ax, [si+2]
 		call	gaiji_putsa pascal, ax, 15, ds, offset gpGAUGE_ATTACK_LEVEL, di
@@ -4760,7 +4760,7 @@ loc_CBF3:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 1
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_PELLET_INIT
 		jnz	short loc_CC2D
 		mov	si, 0A1h
 		jmp	short loc_CC43
@@ -4770,7 +4770,7 @@ loc_CC2D:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 3
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
 		jnz	short loc_CC40
 		mov	si, 61h	; 'a'
 		jmp	short loc_CC43
@@ -4789,12 +4789,12 @@ loc_CC4D:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 1
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_PELLET_INIT
 		jz	short loc_CC78
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 3
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
 		jnz	short loc_CC89
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
@@ -4857,11 +4857,11 @@ loc_CCCE:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+393Ch]
+		mov	al, _gba_flag_next[bx]
 		mov	dl, byte ptr [bp+arg_0]
 		mov	dh, 0
 		mov	bx, dx
-		mov	[bx+2D54h], al
+		mov	_gba_flag_active[bx], al
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
@@ -4875,7 +4875,7 @@ loc_CD15:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	loc_CDB7
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -6742,7 +6742,7 @@ loc_DC64:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 5
+		mov	_gba_flag_next[bx], GBAF_BOSS
 		mov	word ptr [si+1Ah], 400h
 		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
 		jnb	short loc_DCBC
@@ -6770,7 +6770,7 @@ loc_DCDA:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 3
+		mov	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
 		sub	word ptr [si+1Ah], 800h
 		mov	al, _pid_PID_current
 		mov	ah, 0
@@ -6785,7 +6785,7 @@ loc_DCFE:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 1
+		mov	_gba_flag_next[bx], GBAF_GAUGE_PELLET_INIT
 		sub	word ptr [si+1Ah], 400h
 		mov	al, _pid_PID_current
 		mov	ah, 0
@@ -8214,7 +8214,7 @@ sub_F402	proc near
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 5
+		cmp	_gba_flag_active[bx], GBAF_BOSS
 		jnz	loc_F4AE
 		cmp	byte_1DB9E, -1
 		jnz	short loc_F481
@@ -8239,7 +8239,7 @@ loc_F42B:
 		mov	byte_1DB9E, al
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		call	snd_se_play pascal, 18
 		mov	al, 1
 		sub	al, _pid_current
@@ -8304,7 +8304,7 @@ sub_F4B4	proc far
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 5
+		cmp	_gba_flag_active[bx], GBAF_BOSS
 		jz	short loc_F4F6
 		mov	word_21434, 1400h
 
@@ -17429,25 +17429,25 @@ chargeshot_render_marisa	endp
 
 @gauge_pattern_marisa$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= byte ptr  4
 
 		enter	2, 0
 		push	si
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_146C6
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_146C6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_14723
 		push	1Fh
 		call	@randring2_next16_and$qui
@@ -17465,7 +17465,7 @@ loc_146C6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dl, 30h	; '0'
@@ -17483,9 +17483,9 @@ loc_14723:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -17626,7 +17626,7 @@ loc_14850:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -17653,7 +17653,7 @@ gba_gauge_pattern_pellet_marisa	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1489B
 		call	@gauge_pattern_marisa$quc pascal, 1
 
@@ -17673,7 +17673,7 @@ gba_gauge_pattern_bullet_marisa	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_148B3
 		call	@gauge_pattern_marisa$quc pascal, 2
 
@@ -18373,24 +18373,24 @@ chargeshot_render_reimu	endp
 
 @gauge_pattern_reimu$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_14E51
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_14E51:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_14EB3
 		mov	al, _pid_current
 		mov	ah, 0
@@ -18399,7 +18399,7 @@ loc_14E51:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -18428,9 +18428,9 @@ loc_14EB3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -18520,7 +18520,7 @@ loc_14FBD:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -18546,7 +18546,7 @@ gba_gauge_pattern_pellet_reimu proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_15004
 		call	@gauge_pattern_reimu$quc pascal, 1
 
@@ -18566,7 +18566,7 @@ gba_gauge_pattern_bullet_reimu proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1501C
 		call	@gauge_pattern_reimu$quc pascal, 2
 
@@ -19405,24 +19405,24 @@ chargeshot_render_mima	endp
 
 @gauge_pattern_mima$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= word ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_156F8
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_156F8:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_15786
 		push	1
 		nopcall	@randring_far_next16_and$qui
@@ -19451,7 +19451,7 @@ loc_15719:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -19481,9 +19481,9 @@ loc_15786:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -19585,7 +19585,7 @@ loc_15894:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -19612,7 +19612,7 @@ gba_gauge_pattern_pellet_mima proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_158DB
 		call	@gauge_pattern_mima$quc pascal, 1
 
@@ -19632,7 +19632,7 @@ gba_gauge_pattern_bullet_mima proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_158F3
 		call	@gauge_pattern_mima$quc pascal, 2
 
@@ -21105,12 +21105,12 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 5
+		cmp	_gba_flag_active[bx], GBAF_BOSS
 		jz	loc_16708
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 5
+		mov	_gba_flag_next[bx], GBAF_BOSS
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
@@ -21175,12 +21175,12 @@ loc_1667D:
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jnz	short loc_16708
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 3
+		mov	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
@@ -22072,26 +22072,26 @@ chargeshot_render_yumemi	endp
 @gauge_pattern_yumemi$quc proc near
 
 var_4		= word ptr -4
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= word ptr  4
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_16DE0
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_16DE0:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_16E42
 		mov	al, _pid_current
 		mov	ah, 0
@@ -22100,7 +22100,7 @@ loc_16DE0:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -22128,9 +22128,9 @@ loc_16E42:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -22245,7 +22245,7 @@ loc_16F41:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -22305,7 +22305,7 @@ gba_gauge_pattern_pellet_yumemi	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_16FD6
 		call	@gauge_pattern_yumemi$quc pascal, 1
 
@@ -22325,7 +22325,7 @@ gba_gauge_pattern_bullet_yumemi	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_16FEE
 		call	@gauge_pattern_yumemi$quc pascal, 2
 
@@ -23838,7 +23838,7 @@ loc_17B52:
 		mov	bh, 0
 		mov	bl, [si+10h]
 		xor	bl, 1
-		add	bx, 2D54h
+		add	bx, offset _gba_flag_active
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17BA3
 		mov	byte ptr [si], 3
@@ -24132,15 +24132,15 @@ loc_17DD4:
 loc_17E17:
 		mov	al, [bp+@@length]
 		mov	[si+1Bh], al
-		mov	al, byte_1E14C
+		mov	al, _variant
 		add	al, 2
 		mov	[si+7],	al
-		mov	al, byte_1E14C
+		mov	al, _variant
 		add	al, 2
 		mov	[si+6],	al
 		mov	byte ptr [si+9], 30h ; '0'
 		mov	byte ptr [si+1Eh], 0
-		cmp	byte_1E14C, 0
+		cmp	_variant, FV_BLUE
 		jnz	short loc_17E40
 		mov	al, 0
 		jmp	short loc_17E45
@@ -24608,7 +24608,7 @@ var_1		= byte ptr -1
 		mov	_hitbox_radius.x, (12 shl 4)
 		mov	_hitbox_radius.y, (10 shl 4)
 		mov	word_2203C, 4AA6h
-		mov	byte_1E14C, 1
+		mov	_variant, FV_RED
 		mov	si, 3Fh	; '?'
 		jmp	loc_1836D
 ; ---------------------------------------------------------------------------
@@ -24768,7 +24768,7 @@ loc_18367:
 loc_1836D:
 		cmp	si, 28h	; '('
 		jge	loc_181E5
-		mov	byte_1E14C, 0
+		mov	_variant, FV_BLUE
 		pop	si
 		leave
 		retn
@@ -31053,25 +31053,25 @@ chargeshot_render_chiyuri	endp
 
 @gauge_pattern_chiyuri$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= byte ptr  4
 
 		enter	2, 0
 		push	si
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_1B4A3
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1B4A3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1B502
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31080,7 +31080,7 @@ loc_1B4A3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -31108,9 +31108,9 @@ loc_1B502:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -31205,7 +31205,7 @@ loc_1B5E3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -31226,7 +31226,7 @@ gba_gauge_pattern_pellet_chiyuri proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1B639
 		call	@gauge_pattern_chiyuri$quc pascal, 1
 
@@ -31246,7 +31246,7 @@ gba_gauge_pattern_bullet_chiyuri proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1B651
 		call	@gauge_pattern_chiyuri$quc pascal, 2
 
@@ -31728,24 +31728,24 @@ chargeshot_render_ellen	endp
 
 @gauge_pattern_ellen$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_1B9F6
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1BA77
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31754,7 +31754,7 @@ loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -31793,9 +31793,9 @@ loc_1BA77:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -31928,7 +31928,7 @@ loc_1BBFA:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -31954,7 +31954,7 @@ gba_gauge_pattern_pellet_ellen proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1BC33
 		call	@gauge_pattern_ellen$quc pascal, 1
 
@@ -31974,7 +31974,7 @@ gba_gauge_pattern_bullet_ellen proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1BC4B
 		call	@gauge_pattern_ellen$quc pascal, 2
 
@@ -32432,24 +32432,24 @@ chargeshot_render_kana	endp
 
 @gauge_pattern_kana$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_1BF78
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1BFF3
 		mov	al, _pid_current
 		mov	ah, 0
@@ -32458,7 +32458,7 @@ loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -32497,9 +32497,9 @@ loc_1BFF3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -32600,7 +32600,7 @@ loc_1C0F3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
@@ -32628,7 +32628,7 @@ gba_gauge_pattern_pellet_kana proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C13E
 		call	@gauge_pattern_kana$quc pascal, 1
 
@@ -32648,7 +32648,7 @@ gba_gauge_pattern_bullet_kana proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C156
 		call	@gauge_pattern_kana$quc pascal, 2
 
@@ -32878,23 +32878,23 @@ chargeshot_render_kotohime	endp
 
 @gauge_pattern_kotohime$quc proc near
 
-var_1		= byte ptr -1
+@@flag_expected	= byte ptr -1
 arg_0		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_1], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_1C2F6
-		mov	al, [bp+var_1]
-		add	al, 2
-		mov	[bp+var_1], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1C2F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_1]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1C36B
 		mov	al, _pid_current
 		mov	ah, 0
@@ -32903,7 +32903,7 @@ loc_1C2F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -32939,7 +32939,7 @@ loc_1C36B:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
 		mov	dl, [bp+var_1]
 		mov	dh, 0
@@ -32969,7 +32969,7 @@ loc_1C3A5:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
@@ -32997,7 +32997,7 @@ gba_gauge_pattern_pellet_kotohime proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C3F0
 		call	@gauge_pattern_kotohime$quc pascal, 1
 
@@ -33017,7 +33017,7 @@ gba_gauge_pattern_bullet_kotohime proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C408
 		call	@gauge_pattern_kotohime$quc pascal, 2
 
@@ -33489,24 +33489,24 @@ chargeshot_render_rikako	endp
 
 @gauge_pattern_rikako$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
 arg_0		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
 		cmp	[bp+arg_0], 2
 		jnz	short loc_1C75F
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1C75F:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1C7CA
 		mov	al, _pid_current
 		mov	ah, 0
@@ -33515,7 +33515,7 @@ loc_1C75F:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -33549,9 +33549,9 @@ loc_1C7CA:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -33629,7 +33629,7 @@ loc_1C8A5:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
@@ -33657,7 +33657,7 @@ gba_gauge_pattern_pellet_rikako	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C8F0
 		call	@gauge_pattern_rikako$quc pascal, 1
 
@@ -33677,7 +33677,7 @@ gba_gauge_pattern_bullet_rikako	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C908
 		call	@gauge_pattern_rikako$quc pascal, 2
 
@@ -34810,8 +34810,13 @@ aPLAYER_REM	db '残り人数　　　　　　　　×',0
 		db    0
 		db    1
 		db    0
-byte_1E14C	db 0
-		db 0
+
+FV_BLUE = 0
+FV_RED = 1
+
+public _variant
+_variant	db 0
+	evendata
 
 	.data?
 
@@ -34989,15 +34994,21 @@ _chargeshot_hittest label dword
 chargeshot_hittest_p1	dd ?
 chargeshot_hittest_p2	dd ?
 
+GBAF_NONE = 0
+GBAF_GAUGE_PELLET_INIT = 1
+GBAF_GAUGE_BULLET_INIT = 3
+GBAF_BOSS = 5
+GBAF_PELLET_TO_BULLET = (GBAF_GAUGE_BULLET_INIT - GBAF_GAUGE_PELLET_INIT)
+
 public _gba_gauge_pattern_pellet, _gba_gauge_pattern_bullet
+public _gba_flag_active, _gba_gauge_level
 _gba_gauge_pattern_pellet label dword
 gba_gauge_pattern_pellet_p1	dd ?
 gba_gauge_pattern_pellet_p2	dd ?
 _gba_gauge_pattern_bullet label dword
 gba_gauge_pattern_bullet_p1	dd ?
 gba_gauge_pattern_bullet_p2	dd ?
-		db 2 dup(?)
-public _gba_gauge_level
+_gba_flag_active db PLAYER_COUNT dup(?)
 _gba_gauge_level	db PLAYER_COUNT dup(?)
 		db 786 dup(?)
 word_205CA	dw ?
@@ -35061,7 +35072,9 @@ word_20E52	dw ?
 word_20E86	dw ?
 byte_20E88	db ?
 byte_20E89	db ?
-		db 20 dup(?)
+		db 18 dup(?)
+public _gba_flag_next
+_gba_flag_next	db PLAYER_COUNT dup(?)
 include th03/main/player/combo[bss].asm
 		db 120 dup(?)
 byte_20F1E	db ?

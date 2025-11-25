@@ -3,6 +3,22 @@
 
 #include "th03/common.h"
 
+enum gba_flag_t {
+	GBAF_NONE = 0,
+	GBAF_GAUGE_PELLET_INIT = 1,
+	GBAF_GAUGE_PELLET_ACTIVE = 2,
+	GBAF_GAUGE_BULLET_INIT = 3,
+	GBAF_GAUGE_BULLET_ACTIVE = 4,
+	GBAF_BOSS = 5,
+
+	GBAF_PELLET_TO_BULLET = (GBAF_GAUGE_BULLET_INIT - GBAF_GAUGE_PELLET_INIT),
+
+	_gba_flag_t_FORCE_UINT8 = 0xFF
+};
+
+extern gba_flag_t gba_flag_next[PLAYER_COUNT];
+extern gba_flag_t gba_flag_active[PLAYER_COUNT];
+
 // Gauge Attack levels are 1-based and have 16 possible levels.
 static const uint8_t GBA_GAUGE_LEVEL_MIN = 1;
 static const uint8_t GBA_GAUGE_LEVEL_MAX = 16;
