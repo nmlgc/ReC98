@@ -474,3 +474,12 @@ void bullets_add_transfer_pellet(void)
 	bullet_template.type = BT_PELLET_TRANSFER;
 	bullets_add();
 }
+
+void bullet_template_reset_stuff(void)
+{
+	bullet_template.angle = 0x00;
+	bullet_template.count = 0;
+	bullet_template.is_animated = true;
+	bullet_template.is_collidable = true;
+	bullet_template.has_trail = false;
+}

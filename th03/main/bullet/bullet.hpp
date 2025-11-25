@@ -173,6 +173,9 @@ struct bullet_template_t {
 };
 extern bullet_template_t bullet_template;
 
+// Sets default values for a subset of bullet template fields.
+void bullet_template_reset_stuff(void);
+
 void bullets_reset(void);
 
 // Spawns new bullets based on the [bullet_template].

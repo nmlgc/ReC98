@@ -230,7 +230,7 @@ sub_9778	proc near
 
 loc_977E:
 		call	_collmap_reset
-		call	sub_1797F
+		call	@bullet_template_reset_stuff$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	exatt_update_p1
@@ -22744,26 +22744,10 @@ BAT_Y = 80h
 	extern @bullets_reset$qv:proc
 	extern @bullets_add$qv:proc
 	extern @bullets_add_transfer_pellet$qv:proc
+	extern @bullet_template_reset_stuff$qv:proc
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1797F	proc far
-		push	bp
-		mov	bp, sp
-		mov	_bullet_template.BT_angle, 0
-		mov	_bullet_template.BT_count, 0
-		mov	_bullet_template.BT_is_animated, 1
-		mov	_bullet_template.BT_is_collidable, 1
-		mov	_bullet_template.BT_has_trail, 0
-		pop	bp
-		retf
-sub_1797F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
