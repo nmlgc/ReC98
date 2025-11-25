@@ -19738,7 +19738,7 @@ loc_159B2:
 		mov	_hitcircles_enemy_add_do_not_rand, 0
 		cmp	byte_20E2C, 0
 		jnz	short loc_159CC
-		nopcall	sub_1670D
+		nopcall	@explosions_hittest$qv
 		add	[bp+var_5], al
 
 loc_159CC:
@@ -21239,8 +21239,8 @@ sub_165B5	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1670D	proc far
+public @explosions_hittest$qv
+@explosions_hittest$qv proc far
 
 var_E		= byte ptr -0Eh
 @@hitcombo		= byte ptr -0Dh
@@ -21523,7 +21523,7 @@ loc_16974:
 		pop	si
 		leave
 		retf
-sub_1670D	endp
+@explosions_hittest$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23840,7 +23840,7 @@ loc_17B52:
 		mov	_hitbox_bottom, ax
 		mov	bl, [si+10h]
 		mov	_hitbox_pid, bl
-		call	sub_1670D
+		call	@explosions_hittest$qv
 		or	al, al
 		jz	short loc_17BA9
 		mov	bh, 0
