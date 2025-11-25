@@ -256,12 +256,12 @@ loc_977E:
 		call	sub_18059
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_202A4
-		call	p1_202AC
+		call	gba_gauge_pattern_pellet_p1
+		call	gba_gauge_pattern_bullet_p1
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_202A8
-		call	p2_202B0
+		call	gba_gauge_pattern_pellet_p2
+		call	gba_gauge_pattern_bullet_p2
 		nopcall	sub_CEB2
 		call	_input_mode
 		mov	_pid_PID_current, 0
@@ -1605,8 +1605,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p1, chargeshot_render_reimu
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_reimu$qv
-		setfarfp	p1_202A4, reimu_14FEE
-		setfarfp	p1_202AC, reimu_15006
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_reimu
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_reimu
 		setfarfp	p1_1F32E, reimu_11033
 		setfarfp	p1_1F336, reimu_113A9
 		setfarfp	p1_205CE, reimu_1508C
@@ -1624,8 +1624,8 @@ loc_A5E2:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p2, chargeshot_render_reimu
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_reimu$qv
-		setfarfp	p2_202A8, reimu_14FEE
-		setfarfp	p2_202B0, reimu_15006
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_reimu
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_reimu
 		setfarfp	p2_1F332, reimu_11033
 		setfarfp	p2_1F33A, reimu_113A9
 		setfarfp	p2_205D2, reimu_1508C
@@ -1670,8 +1670,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p1, chargeshot_render_mima
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_mima$qv
-		setfarfp	p1_202A4, mima_158C5
-		setfarfp	p1_202AC, mima_158DD
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_mima
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_mima
 		setfarfp	p1_1F32E, mima_FED8
 		setfarfp	p1_1F336, mima_10263
 		setfarfp	p1_205CE, mima_17043
@@ -1689,8 +1689,8 @@ loc_A77A:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p2, chargeshot_render_mima
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_mima$qv
-		setfarfp	p2_202A8, mima_158C5
-		setfarfp	p2_202B0, mima_158DD
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_mima
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_mima
 		setfarfp	p2_1F332, mima_FED8
 		setfarfp	p2_1F33A, mima_10263
 		setfarfp	p2_205D2, mima_17043
@@ -1735,8 +1735,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p1, chargeshot_render_marisa
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_marisa$qv
-		setfarfp	p1_202A4, marisa_14885
-		setfarfp	p1_202AC, marisa_1489D
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_marisa
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_marisa
 		setfarfp	p1_1F32E, marisa_F848
 		setfarfp	p1_1F336, marisa_FAE8
 		setfarfp	p1_205CE, sub_1501E
@@ -1754,8 +1754,8 @@ loc_A912:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p2, chargeshot_render_marisa
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_marisa$qv
-		setfarfp	p2_202A8, marisa_14885
-		setfarfp	p2_202B0, marisa_1489D
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_marisa
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_marisa
 		setfarfp	p2_1F332, marisa_F848
 		setfarfp	p2_1F33A, marisa_FAE8
 		setfarfp	p2_205D2, sub_1501E
@@ -1800,8 +1800,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p1, chargeshot_render_ellen
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_ellen$qv
-		setfarfp	p1_202A4, ellen_1BC1D
-		setfarfp	p1_202AC, ellen_1BC35
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_ellen
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_ellen
 		setfarfp	p1_1F32E, ellen_116B6
 		setfarfp	p1_1F336, ellen_11A01
 		setfarfp	p1_205CE, ellen_185AB
@@ -1819,8 +1819,8 @@ loc_AAAA:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p2, chargeshot_render_ellen
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_ellen$qv
-		setfarfp	p2_202A8, ellen_1BC1D
-		setfarfp	p2_202B0, ellen_1BC35
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_ellen
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_ellen
 		setfarfp	p2_1F332, ellen_116B6
 		setfarfp	p2_1F33A, ellen_11A01
 		setfarfp	p2_205D2, ellen_185AB
@@ -1865,8 +1865,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kotohime
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kotohime$qv
-		setfarfp	p1_202A4, kotohime_1C3DA
-		setfarfp	p1_202AC, kotohime_1C3F2
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_kotohime
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_kotohime
 		setfarfp	p1_1F32E, kotohime_11E48
 		setfarfp	p1_1F336, kotohime_12140
 		setfarfp	p1_205CE, sub_1501E
@@ -1884,8 +1884,8 @@ loc_AC42:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kotohime
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kotohime$qv
-		setfarfp	p2_202A8, kotohime_1C3DA
-		setfarfp	p2_202B0, kotohime_1C3F2
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_kotohime
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_kotohime
 		setfarfp	p2_1F332, kotohime_11E48
 		setfarfp	p2_1F33A, kotohime_12140
 		setfarfp	p2_205D2, sub_1501E
@@ -1930,8 +1930,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kana
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kana$qv
-		setfarfp	p1_202A4, kana_1C128
-		setfarfp	p1_202AC, kana_1C140
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_kana
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_kana
 		setfarfp	p1_1F32E, kana_12FE8
 		setfarfp	p1_1F336, kana_132FE
 		setfarfp	p1_205CE, sub_1501E
@@ -1949,8 +1949,8 @@ loc_ADDA:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kana
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kana$qv
-		setfarfp	p2_202A8, kana_1C128
-		setfarfp	p2_202B0, kana_1C140
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_kana
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_kana
 		setfarfp	p2_1F332, kana_12FE8
 		setfarfp	p2_1F33A, kana_132FE
 		setfarfp	p2_205D2, sub_1501E
@@ -1995,8 +1995,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p1, chargeshot_render_rikako
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_rikako$qv
-		setfarfp	p1_202A4, rikako_1C8DA
-		setfarfp	p1_202AC, rikako_1C8F2
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_rikako
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_rikako
 		setfarfp	p1_1F32E, rikako_13661
 		setfarfp	p1_1F336, rikako_1398B
 		setfarfp	p1_205CE, sub_1501E
@@ -2014,8 +2014,8 @@ loc_AF72:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p2, chargeshot_render_rikako
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_rikako$qv
-		setfarfp	p2_202A8, rikako_1C8DA
-		setfarfp	p2_202B0, rikako_1C8F2
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_rikako
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_rikako
 		setfarfp	p2_1F332, rikako_13661
 		setfarfp	p2_1F33A, rikako_1398B
 		setfarfp	p2_205D2, sub_1501E
@@ -2060,8 +2060,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p1, chargeshot_render_chiyuri
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_chiyuri$qv
-		setfarfp	p1_202A4, chiyuri_1B623
-		setfarfp	p1_202AC, chiyuri_1B63B
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_chiyuri
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_chiyuri
 		setfarfp	p1_1F32E, chiyuri_126A8
 		setfarfp	p1_1F336, chiyuri_12B99
 		setfarfp	p1_205CE, sub_1501E
@@ -2079,8 +2079,8 @@ loc_B10A:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p2, chargeshot_render_chiyuri
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_chiyuri$qv
-		setfarfp	p2_202A8, chiyuri_1B623
-		setfarfp	p2_202B0, chiyuri_1B63B
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_chiyuri
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_chiyuri
 		setfarfp	p2_1F332, chiyuri_126A8
 		setfarfp	p2_1F33A, chiyuri_12B99
 		setfarfp	p2_205D2, sub_1501E
@@ -2125,8 +2125,8 @@ arg_0		= word ptr  4
 		setfarfp	_chargeshot_update_p1, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p1, chargeshot_render_yumemi
 		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_yumemi$qv
-		setfarfp	p1_202A4, yumemi_16FC0
-		setfarfp	p1_202AC, yumemi_16FD8
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_yumemi
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_yumemi
 		setfarfp	p1_1F32E, yumemi_1070A
 		setfarfp	p1_1F336, yumemi_10BAB
 		setfarfp	p1_205CE, sub_1501E
@@ -2144,8 +2144,8 @@ loc_B2A2:
 		setfarfp	_chargeshot_update_p2, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p2, chargeshot_render_yumemi
 		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_yumemi$qv
-		setfarfp	p2_202A8, yumemi_16FC0
-		setfarfp	p2_202B0, yumemi_16FD8
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_yumemi
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_yumemi
 		setfarfp	p2_1F332, yumemi_1070A
 		setfarfp	p2_1F33A, yumemi_10BAB
 		setfarfp	p2_205D2, sub_1501E
@@ -17427,7 +17427,7 @@ chargeshot_render_marisa	endp
 
 ; Attributes: bp-based frame
 
-sub_146AF	proc near
+@gauge_pattern_marisa$quc proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -17640,14 +17640,14 @@ loc_14880:
 		pop	si
 		leave
 		retn	2
-sub_146AF	endp
+@gauge_pattern_marisa$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_14885	proc far
+public gba_gauge_pattern_pellet_marisa
+gba_gauge_pattern_pellet_marisa	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -17655,20 +17655,19 @@ marisa_14885	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1489B
-		push	1
-		call	sub_146AF
+		call	@gauge_pattern_marisa$quc pascal, 1
 
 loc_1489B:
 		pop	bp
 		retf
-marisa_14885	endp
+gba_gauge_pattern_pellet_marisa endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_1489D	proc far
+public gba_gauge_pattern_bullet_marisa
+gba_gauge_pattern_bullet_marisa	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -17676,13 +17675,12 @@ marisa_1489D	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_148B3
-		push	2
-		call	sub_146AF
+		call	@gauge_pattern_marisa$quc pascal, 2
 
 loc_148B3:
 		pop	bp
 		retf
-marisa_1489D	endp
+gba_gauge_pattern_bullet_marisa endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18373,7 +18371,7 @@ chargeshot_render_reimu	endp
 
 ; Attributes: bp-based frame
 
-sub_14E3B	proc near
+@gauge_pattern_reimu$quc proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -18535,14 +18533,14 @@ loc_14FDF:
 locret_14FEA:
 		leave
 		retn	2
-sub_14E3B	endp
+@gauge_pattern_reimu$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_14FEE	proc far
+public gba_gauge_pattern_pellet_reimu
+gba_gauge_pattern_pellet_reimu proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -18550,20 +18548,19 @@ reimu_14FEE	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_15004
-		push	1
-		call	sub_14E3B
+		call	@gauge_pattern_reimu$quc pascal, 1
 
 loc_15004:
 		pop	bp
 		retf
-reimu_14FEE	endp
+gba_gauge_pattern_pellet_reimu endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_15006	proc far
+public gba_gauge_pattern_bullet_reimu
+gba_gauge_pattern_bullet_reimu proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -18571,13 +18568,12 @@ reimu_15006	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1501C
-		push	2
-		call	sub_14E3B
+		call	@gauge_pattern_reimu$quc pascal, 2
 
 loc_1501C:
 		pop	bp
 		retf
-reimu_15006	endp
+gba_gauge_pattern_bullet_reimu endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19407,7 +19403,7 @@ chargeshot_render_mima	endp
 
 ; Attributes: bp-based frame
 
-sub_156E2	proc near
+@gauge_pattern_mima$quc proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -19602,14 +19598,14 @@ loc_158B6:
 locret_158C1:
 		leave
 		retn	2
-sub_156E2	endp
+@gauge_pattern_mima$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_158C5	proc far
+public gba_gauge_pattern_pellet_mima
+gba_gauge_pattern_pellet_mima proc far
 
 		push	bp
 		mov	bp, sp
@@ -19618,20 +19614,19 @@ mima_158C5	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_158DB
-		push	1
-		call	sub_156E2
+		call	@gauge_pattern_mima$quc pascal, 1
 
 loc_158DB:
 		pop	bp
 		retf
-mima_158C5	endp
+gba_gauge_pattern_pellet_mima endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_158DD	proc far
+public gba_gauge_pattern_bullet_mima
+gba_gauge_pattern_bullet_mima proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -19639,13 +19634,12 @@ mima_158DD	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_158F3
-		push	2
-		call	sub_156E2
+		call	@gauge_pattern_mima$quc pascal, 2
 
 loc_158F3:
 		pop	bp
 		retf
-mima_158DD	endp
+gba_gauge_pattern_bullet_mima endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22075,7 +22069,7 @@ chargeshot_render_yumemi	endp
 
 ; Attributes: bp-based frame
 
-sub_16DC8	proc near
+@gauge_pattern_yumemi$quc proc near
 
 var_4		= word ptr -4
 var_2		= byte ptr -2
@@ -22287,7 +22281,7 @@ loc_16F9A:
 		pop	si
 		leave
 		retn	2
-sub_16DC8	endp
+@gauge_pattern_yumemi$quc endp
 
 ; ---------------------------------------------------------------------------
 word_16FA0	dw	0,     8,   10h,   18h
@@ -22304,8 +22298,8 @@ word_16FA0	dw	0,     8,   10h,   18h
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16FC0	proc far
+public gba_gauge_pattern_pellet_yumemi
+gba_gauge_pattern_pellet_yumemi	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -22313,20 +22307,19 @@ yumemi_16FC0	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_16FD6
-		push	1
-		call	sub_16DC8
+		call	@gauge_pattern_yumemi$quc pascal, 1
 
 loc_16FD6:
 		pop	bp
 		retf
-yumemi_16FC0	endp
+gba_gauge_pattern_pellet_yumemi endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16FD8	proc far
+public gba_gauge_pattern_bullet_yumemi
+gba_gauge_pattern_bullet_yumemi	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -22334,13 +22327,12 @@ yumemi_16FD8	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_16FEE
-		push	2
-		call	sub_16DC8
+		call	@gauge_pattern_yumemi$quc pascal, 2
 
 loc_16FEE:
 		pop	bp
 		retf
-yumemi_16FD8	endp
+gba_gauge_pattern_bullet_yumemi endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27987,7 +27979,7 @@ loc_19DCD:
 
 ; Attributes: bp-based frame
 
-sub_19DD3	proc far
+kotohime_19DD3	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -28027,7 +28019,7 @@ loc_19DFA:
 		pop	si
 		pop	bp
 		retf	4
-sub_19DD3	endp
+kotohime_19DD3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31059,7 +31051,7 @@ chargeshot_render_chiyuri	endp
 
 ; Attributes: bp-based frame
 
-sub_1B48C	proc near
+@gauge_pattern_chiyuri$quc proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -31221,14 +31213,14 @@ loc_1B61E:
 		pop	si
 		leave
 		retn	2
-sub_1B48C	endp
+@gauge_pattern_chiyuri$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B623	proc far
+public gba_gauge_pattern_pellet_chiyuri
+gba_gauge_pattern_pellet_chiyuri proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -31236,20 +31228,19 @@ chiyuri_1B623	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1B639
-		push	1
-		call	sub_1B48C
+		call	@gauge_pattern_chiyuri$quc pascal, 1
 
 loc_1B639:
 		pop	bp
 		retf
-chiyuri_1B623	endp
+gba_gauge_pattern_pellet_chiyuri endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B63B	proc far
+public gba_gauge_pattern_bullet_chiyuri
+gba_gauge_pattern_bullet_chiyuri proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -31257,13 +31248,12 @@ chiyuri_1B63B	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1B651
-		push	2
-		call	sub_1B48C
+		call	@gauge_pattern_chiyuri$quc pascal, 2
 
 loc_1B651:
 		pop	bp
 		retf
-chiyuri_1B63B	endp
+gba_gauge_pattern_bullet_chiyuri endp
 
 main_07_TEXT	ends
 
@@ -31736,7 +31726,7 @@ chargeshot_render_ellen	endp
 
 ; Attributes: bp-based frame
 
-sub_1B9E0	proc near
+@gauge_pattern_ellen$quc proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -31951,14 +31941,14 @@ loc_1BC0E:
 locret_1BC19:
 		leave
 		retn	2
-sub_1B9E0	endp
+@gauge_pattern_ellen$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1BC1D	proc far
+public gba_gauge_pattern_pellet_ellen
+gba_gauge_pattern_pellet_ellen proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -31966,20 +31956,19 @@ ellen_1BC1D	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1BC33
-		push	1
-		call	sub_1B9E0
+		call	@gauge_pattern_ellen$quc pascal, 1
 
 loc_1BC33:
 		pop	bp
 		retf
-ellen_1BC1D	endp
+gba_gauge_pattern_pellet_ellen endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1BC35	proc far
+public gba_gauge_pattern_bullet_ellen
+gba_gauge_pattern_bullet_ellen proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -31987,13 +31976,12 @@ ellen_1BC35	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1BC4B
-		push	2
-		call	sub_1B9E0
+		call	@gauge_pattern_ellen$quc pascal, 2
 
 loc_1BC4B:
 		pop	bp
 		retf
-ellen_1BC35	endp
+gba_gauge_pattern_bullet_ellen endp
 
 main_08_TEXT	ends
 
@@ -32442,7 +32430,7 @@ chargeshot_render_kana	endp
 
 ; Attributes: bp-based frame
 
-sub_1BF62	proc near
+@gauge_pattern_kana$quc proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -32627,14 +32615,14 @@ loc_1C119:
 locret_1C124:
 		leave
 		retn	2
-sub_1BF62	endp
+@gauge_pattern_kana$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1C128	proc far
+public gba_gauge_pattern_pellet_kana
+gba_gauge_pattern_pellet_kana proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -32642,20 +32630,19 @@ kana_1C128	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1C13E
-		push	1
-		call	sub_1BF62
+		call	@gauge_pattern_kana$quc pascal, 1
 
 loc_1C13E:
 		pop	bp
 		retf
-kana_1C128	endp
+gba_gauge_pattern_pellet_kana endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1C140	proc far
+public gba_gauge_pattern_bullet_kana
+gba_gauge_pattern_bullet_kana proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -32663,13 +32650,12 @@ kana_1C140	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1C156
-		push	2
-		call	sub_1BF62
+		call	@gauge_pattern_kana$quc pascal, 2
 
 loc_1C156:
 		pop	bp
 		retf
-kana_1C140	endp
+gba_gauge_pattern_bullet_kana endp
 
 main_09_TEXT	ends
 
@@ -32890,7 +32876,7 @@ chargeshot_render_kotohime	endp
 
 ; Attributes: bp-based frame
 
-sub_1C2E0	proc near
+@gauge_pattern_kotohime$quc proc near
 
 var_1		= byte ptr -1
 arg_0		= byte ptr  4
@@ -32970,7 +32956,7 @@ loc_1C36B:
 		add	ax, 400h
 		push	ax
 		push	0
-		call	sub_19DD3
+		call	kotohime_19DD3
 		jmp	short loc_1C3CB
 ; ---------------------------------------------------------------------------
 
@@ -32998,14 +32984,14 @@ loc_1C3CB:
 locret_1C3D6:
 		leave
 		retn	2
-sub_1C2E0	endp
+@gauge_pattern_kotohime$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C3DA	proc far
+public gba_gauge_pattern_pellet_kotohime
+gba_gauge_pattern_pellet_kotohime proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -33013,20 +32999,19 @@ kotohime_1C3DA	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1C3F0
-		push	1
-		call	sub_1C2E0
+		call	@gauge_pattern_kotohime$quc pascal, 1
 
 loc_1C3F0:
 		pop	bp
 		retf
-kotohime_1C3DA	endp
+gba_gauge_pattern_pellet_kotohime endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C3F2	proc far
+public gba_gauge_pattern_bullet_kotohime
+gba_gauge_pattern_bullet_kotohime proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -33034,13 +33019,12 @@ kotohime_1C3F2	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1C408
-		push	2
-		call	sub_1C2E0
+		call	@gauge_pattern_kotohime$quc pascal, 2
 
 loc_1C408:
 		pop	bp
 		retf
-kotohime_1C3F2	endp
+gba_gauge_pattern_bullet_kotohime endp
 
 main_10_TEXT	ends
 
@@ -33503,7 +33487,7 @@ chargeshot_render_rikako	endp
 
 ; Attributes: bp-based frame
 
-sub_1C749	proc near
+@gauge_pattern_rikako$quc proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -33660,14 +33644,14 @@ loc_1C8CB:
 locret_1C8D6:
 		leave
 		retn	2
-sub_1C749	endp
+@gauge_pattern_rikako$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C8DA	proc far
+public gba_gauge_pattern_pellet_rikako
+gba_gauge_pattern_pellet_rikako	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -33675,20 +33659,19 @@ rikako_1C8DA	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1C8F0
-		push	1
-		call	sub_1C749
+		call	@gauge_pattern_rikako$quc pascal, 1
 
 loc_1C8F0:
 		pop	bp
 		retf
-rikako_1C8DA	endp
+gba_gauge_pattern_pellet_rikako endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C8F2	proc far
+public gba_gauge_pattern_bullet_rikako
+gba_gauge_pattern_bullet_rikako	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -33696,13 +33679,12 @@ rikako_1C8F2	proc far
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 0
 		jz	short loc_1C908
-		push	2
-		call	sub_1C749
+		call	@gauge_pattern_rikako$quc pascal, 2
 
 loc_1C908:
 		pop	bp
 		retf
-rikako_1C8F2	endp
+gba_gauge_pattern_bullet_rikako endp
 
 main_11_TEXT	ends
 
@@ -35002,10 +34984,13 @@ _chargeshot_hittest label dword
 chargeshot_hittest_p1	dd ?
 chargeshot_hittest_p2	dd ?
 
-p1_202A4	dd ?
-p2_202A8	dd ?
-p1_202AC	dd ?
-p2_202B0	dd ?
+public _gba_gauge_pattern_pellet, _gba_gauge_pattern_bullet
+_gba_gauge_pattern_pellet label dword
+gba_gauge_pattern_pellet_p1	dd ?
+gba_gauge_pattern_pellet_p2	dd ?
+_gba_gauge_pattern_bullet label dword
+gba_gauge_pattern_bullet_p1	dd ?
+gba_gauge_pattern_bullet_p2	dd ?
 		db 2 dup(?)
 public _gba_gauge_level
 _gba_gauge_level	db PLAYER_COUNT dup(?)

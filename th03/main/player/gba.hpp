@@ -8,6 +8,16 @@ static const uint8_t GBA_GAUGE_LEVEL_MIN = 1;
 static const uint8_t GBA_GAUGE_LEVEL_MAX = 16;
 extern uint8_t gba_gauge_level[PLAYER_COUNT];
 
+// Gauge Attacks are character-specific patterns made up of primarily
+// • pellets ("Level 2", available at 50% gauge, consuming 25% gauge) or
+// • bullets ("Level 3", available at 75% gauge, consuming 50% gauge),
+// and can't include custom entities.
+// ZUN bloat: All 9 characters use the same code layout of calling a common
+// function that handles both types. Refactoring this to use a single pointer
+// would eliminate the resulting 18 boilerplate functions.
+extern farfunc_t_near gba_gauge_pattern_pellet[PLAYER_COUNT];
+extern farfunc_t_near gba_gauge_pattern_bullet[PLAYER_COUNT];
+
 // ZUN bloat: But how many possible levels does this one have? A
 // [gba_boss_level] of 1 would render as 2 next to the gauge, but as 1 in
 // the WARNING popup. Since firing a Boss Attack always increments the level,
