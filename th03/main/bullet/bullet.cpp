@@ -483,3 +483,37 @@ void bullet_template_reset_stuff(void)
 	bullet_template.is_collidable = true;
 	bullet_template.has_trail = false;
 }
+
+// ZUN bloat: Why not just pass an actual `bullet_trail_coords_t *` instance?!
+#define p reinterpret_cast<bullet_t near *>(_SI)
+
+// ZUN bloat: Both of these could have been passed as `__fastcall` parameters.
+#define coord_prev static_cast<playfield_subpixel_t>(_CX)
+extern PlayfieldSubpixel coord_max;
+
+// ZUN bloat: Also, did this *really* have to assign its return value to the
+// carry flag?
+void __fastcall near bullet_trail_update_and_clip(
+	int16_t, int16_t, bullet_trail_coords_t near *coords
+)
+{
+	#define tmp static_cast<playfield_subpixel_t>(_DX)
+
+	reinterpret_cast<uint8_t near *>(coords) += FP_OFF(p->trail);
+	coords->v[5].v = tmp = coords->v[4];
+	if((tmp > CENTER_MIN) && (tmp < coord_max.v)) {
+		coords->v[4].v = coords->v[3].v;
+		coords->v[3].v = coords->v[2].v;
+		coords->v[2].v = coords->v[1].v;
+		coords->v[1].v = coords->v[0].v;
+		coords->v[0].v = coord_prev;
+		asm { clc }
+		return;
+	}
+	asm { stc }
+
+	#undef tmp
+}
+
+#undef coord_prev
+#undef p

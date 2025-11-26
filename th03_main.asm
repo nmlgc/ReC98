@@ -22745,47 +22745,10 @@ BAT_Y = 80h
 	extern @bullets_add$qv:proc
 	extern @bullets_add_transfer_pellet$qv:proc
 	extern @bullet_template_reset_stuff$qv:proc
+	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t procdesc near
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1799D	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		add	bx, [si+bullet_t.BULLET_trail]
-		mov	dx, [bx+(word * 4)]
-		mov	[bx+(word * 5)], dx
-		cmp	dx, (-8 shl 4)
-		jle	short loc_179D1
-		cmp	dx, word_26354
-		jge	short loc_179D1
-		mov	dx, [bx+(word * 3)]
-		mov	[bx+(word * 4)], dx
-		mov	dx, [bx+(word * 2)]
-		mov	[bx+(word * 3)], dx
-		mov	dx, [bx+(word * 1)]
-		mov	[bx+(word * 2)], dx
-		mov	dx, [bx+(word * 0)]
-		mov	[bx+(word * 1)], dx
-		mov	[bx+(word * 0)], cx
-		clc
-		jmp	short loc_179D2
-; ---------------------------------------------------------------------------
-
-loc_179D1:
-		stc
-
-loc_179D2:
-		pop	si
-		pop	bp
-		retn
-sub_1799D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22923,9 +22886,9 @@ loc_17ABA:
 		mov	ax, ((PLAYFIELD_W + 8) shl 4)
 
 loc_17ABD:
-		mov	word_26354, ((PLAYFIELD_W + 8) shl 4)
+		mov	_coord_max, ((PLAYFIELD_W + 8) shl 4)
 		xor	bx, bx
-		call	sub_1799D
+		call	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t
 		jb	short loc_17AD6
 		jmp	short loc_17AEF
 ; ---------------------------------------------------------------------------
@@ -22978,9 +22941,9 @@ loc_17B15:
 		add	ax, [si+bullet_t.BULLET_velocity.y]
 		cmp	[si+bullet_t.BULLET_has_trail], 0
 		jz	short loc_17B36
-		mov	word_26354, ((PLAYFIELD_H + 8) shl 4)
+		mov	_coord_max, ((PLAYFIELD_H + 8) shl 4)
 		mov	bx, bullet_trail_t.BT_center_y
-		call	sub_1799D
+		call	@bullet_trail_update_and_clip$qiip21bullet_trail_coords_t
 		jb	short loc_17B40
 		jmp	short loc_17B46
 ; ---------------------------------------------------------------------------
@@ -33928,12 +33891,12 @@ bullet_t struc
 bullet_t ends
 
 public _bullets, _bullet_trail_ring, _bullet_group_i_angle, _bullet_trail_ring_i
+public _coord_max
 _bullets	bullet_t BULLET_COUNT dup(<?>)
 _bullet_trail_ring	bullet_trail_t TRAIL_RING_SIZE dup(<?>)
 _bullet_group_i_angle	db ?
 _bullet_trail_ring_i	db ?
-
-word_26354	dw ?
+_coord_max	dw ?
 byte_26356	db ?
 byte_26357	db ?
 byte_26358	db ?
