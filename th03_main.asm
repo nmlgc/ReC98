@@ -329,7 +329,7 @@ loc_986C:
 		push	offset _p2
 		call	sub_DF18
 		nopcall	sub_CEE0
-		call	sub_17BD1
+		call	@bullets_render$qv
 		cmp	byte_20E3C, 2
 		jnz	loc_99B1
 		call	sub_C2F9
@@ -22744,208 +22744,10 @@ BAT_Y = 80h
 	extern @bullets_add_transfer_pellet$qv:proc
 	extern @bullet_template_reset_stuff$qv:proc
 	extern @bullets_update$qv:proc
+	extern @bullets_render$qv:proc
 BULLET_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17BD1	proc far
-
-var_D		= byte ptr -0Dh
-@@bullet_p	= word ptr -0Ch
-var_A		= word ptr -0Ah
-@@sprite_offset		= word ptr -8
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Eh
-		push	si
-		push	di
-		call	egc_on
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	_sprite16_put_w, (16 / 16)
-		mov	_sprite16_put_h, 8
-		mov	[bp+@@bullet_p], offset _bullets
-		mov	[bp+var_D], 0
-		mov	[bp+var_2], 0
-		jmp	loc_17CD9
-; ---------------------------------------------------------------------------
-
-loc_17C06:
-		mov	bx, [bp+@@bullet_p]
-		cmp	[bx+bullet_t.BULLET_flag], BF_BULLET16
-		jnz	loc_17CC6
-		mov	ax, [bx+bullet_t.BULLET_sprite_offset]
-		mov	[bp+@@sprite_offset], ax
-		cmp	[bx+bullet_t.BULLET_has_trail], 0
-		jz	short loc_17C7D
-		add	[bp+@@sprite_offset], 6
-		mov	[bp+var_A], 5
-		jmp	short loc_17C77
-; ---------------------------------------------------------------------------
-
-loc_17C27:
-		mov	ax, [bp+var_A]
-		add	ax, ax
-		mov	bx, [bp+@@bullet_p]
-		add	ax, [bx+bullet_t.BULLET_trail]
-		mov	bx, ax
-		push	[bx+bullet_trail_t.BT_center_x]	; x
-		mov	bx, [bp+@@bullet_p]
-		mov	al, [bx+bullet_t.BULLET_pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -8
-		mov	[bp+@@left], ax
-		mov	ax, [bp+var_A]
-		add	ax, ax
-		mov	bx, [bp+@@bullet_p]
-		add	ax, [bx+bullet_t.BULLET_trail]
-		mov	bx, ax
-		mov	ax, [bx+bullet_trail_t.BT_center_y]
-		sar	ax, 4
-		add	ax, 8
-		mov	[bp+@@top], ax
-		call	sprite16_put_noclip pascal, [bp+@@left], ax, [bp+@@sprite_offset]
-		sub	[bp+var_A], 2
-		sub	[bp+@@sprite_offset], 2
-
-loc_17C77:
-		cmp	[bp+var_A], 0
-		jg	short loc_17C27
-
-loc_17C7D:
-		mov	bx, [bp+@@bullet_p]
-		push	[bx+bullet_t.BULLET_center.x]	; x
-		mov	al, [bx+bullet_t.BULLET_pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -8
-		mov	[bp+@@left], ax
-		mov	bx, [bp+@@bullet_p]
-		mov	ax, [bx+bullet_t.BULLET_center.y]
-		sar	ax, 4
-		add	ax, 8
-		mov	[bp+@@top], ax
-		cmp	[bx+bullet_t.BULLET_is_animated], 0
-		jz	short loc_17CB6
-		mov	al, [bx+bullet_t.BULLET_age]
-		mov	ah, 0
-		and	ax, 3
-		add	ax, ax
-		add	[bp+@@sprite_offset], ax
-
-loc_17CB6:
-		call	sprite16_put_noclip pascal, [bp+@@left], [bp+@@top], [bp+@@sprite_offset]
-		jmp	short loc_17CD2
-; ---------------------------------------------------------------------------
-
-loc_17CC6:
-		mov	bx, [bp+@@bullet_p]
-		cmp	[bx+bullet_t.BULLET_flag], BF_PELLET_CLOUD
-		jnz	short loc_17CD2
-		mov	[bp+var_D], 1
-
-loc_17CD2:
-		inc	[bp+var_2]
-		add	[bp+@@bullet_p], size bullet_t
-
-loc_17CD9:
-		cmp	[bp+var_2], BULLET_COUNT
-		jl	loc_17C06
-		cmp	[bp+var_D], 0
-		jz	short loc_17D56
-		mov	dx, 1
-		mov	ah, SPRITE16_SET_MONO
-		int	SPRITE16
-		mov	dx, V_WHITE
-		mov	ah, SPRITE16_SET_COLOR
-		int	SPRITE16
-		mov	_sprite16_put_w, (32 / 16)
-		mov	_sprite16_put_h, 16
-		mov	[bp+@@bullet_p], offset _bullets
-		mov	[bp+var_2], 0
-		jmp	short loc_17D48
-; ---------------------------------------------------------------------------
-
-loc_17D0D:
-		mov	bx, [bp+@@bullet_p]
-		cmp	[bx+bullet_t.BULLET_flag], BF_PELLET_CLOUD
-		jnz	short loc_17D41
-		push	[bx+bullet_t.BULLET_center.x]	; x
-		mov	al, [bx+bullet_t.BULLET_pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -16
-		mov	[bp+@@left], ax
-		mov	bx, [bp+@@bullet_p]
-		mov	ax, [bx+bullet_t.BULLET_center.y]
-		sar	ax, 4
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, [bx+bullet_t.BULLET_sprite_offset]
-
-loc_17D41:
-		inc	[bp+var_2]
-		add	[bp+@@bullet_p], size bullet_t
-
-loc_17D48:
-		cmp	[bp+var_2], BULLET_COUNT
-		jl	short loc_17D0D
-		mov	dx, 0
-		mov	ah, SPRITE16_SET_MONO
-		int	SPRITE16
-
-loc_17D56:
-		call	egc_off
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		mov	ax, SEG_PLANE_B
-		mov	es, ax
-		assume es:nothing
-		mov	si, offset _bullets
-		mov	di, 0
-
-loc_17D71:
-		test	[si+bullet_t.BULLET_flag], 1
-		jz	short loc_17D9C
-		push	[si+bullet_t.BULLET_center.x]	; x
-		mov	al, [si+bullet_t.BULLET_pid]
-		xor	ah, ah
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -4	; left
-		mov	bx, [si+bullet_t.BULLET_center.y]
-		sar	bx, 5
-		add	bx, 6	; top
-		xor	dx, dx	; Regular cel
-		cmp	[si+bullet_t.BULLET_flag], BF_PELLET
-		jz	short loc_17D99
-		mov	dh, 1	; Decay cel
-
-loc_17D99:
-		call	@grcg_pellet_put$qiuii
-
-loc_17D9C:
-		add	si, size bullet_t
-		inc	di
-		cmp	di, BULLET_COUNT
-		jb	short loc_17D71
-		GRCG_OFF_VIA_XOR ax
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17BD1	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33579,11 +33381,6 @@ bullet_template_t ends
 
 public _bullet_template
 _bullet_template bullet_template_t <?>
-
-BF_FREE = 0
-BF_PELLET = 1
-BF_BULLET16 = 2
-BF_PELLET_CLOUD = 4
 
 TRAIL_POINT_COUNT = 6
 TRAIL_RING_SIZE = 48

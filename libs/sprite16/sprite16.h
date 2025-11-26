@@ -50,14 +50,21 @@ inline void sprite16_mono(bool enable) {
 }
 
 // ZUN bloat: Remove.
-inline void sprite16_mono_(bool enable) {
-	_DX = enable;
-	_AH = SPRITE16_SET_MONO;
-	geninterrupt(SPRITE16);
+#define sprite16_mono_(enable) { \
+	_DX = enable; \
+	_AH = SPRITE16_SET_MONO; \
+	geninterrupt(SPRITE16); \
 }
 
 #define sprite16_mono_color(col) { \
 	_AH = SPRITE16_SET_COLOR; \
 	_DX = col; \
 	geninterrupt(SPRITE16); \
+}
+
+// ZUN bloat: Remove.
+inline void sprite16_mono_color_(vc_t col) {
+	_DX = col;
+	_AH = SPRITE16_SET_COLOR;
+	geninterrupt(SPRITE16);
 }

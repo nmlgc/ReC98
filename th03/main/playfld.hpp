@@ -55,6 +55,10 @@ typedef SPPoint PlayfieldPoint;
 extern screen_x_t playfield_fg_shift_x[PLAYFIELD_COUNT];
 
 screen_x_t pascal playfield_fg_x_to_screen(playfield_subpixel_t x, pid2 pid);
+inline screen_y_t playfield_fg_y_to_screen(playfield_subpixel_t y, pid2) {
+	return (TO_PIXEL(y) + PLAYFIELD_TOP);
+}
+
 playfield_subpixel_t pascal screen_x_to_playfield(screen_x_t x, pid2 pid);
 
 // Negative size of the sprite to be clipped, divided by 2.

@@ -13,6 +13,10 @@
 #include "th03/sprites/pellet.h"
 #include "th02/main/bullet/impl.hpp"
 #include "th02/sprites/bullet16.h"
+#include "th02/v_colors.hpp"
+#include "th01/hardware/grcg.hpp"
+#include "libs/master.lib/pc98_gfx.hpp"
+#include "libs/sprite16/sprite16.h"
 #include "platform/x86real/flags.hpp"
 #include "decomp.hpp"
 #include <stddef.h>
@@ -679,6 +683,43 @@ void bullets_update(void)
 			) {
 				goto remove_x;
 			} else if(p->has_trail) {
+				// Bullets with a trail are only removed after their last trail
+				// point has reached the clipping coordinate. However, bullets
+				// are also rendered without any playfield boundary clipping in
+				// general – doing so would break the deliberate out-of-bounds
+				// movement of [BF_PELLET_TRANSFER] bullets, and unclipped
+				// rendering is also slightly faster.
+				// The combination of these details now creates two rendering
+				// issues for the main sprite if a bullet's speed is fast
+				// enough:
+				//
+				// 1) If a bullet travels all the way through the border
+				//    between the left and right playfields in the center of
+				//    VRAM before it is removed, it will pop in at the
+				//    respective opposite edge of the other playfield.
+				// 2) If a bullet's X coordinate ever exceeds VRAM boundaries,
+				//    SPRITE16's unclipped VRAM offset calculation will place
+				//    its sprite at a wildly unrelated point in VRAM.
+				//
+				// To work around both of these, ZUN clamps the X coordinate of
+				// the main entity to the clipping coordinate, letting it
+				// invisibly wait [TRAIL_POINT_COUNT] frames under the border
+				// until the last trail point has caught up. The Y coordinate
+				// does not have this issue because SPRITE16 does clip that one
+				// against the top and bottom edges of the visible 200 lines.
+				//
+				// Of course, this workaround assumes that the playfield border
+				// fully covers a 16×16 bullet at [CENTER_MIN] and
+				// [CENTER_X_MAX].
+				static_assert(
+					(CENTER_MIN - TO_SP(BULLET16_W / 2)) >=
+					TO_SP(-(PLAYFIELD_BORDER * 2))
+				);
+				static_assert(
+					(CENTER_X_MAX + TO_SP(BULLET16_W / 2)) <=
+					TO_SP(PLAYFIELD_W + (PLAYFIELD_BORDER * 2))
+				);
+
 				if(coord_next > CENTER_MIN) {
 					if(coord_next < CENTER_X_MAX) {
 						goto clamp_done;
@@ -863,3 +904,148 @@ void bullets_update(void)
 
 #undef coord_prev
 #undef p
+
+void bullets_render(void)
+{
+	// ZUN bloat: Could have shared variables (and registers!) with regular
+	// bullets.
+	register bullet_t near *pellet_p;
+	register unsigned int pellet_i;
+
+	int bullet_i;
+	struct {
+		screen_y_t y;
+		screen_x_t x;
+	} topleft;
+	sprite16_offset_t so;
+	int trail_i;
+
+	#define topleft_set(topleft, bullet, center_x, center_y, w, h) { \
+		topleft.x = ( \
+			playfield_fg_x_to_screen(center_x, bullet->pid) - (w / 2) \
+		); \
+		topleft.y = ( \
+			playfield_fg_y_to_screen(center_y, bullet->pid) - (h / 2) \
+		); \
+	}
+
+	egc_on();
+	sprite16_clip.reset();
+
+	// 16×16 bullets (full-color)
+	// --------------------------
+
+	sprite16_put_size.set(BULLET16_W, BULLET16_H);
+	bullet_t near *bullet_p = bullets;
+	bool need_cloud_pass = false;
+	for(bullet_i = 0; bullet_i < BULLET_COUNT; (bullet_i++, bullet_p++)) {
+		if(bullet_p->flag == BF_BULLET16) {
+			so = bullet_p->sprite_offset;
+			if(bullet_p->has_trail) {
+				so += (BULLET16_TRAIL_CELS * (BULLET16_W / BYTE_DOTS));
+
+				trail_i = (TRAIL_POINT_COUNT - 1);
+				while(trail_i > 0) {
+					topleft_set(
+						topleft,
+						bullet_p,
+						bullet_p->trail->center_x.v[trail_i],
+						bullet_p->trail->center_y.v[trail_i],
+						BULLET16_W,
+						BULLET16_H
+					);
+					sprite16_put_noclip(topleft.x, topleft.y, so);
+					trail_i -= TRAIL_POINTS_PER_SPRITE;
+					so -= (BULLET16_W / BYTE_DOTS);
+				}
+			}
+
+			topleft_set(
+				topleft,
+				bullet_p,
+				bullet_p->center.x,
+				bullet_p->center.y,
+				BULLET16_W,
+				BULLET16_H
+			);
+			if(bullet_p->is_animated) {
+				so += (
+					(bullet_p->age % BULLET16_CELS) * (BULLET16_W / BYTE_DOTS)
+				);
+			}
+			sprite16_put_noclip(inhibit_Z3(topleft.x), topleft.y, so);
+		} else if(bullet_p->flag == BF_PELLET_CLOUD) {
+			need_cloud_pass = true;
+		}
+	}
+	// --------------------------
+
+	// 32×32 delay clouds (white)
+	// --------------------------
+
+	if(need_cloud_pass) {
+		sprite16_mono_(true);
+		sprite16_mono_color_(V_WHITE);
+		sprite16_put_size.set(PELLET_CLOUD_W, PELLET_CLOUD_H);
+		bullet_p = bullets;
+		for(bullet_i = 0; bullet_i < BULLET_COUNT; (bullet_i++, bullet_p++)) {
+			if(bullet_p->flag == BF_PELLET_CLOUD) {
+				topleft_set(
+					topleft,
+					bullet_p,
+					bullet_p->center.x,
+					bullet_p->center.y,
+					PELLET_CLOUD_W,
+					PELLET_CLOUD_H
+				);
+				sprite16_put(topleft.x, topleft.y, bullet_p->sprite_offset);
+			}
+		}
+		sprite16_mono_(keep_0(false));
+	}
+	// --------------------------
+
+	egc_off();
+
+	// 8×8 pellets
+	// -----------
+
+	grcg_setcolor(GC_RMW, V_WHITE);
+	_ES = SEG_PLANE_B;
+	pellet_p = bullets;
+	pellet_i = keep_0(0);
+	do {
+		static_assert(BF_PELLET == 1);
+		static_assert(BF_PELLET_TRANSFER == 3);
+		if(pellet_p->flag & 1) {
+			#define left static_cast<screen_x_t>(_AX)
+			#define top static_cast<int>(_BX)
+
+			left = (playfield_fg_x_to_screen(
+				pellet_p->center.x, (_AL = pellet_p->pid, _AH ^= _AH, _AX)
+			) - (PELLET_W / 2));
+			top = pellet_p->center.y;
+			top >>= (SUBPIXEL_BITS + 1); // Subpixel screen space → VRAM
+			top += ((PLAYFIELD_BORDER / 2) - (PELLET_VRAM_H / 2));
+
+			// Already counted as bloat inside that function.
+			_DX = C_PELLET;
+			if(pellet_p->flag != BF_PELLET) {
+				_DH = C_PELLET_TRANSFER;
+			}
+			grcg_pellet_put(left, _DX, top);
+
+			#undef top
+			#undef left
+		}
+		pellet_p++;
+		pellet_i++;
+	} while(pellet_i < BULLET_COUNT);
+
+	// ZUN bloat: Just a grcg_off();
+	_asm {
+		xor	ax, ax;
+		out	0x7C, ax;
+	}
+	// -----------
+}
