@@ -283,7 +283,7 @@ bool near pattern_wing_preparation(void)
 			bullet_template.origin.x.v = shinki_wing_random_x();
 			bullet_template.origin.y.v = shinki_wing_random_y();
 			bullet_template.angle = randring2_next8_mod_ge_lt(0x10, 0x70);
-			bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.5f, 5.5f);
+			bullet_template.speed.v = randring2_next8_ge_lt_sp(1.5f, 5.5f);
 			bullets_add_regular();
 		}
 		boss.sprite = PAT_SHINKI_WINGS_WHITE;
@@ -324,7 +324,7 @@ void near pattern_random_rain_and_spreads_from_wings(void)
 			((2 / 23.0f) * PLAYFIELD_H), ((6 / 23.0f) * PLAYFIELD_H)
 		);
 		b6ball_template.angle = 0x40;
-		b6ball_template.speed.v = randring2_next8_and_ge_lt_sp(3.0f, 5.0f);
+		b6ball_template.speed.v = randring2_next8_ge_lt_sp(3.0f, 5.0f);
 		b6ball_template.patnum_tiny = PAT_B6BALL_BLUE_1;
 		b6balls_add();
 		snd_se_play(3);
@@ -367,7 +367,7 @@ void near pattern_cheetos_within_spread_walls(void)
 		bullet_template.patnum = PAT_BULLET16_N_OUTLINED_BALL_BLUE;
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_DECELERATE);
 		bullet_template.group = BG_SPREAD;
-		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(3.0f, 5.0f);
+		bullet_template.speed.v = randring2_next8_ge_lt_sp(3.0f, 5.0f);
 		bullet_template.set_spread(6, 0x08);
 		bullet_template.angle = 0x68;
 		bullets_add_regular();
@@ -407,7 +407,7 @@ bool near pattern_wings_to_purple(void)
 			b6ball_template.origin.x.v = shinki_wing_random_x();
 			b6ball_template.origin.y.v = shinki_wing_random_y();
 			b6ball_template.angle = randring2_next8_mod_ge_lt(0x20, 0x60);
-			b6ball_template.speed.v = randring2_next8_and_ge_lt_sp(2.0f, 6.0f);
+			b6ball_template.speed.v = randring2_next8_ge_lt_sp(2.0f, 6.0f);
 			b6balls_add();
 		}
 		boss.sprite = PAT_SHINKI_WINGS_PURPLE;

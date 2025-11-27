@@ -279,7 +279,7 @@ void near shinki_bg_type_a_update_part1(void)
 			vector2_at(
 				particle->velocity,
 				0.0f, 0.0f,
-				randring1_next16_and_ge_lt_sp(2.0f, 6.0f),
+				randring1_next16_ge_lt_sp(2.0f, 6.0f),
 				particle->angle
 			);
 			shinki_bg_type_a_particles_alive++;
@@ -409,7 +409,7 @@ void near shinki_bg_type_b_update_part1(void)
 			particle->origin.x = particle->pos.x;
 			particle->origin.y.set(-1.0f);
 			particle->velocity.set(0.0f, 0.0f);
-			particle->patnum = randring1_next8_and_ge_lt(
+			particle->patnum = randring1_next8_ge_lt(
 				PAT_PARTICLE, (PAT_PARTICLE_last + 1)
 			);
 			i++;

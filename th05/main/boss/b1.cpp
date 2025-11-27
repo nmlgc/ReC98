@@ -210,7 +210,7 @@ void near pattern_pellet_arcs_at_expanding_random_angles(void)
 		);
 		bullet_template.set_spread(3, 0x3);
 		bullet_template.special_motion = BSM_EXACT_LINEAR;
-		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.0f, 3.0f);
+		bullet_template.speed.v = randring2_next8_ge_lt_sp(1.0f, 3.0f);
 		bullet_template_tune();
 		bullets_add_special();
 
@@ -220,7 +220,7 @@ void near pattern_pellet_arcs_at_expanding_random_angles(void)
 		bullet_template.angle = (
 			randring2_next16_mod(boss.phase_frame * 2) - boss.phase_frame + 0x40
 		);
-		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.5f, 3.5f);
+		bullet_template.speed.v = randring2_next8_ge_lt_sp(1.5f, 3.5f);
 		bullet_template_tune();
 		bullets_add_regular();
 
