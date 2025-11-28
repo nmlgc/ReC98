@@ -4,25 +4,35 @@
 #include "th01/math/subpixel.hpp"
 #include "th03/common.h"
 
-#define PLAYFIELD_COUNT 2
-#define PLAYFIELD_W 288
-#define PLAYFIELD_H 368
+static const int PLAYFIELD_COUNT = 2;
+static const pixel_t PLAYFIELD_W = 288;
+static const pixel_t PLAYFIELD_H = 368;
+
 // For both playfields, in every direction. (CSS style!)
 // The clipped SPRITE16 display functions rely on this being at least 16!
-#define PLAYFIELD_BORDER 16
-#define PLAYFIELD_LEFT PLAYFIELD_BORDER
-#define PLAYFIELD_TOP PLAYFIELD_BORDER
+static const pixel_t PLAYFIELD_BORDER = 16;
+
+static const screen_x_t PLAYFIELD_LEFT = PLAYFIELD_BORDER;
+static const screen_y_t PLAYFIELD_TOP = PLAYFIELD_BORDER;
 static const screen_y_t PLAYFIELD_BOTTOM = (PLAYFIELD_TOP + PLAYFIELD_H);
 
-#define PLAYFIELD_VRAM_H (PLAYFIELD_H / 2)
+static const vram_h_t PLAYFIELD_VRAM_H = (PLAYFIELD_H / 2);
 
-#define PLAYFIELD_W_BORDERED (PLAYFIELD_BORDER + PLAYFIELD_W + PLAYFIELD_BORDER)
-#define PLAYFIELD1_CLIP_LEFT 0
-#define PLAYFIELD1_CLIP_RIGHT (PLAYFIELD1_CLIP_LEFT + PLAYFIELD_W_BORDERED - 1)
-#define PLAYFIELD2_CLIP_LEFT  (PLAYFIELD1_CLIP_RIGHT + 1)
-#define PLAYFIELD2_CLIP_RIGHT (PLAYFIELD2_CLIP_LEFT + PLAYFIELD_W_BORDERED - 1)
+static const pixel_t PLAYFIELD_W_BORDERED = (
+	PLAYFIELD_BORDER + PLAYFIELD_W + PLAYFIELD_BORDER
+);
+static const screen_x_t PLAYFIELD1_CLIP_LEFT = 0;
+static const screen_x_t PLAYFIELD1_CLIP_RIGHT = (
+	PLAYFIELD1_CLIP_LEFT + PLAYFIELD_W_BORDERED - 1
+);
+static const screen_x_t PLAYFIELD2_CLIP_LEFT =  (PLAYFIELD1_CLIP_RIGHT + 1);
+static const screen_x_t PLAYFIELD2_CLIP_RIGHT = (
+	PLAYFIELD2_CLIP_LEFT + PLAYFIELD_W_BORDERED - 1
+);
 
-#define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / BYTE_DOTS)
+static const vram_byte_amount_t PLAYFIELD_VRAM_W_BORDERED = (
+	PLAYFIELD_W_BORDERED / BYTE_DOTS
+);
 
 inline screen_x_t playfield_x(pid_t pid, pixel_t x) {
 	return ((PLAYFIELD_LEFT + x) + (pid * PLAYFIELD_W_BORDERED));
