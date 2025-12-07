@@ -20924,6 +20924,10 @@ loc_164AA:
 		retn
 sub_1615D	endp
 
+EHM_ENEMY = 0
+EHM_PELLET = 1
+EHM_FIREBALL_BLUE = 2
+EHM_FIREBALL_RED = 3
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20933,7 +20937,7 @@ sub_164AD	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	byte_2203A, 0
+		mov	_explosion_hittest_mode, EHM_ENEMY
 		mov	word_2203C, 4626h
 		mov	si, 27h	; '''
 		jmp	short loc_164D3
@@ -21249,14 +21253,14 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_C], 0
-		cmp	byte_2203A, 1
+		cmp	_explosion_hittest_mode, EHM_PELLET
 		jnz	short loc_16725
 		mov	[bp+var_E], 1
 		jmp	short loc_16730
 ; ---------------------------------------------------------------------------
 
 loc_16725:
-		mov	al, byte_2203A
+		mov	al, _explosion_hittest_mode
 		mov	ah, 0
 		imul	ax, 3
 		mov	[bp+var_E], al
@@ -21271,7 +21275,7 @@ loc_16730:
 loc_16740:
 		cmp	byte ptr [si], 9
 		jb	loc_1696E
-		cmp	byte_2203A, 0
+		cmp	_explosion_hittest_mode, EHM_ENEMY
 		jnz	short loc_16769
 		cmp	byte ptr [si], 9
 		jz	loc_1696E
@@ -21318,7 +21322,7 @@ loc_16769:
 		jg	loc_1696E
 		mov	al, [si+1Ch]
 		mov	hitcombo_slot_220C2, al
-		cmp	byte_2203A, 0
+		cmp	_explosion_hittest_mode, EHM_ENEMY
 		jnz	short loc_167DF
 		inc	byte ptr [si]
 		jmp	loc_16966
@@ -23669,7 +23673,7 @@ var_1		= byte ptr -1
 		push	di
 		mov	[bp+var_1], 0
 		mov	_collmap_tile_h, 1
-		mov	byte_2203A, 1
+		mov	_explosion_hittest_mode, EHM_PELLET
 		mov	di, 141h
 		mov	ax, 68F2h
 		add	ax, 0FFE6h
@@ -24619,7 +24623,7 @@ loc_181E5:
 		jnz	loc_18367
 		mov	bx, word_2203C
 		mov	al, [bx+6]
-		mov	byte_2203A, al
+		mov	_explosion_hittest_mode, al
 		mov	al, [bx+8]
 		mov	[bp+@@pid], al
 		mov	ax, [bx+2]
@@ -24650,7 +24654,7 @@ loc_1823A:
 		mov	al, hitcombo_slot_220C2
 		mov	[bp+var_1], al
 		mov	[bx+1Ch], al
-		cmp	byte_2203A, 3
+		cmp	_explosion_hittest_mode, EHM_FIREBALL_RED
 		jnz	short loc_18275
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -24715,7 +24719,7 @@ loc_182D6:
 		add	ax, dx
 		mov	bx, ax
 		mov	al, [bx+4B3Eh]
-		add	al, byte_2203A
+		add	al, _explosion_hittest_mode
 		add	al, -1
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
@@ -35106,7 +35110,10 @@ byte_21673	db ?
 byte_22036	db ?
 byte_22037	db ?
 		db 2 dup(?)
-byte_2203A	db ?
+
+public _explosion_hittest_mode
+_explosion_hittest_mode	db ?
+
 byte_2203B	db ?
 word_2203C	dw ?
 include th03/main/player/hitcombo[bss].asm
