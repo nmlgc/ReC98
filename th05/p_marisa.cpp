@@ -25,7 +25,6 @@ inline subpixel_t star_offset(int count) {
 
 void pascal near shot_marisa_l2(void)
 {
-#undef STAR_COUNT
 #define STAR_COUNT 1
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 2);
 	while(( shot = shots_add() ) != nullptr) {
@@ -42,11 +41,11 @@ void pascal near shot_marisa_l2(void)
 			break;
 		}
 	}
+#undef STAR_COUNT
 }
 
 void pascal near shot_marisa_l3(void)
 {
-#undef STAR_COUNT
 #define STAR_COUNT 2
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 4);
 	while(( shot = shots_add() ) != nullptr) {
@@ -67,11 +66,11 @@ void pascal near shot_marisa_l3(void)
 			break;
 		}
 	}
+#undef STAR_COUNT
 }
 
 void pascal near shot_marisa_l4(void)
 {
-#undef STAR_COUNT
 #define STAR_COUNT 3
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 6);
 	while(( shot = shots_add() ) != nullptr) {
@@ -97,11 +96,11 @@ void pascal near shot_marisa_l4(void)
 			break;
 		}
 	}
+#undef STAR_COUNT
 }
 
 void pascal near shot_marisa_l5(void)
 {
-#undef STAR_COUNT
 #define STAR_COUNT 3
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 6);
 	while(( shot = shots_add() ) != nullptr) {
@@ -127,11 +126,11 @@ void pascal near shot_marisa_l5(void)
 			break;
 		}
 	}
+#undef STAR_COUNT
 }
 
 void pascal near shot_marisa_l6(void)
 {
-#undef STAR_COUNT
 #define STAR_COUNT 4
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 8);
 	subpixel_t star_distance = star_offset(STAR_COUNT);
@@ -155,6 +154,7 @@ void pascal near shot_marisa_l6(void)
 			break;
 		}
 	}
+#undef STAR_COUNT
 }
 
 #define MARISA_L7(star_count, star_damage, missile_count, missile_damage) \
@@ -197,7 +197,6 @@ void pascal near shot_marisa_l8(void)
 
 void pascal near shot_marisa_l9(void)
 {
-#undef STAR_COUNT
 #define STAR_COUNT 6
 
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 12);
@@ -228,6 +227,7 @@ void pascal near shot_marisa_l9(void)
 			break;
 		}
 	}
+#undef STAR_COUNT
 }
 
 }

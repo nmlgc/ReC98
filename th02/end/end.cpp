@@ -515,7 +515,7 @@ void near end_bad_animate(void)
 		);
 		frame_delay(1);
 	}
-	#undef i
+	#undef frame
 
 	end_line_type(13);
 	line_col_set(V_YELLOW);

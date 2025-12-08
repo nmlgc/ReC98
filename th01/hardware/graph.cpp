@@ -677,11 +677,12 @@ end:
 		grcg_off_func();
 	}
 
+#undef slope_y
 #undef plot_loop
 #undef unput32_at
-#undef clip_lerp_min
 #undef clip_lerp_max
-#undef slope_x
+#undef clip_lerp_min
+#undef lerp
 }
 /// -----------------------
 

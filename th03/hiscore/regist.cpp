@@ -459,6 +459,8 @@ void near regist_name_enter_menu(void)
 	}
 
 	#undef on_direction
+	#undef cursor_backspace
+	#undef cursor_blank
 }
 
 void near regist_replace_same_letter_name_with_default_for_playchar(void)

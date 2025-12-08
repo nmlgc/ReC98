@@ -147,9 +147,9 @@ void pascal near pic_put(bool16 darkened)
 		pic_darken(playchar_menu_sel);
 	}
 
-	#undef set_coords
 	#undef pic_raised_top
 	#undef pic_raised_left
+	#undef set_coords
 }
 
 void near playchar_menu_put_initial(void)

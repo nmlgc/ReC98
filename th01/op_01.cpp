@@ -135,16 +135,15 @@ static const int MAIN_CHOICE_COUNT = 4;
 static const int OPTION_CHOICE_COUNT = 5;
 static const int MUSIC_CHOICE_COUNT = 2;
 
-#undef RING_INC
-#undef RING_DEC
-
-#define RING_INC(val, ring_end) \
+// ZUN bloat: Worse versions of the same macros in `clamp.hpp`, replacing `++`
+// and `--` with `+= 1` and `-= 1`.
+#define ring_inc_one(val, ring_end) \
 	(val) += 1; \
 	if((val) > (ring_end)) { \
 		(val) = 0; \
 	}
 
-#define RING_DEC(val, ring_end) \
+#define ring_dec_one(val, ring_end) \
 	(val) -= 1; \
 	if((val) < 0) { \
 		(val) = ring_end; \
@@ -209,14 +208,14 @@ void main_input_sense(void)
 
 	input_onchange_ring(0,
 		(out1.h.ah & K7_ARROW_UP) || (out2.h.ah & K8_NUM_8),
-		RING_DEC(menu_sel, (MAIN_CHOICE_COUNT - 1))
+		ring_dec_one(menu_sel, (MAIN_CHOICE_COUNT - 1))
 	);
 
 	keygroup_sense(out2, in, 9);
 
 	input_onchange_ring(1,
 		(out1.h.ah & K7_ARROW_DOWN) || (out2.h.ah & K9_NUM_2),
-		RING_INC(menu_sel, (MAIN_CHOICE_COUNT - 1))
+		ring_inc_one(menu_sel, (MAIN_CHOICE_COUNT - 1))
 	);
 
 	ok_shot_cancel_sense(out1, in);
@@ -235,7 +234,7 @@ void option_input_sense(void)
 
 	input_onchange_ring(0,
 		(out1.h.ah & K7_ARROW_UP) || (out2.h.ah & K8_NUM_8),
-		RING_DEC(menu_sel, option_choice_max)
+		ring_dec_one(menu_sel, option_choice_max)
 	);
 	input_update_bool(
 		input_left, (out1.h.ah & K7_ARROW_LEFT) || (out2.h.ah & K8_NUM_4)
@@ -245,7 +244,7 @@ void option_input_sense(void)
 
 	input_onchange_ring(1,
 		(out1.h.ah & K7_ARROW_DOWN) || (out2.h.ah & K9_NUM_2),
-		RING_INC(menu_sel, option_choice_max)
+		ring_inc_one(menu_sel, option_choice_max)
 	);
 	input_update_bool(
 		input_right, (out1.h.ah & K7_ARROW_RIGHT) || (out2.h.ah & K9_NUM_6)

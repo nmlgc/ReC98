@@ -6,8 +6,6 @@
 #include "libs/master.lib/master.hpp"
 #include "th01/formats/pf.hpp"
 
-#undef arc_file_get
-
 static const int FILE_COUNT = 64;
 static const size_t CACHE_SIZE = 0x100;
 

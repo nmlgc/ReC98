@@ -29,7 +29,6 @@ bool16 pascal near scoredat_load_and_decode(rank_t rank)
 		return recreated;
 	}
 	return loaded;
-
-	#undef recreated
-	#undef loaded
 }
+#undef loaded
+#undef recreated

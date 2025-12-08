@@ -2144,7 +2144,7 @@ void elis_main(void)
 		}
 	}
 
-	#undef hit_update_and_render
-	#undef phase_frame_common
 	#undef phase_done
+	#undef phase_frame_common
+	#undef hit_update_and_render
 }

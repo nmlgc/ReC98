@@ -1499,8 +1499,8 @@ void near pattern_detonating_snowflake(void)
 		player_is_hit = true;
 	}
 
-	#undef ellipse_put
 	#undef ellipse_sloppy_unput
+	#undef ellipse_put
 }
 
 void near pattern_2_rings_from_a2_orbs(void)
@@ -2226,8 +2226,6 @@ void pascal near pattern_curved_spray_leftright_once(int &frame)
 			frame = 0;
 		}
 	}
-
-	#undef spray
 }
 
 void pascal near pattern_rain_from_seal_center(int &frame)

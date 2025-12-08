@@ -697,7 +697,6 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 	#undef diamonds_put
 	#undef diamonds_unput
-	#undef diamonds
 	#undef DIAMOND_ORIGIN_Y
 	#undef DIAMOND_ORIGIN_X
 }
