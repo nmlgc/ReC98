@@ -1631,9 +1631,11 @@ void near particles2x2_wavy_unput_update_render()
 
 void near pattern_four_aimed_lasers(void)
 {
-	#define ORIGIN_DISTANCE_X_1 (SEAL_CENTER_X - SEAL_RADIUS)
-	#define ORIGIN_Y_1 FACE_CENTER_Y
-	#define ORIGIN_Y_2 SHIELD_CENTER_Y
+	enum {
+		ORIGIN_DISTANCE_X_1 = (SEAL_CENTER_X - SEAL_RADIUS),
+		ORIGIN_Y_1 = FACE_CENTER_Y,
+		ORIGIN_Y_2 = SHIELD_CENTER_Y,
+	};
 
 	static screen_x_t origin_x;
 	static screen_y_t origin_y;
@@ -1727,10 +1729,6 @@ void near pattern_four_aimed_lasers(void)
 
 	#undef fire
 	#undef spawnray_init
-
-	#undef ORIGIN_Y_2
-	#undef ORIGIN_Y_1
-	#undef ORIGIN_DISTANCE_X_1
 }
 
 void near shake_for_50_frames(void)

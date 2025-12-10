@@ -430,7 +430,9 @@ void konngara_load_and_entrance(int8_t)
 	// Shaking and panning
 	// -------------------
 
-	#define MAGNITUDE  	16
+	enum {
+		MAGNITUDE = 16,
+	};
 	#define frame      	i
 	#define line_on_top	j
 
@@ -462,7 +464,6 @@ void konngara_load_and_entrance(int8_t)
 
 	#undef line_on_top
 	#undef frame
-	#undef MAGNITUDE
 	// -------------------
 
 	frame_delay(30);
@@ -555,8 +556,10 @@ void slash_put(int image)
 
 void pattern_diamond_cross_to_edges_followed_by_rain(void)
 {
-	#define DIAMOND_ORIGIN_X (PLAYFIELD_CENTER_X - (DIAMOND_W / 2))
-	#define DIAMOND_ORIGIN_Y (PLAYFIELD_CENTER_Y + (DIAMOND_H / 2))
+	enum {
+		DIAMOND_ORIGIN_X = (PLAYFIELD_CENTER_X - (DIAMOND_W / 2)),
+		DIAMOND_ORIGIN_Y = (PLAYFIELD_CENTER_Y + (DIAMOND_H / 2)),
+	};
 
 	int i;
 
@@ -697,8 +700,6 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 	#undef diamonds_put
 	#undef diamonds_unput
-	#undef DIAMOND_ORIGIN_Y
-	#undef DIAMOND_ORIGIN_X
 }
 
 void pattern_symmetrical_from_cup_fire(unsigned char angle)
