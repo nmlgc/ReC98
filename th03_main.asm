@@ -18164,7 +18164,7 @@ chargeshot_update_reimu	endp
 
 ; Attributes: bp-based frame
 
-sub_14C8C	proc near
+reimu_chargeshot_14C8C	proc near
 
 @@sprite_offset		= word ptr -2
 arg_0		= word ptr  4
@@ -18203,7 +18203,7 @@ arg_4		= word ptr  8
 		pop	si
 		leave
 		retn	6
-sub_14C8C	endp
+reimu_chargeshot_14C8C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18330,7 +18330,7 @@ loc_14DC6:
 		push	word ptr [bx+0Eh]
 		push	word ptr [bx+1Ch]
 		push	3
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 		mov	dx, 5
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
@@ -18338,7 +18338,7 @@ loc_14DC6:
 		push	word ptr [bx+0Ah]
 		push	word ptr [bx+18h]
 		push	2
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 		mov	dx, 6
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
@@ -18346,7 +18346,7 @@ loc_14DC6:
 		push	word ptr [bx+6]
 		push	word ptr [bx+14h]
 		push	1
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 		xor	dx, dx
 		mov	ah, SPRITE16_SET_MONO
 		int	SPRITE16
@@ -18354,7 +18354,7 @@ loc_14DC6:
 		push	word ptr [bx+2]
 		push	word ptr [bx+10h]
 		push	0
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 
 loc_14E2D:
 		inc	si
@@ -19090,7 +19090,7 @@ chargeshot_add_mima	endp
 
 ; Attributes: bp-based frame
 
-sub_1546C	proc near
+mima_chargeshot_1546C	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
@@ -19125,7 +19125,7 @@ arg_2		= byte ptr  6
 		call	snd_se_play pascal, 13
 		pop	bp
 		retn	4
-sub_1546C	endp
+mima_chargeshot_1546C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19207,7 +19207,7 @@ loc_1555A:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_1546C
+		call	mima_chargeshot_1546C
 
 loc_15584:
 		mov	al, _pid_current
@@ -19299,7 +19299,7 @@ mima_15597	endp
 
 ; Attributes: bp-based frame
 
-sub_1561C	proc near
+mima_chargeshot_1561C	proc near
 
 @@sprite_offset		= word ptr  4
 arg_2		= word ptr  6
@@ -19327,7 +19327,7 @@ arg_2		= word ptr  6
 		pop	si
 		pop	bp
 		retn	6
-sub_1561C	endp
+mima_chargeshot_1561C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19386,7 +19386,7 @@ loc_156AF:
 		shl	dx, 2
 		add	dx, [bp+var_2]
 		push	dx
-		call	sub_1561C
+		call	mima_chargeshot_1561C
 
 loc_156D4:
 		inc	si
@@ -21815,7 +21815,7 @@ yumemi_16B0C	endp
 
 ; Attributes: bp-based frame
 
-sub_16BB5	proc near
+yumemi_chargeshot_16BB5	proc near
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
@@ -21886,7 +21886,7 @@ loc_16C56:
 		pop	si
 		leave
 		retn	6
-sub_16BB5	endp
+yumemi_chargeshot_16BB5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22037,7 +22037,7 @@ loc_16D78:
 		shl	ax, 4
 		push	ax
 		push	20h ; ' '
-		call	sub_16BB5
+		call	yumemi_chargeshot_16BB5
 		push	si
 		mov	al, [bp+var_5]
 		mov	ah, 0
@@ -22046,7 +22046,7 @@ loc_16D78:
 		shl	ax, 4
 		push	ax
 		push	0E0h
-		call	sub_16BB5
+		call	yumemi_chargeshot_16BB5
 
 loc_16DAF:
 		push	si
@@ -22061,7 +22061,7 @@ loc_16DB8:
 		push	0
 
 loc_16DC1:
-		call	sub_16BB5
+		call	yumemi_chargeshot_16BB5
 
 loc_16DC4:
 		pop	di
@@ -30896,7 +30896,7 @@ chargeshot_update_chiyuri	endp
 
 ; Attributes: bp-based frame
 
-sub_1B35F	proc near
+chiyuri_chargeshot_1B35F	proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -30930,7 +30930,7 @@ loc_1B37B:
 		pop	si
 		leave
 		retn
-sub_1B35F	endp
+chiyuri_chargeshot_1B35F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31038,7 +31038,7 @@ loc_1B469:
 		mov	bx, word_1F51A
 		cmp	byte ptr [bx], 1
 		jnz	short loc_1B47E
-		call	sub_1B35F
+		call	chiyuri_chargeshot_1B35F
 
 loc_1B47E:
 		inc	si
@@ -31574,7 +31574,7 @@ chargeshot_update_ellen	endp
 
 ; Attributes: bp-based frame
 
-sub_1B8A6	proc near
+ellen_chargeshot_1B8A6	proc near
 
 var_3		= byte ptr -3
 @@sprite_offset		= word ptr -2
@@ -31615,7 +31615,7 @@ arg_0		= word ptr  4
 		pop	si
 		leave
 		retn	4
-sub_1B8A6	endp
+ellen_chargeshot_1B8A6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31717,7 +31717,7 @@ loc_1B9BC:
 		mov	bx, word_1F868
 		push	word ptr [bx+4]
 		push	word ptr [bx+6]
-		call	sub_1B8A6
+		call	ellen_chargeshot_1B8A6
 
 loc_1B9D2:
 		inc	si
@@ -32240,7 +32240,7 @@ chargeshot_update_kana	endp
 
 ; Attributes: bp-based frame
 
-sub_1BDF8	proc near
+kana_chargeshot_1BDF8	proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -32284,7 +32284,7 @@ loc_1BE4A:
 		pop	si
 		leave
 		retn
-sub_1BDF8	endp
+kana_chargeshot_1BDF8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32420,7 +32420,7 @@ loc_1BF40:
 ; ---------------------------------------------------------------------------
 
 loc_1BF4A:
-		call	sub_1BDF8
+		call	kana_chargeshot_1BDF8
 		inc	si
 		add	word_1FD8C, 36h	; '6'
 
@@ -32769,7 +32769,7 @@ chargeshot_update_kotohime	endp
 
 ; Attributes: bp-based frame
 
-sub_1C1E9	proc near
+kotohime_chargeshot_1C1E9	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -32796,7 +32796,7 @@ sub_1C1E9	proc near
 		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		leave
 		retn
-sub_1C1E9	endp
+kotohime_chargeshot_1C1E9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32878,7 +32878,7 @@ loc_1C2CF:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1C2DB:
-		call	sub_1C1E9
+		call	kotohime_chargeshot_1C1E9
 
 loc_1C2DE:
 		pop	bp
@@ -33345,7 +33345,7 @@ chargeshot_update_rikako	endp
 
 ; Attributes: bp-based frame
 
-sub_1C62A	proc near
+rikako_chargeshot_1C62A	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -33371,7 +33371,7 @@ sub_1C62A	proc near
 		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		leave
 		retn
-sub_1C62A	endp
+rikako_chargeshot_1C62A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33484,7 +33484,7 @@ loc_1C734:
 ; ---------------------------------------------------------------------------
 
 loc_1C738:
-		call	sub_1C62A
+		call	rikako_chargeshot_1C62A
 		inc	si
 		add	word_20E86, 6
 
