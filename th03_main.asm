@@ -6245,7 +6245,7 @@ hyper_marisa	proc near
 loc_D89D:
 		mov	bx, _player_cur
 		mov	[bx+player_stuff_t.shot_mode], SA_DISABLED
-		call	sub_14340
+		call	marisa_hyper_14340
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (-1 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6285,7 +6285,7 @@ loc_D8E0:
 		jnz	short loc_D8F9
 		push	[bx+player_stuff_t.center.x]
 		push	[bx+player_stuff_t.center.y]
-		call	sub_1B6CA
+		call	ellen_hyper_1B6CA
 
 loc_D8F9:
 		pop	bp
@@ -6444,7 +6444,7 @@ hyper_rikako	proc near
 		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_DA0C
 		mov	[bx+player_stuff_t.hyper], offset hyper_standby
-		call	sub_1C4B4
+		call	rikako_hyper_1C4B4
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -17024,7 +17024,7 @@ chargeshot_add_marisa	endp
 
 ; Attributes: bp-based frame
 
-sub_14340	proc far
+marisa_hyper_14340	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -17079,7 +17079,7 @@ loc_143A4:
 		pop	si
 		pop	bp
 		retf
-sub_14340	endp
+marisa_hyper_14340	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31349,7 +31349,7 @@ chargeshot_add_ellen	endp
 
 ; Attributes: bp-based frame
 
-sub_1B6CA	proc far
+ellen_hyper_1B6CA	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -31396,7 +31396,7 @@ loc_1B71E:
 		pop	si
 		pop	bp
 		retf	4
-sub_1B6CA	endp
+ellen_hyper_1B6CA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33159,7 +33159,7 @@ rikako_1C497	endp
 
 ; Attributes: bp-based frame
 
-sub_1C4B4	proc far
+rikako_hyper_1C4B4	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_PID_current
@@ -33168,7 +33168,7 @@ sub_1C4B4	proc far
 		mov	byte ptr [bx+3928h], 0
 		pop	bp
 		retf
-sub_1C4B4	endp
+rikako_hyper_1C4B4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
