@@ -18732,7 +18732,7 @@ reimu_1508C	endp
 
 ; Attributes: bp-based frame
 
-sub_1515D	proc near
+reimu_bomb_1515D	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -18786,7 +18786,7 @@ loc_151D9:
 		pop	si
 		leave
 		retn
-sub_1515D	endp
+reimu_bomb_1515D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18978,7 +18978,7 @@ loc_153AB:
 		call	egc_on
 		cmp	[bp+@@frame], 96
 		jnb	short @@ret
-		call	sub_1515D
+		call	reimu_bomb_1515D
 
 @@ret:
 		leave
@@ -22518,7 +22518,7 @@ mima_17043	endp
 
 ; Attributes: bp-based frame
 
-sub_1714F	proc near
+mima_bomb_1714F	proc near
 
 @@x		= word ptr -2
 
@@ -22565,7 +22565,7 @@ loc_171B7:
 		pop	si
 		leave
 		retn
-sub_1714F	endp
+mima_bomb_1714F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22627,7 +22627,7 @@ loc_17202:
 		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 		call	egc_on
-		call	sub_1714F
+		call	mima_bomb_1714F
 		jmp	loc_1737D
 ; ---------------------------------------------------------------------------
 
@@ -25161,7 +25161,7 @@ ellen_185AB	endp
 
 ; Attributes: bp-based frame
 
-sub_186C3	proc near
+ellen_bomb_186C3	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -25228,7 +25228,7 @@ loc_1875E:
 		pop	si
 		leave
 		retn
-sub_186C3	endp
+ellen_bomb_186C3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -25449,7 +25449,7 @@ loc_18964:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		call	sub_186C3
+		call	ellen_bomb_186C3
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
