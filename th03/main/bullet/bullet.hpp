@@ -9,6 +9,22 @@ static const int TRAIL_POINTS_PER_SPRITE = 2;
 static const int TRAIL_POINT_COUNT = (
 	TRAIL_POINTS_PER_SPRITE * BULLET16_TRAIL_CELS
 );
+
+// ZUN quirk: This appears to match the 48-ring in one of the subpatterns of
+// Chiyuri's Boss Attack. ZUN only uses trail bullets in two Boss Attacks, only
+// one player's Boss Attack can be active at any given time, and the one other
+// trail bullet pattern gets nowhere close to spawning this amount of bullets.
+//
+// However, let's consider the rare but entirely possible case of Chiyuri
+// firing this 48-ring group twice in a row. On Boss Attack levels 1 and 2,
+// bullet speeds are slow enough for the occasional bullet to still be alive
+// and moving after the 96 frames that Chiyuri waits before firing the second
+// group – especially since trail bullets spend an added [TRAIL_POINT_COUNT]
+// frames on the playfield before being clipped, for optical reasons. With no
+// check against this cap, bullets_add() ends up assigning the same trail slot
+// to a second bullet. Then, that second bullet will quickly despawn as the
+// first bullet's clipping condition will also apply to it, even though its
+// main sprite might be nowhere close to any edge of the playfield.
 static const int TRAIL_RING_SIZE = 48;
 // ---------
 
