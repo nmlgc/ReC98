@@ -668,6 +668,16 @@ void bullets_update(void)
 
 		// X coordinate
 		// ------------
+		// ZUN bug: If two or more bullets share the same trail point slot as
+		// a result of the [TRAIL_RING_SIZE] quirk, separately processing X and
+		// Y can cause trail point coordinates to get mixed up if the first
+		// bullet gets clipped due to its Y coordinate. In that case, X will
+		// come from the first bullet, and Y will come from the second one.
+		// bullets_render() will then blit trail sprites to this mixed-up
+		// position for a single frame, until the second bullet is removed as
+		// well. Hence, this is a bug we can fix without affecting gameplay, as
+		// the clipping condition from the first bullet still applies due to
+		// the quirk, regardless of the mixed-up positions.
 
 		coord_next = p->center.x;
 		coord_prev = coord_next;
