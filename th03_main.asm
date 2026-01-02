@@ -21645,45 +21645,10 @@ loc_17EF3:
 sub_17DAE	endp
 
 	@fireball_put$qv procdesc near
+	@fireball_explosion_flag_update$qv procdesc near
 E_FIREB_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17F9F	proc near
-		push	bp
-		mov	bp, sp
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_enemy], 14
-		jnz	short loc_17FB1
-		mov	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_HITTING_ENEMIES
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_17FB1:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_enemy], 32
-		jnz	short loc_17FC0
-		mov	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_17FC0:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_enemy], 36
-		jb	short loc_17FCD
-		mov	[bx+fireball_t.FIREBALL_flag], EFF_FREE
-
-loc_17FCD:
-		pop	bp
-		retn
-sub_17F9F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21775,7 +21740,7 @@ loc_18075:
 		inc	[bx+fireball_t.FIREBALL_enemy]
 		cmp	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jb	short loc_18092
-		call	sub_17F9F
+		call	@fireball_explosion_flag_update$qv
 		jmp	loc_1815C
 ; ---------------------------------------------------------------------------
 

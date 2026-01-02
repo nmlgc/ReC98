@@ -121,3 +121,16 @@ void near fireball_put(void)
 	top  = (playfield_fg_y_to_screen(p.center.y, p.pid) - size_half);
 	sprite16_put(left, top, so);
 }
+
+#define p (efe_p.fireball)
+
+void near fireball_explosion_flag_update(void)
+{
+	if(p->frame == 14) {
+		p->flag = EFF_EXPLOSION_HITTING_ENEMIES;
+	} else if(p->frame == 32) {
+		p->flag = EFF_EXPLOSION_IGNORING_ENEMIES;
+	} else if(p->frame >= 36) {
+		p->flag = EFF_FREE;
+	}
+}
