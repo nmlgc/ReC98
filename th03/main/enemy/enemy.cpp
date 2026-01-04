@@ -733,3 +733,34 @@ bool near enemy_run(void)
 		script += op_size;
 	}
 }
+
+#pragma codeseg ENEMY_PUT main_04 // ZUN bloat
+
+void enemies_render(void)
+{
+	efe_p.enemy = enemies;
+	for(int i = 0; i < ENEMY_COUNT; (i++, efe_p.enemy++)) {
+		enemy_t near *p = efe_p.enemy;
+		if((p->flag == EFF_FREE) || (p->flag == EF_RUNNING_UNSPAWNED)) {
+			continue;
+		}
+
+		// ZUN bloat: enemy_explosion_put() overwrites the size anyway, so this
+		// should be done in enemy_put() for symmetry.
+		sprite16_put_size.w.v = to_vram_word(p->size_pixels);
+		sprite16_put_size.h = (p->size_pixels / 2);
+
+		static_assert(PLAYER_COUNT == 2);
+		if(p->pid == 0) {
+			sprite16_clip.set_for_pid_0();
+		} else {
+			sprite16_clip.set_for_pid_1();
+		}
+
+		if(p->flag == EF_RUNNING_SPAWNED) {
+			enemy_put();
+		} else {
+			enemy_explosion_put();
+		}
+	}
+}

@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, main_04__TEXT
 
 ; ===========================================================================
 
@@ -304,7 +304,7 @@ loc_986C:
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	gba_boss_render_p2
 		call	@shots_render$qv
-		call	sub_164DA
+		call	@enemies_render$qv
 		call	sub_1837C
 		call	@hitcircles_render$qv
 		mov	_pid_current, 0
@@ -19296,10 +19296,8 @@ loc_15E45:
 include th03/main/player/gauge_avail_add.asm
 E_ENEMY_TEXT ends
 
-PELLET_PUT segment byte public 'CODE' use16
-	@enemy_put$qv procdesc near
+ENEMY_PUT segment byte public 'CODE' use16
 	@enemy_explosion_flag_update$qv procdesc near
-	@enemy_explosion_put$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19754,73 +19752,10 @@ loc_164D3:
 		retn
 sub_164AD	endp
 
+	extern @enemies_render$qv:proc
+ENEMY_PUT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_164DA	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	_efe_p, offset enemies
-		xor	di, di
-		jmp	short loc_16545
-; ---------------------------------------------------------------------------
-
-loc_164E9:
-		mov	si, _efe_p
-		cmp	[si+enemy_t.ENEMY_flag], EFF_FREE
-		jz	short loc_1653F
-		cmp	[si+enemy_t.ENEMY_flag], EF_RUNNING_UNSPAWNED
-		jz	short loc_1653F
-		mov	al, [si+enemy_t.ENEMY_size_pixels]
-		mov	ah, 0
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	_sprite16_put_w, al
-		mov	al, [si+enemy_t.ENEMY_size_pixels]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sprite16_put_h, ax
-		cmp	[si+enemy_t.ENEMY_pid], 0
-		jnz	short loc_16526
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
-		jmp	short loc_16532
-; ---------------------------------------------------------------------------
-
-loc_16526:
-		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-
-loc_16532:
-		cmp	[si+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
-		jnz	short loc_1653C
-		call	@enemy_put$qv
-		jmp	short loc_1653F
-; ---------------------------------------------------------------------------
-
-loc_1653C:
-		call	@enemy_explosion_put$qv
-
-loc_1653F:
-		inc	di
-		add	_efe_p, size enemy_t
-
-loc_16545:
-		cmp	di, ENEMY_COUNT
-		jl	short loc_164E9
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_164DA	endp
-
+PELLET_PUT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32089,7 +32024,6 @@ efe_t struct
 efe_t ends
 
 EF_RUNNING_SPAWNED = 1
-EF_RUNNING_UNSPAWNED = 3
 
 enemy_t struct
 	ENEMY_flag           	db ?
