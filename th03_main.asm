@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
 main_06 group P_EXATT_TEXT, main_06_TEXT
 
 ; ===========================================================================
@@ -19688,9 +19688,7 @@ loc_1646E:
 		mov	ah, 0
 		push	ax
 		call	@chain_fire_charged_exatt$qucui
-		push	word ptr [bp+@@pid]
-		push	_efe_p
-		call	sub_1654E
+		call	@explosion_collision_chain_slot_f$qucp5efe_t pascal, word ptr [bp+@@pid], _efe_p
 
 loc_16484:
 		mov	bx, _efe_p
@@ -19756,61 +19754,12 @@ sub_164AD	endp
 	extern @enemies_render$qv:proc
 ENEMY_PUT ends
 
+E_EXPL_TEXT segment byte public 'CODE' use16
+	@EXPLOSION_COLLISION_CHAIN_SLOT_F$QUCP5EFE_T procdesc pascal near \
+		pid:word, efe:word
+E_EXPL_TEXT ends
+
 PELLET_PUT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1654E	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-
-		enter	2, 0
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, _explosion_collision_chain_slot
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _chains.CHAIN_charge_fireball[bx]
-		mov	ah, 0
-		mov	dl, _round_speed
-		mov	dh, 0
-		mov	bx, (1 shl 4)
-		push	ax
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	dx, 0Ch
-		sub	dx, ax
-		pop	ax
-		cmp	ax, dx
-		jl	short locret_165B1
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, _explosion_collision_chain_slot
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_charge_fireball[bx], 0
-		mov	ax, _efe_p
-		mov	[bp+var_2], ax
-		mov	ax, [bp+arg_0]
-		mov	_efe_p, ax
-		nopcall	@fireballs_add$qv
-		mov	ax, [bp+var_2]
-		mov	_efe_p, ax
-
-locret_165B1:
-		leave
-		retn	4
-sub_1654E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20230,9 +20179,7 @@ loc_16945:
 		push	ax
 		push	word ptr _hitbox_pid
 		call	sub_165B5
-		push	word ptr _hitbox_pid
-		push	si
-		call	sub_1654E
+		call	@explosion_collision_chain_slot_f$qucp5efe_t pascal, word ptr _hitbox_pid, si
 
 loc_16966:
 		inc	[bp+var_C]

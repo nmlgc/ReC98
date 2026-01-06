@@ -30,6 +30,20 @@ extern chains_t chains;
 // ZUN bloat: One-line wrapper around combo_add_raw().
 uint16_t pascal near combo_add(pid_t pid, uint8_t chain_slot, uint16_t bonus);
 
+#pragma codeseg ENEMY_PUT // ZUN bloat
+
+struct efe_t;
+
+// Fires a blue fireball if [pid]'s [charge_fireball] in
+// [explosion_collision_chain_slot] exceeds a difficulty-specific threshold
+// value, then resets the charge.
+// ZUN bloat: Should be generic and take a slot parameter.
+void pascal near explosion_collision_chain_slot_fire_charged_fireball(
+	pid_t pid, efe_t near *efe
+);
+
+#pragma codeseg
+
 // Fires an Extra Attack if [pid]'s [charge_exatt] in the given chain [slot]
 // exceeds a difficulty-specific threshold value, then resets the charge.
 // ZUN bloat: Reads [efe_p.efe.center]. Should just take a `PlayfieldPoint`
