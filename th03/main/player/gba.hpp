@@ -48,5 +48,8 @@ extern farfunc_t_near gba_gauge_pattern_bullet[PLAYER_COUNT];
 static const uint8_t GBA_BOSS_LEVEL_MAX = 16;
 extern uint8_t gba_boss_level;
 
+// The opposite PID is the attacked one.
+extern pid_optional_t gba_boss_launched_by;
+
 extern farfunc_t_near gba_boss_update[PLAYER_COUNT];
 extern farfunc_t_near gba_boss_render[PLAYER_COUNT];

@@ -1185,7 +1185,7 @@ loc_A10B:
 		mov	_gba_gauge_level[1], GBA_GAUGE_LEVEL_MAX
 
 loc_A117:
-		mov	byte_1DB9E, -1
+		mov	_gba_boss_launched_by, PID_NONE
 		mov	_defeat_flag, DF_NONE
 		mov	_hud_start_flag, HSF_INIT
 		mov	word_21434, 1400h
@@ -6744,7 +6744,7 @@ loc_DC64:
 		mov	_warning_flag[bx], WF_PORTRAIT
 		cmp	[bp+var_2], 0FF0h
 		jl	short loc_DCD3
-		mov	al, byte_1DB9E
+		mov	al, _gba_boss_launched_by
 		cmp	al, _pid_PID_current
 		jz	short loc_DCDA
 		mov	al, _pid_PID_current
@@ -6758,7 +6758,7 @@ loc_DC64:
 
 loc_DCBC:
 		add	word_21434, 2800h
-		cmp	byte_1DB9E, -1
+		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_DCCE
 		inc	byte ptr [si+77h]
 		jmp	short loc_DD2B
@@ -8113,7 +8113,7 @@ loc_F3D6:
 		cmp	word_1F340, 1A00h
 		jl	short loc_F400
 		mov	byte_1F34F, 0
-		mov	byte_1DB9E, -1
+		mov	_gba_boss_launched_by, PID_NONE
 		mov	word_21434, 1400h
 
 loc_F400:
@@ -8136,7 +8136,7 @@ sub_F402	proc near
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_BOSS
 		jnz	loc_F4AE
-		cmp	byte_1DB9E, -1
+		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_F481
 		mov	si, 1DFEh
 		cmp	_pid_current, 1
@@ -8156,7 +8156,7 @@ loc_F42B:
 		mov	byte_1F352, al
 		mov	word_1F3B0, 0
 		mov	al, _pid_current
-		mov	byte_1DB9E, al
+		mov	_gba_boss_launched_by, al
 		mov	ah, 0
 		mov	bx, ax
 		mov	_gba_flag_active[bx], GBAF_NONE
@@ -8329,7 +8329,7 @@ sub_F58C	proc near
 		mov	byte_1F34F, al
 		cmp	byte_1F34F, 0
 		jnz	short loc_F5AD
-		mov	byte_1DB9E, -1
+		mov	_gba_boss_launched_by, PID_NONE
 
 loc_F5AD:
 		pop	bp
@@ -8668,7 +8668,7 @@ var_4		= word ptr -4
 
 loc_F887:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_F953	; jumptable 0000F8BF case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -8940,7 +8940,7 @@ gba_boss_render_marisa proc far
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_FB44
 		mov	al, 1
 		sub	al, _pid_current
@@ -9398,7 +9398,7 @@ var_4		= word ptr -4
 
 loc_FF2B:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_10000	; jumptable 0000FF6C case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -9734,7 +9734,7 @@ gba_boss_render_mima proc far
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_102C6
 		mov	al, 1
 		sub	al, _pid_current
@@ -10272,7 +10272,7 @@ var_4		= word ptr -4
 
 loc_10761:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_10878	; jumptable 000107AE case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -10742,7 +10742,7 @@ gba_boss_render_yumemi proc far
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_10BFC
 		mov	al, 1
 		sub	al, _pid_current
@@ -11258,7 +11258,7 @@ var_4		= word ptr -4
 
 loc_11083:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_11159	; jumptable 000110E0 case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -11609,7 +11609,7 @@ gba_boss_render_reimu proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_113E0
 		cmp	byte_1F34F, 0
 		jnz	short loc_113D1
@@ -12008,7 +12008,7 @@ var_4		= word ptr -4
 
 loc_116F6:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_117C1	; jumptable 00011732 case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -12368,7 +12368,7 @@ gba_boss_render_ellen proc far
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_11A6B
 		mov	al, 1
 		sub	al, _pid_current
@@ -12890,7 +12890,7 @@ var_4		= word ptr -4
 
 loc_11EC0:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_11F92	; jumptable 00011EFE case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -13179,7 +13179,7 @@ gba_boss_render_kotohime proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_1219B
 		mov	al, _pid_current
 		mov	ah, 0
@@ -13810,7 +13810,7 @@ var_2		= byte ptr -2
 
 loc_12700:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_1290B
 		mov	al, 1
 		sub	al, _pid_current
@@ -14330,7 +14330,7 @@ gba_boss_render_chiyuri proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_12BF9
 		mov	al, _pid_current
 		mov	ah, 0
@@ -14364,7 +14364,7 @@ loc_12BD7:
 
 loc_12BE3:
 		call	sub_F58C
-		cmp	byte_1DB9E, -1
+		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_12BF9
 		mov	al, 1
 		sub	al, _pid_current
@@ -14852,7 +14852,7 @@ var_4		= word ptr -4
 
 loc_1304F:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_13122	; jumptable 0001308A case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -15158,7 +15158,7 @@ gba_boss_render_kana proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_1334B
 		mov	al, _pid_current
 		mov	ah, 0
@@ -15599,7 +15599,7 @@ var_4		= word ptr -4
 
 loc_136AB:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_1377C	; jumptable 000136E6 case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -15912,7 +15912,7 @@ gba_boss_render_rikako proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_139D8
 		mov	al, _pid_current
 		mov	ah, 0
@@ -19782,7 +19782,7 @@ arg_2		= word ptr  6
 		mov	bx, ax
 		cmp	_warning_flag[bx], WF_NONE
 		jnz	loc_16708
-		cmp	byte_1DB9E, cl
+		cmp	_gba_boss_launched_by, cl
 		jz	loc_1667D
 		mov	al, cl
 		mov	ah, 0
@@ -19827,7 +19827,7 @@ arg_2		= word ptr  6
 		inc	_gba_boss_level
 
 loc_16656:
-		cmp	byte_1DB9E, -1
+		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_1666D
 		mov	al, cl
 		mov	ah, 0
@@ -30494,6 +30494,8 @@ main_11_TEXT	ends
 
 	.data
 
+PID_NONE = -1
+
 		db  64h	; d
 		db    0
 		db  32h	; 2
@@ -30652,9 +30654,10 @@ include th03/snd/se_state[data].asm
 include th02/formats/pfopen[data].asm
 include th03/snd/se_priority[data].asm
 include th03/formats/cfg_lres[data].asm
-		db 0
-byte_1DB9E	db 0FFh
-		db 0
+	evendata
+public _gba_boss_launched_by
+_gba_boss_launched_by	db PID_NONE
+	evendata
 a00ch_bf2	db '00ch.bf2',0
 		db 0
 		db    0
