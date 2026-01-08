@@ -1188,7 +1188,7 @@ loc_A117:
 		mov	_gba_boss_launched_by, PID_NONE
 		mov	_defeat_flag, DF_NONE
 		mov	_hud_start_flag, HSF_INIT
-		mov	word_21434, 1400h
+		mov	_combo_points_for_boss_attack, 5120
 		mov	_round_frame_mod16, 0
 		mov	_round_frame_mod8, 0
 		mov	_round_frame_mod4, 0
@@ -6757,7 +6757,7 @@ loc_DC64:
 		inc	_gba_boss_level
 
 loc_DCBC:
-		add	word_21434, 2800h
+		add	_combo_points_for_boss_attack, 10240
 		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_DCCE
 		inc	byte ptr [si+77h]
@@ -8114,7 +8114,7 @@ loc_F3D6:
 		jl	short loc_F400
 		mov	byte_1F34F, 0
 		mov	_gba_boss_launched_by, PID_NONE
-		mov	word_21434, 1400h
+		mov	_combo_points_for_boss_attack, 5120
 
 loc_F400:
 		pop	bp
@@ -8226,7 +8226,7 @@ sub_F4B4	proc far
 		mov	bx, ax
 		cmp	_gba_flag_active[bx], GBAF_BOSS
 		jz	short loc_F4F6
-		mov	word_21434, 1400h
+		mov	_combo_points_for_boss_attack, 5120
 
 loc_F4F6:
 		mov	al, [bp+@@pid_other]
@@ -19556,9 +19556,7 @@ loc_1630B:
 		push	ax
 		call	@combo_add$qucucui
 		mov	[bp+@@bonus_total], ax
-		push	ax
-		push	word ptr [bp+@@pid]
-		call	sub_165B5
+		call	sub_165B5 pascal, ax, word ptr [bp+@@pid]
 		mov	bx, _efe_p
 		mov	ax, [bx+enemy_t.ENEMY_center.x]
 		mov	_bullet_template.BT_center.x, ax
@@ -19768,14 +19766,14 @@ PELLET_PUT segment byte public 'CODE' use16
 sub_165B5	proc near
 
 arg_0		= byte ptr  4
-arg_2		= word ptr  6
+@@points	= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_2]
+		mov	si, [bp+@@points]
 		mov	cl, [bp+arg_0]
-		cmp	si, word_21434
+		cmp	si, _combo_points_for_boss_attack
 		jb	loc_166FD
 		mov	al, cl
 		mov	ah, 0
@@ -19821,7 +19819,7 @@ arg_2		= word ptr  6
 		add	ax, dx
 		mov	bx, ax
 		mov	_chains.CHAIN_charge_exatt[bx], 0
-		add	word_21434, 1400h
+		add	_combo_points_for_boss_attack, 5120
 		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
 		jnb	short loc_16656
 		inc	_gba_boss_level
@@ -19847,7 +19845,7 @@ loc_1666D:
 ; ---------------------------------------------------------------------------
 
 loc_1667D:
-		cmp	si, 7530h
+		cmp	si, 30000
 		jb	loc_16708
 		mov	al, cl
 		mov	ah, 0
@@ -20176,9 +20174,7 @@ loc_16916:
 loc_16945:
 		call	@combo_add$qucucui pascal, word ptr _hitbox_pid, word ptr _explosion_collision_chain_slot, [bp+@@bonus]
 		mov	[bp+@@bonus], ax
-		push	ax
-		push	word ptr _hitbox_pid
-		call	sub_165B5
+		call	sub_165B5 pascal, ax, word ptr _hitbox_pid
 		call	@explosion_collision_chain_slot_f$qucp5efe_t pascal, word ptr _hitbox_pid, si
 
 loc_16966:
@@ -31404,7 +31400,8 @@ angle_2142C	db ?
 word_2142E	dw ?
 word_21430	dw ?
 		db 2 dup(?)
-word_21434	dw ?
+public _combo_points_for_boss_attack
+_combo_points_for_boss_attack	dw ?
 
 EFF_FREE = 0
 EFF_EXPLOSION_IGNORING_ENEMIES = 9

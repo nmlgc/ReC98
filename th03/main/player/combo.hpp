@@ -16,6 +16,12 @@ struct combo_t {
 #define COMBO_HIT_CAP 99
 #define COMBO_BONUS_CAP 65535
 
+// The first player to reach this amount of combo points will fire or reverse a
+// Boss Attack as soon as the other blocking conditions are no longer met.
+// (Also known as the Spell Point Requirement among the Western gameplay
+// community.)
+extern uint16_t combo_points_for_boss_attack;
+
 extern combo_t combos[PLAYER_COUNT];
 
 // Updates [pid]'s combo with the given amount of [bonus] points coming from an
