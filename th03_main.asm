@@ -1251,7 +1251,7 @@ loc_A1BD:
 		add	bx, bx
 		mov	_playfield_fg_shift_x[bx], 0
 		mov	_damage_all_on[di], 0
-		mov	byte ptr [di+798h], 0
+		mov	_warning_flag[di], WF_NONE
 		inc	di
 		add	si, size player_stuff_t
 
@@ -4513,6 +4513,13 @@ loc_C9F6:
 		retn
 sub_C8C4	endp
 
+WARNING_FLASH_RED_FRAMES = 30
+
+WF_NONE = 0
+WF_PORTRAIT = 1
+WF_FLASH_WHITE = 2
+WF_FLASH_RED = 3
+WF_FLASH_RED_END = (WF_FLASH_RED + WARNING_FLASH_RED_FRAMES)
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4528,7 +4535,7 @@ sub_C9FE	proc far
 		mov	al, [bp+@@mrs_slot]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 1
+		cmp	_warning_flag[bx], WF_PORTRAIT
 		jnz	short loc_CA37
 		mov	si, PLAYFIELD_LEFT
 		cmp	[bp+@@mrs_slot], 0
@@ -4545,7 +4552,7 @@ loc_CA1D:
 		mov	al, [bp+@@mrs_slot]
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 2
+		mov	_warning_flag[bx], WF_FLASH_WHITE
 
 loc_CA37:
 		pop	si
@@ -4562,9 +4569,9 @@ sub_CA3C	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_1DCF8, 2
+		cmp	warning_flag_p1, WF_FLASH_WHITE
 		jz	short loc_CA4E
-		cmp	byte_1DCF9, 2
+		cmp	warning_flag_p2, WF_FLASH_WHITE
 		jnz	short loc_CAC8
 
 loc_CA4E:
@@ -4575,17 +4582,17 @@ loc_CA4E:
 		nopcall	@hud_static_gauge_levels_put$qi
 		push	1
 		nopcall	@hud_static_gauge_levels_put$qi
-		cmp	byte_1DCF8, 2
+		cmp	warning_flag_p1, WF_FLASH_WHITE
 		jnz	short loc_CA81
-		mov	byte_1DCF8, 3
+		mov	warning_flag_p1, WF_FLASH_RED
 		push	0
 		push	0E1h
 		call	sub_CACB
 
 loc_CA81:
-		cmp	byte_1DCF9, 2
+		cmp	warning_flag_p2, WF_FLASH_WHITE
 		jnz	short loc_CA95
-		mov	byte_1DCF9, 3
+		mov	warning_flag_p2, WF_FLASH_RED
 		push	1
 		push	0E1h
 		call	sub_CACB
@@ -4612,7 +4619,7 @@ loc_CAA8:
 		inc	si
 
 loc_CAC3:
-		cmp	si, 1Bh
+		cmp	si, 27
 		jl	short loc_CA99
 
 loc_CAC8:
@@ -4704,12 +4711,12 @@ arg_0		= word ptr  6
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 3
+		cmp	_warning_flag[bx], WF_FLASH_RED
 		jb	loc_CD15
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 3
+		cmp	_warning_flag[bx], WF_FLASH_RED
 		jnz	short loc_CBB9
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -4720,12 +4727,12 @@ loc_CBB9:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 21h	; '!'
+		cmp	_warning_flag[bx], WF_FLASH_RED_END
 		jnb	loc_CCA6
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 12h
+		cmp	_warning_flag[bx], (WF_FLASH_RED + (WARNING_FLASH_RED_FRAMES / 2))
 		jnb	short loc_CBE6
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -4750,12 +4757,12 @@ loc_CBF3:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+798h]
+		inc	_warning_flag[bx]
 		mov	si, 1
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+798h], 1
+		test	_warning_flag[bx], WF_PORTRAIT
 		jz	short loc_CC4D
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -4853,7 +4860,7 @@ loc_CCCE:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 0
+		mov	_warning_flag[bx], WF_NONE
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
@@ -6733,7 +6740,7 @@ loc_DC64:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 1
+		mov	_warning_flag[bx], WF_PORTRAIT
 		cmp	[bp+var_2], 0FF0h
 		jl	short loc_DCD3
 		mov	al, byte_1DB9E
@@ -21011,7 +21018,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 0
+		cmp	_warning_flag[bx], WF_NONE
 		jnz	loc_16708
 		cmp	byte_1DB9E, cl
 		jz	loc_1667D
@@ -21027,7 +21034,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 1
+		mov	_warning_flag[bx], WF_PORTRAIT
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
@@ -21097,7 +21104,7 @@ loc_1667D:
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 1
+		mov	_warning_flag[bx], WF_PORTRAIT
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
@@ -32758,10 +32765,12 @@ yumemi_group_1DCF2 label byte
 	db BG_2_SPREAD_NARROW
 	db BG_5_SPREAD_NARROW
 	db BG_1
+	evendata
 
-		db    0
-byte_1DCF8	db 0
-byte_1DCF9	db 0
+public _warning_flag
+_warning_flag label byte
+warning_flag_p1	db WF_NONE
+warning_flag_p2	db WF_NONE
 gbWARNING_1	db 50h,	51h, 52h, 53h, 54h, 55h, 56h, 57h, 58h, 59h, 5Ah
 		db 5Bh,	5Ch, 5Dh, 5Eh, 5Fh, 0
 gbWARNING_2	db 60h,	61h, 62h, 63h, 64h, 65h, 66h, 67h, 68h, 69h, 6Ah
