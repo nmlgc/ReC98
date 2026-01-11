@@ -27,6 +27,17 @@ struct chains_t {
 
 extern chains_t chains;
 
+// Increments the hit count in [pid]'s given chain [slot], returning the new
+// count.
+#define chain_hits_inc_and_clamp(hits_new, pid, slot) \
+	/* Sneaky! That's how we can pretend this is an actual function that */ \
+	/* returns a value. */ \
+	chains.hits[pid][slot]; \
+	if(hits_new < 255) { \
+		hits_new++; \
+	} \
+	chains.hits[pid][slot] = hits_new;
+
 // ZUN bloat: One-line wrapper around combo_add_raw().
 uint16_t pascal near combo_add(pid_t pid, uint8_t chain_slot, uint16_t bonus);
 

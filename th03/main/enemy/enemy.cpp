@@ -48,7 +48,7 @@ struct enemy_t {
 	uint8_t explosion_max_enemy_hits_half;
 	uint8_t hp;
 	pid_t pid;
-	pixel_length_8_t size_pixels;
+	pixel_length_8_t size_pixels; // Also controls the hitbox size
 	uint16_t script_ip; // Offset from [script_base]
 	uint16_t script_op_frame;
 	uint8_t near *script_base; // Pointer to first script instruction

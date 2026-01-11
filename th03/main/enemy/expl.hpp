@@ -25,4 +25,10 @@ extern bool explosion_collision_in_last_hittest;
 // ZUN bloat: Could have been merged with that flag.
 extern uint8_t explosion_collision_chain_slot;
 
+// Processes collisions of all explosions against the hitbox specified in
+// [hitbox.pid], [hitbox.origin.topleft], [hitbox.right], and [hitbox.bottom].
+// Returns the number of explosions the hitbox collides with, and updates
+// [explosion_collision_in_last_hittest] accordingly.
+// ZUN bloat: This is called twice, and both call sites construct the hitbox
+// in the same function. Parameters would be cleaner.
 uint8_t explosions_hittest(void);
