@@ -3,11 +3,14 @@
 #include "th03/main/enemy/enemy.hpp"
 #include "th03/main/enemy/efe.hpp"
 #include "th03/main/hud/start.hpp"
+#include "th03/main/player/stuff.hpp"
 #include "th03/main/difficul.hpp"
 #include "th03/formats/enedat.hpp"
 #include "th03/math/vector.hpp"
 #include "th03/snd/snd.h"
 #include "th03/sprites/main_s16.hpp"
+#include "th03/sprites/player.hpp"
+#include "th01/math/polar.hpp"
 #include "libs/master.lib/master.hpp"
 #include "x86real.h"
 
@@ -69,11 +72,17 @@ struct enemy_t {
 	uint8_t formation_type;
 	uint8_t formation_i; // ID of this enemy within its formation
 	subpixel_length_8_t speed;
+
+	// Current loop counter for the (broken) [EO_LOOP_*] instructions.
 	uint8_t loop_i;
+
 	enemy_pos_type_t pos_type;
 	int8_t padding[14];
 
 	// Sprite size in 16-pixel units. 0 = invalid.
+	// ZUN bloat: Fully redundant with [size_pixels]. The code should
+	// explicitly assign [explosion_max_enemy_hits_half] in the [EO_SPAWN]
+	// handler and then use [size_pixels] everywhere else.
 	uvram_word_amount_8_t& size_words(void) {
 		return static_cast<uvram_word_amount_8_t>(
 			explosion_max_enemy_hits_half
@@ -84,6 +93,8 @@ struct enemy_t {
 inline void enemy_t_verify(void) {
 	efe_subclass_verify(reinterpret_cast<enemy_t *>(nullptr));
 }
+
+#pragma option -a2
 
 // Constants
 // ---------
@@ -223,7 +234,7 @@ void near enemy_explosion_put(void)
 }
 
 #undef p
-#pragma codeseg ENEMY_2_TEXT // ZUN bloat
+#pragma codeseg ENEMY_2_TEXT main_04 // ZUN bloat
 
 void pascal near enemy_formation_spawn(
 	int formation_type, pid_t pid, enemy_pos_type_t pos_type
@@ -450,4 +461,275 @@ subpixel_length_8_t pascal near chain_pellet_speed(subpixel_length_8_t base)
 		v = ROUND_SPEED_MAX;
 	}
 	return v;
+}
+
+bool near enemy_run(void)
+{
+	enemy_t near& enemy = *efe_p.enemy;
+
+	// ZUN bloat: Can be replaced with either direct assignment, or a separate,
+	// more explicitly named variable.
+	int16_t var;
+
+	player_stuff_t near *player;
+
+	// ZUN bloat: There are better ways of moving through the instruction
+	// stream than duplicating ([enemy.script_base] + [enemy.script_ip]).
+	uint8_t __es *script;
+
+	uint8_t op_size;
+	uint8_t op_duration;
+	subpixel_length_8_t speed_on_sine_axis;
+	Subpixel8 velocity_tmp;
+	pid_t pid = enemy.pid;
+
+	player = &players[pid];
+	_ES = FP_SEG(enedat_2);
+	script = static_cast<uint8_t __es *>(enemy.script_base);
+	script += enemy.script_ip;
+
+	// ZUN bloat: Every clipped branch that returns `true` redundantly sets the
+	// [enemy.flag] to [EFF_FREE].
+	while(1) {
+		switch(reinterpret_cast<enedat_op_t __es *>(script)->code) {
+		case EO_MOVE_LINEAR:
+		case EO_MOVE_LINEAR_STOP_AT_PLAYER_Y:
+		case EO_MOVE_LINEAR_STOP_AT_PLAYER_X:
+			#define p reinterpret_cast<enedat_op_linear_t __es *>(script)
+			if(enemy.script_op_frame == 0) {
+				enemy.speed = p->speed;
+				enemy.angle.split.coarse = p->angle;
+				enemy.angle.split.fine = 0;
+				enemy_velocity_set_from_angle_and_speed();
+			}
+			if(!enemy_move_and_clip()) {
+				op_duration = p->duration;
+				op_size = sizeof(*p);
+
+				enum {
+					HALF_W = TO_SP(PLAYER_W / 2),
+					HALF_H = TO_SP(PLAYER_H / 2),
+				};
+				if(p->code == EO_MOVE_LINEAR_STOP_AT_PLAYER_Y) {
+					if(
+						(enemy.center.y.v >= (player->center.y.v - HALF_H)) &&
+						(enemy.center.y.v <= (player->center.y.v + HALF_H))
+					) {
+						enemy.script_op_frame = 0;
+						break;
+					}
+				} else if(p->code == EO_MOVE_LINEAR_STOP_AT_PLAYER_X) {
+					if(
+						(enemy.center.x.v >= (player->center.x.v - HALF_W)) &&
+						(enemy.center.x.v <= (player->center.x.v + HALF_W))
+					) {
+						enemy.script_op_frame = 0;
+						break;
+					}
+				}
+			} else {
+				enemy.flag = EFF_FREE;
+				return true;
+			}
+			#undef p
+			goto wait_and_return;
+
+		case EO_MOVE:
+			#define p reinterpret_cast<enedat_op_duration_t __es *>(script)
+			if(!enemy_move_and_clip()) {
+				op_duration = p->duration;
+				op_size = sizeof(*p);
+			} else {
+				enemy.flag = EFF_FREE;
+				return true;
+			}
+			#undef p
+			goto wait_and_return;
+
+		case EO_MOVE_WITH_SPEED:
+			#define p reinterpret_cast<enedat_op_speed_t __es *>(script)
+			if(enemy.script_op_frame == 0) {
+				enemy.speed = p->speed;
+				enemy_velocity_set_from_angle_and_speed();
+			}
+			if(!enemy_move_and_clip()) {
+				op_duration = p->duration;
+				op_size = sizeof(*p);
+			} else {
+				enemy.flag = EFF_FREE;
+				return true;
+			}
+			#undef p
+			goto wait_and_return;
+
+		case EO_MOVE_CIRCULAR:
+		case EO_MOVE_CIRCULAR_PLUS:
+			#define p reinterpret_cast<enedat_op_circular_base_t __es *>(script)
+			if(enemy.script_op_frame == 0) {
+				enemy.angle.split.coarse = p->angle_start;
+				enemy.angle.split.fine = 0;
+				enemy.angle_speed = p->angle_speed;
+			}
+			enemy.speed = p->speed;
+			enemy_velocity_set_from_angle_and_speed();
+
+			if(p->code == EO_MOVE_CIRCULAR_PLUS) {
+				#undef p
+				#define p ( \
+					reinterpret_cast<enedat_op_circular_plus_t __es *>(script) \
+				)
+				enemy.velocity.x.v += p->velocity_x_plus.v;
+				enemy.velocity.y.v += p->velocity_y_plus.v;
+				op_duration = p->duration;
+				op_size = sizeof(*p);
+			} else {
+				#undef p
+				#define p reinterpret_cast<enedat_op_circular_t __es *>(script)
+				op_duration = p->duration;
+				op_size = sizeof(*p);
+			}
+
+			if(!enemy_move_and_clip()) {
+				enemy_angle_update();
+			} else {
+				enemy.flag = EFF_FREE;
+				return true;
+			}
+			#undef p
+			goto wait_and_return;
+
+		case EO_WAIT:
+			#define p reinterpret_cast<enedat_op_duration_t __es *>(script)
+			op_duration = p->duration;
+			op_size = sizeof(*p);
+			#undef p
+			goto wait_and_return;
+
+		case EO_MOVE_SINE_X:
+		case EO_MOVE_SINE_Y:
+			#define p reinterpret_cast<enedat_op_sine_t __es *>(script)
+			if(enemy.script_op_frame == 0) {
+				enemy.angle.wide = 0x00;
+				enemy.angle_speed = p->angle_speed;
+			}
+			speed_on_sine_axis = p->speed_on_sine_axis; // ZUN bloat
+			enemy.velocity.x.v = polar_x_fast(
+				0, speed_on_sine_axis, enemy.angle.split.coarse
+			);
+			enemy.velocity.y.v = p->velocity_on_linear_axis.v;
+			if(p->code == EO_MOVE_SINE_Y) {
+				velocity_tmp.v = enemy.velocity.x.v;
+				enemy.velocity.x.v = enemy.velocity.y.v;
+				enemy.velocity.y.v = velocity_tmp.v;
+			}
+
+			if(!enemy_move_and_clip()) {
+				enemy_angle_update();
+			} else {
+				enemy.flag = EFF_FREE;
+				return true;
+			}
+
+			op_duration = p->duration;
+			op_size = sizeof(*p);
+			#undef p
+			goto wait_and_return;
+
+		case EO_STOP:
+			enemy.flag = EFF_FREE;
+			return true;
+
+		case EO_SPAWN:
+			#define p reinterpret_cast<enedat_op_spawn_t __es *>(script)
+			enemy.flag = EF_RUNNING_SPAWNED;
+
+			var = p->center_x_divided_by_8;
+			if(enemy.pos_type & EPT_DO_NOT_MIRROR_X) {
+				enemy.center.x.v = (var << (3 + SUBPIXEL_BITS));
+			} else {
+				enemy.center.x.v = (
+					to_sp(PLAYFIELD_W) - (var << (3 + SUBPIXEL_BITS))
+				);
+			}
+
+			var = p->center_y_divided_by_8;
+			enemy.center.y.v = (var << (3 + SUBPIXEL_BITS));
+
+			enemy.size_words() = p->size_words[enemy_speed];
+			enemy.size_pixels = (enemy.size_words() * 16);
+			enemy.hp = p->hp[enemy_speed];
+			enemy.pos_type |= ((p->clip_x != false) * EPT_CLIP_X);
+			enemy.pos_type |= ((p->clip_bottom != false) * EPT_CLIP_BOTTOM);
+
+			op_size = sizeof(*p);
+			#undef p
+			break;
+
+		case EO_CLIP_X:
+			enemy.pos_type |= EPT_CLIP_X;
+			op_size = sizeof(enedat_op_t);
+			break;
+
+		// ZUN bloat: The next three operations are unused in the original
+		// `ENEDAT.DAT`.
+		case EO_CLIP_BOTTOM:
+			enemy.pos_type |= EPT_CLIP_BOTTOM;
+			op_size = sizeof(enedat_op_t);
+			break;
+
+		// ZUN landmine: These loop instructions don't really work for two
+		// reasons:
+		// • If the branch is taken, the IP displacement is only applied to
+		//   [enemy.script_ip] – not to [script], which the `switch` after the
+		//   `continue` immediately reads from. Yet another symptom of the
+		//   bloat behind [script] as a whole.
+		// • And since [op_size] is not set in that case either, execution will
+		//   effectively jump to some place further down the instruction stream
+		//   that depends on the previously processed instruction.
+		//
+		// ZUN bloat: Also, both of these implementations only differ in a
+		// single line:
+		case EO_LOOP_ABS:
+			#define p reinterpret_cast<enedat_op_loop_t __es *>(script)
+			if(enemy.loop_i >= p->count) {
+				enemy.loop_i = 0;
+				op_size = sizeof(*p);
+			} else {
+				enemy.loop_i++;
+				enemy.script_ip = p->ip_disp; // ← This one...
+				script += op_size;
+				continue;
+			}
+			#undef p
+			break;
+
+		case EO_LOOP_REL:
+			#define p reinterpret_cast<enedat_op_loop_t __es *>(script)
+			if(enemy.loop_i >= p->count) {
+				enemy.loop_i = 0;
+				op_size = sizeof(*p);
+			} else {
+				enemy.loop_i++;
+				enemy.script_ip += p->ip_disp; // ← …vs. this one.
+				script += op_size;
+				continue;
+			}
+			#undef p
+			break;
+
+		default:
+		wait_and_return:
+			var = op_duration;
+			var = (((var / 2) * 3) - ((enemy_speed * var) / 6));
+			if(var <= enemy.script_op_frame) {
+				enemy.script_op_frame = 0;
+				enemy.script_ip += op_size;
+			} else {
+				enemy.script_op_frame++;
+			}
+			return false;
+		}
+		enemy.script_ip += op_size;
+		script += op_size;
+	}
 }
