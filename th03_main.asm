@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
 main_06 group P_EXATT_TEXT, main_06_TEXT
 
 ; ===========================================================================
@@ -15974,7 +15974,7 @@ COLLMAP_TEXT	ends
 ENEMY_2_TEXT segment byte public 'CODE' use16
 ENEMY_2_TEXT ends
 
-E_ENEMY_TEXT segment byte public 'CODE' use16
+P_GAUGE_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_update$qv:proc
 	extern @enemy_formations_load$qv:proc
 	extern @enemy_formations_randomize$qv:proc
@@ -19294,7 +19294,11 @@ loc_15E45:
 		retf
 @combos_update_and_render$qv endp
 
-include th03/main/player/gauge_avail_add.asm
+	@GAUGE_AVAIL_ADD$QUCUC procdesc pascal near \
+		pid:byte, charge:byte
+P_GAUGE_TEXT ends
+
+E_ENEMY_TEXT segment byte public 'CODE' use16
 E_ENEMY_TEXT ends
 
 ENEMY_PUT segment byte public 'CODE' use16
@@ -19520,7 +19524,7 @@ loc_16257:
 ; ---------------------------------------------------------------------------
 
 loc_162D5:
-		call	gauge_avail_add pascal, word ptr [bp+@@pid], 32
+		call	@gauge_avail_add$qucuc pascal, word ptr [bp+@@pid], 32
 		mov	al, _explosion_collision_chain_slot
 		mov	[bp+@@chain_slot], al
 		mov	bx, _efe_p
@@ -19967,7 +19971,7 @@ loc_168C8:
 		push	ax
 
 loc_168D5:
-		call	gauge_avail_add
+		call	@gauge_avail_add$qucuc
 		cmp	[bp+@@hits], 4
 		jnb	short loc_168E4
 		mov	al, [di]
@@ -21423,7 +21427,7 @@ loc_182D6:
 		mov	ah, 0
 		push	ax
 		call	@chain_fire_charged_exatt$qucui
-		call	gauge_avail_add pascal, word ptr [bp+@@pid], 16
+		call	@gauge_avail_add$qucuc pascal, word ptr [bp+@@pid], 16
 		call	@score_add$quiuc pascal, 50, word ptr [bp+@@pid]
 
 loc_18341:
