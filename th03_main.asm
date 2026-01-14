@@ -20839,8 +20839,9 @@ sub_1615D	endp
 
 EHA_ENEMY = 0
 EHA_PELLET = 1
-EHA_FIREBALL_BLUE = 2
-EHA_FIREBALL_RED = 3
+EHA_FIREBALL = 2
+EHA_FIREBALL_BLUE = (EHA_FIREBALL + FV_BLUE)
+EHA_FIREBALL_RED = (EHA_FIREBALL + FV_RED)
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22673,35 +22674,35 @@ sub_17DAE	proc far
 
 @@length		= byte ptr -8
 @@pid		= byte ptr -7
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@y	= word ptr -6
+@@i	= word ptr -4
 @@x		= word ptr -2
 
 		enter	8, 0
 		push	si
 		push	di
 		mov	bx, _efe_p
-		mov	di, [bx+2]
-		mov	ax, [bx+4]
-		mov	[bp+var_6], ax
-		mov	si, 4656h
+		mov	di, [bx+fireball_t.FIREBALL_center.x]
+		mov	ax, [bx+fireball_t.FIREBALL_center.y]
+		mov	[bp+@@y], ax
+		mov	si, offset fireballs
 		mov	al, 1
-		sub	al, [bx+8]
+		sub	al, [bx+fireball_t.FIREBALL_pid]
 		mov	[bp+@@pid], al
-		mov	[bp+var_4], 0
+		mov	[bp+@@i], 0
 		jmp	loc_17EEB
 ; ---------------------------------------------------------------------------
 
 loc_17DD4:
-		cmp	byte ptr [si], 0
+		cmp	[si+fireball_t.FIREBALL_flag], EFF_FREE
 		jnz	loc_17EE5
-		mov	byte ptr [si], 2
-		mov	[si+2],	di
-		mov	ax, [bp+var_6]
-		mov	[si+4],	ax
+		mov	[si+fireball_t.FIREBALL_flag], FF_TRANSFER
+		mov	[si+fireball_t.FIREBALL_center.x], di
+		mov	ax, [bp+@@y]
+		mov	[si+fireball_t.FIREBALL_center.y], ax
 		mov	bx, _efe_p
-		mov	al, [bx+8]
-		mov	[si+8],	al
+		mov	al, [bx+fireball_t.FIREBALL_pid]
+		mov	[si+fireball_t.FIREBALL_pid], al
 		push	1Fh
 		call	@randring2_next16_and$qui
 		mov	dl, _round_speed
@@ -22721,15 +22722,15 @@ loc_17DD4:
 
 loc_17E17:
 		mov	al, [bp+@@length]
-		mov	[si+1Bh], al
+		mov	[si+fireball_t.FIREBALL_fall_velocity_y], al
 		mov	al, _variant
 		add	al, 2
-		mov	[si+7],	al
+		mov	[si+fireball_t.FIREBALL_hp], al
 		mov	al, _variant
-		add	al, 2
-		mov	[si+6],	al
-		mov	byte ptr [si+9], 30h ; '0'
-		mov	byte ptr [si+1Eh], 0
+		add	al, EHA_FIREBALL
+		mov	[si+fireball_t.FIREBALL_variant_as_eha], al
+		mov	[si+fireball_t.FIREBALL_size_pixels], 48
+		mov	[si+fireball_t.FIREBALL_unused_5], 0
 		cmp	_variant, FV_BLUE
 		jnz	short loc_17E40
 		mov	al, 0
@@ -22741,7 +22742,7 @@ loc_17E40:
 		inc	al
 
 loc_17E45:
-		mov	[si+20h], al
+		mov	[si+fireball_t.FIREBALL_generation], al
 		push	di	; x
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -22754,7 +22755,7 @@ loc_17E45:
 		and	ax, 511
 		cmp	ax, 256
 		jnb	short loc_17E6F
-		push	1200h
+		push	(PLAYFIELD_W shl 4)
 		call	@randring2_next16_mod$qui
 		jmp	short loc_17E83
 ; ---------------------------------------------------------------------------
@@ -22770,7 +22771,7 @@ loc_17E6F:
 
 loc_17E83:
 		mov	di, ax
-		mov	[si+14h], di
+		mov	[si+fireball_t.FIREBALL_target_center_x_for_target_pid], di
 		push	di	; x
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -22787,17 +22788,17 @@ loc_17E83:
 		mov	ax, [bp+@@x]
 		shl	ax, 4
 		push	ax
-		push	[bp+var_6]
+		push	[bp+@@y]
 		mov	ax, di
 		shl	ax, 4
 		push	ax
 		push	0
 		push	0
 		push	ds
-		lea	ax, [si+10h]
+		lea	ax, [si+fireball_t.FIREBALL_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+12h]
+		lea	ax, [si+fireball_t.FIREBALL_velocity.y]
 		push	ax
 		mov	al, [bp+@@length]
 		mov	ah, 0
@@ -22810,16 +22811,16 @@ loc_17E83:
 		sub	dx, ax
 		push	dx	; pid
 		call	@screen_x_to_playfield$qii
-		mov	[si+16h], ax
+		mov	[si+fireball_t.FIREBALL_target_center_x_for_origin_pid], ax
 		jmp	short loc_17EF3
 ; ---------------------------------------------------------------------------
 
 loc_17EE5:
-		inc	[bp+var_4]
-		add	si, 30h	; '0'
+		inc	[bp+@@i]
+		add	si, size efe_t
 
 loc_17EEB:
-		cmp	[bp+var_4], 18h
+		cmp	[bp+@@i], FIREBALL_COUNT
 		jl	loc_17DD4
 
 loc_17EF3:
@@ -22845,12 +22846,12 @@ var_5		= byte ptr -5
 		push	si
 		push	di
 		mov	si, _efe_p
-		mov	al, [si+1]
+		mov	al, [si+fireball_t.FIREBALL_enemy]
 		and	al, 7
 		mov	[bp+var_6], al
-		cmp	byte ptr [si], 1
+		cmp	[si+fireball_t.FIREBALL_flag], FF_FALL
 		jnz	short loc_17F35
-		mov	al, [si+6]
+		mov	al, [si+fireball_t.FIREBALL_variant_as_eha]
 		mov	ah, 0
 		shl	ax, 3
 		add	ax, 18F0h
@@ -22867,7 +22868,7 @@ loc_17F24:
 ; ---------------------------------------------------------------------------
 
 loc_17F35:
-		mov	al, [si+6]
+		mov	al, [si+fireball_t.FIREBALL_variant_as_eha]
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 1DF8h
@@ -22884,8 +22885,8 @@ loc_17F4B:
 loc_17F5A:
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		push	word ptr [si+2]	; x
-		mov	al, [si+8]
+		push	[si+fireball_t.FIREBALL_center.x]	; x
+		mov	al, [si+fireball_t.FIREBALL_pid]
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
@@ -22916,27 +22917,27 @@ sub_17F9F	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 0Eh
+		cmp	[bx+fireball_t.FIREBALL_enemy], 14
 		jnz	short loc_17FB1
-		mov	byte ptr [bx], 0Ah
+		mov	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_HITTING_ENEMIES
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_17FB1:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 20h ; ' '
+		cmp	[bx+fireball_t.FIREBALL_enemy], 32
 		jnz	short loc_17FC0
-		mov	byte ptr [bx], 9
+		mov	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_17FC0:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 24h ; '$'
+		cmp	[bx+fireball_t.FIREBALL_enemy], 36
 		jb	short loc_17FCD
-		mov	byte ptr [bx], 0
+		mov	[bx+fireball_t.FIREBALL_flag], EFF_FREE
 
 loc_17FCD:
 		pop	bp
@@ -22957,7 +22958,7 @@ var_1		= byte ptr -1
 		enter	6, 0
 		push	si
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 0Ch
+		cmp	[bx+fireball_t.FIREBALL_enemy], 12
 		jnb	short loc_17FE4
 		mov	si, word_1DDA6
 		jmp	short loc_18019
@@ -22965,9 +22966,9 @@ var_1		= byte ptr -1
 
 loc_17FE4:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 20h ; ' '
+		cmp	[bx+fireball_t.FIREBALL_enemy], 32
 		jnb	short loc_1800B
-		mov	al, [bx+1]
+		mov	al, [bx+fireball_t.FIREBALL_enemy]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -22983,7 +22984,7 @@ loc_17FE4:
 
 loc_1800B:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 24h ; '$'
+		cmp	[bx+fireball_t.FIREBALL_enemy], 36
 		jnb	short loc_18019
 		mov	si, word_1DDAC
 
@@ -22991,15 +22992,15 @@ loc_18019:
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 32
 		mov	bx, _efe_p
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+8]
+		push	[bx+fireball_t.FIREBALL_center.x]	; x
+		mov	al, [bx+fireball_t.FIREBALL_pid]
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
 		add	ax, -32
 		mov	[bp+@@left], ax
 		mov	bx, _efe_p
-		mov	ax, [bx+4]
+		mov	ax, [bx+fireball_t.FIREBALL_center.y]
 		sar	ax, 4
 		add	ax, -8
 		mov	[bp+@@top], ax
@@ -23021,18 +23022,18 @@ sub_18059	proc far
 		push	di
 		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
 		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
-		mov	_efe_p, 4656h
+		mov	_efe_p, offset fireballs
 		xor	di, di
 		jmp	loc_18162
 ; ---------------------------------------------------------------------------
 
 loc_18075:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 0
+		cmp	[bx+fireball_t.FIREBALL_flag], EFF_FREE
 		jz	loc_1815C
 		mov	bx, _efe_p
-		inc	byte ptr [bx+1]
-		cmp	byte ptr [bx], 9
+		inc	[bx+fireball_t.FIREBALL_enemy]
+		cmp	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jb	short loc_18092
 		call	sub_17F9F
 		jmp	loc_1815C
@@ -23040,43 +23041,43 @@ loc_18075:
 
 loc_18092:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 1
+		cmp	[bx+fireball_t.FIREBALL_flag], FF_FALL
 		jnz	short loc_18100
-		mov	si, [bx+2]
-		add	si, [bx+10h]
-		mov	al, [bx+8]
+		mov	si, [bx+fireball_t.FIREBALL_center.x]
+		add	si, [bx+fireball_t.FIREBALL_velocity.x]
+		mov	al, [bx+fireball_t.FIREBALL_pid]
 		mov	ah, 0
 		mov	bx, ax
 		cmp	_bomb_flag[bx], BF_INACTIVE
 		jnz	short loc_180BB
-		cmp	si, 0FF00h
+		cmp	si, (-16 shl 4)
 		jle	short loc_180BB
-		cmp	si, 1300h
+		cmp	si, ((PLAYFIELD_W + 16) shl 4)
 		jl	short loc_180C5
 
 loc_180BB:
 		mov	bx, _efe_p
-		mov	byte ptr [bx], 0
+		mov	[bx+fireball_t.FIREBALL_flag], EFF_FREE
 		jmp	loc_1815C
 ; ---------------------------------------------------------------------------
 
 loc_180C5:
 		mov	bx, _efe_p
-		mov	[bx+2],	si
-		mov	si, [bx+4]
-		add	si, [bx+12h]
-		cmp	si, 1800h
+		mov	[bx+fireball_t.FIREBALL_center.x], si
+		mov	si, [bx+fireball_t.FIREBALL_center.y]
+		add	si, [bx+fireball_t.FIREBALL_velocity.y]
+		cmp	si, ((PLAYFIELD_H + PLAYFIELD_BORDER) shl 4)
 		jge	short loc_180BB
 		mov	bx, _efe_p
-		mov	[bx+4],	si
-		cmp	byte ptr [bx], 1
+		mov	[bx+fireball_t.FIREBALL_center.y], si
+		cmp	[bx+fireball_t.FIREBALL_flag], FF_FALL
 		jnz	short loc_1815C
-		mov	ax, [bx+2]
+		mov	ax, [bx+fireball_t.FIREBALL_center.x]
 		mov	_collmap_center.x, ax
-		mov	ax, [bx+4]
-		add	ax, 80h
+		mov	ax, [bx+fireball_t.FIREBALL_center.y]
+		add	ax, (8 shl 4)
 		mov	_collmap_center.y, ax
-		mov	al, [bx+8]
+		mov	al, [bx+fireball_t.FIREBALL_pid]
 		mov	_collmap_pid, al
 		nopcall	@collmap_set_rect_striped$qv
 		jmp	short loc_1815C
@@ -23084,49 +23085,49 @@ loc_180C5:
 
 loc_18100:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 2
+		cmp	[bx+fireball_t.FIREBALL_flag], FF_TRANSFER
 		jnz	short loc_1815C
-		mov	si, [bx+2]
-		add	si, [bx+10h]
-		cmp	byte ptr [bx+8], 0
+		mov	si, [bx+fireball_t.FIREBALL_center.x]
+		add	si, [bx+fireball_t.FIREBALL_velocity.x]
+		cmp	[bx+fireball_t.FIREBALL_pid], 0
 		jnz	short loc_18143
-		cmp	[bx+16h], si
+		cmp	[bx+fireball_t.FIREBALL_target_center_x_for_origin_pid], si
 		jg	short loc_1814C
 
 loc_1811A:
 		mov	bx, _efe_p
-		mov	ax, [bx+14h]
-		mov	[bx+2],	ax
-		mov	word ptr [bx+4], 0
-		mov	word ptr [bx+10h], 0
-		mov	al, [bx+1Bh]
+		mov	ax, [bx+fireball_t.FIREBALL_target_center_x_for_target_pid]
+		mov	[bx+fireball_t.FIREBALL_center.x], ax
+		mov	[bx+fireball_t.FIREBALL_center.y], 0
+		mov	[bx+fireball_t.FIREBALL_velocity.x], 0
+		mov	al, [bx+fireball_t.FIREBALL_fall_velocity_y]
 		mov	ah, 0
-		mov	[bx+12h], ax
-		mov	byte ptr [bx], 1
+		mov	[bx+fireball_t.FIREBALL_velocity.y], ax
+		mov	[bx+fireball_t.FIREBALL_flag], FF_FALL
 		mov	al, 1
-		sub	al, [bx+8]
-		mov	[bx+8],	al
+		sub	al, [bx+fireball_t.FIREBALL_pid]
+		mov	[bx+fireball_t.FIREBALL_pid], al
 		jmp	short loc_1815C
 ; ---------------------------------------------------------------------------
 
 loc_18143:
 		mov	bx, _efe_p
-		cmp	[bx+16h], si
+		cmp	[bx+fireball_t.FIREBALL_target_center_x_for_origin_pid], si
 		jge	short loc_1811A
 
 loc_1814C:
 		mov	bx, _efe_p
-		mov	[bx+2],	si
-		mov	si, [bx+4]
-		add	si, [bx+12h]
-		mov	[bx+4],	si
+		mov	[bx+fireball_t.FIREBALL_center.x], si
+		mov	si, [bx+fireball_t.FIREBALL_center.y]
+		add	si, [bx+fireball_t.FIREBALL_velocity.y]
+		mov	[bx+fireball_t.FIREBALL_center.y], si
 
 loc_1815C:
 		inc	di
-		add	_efe_p, 30h	; '0'
+		add	_efe_p, size efe_t
 
 loc_18162:
-		cmp	di, 18h
+		cmp	di, FIREBALL_COUNT
 		jl	loc_18075
 		pop	di
 		pop	si
@@ -23197,24 +23198,24 @@ var_1		= byte ptr -1
 		push	si
 		mov	_hitbox_radius.x, (12 shl 4)
 		mov	_hitbox_radius.y, (10 shl 4)
-		mov	_efe_p, 4AA6h
+		mov	_efe_p, offset (fireballs + ((FIREBALL_COUNT - 1) * size efe_t))
 		mov	_variant, FV_RED
-		mov	si, 3Fh	; '?'
+		mov	si, (EFE_COUNT - 1)
 		jmp	loc_1836D
 ; ---------------------------------------------------------------------------
 
 loc_181E5:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 1
+		cmp	[bx+fireball_t.FIREBALL_flag], FF_FALL
 		jnz	loc_18367
 		mov	bx, _efe_p
-		mov	al, [bx+6]
+		mov	al, [bx+fireball_t.FIREBALL_variant_as_eha]
 		mov	_explosion_hittest_against, al
-		mov	al, [bx+8]
+		mov	al, [bx+fireball_t.FIREBALL_pid]
 		mov	[bp+@@pid], al
-		mov	ax, [bx+2]
+		mov	ax, [bx+fireball_t.FIREBALL_center.x]
 		mov	_hitbox_origin_center.x, ax
-		mov	ax, [bx+4]
+		mov	ax, [bx+fireball_t.FIREBALL_center.y]
 		add	ax, (3 shl 4)
 		mov	_hitbox_origin_center.y, ax
 		mov	al, [bp+@@pid]
@@ -23223,7 +23224,7 @@ loc_181E5:
 		or	al, al
 		jz	loc_18367
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+7], 0
+		cmp	[bx+fireball_t.FIREBALL_hp], 0
 		jz	short loc_1823A
 		cmp	byte_2203B, 0
 		jnz	short loc_1823A
@@ -23232,14 +23233,14 @@ loc_181E5:
 
 loc_1823A:
 		mov	bx, _efe_p
-		mov	al, [bx+20h]
+		mov	al, [bx+fireball_t.FIREBALL_generation]
 		mov	byte_26358, al
 		cmp	byte_2203B, 0
 		jz	loc_182D6
-		mov	byte ptr [bx], 9
+		mov	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		mov	al, chain_slot_220C2
 		mov	[bp+var_1], al
-		mov	[bx+1Ch], al
+		mov	[bx+fireball_t.FIREBALL_chain_slot], al
 		cmp	_explosion_hittest_against, EHA_FIREBALL_RED
 		jnz	short loc_18275
 		mov	al, [bp+@@pid]
@@ -23282,8 +23283,8 @@ loc_18275:
 		mov	bx, ax
 		mov	byte ptr [bx+4B3Eh], 0
 		mov	bx, _efe_p
-		push	word ptr [bx+2]
-		push	word ptr [bx+4]
+		push	[bx+fireball_t.FIREBALL_center.x]
+		push	[bx+fireball_t.FIREBALL_center.y]
 		push	word ptr [bp+@@pid]
 		call	sub_1A17E
 
@@ -23318,7 +23319,7 @@ loc_182D6:
 		mov	bx, dx
 		mov	[bx+4B3Eh], al
 		mov	bx, _efe_p
-		mov	byte ptr [bx], 0
+		mov	[bx+fireball_t.FIREBALL_flag], EFF_FREE
 		push	word ptr [bp+@@pid]
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -23344,19 +23345,19 @@ loc_18345:
 
 loc_18353:
 		mov	bx, _efe_p
-		dec	byte ptr [bx+7]
+		dec	[bx+fireball_t.FIREBALL_hp]
 
 loc_1835A:
 		mov	byte_26357, 1
 		mov	bx, _efe_p
-		mov	byte ptr [bx+1], 0
+		mov	[bx+fireball_t.FIREBALL_enemy], 0
 
 loc_18367:
 		dec	si
-		sub	_efe_p, 30h	; '0'
+		sub	_efe_p, size efe_t
 
 loc_1836D:
-		cmp	si, 28h	; '('
+		cmp	si, (EFE_COUNT - FIREBALL_COUNT)
 		jge	loc_181E5
 		mov	_variant, FV_BLUE
 		pop	si
@@ -23376,17 +23377,17 @@ sub_1837C	proc far
 		call	sub_181C3
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	_efe_p, 4656h
+		mov	_efe_p, offset fireballs
 		xor	si, si
 		jmp	short loc_183B9
 ; ---------------------------------------------------------------------------
 
 loc_18399:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 0
+		cmp	[bx+fireball_t.FIREBALL_flag], EFF_FREE
 		jz	short loc_183B3
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 9
+		cmp	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jnb	short loc_183B0
 		call	sub_17EF7
 		jmp	short loc_183B3
@@ -23397,10 +23398,10 @@ loc_183B0:
 
 loc_183B3:
 		inc	si
-		add	_efe_p, 30h	; '0'
+		add	_efe_p, size efe_t
 
 loc_183B9:
-		cmp	si, 18h
+		cmp	si, FIREBALL_COUNT
 		jl	short loc_18399
 		pop	si
 		pop	bp
@@ -33244,11 +33245,38 @@ enemy_t struct
 		db 14 dup(?)
 enemy_t ends
 
+FF_FALL = 1
+FF_TRANSFER = 2
+
+fireball_t struct
+	FIREBALL_flag                          	db ?
+	FIREBALL_enemy                         	db ?
+	FIREBALL_center                        	Point <?>
+	FIREBALL_variant_as_eha                	db ?
+	FIREBALL_hp                            	db ?
+	FIREBALL_pid                           	db ?
+	FIREBALL_size_pixels                   	db ?
+		db 6 dup (?)
+	FIREBALL_velocity                      	Point <?>
+	FIREBALL_target_center_x_for_target_pid	dw ?
+	FIREBALL_target_center_x_for_origin_pid	dw ?
+		db 3 dup (?)
+	FIREBALL_fall_velocity_y               	db ?
+	FIREBALL_chain_slot                    	db ?
+		db ?
+	FIREBALL_unused_5                      	db ?
+		db ?
+	FIREBALL_generation                    	db ?
+		db 15 dup(?)
+fireball_t ends
+
 EFE_COUNT = 64
 ENEMY_COUNT = 40
+FIREBALL_COUNT = 24
 
 public _efes, _enemies_alive, _efe_p
 label enemies enemy_t
+fireballs = ($ + (ENEMY_COUNT * size efe_t))
 _efes	efe_t EFE_COUNT dup(<?>)
 _enemies_alive	db PLAYER_COUNT dup(?)
 

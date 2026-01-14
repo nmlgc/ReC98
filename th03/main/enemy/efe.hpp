@@ -82,6 +82,7 @@ static const int EFE_COUNT = 64;
 extern efe_t efes[EFE_COUNT];
 
 struct enemy_t;
+struct fireball_t;
 
 // Currently iterated enemy, explosion, or fireball. Using a `union` to allow
 // potential undefined behavior checks in case the code accesses an inactive
@@ -90,6 +91,7 @@ struct enemy_t;
 extern union {
 	efe_t near *efe;
 	enemy_t near *enemy;
+	fireball_t near *fireball;
 } efe_p;
 
 #endif /* TH03_MAIN_ENEMY_EFE_HPP */
