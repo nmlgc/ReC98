@@ -1,4 +1,4 @@
-#include "th03/common.h"
+#include "th03/main/enemy/efe.hpp"
 
 // Position flags
 // --------------
@@ -17,8 +17,67 @@ static const enemy_pos_type_t EPT_CLIP_BOTTOM = 0x02;
 static const enemy_pos_type_t EPT_DO_NOT_MIRROR_X = 0x80;
 // --------------
 
+// Entity flags
+// ------------
+
+// Script is running and has spawned its enemy
+static const efe_flag_t EF_RUNNING_SPAWNED = 1;
+
+// Script is running and hasn't spawned its enemy
+static const efe_flag_t EF_RUNNING_UNSPAWNED = 3;
+// ------------
+
+struct enemy_t {
+	efe_flag_t flag;
+	uint8_t frame;
+	PlayfieldPoint center;
+	uint8_t explosion_max_enemy_hits_half;
+	uint8_t hp;
+	pid_t pid;
+	pixel_length_8_t size_pixels;
+	uint16_t script_ip; // Offset from [script_base]
+	uint16_t script_op_frame;
+	uint8_t near *script_base; // Pointer to first script instruction
+	SPPoint velocity;
+	int8_t unused_1[4];
+
+	// 16-bit angles!
+	// ZUN landmine: Should be a single 16-bit variable instead of a `union`
+	// to not break on big-endian systems.
+	union {
+		uint16_t wide;
+		struct {
+			unsigned char fine;
+			unsigned char coarse;
+		} split;
+	} angle;
+
+	int8_t angle_speed;
+	int8_t unused_2;
+	uint8_t chain_slot;
+	uint8_t formation_type;
+	uint8_t formation_i; // ID of this enemy within its formation
+	subpixel_length_8_t speed;
+	uint8_t loop_i;
+	enemy_pos_type_t pos_type;
+	int8_t padding[14];
+
+	// Sprite size in 16-pixel units. 0 = invalid.
+	uvram_word_amount_8_t& size_words(void) {
+		return static_cast<uvram_word_amount_8_t>(
+			explosion_max_enemy_hits_half
+		);
+	}
+};
+
+inline void enemy_t_verify(void) {
+	efe_subclass_verify(reinterpret_cast<enemy_t *>(nullptr));
+}
+
 // Constants
 // ---------
+
+static const int ENEMY_COUNT = 40;
 
 // TH03 generates a sequence of 256 random formations and formation directions
 // for each round.
@@ -32,12 +91,17 @@ static const int FORMATIONS_MAX = 24;
 // State
 // -----
 
+#define enemies reinterpret_cast<enemy_t *>(&efes[0])
+
 // ZUN bloat: Declaring a structure with an
 //
 // 	uint8_t near *for_enemy[FORMATION_ENEMIES_MAX];
 //
 // array would have been more readable and generated one fewer instruction.
 typedef uint8_t near *enemy_script_p;
+
+extern uint8_t enemy_formation_type;
+extern uint8_t enemy_formation_i;
 
 // ZUN bloat: One pointer is enough.
 extern uint8_t __seg *enedat_2;

@@ -15993,8 +15993,8 @@ arg_4		= word ptr  8
 		shl	ax, 4
 		mov	si, ax
 		mov	al, byte ptr [bp+arg_4]
-		mov	byte_1F51C, al
-		mov	byte_1F51D, 0
+		mov	_enemy_formation_type, al
+		mov	_enemy_formation_i, 0
 		jmp	short loc_13C52
 ; ---------------------------------------------------------------------------
 
@@ -16006,13 +16006,13 @@ loc_13C37:
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		nopcall	sub_15EDB
-		inc	byte_1F51D
+		inc	_enemy_formation_i
 		inc	si
 
 loc_13C52:
 		mov	bx, [bp+arg_4]
 		mov	al, _formation_enemy_count[bx]
-		cmp	al, byte_1F51D
+		cmp	al, _enemy_formation_i
 		ja	short loc_13C37
 		pop	si
 		pop	bp
@@ -16258,7 +16258,7 @@ sub_13E22	proc near
 		mov	bp, sp
 		push	si
 		mov	si, _efe_p
-		mov	cx, [si+10h]
+		mov	cx, [si+enemy_t.ENEMY_velocity.x]
 		mov	al, _enemy_speed
 		mov	ah, 0
 		imul	cx
@@ -16274,25 +16274,25 @@ sub_13E22	proc near
 		pop	dx
 		add	dx, ax
 		mov	cx, dx
-		test	byte ptr [si+21h], 80h
+		test	[si+enemy_t.ENEMY_pos_type], EPT_DO_NOT_MIRROR_X
 		jz	short loc_13E55
-		add	[si+2],	cx
+		add	[si+enemy_t.ENEMY_center.x], cx
 		jmp	short loc_13E58
 ; ---------------------------------------------------------------------------
 
 loc_13E55:
-		sub	[si+2],	cx
+		sub	[si+enemy_t.ENEMY_center.x], cx
 
 loc_13E58:
-		test	byte ptr [si+21h], 1
+		test	[si+enemy_t.ENEMY_pos_type], EPT_CLIP_X
 		jz	short loc_13E6C
-		cmp	word ptr [si+2], 0FE00h
+		cmp	[si+enemy_t.ENEMY_center.x], (-32 shl 4)
 		jle	short loc_13EA0
-		cmp	word ptr [si+2], 1400h
+		cmp	[si+enemy_t.ENEMY_center.x], ((PLAYFIELD_W + 32) shl 4)
 		jge	short loc_13EA0
 
 loc_13E6C:
-		mov	cx, [si+12h]
+		mov	cx, [si+enemy_t.ENEMY_velocity.y]
 		mov	al, _enemy_speed
 		mov	ah, 0
 		imul	cx
@@ -16308,10 +16308,10 @@ loc_13E6C:
 		pop	dx
 		add	dx, ax
 		mov	cx, dx
-		add	[si+4],	cx
-		test	byte ptr [si+21h], 2
+		add	[si+enemy_t.ENEMY_center.y], cx
+		test	[si+enemy_t.ENEMY_pos_type], EPT_CLIP_BOTTOM
 		jz	short loc_13E9C
-		cmp	word ptr [si+4], 1900h
+		cmp	[si+enemy_t.ENEMY_center.y], ((PLAYFIELD_H + 32) shl 4)
 		jge	short loc_13EA0
 
 loc_13E9C:
@@ -16320,7 +16320,7 @@ loc_13E9C:
 ; ---------------------------------------------------------------------------
 
 loc_13EA0:
-		mov	byte ptr [si], 0
+		mov	[si+enemy_t.ENEMY_flag], EFF_FREE
 		mov	al, 1
 
 loc_13EA5:
@@ -16340,15 +16340,15 @@ sub_13EA8	proc near
 		push	es
 		push	ds
 		mov	ax, _efe_p
-		add	ax, 10h
+		add	ax, ENEMY_velocity.x
 		push	ax
 		push	ds
 		mov	ax, _efe_p
-		add	ax, 12h
+		add	ax, ENEMY_velocity.y
 		push	ax
 		mov	bx, _efe_p
-		push	word ptr [bx+19h]
-		mov	al, [bx+1Fh]
+		push	word ptr [bx+enemy_t.ENEMY_angle_coarse]
+		mov	al, [bx+enemy_t.ENEMY_speed]
 		mov	ah, 0
 		push	ax
 		call	vector2
@@ -16366,7 +16366,7 @@ sub_13ED1	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _efe_p
-		mov	al, [bx+1Ah]
+		mov	al, [bx+enemy_t.ENEMY_angle_speed]
 		cbw
 		shl	ax, 9
 		mov	bx, 3
@@ -16381,7 +16381,7 @@ sub_13ED1	proc near
 		idiv	bx
 		add	cx, ax
 		mov	bx, _efe_p
-		add	[bx+18h], cx
+		add	[bx+enemy_t.ENEMY_angle_wide], cx
 		pop	bp
 		retn
 sub_13ED1	endp
@@ -16440,16 +16440,16 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	di, _efe_p
-		mov	al, [di+8]
+		mov	al, [di+enemy_t.ENEMY_pid]
 		mov	[bp+var_B], al
 		mov	ah, 0
 		shl	ax, 7
 		add	ax, offset _players
 		mov	[bp+@@player], ax
 		mov	es, _enedat_2
-		mov	ax, [di+0Eh]
+		mov	ax, [di+enemy_t.ENEMY_script_base]
 		mov	[bp+var_6], ax
-		mov	ax, [di+0Ah]
+		mov	ax, [di+enemy_t.ENEMY_script_ip]
 
 loc_13F54:
 		add	[bp+var_6], ax
@@ -16473,14 +16473,14 @@ loc_13F78:
 		jmp	word ptr cs:[bx+20h] ; switch jump
 
 loc_13F7C:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 cases	1,8,9
+		cmp	[di+enemy_t.ENEMY_script_op_frame], 0 ; jumptable 00013F78 cases	1,8,9
 		jnz	short loc_13F9A
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+2]
-		mov	[di+1Fh], al
+		mov	[di+enemy_t.ENEMY_speed], al
 		mov	al, es:[bx+1]
-		mov	[di+19h], al
-		mov	byte ptr [di+18h], 0
+		mov	[di+enemy_t.ENEMY_angle_coarse], al
+		mov	[di+enemy_t.ENEMY_angle_fine], 0
 		call	sub_13EA8
 
 loc_13F9A:
@@ -16496,11 +16496,11 @@ loc_13F9A:
 		mov	bx, [bp+@@player]
 		mov	ax, [bx+player_stuff_t.center.y]
 		add	ax, (-32 shl 4)
-		cmp	[di+4],	ax
+		cmp	[di+enemy_t.ENEMY_center.y], ax
 		jl	loc_1423E	; default
 		mov	ax, [bx+player_stuff_t.center.y]
 		add	ax, (32 shl 4)
-		cmp	[di+4],	ax
+		cmp	[di+enemy_t.ENEMY_center.y], ax
 		jg	loc_1423E	; default
 		jmp	short loc_13FFC
 ; ---------------------------------------------------------------------------
@@ -16512,15 +16512,15 @@ loc_13FD6:
 		mov	bx, [bp+@@player]
 		mov	ax, [bx+player_stuff_t.center.x]
 		add	ax, (-16 shl 4)
-		cmp	[di+2],	ax
+		cmp	[di+enemy_t.ENEMY_center.x], ax
 		jl	loc_1423E	; default
 		mov	ax, [bx+player_stuff_t.center.x]
 		add	ax, (16 shl 4)
-		cmp	[di+2],	ax
+		cmp	[di+enemy_t.ENEMY_center.x], ax
 		jg	loc_1423E	; default
 
 loc_13FFC:
-		mov	word ptr [di+0Ch], 0
+		mov	[di+enemy_t.ENEMY_script_op_frame], 0
 		jmp	loc_14284
 ; ---------------------------------------------------------------------------
 
@@ -16532,11 +16532,11 @@ loc_14004:
 ; ---------------------------------------------------------------------------
 
 loc_14010:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 case 7
+		cmp	[di+enemy_t.ENEMY_script_op_frame], 0 ; jumptable 00013F78 case 7
 		jnz	short loc_14023
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+1]
-		mov	[di+1Fh], al
+		mov	[di+enemy_t.ENEMY_speed], al
 		call	sub_13EA8
 
 loc_14023:
@@ -16551,29 +16551,29 @@ loc_14023:
 ; ---------------------------------------------------------------------------
 
 loc_1403D:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 cases	2,10
+		cmp	[di+enemy_t.ENEMY_script_op_frame], 0 ; jumptable 00013F78 cases	2,10
 		jnz	short loc_14058
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+1]
-		mov	[di+19h], al
-		mov	byte ptr [di+18h], 0
+		mov	[di+enemy_t.ENEMY_angle_coarse], al
+		mov	[di+enemy_t.ENEMY_angle_fine], 0
 		mov	al, es:[bx+3]
-		mov	[di+1Ah], al
+		mov	[di+enemy_t.ENEMY_angle_speed], al
 
 loc_14058:
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+2]
-		mov	[di+1Fh], al
+		mov	[di+enemy_t.ENEMY_speed], al
 		call	sub_13EA8
 		mov	bx, [bp+var_6]
 		cmp	byte ptr es:[bx], 0Ah
 		jnz	short loc_1408B
 		mov	al, es:[bx+4]
 		cbw
-		add	[di+10h], ax
+		add	[di+enemy_t.ENEMY_velocity.x], ax
 		mov	al, es:[bx+5]
 		cbw
-		add	[di+12h], ax
+		add	[di+enemy_t.ENEMY_velocity.y], ax
 		mov	al, es:[bx+6]
 		mov	[bp+var_8], al
 		mov	[bp+var_7], 7
@@ -16603,39 +16603,39 @@ loc_140A8:
 ; ---------------------------------------------------------------------------
 
 loc_140B9:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 cases	4,5
+		cmp	[di+enemy_t.ENEMY_script_op_frame], 0 ; jumptable 00013F78 cases	4,5
 		jnz	short loc_140CE
-		mov	word ptr [di+18h], 0
+		mov	[di+enemy_t.ENEMY_angle_wide], 0
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+2]
-		mov	[di+1Ah], al
+		mov	[di+enemy_t.ENEMY_angle_speed], al
 
 loc_140CE:
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+1]
 		mov	[bp+var_9], al
 		movzx	eax, [bp+var_9]
-		mov	dl, [di+19h]
+		mov	dl, [di+enemy_t.ENEMY_angle_coarse]
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		mov	[di+10h], ax
+		mov	[di+enemy_t.ENEMY_velocity.x], ax
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+3]
 		cbw
-		mov	[di+12h], ax
+		mov	[di+enemy_t.ENEMY_velocity.y], ax
 		cmp	byte ptr es:[bx], 5
 		jnz	short loc_1411B
-		mov	al, [di+10h]
+		mov	al, byte ptr [di+enemy_t.ENEMY_velocity.x]
 		mov	[bp+var_A], al
-		mov	ax, [di+12h]
-		mov	[di+10h], ax
+		mov	ax, [di+enemy_t.ENEMY_velocity.y]
+		mov	[di+enemy_t.ENEMY_velocity.x], ax
 		mov	al, [bp+var_A]
 		cbw
-		mov	[di+12h], ax
+		mov	[di+enemy_t.ENEMY_velocity.y], ax
 
 loc_1411B:
 		call	sub_13E22
@@ -16650,30 +16650,30 @@ loc_1411B:
 ; ---------------------------------------------------------------------------
 
 loc_14136:
-		mov	byte ptr [di], 0 ; jumptable 00013F78 case 0
+		mov	[di+enemy_t.ENEMY_flag], EFF_FREE ; jumptable 00013F78 case 0
 		mov	al, 1
 		jmp	loc_1428B
 ; ---------------------------------------------------------------------------
 
 loc_1413E:
-		mov	byte ptr [di], 1 ; jumptable 00013F78 case 16
+		mov	[di+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED ; jumptable 00013F78 case 16
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+1]
 		cbw
 		mov	[bp+var_2], ax
-		test	byte ptr [di+21h], 80h
+		test	[di+enemy_t.ENEMY_pos_type], EPT_DO_NOT_MIRROR_X
 		jz	short loc_1415A
 		shl	ax, 7
-		mov	[di+2],	ax
+		mov	[di+enemy_t.ENEMY_center.x], ax
 		jmp	short loc_14168
 ; ---------------------------------------------------------------------------
 
 loc_1415A:
 		mov	ax, [bp+var_2]
 		shl	ax, 7
-		mov	dx, 1200h
+		mov	dx, (PLAYFIELD_W shl 4)
 		sub	dx, ax
-		mov	[di+2],	dx
+		mov	[di+enemy_t.ENEMY_center.x], dx
 
 loc_14168:
 		mov	bx, [bp+var_6]
@@ -16681,28 +16681,26 @@ loc_14168:
 		cbw
 		mov	[bp+var_2], ax
 		shl	ax, 7
-		mov	[di+4],	ax
+		mov	[di+enemy_t.ENEMY_center.y], ax
 		mov	al, _enemy_speed
 		mov	ah, 0
 		add	ax, [bp+var_6]
 		mov	bx, ax
 		mov	al, es:[bx+3]
-
-loc_14187:
-		mov	[di+6],	al
-		mov	al, [di+6]
+		mov	[di+enemy_t.ENEMY_size_words], al
+		mov	al, [di+enemy_t.ENEMY_size_words]
 		shl	al, 4
-		mov	[di+9],	al
+		mov	[di+enemy_t.ENEMY_size_pixels], al
 		mov	al, _enemy_speed
 		mov	ah, 0
 		add	ax, [bp+var_6]
 		mov	bx, ax
 		mov	al, es:[bx+7]
-		mov	[di+7],	al
+		mov	[di+enemy_t.ENEMY_hp], al
 		mov	bx, [bp+var_6]
 		cmp	byte ptr es:[bx+0Bh], 0
 		jz	short loc_141B3
-		mov	ax, 1
+		mov	ax, EPT_CLIP_X
 		jmp	short loc_141B5
 ; ---------------------------------------------------------------------------
 
@@ -16710,11 +16708,11 @@ loc_141B3:
 		xor	ax, ax
 
 loc_141B5:
-		or	[di+21h], al
+		or	[di+enemy_t.ENEMY_pos_type], al
 		mov	bx, [bp+var_6]
 		cmp	byte ptr es:[bx+0Ch], 0
 		jz	short loc_141C7
-		mov	ax, 1
+		mov	ax, EPT_CLIP_X
 		jmp	short loc_141C9
 ; ---------------------------------------------------------------------------
 
@@ -16723,18 +16721,18 @@ loc_141C7:
 
 loc_141C9:
 		add	al, al
-		or	[di+21h], al
+		or	[di+enemy_t.ENEMY_pos_type], al
 		mov	[bp+var_7], 0Eh
 		jmp	loc_14284
 ; ---------------------------------------------------------------------------
 
 loc_141D5:
-		or	byte ptr [di+21h], 1 ; jumptable 00013F78 case 130
+		or	[di+enemy_t.ENEMY_pos_type], EPT_CLIP_X ; jumptable 00013F78 case 130
 		jmp	short loc_141DF
 ; ---------------------------------------------------------------------------
 
 loc_141DB:
-		or	byte ptr [di+21h], 2 ; jumptable 00013F78 case 131
+		or	[di+enemy_t.ENEMY_pos_type], EPT_CLIP_BOTTOM ; jumptable 00013F78 case 131
 
 loc_141DF:
 		mov	[bp+var_7], 1
@@ -16742,7 +16740,7 @@ loc_141DF:
 ; ---------------------------------------------------------------------------
 
 loc_141E6:
-		mov	al, [di+20h]	; jumptable 00013F78 case 128
+		mov	al, [di+enemy_t.ENEMY_loop_i]	; jumptable 00013F78 case 128
 		mov	ah, 0
 		mov	bx, [bp+var_6]
 		push	ax
@@ -16755,16 +16753,16 @@ loc_141E6:
 ; ---------------------------------------------------------------------------
 
 loc_141FB:
-		inc	byte ptr [di+20h]
+		inc	[di+enemy_t.ENEMY_loop_i]
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+1]
 		cbw
-		mov	[di+0Ah], ax
+		mov	[di+enemy_t.ENEMY_script_ip], ax
 		jmp	short loc_14236
 ; ---------------------------------------------------------------------------
 
 loc_1420B:
-		mov	al, [di+20h]	; jumptable 00013F78 case 129
+		mov	al, [di+enemy_t.ENEMY_loop_i]	; jumptable 00013F78 case 129
 		mov	ah, 0
 		mov	bx, [bp+var_6]
 		push	ax
@@ -16775,19 +16773,19 @@ loc_1420B:
 		jl	short loc_14228
 
 loc_1421E:
-		mov	byte ptr [di+20h], 0
+		mov	[di+enemy_t.ENEMY_loop_i], 0
 		mov	[bp+var_7], 3
 		jmp	short loc_14284
 ; ---------------------------------------------------------------------------
 
 loc_14228:
-		inc	byte ptr [di+20h]
+		inc	[di+enemy_t.ENEMY_loop_i]
 		mov	bx, [bp+var_6]
 		mov	al, es:[bx+1]
 		cbw
 
 loc_14233:
-		add	[di+0Ah], ax
+		add	[di+enemy_t.ENEMY_script_ip], ax
 
 loc_14236:
 		mov	al, [bp+var_7]
@@ -16814,18 +16812,18 @@ loc_1423E:
 		pop	dx
 		sub	dx, ax
 		mov	[bp+var_2], dx
-		mov	ax, [di+0Ch]
+		mov	ax, [di+enemy_t.ENEMY_script_op_frame]
 		cmp	ax, [bp+var_2]
 		jb	short loc_1427D
-		mov	word ptr [di+0Ch], 0
+		mov	[di+enemy_t.ENEMY_script_op_frame], 0
 		mov	al, [bp+var_7]
 		mov	ah, 0
-		add	[di+0Ah], ax
+		add	[di+enemy_t.ENEMY_script_ip], ax
 		jmp	short loc_14280
 ; ---------------------------------------------------------------------------
 
 loc_1427D:
-		inc	word ptr [di+0Ch]
+		inc	[di+enemy_t.ENEMY_script_op_frame]
 
 loc_14280:
 		mov	al, 0
@@ -20187,44 +20185,44 @@ include th03/main/player/gauge_avail_add.asm
 
 sub_15EDB	proc far
 
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= word ptr  0Ah
+@@pos_type   	= byte ptr  6
+@@pid        	= byte ptr  8
+@@script_base	= word ptr  0Ah
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 3ED6h
+		mov	si, offset enemies
 		xor	dx, dx
 		jmp	short loc_15F20
 ; ---------------------------------------------------------------------------
 
 loc_15EE6:
-		cmp	byte ptr [si], 0
+		cmp	[si+enemy_t.ENEMY_flag], EFF_FREE
 		jnz	short loc_15F1C
-		mov	byte ptr [si], 3
-		mov	word ptr [si+0Ah], 0
-		mov	word ptr [si+0Ch], 0
-		mov	byte ptr [si+20h], 0
-		mov	ax, [bp+arg_4]
-		mov	[si+0Eh], ax
-		mov	al, [bp+arg_2]
-		mov	[si+8],	al
-		mov	al, byte_1F51C
-		mov	[si+1Dh], al
-		mov	al, byte_1F51D
-		mov	[si+1Eh], al
-		mov	al, [bp+arg_0]
-		mov	[si+21h], al
+		mov	[si+enemy_t.ENEMY_flag], EF_RUNNING_UNSPAWNED
+		mov	[si+enemy_t.ENEMY_script_ip], 0
+		mov	[si+enemy_t.ENEMY_script_op_frame], 0
+		mov	[si+enemy_t.ENEMY_loop_i], 0
+		mov	ax, [bp+@@script_base]
+		mov	[si+enemy_t.ENEMY_script_base], ax
+		mov	al, [bp+@@pid]
+		mov	[si+enemy_t.ENEMY_pid], al
+		mov	al, _enemy_formation_type
+		mov	[si+enemy_t.ENEMY_formation_type], al
+		mov	al, _enemy_formation_i
+		mov	[si+enemy_t.ENEMY_formation_i], al
+		mov	al, [bp+@@pos_type]
+		mov	[si+enemy_t.ENEMY_pos_type], al
 		jmp	short loc_15F25
 ; ---------------------------------------------------------------------------
 
 loc_15F1C:
 		inc	dx
-		add	si, 30h	; '0'
+		add	si, size efe_t
 
 loc_15F20:
-		cmp	dx, 28h	; '('
+		cmp	dx, ENEMY_COUNT
 		jl	short loc_15EE6
 
 loc_15F25:
@@ -20247,27 +20245,27 @@ var_5		= byte ptr -5
 		enter	6, 0
 		push	si
 		mov	bx, _efe_p
-		mov	al, [bx+6]
+		mov	al, [bx+enemy_t.ENEMY_size_words]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	si, [bx+82Ch]
 		mov	bx, _efe_p
-		mov	al, [bx+7]
+		mov	al, [bx+enemy_t.ENEMY_hp]
 		mov	ah, 0
-		mov	dl, [bx+6]
+		mov	dl, [bx+enemy_t.ENEMY_size_words]
 		mov	dh, 0
 		imul	dx
 		add	ax, ax
 		sub	si, ax
-		mov	al, [bx+9]
+		mov	al, [bx+enemy_t.ENEMY_size_pixels]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_5], al
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+8]
+		push	[bx+enemy_t.ENEMY_center.x]	; x
+		mov	al, [bx+enemy_t.ENEMY_pid]
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
@@ -20276,7 +20274,7 @@ var_5		= byte ptr -5
 		sub	ax, dx
 		mov	[bp+@@left], ax
 		mov	bx, _efe_p
-		mov	ax, [bx+4]
+		mov	ax, [bx+enemy_t.ENEMY_center.y]
 		sar	ax, 4
 		add	ax, 16
 		mov	dl, [bp+var_5]
@@ -20298,9 +20296,9 @@ sub_15F9D	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 0Ah
+		cmp	[bx+enemy_t.ENEMY_frame], 10
 		jnz	short loc_15FB6
-		mov	byte ptr [bx], 0Ah
+		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_HITTING_ENEMIES
 		call	snd_se_play pascal, 3
 		pop	bp
 		retn
@@ -20308,18 +20306,18 @@ sub_15F9D	proc near
 
 loc_15FB6:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 20h ; ' '
+		cmp	[bx+enemy_t.ENEMY_frame], 32
 		jnz	short loc_15FC5
-		mov	byte ptr [bx], 9
+		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_15FC5:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 24h ; '$'
+		cmp	[bx+enemy_t.ENEMY_frame], 36
 		jb	short loc_15FD2
-		mov	byte ptr [bx], 0
+		mov	[bx+enemy_t.ENEMY_flag], EFF_FREE
 
 loc_15FD2:
 		pop	bp
@@ -20341,9 +20339,9 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 0Ah
+		cmp	[bx+enemy_t.ENEMY_frame], 10
 		jnb	short loc_15FF4
-		mov	al, [bx+6]
+		mov	al, [bx+enemy_t.ENEMY_size_words]
 		mov	ah, 0
 		shl	ax, 3
 		mov	bx, ax
@@ -20353,16 +20351,16 @@ var_1		= byte ptr -1
 
 loc_15FF4:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 20h ; ' '
+		cmp	[bx+enemy_t.ENEMY_frame], 32
 		jnb	short loc_1602C
-		mov	al, [bx+1]
+		mov	al, [bx+enemy_t.ENEMY_frame]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		mov	[bp+var_1], al
 		mov	bx, _efe_p
-		mov	al, [bx+6]
+		mov	al, [bx+enemy_t.ENEMY_size_words]
 		mov	ah, 0
 		shl	ax, 3
 		mov	dl, [bp+var_1]
@@ -20377,9 +20375,9 @@ loc_15FF4:
 
 loc_1602C:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+1], 24h ; '$'
+		cmp	[bx+enemy_t.ENEMY_frame], 36
 		jnb	short loc_16044
-		mov	al, [bx+6]
+		mov	al, [bx+enemy_t.ENEMY_size_words]
 		mov	ah, 0
 		shl	ax, 3
 		mov	bx, ax
@@ -20387,7 +20385,7 @@ loc_1602C:
 
 loc_16044:
 		mov	bx, _efe_p
-		mov	al, [bx+9]
+		mov	al, [bx+enemy_t.ENEMY_size_pixels]
 		mov	ah, 0
 		add	ax, 16
 		mov	si, ax
@@ -20402,15 +20400,15 @@ loc_16044:
 		mov	_sprite16_put_h, ax
 		sar	si, 1
 		mov	bx, _efe_p
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+8]
+		push	[bx+enemy_t.ENEMY_center.x]	; x
+		mov	al, [bx+enemy_t.ENEMY_pid]
 		mov	ah, 0
 		push	ax	; pid
 		call	@playfield_fg_x_to_screen$qii
 		sub	ax, si
 		mov	[bp+@@left], ax
 		mov	bx, _efe_p
-		mov	ax, [bx+4]
+		mov	ax, [bx+enemy_t.ENEMY_center.y]
 		sar	ax, 4
 		add	ax, 16
 		sub	ax, si
@@ -20432,7 +20430,7 @@ sub_1609E	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	_efe_p, 3ED6h
+		mov	_efe_p, offset enemies
 		mov	_enemies_alive[0], 0
 		mov	_enemies_alive[1], 0
 		xor	si, si
@@ -20441,11 +20439,11 @@ sub_1609E	proc far
 
 loc_160B7:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 0
+		cmp	[bx+enemy_t.ENEMY_flag], EFF_FREE
 		jz	short loc_16123
 		mov	bx, _efe_p
-		inc	byte ptr [bx+1]
-		cmp	byte ptr [bx], 9
+		inc	[bx+enemy_t.ENEMY_frame]
+		cmp	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jb	short loc_160D1
 		call	sub_15F9D
 		jmp	short loc_16123
@@ -20456,14 +20454,14 @@ loc_160D1:
 		or	al, al
 		jnz	short loc_16123
 		mov	bx, _efe_p
-		mov	al, [bx+8]
+		mov	al, [bx+enemy_t.ENEMY_pid]
 		mov	ah, 0
 		mov	bx, ax
 		inc	_enemies_alive[bx]
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 1
+		cmp	[bx+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
 		jnz	short loc_16123
-		mov	al, [bx+9]
+		mov	al, [bx+enemy_t.ENEMY_size_pixels]
 		mov	ah, 0
 		imul	ax, 3
 		mov	bx, 16
@@ -20471,22 +20469,22 @@ loc_160D1:
 		idiv	bx
 		mov	di, ax
 		mov	bx, _efe_p
-		mov	ax, [bx+2]
+		mov	ax, [bx+enemy_t.ENEMY_center.x]
 		mov	_collmap_center.x, ax
-		mov	ax, [bx+4]
+		mov	ax, [bx+enemy_t.ENEMY_center.y]
 		mov	_collmap_center.y, ax
 		mov	_collmap_stripe_tile_w, di
 		mov	_collmap_tile_h, di
-		mov	al, [bx+8]
+		mov	al, [bx+enemy_t.ENEMY_pid]
 		mov	_collmap_pid, al
 		nopcall	@collmap_set_rect_striped$qv
 
 loc_16123:
 		inc	si
-		add	_efe_p, 30h	; '0'
+		add	_efe_p, size efe_t
 
 loc_16129:
-		cmp	si, 28h	; '('
+		cmp	si, ENEMY_COUNT
 		jl	short loc_160B7
 		call	sub_164AD
 		pop	di
@@ -20511,12 +20509,12 @@ sub_1615D	proc near
 		enter	6, 0
 		push	si
 		mov	bx, _efe_p
-		cmp	word ptr [bx+4], 0
+		cmp	[bx+enemy_t.ENEMY_center.y], 0
 		jle	loc_164AA
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+9], 10h
+		cmp	[bx+enemy_t.ENEMY_size_pixels], 16
 		jz	short loc_16184
-		mov	al, [bx+9]
+		mov	al, [bx+enemy_t.ENEMY_size_pixels]
 		mov	ah, 0
 		imul	ax, 7
 		mov	si, ax
@@ -20528,22 +20526,22 @@ loc_16184:
 
 loc_16187:
 		mov	bx, _efe_p
-		mov	al, [bx+8]
+		mov	al, [bx+enemy_t.ENEMY_pid]
 		mov	[bp+@@pid], al
 		mov	ah, 0
 		mov	bx, ax
 		cmp	_damage_all_on[bx], 0
 		jz	short loc_16212
 		mov	bx, _efe_p
-		mov	byte ptr [bx+7], 0
-		mov	byte ptr [bx], 9
+		mov	[bx+enemy_t.ENEMY_hp], 0
+		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, _chain_ring_p[bx]
 		mov	[bp+@@chain_slot], al
 		mov	bx, _efe_p
-		mov	[bx+1Ch], al
+		mov	[bx+enemy_t.ENEMY_chain_slot], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
@@ -20578,13 +20576,13 @@ loc_16187:
 
 loc_16212:
 		mov	bx, _efe_p
-		mov	ax, [bx+2]
+		mov	ax, [bx+enemy_t.ENEMY_center.x]
 		mov	_hitbox_origin_center.x, ax
-		mov	ax, [bx+4]
+		mov	ax, [bx+enemy_t.ENEMY_center.y]
 		mov	_hitbox_origin_center.y, ax
 		mov	_hitbox_radius.x, si
 		mov	_hitbox_radius.y, si
-		mov	al, [bx+8]
+		mov	al, [bx+enemy_t.ENEMY_pid]
 		mov	_hitbox_pid, al
 		cmp	_hitbox_origin_center.y, 0
 		jl	loc_164AA
@@ -20592,14 +20590,14 @@ loc_16212:
 		or	al, al
 		jz	loc_164AA
 		mov	bx, _efe_p
-		cmp	byte ptr [bx+7], 0
+		cmp	[bx+enemy_t.ENEMY_hp], 0
 		jz	short loc_16257
 		cmp	byte_26356, 0
 		jz	loc_1649B
 
 loc_16257:
 		mov	bx, _efe_p
-		mov	byte ptr [bx], 9
+		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		mov	byte_220C3, 1
 		cmp	byte_2203B, 0
 		jnz	short loc_162D5
@@ -20609,7 +20607,7 @@ loc_16257:
 		mov	al, _chain_ring_p[bx]
 		mov	[bp+@@chain_slot], al
 		mov	bx, _efe_p
-		mov	[bx+1Ch], al
+		mov	[bx+enemy_t.ENEMY_chain_slot], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
@@ -20647,7 +20645,7 @@ loc_162D5:
 		mov	al, chain_slot_220C2
 		mov	[bp+@@chain_slot], al
 		mov	bx, _efe_p
-		mov	[bx+1Ch], al
+		mov	[bx+enemy_t.ENEMY_chain_slot], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
@@ -20683,9 +20681,9 @@ loc_1630B:
 		push	word ptr [bp+@@pid]
 		call	sub_165B5
 		mov	bx, _efe_p
-		mov	ax, [bx+2]
+		mov	ax, [bx+enemy_t.ENEMY_center.x]
 		mov	_bullet_template.BT_center.x, ax
-		mov	ax, [bx+4]
+		mov	ax, [bx+enemy_t.ENEMY_center.y]
 		mov	_bullet_template.BT_center.y, ax
 		push	18h
 		call	sub_13EFF
@@ -20818,7 +20816,7 @@ loc_1646E:
 
 loc_16484:
 		mov	bx, _efe_p
-		mov	al, [bx+6]
+		mov	al, [bx+enemy_t.ENEMY_size_words]
 		mov	ah, 0
 		imul	ax, 10
 		call	@score_add$quiuc pascal, ax, word ptr [bp+@@pid]
@@ -20827,11 +20825,11 @@ loc_16484:
 
 loc_1649B:
 		mov	bx, _efe_p
-		dec	byte ptr [bx+7]
+		dec	[bx+enemy_t.ENEMY_hp]
 
 loc_164A2:
 		mov	bx, _efe_p
-		mov	byte ptr [bx+1], 0
+		mov	[bx+enemy_t.ENEMY_frame], 0
 
 loc_164AA:
 		pop	si
@@ -20853,20 +20851,20 @@ sub_164AD	proc near
 		mov	bp, sp
 		push	si
 		mov	_explosion_hittest_against, EHA_ENEMY
-		mov	_efe_p, 4626h
-		mov	si, 27h	; '''
+		mov	_efe_p, offset (enemies + ((ENEMY_COUNT - 1) * size efe_t))
+		mov	si, (ENEMY_COUNT - 1)
 		jmp	short loc_164D3
 ; ---------------------------------------------------------------------------
 
 loc_164C1:
 		mov	bx, _efe_p
-		cmp	byte ptr [bx], 1
+		cmp	[bx+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
 		jnz	short loc_164CD
 		call	sub_1615D
 
 loc_164CD:
 		dec	si
-		sub	_efe_p, 30h	; '0'
+		sub	_efe_p, size efe_t
 
 loc_164D3:
 		or	si, si
@@ -20886,30 +20884,30 @@ sub_164DA	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	_efe_p, 3ED6h
+		mov	_efe_p, offset enemies
 		xor	di, di
 		jmp	short loc_16545
 ; ---------------------------------------------------------------------------
 
 loc_164E9:
 		mov	si, _efe_p
-		cmp	byte ptr [si], 0
+		cmp	[si+enemy_t.ENEMY_flag], EFF_FREE
 		jz	short loc_1653F
-		cmp	byte ptr [si], 3
+		cmp	[si+enemy_t.ENEMY_flag], EF_RUNNING_UNSPAWNED
 		jz	short loc_1653F
-		mov	al, [si+9]
+		mov	al, [si+enemy_t.ENEMY_size_pixels]
 		mov	ah, 0
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	_sprite16_put_w, al
-		mov	al, [si+9]
+		mov	al, [si+enemy_t.ENEMY_size_pixels]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		mov	_sprite16_put_h, ax
-		cmp	byte ptr [si+8], 0
+		cmp	[si+enemy_t.ENEMY_pid], 0
 		jnz	short loc_16526
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
@@ -20921,7 +20919,7 @@ loc_16526:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_16532:
-		cmp	byte ptr [si], 1
+		cmp	[si+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
 		jnz	short loc_1653C
 		call	sub_15F2A
 		jmp	short loc_1653F
@@ -20932,10 +20930,10 @@ loc_1653C:
 
 loc_1653F:
 		inc	di
-		add	_efe_p, 30h	; '0'
+		add	_efe_p, size enemy_t
 
 loc_16545:
-		cmp	di, 28h	; '('
+		cmp	di, ENEMY_COUNT
 		jl	short loc_164E9
 		pop	di
 		pop	si
@@ -21466,38 +21464,38 @@ sub_16983	proc far
 ; ---------------------------------------------------------------------------
 
 loc_169AD:
-		mov	si, 3ED6h
+		mov	si, offset enemies
 		xor	cx, cx
 		jmp	short loc_169EF
 ; ---------------------------------------------------------------------------
 
 loc_169B4:
-		cmp	byte ptr [si], 1
+		cmp	[si+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
 		jnz	short loc_169EB
-		mov	al, [si+8]
+		mov	al, [si+enemy_t.ENEMY_pid]
 		cmp	al, [bp+@@pid]
 		jnz	short loc_169EB
-		cmp	word ptr [si+2], 0
+		cmp	[si+enemy_t.ENEMY_center.x], 0
 		jl	short loc_169EB
-		cmp	word ptr [si+2], 1200h
+		cmp	[si+enemy_t.ENEMY_center.x], (PLAYFIELD_W shl 4)
 		jg	short loc_169EB
-		cmp	word ptr [si+4], 0
+		cmp	[si+enemy_t.ENEMY_center.y], 0
 		jl	short loc_169EB
-		cmp	word ptr [si+4], 1800h
+		cmp	[si+enemy_t.ENEMY_center.y], ((PLAYFIELD_H + PLAYFIELD_BORDER) shl 4)
 		jg	short loc_169EB
-		cmp	[si+1Eh], dl
+		cmp	[si+enemy_t.ENEMY_formation_i], dl
 		jnb	short loc_169EB
-		mov	dl, [si+1Eh]
+		mov	dl, [si+enemy_t.ENEMY_formation_i]
 		mov	_efe_p, si
 		or	dl, dl
 		jz	short loc_169F4
 
 loc_169EB:
 		inc	cx
-		add	si, 30h	; '0'
+		add	si, size efe_t
 
 loc_169EF:
-		cmp	cx, 28h	; '('
+		cmp	cx, ENEMY_COUNT
 		jl	short loc_169B4
 
 loc_169F4:
@@ -21511,11 +21509,11 @@ loc_169F4:
 
 loc_16A0C:
 		mov	bx, _efe_p
-		mov	ax, [bx+2]
-		add	ax, 0FF00h
+		mov	ax, [bx+enemy_t.ENEMY_center.x]
+		add	ax, (-16 shl 4)
 		mov	word_2142E, ax
-		mov	ax, [bx+4]
-		add	ax, 6E0h
+		mov	ax, [bx+enemy_t.ENEMY_center.y]
+		add	ax, (110 shl 4)
 		mov	word_21430, ax
 		mov	byte_20E48, dl
 		cmp	word_2142E, 0
@@ -23174,8 +23172,8 @@ arg_2		= word ptr  6
 		mov	bx, ax
 		mov	byte ptr [bx+si+4B3Eh],	0
 		mov	bx, _efe_p
-		push	word ptr [bx+2]
-		push	word ptr [bx+4]
+		push	[bx+efe_t.EFE_center.x]
+		push	[bx+efe_t.EFE_center.y]
 		push	[bp+arg_2]
 		call	sub_1A17E
 
@@ -32983,10 +32981,11 @@ word_1F3B0	dw ?
 include th02/math/randring[bss].asm
 		db 102 dup(?)
 word_1F51A	dw ?
-byte_1F51C	db ?
-byte_1F51D	db ?
 
-public _enedat_2, _enedat, _enemy_speed
+public _enemy_formation_type, _enemy_formation_i, _enedat_2, _enemy_speed
+public _enedat
+_enemy_formation_type	db ?
+_enemy_formation_i	db ?
 _enedat_2	dw ?
 _enemy_speed	db ?
 	evendata
@@ -33215,11 +33214,44 @@ efe_t struct
 		db 19 dup(?)
 efe_t ends
 
+EF_RUNNING_SPAWNED = 1
+EF_RUNNING_UNSPAWNED = 3
+
+enemy_t struct
+	ENEMY_flag           	db ?
+	ENEMY_frame          	db ?
+	ENEMY_center         	Point <?>
+	ENEMY_size_words     	db ?
+	ENEMY_hp             	db ?
+	ENEMY_pid            	db ?
+	ENEMY_size_pixels    	db ?
+	ENEMY_script_ip      	dw ?
+	ENEMY_script_op_frame	dw ?
+	ENEMY_script_base    	dw ?
+	ENEMY_velocity       	Point <?>
+		db 4 dup (?)
+	ENEMY_angle_wide label word
+	ENEMY_angle_fine     	db ?
+	ENEMY_angle_coarse   	db ?
+	ENEMY_angle_speed    	db ?
+		db ?
+	ENEMY_chain_slot     	db ?
+	ENEMY_formation_type 	db ?
+	ENEMY_formation_i    	db ?
+	ENEMY_speed          	db ?
+	ENEMY_loop_i         	db ?
+	ENEMY_pos_type       	db ?
+		db 14 dup(?)
+enemy_t ends
+
 EFE_COUNT = 64
+ENEMY_COUNT = 40
 
 public _efes, _enemies_alive, _efe_p
+label enemies enemy_t
 _efes	efe_t EFE_COUNT dup(<?>)
 _enemies_alive	db PLAYER_COUNT dup(?)
+
 		db 2 dup(?)
 
 public _explosion_hittest_against

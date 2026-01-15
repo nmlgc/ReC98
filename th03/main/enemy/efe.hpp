@@ -81,10 +81,15 @@ static const int EFE_COUNT = 64;
 
 extern efe_t efes[EFE_COUNT];
 
-// Currently iterated enemy, explosion, or fireball.
+struct enemy_t;
+
+// Currently iterated enemy, explosion, or fireball. Using a `union` to allow
+// potential undefined behavior checks in case the code accesses an inactive
+// type, with tools that support it.
 // ZUN bloat: Should be replaced with local variables and function parameters.
 extern union {
 	efe_t near *efe;
+	enemy_t near *enemy;
 } efe_p;
 
 #endif /* TH03_MAIN_ENEMY_EFE_HPP */
