@@ -1186,7 +1186,7 @@ loc_A10B:
 loc_A117:
 		mov	byte_1DB9E, -1
 		mov	byte_20E3C, 0
-		mov	byte_207E2, 1
+		mov	_hud_start_flag, HSF_INIT
 		mov	word_21434, 1400h
 		mov	_round_frame_mod16, 0
 		mov	_round_frame_mod8, 0
@@ -2615,7 +2615,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		cmp	byte_207E2, 1
+		cmp	_hud_start_flag, HSF_INIT
 		jnz	short loc_BB86
 		mov	word_20CE8, 0
 		mov	word_20CE4, 3284h
@@ -2652,7 +2652,7 @@ loc_BB75:
 		mov	word_20CEA, 1Ah
 
 loc_BB7B:
-		mov	byte_207E2, 2
+		mov	_hud_start_flag, HSF_ACTIVE
 		mov	x_20CEC, 0
 
 loc_BB86:
@@ -2878,7 +2878,7 @@ loc_BDAF:
 ; ---------------------------------------------------------------------------
 
 loc_BDB9:
-		mov	byte_207E2, 0
+		mov	_hud_start_flag, HSF_DONE
 
 loc_BDBE:
 		pop	di
@@ -3003,7 +3003,7 @@ sub_BE5D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_207E2, 0
+		cmp	_hud_start_flag, HSF_DONE
 		jz	loc_C0D5
 		cmp	byte_20CE6, 0
 		jnz	loc_BF51
@@ -16068,7 +16068,7 @@ sub_13C64	endp
 sub_13CC7	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_207E2, 0
+		cmp	_hud_start_flag, HSF_DONE
 		jnz	short loc_13CDB
 		push	0
 		call	sub_13C64
@@ -33101,7 +33101,14 @@ public _bomb_frame
 _bomb_frame	db PLAYER_COUNT dup(?)
 		db 512 dup(?)
 word_207E0	dw ?
-byte_207E2	db ?
+
+HSF_DONE = 0
+HSF_INIT = 1
+HSF_ACTIVE = 2
+
+public _hud_start_flag
+_hud_start_flag	db ?
+
 byte_207E3	db ?
 		db 150 dup(?)
 word_2087A	dw ?
