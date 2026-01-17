@@ -34,7 +34,7 @@ GBA_BOSS_LEVEL_MAX = 16
 
 	extern _execl:proc
 
-main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
+main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, PELLET_PUT, BULLET_TEXT, main_04__TEXT
 
 ; ===========================================================================
@@ -7287,7 +7287,7 @@ player_bomb	endp
 		hitbox_size:word
 main_010_TEXT	ends
 
-main_011_TEXT	segment	byte public 'CODE' use16
+P_SHOT_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7933,7 +7933,7 @@ sub_E737	endp
 
 	@shots_update$qv procdesc near
 	@shots_render$qv procdesc near
-main_011_TEXT	ends
+P_SHOT_TEXT ends
 
 ; ===========================================================================
 
