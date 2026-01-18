@@ -2,6 +2,7 @@
 
 #include "th03/main/sprite16.hpp"
 
+static const int FIREBALL_CELS = 2;
 static const int EXPLOSION_CELS = 4;
 
 #define XY(x, y) ((y * ROW_SIZE) + (x / BYTE_DOTS))
@@ -21,6 +22,8 @@ static const sprite16_offset_t SO_ATTACK_P2 = XY(320, 0);
 // trail sprites for a single main bullet sprite.
 static const sprite16_offset_t SO_BULLET16 = XY(64, 0);
 
+static const sprite16_offset_t SO_FIREBALL_FALL = XY(0, 80);
+static const sprite16_offset_t SO_FIREBALL_FLY = XY(0, 96);
 static const sprite16_offset_t SO_HITCIRCLE = XY(128, 80);
 
 static const sprite16_offset_t SO_PELLET_CLOUD = XY(528, 80);

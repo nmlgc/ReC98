@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
 
 ; ===========================================================================
 
@@ -21478,7 +21478,7 @@ BAT_Y = 80h
 	extern @bullets_render$qv:proc
 BULLET_TEXT ends
 
-main_04__TEXT segment byte public 'CODE' use16
+E_FIREB_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21644,84 +21644,10 @@ loc_17EF3:
 		retf
 sub_17DAE	endp
 
+	@fireball_put$qv procdesc near
+E_FIREB_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17EF7	proc near
-
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, _efe_p
-		mov	al, [si+fireball_t.FIREBALL_enemy]
-		and	al, 7
-		mov	[bp+var_6], al
-		cmp	[si+fireball_t.FIREBALL_flag], FF_FALL
-		jnz	short loc_17F35
-		mov	al, [si+fireball_t.FIREBALL_variant_as_eha]
-		mov	ah, 0
-		shl	ax, 3
-		add	ax, 18F0h
-		mov	di, ax
-		cmp	[bp+var_6], 3
-		ja	short loc_17F24
-		add	di, 4
-
-loc_17F24:
-		mov	_sprite16_put_w, (32 / 16)
-		mov	_sprite16_put_h, 16
-		mov	[bp+var_5], 10h
-		jmp	short loc_17F5A
-; ---------------------------------------------------------------------------
-
-loc_17F35:
-		mov	al, [si+fireball_t.FIREBALL_variant_as_eha]
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, 1DF8h
-		mov	di, ax
-		cmp	[bp+var_6], 3
-		ja	short loc_17F4B
-		add	di, 2
-
-loc_17F4B:
-		mov	_sprite16_put_w, (16 / 16)
-		mov	_sprite16_put_h, 8
-		mov	[bp+var_5], 8
-
-loc_17F5A:
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		push	[si+fireball_t.FIREBALL_center.x]	; x
-		mov	al, [si+fireball_t.FIREBALL_pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@left], ax
-		mov	ax, [si+4]
-		sar	ax, 4
-		add	ax, 16
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, di
-		pop	di
-		pop	si
-		leave
-		retn
-sub_17EF7	endp
-
+main_04__TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22203,7 +22129,7 @@ loc_18399:
 		mov	bx, _efe_p
 		cmp	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		jnb	short loc_183B0
-		call	sub_17EF7
+		call	@fireball_put$qv
 		jmp	short loc_183B3
 ; ---------------------------------------------------------------------------
 

@@ -1,5 +1,6 @@
 #include "th03/main/enemy/expl.hpp"
 #include "th03/main/enemy/efe.hpp"
+#include "th03/sprites/main_s16.hpp"
 
 // Flags
 // -----
@@ -52,7 +53,17 @@ inline void fireball_t_verify(void) {
 	efe_subclass_verify(reinterpret_cast<fireball_t *>(nullptr));
 }
 
+// Constants
+// ---------
+
 static const int FIREBALL_COUNT = 24;
+
+static const pixel_t FLY_W = 16;
+static const pixel_t FLY_H = 16;
+static const pixel_t FALL_W = 32;
+static const pixel_t FALL_H = 32;
+static const uint8_t FRAMES_PER_CEL = 4;
+// ---------
 
 // State
 // -----
@@ -63,3 +74,50 @@ static const int FIREBALL_COUNT = 24;
 
 extern fireball_variant_t variant;
 // -----
+
+void near fireball_put(void)
+{
+	enum {
+		FLY_VRAM_W = (FLY_W / BYTE_DOTS),
+		FALL_VRAM_W = (FALL_W / BYTE_DOTS),
+	};
+
+	fireball_t near& p = *efe_p.fireball;
+	sprite16_offset_t so;
+	screen_x_t left;
+	screen_y_t top;
+	pixel_length_8_t size_half;
+
+	uint8_t cycle = (p.frame % 8u);
+	if(p.flag == FF_FALL) {
+		// See, if [variant_as_eha] was a regular `fireball_variant_t`, ZUN
+		// wouldn't have needed to translate it back into one here.
+		so = (
+			SO_FIREBALL_FALL -
+			(EHA_FIREBALL * FIREBALL_CELS * FALL_VRAM_W) +
+			(p.variant_as_eha() * (FIREBALL_CELS * FALL_VRAM_W))
+		);
+		if(cycle <= (FRAMES_PER_CEL - 1)) {
+			so += (FALL_W / BYTE_DOTS);
+		}
+		sprite16_put_size.set(FALL_W, FALL_H);
+		size_half = (FALL_W / 2);
+	} else {
+		// Or here.
+		so = (
+			SO_FIREBALL_FLY -
+			(EHA_FIREBALL * FIREBALL_CELS * FLY_VRAM_W) +
+			(p.variant_as_eha() * (FIREBALL_CELS * FLY_VRAM_W))
+		);
+		if(cycle <= (FRAMES_PER_CEL - 1)) {
+			so += (FLY_W / BYTE_DOTS);
+		}
+		sprite16_put_size.set(FLY_W, FLY_H);
+		size_half = (FLY_W / 2);
+	}
+
+	sprite16_clip.reset();
+	left = (playfield_fg_x_to_screen(p.center.x, p.pid) - size_half);
+	top  = (playfield_fg_y_to_screen(p.center.y, p.pid) - size_half);
+	sprite16_put(left, top, so);
+}
