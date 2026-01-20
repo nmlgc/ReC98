@@ -7596,28 +7596,28 @@ loc_E4A2:
 		cmp	_round_or_result_frame, 1
 		jnz	loc_E5AC
 		mov	al, [di+player_stuff_t.combo_hits_max]
-		mov	_win_combo_hits_max, al
+		mov	_defeat_combo_hits_max, al
 		mov	al, [di+player_stuff_t.gauge_attacks_fired]
-		mov	_win_gauge_attacks_fired, al
+		mov	_defeat_gauge_attacks_fired, al
 		mov	al, [di+player_stuff_t.boss_attacks_fired]
-		mov	_win_boss_attacks_fired, al
+		mov	_defeat_boss_attacks_fired, al
 		mov	al, [di+player_stuff_t.boss_attacks_reversed]
-		mov	_win_boss_attacks_reversed, al
+		mov	_defeat_boss_attacks_reversed, al
 		mov	al, [di+player_stuff_t.boss_panics_fired]
-		mov	_win_boss_panics_fired, al
-		movzx	eax, _win_combo_hits_max
+		mov	_defeat_boss_panics_fired, al
+		movzx	eax, _defeat_combo_hits_max
 		imul	eax, 1000
 		mov	score_23DF0, eax
-		movzx	eax, _win_gauge_attacks_fired
+		movzx	eax, _defeat_gauge_attacks_fired
 		imul	eax, 10000
 		add	score_23DF0, eax
-		movzx	eax, _win_boss_attacks_fired
+		movzx	eax, _defeat_boss_attacks_fired
 		imul	eax, 15000
 		add	score_23DF0, eax
-		movzx	eax, _win_boss_attacks_reversed
+		movzx	eax, _defeat_boss_attacks_reversed
 		imul	eax, 20000
 		add	score_23DF0, eax
-		movzx	eax, _win_boss_panics_fired
+		movzx	eax, _defeat_boss_panics_fired
 		imul	eax, 30000
 		add	score_23DF0, eax
 		les	bx, _resident
@@ -7661,31 +7661,31 @@ loc_E589:
 loc_E5AC:
 		push	si
 		push	20h ; ' '
-		mov	al, _win_combo_hits_max
+		mov	al, _defeat_combo_hits_max
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	40h
-		mov	al, _win_gauge_attacks_fired
+		mov	al, _defeat_gauge_attacks_fired
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	60h
-		mov	al, _win_boss_attacks_fired
+		mov	al, _defeat_boss_attacks_fired
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	80h
-		mov	al, _win_boss_attacks_reversed
+		mov	al, _defeat_boss_attacks_reversed
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	0A0h
-		mov	al, _win_boss_panics_fired
+		mov	al, _defeat_boss_panics_fired
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
@@ -33365,7 +33365,16 @@ score_23DEA	dw ?
 word_23DEC	dw ?
 word_23DEE	dw ?
 score_23DF0	dd ?
-include th03/main/player/win[bss].asm
+
+public _defeat_combo_hits_max
+public _defeat_gauge_attacks_fired, _defeat_boss_attacks_fired
+public _defeat_boss_attacks_reversed, _defeat_boss_panics_fired
+_defeat_combo_hits_max       	db ?
+_defeat_gauge_attacks_fired  	db ?
+_defeat_boss_attacks_fired   	db ?
+_defeat_boss_attacks_reversed	db ?
+_defeat_boss_panics_fired    	db ?
+
 byte_23DF9	db ?
 		db 64 dup(?)
 word_23E3A	dw ?
