@@ -250,7 +250,7 @@ loc_977E:
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	_chargeshot_update_p2
 		call	sub_BB12
-		call	sub_13CC7
+		call	@enemy_formations_update$qv
 		call	@bullets_update$qv
 		call	sub_1609E
 		call	sub_18059
@@ -15976,121 +15976,10 @@ EPT_CLIP_X = 01h
 EPT_CLIP_BOTTOM = 02h
 EPT_DO_NOT_MIRROR_X = 80h
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13C1E	proc near
-
-@@pos_type	= word ptr  4
-@@pid	= word ptr  6
-@@formation_type	= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, [bp+@@formation_type]
-		shl	ax, 4
-		mov	si, ax
-		mov	al, byte ptr [bp+@@formation_type]
-		mov	_enemy_formation_type, al
-		mov	_enemy_formation_i, 0
-		jmp	short loc_13C52
-; ---------------------------------------------------------------------------
-
-loc_13C37:
-		mov	bx, si
-		add	bx, bx
-		mov	es, _formation_scripts
-		push	word ptr es:[bx]
-		push	[bp+@@pid]
-		push	[bp+@@pos_type]
-		nopcall	@enemies_add$qpucucuc
-		inc	_enemy_formation_i
-		inc	si
-
-loc_13C52:
-		mov	bx, [bp+@@formation_type]
-		mov	al, _formation_enemy_count[bx]
-		cmp	al, _enemy_formation_i
-		ja	short loc_13C37
-		pop	si
-		pop	bp
-		retn	6
-sub_13C1E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13C64	proc near
-
-var_1		= byte ptr -1
-@@pid	= word ptr  4
-
-		enter	2, 0
-		mov	al, byte ptr [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_enemies_alive[bx], 0
-		jnz	short locret_13CC3
-		mov	al, byte ptr [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _formation_p[bx]
-		mov	[bp+var_1], al
-		mov	al, _round_speed
-		mov	ah, 0
-		mov	bx, (2 shl 4)
-		cwd
-		idiv	bx
-		mov	_enemy_speed, al
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	es, _formation_type_ring
-		mov	bx, ax
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax	; formation_type
-		push	[bp+@@pid]	; pid
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	es, _formation_pos_type_ring
-		mov	bx, ax
-		mov	al, es:[bx]
-		push	ax	; pos_type
-		call	sub_13C1E
-		mov	al, byte ptr [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		inc	_formation_p[bx]
-
-locret_13CC3:
-		leave
-		retn	2
-sub_13C64	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13CC7	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_hud_start_flag, HSF_DONE
-		jnz	short loc_13CDB
-		call	sub_13C64 pascal, 0
-		call	sub_13C64 pascal, 1
-
-loc_13CDB:
-		pop	bp
-		retf
-sub_13CC7	endp
 ENEMY_2_TEXT ends
 
 E_ENEMY_TEXT segment byte public 'CODE' use16
+	extern @enemy_formations_update$qv:proc
 	extern @enemy_formations_load$qv:proc
 	extern @enemy_formations_randomize$qv:proc
 	extern @enemy_formations_free$qv:proc
@@ -19861,7 +19750,6 @@ include th03/main/player/gauge_avail_add.asm
 E_ENEMY_TEXT ends
 
 PELLET_PUT segment byte public 'CODE' use16
-	extern @ENEMIES_ADD$QPUCUCUC:proc
 	@enemy_put$qv procdesc near
 	@enemy_explosion_flag_update$qv procdesc near
 	@enemy_explosion_put$qv procdesc near

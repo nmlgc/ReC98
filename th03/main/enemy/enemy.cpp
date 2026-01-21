@@ -1,11 +1,15 @@
+#pragma option -zPmain_04
+
 #include "th03/main/enemy/enemy.hpp"
 #include "th03/main/enemy/efe.hpp"
+#include "th03/main/hud/start.hpp"
 #include "th03/main/difficul.hpp"
 #include "th03/formats/enedat.hpp"
 #include "th03/math/vector.hpp"
 #include "th03/snd/snd.h"
 #include "th03/sprites/main_s16.hpp"
 #include "libs/master.lib/master.hpp"
+#include "x86real.h"
 
 // Position flags
 // --------------
@@ -220,6 +224,46 @@ void near enemy_explosion_put(void)
 
 #undef p
 #pragma codeseg ENEMY_2_TEXT // ZUN bloat
+
+void pascal near enemy_formation_spawn(
+	int formation_type, pid_t pid, enemy_pos_type_t pos_type
+)
+{
+	int script_i = (formation_type * FORMATION_ENEMIES_MAX);
+	enemy_formation_type = formation_type;
+	enemy_formation_i = 0;
+	while(enemy_formation_i < formation_enemy_count[formation_type]) {
+		enemies_add(formation_scripts[script_i], pid, pos_type);
+		enemy_formation_i++;
+		script_i++;
+	}
+}
+
+void pascal near enemy_formations_update_for(pid_t pid)
+{
+	if(enemies_alive[pid]) {
+		return;
+	}
+	uint8_t p = formation_p[pid];
+
+	// Could be done at the call site, but eh… Not worth a bloat designation.
+	enemy_speed = (round_speed / ((ROUND_SPEED_MAX + 1) / ENEMY_SPEED_COUNT));
+
+	enemy_formation_spawn(
+		formation_type_ring[p], pid, formation_pos_type_ring[p]
+	);
+	formation_p[pid]++;
+}
+
+void enemy_formations_update(void)
+{
+	if(hud_start_flag != HSF_DONE) {
+		return;
+	}
+	static_assert(PLAYER_COUNT == 2);
+	enemy_formations_update_for(0);
+	enemy_formations_update_for(1);
+}
 
 void enemy_formations_load(void)
 {
