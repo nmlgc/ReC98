@@ -330,7 +330,7 @@ loc_986C:
 		call	sub_DF18
 		nopcall	sub_CEE0
 		call	@bullets_render$qv
-		cmp	byte_20E3C, 2
+		cmp	_defeat_flag, DF_BANNER
 		jnz	loc_99B1
 		call	sub_C2F9
 		les	bx, _resident
@@ -1185,7 +1185,7 @@ loc_A10B:
 
 loc_A117:
 		mov	byte_1DB9E, -1
-		mov	byte_20E3C, 0
+		mov	_defeat_flag, DF_NONE
 		mov	_hud_start_flag, HSF_INIT
 		mov	word_21434, 1400h
 		mov	_round_frame_mod16, 0
@@ -3279,7 +3279,7 @@ arg_0		= word ptr  4
 		sar	ax, 4
 		add	ax, 0FFF8h
 		mov	word_20E40, ax
-		mov	byte_20E3C, 1
+		mov	_defeat_flag, DF_EXPLODE
 		call	snd_se_play pascal, 14
 		mov	al, _pid_PID_current
 		mov	ah, 0
@@ -3330,7 +3330,7 @@ loc_C159:
 		mov	byte ptr [si+1Fh], -1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		mov	byte_20E3C, 2
+		mov	_defeat_flag, DF_BANNER
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, 1
@@ -6521,7 +6521,7 @@ loc_DA68:
 		dec	_damage_all_on[bx]
 
 loc_DA81:
-		cmp	byte_20E3C, 2
+		cmp	_defeat_flag, DF_BANNER
 		jz	loc_DE4F
 		cmp	byte ptr [si+1Fh], 0
 		jnz	loc_DE45
@@ -6884,7 +6884,7 @@ loc_DDCA:
 		mov	[bp+var_5], 1
 
 loc_DDCE:
-		cmp	byte_20E3C, 0
+		cmp	_defeat_flag, DF_NONE
 		jnz	short loc_DE4F
 		cmp	[bp+var_5], 0
 		jnz	short loc_DE4F
@@ -19576,7 +19576,7 @@ var_2		= word ptr -2
 		mov	[bp+var_5], 0
 		cmp	_hitbox_origin_center.y, 0
 		jl	short loc_1590F
-		cmp	byte_20E3C, 2
+		cmp	_defeat_flag, DF_BANNER
 		jnz	short loc_15914
 
 loc_1590F:
@@ -33147,7 +33147,13 @@ _hitbox_right 	dw ?
 _hitbox_bottom	dw ?
 _hitbox_pid	db ?
 	evendata
-byte_20E3C	db ?
+
+DF_NONE = 0
+DF_EXPLODE = 1
+DF_BANNER = 2
+
+public _defeat_flag
+_defeat_flag	db ?
 byte_20E3D	db ?
 word_20E3E	dw ?
 word_20E40	dw ?
