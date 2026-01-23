@@ -8,6 +8,10 @@
 
 static const pixel_t SHOT_W = 16;
 static const pixel_t SHOT_H = 16;
+static const pixel_t SHOTPAIR_DISTANCE = 16;
+
+static const pixel_t SHOTPAIR_W = (SHOTPAIR_DISTANCE + SHOT_W);
+static const pixel_t SHOTPAIR_H = SHOT_H;
 static const vram_byte_amount_t SHOT_VRAM_W = (SHOT_W / BYTE_DOTS);
 
 enum shot_mode_t {
@@ -36,7 +40,6 @@ struct shotpair_t {
 	char unused_3; // ZUN bloat
 };
 
-#define SHOTPAIR_DISTANCE 16
 #define SHOTPAIR_COUNT 32
 
 extern shotpair_t shotpairs[SHOTPAIR_COUNT];

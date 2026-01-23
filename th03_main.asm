@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, HITBOX_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
 main_06 group P_EXATT_TEXT, main_06_TEXT
 
 ; ===========================================================================
@@ -8739,7 +8739,7 @@ loc_F8F5:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -8748,11 +8748,11 @@ loc_F8F5:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_F953:
@@ -9472,7 +9472,7 @@ loc_FFA2:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -9481,11 +9481,11 @@ loc_FFA2:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_10000:
@@ -10375,7 +10375,7 @@ loc_1081A:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -10384,11 +10384,11 @@ loc_1081A:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_10878:
@@ -11329,7 +11329,7 @@ loc_110FB:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -11338,11 +11338,11 @@ loc_110FB:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_11159:
@@ -12075,7 +12075,7 @@ loc_11763:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (24 shl 4)
 		mov	_hitbox_radius.y, (24 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -12084,11 +12084,11 @@ loc_11763:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_117C1:
@@ -12963,7 +12963,7 @@ loc_11F34:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -12972,11 +12972,11 @@ loc_11F34:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_11F92:
@@ -14000,7 +14000,7 @@ loc_128AD:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -14009,11 +14009,11 @@ loc_128AD:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_1290B:
@@ -14925,7 +14925,7 @@ loc_130C0:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -14934,11 +14934,11 @@ loc_130C0:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_13122:
@@ -15668,7 +15668,7 @@ loc_13717:
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
 		call	@collmap_set_rect_striped$qv
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -15677,11 +15677,11 @@ loc_13717:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_1377C:
@@ -15974,7 +15974,7 @@ COLLMAP_TEXT	ends
 ENEMY_2_TEXT segment byte public 'CODE' use16
 ENEMY_2_TEXT ends
 
-P_GAUGE_TEXT segment byte public 'CODE' use16
+HITBOX_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_update$qv:proc
 	extern @enemy_formations_load$qv:proc
 	extern @enemy_formations_randomize$qv:proc
@@ -18671,131 +18671,10 @@ loc_158F3:
 		retf
 gba_gauge_pattern_bullet_mima endp
 
+	extern @hitbox_hittest$qv:proc
+HITBOX_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_158F5	proc far
-
-var_5		= byte ptr -5
-@@center_y	= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	[bp+var_5], 0
-		cmp	_hitbox_origin_center.y, 0
-		jl	short loc_1590F
-		cmp	_defeat_flag, DF_BANNER
-		jnz	short loc_15914
-
-loc_1590F:
-		mov	al, 0
-		jmp	loc_159FB
-; ---------------------------------------------------------------------------
-
-loc_15914:
-		mov	_ef_onehit, 0
-		mov	si, offset _shotpairs
-		mov	ax, _hitbox_origin_center.x
-		add	ax, _hitbox_radius.x
-		mov	_hitbox_right, ax
-		mov	ax, _hitbox_origin_center.y
-		add	ax, _hitbox_radius.y
-		mov	_hitbox_bottom, ax
-		mov	ax, _hitbox_origin_center.x
-		sub	ax, _hitbox_radius.x
-		mov	_hitbox_origin_topleft.x, ax
-		mov	ax, _hitbox_origin_center.y
-		sub	ax, _hitbox_radius.y
-		mov	_hitbox_origin_topleft.y, ax
-		mov	_hitcircles_enemy_add_do_not_rand, 1
-		mov	[bp+var_2], 0
-		jmp	short loc_159B2
-; ---------------------------------------------------------------------------
-
-loc_15950:
-		cmp	[si+shotpair_t.SP_alive], 1
-		jnz	short loc_159AC
-		mov	al, [si+shotpair_t.pid]
-		cmp	al, _hitbox_pid
-		jnz	short loc_159AC
-		mov	ax, [si+shotpair_t.topleft.x]
-		add	ax, (16 shl 4)
-		mov	di, ax
-		mov	ax, [si+shotpair_t.topleft.y]
-		add	ax, (8 shl 4)
-		mov	[bp+@@center_y], ax
-		lea	ax, [di-(16 shl 4)]
-		cmp	ax, _hitbox_right
-		jg	short loc_159AC
-		lea	ax, [di+(16 shl 4)]
-		cmp	ax, _hitbox_origin_topleft.x
-		jl	short loc_159AC
-		mov	ax, [bp+@@center_y]
-		cmp	ax, _hitbox_origin_topleft.y
-		jl	short loc_159AC
-		cmp	ax, _hitbox_bottom
-		jg	short loc_159AC
-		mov	[si+shotpair_t.SP_alive], 0
-		mov	al, [bp+var_5]
-		add	al, 2
-		mov	[bp+var_5], al
-		push	di	; center_x
-		push	[bp+@@center_y]	; center_y
-		mov	al, _hitbox_pid
-		mov	ah, 0
-		push	ax	; pid
-		call	@hitcircles_enemy_add$qiii
-
-loc_159AC:
-		inc	[bp+var_2]
-		add	si, size shotpair_t
-
-loc_159B2:
-		cmp	[bp+var_2], SHOTPAIR_COUNT
-		jl	short loc_15950
-		mov	_hitcircles_enemy_add_do_not_rand, 0
-		cmp	byte_20E2C, 0
-		jnz	short loc_159CC
-		nopcall	@explosions_hittest$qv
-		add	[bp+var_5], al
-
-loc_159CC:
-		cmp	_hitbox_pid, 0
-		jnz	short loc_159D9
-		call	chargeshot_hittest_p1
-		jmp	short loc_159DD
-; ---------------------------------------------------------------------------
-
-loc_159D9:
-		call	chargeshot_hittest_p2
-
-loc_159DD:
-		add	[bp+var_5], al
-		mov	al, _hitbox_pid
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_bomb_flag[bx], BF_INACTIVE
-		jz	short loc_159F8
-		test	byte ptr _round_or_result_frame, 1
-		jnz	short loc_159F8
-		inc	[bp+var_5]
-
-loc_159F8:
-		mov	al, [bp+var_5]
-
-loc_159FB:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_158F5	endp
-
+P_GAUGE_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19469,7 +19348,7 @@ loc_16212:
 		mov	_hitbox_pid, al
 		cmp	_hitbox_origin_center.y, 0
 		jl	loc_164AA
-		nopcall	sub_158F5
+		nopcall	@hitbox_hittest$qv
 		or	al, al
 		jz	loc_164AA
 		mov	bx, _efe_p
@@ -19764,7 +19643,6 @@ E_EXPL_TEXT segment byte public 'CODE' use16
 E_EXPL_TEXT ends
 
 E_EXPL_TEXT segment byte public 'CODE' use16
-	extern @explosions_hittest$qv:proc
 E_EXPL_TEXT ends
 
 PELLET_PUT segment byte public 'CODE' use16
@@ -21040,7 +20918,7 @@ loc_181E5:
 		mov	_hitbox_origin_center.y, ax
 		mov	al, [bp+@@pid]
 		mov	_hitbox_pid, al
-		nopcall	sub_158F5
+		nopcall	@hitbox_hittest$qv
 		or	al, al
 		jz	loc_18367
 		mov	bx, _efe_p
@@ -23433,7 +23311,7 @@ loc_19732:
 		add	[di+10h], ax
 
 loc_19740:
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -23442,8 +23320,8 @@ loc_19740:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [di+10h]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
-		mov	byte_20E2C, 0
+		call	@hitbox_hittest$qv
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	ax, [di+2]
 		mov	_collmap_center.x, ax
 		mov	ax, [di+10h]
@@ -24772,7 +24650,7 @@ loc_1A0D5:
 loc_1A0DA:
 		mov	ax, [si+14h]
 		add	[si+4],	ax
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -24781,8 +24659,8 @@ loc_1A0DA:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
-		mov	byte_20E2C, 0
+		call	@hitbox_hittest$qv
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	ax, [si+2]
 		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
@@ -25341,7 +25219,7 @@ public @exatt_update_reimu$qv
 		enter	2, 0
 		push	si
 		push	di
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, 1
@@ -25400,7 +25278,7 @@ loc_1A56B:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		call	sub_1A491
@@ -25458,7 +25336,7 @@ loc_1A5E5:
 loc_1A5E9:
 		cmp	di, 8
 		jl	loc_1A512
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		pop	di
 		pop	si
 		leave
@@ -25787,7 +25665,7 @@ loc_1A81C:
 		call	vector2
 
 loc_1A83A:
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
@@ -25795,13 +25673,13 @@ loc_1A83A:
 		mov	_hitbox_origin_center.x, di
 		mov	ax, [bp+@@center_y]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		or	al, al
 		jz	short loc_1A868
 		sub	word ptr [si+8], 8
 
 loc_1A868:
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	_collmap_center.x, di
 		mov	ax, [bp+@@center_y]
 		mov	_collmap_center.y, ax
@@ -26584,7 +26462,7 @@ loc_1AE8B:
 		mov	byte ptr [si], 0
 
 loc_1AE9D:
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	al, [bp+@@pid_other]
 		mov	_hitbox_pid, al
 		mov	ax, [si+14h]
@@ -26595,7 +26473,7 @@ loc_1AE9D:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	_hitbox_radius.x, (4 shl 4)
 		mov	ax, [si+14h]
 		shl	ax, 3
@@ -26604,8 +26482,8 @@ loc_1AE9D:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
-		mov	byte_20E2C, 0
+		call	@hitbox_hittest$qv
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	ax, [si+14h]
 		mov	_collmap_stripe_tile_w, ax
 		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
@@ -26935,7 +26813,7 @@ var_6		= byte ptr -6
 		mov	[bp+@@pid_other], al
 		mov	_playfield_clip_negative_radius.x, (-32 shl 4)
 		mov	_playfield_clip_negative_radius.y, (-32 shl 4)
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	_hitbox_pid, al
@@ -27008,7 +26886,7 @@ loc_1B1E0:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		call	sub_1A491
@@ -27044,7 +26922,7 @@ loc_1B21D:
 loc_1B221:
 		cmp	di, 0Eh
 		jl	loc_1B146
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		pop	di
 		pop	si
 		leave
@@ -30919,9 +30797,10 @@ byte_20E28	db ?
 byte_20E29	db ?
 byte_20E2A	db ?
 angle_20E2B	db ?
-byte_20E2C	db ?
-		db ?
-public _hitbox
+
+public _hitbox_hittest_skip_explosions, _hitbox
+_hitbox_hittest_skip_explosions	db ?
+	evendata
 _hitbox label byte
 _hitbox_origin_center label Point
 _hitbox_origin_topleft label Point
