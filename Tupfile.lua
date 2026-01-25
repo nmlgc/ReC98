@@ -659,6 +659,7 @@ th03:branch(MODEL_LARGE, { cflags = "-DBINARY='M'" }):link("main", {
 	"th03/bullet.cpp",
 	"th03/e_enemy.cpp",
 	"th03/e_fireb.cpp",
+	"th03/p_exatt.cpp",
 	"th03/hfliplut.asm",
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",

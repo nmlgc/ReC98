@@ -11,3 +11,6 @@ typedef struct exatt_funcs_t {
 };
 
 extern exatt_funcs_t exatt_funcs[PLAYER_COUNT];
+
+// ZUN bloat: Useless wrapper around [exatt_funcs[pid]].
+void pascal exatt_add(Subpixel center_x, Subpixel center_y, pid_t pid);

@@ -36,6 +36,7 @@ GBA_BOSS_LEVEL_MAX = 16
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, PELLET_PUT, E_ENEMY_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
+main_06 group P_EXATT_TEXT, main_06_TEXT
 
 ; ===========================================================================
 
@@ -21494,13 +21495,13 @@ main_04__TEXT segment byte public 'CODE' use16
 sub_1816D	proc near
 
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@pid	= byte ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		mov	al, byte ptr [bp+arg_2]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
@@ -21518,16 +21519,13 @@ arg_2		= word ptr  6
 		pop	ax
 		cmp	ax, dx
 		jl	short loc_181BE
-		mov	al, byte ptr [bp+arg_2]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
 		mov	_chains.CHAIN_charge_exatt[bx+si], 0
 		mov	bx, _efe_p
-		push	[bx+efe_t.EFE_center.x]
-		push	[bx+efe_t.EFE_center.y]
-		push	[bp+arg_2]
-		call	sub_1A17E
+		call	@exatt_add$q20%SubpixelBase$ti$ti%t1uc pascal, [bx+efe_t.EFE_center.x], [bx+efe_t.EFE_center.y], word ptr [bp+@@pid]
 
 loc_181BE:
 		pop	si
@@ -21634,10 +21632,7 @@ loc_18275:
 		mov	bx, ax
 		mov	_chains.CHAIN_charge_exatt[bx], 0
 		mov	bx, _efe_p
-		push	[bx+fireball_t.FIREBALL_center.x]
-		push	[bx+fireball_t.FIREBALL_center.y]
-		push	word ptr [bp+@@pid]
-		call	sub_1A17E
+		call	@exatt_add$q20%SubpixelBase$ti$ti%t1uc pascal, [bx+fireball_t.FIREBALL_center.x], [bx+fireball_t.FIREBALL_center.y], word ptr [bp+@@pid]
 
 loc_182CD:
 		cmp	_generation_prev, 4
@@ -23044,8 +23039,8 @@ main_05_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_06_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_06_TEXT
+P_EXATT_TEXT segment byte public 'CODE' use16
+		assume cs:main_06
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -25395,45 +25390,10 @@ loc_1A176:
 		retf
 @exatt_render_kotohime$qv endp
 
+	extern @EXATT_ADD$Q20%SUBPIXELBASE$TI$TI%T1UC:proc
+P_EXATT_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A17E	proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		cmp	[bp+arg_0], 0
-		jnz	short loc_1A199
-		push	si
-		push	di
-		push	0
-		call	exatt_add_p1
-		jmp	short loc_1A1A1
-; ---------------------------------------------------------------------------
-
-loc_1A199:
-		push	si
-		push	di
-		push	1
-		call	exatt_add_p2
-
-loc_1A1A1:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_1A17E	endp
-
+main_06_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
