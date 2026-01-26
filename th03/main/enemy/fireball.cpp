@@ -7,7 +7,9 @@
 #include "th03/main/player/exatt.hpp"
 #include "th03/main/player/stuff.hpp"
 #include "th03/main/difficul.hpp"
+#include "th03/main/hitbox.hpp"
 #include "th03/main/round.hpp"
+#include "th03/main/score.hpp"
 #include "th03/math/randring.hpp"
 #include "th03/math/vector.hpp"
 #include "th03/sprites/main_s16.hpp"
@@ -48,7 +50,11 @@ struct fireball_t {
 
 	uint8_t chain_slot;
 	uint8_t unused_4[3];
+
+	// Very inconsistently assigned to newly spawned red fireballs, as
+	// explained for the [generation_prev] quirk.
 	uint8_t generation;
+
 	int8_t padding[15];
 
 	// ZUN bloat: A regular `fireball_variant_t` would have been much nicer.
@@ -82,6 +88,22 @@ static const uint8_t FRAMES_PER_CEL = 4;
 	reinterpret_cast<fireball_t *>(&efes[EFE_COUNT - FIREBALL_COUNT]) \
 )
 
+// These *could* be turned into parameters to fireballs_add(). Has to be done
+// carefully though: explosion_collision_chain_slot_fire_charged_fireball() can
+// get called from explosions_hittest() and will read both of these globals:
+//
+// • The original game spawns red fireballs when explosions_hittest() is called
+//   via fireballs_hittest() (which sets [variant] to [FV_RED]), and blue ones
+//   ones when explosions_hittest() is called from anywhere else. (See the
+//   quirk explanation in fireballs_hittest().)
+//
+// • ZUN quirk: [generation_prev] is only set *after* a fireball was destroyed.
+//   Charged fireballs, however, are spawned *during* explosions_hittest(), and
+//   will reuse whatever the last explosion-destroyed fireball wrote to this
+//   variable.
+//
+// The intended values of these parameters would therefore have to be passed
+// through the collision detection system as well.
 fireball_variant_t variant = FV_BLUE;
 uint8_t generation_prev;
 // -----
@@ -353,10 +375,102 @@ switch_to_fall:
 	}
 }
 
+// ZUN bloat: This should really be part of the chain translation unit. But
+// that would require splitting segments and placing fireballs_hittest() into
+// that second segment, which would ruin the far→near conversion of its two
+// fireballs_add() calls and thus have an even worse effect on code quality.
 void pascal near chain_fire_charged_exatt(pid_t pid, unsigned int slot)
 {
 	if(chains.charge_exatt[pid][slot] >= (6 - (round_speed / to_sp(2.0f)))) {
 		chains.charge_exatt[pid][slot] = 0;
 		exatt_add(efe_p.efe->center.x, efe_p.efe->center.y, pid);
 	}
+}
+
+void near fireballs_hittest(void)
+{
+	int i;
+	uint8_t chain_slot;
+
+	hitbox.radius.set(12, 10);
+	p = &fireballs[FIREBALL_COUNT - 1];
+
+	// ZUN quirk: explosions_hittest() will also spawn fireballs as a result of
+	// sufficiently high chain charges. This assignment ensures that those
+	// fireballs will also be red, contradicting Section 10 of 夢時空.TXT which
+	// claims that any red fireball must have been transferred. Quite a
+	// significant error in the manual if we consider the vast gameplay
+	// differences between blue and red fireballs...
+	variant = FV_RED;
+
+	// ZUN bloat: [FIREBALL_COUNT] exists.
+	for(i = (EFE_COUNT - 1); i >= (EFE_COUNT - FIREBALL_COUNT); (i--, p--)) {
+		if(p->flag != FF_FALL) {
+			continue;
+		}
+		explosion_hittest_against = p->variant_as_eha();
+		pid_t pid = p->pid;
+		hitbox.origin.center.x.v = p->center.x.v;
+		hitbox.origin.center.y.v = (p->center.y.v + to_sp(3.0f));
+		hitbox.pid = pid;
+
+		/* TODO: Replace with the decompiled condition
+		 * 	if(!hitbox_hittest()) {
+		 * once the segmentation allows us to, if ever */
+		asm { nop; push cs; call near ptr hitbox_hittest; }
+		if(_AL == 0) {
+			continue;
+		}
+
+		// Checking HP *before* decrementing means that fireballs still live at
+		// 0 HP, and are only destroyed if their HP would reach -1, just like
+		// enemies.
+		if((p->hp == 0) || explosion_collision_in_last_hittest || ef_onehit) {
+			generation_prev = p->generation;
+			if(explosion_collision_in_last_hittest) {
+				// Fireballs only turn into explosions when destroyed by an
+				// existing explosion...
+				p->flag = EFF_EXPLOSION_IGNORING_ENEMIES;
+				chain_slot = explosion_collision_chain_slot;
+				p->chain_slot = chain_slot;
+				if(explosion_hittest_against == EHA_FIREBALL_RED) {
+					chains.charge_exatt[pid][chain_slot]++;
+				}
+				if(
+					chains.charge_exatt[pid][chain_slot] >=
+					(7 - (round_speed / to_sp8(2.0f)))
+				) {
+					chains.charge_exatt[pid][chain_slot] = 0;
+					exatt_add(p->center.x, p->center.y, pid);
+				}
+				if(generation_prev < 4) {
+					fireballs_add();
+				}
+			} else {
+				// …and are simply transferred to the other playfield
+				// otherwise, without the 4-transfer limit.
+				// ZUN quirk: Except that they still contribute to a probably
+				// inactive chain?
+				chains.charge_exatt[pid][chain_ring_p[pid]] += (
+					explosion_hittest_against - 1
+				);
+				p->flag = EFF_FREE;
+				chain_fire_charged_exatt(pid, chain_ring_p[pid]);
+				gauge_avail_add(pid, 16);
+				score_add(50, pid);
+				fireballs_add();
+			}
+
+			chain_fire_charged_exatt(pid, chain_slot);
+		} else {
+			p->hp--;
+		}
+		fireball_collision_in_previous_hittest = true;
+
+		// Yup, doing this unconditionally resets the animation cycle on every
+		// collision. Too minor to be classified as a quirk though, and maybe
+		// even intentional.
+		p->frame = 0;
+	}
+	variant = FV_BLUE;
 }

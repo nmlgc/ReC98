@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "th03/main/enemy/fireball.hpp"
 
 enum explosion_hittest_against_t {

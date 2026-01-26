@@ -531,6 +531,10 @@ void __fastcall near bullet_trail_update_and_clip(
 	#undef tmp
 }
 
+// ZUN bloat: Global state that is defined here for some reason
+bool ef_onehit;
+bool fireball_collision_in_previous_hittest;
+
 // ZUN bloat: Ironically, both call sites mutate [p] before calling this
 // function, and then remove [p]. Why not just mutate the template directly
 // then? Instead, we get this function that only sets half of the template and

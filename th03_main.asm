@@ -19595,10 +19595,6 @@ loc_164AA:
 sub_1615D	endp
 
 EHA_ENEMY = 0
-EHA_PELLET = 1
-EHA_FIREBALL = 2
-EHA_FIREBALL_BLUE = (EHA_FIREBALL + FV_BLUE)
-EHA_FIREBALL_RED = (EHA_FIREBALL + FV_RED)
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20874,192 +20870,14 @@ BAT_Y = 80h
 BULLET_TEXT ends
 
 E_FIREB_TEXT segment byte public 'CODE' use16
-	extern @fireballs_add$qv:proc
 	@fireball_put$qv procdesc near
 	@fireball_explosion_put$qv procdesc near
 	extern @fireballs_update$qv:proc
 	@CHAIN_FIRE_CHARGED_EXATT$QUCUI procdesc pascal near
+	@fireballs_hittest$qv procdesc near
 E_FIREB_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_181C3	proc near
-
-@@pid		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	_hitbox_radius.x, (12 shl 4)
-		mov	_hitbox_radius.y, (10 shl 4)
-		mov	_efe_p, offset (fireballs + ((FIREBALL_COUNT - 1) * size efe_t))
-		mov	_variant, FV_RED
-		mov	si, (EFE_COUNT - 1)
-		jmp	loc_1836D
-; ---------------------------------------------------------------------------
-
-loc_181E5:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_flag], FF_FALL
-		jnz	loc_18367
-		mov	bx, _efe_p
-		mov	al, [bx+fireball_t.FIREBALL_variant_as_eha]
-		mov	_explosion_hittest_against, al
-		mov	al, [bx+fireball_t.FIREBALL_pid]
-		mov	[bp+@@pid], al
-		mov	ax, [bx+fireball_t.FIREBALL_center.x]
-		mov	_hitbox_origin_center.x, ax
-		mov	ax, [bx+fireball_t.FIREBALL_center.y]
-		add	ax, (3 shl 4)
-		mov	_hitbox_origin_center.y, ax
-		mov	al, [bp+@@pid]
-		mov	_hitbox_pid, al
-		nopcall	@hitbox_hittest$qv
-		or	al, al
-		jz	loc_18367
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_hp], 0
-		jz	short loc_1823A
-		cmp	_explosion_collision_in_last_hitt, 0
-		jnz	short loc_1823A
-		cmp	_ef_onehit, 0
-		jz	loc_18353
-
-loc_1823A:
-		mov	bx, _efe_p
-		mov	al, [bx+fireball_t.FIREBALL_generation]
-		mov	_generation_prev, al
-		cmp	_explosion_collision_in_last_hitt, 0
-		jz	loc_182D6
-		mov	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		mov	al, _explosion_collision_chain_slot
-		mov	[bp+var_1], al
-		mov	[bx+fireball_t.FIREBALL_chain_slot], al
-		cmp	_explosion_hittest_against, EHA_FIREBALL_RED
-		jnz	short loc_18275
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		inc	_chains.CHAIN_charge_exatt[bx]
-
-loc_18275:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _chains.CHAIN_charge_exatt[bx]
-		mov	ah, 0
-		mov	dl, _round_speed
-		mov	dh, 0
-		mov	bx, (2 shl 4)
-		push	ax
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	dx, 7
-		sub	dx, ax
-		pop	ax
-		cmp	ax, dx
-		jl	short loc_182CD
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_charge_exatt[bx], 0
-		mov	bx, _efe_p
-		call	@exatt_add$q20%SubpixelBase$ti$ti%t1uc pascal, [bx+fireball_t.FIREBALL_center.x], [bx+fireball_t.FIREBALL_center.y], word ptr [bp+@@pid]
-
-loc_182CD:
-		cmp	_generation_prev, 4
-		jnb	short loc_18345
-		jmp	short loc_18341
-; ---------------------------------------------------------------------------
-
-loc_182D6:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		mov	bx, dx
-		mov	dl, _chain_ring_p[bx]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _chains.CHAIN_charge_exatt[bx]
-		add	al, _explosion_hittest_against
-		add	al, -1
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@pid]
-		mov	bh, 0
-		mov	bl, _chain_ring_p[bx]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	_chains.CHAIN_charge_exatt[bx], al
-		mov	bx, _efe_p
-		mov	[bx+fireball_t.FIREBALL_flag], EFF_FREE
-		push	word ptr [bp+@@pid]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _chain_ring_p[bx]
-		mov	ah, 0
-		push	ax
-		call	@chain_fire_charged_exatt$qucui
-		call	@gauge_avail_add$qucuc pascal, word ptr [bp+@@pid], 16
-		call	@score_add$quiuc pascal, 50, word ptr [bp+@@pid]
-
-loc_18341:
-		call	@fireballs_add$qv
-
-loc_18345:
-		push	word ptr [bp+@@pid]
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		push	ax
-		call	@chain_fire_charged_exatt$qucui
-		jmp	short loc_1835A
-; ---------------------------------------------------------------------------
-
-loc_18353:
-		mov	bx, _efe_p
-		dec	[bx+fireball_t.FIREBALL_hp]
-
-loc_1835A:
-		mov	byte_26357, 1
-		mov	bx, _efe_p
-		mov	[bx+fireball_t.FIREBALL_enemy], 0
-
-loc_18367:
-		dec	si
-		sub	_efe_p, size efe_t
-
-loc_1836D:
-		cmp	si, (EFE_COUNT - FIREBALL_COUNT)
-		jge	loc_181E5
-		mov	_variant, FV_BLUE
-		pop	si
-		leave
-		retn
-sub_181C3	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21069,7 +20887,7 @@ sub_1837C	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_181C3
+		call	@fireballs_hittest$qv
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_efe_p, offset fireballs
@@ -24738,8 +24556,6 @@ loc_1A176:
 		pop	bp
 		retf
 @exatt_render_kotohime$qv endp
-
-	extern @EXATT_ADD$Q20%SUBPIXELBASE$TI$TI%T1UC:proc
 P_EXATT_TEXT ends
 
 main_06_TEXT segment byte public 'CODE' use16
@@ -30555,11 +30371,6 @@ include th03/sprites/pellet.asp
 		db    1
 		db    0
 
-FV_BLUE = 0
-FV_RED = 1
-
-	extern _variant:byte
-
 	.data?
 
 include th03/hardware/input_modes[bss].asm
@@ -30901,8 +30712,6 @@ enemy_t struct
 		db 14 dup(?)
 enemy_t ends
 
-FF_FALL = 1
-
 fireball_t struct
 	FIREBALL_flag                          	db ?
 	FIREBALL_enemy                         	db ?
@@ -31092,15 +30901,13 @@ bullet_t struc
 bullet_t ends
 
 public _bullets, _bullet_trail_ring, _bullet_group_i_angle, _bullet_trail_ring_i
-public _coord_max, _ef_onehit
+public _coord_max
 _bullets	bullet_t BULLET_COUNT dup(<?>)
 _bullet_trail_ring	bullet_trail_t TRAIL_RING_SIZE dup(<?>)
 _bullet_group_i_angle	db ?
 _bullet_trail_ring_i	db ?
 _coord_max	dw ?
-_ef_onehit	db ?
-byte_26357	db ?
 
-	extern _generation_prev:byte
+	extern _ef_onehit:byte
 
 		end
