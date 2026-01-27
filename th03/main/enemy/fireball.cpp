@@ -474,3 +474,21 @@ void near fireballs_hittest(void)
 	}
 	variant = FV_BLUE;
 }
+
+void fireballs_hittest_and_render(void)
+{
+	fireballs_hittest();
+	sprite16_clip.reset();
+
+	p = fireballs;
+	for(int i = 0; i < FIREBALL_COUNT; (i++, p++)) {
+		if(p->flag == EFF_FREE) {
+			continue;
+		}
+		if(p->flag < EFF_EXPLOSION_IGNORING_ENEMIES) {
+			fireball_put();
+		} else {
+			fireball_explosion_put();
+		}
+	}
+}

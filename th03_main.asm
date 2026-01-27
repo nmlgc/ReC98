@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, HITBOX_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT, main_04__TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, HITBOX_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT
 main_06 group P_EXATT_TEXT, main_06_TEXT
 
 ; ===========================================================================
@@ -306,7 +306,7 @@ loc_986C:
 		call	gba_boss_render_p2
 		call	@shots_render$qv
 		call	@enemies_render$qv
-		call	sub_1837C
+		call	@fireballs_hittest_and_render$qv
 		call	@hitcircles_render$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
@@ -20870,58 +20870,10 @@ BAT_Y = 80h
 BULLET_TEXT ends
 
 E_FIREB_TEXT segment byte public 'CODE' use16
-	@fireball_put$qv procdesc near
-	@fireball_explosion_put$qv procdesc near
 	extern @fireballs_update$qv:proc
 	@CHAIN_FIRE_CHARGED_EXATT$QUCUI procdesc pascal near
-	@fireballs_hittest$qv procdesc near
+	extern @fireballs_hittest_and_render$qv:proc
 E_FIREB_TEXT ends
-
-main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1837C	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@fireballs_hittest$qv
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	_efe_p, offset fireballs
-		xor	si, si
-		jmp	short loc_183B9
-; ---------------------------------------------------------------------------
-
-loc_18399:
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_flag], EFF_FREE
-		jz	short loc_183B3
-		mov	bx, _efe_p
-		cmp	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		jnb	short loc_183B0
-		call	@fireball_put$qv
-		jmp	short loc_183B3
-; ---------------------------------------------------------------------------
-
-loc_183B0:
-		call	@fireball_explosion_put$qv
-
-loc_183B3:
-		inc	si
-		add	_efe_p, size efe_t
-
-loc_183B9:
-		cmp	si, FIREBALL_COUNT
-		jl	short loc_18399
-		pop	si
-		pop	bp
-		retf
-sub_1837C	endp
-
-main_04__TEXT	ends
 
 ; ===========================================================================
 
@@ -30712,36 +30664,12 @@ enemy_t struct
 		db 14 dup(?)
 enemy_t ends
 
-fireball_t struct
-	FIREBALL_flag                          	db ?
-	FIREBALL_enemy                         	db ?
-	FIREBALL_center                        	Point <?>
-	FIREBALL_variant_as_eha                	db ?
-	FIREBALL_hp                            	db ?
-	FIREBALL_pid                           	db ?
-	FIREBALL_size_pixels                   	db ?
-		db 6 dup (?)
-	FIREBALL_velocity                      	Point <?>
-	FIREBALL_target_center_x_for_target_pid	dw ?
-	FIREBALL_target_center_x_for_origin_pid	dw ?
-		db 3 dup (?)
-	FIREBALL_fall_velocity_y               	db ?
-	FIREBALL_chain_slot                    	db ?
-		db ?
-	FIREBALL_unused_5                      	db ?
-		db ?
-	FIREBALL_generation                    	db ?
-		db 15 dup(?)
-fireball_t ends
-
 EFE_COUNT = 64
 ENEMY_COUNT = 40
-FIREBALL_COUNT = 24
 
 public _efes, _enemies_alive, _boss_panic_fired_in_current_comb
 public _explosion_hittest_against, _explosion_collision_in_last_hitt, _efe_p
 label enemies enemy_t
-fireballs = ($ + (ENEMY_COUNT * size efe_t))
 _efes	efe_t EFE_COUNT dup(<?>)
 _enemies_alive	db PLAYER_COUNT dup(?)
 _boss_panic_fired_in_current_comb db PLAYER_COUNT dup(?)

@@ -18,4 +18,6 @@ void fireballs_add(void);
 
 void fireballs_update(void);
 
+void fireballs_hittest_and_render(void);
+
 #endif /* TH03_MAIN_ENEMY_FIREBALL_HPP */
