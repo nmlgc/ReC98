@@ -635,14 +635,14 @@ loc_9BC5:
 		inc	al
 		mov	_gba_gauge_level[1], al
 		mov	al, _score_p1[6]
-		mov	byte_220DC, al
-		cmp	byte_220DC, 2
+		mov	_extends_gained, al
+		cmp	_extends_gained, EXTENDS_MAX
 		jnb	short loc_9BEF
 		cmp	_score_p1[7], 0
 		jz	short loc_9BF4
 
 loc_9BEF:
-		mov	byte_220DC, -1
+		mov	_extends_gained, EXTENDS_DISABLE
 
 loc_9BF4:
 		les	bx, _resident
@@ -694,7 +694,7 @@ loc_9C51:
 		mov	_p2.cpu_safety_frames, ax
 		mov	_gba_gauge_level[0], GBA_GAUGE_LEVEL_MIN
 		mov	_gba_gauge_level[1], GBA_GAUGE_LEVEL_MIN
-		mov	byte_220DC, -1
+		mov	_extends_gained, EXTENDS_DISABLE
 		mov	_cpu_hit_damage_additional, 0
 		push	3
 
@@ -5955,17 +5955,17 @@ loc_D56B:
 		call	sub_D50E
 		call	grcg_off
 		mov	al, _score_p1[6]
-		cmp	byte_220DC, al
+		cmp	_extends_gained, al
 		jnb	short locret_D5A0
 		call	snd_se_play pascal, 8
 		les	bx, _resident
 		assume es:nothing
 		inc	es:[bx+resident_t.story_lives]
 		call	@hud_static_story_lives_put$qv
-		inc	byte_220DC
-		cmp	byte_220DC, 2
+		inc	_extends_gained
+		cmp	_extends_gained, EXTENDS_MAX
 		jnz	short locret_D5A0
-		mov	byte_220DC, -1
+		mov	_extends_gained, EXTENDS_DISABLE
 
 locret_D5A0:
 		retn
@@ -7548,7 +7548,7 @@ loc_E4A2:
 		movzx	eax, byte_23DF9
 		imul	eax, 100000
 		add	score_23DF0, eax
-		mov	byte_220DC, -1
+		mov	_extends_gained, EXTENDS_DISABLE
 
 loc_E55E:
 		mov	eax, score_23DF0
@@ -29999,7 +29999,12 @@ _chains	chains_t <?>
 _explosion_collision_chain_slot	db ?
 _enemy_killed_in_previous_hittest	db ?
 include th03/main/player/score[bss].asm
-byte_220DC	db ?
+
+EXTENDS_MAX = 2
+EXTENDS_DISABLE = 255
+
+public _extends_gained
+_extends_gained	db ?
 		db 3 dup(?)
 byte_220E0	db ?
 		db 5 dup(?)
