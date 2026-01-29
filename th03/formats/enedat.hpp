@@ -70,7 +70,7 @@ enum enedat_op_code_t {
 	// Uses `enedat_op_t`.
 	EO_CLIP_X = 0x82,
 
-	// Sets the [EPT_CLIP_BOTTOM] flag.
+	// Sets the [EPT_CLIP_BOTTOM] flag. Unused in the original `ENEDAT.DAT`.
 	// Uses `enedat_op_t`.
 	EO_CLIP_BOTTOM = 0x83,
 

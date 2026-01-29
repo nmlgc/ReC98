@@ -205,6 +205,8 @@ local pipeline_cfg = optimized_cfg:branch(Subdir("Pipeline/"), {
 local pipeline_tool_cfg = pipeline_cfg:branch(MODEL_TINY)
 local pipeline_stub_cfg = pipeline_cfg:branch(MODEL_ASM)
 
+pipeline_tool_cfg:link("enedat", { "Pipeline/enedat.cpp" })
+
 pipeline_tool_cfg:link("grzview", {
 	"Pipeline/grzview.cpp",
 	"th01/formats/grz.cpp",

@@ -26,8 +26,10 @@ mkdir th02\sprites %STDERR_IGNORE%
 mkdir th03\sprites %STDERR_IGNORE%
 mkdir th04\sprites %STDERR_IGNORE%
 mkdir th05\sprites %STDERR_IGNORE%
-echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -IPipeline/  -mt  -nobj/Pipeline/  Pipeline/grzview.cpp  th01/formats/grz.cpp  platform/x86real/pc98/palette.cpp  Pipeline/bmp2arrl.c  Pipeline/bmp2arr.c  Pipeline/zungen.c  Pipeline/comcstm.c>obj\batch000.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -IPipeline/  -mt  -nobj/Pipeline/  Pipeline/enedat.cpp  Pipeline/grzview.cpp  th01/formats/grz.cpp  platform/x86real/pc98/palette.cpp  Pipeline/bmp2arrl.c  Pipeline/bmp2arr.c  Pipeline/zungen.c  Pipeline/comcstm.c>obj\batch000.@c
 tcc @obj/batch000.@c
+echo -c -s -t c0t.obj obj\Pipeline\enedat.obj, bin\Pipeline\enedat.com, obj\Pipeline\enedat.map, emu.lib maths.lib ct.lib>obj\Pipeline\enedat.@l
+tlink @obj\Pipeline\enedat.@l
 echo -c -s -t c0t.obj obj\Pipeline\grzview.obj obj\Pipeline\grz.obj obj\Pipeline\palette.obj, bin\Pipeline\grzview.com, obj\Pipeline\grzview.map, bin\masters.lib emu.lib maths.lib ct.lib>obj\Pipeline\grzview.@l
 tlink @obj\Pipeline\grzview.@l
 echo -c -s -t c0t.obj obj\Pipeline\bmp2arrl.obj obj\Pipeline\bmp2arr.obj, bin\Pipeline\bmp2arr.com, obj\Pipeline\bmp2arr.map, emu.lib maths.lib ct.lib>obj\Pipeline\bmp2arr.@l
