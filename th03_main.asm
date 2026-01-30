@@ -948,7 +948,7 @@ var_6		= dword	ptr -6
 		push	di
 		mov	word_1F32A, 0
 		mov	word_1F32C, 0
-		mov	byte_26356, 0
+		mov	_ef_onehit, 0
 		mov	byte_1FBC2, 0
 		mov	byte_1FBC3, 0
 		mov	_enemy_speed, 0
@@ -19582,7 +19582,7 @@ loc_1590F:
 ; ---------------------------------------------------------------------------
 
 loc_15914:
-		mov	byte_26356, 0
+		mov	_ef_onehit, 0
 		mov	si, offset _shotpairs
 		mov	ax, _hitbox_origin_center.x
 		add	ax, _hitbox_radius.x
@@ -20592,7 +20592,7 @@ loc_16212:
 		mov	bx, _efe_p
 		cmp	[bx+enemy_t.ENEMY_hp], 0
 		jz	short loc_16257
-		cmp	byte_26356, 0
+		cmp	_ef_onehit, 0
 		jz	loc_1649B
 
 loc_16257:
@@ -23228,7 +23228,7 @@ loc_181E5:
 		jz	short loc_1823A
 		cmp	byte_2203B, 0
 		jnz	short loc_1823A
-		cmp	byte_26356, 0
+		cmp	_ef_onehit, 0
 		jz	loc_18353
 
 loc_1823A:
@@ -31405,7 +31405,7 @@ public @chargeshot_hittest_kotohime$qv
 		jl	short loc_1C291
 		cmp	ax, _hitbox_bottom
 		jg	short loc_1C291
-		mov	byte_26356, 1
+		mov	_ef_onehit, 1
 		mov	ax, _hitbox_origin_topleft.x
 		add	ax, _hitbox_radius.x
 		push	ax	; center_x
@@ -33432,13 +33432,13 @@ bullet_t struc
 bullet_t ends
 
 public _bullets, _bullet_trail_ring, _bullet_group_i_angle, _bullet_trail_ring_i
-public _coord_max
+public _coord_max, _ef_onehit
 _bullets	bullet_t BULLET_COUNT dup(<?>)
 _bullet_trail_ring	bullet_trail_t TRAIL_RING_SIZE dup(<?>)
 _bullet_group_i_angle	db ?
 _bullet_trail_ring_i	db ?
 _coord_max	dw ?
-byte_26356	db ?
+_ef_onehit	db ?
 byte_26357	db ?
 byte_26358	db ?
 		db    ?	;

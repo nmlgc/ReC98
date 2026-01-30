@@ -94,4 +94,8 @@ extern union {
 	fireball_t near *fireball;
 } efe_p;
 
+// If `true`, enemies and fireballs will be immediately destroyed when hit,
+// ignoring their remaining HP.
+extern bool ef_onehit;
+
 #endif /* TH03_MAIN_ENEMY_EFE_HPP */
