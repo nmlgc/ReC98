@@ -2,13 +2,19 @@
 
 #include "th03/main/enemy/enemy.hpp"
 #include "th03/main/enemy/efe.hpp"
+#include "th03/main/enemy/expl.hpp"
+#include "th03/main/bullet/bullet.hpp"
 #include "th03/main/hud/start.hpp"
+#include "th03/main/player/bomb.hpp"
+#include "th03/main/player/chain.hpp"
+#include "th03/main/player/combo.hpp"
 #include "th03/main/player/stuff.hpp"
 #include "th03/main/difficul.hpp"
+#include "th03/main/hitbox.hpp"
+#include "th03/main/score.hpp"
 #include "th03/formats/enedat.hpp"
 #include "th03/math/vector.hpp"
 #include "th03/snd/snd.h"
-#include "th03/sprites/main_s16.hpp"
 #include "th03/sprites/player.hpp"
 #include "th01/math/polar.hpp"
 #include "libs/master.lib/master.hpp"
@@ -735,6 +741,170 @@ bool near enemy_run(void)
 }
 
 #pragma codeseg ENEMY_PUT main_04 // ZUN bloat
+
+#define p (efe_p.enemy)
+
+#define chain_start_next_in_ring(pid) \
+	/* Sneaky! That's how we can pretend this is an actual function that */ \
+	/* returns a value. */ \
+	chain_ring_p[pid]; \
+	p->chain_slot = chain_slot; \
+	chains.hits[pid][chain_slot] = 1; \
+	chains.pellet_and_fireball_value[pid][chain_slot] = 0; \
+	chain_ring_p[pid]++; \
+	if(chain_ring_p[pid] >= CHAIN_RING_SIZE) { \
+		chain_ring_p[pid] = 0; \
+	}
+
+void near enemy_hittest(void)
+{
+	playfield_subpixel_t radius;
+	uint16_t bonus;
+	pid_t pid;
+	uint8_t chain_slot; // ZUN bloat: Redundant copy of same value from [p]
+	uint8_t hits;
+
+	if(p->center.y.v <= to_sp(0.0f)) {
+		return;
+	}
+	if(p->size_pixels != 16) {
+		radius = (p->size_pixels * to_sp(0.4375f));
+	} else {
+		radius = to_sp(10.0f); // Larger than the enemy itself!
+	}
+	pid = p->pid;
+	if(damage_all_on[pid]) {
+		p->hp = 0;
+		p->flag = EFF_EXPLOSION_IGNORING_ENEMIES;
+		chain_slot = chain_start_next_in_ring(pid);
+		p->frame = 0;
+		return;
+	}
+	hitbox.origin.center.x = p->center.x;
+	hitbox.origin.center.y = p->center.y;
+	hitbox.radius.x.v = radius;
+	hitbox.radius.y.v = radius;
+	hitbox.pid = p->pid;
+
+	// ZUN bloat: We already checked this in the beginning.
+	if(hitbox.origin.center.y.v < to_sp(0.0f)) {
+		return;
+	}
+
+	/* TODO: Replace with the decompiled condition
+	 * 	if(!hitbox_hittest()) {
+	 * once the segmentation allows us to, if ever */
+	asm { nop; push cs; call near ptr hitbox_hittest; }
+	if(_AL == 0) {
+		return;
+	}
+
+	// Checking HP *before* decrementing means that enemies still live at 0 HP
+	// and are only destroyed if their HP would reach -1, matching what you'd
+	// expect from the formation scripts.
+	if((p->hp == 0) || ef_onehit) {
+		p->flag = EFF_EXPLOSION_IGNORING_ENEMIES;
+		enemy_killed_in_previous_hittest = true;
+		if(!explosion_collision_in_last_hittest) {
+			chain_slot = chain_start_next_in_ring(pid);
+		} else {
+			// Enemy continues the chain of the explosion that destroyed it
+			gauge_avail_add(pid, 32);
+			chain_slot = explosion_collision_chain_slot;
+			p->chain_slot = chain_slot;
+
+			// Doing this here and not in explosions_hittest() might look
+			// inconsistent, but that function can't access [p->hp] or
+			// [ef_onehit].
+			hits = chain_hits_inc_and_clamp(hits, pid, chain_slot);
+			bonus = combo_add(pid, chain_slot, (hits * 16));
+			fire_point_based_boss_attack_or_panic(bonus, pid);
+
+			bullet_template.center.x = p->center.x;
+			bullet_template.center.y = p->center.y;
+			bullet_template.speed.v = chain_pellet_speed(to_sp(1.5f));
+			bullet_template.angle = 0x00;
+			bullet_template.pid = pid;
+
+			// ZUN quirk: Incrementing fireball and Extra Attack charge in a
+			// fixed slot depending on the round speed? Since...
+			static_assert(CHAIN_RING_SIZE >= 4);
+			chain_slot = (round_speed / ((ROUND_SPEED_MAX + 1) / 4));
+			if(hits <= 2) {
+				chains.charge_fireball[pid][chain_slot]++;
+			} else if(hits <= (9 - chain_slot)) {
+				bullet_template.group = BG_RANDOM_CONSTRAINED_ANGLE_AIMED;
+
+				/* TODO: Replace with the decompiled call
+				 * 	bullets_add_transfer_pellet();
+				 * once the segmentation allows us to, if ever */
+				_asm {
+					nop; push cs; call near ptr bullets_add_transfer_pellet;
+				}
+
+				chains.charge_fireball[pid][chain_slot] += 2;
+			} else if(hits <= (14 - (chain_slot * 2))) {
+				chains.charge_fireball[pid][chain_slot] += 3;
+				if((hits & 1) == 0) {
+					bullet_template.group = BG_RANDOM_CONSTRAINED_ANGLE_AIMED;
+
+					/* TODO: Replace with the decompiled call
+					 * 	bullets_add_transfer_pellet();
+					 * once the segmentation allows us to, if ever */
+					_asm {
+						nop; push cs; call near ptr bullets_add_transfer_pellet;
+					}
+
+					chains.charge_exatt[pid][chain_slot]++;
+				}
+			} else {
+				chains.charge_fireball[pid][chain_slot] += 4;
+				chains.charge_exatt[pid][chain_slot]++;
+			}
+			chain_fire_charged_exatt(pid, chain_slot);
+
+			// …this firing call uses [explosion_collision_chain_slot] instead
+			// of the custom [chain_slot] we assigned earlier, this effectively
+			// delays fireballs until
+			//
+			// 1) both slot IDs are identical (which probably requires
+			//    [chain_ring_p] to wrap around after [CHAIN_RING_SIZE]
+			//    explosion chains), and
+			// 2) that explosion chain has hit its *second* target (since the
+			//    destroyed enemy that will start the chain won't come down
+			//    this code path). If the chain doesn't hit anything beyond its
+			//    initial enemy, you'd have to wait another [CHAIN_RING_SIZE]
+			//    chains for the next chance. The CPU is particularly bad at
+			//    this, as it tends to keep shooting and starting new chains
+			//    rather than letting existing ones continue. Bombing will also
+			//    immediately start one explosion chain for every active enemy
+			//    and thus rapidly move through the chain ring.
+			//
+			// Since explosions_hittest() doesn't mutate the fireball charge
+			// for [EHA_ENEMY] either, this is a no-op in every other case.
+			explosion_collision_chain_slot_fire_charged_fireball(
+				pid, efe_p.efe
+			);
+		}
+		score_add((p->size_words() * 10), pid);
+	} else {
+		p->hp--;
+	}
+	p->frame = 0;
+}
+
+void near enemies_hittest(void)
+{
+	explosion_hittest_against = EHA_ENEMY;
+	p = &enemies[ENEMY_COUNT - 1];
+	for(int i = (ENEMY_COUNT - 1); i >= 0; (i--, p--)) {
+		if(p->flag == EF_RUNNING_SPAWNED) {
+			enemy_hittest();
+		}
+	}
+}
+
+#undef p
 
 void enemies_render(void)
 {

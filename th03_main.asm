@@ -15979,8 +15979,6 @@ HITBOX_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_load$qv:proc
 	extern @enemy_formations_randomize$qv:proc
 	extern @enemy_formations_free$qv:proc
-	@CHAIN_PELLET_SPEED$QUC procdesc pascal near \
-		base:byte
 	@enemy_run$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19172,9 +19170,6 @@ loc_15E45:
 		leave
 		retf
 @combos_update_and_render$qv endp
-
-	@GAUGE_AVAIL_ADD$QUCUC procdesc pascal near \
-		pid:byte, charge:byte
 P_GAUGE_TEXT ends
 
 E_ENEMY_TEXT segment byte public 'CODE' use16
@@ -19248,7 +19243,7 @@ loc_16123:
 loc_16129:
 		cmp	si, ENEMY_COUNT
 		jl	short loc_160B7
-		call	sub_164AD
+		call	@enemies_hittest$qv
 		pop	di
 		pop	si
 		pop	bp
@@ -19257,386 +19252,9 @@ sub_1609E	endp
 
 include th03/main/player/combo.asm
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1615D	proc near
-
-@@hits		= byte ptr -5
-@@chain_slot	= byte ptr -4
-@@pid		= byte ptr -3
-@@bonus_total		= word ptr -2
-
-		enter	6, 0
-		push	si
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_center.y], 0
-		jle	loc_164AA
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_size_pixels], 16
-		jz	short loc_16184
-		mov	al, [bx+enemy_t.ENEMY_size_pixels]
-		mov	ah, 0
-		imul	ax, 7
-		mov	si, ax
-		jmp	short loc_16187
-; ---------------------------------------------------------------------------
-
-loc_16184:
-		mov	si, (10 shl 4)
-
-loc_16187:
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_pid]
-		mov	[bp+@@pid], al
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_damage_all_on[bx], 0
-		jz	short loc_16212
-		mov	bx, _efe_p
-		mov	[bx+enemy_t.ENEMY_hp], 0
-		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _chain_ring_p[bx]
-		mov	[bp+@@chain_slot], al
-		mov	bx, _efe_p
-		mov	[bx+enemy_t.ENEMY_chain_slot], al
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_hits[bx], 1
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_pellet_or_fireball_value[bx], 0
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		inc	_chain_ring_p[bx]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_chain_ring_p[bx], CHAIN_RING_SIZE
-		jb	loc_164A2
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	_chain_ring_p[bx], 0
-		jmp	loc_164A2
-; ---------------------------------------------------------------------------
-
-loc_16212:
-		mov	bx, _efe_p
-		mov	ax, [bx+enemy_t.ENEMY_center.x]
-		mov	_hitbox_origin_center.x, ax
-		mov	ax, [bx+enemy_t.ENEMY_center.y]
-		mov	_hitbox_origin_center.y, ax
-		mov	_hitbox_radius.x, si
-		mov	_hitbox_radius.y, si
-		mov	al, [bx+enemy_t.ENEMY_pid]
-		mov	_hitbox_pid, al
-		cmp	_hitbox_origin_center.y, 0
-		jl	loc_164AA
-		nopcall	@hitbox_hittest$qv
-		or	al, al
-		jz	loc_164AA
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_hp], 0
-		jz	short loc_16257
-		cmp	_ef_onehit, 0
-		jz	loc_1649B
-
-loc_16257:
-		mov	bx, _efe_p
-		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		mov	byte_220C3, 1
-		cmp	_explosion_collision_in_last_hitt, 0
-		jnz	short loc_162D5
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _chain_ring_p[bx]
-		mov	[bp+@@chain_slot], al
-		mov	bx, _efe_p
-		mov	[bx+enemy_t.ENEMY_chain_slot], al
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_hits[bx], 1
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_pellet_or_fireball_value[bx], 0
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		inc	_chain_ring_p[bx]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_chain_ring_p[bx], CHAIN_RING_SIZE
-		jb	loc_16484
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	_chain_ring_p[bx], 0
-		jmp	loc_16484
-; ---------------------------------------------------------------------------
-
-loc_162D5:
-		call	@gauge_avail_add$qucuc pascal, word ptr [bp+@@pid], 32
-		mov	al, _explosion_collision_chain_slot
-		mov	[bp+@@chain_slot], al
-		mov	bx, _efe_p
-		mov	[bx+enemy_t.ENEMY_chain_slot], al
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _chains.CHAIN_hits[bx]
-		mov	[bp+@@hits], al
-		cmp	[bp+@@hits], 255
-		jnb	short loc_1630B
-		inc	[bp+@@hits]
-
-loc_1630B:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	dl, [bp+@@hits]
-		mov	bx, ax
-		mov	_chains.CHAIN_hits[bx], dl
-		push	word ptr [bp+@@pid]
-		push	word ptr [bp+@@chain_slot]
-		mov	al, [bp+@@hits]
-		mov	ah, 0
-		shl	ax, 4
-		push	ax
-		call	@combo_add$qucucui
-		mov	[bp+@@bonus_total], ax
-		call	@fire_point_based_boss_attack_or_$quiuc pascal, ax, word ptr [bp+@@pid]
-		mov	bx, _efe_p
-		mov	ax, [bx+enemy_t.ENEMY_center.x]
-		mov	_bullet_template.BT_center.x, ax
-		mov	ax, [bx+enemy_t.ENEMY_center.y]
-		mov	_bullet_template.BT_center.y, ax
-		call	@chain_pellet_speed$quc pascal, ((1 shl 4) + 8)
-		mov	_bullet_template.BT_speed, al
-		mov	_bullet_template.BT_angle, 0
-		mov	al, [bp+@@pid]
-		mov	_bullet_template.BT_pid, al
-		mov	al, _round_speed
-		mov	ah, 0
-		mov	bx, (2 shl 4)
-		cwd
-		idiv	bx
-		mov	[bp+@@chain_slot], al
-		cmp	[bp+@@hits], 2
-		ja	short loc_1638E
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		inc	_chains.CHAIN_charge_fireball[bx]
-		jmp	loc_1646E
-; ---------------------------------------------------------------------------
-
-loc_1638E:
-		mov	al, [bp+@@hits]
-		mov	ah, 0
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		mov	bx, 9
-		sub	bx, dx
-		cmp	ax, bx
-		jg	short loc_163DA
-		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
-		nopcall	@bullets_add_transfer_pellet$qv
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _chains.CHAIN_charge_fireball[bx]
-		add	al, 2
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@chain_slot]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	_chains.CHAIN_charge_fireball[bx], al
-		jmp	loc_1646E
-; ---------------------------------------------------------------------------
-
-loc_163DA:
-		mov	al, [bp+@@hits]
-		mov	ah, 0
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, 0Eh
-		sub	bx, dx
-		cmp	ax, bx
-		jg	short loc_1642D
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _chains.CHAIN_charge_fireball[bx]
-		add	al, 3
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@chain_slot]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	_chains.CHAIN_charge_fireball[bx], al
-		test	[bp+@@hits], 1
-		jnz	short loc_1646E
-		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
-		nopcall	@bullets_add_transfer_pellet$qv
-		jmp	short loc_16459
-; ---------------------------------------------------------------------------
-
-loc_1642D:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _chains.CHAIN_charge_fireball[bx]
-		add	al, 4
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@chain_slot]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	_chains.CHAIN_charge_fireball[bx], al
-
-loc_16459:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@chain_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		inc	_chains.CHAIN_charge_exatt[bx]
-
-loc_1646E:
-		push	word ptr [bp+@@pid]
-		mov	al, [bp+@@chain_slot]
-		mov	ah, 0
-		push	ax
-		call	@chain_fire_charged_exatt$qucui
-		call	@explosion_collision_chain_slot_f$qucp5efe_t pascal, word ptr [bp+@@pid], _efe_p
-
-loc_16484:
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_size_words]
-		mov	ah, 0
-		imul	ax, 10
-		call	@score_add$quiuc pascal, ax, word ptr [bp+@@pid]
-		jmp	short loc_164A2
-; ---------------------------------------------------------------------------
-
-loc_1649B:
-		mov	bx, _efe_p
-		dec	[bx+enemy_t.ENEMY_hp]
-
-loc_164A2:
-		mov	bx, _efe_p
-		mov	[bx+enemy_t.ENEMY_frame], 0
-
-loc_164AA:
-		pop	si
-		leave
-		retn
-sub_1615D	endp
-
-EHA_ENEMY = 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_164AD	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	_explosion_hittest_against, EHA_ENEMY
-		mov	_efe_p, offset (enemies + ((ENEMY_COUNT - 1) * size efe_t))
-		mov	si, (ENEMY_COUNT - 1)
-		jmp	short loc_164D3
-; ---------------------------------------------------------------------------
-
-loc_164C1:
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
-		jnz	short loc_164CD
-		call	sub_1615D
-
-loc_164CD:
-		dec	si
-		sub	_efe_p, size efe_t
-
-loc_164D3:
-		or	si, si
-		jge	short loc_164C1
-		pop	si
-		pop	bp
-		retn
-sub_164AD	endp
-
+	@enemies_hittest$qv procdesc near
 	extern @enemies_render$qv:proc
 ENEMY_PUT ends
-
-E_EXPL_TEXT segment byte public 'CODE' use16
-	@EXPLOSION_COLLISION_CHAIN_SLOT_F$QUCP5EFE_T procdesc pascal near \
-		pid:word, efe:word
-	@FIRE_POINT_BASED_BOSS_ATTACK_OR_$QUIUC procdesc pascal near \
-		points:word, pid:byte
-E_EXPL_TEXT ends
 
 E_EXPL_TEXT segment byte public 'CODE' use16
 E_EXPL_TEXT ends
@@ -20863,7 +20481,6 @@ BAT_Y = 80h
 
 	extern @bullets_reset$qv:proc
 	extern @bullets_add$qv:proc
-	extern @bullets_add_transfer_pellet$qv:proc
 	extern @bullet_template_reset_stuff$qv:proc
 	extern @bullets_update$qv:proc
 	extern @bullets_render$qv:proc
@@ -20871,7 +20488,6 @@ BULLET_TEXT ends
 
 E_FIREB_TEXT segment byte public 'CODE' use16
 	extern @fireballs_update$qv:proc
-	@CHAIN_FIRE_CHARGED_EXATT$QUCUI procdesc pascal near
 	extern @fireballs_hittest_and_render$qv:proc
 E_FIREB_TEXT ends
 
@@ -30687,10 +30303,11 @@ chains_t struc
 chains_t ends
 
 public _chains, _explosion_collision_chain_slot
+public _enemy_killed_in_previous_hittest
 _chains	chains_t <?>
 		dd ?
 _explosion_collision_chain_slot	db ?
-byte_220C3	db ?
+_enemy_killed_in_previous_hittest	db ?
 include th03/main/player/score[bss].asm
 byte_220DC	db ?
 		db 3 dup(?)
