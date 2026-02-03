@@ -391,85 +391,10 @@ void near fireballs_hittest(void)
 {
 	int i;
 
-	// ZUN landmine: This uninitialized variable is the cause behind the
-	// infamous rare score reduction and extend glitches. The collision branch
-	// below doesn't set this slot if a fireball is destroyed by anything that
-	// isn't an explosion, but still passes it to chain_fire_charged_exatt(),
-	// where any value ≥ [CHAIN_RING_SIZE] causes an out-of-bounds array
-	// access.
-	// In ZUN's binary, [score_lebcd] and [extends_gained] happen to be placed
-	// 6 and 30 bytes after the end of [chains.charge_exatt], respectively.
-	// Hence, if this uninitialized variable ever happens to be
-	//
-	// 	≥ (([CHAIN_RING_SIZE] × ([PLAYER_COUNT] - <fireball PID>)) + 6) and
-	// 	< that number plus ([SCORE_DIGITS] × [PLAYER_COUNT]),
-	//
-	// the game will interpret a score digit as an Extra Attack charge value,
-	// resetting it to 0 if the charge condition is met. These constants
-	// translate to slot IDs ≥38 and <54 for P1, and to ID ≥22 and <38 for P2.
-	//
-	// Similarly, the game will access [extends_gained] if the slot ID happens
-	// to be 62 for P1 and 46 for P2. Due to [ROUND_SPEED_MAX] being 7.9375f,
-	// the smallest possible Extra Attack chain value would be 3, which would
-	// be impossible to reach due to [EXTENDS_MAX] being 2. However, ZUN sets
-	// [extends_gained] to 0xFF once P1's score is ≥20 million, thus ensuring
-	// that the condition in chain_fire_charged_exatt() will always be true in
-	// that case.
-	//
-	// But how likely is it for this specific stack byte to fall within these
-	// ranges? If we trace the flow of code in ZUN's original binary, we almost
-	// always see a value of 15 – which just happens to be the highest valid
-	// slot number, ([CHAIN_RING_SIZE] - 1). This value is written by the
-	// `ENTER` instruction at the start of enemy_explosion_put() and
-	// enemy_put(), and represents the top 8 bits of `SP`. This value is as
-	// safe and deterministic as it gets, for two reasons:
-	//
-	// 1) Turbo C++ 4.0J allocates a 4,096-byte stack with `SP` starting at
-	//    0x1000 and growing towards 0x0000. Since these blitting functions are
-	//    only ever called from a single place two functions above main(), `SP`
-	//    is guaranteed to be somewhere within 0x0F00 and 0x0FFF whenever they
-	//    get called, ensuring the consistent high byte of 0x0F.
-	// 2) Since TH03 immediately spawns the next formation once all active
-	//    enemies have exploded or left the playfield, it will always at least
-	//    try to render one enemy or enemy-originating explosion on every frame
-	//    of gameplay. Even bombs merely cause enemies to explode immediately,
-	//    rather than removing them outright.
-	//
-	// Thus, the glitch can only happen if the system receives an interrupt
-	// (from either the keyboard, VSync, or PMD's background task) within the
-	// very specific window of CPU instructions between
-	//
-	// 1) after the end of the final enemy_explosion_put() or enemy_put() call
-	//    for a frame, and
-	// 2) the beginning of this function.
-	//
-	// In that case, the CPU must save the current CS:IP pair to the current
-	// stack to service the interrupt, which will overwrite the 0x0F value with
-	// the high byte of the segment containing the currently active function,
-	// most likely enemies_render(). (Note that the interrupt must indeed
-	// happen *outside* the two blitting functions for this glitch to occur, as
-	// `SP` will already be too low once execution has moved inside.)
-	// Due to the required timing, this glitch is very rare even on systems
-	// where it *can* happen as a result of enemies_render()'s segment falling
-	// into the ranges described above.
-	//
-	// Thankfully, just initializing this variable to 15 is the correct fix
-	// here, and will remove this highly system-specific landmine by locking
-	// down the effect of normal code flow. In fact, this *must* be fixed for
-	// any build that supports netplay:
-	//
-	// • Gameplay would desync if one of the peers runs on a glitch-prone
-	//   configuration and spawns an additional Extra Attack onto the other
-	//   player's field. They won't be able to see and dodge that attack unless
-	//   they are running the exact same system configuration.
-	// • We'd like to skip rendering during rollback, but that would also skip
-	//   the call to enemies_render(), which is the whole reason why this
-	//   glitch only happens rarely instead of happening all the time.
-	//
-	// See https://rec98.nmlgc.net/blog/2026-03-16#glitches for a more in-depth
-	// documentation of this glitch and the system configurations that are most
-	// likely to cause it.
-	uint8_t chain_slot;
+	// Fixing the landmine behind the score reduction and extend glitches by
+	// initializing this variable to the value it will have during regular
+	// uninterrupted code flow.
+	uint8_t chain_slot = (CHAIN_RING_SIZE - 1);
 
 	hitbox.radius.set(12, 10);
 	p = &fireballs[FIREBALL_COUNT - 1];
@@ -512,14 +437,12 @@ void near fireballs_hittest(void)
 				p->flag = EFF_EXPLOSION_IGNORING_ENEMIES;
 				chain_slot = explosion_collision_chain_slot;
 				p->chain_slot = chain_slot;
+				uint8_t& charge_exatt = (chains.charge_exatt[pid][chain_slot]);
 				if(explosion_hittest_against == EHA_FIREBALL_RED) {
-					chains.charge_exatt[pid][chain_slot]++;
+					charge_exatt++;
 				}
-				if(
-					chains.charge_exatt[pid][chain_slot] >=
-					(7 - (round_speed / to_sp8(2.0f)))
-				) {
-					chains.charge_exatt[pid][chain_slot] = 0;
+				if(charge_exatt >= (7 - (round_speed / to_sp8(2.0f)))) {
+					charge_exatt = 0;
 					exatt_add(p->center.x, p->center.y, pid);
 				}
 				if(generation_prev < 4) {
@@ -540,7 +463,6 @@ void near fireballs_hittest(void)
 				fireballs_add();
 			}
 
-			// See the landmine above.
 			chain_fire_charged_exatt(pid, chain_slot);
 		} else {
 			p->hp--;
@@ -554,6 +476,8 @@ void near fireballs_hittest(void)
 	}
 	variant = FV_BLUE;
 }
+
+#pragma codestring "- 19 free bytes! -\x00"
 
 void fireballs_hittest_and_render(void)
 {
