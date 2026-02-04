@@ -111,17 +111,19 @@ struct bullet_t {
 // State
 // -----
 
-extern bullet_t bullets[BULLET_COUNT];
+SubpixelLength8 bullet_base_speed;
+bullet_template_t bullet_template;
+bullet_t bullets[BULLET_COUNT];
 
-extern bullet_trail_t bullet_trail_ring[TRAIL_RING_SIZE];
+bullet_trail_t bullet_trail_ring[TRAIL_RING_SIZE];
 
 // ZUN bloat: group_velocity_set() should have just received a mutable
 // reference to the bullet, like in TH02.
-extern unsigned char bullet_group_i_angle;
+unsigned char bullet_group_i_angle;
 
 // Index of the next `bullet_trail_t` instance within [bullet_trail_ring] to be
 // assigned to a bullet with trail sprites.
-extern uint8_t bullet_trail_ring_i;
+uint8_t bullet_trail_ring_i;
 // -----
 
 #pragma codeseg PELLET_PUT main_04
@@ -505,7 +507,7 @@ void bullet_template_reset_stuff(void)
 
 // ZUN bloat: Both of these could have been passed as `__fastcall` parameters.
 #define coord_prev static_cast<playfield_subpixel_t>(_CX)
-extern PlayfieldSubpixel coord_max;
+PlayfieldSubpixel coord_max;
 
 // ZUN bloat: Also, did this *really* have to assign its return value to the
 // carry flag?

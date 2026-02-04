@@ -30849,9 +30849,6 @@ _defeat_boss_panics_fired    	db ?
 byte_23DF9	db ?
 		db 64 dup(?)
 word_23E3A	dw ?
-public _bullet_base_speed, _bullet_template
-_bullet_base_speed	db ?
-	evendata
 
 bullet_template_t struc
 	BT_center       	Point <?>
@@ -30869,45 +30866,8 @@ bullet_template_t struc
 	BT_has_trail    	db ?
 bullet_template_t ends
 
-public _bullet_template
-_bullet_template bullet_template_t <?>
-
-TRAIL_POINT_COUNT = 6
-TRAIL_RING_SIZE = 48
-BULLET_COUNT = 320
-
-bullet_trail_t struc
-	BT_center_x dw TRAIL_POINT_COUNT dup(?)
-	BT_center_y dw TRAIL_POINT_COUNT dup(?)
-bullet_trail_t ends
-
-bullet_t struc
-	BULLET_flag                          	db ?
-	BULLET_age                           	db ?
-	BULLET_center                        	Point <?>
-	BULLET_target_center_x_for_target_pid	dw ?
-	BULLET_target_center_x_for_origin_pid	dw ?
-	BULLET_velocity                      	Point <?>
-	BULLET_speed_next                    	db ?
-	BULLET_angle_next                    	db ?
-	BULLET_pid                           	db ?
-	BULLET_group_next                    	db ?
-	BULLET_sprite_offset                 	dw ?
-	BULLET_accel_type                    	db ?
-	BULLET_is_collidable                 	db ?
-	BULLET_is_animated                   	db ?
-	BULLET_has_trail                     	db ?
-	BULLET_trail                         	dw ?
-bullet_t ends
-
-public _bullets, _bullet_trail_ring, _bullet_group_i_angle, _bullet_trail_ring_i
-public _coord_max
-_bullets	bullet_t BULLET_COUNT dup(<?>)
-_bullet_trail_ring	bullet_trail_t TRAIL_RING_SIZE dup(<?>)
-_bullet_group_i_angle	db ?
-_bullet_trail_ring_i	db ?
-_coord_max	dw ?
-
+	extern _bullet_base_speed:byte
+	extern _bullet_template:bullet_template_t
 	extern _ef_onehit:byte
 
 		end
