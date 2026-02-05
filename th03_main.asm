@@ -19435,7 +19435,7 @@ loc_16187:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4AFEh], 0
+		mov	_chains.CHAIN_pellet_or_fireball_value[bx], 0
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
@@ -19501,7 +19501,7 @@ loc_16257:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4AFEh], 0
+		mov	_chains.CHAIN_pellet_or_fireball_value[bx], 0
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
@@ -19583,7 +19583,7 @@ loc_1630B:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		inc	byte ptr [bx+4B1Eh]
+		inc	_chains.CHAIN_charge_fireball[bx]
 		jmp	loc_1646E
 ; ---------------------------------------------------------------------------
 
@@ -19605,7 +19605,7 @@ loc_1638E:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4B1Eh]
+		mov	al, _chains.CHAIN_charge_fireball[bx]
 		add	al, 2
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
@@ -19614,7 +19614,7 @@ loc_1638E:
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
-		mov	[bx+4B1Eh], al
+		mov	_chains.CHAIN_charge_fireball[bx], al
 		jmp	loc_1646E
 ; ---------------------------------------------------------------------------
 
@@ -19635,7 +19635,7 @@ loc_163DA:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4B1Eh]
+		mov	al, _chains.CHAIN_charge_fireball[bx]
 		add	al, 3
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
@@ -19644,7 +19644,7 @@ loc_163DA:
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
-		mov	[bx+4B1Eh], al
+		mov	_chains.CHAIN_charge_fireball[bx], al
 		test	[bp+@@hits], 1
 		jnz	short loc_1646E
 		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
@@ -19660,7 +19660,7 @@ loc_1642D:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4B1Eh]
+		mov	al, _chains.CHAIN_charge_fireball[bx]
 		add	al, 4
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
@@ -19669,7 +19669,7 @@ loc_1642D:
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
-		mov	[bx+4B1Eh], al
+		mov	_chains.CHAIN_charge_fireball[bx], al
 
 loc_16459:
 		mov	al, [bp+@@pid]
@@ -19679,7 +19679,7 @@ loc_16459:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		inc	byte ptr [bx+4B3Eh]
+		inc	_chains.CHAIN_charge_exatt[bx]
 
 loc_1646E:
 		push	word ptr [bp+@@pid]
@@ -19775,7 +19775,7 @@ arg_2		= byte ptr  6
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4B1Eh]
+		mov	al, _chains.CHAIN_charge_fireball[bx]
 		mov	ah, 0
 		mov	dl, _round_speed
 		mov	dh, 0
@@ -19796,7 +19796,7 @@ arg_2		= byte ptr  6
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4B1Eh], 0
+		mov	_chains.CHAIN_charge_fireball[bx], 0
 		mov	ax, _efe_p
 		mov	[bp+var_2], ax
 		mov	ax, [bp+arg_0]
@@ -19854,7 +19854,7 @@ arg_2		= word ptr  6
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4AFEh], 0
+		mov	_chains.CHAIN_pellet_or_fireball_value[bx], 0
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
@@ -19862,7 +19862,7 @@ arg_2		= word ptr  6
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4B1Eh], 0
+		mov	_chains.CHAIN_charge_fireball[bx], 0
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
@@ -19870,7 +19870,7 @@ arg_2		= word ptr  6
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4B3Eh], 0
+		mov	_chains.CHAIN_charge_exatt[bx], 0
 		add	word_21434, 1400h
 		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
 		jnb	short loc_16656
@@ -20139,7 +20139,7 @@ loc_16886:
 		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
-		add	ax, 4AFEh
+		add	ax, offset _chains.CHAIN_pellet_or_fireball_value
 		mov	di, ax
 		mov	al, [bp+var_E]
 		add	[di], al
@@ -20151,7 +20151,7 @@ loc_16886:
 		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
-		add	ax, 4B1Eh
+		add	ax, offset _chains.CHAIN_charge_fireball
 		mov	di, ax
 		cmp	[bp+var_E], 1
 		jnz	short loc_168C8
@@ -20200,7 +20200,7 @@ loc_168F2:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		inc	byte ptr [bx+4B3Eh]
+		inc	_chains.CHAIN_charge_exatt[bx]
 		jmp	short loc_16945
 ; ---------------------------------------------------------------------------
 
@@ -20212,7 +20212,7 @@ loc_16916:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4B3Eh]
+		mov	al, _chains.CHAIN_charge_exatt[bx]
 		add	al, 2
 		mov	dl, _hitbox_pid
 		mov	dh, 0
@@ -20221,7 +20221,7 @@ loc_16916:
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
-		mov	[bx+4B3Eh], al
+		mov	_chains.CHAIN_charge_exatt[bx], al
 
 loc_16945:
 		call	@combo_add$qucucui pascal, word ptr _hitbox_pid, word ptr chain_slot_220C2, [bp+@@bonus]
@@ -21504,7 +21504,7 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		mov	al, [bx+si+4B3Eh]
+		mov	al, _chains.CHAIN_charge_exatt[bx+si]
 		mov	ah, 0
 		mov	dl, _round_speed
 		mov	dh, 0
@@ -21522,7 +21522,7 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		mov	byte ptr [bx+si+4B3Eh],	0
+		mov	_chains.CHAIN_charge_exatt[bx+si], 0
 		mov	bx, _efe_p
 		push	[bx+efe_t.EFE_center.x]
 		push	[bx+efe_t.EFE_center.y]
@@ -21601,7 +21601,7 @@ loc_1823A:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		inc	byte ptr [bx+4B3Eh]
+		inc	_chains.CHAIN_charge_exatt[bx]
 
 loc_18275:
 		mov	al, [bp+@@pid]
@@ -21611,7 +21611,7 @@ loc_18275:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4B3Eh]
+		mov	al, _chains.CHAIN_charge_exatt[bx]
 		mov	ah, 0
 		mov	dl, _round_speed
 		mov	dh, 0
@@ -21632,7 +21632,7 @@ loc_18275:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4B3Eh], 0
+		mov	_chains.CHAIN_charge_exatt[bx], 0
 		mov	bx, _efe_p
 		push	[bx+fireball_t.FIREBALL_center.x]
 		push	[bx+fireball_t.FIREBALL_center.y]
@@ -21656,7 +21656,7 @@ loc_182D6:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4B3Eh]
+		mov	al, _chains.CHAIN_charge_exatt[bx]
 		add	al, _explosion_hittest_against
 		add	al, -1
 		mov	dl, [bp+@@pid]
@@ -21668,7 +21668,7 @@ loc_182D6:
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
-		mov	[bx+4B3Eh], al
+		mov	_chains.CHAIN_charge_exatt[bx], al
 		mov	bx, _efe_p
 		mov	[bx+fireball_t.FIREBALL_flag], EFF_FREE
 		push	word ptr [bp+@@pid]
@@ -31632,13 +31632,15 @@ _efe_p	dw ?
 CHAIN_RING_SIZE = 16
 
 chains_t struc
-	CHAIN_hits	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+	CHAIN_hits                    	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+	CHAIN_pellet_or_fireball_value	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+	CHAIN_charge_fireball         	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+	CHAIN_charge_exatt            	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
 chains_t ends
 
 public _chains
 _chains	chains_t <?>
-
-		db 100 dup(?)
+		dd ?
 chain_slot_220C2	db ?
 byte_220C3	db ?
 include th03/main/player/score[bss].asm

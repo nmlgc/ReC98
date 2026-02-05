@@ -12,8 +12,17 @@ static const int CHAIN_RING_SIZE = 16;
 
 extern uint8_t chain_ring_p[PLAYER_COUNT];
 
+// ZUN bloat: AoS would be much more appropriate for how the game uses these.
 struct chains_t {
 	uint8_t hits[PLAYER_COUNT][CHAIN_RING_SIZE];
+
+	// Increases by destroying pellets (+1), blue fireballs (+6) and red
+	// fireballs (+9), which in turn causes [charge_fireball] and
+	// [charge_exatt] to increase relative to this value.
+	uint8_t pellet_and_fireball_value[PLAYER_COUNT][CHAIN_RING_SIZE];
+
+	uint8_t charge_fireball[PLAYER_COUNT][CHAIN_RING_SIZE];
+	uint8_t charge_exatt[PLAYER_COUNT][CHAIN_RING_SIZE];
 };
 
 extern chains_t chains;
