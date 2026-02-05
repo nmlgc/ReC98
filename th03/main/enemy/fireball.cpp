@@ -3,6 +3,8 @@
 #include "th03/main/enemy/expl.hpp"
 #include "th03/main/enemy/efe.hpp"
 #include "th03/main/player/bomb.hpp"
+#include "th03/main/player/chain.hpp"
+#include "th03/main/player/exatt.hpp"
 #include "th03/main/player/stuff.hpp"
 #include "th03/main/difficul.hpp"
 #include "th03/main/round.hpp"
@@ -346,5 +348,13 @@ switch_to_fall:
 			next += p->velocity.y.v;
 			p->center.y.v = next;
 		}
+	}
+}
+
+void pascal near chain_fire_charged_exatt(pid_t pid, unsigned int slot)
+{
+	if(chains.charge_exatt[pid][slot] >= (6 - (round_speed / to_sp(2.0f)))) {
+		chains.charge_exatt[pid][slot] = 0;
+		exatt_add(efe_p.efe->center.x, efe_p.efe->center.y, pid);
 	}
 }

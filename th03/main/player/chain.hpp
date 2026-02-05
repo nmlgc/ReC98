@@ -29,4 +29,10 @@ extern chains_t chains;
 
 // ZUN bloat: One-line wrapper around combo_add_raw().
 uint16_t pascal near combo_add(pid_t pid, uint8_t chain_slot, uint16_t bonus);
+
+// Fires an Extra Attack if [pid]'s [charge_exatt] in the given chain [slot]
+// exceeds a difficulty-specific threshold value, then resets the charge.
+// ZUN bloat: Reads [efe_p.efe.center]. Should just take a `PlayfieldPoint`
+// parameter.
+void pascal near chain_fire_charged_exatt(pid_t pid, unsigned int slot);
 /// --------------------

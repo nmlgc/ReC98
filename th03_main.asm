@@ -19687,7 +19687,7 @@ loc_1646E:
 		mov	al, [bp+@@chain_slot]
 		mov	ah, 0
 		push	ax
-		call	sub_1816D
+		call	@chain_fire_charged_exatt$qucui
 		push	word ptr [bp+@@pid]
 		push	_efe_p
 		call	sub_1654E
@@ -21484,55 +21484,10 @@ E_FIREB_TEXT segment byte public 'CODE' use16
 	@fireball_put$qv procdesc near
 	@fireball_explosion_put$qv procdesc near
 	extern @fireballs_update$qv:proc
+	@CHAIN_FIRE_CHARGED_EXATT$QUCUI procdesc pascal near
 E_FIREB_TEXT ends
 
 main_04__TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1816D	proc near
-
-arg_0		= word ptr  4
-@@pid	= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	bx, ax
-		mov	al, _chains.CHAIN_charge_exatt[bx+si]
-		mov	ah, 0
-		mov	dl, _round_speed
-		mov	dh, 0
-		mov	bx, (2 shl 4)
-		push	ax
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	dx, 6
-		sub	dx, ax
-		pop	ax
-		cmp	ax, dx
-		jl	short loc_181BE
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	bx, ax
-		mov	_chains.CHAIN_charge_exatt[bx+si], 0
-		mov	bx, _efe_p
-		call	@exatt_add$q20%SubpixelBase$ti$ti%t1uc pascal, [bx+efe_t.EFE_center.x], [bx+efe_t.EFE_center.y], word ptr [bp+@@pid]
-
-loc_181BE:
-		pop	si
-		pop	bp
-		retn	4
-sub_1816D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21673,7 +21628,7 @@ loc_182D6:
 		mov	al, _chain_ring_p[bx]
 		mov	ah, 0
 		push	ax
-		call	sub_1816D
+		call	@chain_fire_charged_exatt$qucui
 		call	gauge_avail_add pascal, word ptr [bp+@@pid], 16
 		call	@score_add$quiuc pascal, 50, word ptr [bp+@@pid]
 
@@ -21685,7 +21640,7 @@ loc_18345:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_1816D
+		call	@chain_fire_charged_exatt$qucui
 		jmp	short loc_1835A
 ; ---------------------------------------------------------------------------
 
