@@ -1,5 +1,10 @@
 #include "th03/main/enemy/expl.hpp"
 #include "th03/main/enemy/efe.hpp"
+#include "th03/main/player/stuff.hpp"
+#include "th03/main/difficul.hpp"
+#include "th03/main/round.hpp"
+#include "th03/math/randring.hpp"
+#include "th03/math/vector.hpp"
 #include "th03/sprites/main_s16.hpp"
 
 // Flags
@@ -72,8 +77,98 @@ static const uint8_t FRAMES_PER_CEL = 4;
 	reinterpret_cast<fireball_t *>(&efes[EFE_COUNT - FIREBALL_COUNT]) \
 )
 
-extern fireball_variant_t variant;
+fireball_variant_t variant = FV_BLUE;
+uint8_t generation_prev;
 // -----
+
+void fireballs_add(void)
+{
+	#define origin (*efe_p.efe)
+
+	fireball_t near *fireball_p;
+	playfield_subpixel_t origin_center_x = origin.center.x;
+	screen_x_t screen_x;
+	int i;
+	playfield_subpixel_t origin_center_y = origin.center.y;
+	fireball_p = fireballs;
+
+	static_assert(PLAYER_COUNT == 2);
+	pid_t pid_target = (1 - origin.pid);
+
+	subpixel_length_8_t speed;
+	for(i = 0; i < FIREBALL_COUNT; (i++, fireball_p++)) {
+		if(fireball_p->flag != EFF_FREE) {
+			continue;
+		}
+		fireball_p->flag = FF_TRANSFER;
+		fireball_p->center.x.v = origin_center_x;
+		fireball_p->center.y.v = origin_center_y;
+		fireball_p->pid = origin.pid;
+
+		speed = (
+			to_sp(1.25f) +
+			(round_speed / 2) +
+			randring2_next16_ge_lt_sp(0.0f, 2.0f)
+		);
+
+		// Technically not needed because [speed] can at most be
+		// 	(3.25f + ([ROUND_SPEED_MAX] / 2)) = 7.1875f
+		// but it does make sense as a sanity check.
+		if(speed > to_sp8(8.0f)) {
+			speed = to_sp8(8.0f);
+		}
+
+		fireball_p->fall_velocity_y = speed;
+		fireball_p->hp = (variant + 2);
+		fireball_p->variant_as_eha() = static_cast<explosion_hittest_against_t>(
+			EHA_FIREBALL + variant
+		);
+		fireball_p->size_pixels = 48;
+		fireball_p->unused_4[1] = 0; // ZUN bloat
+		fireball_p->generation = (
+			(variant == FV_BLUE) ? 0 : (generation_prev + 1)
+		);
+
+		// ZUN bloat: Identical to `origin.pid`.
+		static_assert(PLAYER_COUNT == 2);
+		screen_x = playfield_fg_x_to_screen(origin_center_x, (1 - pid_target));
+
+		if((round_or_result_frame % 512) < 256) {
+			origin_center_x = randring2_next16_ge_lt_sp(0.0f, PLAYFIELD_W);
+		} else {
+			origin_center_x = (
+				players[pid_target].center.x.v +
+				randring2_next16_ge_lt_sp(0.0f, 32.0f)
+			);
+		}
+		fireball_p->target_center_x_for_target_pid.v = origin_center_x;
+
+		// ZUN bloat: Should write to another variable.
+		origin_center_x = playfield_fg_x_to_screen(origin_center_x, pid_target);
+
+		// ZUN bloat: Inlining the calculation avoids overloading the variable.
+		speed = (to_sp(4.375f) + (round_speed / 3));
+		vector2_between_plus(
+			TO_SP(screen_x),
+			origin_center_y,
+			TO_SP(origin_center_x),
+			0,
+			0,
+			fireball_p->velocity.x.v,
+			fireball_p->velocity.y.v,
+			speed
+		);
+
+		// ZUN bloat: Again, identical to `origin.pid`.
+		static_assert(PLAYER_COUNT == 2);
+		fireball_p->target_center_x_for_origin_pid.v = screen_x_to_playfield(
+			origin_center_x, (1 - pid_target)
+		);
+		return;
+	}
+
+	#undef origin
+}
 
 void near fireball_put(void)
 {
