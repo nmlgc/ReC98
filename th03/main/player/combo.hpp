@@ -29,4 +29,10 @@ extern combo_t combos[PLAYER_COUNT];
 // value.
 uint16_t pascal combo_add_raw(uint8_t hits, pid_t pid, uint16_t bonus);
 
+// ZUN bloat: Should be merged into combos_add(), since it's always called
+// immediately afterward.
+void pascal near fire_point_based_boss_attack_or_panic(
+	uint16_t points, pid_t pid
+);
+
 void combos_update_and_render(void);

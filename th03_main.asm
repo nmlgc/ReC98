@@ -19556,7 +19556,7 @@ loc_1630B:
 		push	ax
 		call	@combo_add$qucucui
 		mov	[bp+@@bonus_total], ax
-		call	sub_165B5 pascal, ax, word ptr [bp+@@pid]
+		call	@fire_point_based_boss_attack_or_$quiuc pascal, ax, word ptr [bp+@@pid]
 		mov	bx, _efe_p
 		mov	ax, [bx+enemy_t.ENEMY_center.x]
 		mov	_bullet_template.BT_center.x, ax
@@ -19755,160 +19755,11 @@ ENEMY_PUT ends
 E_EXPL_TEXT segment byte public 'CODE' use16
 	@EXPLOSION_COLLISION_CHAIN_SLOT_F$QUCP5EFE_T procdesc pascal near \
 		pid:word, efe:word
+	@FIRE_POINT_BASED_BOSS_ATTACK_OR_$QUIUC procdesc pascal near \
+		points:word, pid:byte
 E_EXPL_TEXT ends
 
 PELLET_PUT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_165B5	proc near
-
-arg_0		= byte ptr  4
-@@points	= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@points]
-		mov	cl, [bp+arg_0]
-		cmp	si, _combo_points_for_boss_attack
-		jb	loc_166FD
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_warning_flag[bx], WF_NONE
-		jnz	loc_16708
-		cmp	_gba_boss_launched_by, cl
-		jz	loc_1667D
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_gba_flag_active[bx], GBAF_BOSS
-		jz	loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	_gba_flag_next[bx], GBAF_BOSS
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	_warning_flag[bx], WF_PORTRAIT
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, _explosion_collision_chain_slot
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_pellet_or_fireball_value[bx], 0
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, _explosion_collision_chain_slot
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_charge_fireball[bx], 0
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, _explosion_collision_chain_slot
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_chains.CHAIN_charge_exatt[bx], 0
-		add	_combo_points_for_boss_attack, 5120
-		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
-		jnb	short loc_16656
-		inc	_gba_boss_level
-
-loc_16656:
-		cmp	_gba_boss_launched_by, PID_NONE
-		jnz	short loc_1666D
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		inc	_players[bx].boss_attacks_fired
-		jmp	loc_16708
-; ---------------------------------------------------------------------------
-
-loc_1666D:
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		inc	_players[bx].boss_attacks_reversed
-		jmp	loc_16708
-; ---------------------------------------------------------------------------
-
-loc_1667D:
-		cmp	si, 30000
-		jb	loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+4AD8h], 0
-		jnz	short loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_gba_flag_active[bx], GBAF_NONE
-		jnz	short loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	_warning_flag[bx], WF_PORTRAIT
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+4AD8h], 1
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _gba_gauge_level[bx]
-		add	al, 3
-		mov	dl, cl
-		mov	dh, 0
-		mov	bx, dx
-		mov	_gba_gauge_level[bx], al
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_gba_gauge_level[bx], GBA_GAUGE_LEVEL_MAX
-		jbe	short loc_166EE
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	_gba_gauge_level[bx], GBA_GAUGE_LEVEL_MAX
-
-loc_166EE:
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		inc	_players[bx].boss_panics_fired
-		jmp	short loc_16708
-; ---------------------------------------------------------------------------
-
-loc_166FD:
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+4AD8h], 0
-
-loc_16708:
-		pop	si
-		pop	bp
-		retn	4
-sub_165B5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20174,7 +20025,7 @@ loc_16916:
 loc_16945:
 		call	@combo_add$qucucui pascal, word ptr _hitbox_pid, word ptr _explosion_collision_chain_slot, [bp+@@bonus]
 		mov	[bp+@@bonus], ax
-		call	sub_165B5 pascal, ax, word ptr _hitbox_pid
+		call	@fire_point_based_boss_attack_or_$quiuc pascal, ax, word ptr _hitbox_pid
 		call	@explosion_collision_chain_slot_f$qucp5efe_t pascal, word ptr _hitbox_pid, si
 
 loc_16966:
@@ -31477,15 +31328,13 @@ EFE_COUNT = 64
 ENEMY_COUNT = 40
 FIREBALL_COUNT = 24
 
-public _efes, _enemies_alive, _efe_p
+public _efes, _enemies_alive, _boss_panic_fired_in_current_comb
+public _explosion_hittest_against, _explosion_collision_in_last_hitt, _efe_p
 label enemies enemy_t
 fireballs = ($ + (ENEMY_COUNT * size efe_t))
 _efes	efe_t EFE_COUNT dup(<?>)
 _enemies_alive	db PLAYER_COUNT dup(?)
-
-		db 2 dup(?)
-
-public _explosion_hittest_against, _explosion_collision_in_last_hitt
+_boss_panic_fired_in_current_comb db PLAYER_COUNT dup(?)
 _explosion_hittest_against	db ?
 _explosion_collision_in_last_hitt	db ?
 _efe_p	dw ?
