@@ -253,7 +253,7 @@ loc_977E:
 		call	sub_BB12
 		call	@enemy_formations_update$qv
 		call	@bullets_update$qv
-		call	sub_1609E
+		call	@enemies_update$qv
 		call	@fireballs_update$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
@@ -15979,7 +15979,6 @@ HITBOX_TEXT segment byte public 'CODE' use16
 	extern @enemy_formations_load$qv:proc
 	extern @enemy_formations_randomize$qv:proc
 	extern @enemy_formations_free$qv:proc
-	@enemy_run$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19176,83 +19175,8 @@ E_ENEMY_TEXT segment byte public 'CODE' use16
 E_ENEMY_TEXT ends
 
 ENEMY_PUT segment byte public 'CODE' use16
-	@enemy_explosion_flag_update$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1609E	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	_efe_p, offset enemies
-		mov	_enemies_alive[0], 0
-		mov	_enemies_alive[1], 0
-		xor	si, si
-		jmp	short loc_16129
-; ---------------------------------------------------------------------------
-
-loc_160B7:
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_flag], EFF_FREE
-		jz	short loc_16123
-		mov	bx, _efe_p
-		inc	[bx+enemy_t.ENEMY_frame]
-		cmp	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		jb	short loc_160D1
-		call	@enemy_explosion_flag_update$qv
-		jmp	short loc_16123
-; ---------------------------------------------------------------------------
-
-loc_160D1:
-		call	@enemy_run$qv
-		or	al, al
-		jnz	short loc_16123
-		mov	bx, _efe_p
-		mov	al, [bx+enemy_t.ENEMY_pid]
-		mov	ah, 0
-		mov	bx, ax
-		inc	_enemies_alive[bx]
-		mov	bx, _efe_p
-		cmp	[bx+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
-		jnz	short loc_16123
-		mov	al, [bx+enemy_t.ENEMY_size_pixels]
-		mov	ah, 0
-		imul	ax, 3
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	di, ax
-		mov	bx, _efe_p
-		mov	ax, [bx+enemy_t.ENEMY_center.x]
-		mov	_collmap_center.x, ax
-		mov	ax, [bx+enemy_t.ENEMY_center.y]
-		mov	_collmap_center.y, ax
-		mov	_collmap_stripe_tile_w, di
-		mov	_collmap_tile_h, di
-		mov	al, [bx+enemy_t.ENEMY_pid]
-		mov	_collmap_pid, al
-		nopcall	@collmap_set_rect_striped$qv
-
-loc_16123:
-		inc	si
-		add	_efe_p, size efe_t
-
-loc_16129:
-		cmp	si, ENEMY_COUNT
-		jl	short loc_160B7
-		call	@enemies_hittest$qv
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_1609E	endp
-
+	extern @enemies_update$qv:proc
 include th03/main/player/combo.asm
-
-	@enemies_hittest$qv procdesc near
 	extern @enemies_render$qv:proc
 ENEMY_PUT ends
 

@@ -7,6 +7,7 @@ extern uint8_t enemy_speed;
 
 extern bool enemy_killed_in_previous_hittest;
 
+void enemies_update(void);
 void enemies_render(void);
 
 // Loads constant enemy formation data.

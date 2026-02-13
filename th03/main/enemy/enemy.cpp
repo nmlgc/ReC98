@@ -934,3 +934,44 @@ void enemies_render(void)
 		}
 	}
 }
+
+#pragma codeseg E_ENEMY_TEXT main_04 // ZUN bloat
+
+void enemies_update(void)
+{
+	#define p (efe_p.enemy)
+	p = enemies;
+
+	static_assert(PLAYER_COUNT == 2);
+	enemies_alive[0] = 0;
+	enemies_alive[1] = 0;
+
+	for(int i = 0; i < ENEMY_COUNT; (i++, p++)) {
+		if(p->flag == EFF_FREE) {
+			continue;
+		}
+		p->frame++;
+		if(p->flag >= EFF_EXPLOSION_IGNORING_ENEMIES) {
+			enemy_explosion_flag_update();
+		} else if(enemy_run()) {
+			continue;
+		} else {
+			enemies_alive[p->pid]++;
+			if(p->flag == EF_RUNNING_SPAWNED) {
+				collmap_tile_amount_t tiles = ((p->size_pixels * 3) / 16);
+				collmap_center.x = p->center.x;
+				collmap_center.y = p->center.y;
+				collmap_stripe_tile_w.v = tiles;
+				collmap_tile_h.v = tiles;
+				collmap_pid = p->pid;
+
+				/* TODO: Replace with the decompiled call
+				 * 	collmap_set_rect_striped();
+				 * once the segmentation allows us to, if ever */
+				asm { nop; push cs; call near ptr collmap_set_rect_striped; }
+			}
+		}
+	}
+	enemies_hittest();
+	#undef p
+}
