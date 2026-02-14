@@ -618,7 +618,7 @@ void bullets_update(void)
 	)
 
 	collmap_tile_h = 1;
-	explosion_hittest_mode = EHM_PELLET;
+	explosion_hittest_against = EHA_PELLET;
 
 	// ZUN bloat: A `for` loop would have been more readable.
 	int i = (BULLET_COUNT + 1);
