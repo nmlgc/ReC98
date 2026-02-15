@@ -5994,32 +5994,32 @@ include th03/main/player/score_add.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @HUD_DYNAMIC_5_DIGIT_POINTS_PUT$QIIUIUC
+@hud_dynamic_5_digit_points_put$qiiuiuc proc far
 
-sub_D608	proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
+@@col   	= byte ptr  6
+@@points	= word ptr  8
+@@top   	= word ptr  0Ah
+@@left  	= word ptr  0Ch
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	GC_RMW
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@col]
 		mov	ah, 0
 		push	ax
 		call	grcg_setcolor
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@top] ; _AX = (top * (ROW_SIZE / 16))
 		mov	dx, ax
 		shl	ax, 2
 		add	ax, dx
-		add	ax, 0A805h
+		add	ax, (SEG_PLANE_B + ((1 * ROW_SIZE) / 16))
 		mov	es, ax
-		mov	cx, [bp+arg_6]
+		mov	cx, [bp+@@left]
 		mov	si, offset _FIVE_DIGIT_POWERS_OF_10
-		mov	di, [bp+arg_2]
+		mov	di, [bp+@@points]
 		mov	bl, 0
 		nop
 
@@ -6047,7 +6047,7 @@ loc_D645:
 		pop	si
 		pop	bp
 		retf	8
-sub_D608	endp
+@hud_dynamic_5_digit_points_put$qiiuiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7623,73 +7623,73 @@ loc_E602:
 		mov	ax, 8
 		imul	si
 		mov	si, ax
-		lea	ax, [si+0D8h]
-		push	ax
-		push	4003E8h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	502710h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	603A98h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	704E20h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	807530h
-		push	0Fh
-		nopcall	sub_D608
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(64 shl 16) or 1000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(80 shl 16) or 10000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(96 shl 16) or 15000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(112 shl 16) or 20000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(128 shl 16) or 30000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
 		les	bx, _resident
 		cmp	es:[bx+resident_t.story_stage], 8
 		jnz	short loc_E692
-		lea	ax, [si+0D0h]
-		push	ax
-		push	902710h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	900000h
-		push	0Fh
-		nopcall	sub_D608
+		lea	ax, [si+208]
+		push	ax	; left
+		push	(144 shl 16) or 10000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(144 shl 16) or 0	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
 
 loc_E692:
 		cmp	word_23DEC, 0
 		jz	short loc_E6A7
-		lea	ax, [si+0D8h]
-		push	ax
-		push	0A0h
+		lea	ax, [si+216]
+		push	ax	; left
+		push	160	; top
 		push	word_23DEC
 		jmp	short loc_E6D6
 ; ---------------------------------------------------------------------------
 
 loc_E6A7:
-		lea	ax, [si+0D8h]
-		push	ax
-		push	0A00000h
-		push	0Ch
-		nopcall	sub_D608
-		lea	ax, [si+0C8h]
-		push	ax
-		push	0A00000h
-		push	0Ch
-		nopcall	sub_D608
-		lea	ax, [si+0C0h]
-		push	ax
-		push	0A00000h
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(160 shl 16) or 0	; ((top shl 16) or points)
+		push	0Ch ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+200]
+		push	ax	; left
+		push	(160 shl 16) or 0	; ((top shl 16) or points)
+		push	0Ch ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+192]
+		push	ax	; left
+		push	(160 shl 16) or 0	; ((top shl 16) or points)
 
 loc_E6D6:
-		push	0Ch
-		nopcall	sub_D608
+		push	0Ch ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
 		lea	ax, [si+0B8h]
 		push	ax
 		push	0A0h
@@ -19027,7 +19027,7 @@ loc_15D3F:
 @combos_update_and_render$qv proc far
 
 var_4		= byte ptr -4
-var_3		= byte ptr -3
+@@col		= byte ptr -3
 @@pid		= word ptr -2
 
 		enter	4, 0
@@ -19059,11 +19059,11 @@ var_3		= byte ptr -3
 		cwd
 		idiv	bx
 		add	al, gb_0_
-		mov	[bp+var_3], al
+		mov	[bp+@@col], al
 		lea	ax, [di+4]
 		push	ax
 		push	2
-		mov	al, [bp+var_3]
+		mov	al, [bp+@@col]
 		mov	ah, 0
 		push	ax
 		push	TX_WHITE
@@ -19087,11 +19087,11 @@ loc_15DDB:
 loc_15DED:
 		mov	al, [bp+var_4]
 		add	al, gb_0_
-		mov	[bp+var_3], al
+		mov	[bp+@@col], al
 		lea	ax, [di+6]
 		push	ax
 		push	2
-		mov	al, [bp+var_3]
+		mov	al, [bp+@@col]
 		mov	ah, 0
 		push	ax
 		push	TX_WHITE
@@ -19101,15 +19101,15 @@ loc_15E09:
 		dec	[si+combo_t.COMBO_time]
 		cmp	[bp+@@pid], 0
 		jnz	short loc_15E16
-		mov	di, 28h	; '('
+		mov	di, (PLAYFIELD_LEFT + 24)
 		jmp	short loc_15E19
 ; ---------------------------------------------------------------------------
 
 loc_15E16:
-		mov	di, 168h
+		mov	di, (PLAYFIELD_LEFT + PLAYFIELD_W_BORDERED + 24)
 
 loc_15E19:
-		mov	[bp+var_3], 0Ch
+		mov	[bp+@@col], 0Ch
 		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
 		jnb	short loc_15E27
 		mov	ax, 1
@@ -19136,14 +19136,14 @@ loc_15E3C:
 		pop	dx
 		test	dx, ax
 		jz	short loc_15E45
-		mov	[bp+var_3], 8
+		mov	[bp+@@col], 8
 
 loc_15E45:
-		push	di
-		push	18h
-		push	[si+combo_t.bonus]
-		push	word ptr [bp+var_3]
-		call	sub_D608
+		push	di	; left
+		push	24	; top
+		push	[si+combo_t.bonus]	; points
+		push	word ptr [bp+@@col] ; col
+		call	@hud_dynamic_5_digit_points_put$qiiuiuc
 		cmp	[si+combo_t.COMBO_time], 0
 		jnz	short @@player_next
 		mov	ax, [bp+@@pid]
