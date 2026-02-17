@@ -35,7 +35,7 @@ GBA_BOSS_LEVEL_MAX = 16
 	extern _execl:proc
 
 main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, HITBOX_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, HITBOX_TEXT, P_COMBO_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT
 main_06 group P_EXATT_TEXT, main_06_TEXT
 
 ; ===========================================================================
@@ -18671,7 +18671,7 @@ gba_gauge_pattern_bullet_mima endp
 	extern @hitbox_hittest$qv:proc
 HITBOX_TEXT ends
 
-P_GAUGE_TEXT segment byte public 'CODE' use16
+P_COMBO_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19019,156 +19019,10 @@ loc_15D3F:
 		retf	6
 @combo_add_raw$qucucui endp
 
+	extern @combos_update_and_render$qv:proc
+P_COMBO_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-@combos_update_and_render$qv proc far
-
-var_4		= byte ptr -4
-@@col		= byte ptr -3
-@@pid		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	si, offset _combos
-		mov	[bp+@@pid], 0
-		jmp	@@player_more?
-; ---------------------------------------------------------------------------
-
-@@player_loop:
-		cmp	[si+combo_t.COMBO_time], 0
-		jz	@@player_next
-		cmp	[si+combo_t.COMBO_time], COMBO_FRAMES
-		jnz	loc_15E09
-		mov	ax, [bp+@@pid]
-		imul	ax, PLAYFIELD_VRAM_W_BORDERED
-		mov	di, ax
-		add	ax, 8
-		call	gaiji_putsa pascal, ax, 2, ds, offset _gsHIT, TX_WHITE
-		lea	ax, [di+4]
-		call	gaiji_putsa pascal, ax, 3, ds, offset _gBONUS_BOX, TX_WHITE
-		mov	al, [si+combo_t.hits_highest]
-		mov	[bp+var_4], al
-		cmp	[bp+var_4], 0Ah
-		jb	short loc_15DDB
-		mov	ah, 0
-		mov	bx, 10
-		cwd
-		idiv	bx
-		add	al, gb_0_
-		mov	[bp+@@col], al
-		lea	ax, [di+4]
-		push	ax
-		push	2
-		mov	al, [bp+@@col]
-		mov	ah, 0
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putca
-		mov	al, [bp+var_4]
-		mov	ah, 0
-		mov	bx, 10
-		cwd
-		idiv	bx
-		mov	[bp+var_4], dl
-		jmp	short loc_15DED
-; ---------------------------------------------------------------------------
-
-loc_15DDB:
-		lea	ax, [di+4]
-		push	ax
-		push	(2 shl 16) + 0CFh
-		push	TX_WHITE
-		call	gaiji_putca
-
-loc_15DED:
-		mov	al, [bp+var_4]
-		add	al, gb_0_
-		mov	[bp+@@col], al
-		lea	ax, [di+6]
-		push	ax
-		push	2
-		mov	al, [bp+@@col]
-		mov	ah, 0
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putca
-
-loc_15E09:
-		dec	[si+combo_t.COMBO_time]
-		cmp	[bp+@@pid], 0
-		jnz	short loc_15E16
-		mov	di, (PLAYFIELD_LEFT + 24)
-		jmp	short loc_15E19
-; ---------------------------------------------------------------------------
-
-loc_15E16:
-		mov	di, (PLAYFIELD_LEFT + PLAYFIELD_W_BORDERED + 24)
-
-loc_15E19:
-		mov	[bp+@@col], 0Ch
-		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
-		jnb	short loc_15E27
-		mov	ax, 1
-		jmp	short loc_15E29
-; ---------------------------------------------------------------------------
-
-loc_15E27:
-		xor	ax, ax
-
-loc_15E29:
-		push	ax
-		mov	ax, _round_or_result_frame
-		and	ax, 3
-		cmp	ax, 2
-		jnb	short loc_15E3A
-		mov	ax, 1
-		jmp	short loc_15E3C
-; ---------------------------------------------------------------------------
-
-loc_15E3A:
-		xor	ax, ax
-
-loc_15E3C:
-		pop	dx
-		test	dx, ax
-		jz	short loc_15E45
-		mov	[bp+@@col], 8
-
-loc_15E45:
-		push	di	; left
-		push	24	; top
-		push	[si+combo_t.bonus_total]	; points
-		push	word ptr [bp+@@col] ; col
-		call	@hud_dynamic_5_digit_points_put$qiiuiuc
-		cmp	[si+combo_t.COMBO_time], 0
-		jnz	short @@player_next
-		mov	ax, [bp+@@pid]
-		imul	ax, PLAYFIELD_VRAM_W_BORDERED
-		mov	di, ax
-		add	ax, 4
-		call	text_puts pascal, ax, 2, ds, offset _aBONUS_BOX_SPACES
-		lea	ax, [di+4]
-		call	text_puts pascal, ax, 3, ds, offset _aBONUS_BOX_SPACES
-		mov	[si+combo_t.hits_highest], 0
-		call	@score_add$quiuc pascal, [si+combo_t.bonus_total], [bp+@@pid]
-		mov	[si+combo_t.bonus_total], 0
-
-@@player_next:
-		inc	[bp+@@pid]
-		add	si, size combo_t
-
-@@player_more?:
-		cmp	[bp+@@pid], PLAYER_COUNT
-		jl	@@player_loop
-		pop	di
-		pop	si
-		leave
-		retf
-@combos_update_and_render$qv endp
+P_GAUGE_TEXT segment byte public 'CODE' use16
 P_GAUGE_TEXT ends
 
 E_ENEMY_TEXT segment byte public 'CODE' use16
