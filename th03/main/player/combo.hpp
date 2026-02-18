@@ -9,11 +9,6 @@ struct combo_t {
 	uint16_t bonus_total; // among all chains with ≥2 hits
 };
 
-#define COMBO_FRAMES 80
-#define COMBO_HIT_RESET_FRAMES 32
-#define COMBO_HIT_CAP 99
-#define COMBO_BONUS_CAP 65535
-
 // The first player to reach this amount of combo points will fire or reverse a
 // Boss Attack as soon as the other blocking conditions are no longer met.
 // (Also known as the Spell Point Requirement among the Western gameplay

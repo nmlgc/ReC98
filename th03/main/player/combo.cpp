@@ -1,3 +1,5 @@
+#pragma option -zPmain_04
+
 #include "th03/main/player/chain.hpp"
 #include "th03/main/player/combo.hpp"
 #include "th03/main/player/gba.hpp"
@@ -17,6 +19,13 @@
 /// ---------
 
 static const int COMBO_DIGITS = 2;
+static const unsigned int COMBO_FRAMES = 80;
+static const unsigned int COMBO_HIT_RESET_FRAMES = 32;
+static const unsigned int COMBO_BONUS_CAP = 65535;
+
+// Only applies to the total combo. [player_stuff_t::combo_hits_max] is allowed
+// to hold the full unsigned 8-bit range.
+static const int COMBO_HIT_CAP = 99;
 /// ---------
 
 /// Coordinates
@@ -43,6 +52,57 @@ inline tram_x_t box_tram_x(tram_x_t playfield_border_left) {
 extern const char near gsHIT[];
 extern const char near gBONUS_BOX[];
 extern const char near aBONUS_BOX_SPACES[];
+
+uint16_t pascal combo_add_raw(uint8_t hits, pid_t pid, uint16_t bonus)
+{
+	combo_t near& combo = combos[pid];
+
+	// The combo isn't continued with chains that just started.
+	if(hits < 2) {
+		return combo.bonus_total;
+	}
+	player_stuff_t near& player = players[pid];
+
+	uint32_t bonus_total_new = bonus;
+	bonus_total_new += combo.bonus_total;
+	if(bonus_total_new > COMBO_BONUS_CAP) {
+		bonus = COMBO_BONUS_CAP;
+	} else {
+		bonus = bonus_total_new;
+	}
+	combo.bonus_total = bonus;
+
+	// ZUN bloat: Useless copies. This is neither the shortest C++ nor the
+	// shortest ASM variant...
+	uint8_t combo_hits_max = player.combo_hits_max;
+	if(combo_hits_max < hits) {
+		player.combo_hits_max = hits;
+	}
+	uint16_t combo_bonus_max = player.combo_bonus_max;
+	if(combo_bonus_max < bonus) {
+		player.combo_bonus_max = bonus;
+	}
+
+	// The visible hit number is intentionally clamped after recording the
+	// unclamped 8-bit value in [player.combo_hits_max]. This preserves larger
+	// three-digit hit numbers for the defeat screen, where ZUN intentionally
+	// reserves space for and renders that extra digit.
+	if(hits > COMBO_HIT_CAP) {
+		hits = COMBO_HIT_CAP;
+		if(bonus != COMBO_BONUS_CAP) {
+			combo.time = COMBO_FRAMES;
+		}
+	}
+
+	if((hits > combo.hits_highest) || (combo.time < COMBO_HIT_RESET_FRAMES)) {
+		combo.hits_highest = hits;
+		if(bonus != COMBO_BONUS_CAP) {
+			combo.time = COMBO_FRAMES;
+		}
+	}
+
+	return combo.bonus_total;
+}
 
 void combos_update_and_render(void)
 {
@@ -125,6 +185,11 @@ void combos_update_and_render(void)
 			p->bonus_total = 0;
 		}
 	}
+}
+
+uint16_t pascal near combo_add(pid_t pid, uint8_t chain_slot, uint16_t bonus)
+{
+	return combo_add_raw(chains.hits[pid][chain_slot], pid, bonus);
 }
 
 // ZUN bloat: Should be in some other translation unit. Probably the fireball

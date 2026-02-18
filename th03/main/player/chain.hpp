@@ -38,6 +38,8 @@ extern chains_t chains;
 	} \
 	chains.hits[pid][slot] = hits_new;
 
+#pragma codeseg E_ENEMY_TEXT // ZUN bloat
+
 // ZUN bloat: One-line wrapper around combo_add_raw().
 uint16_t pascal near combo_add(pid_t pid, uint8_t chain_slot, uint16_t bonus);
 

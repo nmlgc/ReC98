@@ -18932,93 +18932,6 @@ loc_15CB0:
 		retf
 yumemi_bomb	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @COMBO_ADD$QUCUCUI
-@combo_add_raw$qucucui proc far
-
-var_8		= word ptr -8
-var_5		= byte ptr -5
-@@bonus_total		= dword	ptr -4
-@@bonus		= word ptr  6
-@@pid		= byte ptr  8
-@@hits		= byte ptr  0Ah
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	cl, [bp+@@hits]
-		mov	dx, [bp+@@bonus]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, offset _combos
-		mov	si, ax
-		cmp	cl, 2
-		jb	short @@ret
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 7
-		add	ax, offset _players
-		mov	di, ax
-		movzx	eax, dx
-		mov	[bp+@@bonus_total], eax
-		movzx	eax, [si+combo_t.bonus_total]
-		add	[bp+@@bonus_total], eax
-		cmp	[bp+@@bonus_total], COMBO_BONUS_CAP
-		jbe	short loc_15D04
-		mov	dx, COMBO_BONUS_CAP
-		jmp	short loc_15D07
-; ---------------------------------------------------------------------------
-
-loc_15D04:
-		mov	dx, word ptr [bp+@@bonus_total]
-
-loc_15D07:
-		mov	[si+combo_t.bonus_total], dx
-		mov	al, [di+player_stuff_t.combo_hits_max]
-		mov	[bp+var_5], al
-		cmp	[bp+var_5], cl
-		jnb	short loc_15D18
-		mov	[di+player_stuff_t.combo_hits_max], cl
-
-loc_15D18:
-		mov	ax, [di+player_stuff_t.combo_bonus_max]
-		mov	[bp+var_8], ax
-		cmp	[bp+var_8], dx
-		jnb	short loc_15D26
-		mov	[di+player_stuff_t.combo_bonus_max], dx
-
-loc_15D26:
-		cmp	cl, COMBO_HIT_CAP
-		jbe	short loc_15D35
-		mov	cl, COMBO_HIT_CAP
-		cmp	dx, COMBO_BONUS_CAP
-		jz	short loc_15D35
-		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
-
-loc_15D35:
-		cmp	[si+combo_t.hits_highest], cl
-		jb	short loc_15D3F
-		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
-		jnb	short @@ret
-
-loc_15D3F:
-		mov	[si+combo_t.hits_highest], cl
-		cmp	dx, COMBO_BONUS_CAP
-		jz	short @@ret
-		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
-
-@@ret:
-		mov	ax, [si+combo_t.bonus_total]
-		pop	di
-		pop	si
-		leave
-		retf	6
-@combo_add_raw$qucucui endp
-
 	extern @combos_update_and_render$qv:proc
 P_COMBO_TEXT ends
 
@@ -19030,7 +18943,6 @@ E_ENEMY_TEXT ends
 
 ENEMY_PUT segment byte public 'CODE' use16
 	extern @enemies_update$qv:proc
-include th03/main/player/combo.asm
 	extern @enemies_render$qv:proc
 ENEMY_PUT ends
 
