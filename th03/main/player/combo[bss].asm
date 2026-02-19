@@ -2,7 +2,7 @@ combo_t struc
 	COMBO_time	db ?
 	hits	db ?
 	bonus	dw ?
-combo_t	ends
+combo_t ends
 
 COMBO_FRAMES = 80
 COMBO_HIT_RESET_FRAMES = 32

@@ -407,7 +407,7 @@ loc_99B1:
 		push	1
 		nopcall	sub_C9FE
 		call	sub_BE5D
-		call	_combo_update_and_render
+		call	@combos_update_and_render$qv
 		call	fp_1FBC0
 		call	fp_1E6EA
 		cmp	byte_23AFA, 0
@@ -20028,7 +20028,7 @@ yumemi_bomb	endp
 
 ; Attributes: bp-based frame
 public @COMBO_ADD$QUCUCUI
-@combo_add$qucucui proc far
+@combo_add_raw$qucucui proc far
 
 var_8		= word ptr -8
 var_5		= byte ptr -5
@@ -20108,14 +20108,14 @@ loc_15D3F:
 		pop	si
 		leave
 		retf	6
-@combo_add$qucucui endp
+@combo_add_raw$qucucui endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-_combo_update_and_render	proc far
+@combos_update_and_render$qv proc far
 
 var_4		= byte ptr -4
 var_3		= byte ptr -3
@@ -20259,7 +20259,7 @@ loc_15E45:
 		pop	si
 		leave
 		retf
-_combo_update_and_render	endp
+@combos_update_and_render$qv endp
 
 include th03/main/player/gauge_avail_add.asm
 
@@ -20577,7 +20577,7 @@ loc_16129:
 		retf
 sub_1609E	endp
 
-include th03/main/player/hitcombo.asm
+include th03/main/player/combo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20585,8 +20585,8 @@ include th03/main/player/hitcombo.asm
 
 sub_1615D	proc near
 
-@@hitcombo		= byte ptr -5
-@@hitcombo_slot		= byte ptr -4
+@@hits		= byte ptr -5
+@@chain_slot	= byte ptr -4
 @@pid		= byte ptr -3
 @@bonus_total		= word ptr -2
 
@@ -20622,22 +20622,22 @@ loc_16187:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _hitcombo_ring_p[bx]
-		mov	[bp+@@hitcombo_slot], al
+		mov	al, _chain_ring_p[bx]
+		mov	[bp+@@chain_slot], al
 		mov	bx, word_2203C
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	_hitcombo_ring[bx], 1
+		mov	_chains.CHAIN_hits[bx], 1
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20645,16 +20645,16 @@ loc_16187:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		inc	_hitcombo_ring_p[bx]
+		inc	_chain_ring_p[bx]
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_hitcombo_ring_p[bx], HITCOMBO_RING_SIZE
+		cmp	_chain_ring_p[bx], CHAIN_RING_SIZE
 		jb	loc_164A2
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	_hitcombo_ring_p[bx], 0
+		mov	_chain_ring_p[bx], 0
 		jmp	loc_164A2
 ; ---------------------------------------------------------------------------
 
@@ -20688,22 +20688,22 @@ loc_16257:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _hitcombo_ring_p[bx]
-		mov	[bp+@@hitcombo_slot], al
+		mov	al, _chain_ring_p[bx]
+		mov	[bp+@@chain_slot], al
 		mov	bx, word_2203C
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	_hitcombo_ring[bx], 1
+		mov	_chains.CHAIN_hits[bx], 1
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20711,55 +20711,55 @@ loc_16257:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		inc	_hitcombo_ring_p[bx]
+		inc	_chain_ring_p[bx]
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_hitcombo_ring_p[bx], HITCOMBO_RING_SIZE
+		cmp	_chain_ring_p[bx], CHAIN_RING_SIZE
 		jb	loc_16484
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	_hitcombo_ring_p[bx], 0
+		mov	_chain_ring_p[bx], 0
 		jmp	loc_16484
 ; ---------------------------------------------------------------------------
 
 loc_162D5:
 		call	gauge_avail_add pascal, word ptr [bp+@@pid], 32
-		mov	al, hitcombo_slot_220C2
-		mov	[bp+@@hitcombo_slot], al
+		mov	al, chain_slot_220C2
+		mov	[bp+@@chain_slot], al
 		mov	bx, word_2203C
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, _hitcombo_ring[bx]
-		mov	[bp+@@hitcombo], al
-		cmp	[bp+@@hitcombo], 255
+		mov	al, _chains.CHAIN_hits[bx]
+		mov	[bp+@@hits], al
+		cmp	[bp+@@hits], 255
 		jnb	short loc_1630B
-		inc	[bp+@@hitcombo]
+		inc	[bp+@@hits]
 
 loc_1630B:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
-		mov	dl, [bp+@@hitcombo]
+		mov	dl, [bp+@@hits]
 		mov	bx, ax
-		mov	_hitcombo_ring[bx], dl
+		mov	_chains.CHAIN_hits[bx], dl
 		push	word ptr [bp+@@pid]
-		push	word ptr [bp+@@hitcombo_slot]
-		mov	al, [bp+@@hitcombo]
+		push	word ptr [bp+@@chain_slot]
+		mov	al, [bp+@@hits]
 		mov	ah, 0
 		shl	ax, 4
 		push	ax
-		call	@hitcombo_commit$qucucui
+		call	@combo_add$qucucui
 		mov	[bp+@@bonus_total], ax
 		push	ax
 		push	word ptr [bp+@@pid]
@@ -20780,13 +20780,13 @@ loc_1630B:
 		mov	bx, (2 shl 4)
 		cwd
 		idiv	bx
-		mov	[bp+@@hitcombo_slot], al
-		cmp	[bp+@@hitcombo], 2
+		mov	[bp+@@chain_slot], al
+		cmp	[bp+@@hits], 2
 		ja	short loc_1638E
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20795,9 +20795,9 @@ loc_1630B:
 ; ---------------------------------------------------------------------------
 
 loc_1638E:
-		mov	al, [bp+@@hitcombo]
+		mov	al, [bp+@@hits]
 		mov	ah, 0
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		mov	bx, 9
 		sub	bx, dx
@@ -20808,7 +20808,7 @@ loc_1638E:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20817,7 +20817,7 @@ loc_1638E:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, [bp+@@hitcombo_slot]
+		mov	bl, [bp+@@chain_slot]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
@@ -20826,9 +20826,9 @@ loc_1638E:
 ; ---------------------------------------------------------------------------
 
 loc_163DA:
-		mov	al, [bp+@@hitcombo]
+		mov	al, [bp+@@hits]
 		mov	ah, 0
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, 0Eh
@@ -20838,7 +20838,7 @@ loc_163DA:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20847,12 +20847,12 @@ loc_163DA:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, [bp+@@hitcombo_slot]
+		mov	bl, [bp+@@chain_slot]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
 		mov	[bx+4B1Eh], al
-		test	[bp+@@hitcombo], 1
+		test	[bp+@@hits], 1
 		jnz	short loc_1646E
 		mov	_bullet_template.BT_group, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
 		nopcall	@bullets_add_transfer_pellet$qv
@@ -20863,7 +20863,7 @@ loc_1642D:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20872,7 +20872,7 @@ loc_1642D:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, [bp+@@hitcombo_slot]
+		mov	bl, [bp+@@chain_slot]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
@@ -20882,7 +20882,7 @@ loc_16459:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
+		mov	dl, [bp+@@chain_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20890,7 +20890,7 @@ loc_16459:
 
 loc_1646E:
 		push	word ptr [bp+@@pid]
-		mov	al, [bp+@@hitcombo_slot]
+		mov	al, [bp+@@chain_slot]
 		mov	ah, 0
 		push	ax
 		call	sub_1816D
@@ -21040,7 +21040,7 @@ arg_2		= byte ptr  6
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -21061,7 +21061,7 @@ arg_2		= byte ptr  6
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -21119,7 +21119,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -21127,7 +21127,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -21135,7 +21135,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -21238,7 +21238,7 @@ public @explosions_hittest$qv
 @explosions_hittest$qv proc far
 
 var_E		= byte ptr -0Eh
-@@hitcombo		= byte ptr -0Dh
+@@hits		= byte ptr -0Dh
 var_C		= word ptr -0Ch
 @@bonus		= word ptr -0Ah
 var_8		= word ptr -8
@@ -21318,7 +21318,7 @@ loc_16769:
 		cmp	ax, [bp+var_6]
 		jg	loc_1696E
 		mov	al, [si+1Ch]
-		mov	hitcombo_slot_220C2, al
+		mov	chain_slot_220C2, al
 		cmp	_explosion_hittest_against, EHA_ENEMY
 		jnz	short loc_167DF
 		inc	byte ptr [si]
@@ -21329,29 +21329,29 @@ loc_167DF:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, _hitcombo_ring[bx]
-		mov	[bp+@@hitcombo], al
-		cmp	[bp+@@hitcombo], 255
+		mov	al, _chains.CHAIN_hits[bx]
+		mov	[bp+@@hits], al
+		cmp	[bp+@@hits], 255
 		jnb	short loc_16801
-		inc	[bp+@@hitcombo]
+		inc	[bp+@@hits]
 
 loc_16801:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
-		mov	dl, [bp+@@hitcombo]
+		mov	dl, [bp+@@hits]
 		mov	bx, ax
-		mov	_hitcombo_ring[bx], dl
+		mov	_chains.CHAIN_hits[bx], dl
 		cmp	[bp+var_E], 1
 		jnz	short loc_1682E
-		mov	al, [bp+@@hitcombo]
+		mov	al, [bp+@@hits]
 		mov	ah, 0
 		add	ax, ax
 		mov	[bp+@@bonus], ax
@@ -21362,7 +21362,7 @@ loc_16801:
 loc_1682E:
 		cmp	[bp+var_E], 6
 		jnz	short loc_16846
-		mov	al, [bp+@@hitcombo]
+		mov	al, [bp+@@hits]
 		mov	ah, 0
 		shl	ax, 4
 		add	ax, 100
@@ -21374,7 +21374,7 @@ loc_1682E:
 loc_16846:
 		cmp	[bp+var_E], 9
 		jnz	short loc_16865
-		mov	al, [bp+@@hitcombo]
+		mov	al, [bp+@@hits]
 		mov	ah, 0
 		shl	ax, 4
 		add	ax, 444
@@ -21405,7 +21405,7 @@ loc_16886:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		add	ax, 4AFEh
@@ -21413,11 +21413,11 @@ loc_16886:
 		mov	al, [bp+var_E]
 		add	[di], al
 		mov	al, [di]
-		mov	[bp+@@hitcombo], al
+		mov	[bp+@@hits], al
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		add	ax, 4B1Eh
@@ -21438,7 +21438,7 @@ loc_168C8:
 
 loc_168D5:
 		call	gauge_avail_add
-		cmp	[bp+@@hitcombo], 4
+		cmp	[bp+@@hits], 4
 		jnb	short loc_168E4
 		mov	al, [di]
 		add	al, 2
@@ -21446,7 +21446,7 @@ loc_168D5:
 ; ---------------------------------------------------------------------------
 
 loc_168E4:
-		cmp	[bp+@@hitcombo], 10
+		cmp	[bp+@@hits], 10
 		jnb	short loc_168F2
 		mov	al, [di]
 		add	al, 5
@@ -21457,7 +21457,7 @@ loc_168EE:
 ; ---------------------------------------------------------------------------
 
 loc_168F2:
-		cmp	[bp+@@hitcombo], 20
+		cmp	[bp+@@hits], 20
 		jnb	short loc_16916
 		mov	al, [di]
 		add	al, 2
@@ -21465,7 +21465,7 @@ loc_168F2:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -21477,7 +21477,7 @@ loc_16916:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
+		mov	dl, chain_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -21486,14 +21486,14 @@ loc_16916:
 		mov	dl, _hitbox_pid
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, hitcombo_slot_220C2
+		mov	bl, chain_slot_220C2
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
 		mov	[bx+4B3Eh], al
 
 loc_16945:
-		call	@hitcombo_commit$qucucui pascal, word ptr _hitbox_pid, word ptr hitcombo_slot_220C2, [bp+@@bonus]
+		call	@combo_add$qucucui pascal, word ptr _hitbox_pid, word ptr chain_slot_220C2, [bp+@@bonus]
 		mov	[bp+@@bonus], ax
 		push	ax
 		push	word ptr _hitbox_pid
@@ -23321,7 +23321,7 @@ loc_1823A:
 		cmp	byte_2203B, 0
 		jz	loc_182D6
 		mov	byte ptr [bx], 9
-		mov	al, hitcombo_slot_220C2
+		mov	al, chain_slot_220C2
 		mov	[bp+var_1], al
 		mov	[bx+1Ch], al
 		cmp	_explosion_hittest_against, EHA_FIREBALL_RED
@@ -23384,7 +23384,7 @@ loc_182D6:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		mov	bx, dx
-		mov	dl, _hitcombo_ring_p[bx]
+		mov	dl, _chain_ring_p[bx]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -23396,7 +23396,7 @@ loc_182D6:
 		shl	dx, 4
 		mov	bl, [bp+@@pid]
 		mov	bh, 0
-		mov	bl, _hitcombo_ring_p[bx]
+		mov	bl, _chain_ring_p[bx]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
@@ -23407,7 +23407,7 @@ loc_182D6:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _hitcombo_ring_p[bx]
+		mov	al, _chain_ring_p[bx]
 		mov	ah, 0
 		push	ax
 		call	sub_1816D
@@ -32904,7 +32904,8 @@ word_1DDAC	dw 2AB6h
 		db  32h	; 2
 		db  1Eh
 		db  32h	; 2
-include th03/main/player/hitcombo[data].asm
+public _chain_ring_p
+_chain_ring_p	db	PLAYER_COUNT dup(0)
 include th03/sprites/score.asp
 include th03/main/5_powers_of_10[data].asm
 		db  6Ch	; l
@@ -33278,9 +33279,18 @@ _explosion_hittest_against	db ?
 
 byte_2203B	db ?
 word_2203C	dw ?
-include th03/main/player/hitcombo[bss].asm
+
+CHAIN_RING_SIZE = 16
+
+chains_t struc
+	CHAIN_hits	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+chains_t ends
+
+public _chains
+_chains	chains_t <?>
+
 		db 100 dup(?)
-hitcombo_slot_220C2	db ?
+chain_slot_220C2	db ?
 byte_220C3	db ?
 include th03/main/player/score[bss].asm
 byte_220DC	db ?

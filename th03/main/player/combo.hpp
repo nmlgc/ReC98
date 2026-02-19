@@ -1,3 +1,6 @@
+/// Displayed combo/bonus values
+/// ----------------------------
+
 #include "th03/common.h"
 
 struct combo_t {
@@ -15,32 +18,9 @@ struct combo_t {
 
 extern combo_t combos[PLAYER_COUNT];
 
-// Adds the given amount of [bonus] points to [pid]'s combo, if the current
-// amount of [hits] is enough to continue the combo. Returns the new total
-// bonus value.
-unsigned int pascal combo_add(
-	unsigned char hits, pid_t pid, unsigned int bonus
-);
+// Updates [pid]'s combo with the given amount of [bonus] points coming from an
+// explosion chain with the given number of [hits]. Returns the new total bonus
+// value.
+uint16_t pascal combo_add_raw(uint8_t hits, pid_t pid, uint16_t bonus);
 
-void combo_update_and_render(void);
-
-/// Hit combo slots
-/// ---------------
-
-// Number of simultaneous, separate hit combos tracked per player. *Not*
-// related to the number of explosions on screen; rather, each explosion is
-// assigned one of these slots when it spawns. All consecutive explosions
-// spawned from that one will then add to the combo in that slot, which is
-// what builds up the actual hit combo.
-#define HITCOMBO_RING_SIZE 16
-
-extern unsigned char hitcombo_ring_p[PLAYER_COUNT];
-extern unsigned char hitcombo_ring[PLAYER_COUNT][HITCOMBO_RING_SIZE];
-
-// Tries to update [pid]'s combo with the current hit combo value in the given
-// [slot], adding the given amount of bonus points. Returns the new total
-// bonus value.
-unsigned int pascal near hitcombo_commit(
-	pid_t pid, unsigned char slot, unsigned int bonus_to_add
-);
-/// ----------------
+void combos_update_and_render(void);
