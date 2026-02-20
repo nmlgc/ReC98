@@ -18956,7 +18956,7 @@ var_5		= byte ptr -5
 		shl	ax, 2
 		add	ax, offset _combos
 		mov	si, ax
-		cmp	cl, COMBO_HIT_MIN
+		cmp	cl, 2
 		jb	short @@ret
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -18965,7 +18965,7 @@ var_5		= byte ptr -5
 		mov	di, ax
 		movzx	eax, dx
 		mov	[bp+@@bonus_total], eax
-		movzx	eax, [si+combo_t.bonus]
+		movzx	eax, [si+combo_t.bonus_total]
 		add	[bp+@@bonus_total], eax
 		cmp	[bp+@@bonus_total], COMBO_BONUS_CAP
 		jbe	short loc_15D04
@@ -18977,7 +18977,7 @@ loc_15D04:
 		mov	dx, word ptr [bp+@@bonus_total]
 
 loc_15D07:
-		mov	[si+combo_t.bonus], dx
+		mov	[si+combo_t.bonus_total], dx
 		mov	al, [di+player_stuff_t.combo_hits_max]
 		mov	[bp+var_5], al
 		cmp	[bp+var_5], cl
@@ -19000,19 +19000,19 @@ loc_15D26:
 		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
 
 loc_15D35:
-		cmp	[si+combo_t.hits], cl
+		cmp	[si+combo_t.hits_highest], cl
 		jb	short loc_15D3F
 		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
 		jnb	short @@ret
 
 loc_15D3F:
-		mov	[si+combo_t.hits], cl
+		mov	[si+combo_t.hits_highest], cl
 		cmp	dx, COMBO_BONUS_CAP
 		jz	short @@ret
 		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
 
 @@ret:
-		mov	ax, [si+combo_t.bonus]
+		mov	ax, [si+combo_t.bonus_total]
 		pop	di
 		pop	si
 		leave
@@ -19050,7 +19050,7 @@ var_4		= byte ptr -4
 		call	gaiji_putsa pascal, ax, 2, ds, offset _gsHIT, TX_WHITE
 		lea	ax, [di+4]
 		call	gaiji_putsa pascal, ax, 3, ds, offset _gBONUS_BOX, TX_WHITE
-		mov	al, [si+combo_t.hits]
+		mov	al, [si+combo_t.hits_highest]
 		mov	[bp+var_4], al
 		cmp	[bp+var_4], 0Ah
 		jb	short loc_15DDB
@@ -19141,7 +19141,7 @@ loc_15E3C:
 loc_15E45:
 		push	di	; left
 		push	24	; top
-		push	[si+combo_t.bonus]	; points
+		push	[si+combo_t.bonus_total]	; points
 		push	word ptr [bp+@@col] ; col
 		call	@hud_dynamic_5_digit_points_put$qiiuiuc
 		cmp	[si+combo_t.COMBO_time], 0
@@ -19153,9 +19153,9 @@ loc_15E45:
 		call	text_puts pascal, ax, 2, ds, offset _aBONUS_BOX_SPACES
 		lea	ax, [di+4]
 		call	text_puts pascal, ax, 3, ds, offset _aBONUS_BOX_SPACES
-		mov	[si+combo_t.hits], 0
-		call	@score_add$quiuc pascal, [si+combo_t.bonus], [bp+@@pid]
-		mov	[si+combo_t.bonus], 0
+		mov	[si+combo_t.hits_highest], 0
+		call	@score_add$quiuc pascal, [si+combo_t.bonus_total], [bp+@@pid]
+		mov	[si+combo_t.bonus_total], 0
 
 @@player_next:
 		inc	[bp+@@pid]
