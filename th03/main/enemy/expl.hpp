@@ -16,4 +16,13 @@ enum explosion_hittest_against_t {
 // single one of this type of entity.
 extern explosion_hittest_against_t explosion_hittest_against;
 
+// Stores whether the last return value of explosions_hittest() was nonzero.
+extern bool explosion_collision_in_last_hittest;
+
+// If [explosion_collision_in_last_hittest] is true, this holds the chain slot
+// ID of the last explosion that collided with the hitbox tested by the last
+// call to explosions_hittest().
+// ZUN bloat: Could have been merged with that flag.
+extern uint8_t explosion_collision_chain_slot;
+
 uint8_t explosions_hittest(void);

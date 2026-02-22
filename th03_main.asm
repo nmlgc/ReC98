@@ -19477,7 +19477,7 @@ loc_16257:
 		mov	bx, _efe_p
 		mov	[bx+enemy_t.ENEMY_flag], EFF_EXPLOSION_IGNORING_ENEMIES
 		mov	byte_220C3, 1
-		cmp	byte_2203B, 0
+		cmp	_explosion_collision_in_last_hitt, 0
 		jnz	short loc_162D5
 		mov	al, [bp+@@pid]
 		mov	ah, 0
@@ -19520,7 +19520,7 @@ loc_16257:
 
 loc_162D5:
 		call	gauge_avail_add pascal, word ptr [bp+@@pid], 32
-		mov	al, chain_slot_220C2
+		mov	al, _explosion_collision_chain_slot
 		mov	[bp+@@chain_slot], al
 		mov	bx, _efe_p
 		mov	[bx+enemy_t.ENEMY_chain_slot], al
@@ -19771,7 +19771,7 @@ arg_2		= byte ptr  6
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -19792,7 +19792,7 @@ arg_2		= byte ptr  6
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -19850,7 +19850,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -19858,7 +19858,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -19866,7 +19866,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -19995,7 +19995,7 @@ loc_16725:
 
 loc_16730:
 		mov	si, offset _efes
-		mov	byte_2203B, 0
+		mov	_explosion_collision_in_last_hitt, 0
 		mov	[bp+@@i], 0
 		jmp	loc_16974
 ; ---------------------------------------------------------------------------
@@ -20049,7 +20049,7 @@ loc_16769:
 		cmp	ax, [bp+var_6]
 		jg	loc_1696E
 		mov	al, [si+efe_t.EFE_chain_slot]
-		mov	chain_slot_220C2, al
+		mov	_explosion_collision_chain_slot, al
 		cmp	_explosion_hittest_against, EHA_ENEMY
 		jnz	short loc_167DF
 		inc	[si+efe_t.EFE_flag]
@@ -20060,7 +20060,7 @@ loc_167DF:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20074,7 +20074,7 @@ loc_16801:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	dl, [bp+@@hits]
@@ -20136,7 +20136,7 @@ loc_16886:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		add	ax, offset _chains.CHAIN_pellet_or_fireball_value
@@ -20148,7 +20148,7 @@ loc_16886:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		add	ax, offset _chains.CHAIN_charge_fireball
@@ -20196,7 +20196,7 @@ loc_168F2:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20208,7 +20208,7 @@ loc_16916:
 		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, chain_slot_220C2
+		mov	dl, _explosion_collision_chain_slot
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -20217,14 +20217,14 @@ loc_16916:
 		mov	dl, _hitbox_pid
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, chain_slot_220C2
+		mov	bl, _explosion_collision_chain_slot
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
 		mov	_chains.CHAIN_charge_exatt[bx], al
 
 loc_16945:
-		call	@combo_add$qucucui pascal, word ptr _hitbox_pid, word ptr chain_slot_220C2, [bp+@@bonus]
+		call	@combo_add$qucucui pascal, word ptr _hitbox_pid, word ptr _explosion_collision_chain_slot, [bp+@@bonus]
 		mov	[bp+@@bonus], ax
 		push	ax
 		push	word ptr _hitbox_pid
@@ -20235,7 +20235,7 @@ loc_16945:
 
 loc_16966:
 		inc	[bp+var_C]
-		mov	byte_2203B, 1
+		mov	_explosion_collision_in_last_hitt, 1
 
 loc_1696E:
 		inc	[bp+@@i]
@@ -21577,7 +21577,7 @@ loc_181E5:
 		mov	bx, _efe_p
 		cmp	[bx+fireball_t.FIREBALL_hp], 0
 		jz	short loc_1823A
-		cmp	byte_2203B, 0
+		cmp	_explosion_collision_in_last_hitt, 0
 		jnz	short loc_1823A
 		cmp	_ef_onehit, 0
 		jz	loc_18353
@@ -21586,10 +21586,10 @@ loc_1823A:
 		mov	bx, _efe_p
 		mov	al, [bx+fireball_t.FIREBALL_generation]
 		mov	_generation_prev, al
-		cmp	byte_2203B, 0
+		cmp	_explosion_collision_in_last_hitt, 0
 		jz	loc_182D6
 		mov	[bx+fireball_t.FIREBALL_flag], EFF_EXPLOSION_IGNORING_ENEMIES
-		mov	al, chain_slot_220C2
+		mov	al, _explosion_collision_chain_slot
 		mov	[bp+var_1], al
 		mov	[bx+fireball_t.FIREBALL_chain_slot], al
 		cmp	_explosion_hittest_against, EHA_FIREBALL_RED
@@ -31623,10 +31623,9 @@ _enemies_alive	db PLAYER_COUNT dup(?)
 
 		db 2 dup(?)
 
-public _explosion_hittest_against
+public _explosion_hittest_against, _explosion_collision_in_last_hitt
 _explosion_hittest_against	db ?
-
-byte_2203B	db ?
+_explosion_collision_in_last_hitt	db ?
 _efe_p	dw ?
 
 CHAIN_RING_SIZE = 16
@@ -31638,10 +31637,10 @@ chains_t struc
 	CHAIN_charge_exatt            	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
 chains_t ends
 
-public _chains
+public _chains, _explosion_collision_chain_slot
 _chains	chains_t <?>
 		dd ?
-chain_slot_220C2	db ?
+_explosion_collision_chain_slot	db ?
 byte_220C3	db ?
 include th03/main/player/score[bss].asm
 byte_220DC	db ?
