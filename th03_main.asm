@@ -468,7 +468,7 @@ loc_9A62:
 		mov	_round_frame_mod2, al
 		test	byte ptr _round_or_result_frame, 63
 		jnz	short loc_9AC9
-		cmp	_round_speed, (ROUND_SPEED_MAX - 1)
+		cmp	_round_speed, ROUND_SPEED_MAX
 		jnb	short loc_9A94
 		inc	_round_speed
 
@@ -1164,9 +1164,9 @@ loc_A0E4:
 		mov	_gba_gauge_level[1], al
 
 loc_A0E7:
-		cmp	_round_speed, ROUND_SPEED_MAX
+		cmp	_round_speed, (ROUND_SPEED_MAX + 1)
 		jb	short loc_A0F3
-		mov	_round_speed, (ROUND_SPEED_MAX - 1)
+		mov	_round_speed, ROUND_SPEED_MAX
 
 loc_A0F3:
 		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
@@ -33324,7 +33324,7 @@ _pid_PID_so_attack	label byte
 _pid	db ?
 	evendata
 
-ROUND_SPEED_MAX = (8 shl 4)
+ROUND_SPEED_MAX = ((8 shl 4) - 1)
 
 public _round_frame, _round_or_result_frame, _round_speed
 _round_frame	dd ?
