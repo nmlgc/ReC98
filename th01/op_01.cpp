@@ -746,7 +746,7 @@ void music_update_and_render(void)
 void main(int argc, const char *argv[])
 {
 	int bgm_mode_cur = 0;
-	int hit_key_frames = 0;
+	int hit_key_frame = 0;
 	const char* arg2; // ZUN bloat
 	const char* arg4; // ZUN bloat
 	uint8_t bios_flag;
@@ -808,8 +808,8 @@ void main(int argc, const char *argv[])
 
 	while(!key_sense_bios()) {
 		frame_delay(1);
-		title_hit_key_put(hit_key_frames);
-		hit_key_frames++;
+		title_hit_key_put(hit_key_frame);
+		hit_key_frame++;
 	}
 
 	title_window_put();

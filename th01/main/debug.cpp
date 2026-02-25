@@ -161,9 +161,9 @@ void debug_vars(void)
 	// ZUN bug: A length for `bomb` would have been nice.
 	printf(
 		" main:%7lu, rand:%7lu, bomb:%d, timer:%7lu\n",
-		bomb_frames,
+		bomb_frame,
 		frame_rand,
-		bomb_doubletap_frames,
-		frames_since_start_of_binary
+		bomb_doubletap_frame,
+		frame_since_start_of_binary
 	);
 }

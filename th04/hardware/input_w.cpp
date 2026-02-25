@@ -5,7 +5,7 @@
 
 void pascal input_wait_for_change(int frames_to_wait)
 {
-	int frames_waited = 0;
+	int frame = 0;
 
 	// Wait for release
 	do {
@@ -19,16 +19,16 @@ void pascal input_wait_for_change(int frames_to_wait)
 	}
 
 	// Wait for press
-	while(frames_waited < frames_to_wait) {
+	while(frame < frames_to_wait) {
 		input_reset_sense();
 		frame_delay(1);
 		input_sense();
 		if(key_det != INPUT_NONE) {
 			break;
 		}
-		frames_waited++;
+		frame++;
 		if(frames_to_wait == 9999) {
-			frames_waited = 0;
+			frame = 0;
 		}
 	}
 }

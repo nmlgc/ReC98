@@ -414,7 +414,7 @@ void bullets_update(void)
 		unsigned char patnum;
 
 		patnum =
-			(PAT_BULLET_ZAP + (bullet_zap.frames / BULLET_ZAP_FRAMES_PER_CEL)
+			(PAT_BULLET_ZAP + (bullet_zap.frame / BULLET_ZAP_FRAMES_PER_CEL)
 		);
 		score_per_bullet = 1;
 		score_step = 1;
@@ -484,7 +484,7 @@ void bullets_update(void)
 		if(overlay_popup_bonus) {
 			overlay_popup_show(POPUP_ID_BONUS);
 		}
-		bullet_zap.frames++;
+		bullet_zap.frame++;
 
 		// ZUN quirk: Always true in TH05, see above
 		if(patnum >= (PAT_BULLET_ZAP + BULLET_ZAP_CELS)) {

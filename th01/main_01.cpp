@@ -70,12 +70,12 @@ bool bomb_damaging = false;
 bool player_sliding = false;
 uscore_t score = 0;
 uscore_t score_bonus = 0;
-unsigned long bomb_frames = 0;
+uint32_t bomb_frame = 0;
 long continues_total = 0;
 static int16_t unused_4 = 0; // ZUN bloat
 bool16 mode_test = false;
-int bomb_doubletap_frames = 0;
-int bomb_doubletap_frames_unused = 0; // ZUN bloat
+int bomb_doubletap_frame = 0;
+int bomb_doubletap_frame_unused = 0; // ZUN bloat
 bool16 test_damage = false;
 static int unused_5 = 0; // ZUN bloat
 static int unused_6 = 0; // ZUN bloat
@@ -93,7 +93,7 @@ uint32_t coreleft_prev;
 bool stage_wait_for_shot_to_begin;
 
 bool mode_debug;
-unsigned long frames_since_start_of_binary;
+uint32_t frame_since_start_of_binary;
 
 int player_invincibility_time;
 screen_x_t player_left;
@@ -144,10 +144,10 @@ struct {
 // --------------------------------------------
 
 inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
-	if(bomb_doubletap_frames < BOMB_DOUBLETAP_WINDOW) {
+	if(bomb_doubletap_frame < BOMB_DOUBLETAP_WINDOW) {
 		pressed++;
 	} else {
-		bomb_doubletap_frames = 0;
+		bomb_doubletap_frame = 0;
 		pressed = 1;
 		other = 0;
 	}
@@ -701,14 +701,14 @@ int main(void)
 
 		cardcombo_max = 0;
 		orb_in_portal = false;
-		bomb_frames = 0;
+		bomb_frame = 0;
 		Pellets.unknown_seven = 7;
 
 		if(mode_debug == true) {
 			debug_startup_delay();
 		}
 
-		frames_since_start_of_binary = 0;
+		frame_since_start_of_binary = 0;
 		orb_cur_left = ORB_LEFT_START;
 		orb_cur_top = ORB_TOP_START;
 
@@ -735,8 +735,8 @@ int main(void)
 			input_ok = false;
 			paused = false;
 			hud_score_and_cardcombo_render();
-			bomb_doubletap_frames = (BOMB_DOUBLETAP_WINDOW * 3);
-			bomb_doubletap_frames_unused = (BOMB_DOUBLETAP_WINDOW * 3);
+			bomb_doubletap_frame = (BOMB_DOUBLETAP_WINDOW * 3);
+			bomb_doubletap_frame_unused = (BOMB_DOUBLETAP_WINDOW * 3);
 			obstacles_update_and_render(true);
 
 			// Play stage BGM. Why inside this loop though? The code would be
@@ -786,7 +786,7 @@ int main(void)
 					player_unput_update_render();
 
 					frame_delay(1);
-					bomb_frames++;
+					bomb_frame++;
 				}
 			}
 
@@ -794,7 +794,7 @@ int main(void)
 			input_shot = false;
 			timer_initialized = true;
 			irand_init(frame_rand);
-			bomb_doubletap_frames = BOMB_DOUBLETAP_WINDOW;
+			bomb_doubletap_frame = BOMB_DOUBLETAP_WINDOW;
 			first_stage_in_scene = false;
 			pellet_speed_raise_cycle = 3000; // ZUN bloat: Reassigned below
 
@@ -819,10 +819,10 @@ int main(void)
 
 				player_unput_update_render();
 				items_unput_update_render();
-				frames_since_start_of_binary++;
+				frame_since_start_of_binary++;
 				orb_force_frame++;
-				bomb_frames++;
-				bomb_doubletap_frames++;
+				bomb_frame++;
+				bomb_doubletap_frame++;
 				if((frame_rand & 3) == 0) {
 					timer_tick_and_put();
 				}
@@ -906,7 +906,7 @@ int main(void)
 			z_vsync_wait_and_scrollup(0);
 			resident->rand = frame_rand;
 			test_damage = false;
-			bomb_frames = 200;
+			bomb_frame = 200;
 			if((rem_lives <= 0) || stage_cleared) {
 				break;
 			}

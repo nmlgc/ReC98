@@ -20140,7 +20140,7 @@ var_3		= byte ptr -3
 		add	ax, 8
 		call	gaiji_putsa pascal, ax, 2, ds, offset _gsHIT, TX_WHITE
 		lea	ax, [di+4]
-		call	gaiji_putsa pascal, ax, 3, ds, offset _gBONUS_FRAME, TX_WHITE
+		call	gaiji_putsa pascal, ax, 3, ds, offset _gBONUS_BOX, TX_WHITE
 		mov	al, [si+combo_t.hits]
 		mov	[bp+var_4], al
 		cmp	[bp+var_4], 0Ah
@@ -20241,9 +20241,9 @@ loc_15E45:
 		imul	ax, PLAYFIELD_VRAM_W_BORDERED
 		mov	di, ax
 		add	ax, 4
-		call	text_puts pascal, ax, 2, ds, offset _aBONUS_FRAME_SPACES
+		call	text_puts pascal, ax, 2, ds, offset _aBONUS_BOX_SPACES
 		lea	ax, [di+4]
-		call	text_puts pascal, ax, 3, ds, offset _aBONUS_FRAME_SPACES
+		call	text_puts pascal, ax, 3, ds, offset _aBONUS_BOX_SPACES
 		mov	[si+combo_t.hits], 0
 		call	@score_add$quiuc pascal, [si+combo_t.bonus], [bp+@@pid]
 		mov	[si+combo_t.bonus], 0

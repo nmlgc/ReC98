@@ -144,7 +144,7 @@ static const int SHINKI_LINE_4 = (3 * 6);
 extern unsigned char shinki_bg_linesets_zoomed_out;
 extern int shinki_bg_type_a_particles_alive;
 extern bool shinki_bg_type_b_initialized;
-extern unsigned int shinki_bg_spinline_frames;
+extern unsigned int shinki_bg_spinline_frame;
 extern bool shinki_bg_type_c_initialized;
 extern bool shinki_bg_type_d_initialized;
 
@@ -153,7 +153,7 @@ extern bool shinki_bg_type_d_initialized;
 		set->radius[SHINKI_LINE_MAIN] -= 0.125f; \
 	} \
 	if( \
-		(shinki_bg_spinline_frames & ( \
+		(shinki_bg_spinline_frame & ( \
 			(SHINKI_SPINLINE_MOVE_DURATION * 2) - 1) \
 		) < SHINKI_SPINLINE_MOVE_DURATION \
 	) { \
@@ -463,7 +463,7 @@ void near shinki_bg_type_b_update_and_render(void)
 		delta = -delta;
 	}
 
-	shinki_bg_spinline_frames++;
+	shinki_bg_spinline_frame++;
 
 	set = linesets;
 	if(set->center[SHINKI_LINE_MAIN].y < SHINKI_SPINLINE_TOP) {
@@ -533,7 +533,7 @@ void near shinki_bg_type_c_update_and_render(void)
 		delta = -delta;
 	}
 
-	shinki_bg_spinline_frames++;
+	shinki_bg_spinline_frame++;
 
 	set = linesets;
 	// [velocity_y] is still negative from type B in the beginning. Continue

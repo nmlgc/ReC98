@@ -13403,7 +13403,7 @@ loc_15D7F:
 loc_15D86:
 		cmp	ax, THICKLASER_COUNT
 		jl	short loc_15D7F
-		mov	_thicklaser_template.TL_cur_flag_frames, 0
+		mov	_thicklaser_template.TL_cur_flag_frame, 0
 		mov	_thicklaser_template.TL_flag, 1
 		mov	_thicklaser_template.TL_radius_cur, 1
 		mov	_thicklaser_template.TL_radius_speed, 1
@@ -13500,11 +13500,11 @@ loc_15DFB:
 		jz	loc_15EBC
 		cmp	[si+thicklaser_t.TL_flag], TF_LINE
 		jnz	short loc_15E1F
-		mov	ax, [si+thicklaser_t.TL_cur_flag_frames]
+		mov	ax, [si+thicklaser_t.TL_cur_flag_frame]
 		cmp	ax, [si+thicklaser_t.TL_line_frames]
 		jl	short loc_15E6B
 		inc	[si+thicklaser_t.TL_flag]
-		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
+		mov	[si+thicklaser_t.TL_cur_flag_frame], 0
 		call	snd_se_play pascal, 6
 		jmp	short loc_15E6B
 ; ---------------------------------------------------------------------------
@@ -13518,7 +13518,7 @@ loc_15E1F:
 		cmp	ax, [si+thicklaser_t.TL_radius_max]
 		jl	short loc_15E6B
 		inc	[si+thicklaser_t.TL_flag]
-		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
+		mov	[si+thicklaser_t.TL_cur_flag_frame], 0
 		mov	ax, [si+thicklaser_t.TL_radius_max]
 		mov	[si+thicklaser_t.TL_radius_cur], ax
 		jmp	short loc_15E6B
@@ -13527,11 +13527,11 @@ loc_15E1F:
 loc_15E41:
 		cmp	[si+thicklaser_t.TL_flag], TF_STATIC
 		jnz	short loc_15E57
-		mov	ax, [si+thicklaser_t.TL_cur_flag_frames]
+		mov	ax, [si+thicklaser_t.TL_cur_flag_frame]
 		cmp	ax, [si+thicklaser_t.TL_static_frames]
 		jl	short loc_15E6B
 		inc	[si+thicklaser_t.TL_flag]
-		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
+		mov	[si+thicklaser_t.TL_cur_flag_frame], 0
 		jmp	short loc_15E6B
 ; ---------------------------------------------------------------------------
 
@@ -13545,7 +13545,7 @@ loc_15E57:
 		mov	[si+thicklaser_t.TL_flag], TF_FREE
 
 loc_15E6B:
-		inc	[si+thicklaser_t.TL_cur_flag_frames]
+		inc	[si+thicklaser_t.TL_cur_flag_frame]
 		cmp	[si+thicklaser_t.TL_flag], TF_LINE
 		jbe	short loc_15EBC
 		mov	ax, [si+thicklaser_t.TL_radius_cur]
@@ -20739,7 +20739,7 @@ yuuka6_1A0D1	proc near
 		push	si
 		mov	si, offset yuuka6_safetycircle
 		mov	[si+yuuka6_safetycircle_t.B6S_flag], SCF_GROW
-		mov	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 0
+		mov	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 0
 		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 8
 		mov	ax, _player_pos.cur.x
 		sar	ax, 4
@@ -20905,30 +20905,30 @@ loc_1A25B:
 ; ---------------------------------------------------------------------------
 
 loc_1A261:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 8
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 8
 		jnb	short loc_1A26E
 		sub	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 8
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A26E:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 8
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 8
 		jnz	short loc_1A27B
 		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 9
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A27B:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 16
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 16
 		jnb	short loc_1A288
 		sub	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 2
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A288:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 160
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 160
 		jnb	loc_1A3A8
-		mov	ax, [si+yuuka6_safetycircle_t.B6S_shrink_frames]
+		mov	ax, [si+yuuka6_safetycircle_t.B6S_shrink_frame]
 		and	ax, 1Fh
 		cmp	ax, 16
 		jnb	short loc_1A2A1
@@ -20950,15 +20950,15 @@ loc_1A2B1:
 		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 9
 
 loc_1A2B5:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 104
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 104
 		ja	short loc_1A2BE
 		dec	[si+yuuka6_safetycircle_t.B6S_radius_filled]
 
 loc_1A2BE:
-		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 0Fh
+		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frame], 0Fh
 		jnz	loc_1A3BC
 		mov	[bp+var_6], -40h
-		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 1Fh
+		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frame], 1Fh
 		jnz	short loc_1A309
 		mov	ax, _boss_pos.cur.x
 		mov	_bullet_template.BT_origin.x, ax
@@ -21031,7 +21031,7 @@ loc_1A39A:
 ; ---------------------------------------------------------------------------
 
 loc_1A3A8:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 176
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 176
 		jnb	short loc_1A3B9
 		add	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 16
 		sub	[si+yuuka6_safetycircle_t.B6S_radius_filled], 2
@@ -21042,7 +21042,7 @@ loc_1A3B9:
 		mov	[si+yuuka6_safetycircle_t.B6S_flag], SCF_FREE
 
 loc_1A3BC:
-		inc	[si+yuuka6_safetycircle_t.B6S_shrink_frames]
+		inc	[si+yuuka6_safetycircle_t.B6S_shrink_frame]
 
 loc_1A3BF:
 		pop	di
@@ -30044,21 +30044,21 @@ TF_STATIC = 3
 TF_SHRINK = 4
 
 thicklaser_t struc
-	TL_flag           	db ?
+	TL_flag          	db ?
 		db ?
-	TL_origin         	Point <?>
-		db ?
-		db ?
+	TL_origin        	Point <?>
 		db ?
 		db ?
-	TL_cur_flag_frames	dw ?
-	TL_line_frames    	dw ?
-	TL_static_frames  	dw ?
-	TL_col_outline    	db ?
 		db ?
-	TL_radius_max     	dw ?
-	TL_radius_cur     	dw ?
-	TL_radius_speed   	dw ?
+		db ?
+	TL_cur_flag_frame	dw ?
+	TL_line_frames   	dw ?
+	TL_static_frames 	dw ?
+	TL_col_outline   	db ?
+		db ?
+	TL_radius_max    	dw ?
+	TL_radius_cur    	dw ?
+	TL_radius_speed  	dw ?
 thicklaser_t ends
 
 public _thicklaser_template, _thicklasers
@@ -30346,7 +30346,7 @@ yuuka6_safetycircle_t struc
 		db ?
 	B6S_center              	Point <?>
 		db 8 dup(?)
-	B6S_shrink_frames       	dw ?
+	B6S_shrink_frame        	dw ?
 	B6S_radius_filled       	dw ?
 	B6S_radius_ring_distance	dw ?
 		db 4 dup(?)

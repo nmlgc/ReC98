@@ -19566,7 +19566,7 @@ include th04/main/pointnum/pointnum[data].asm
 include th04/sprites/pointnum.asp
 include th05/formats/bb_playchar[data].asm
 public _shinki_bg_linesets_zoomed_out, _shinki_bg_type_a_particles_alive
-public _shinki_bg_type_b_initialized, _shinki_bg_spinline_frames
+public _shinki_bg_type_b_initialized, _shinki_bg_spinline_frame
 public _shinki_bg_type_c_initialized
 public _shinki_bg_type_d_initialized
 _shinki_bg_linesets_zoomed_out	db 0
@@ -19574,7 +19574,7 @@ _shinki_bg_linesets_zoomed_out	db 0
 _shinki_bg_type_a_particles_alive	dw (-1 and 255)
 _shinki_bg_type_b_initialized	db 0
 		db 0
-_shinki_bg_spinline_frames	dw 0
+_shinki_bg_spinline_frame	dw 0
 _shinki_bg_type_c_initialized	db 0
 _shinki_bg_type_d_initialized	db 0
 public _hexagrams_flag
@@ -20094,7 +20094,7 @@ sword_t struc
 	twirl_time	dw ?
 		dw ?
 	SWORD_patnum_tiny	dw ?
-	SWORD_decay_frames	dw ?
+	SWORD_decay_frame	dw ?
 		dw ?
 	SWORD_speed	db ?
 		db ?

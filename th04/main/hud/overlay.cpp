@@ -34,7 +34,7 @@ extern "C" void pascal near tiles_invalidate_around(
 // --------------------------
 
 extern union {
-	unsigned char in_frames;
+	uint8_t in_frame;
 	unsigned char out_time;
 } overlay_fade; // = 0
 extern unsigned char boss_bgm_frame; // = 0
@@ -123,9 +123,9 @@ void near overlay_black(void)
 // Stage transitions
 // -----------------
 
-#define overlay_fade_put(frames) { \
-	if((frames % OVERLAY_FADE_INTERVAL) == 0) { \
-		unsigned char cel_num = (frames / OVERLAY_FADE_INTERVAL); \
+#define overlay_fade_put(frame) { \
+	if((frame % OVERLAY_FADE_INTERVAL) == 0) { \
+		unsigned char cel_num = (frame / OVERLAY_FADE_INTERVAL); \
 		if(cel_num != 0) { \
 			tram_y_t y = PLAYFIELD_TRAM_TOP; \
 			while(y < PLAYFIELD_TRAM_BOTTOM) { \
@@ -144,7 +144,7 @@ void near overlay_black(void)
 
 void pascal near overlay_stage_enter_update_and_render(void)
 {
-	if(overlay_fade.in_frames >= OVERLAY_FADE_DURATION) {
+	if(overlay_fade.in_frame >= OVERLAY_FADE_DURATION) {
 		overlay_wipe();
 		if(
 			(resident->demo_num == 0) ||
@@ -165,8 +165,8 @@ void pascal near overlay_stage_enter_update_and_render(void)
 		titles_frame = 0;
 		return;
 	}
-	overlay_fade_put(overlay_fade.in_frames);
-	overlay_fade.in_frames++;
+	overlay_fade_put(overlay_fade.in_frame);
+	overlay_fade.in_frame++;
 }
 
 void pascal near overlay_stage_leave_update_and_render(void)
@@ -218,11 +218,11 @@ void pascal near dissolve_put(
 
 void near overlay_titles_invalidate(void)
 {
-	unsigned char frames = (titles_frame + boss_bgm_frame);
-	if(frames == 0) {
+	uint8_t frame = (titles_frame + boss_bgm_frame);
+	if(frame == 0) {
 		return;
 	}
-	if(frames >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE || frames <= 34) {
+	if((frame >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) || (frame <= 34)) {
 		tile_invalidate_box.x = PLAYFIELD_W;
 		tile_invalidate_box.y = BB_TXT_H;
 		tiles_invalidate_around_xy(to_sp(PLAYFIELD_W / 2), STAGE_NUM_CENTER_Y);
@@ -330,13 +330,13 @@ inline void boss_bgm_dissolve_put(const int& bgm_len) {
 
 void pascal near overlay_titles_update_and_render(void)
 {
-	#define frames titles_frame
-	if(frames >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) {
-		dissolve_out_update(frames);
+	#define frame titles_frame
+	if(frame >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) {
+		dissolve_out_update(frame);
 		if(dissolve_sprite >= (BB_TXT_OUT_SPRITE + BB_TXT_OUT_CELS)) {
-			if(frames & 1) {
+			if(frame & 1) {
 				overlay1 = nullfunc_near;
-				frames = 0;
+				frame = 0;
 				dissolve_sprite = 0;
 				return;
 			}
@@ -344,7 +344,7 @@ void pascal near overlay_titles_update_and_render(void)
 			titles_dissolve_put(stage_bgm_title_len);
 		}
 	} else {
-		if(frames == 0) {
+		if(frame == 0) {
 			dissolve_sprite = BB_TXT_IN_SPRITE;
 #if (GAME == 4)
 			stage_title_id = (stage_id + 1);
@@ -362,31 +362,31 @@ void pascal near overlay_titles_update_and_render(void)
 				titles_strings_put(stage_bgm_title, stage_bgm_title_len);
 			}
 			titles_dissolve_put(stage_bgm_title_len);
-			dissolve_in_update(frames);
+			dissolve_in_update(frame);
 		}
 	}
-	frames++;
-	#undef frames
+	frame++;
+	#undef frame
 }
 
 void pascal near overlay_boss_bgm_update_and_render(void)
 {
 	extern int boss_bgm_title_len;
 
-	#define frames boss_bgm_frame
-	if(frames >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) {
-		dissolve_out_update(frames);
+	#define frame boss_bgm_frame
+	if(frame >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) {
+		dissolve_out_update(frame);
 		if(dissolve_sprite >= (BB_TXT_OUT_SPRITE + BB_TXT_OUT_CELS)) {
-			if(frames & 1) {
+			if(frame & 1) {
 				overlay1 = nullfunc_near;
-				frames = 0;
+				frame = 0;
 				return;
 			}
 		} else {
 			boss_bgm_dissolve_put(boss_bgm_title_len);
 		}
 	} else {
-		if(frames == 0) {
+		if(frame == 0) {
 			dissolve_sprite = BB_TXT_IN_SPRITE;
 			boss_bgm_title_len = strlen(boss_bgm_title);
 		}
@@ -395,11 +395,11 @@ void pascal near overlay_boss_bgm_update_and_render(void)
 				bgm_string_put(boss_bgm_title, boss_bgm_title_len);
 			}
 			boss_bgm_dissolve_put(boss_bgm_title_len);
-			dissolve_in_update(frames);
+			dissolve_in_update(frame);
 		}
 	}
-	frames++;
-	#undef frames
+	frame++;
+	#undef frame
 }
 // --------------------
 

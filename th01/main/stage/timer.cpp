@@ -15,7 +15,7 @@
 #include "th01/main/stage/timer.hpp"
 
 unsigned int stage_timer;
-static unsigned int frames_since_harryup;
+static unsigned int frame_since_harryup;
 
 // Function ordering fails
 // -----------------------
@@ -76,7 +76,7 @@ void timer_init_for(int stage_id, int route)
 	} else {
 		stage_timer = STAGE_TIMES[(route * STAGES_ON_ROUTE) + stage_id];
 	}
-	frames_since_harryup = 0;
+	frame_since_harryup = 0;
 }
 
 void timer_bg_snap_and_put(void)
@@ -128,7 +128,7 @@ void timer_extend_and_put(void)
 		stage_timer += 1000;
 	}
 	timer_put();
-	frames_since_harryup = 0;
+	frame_since_harryup = 0;
 }
 
 // Largely copy-pasted from stage_num_animate()
@@ -188,15 +188,15 @@ void pattern_harryup(void)
 {
 	static unsigned char harryup_cycle;
 
-	frames_since_harryup++;
+	frame_since_harryup++;
 	harryup_cycle++;
 
 	bool fire =
-		(frames_since_harryup < 200) ? ((harryup_cycle % 5) == 0) :
-		(frames_since_harryup < 300) ? ((harryup_cycle % 4) == 0) :
-		(frames_since_harryup < 400) ? ((harryup_cycle % 3) == 0) :
-		(frames_since_harryup < 500) ? ((harryup_cycle % 2) == 0) :
-		/*                   >= 500 */ true;
+		(frame_since_harryup < 200) ? ((harryup_cycle % 5) == 0) :
+		(frame_since_harryup < 300) ? ((harryup_cycle % 4) == 0) :
+		(frame_since_harryup < 400) ? ((harryup_cycle % 3) == 0) :
+		(frame_since_harryup < 500) ? ((harryup_cycle % 2) == 0) :
+		/*                  >= 500 */ true;
 
 	if(!fire) {
 		return;

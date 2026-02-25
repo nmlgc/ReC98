@@ -332,31 +332,31 @@ void near regist_name_enter_menu(void)
 		} \
 	}
 
-	#define on_direction(condition, hold_frames, func) { \
+	#define on_direction(condition, hold_frame, func) { \
 		if(condition) { \
 			if( \
-				(hold_frames == 0) || \
-				((hold_frames >= 30) && ((hold_frames % 4) == 0)) \
+				(hold_frame == 0) || \
+				((hold_frame >= 30) && ((hold_frame % 4) == 0)) \
 			) { \
 				func \
 			} \
-			hold_frames++; \
+			hold_frame++; \
 		} else { \
-			hold_frames = 0; \
+			hold_frame = 0; \
 		} \
 	}
 
-	struct input_hold_frames_t {
+	struct input_hold_frame_t {
 		int up;
 		int down;
 		int left;
 		int right;
 	};
-	extern const input_hold_frames_t REGIST_INPUT_HOLD_INIT;
+	extern const input_hold_frame_t REGIST_INPUT_HOLD_INIT;
 
 	screen_y_t top;
 	int regi = REGI_A; // regi_patnum_t
-	input_hold_frames_t hold_frames = REGIST_INPUT_HOLD_INIT;
+	input_hold_frame_t hold_frame = REGIST_INPUT_HOLD_INIT;
 	bool done = false;
 	bool rerender = true;
 	bool enter_locked = false;
@@ -367,7 +367,7 @@ void near regist_name_enter_menu(void)
 	while(!done) {
 		input_mode_interface();
 
-		on_direction((input_sp & INPUT_UP), hold_frames.up, {
+		on_direction((input_sp & INPUT_UP), hold_frame.up, {
 			if(regi != REGI_QUESTION) {
 				alphabet_putca(regi, false);
 				regi -= ALPHABET_GLYPHS_PER_ROW;
@@ -377,7 +377,7 @@ void near regist_name_enter_menu(void)
 				rerender = true;
 			}
 		});
-		on_direction((input_sp & INPUT_DOWN), hold_frames.down, {
+		on_direction((input_sp & INPUT_DOWN), hold_frame.down, {
 			if(regi != REGI_QUESTION) {
 				alphabet_putca(regi, false);
 				regi += ALPHABET_GLYPHS_PER_ROW;
@@ -387,7 +387,7 @@ void near regist_name_enter_menu(void)
 				rerender = true;
 			}
 		});
-		on_direction((input_sp & INPUT_LEFT), hold_frames.left, {
+		on_direction((input_sp & INPUT_LEFT), hold_frame.left, {
 			alphabet_putca(regi, false);
 			if((regi % ALPHABET_GLYPHS_PER_ROW) == 0) {
 				regi += REGI_DOUBLEWIDE_X;
@@ -398,7 +398,7 @@ void near regist_name_enter_menu(void)
 			}
 			rerender = true;
 		});
-		on_direction((input_sp & INPUT_RIGHT), hold_frames.right, {
+		on_direction((input_sp & INPUT_RIGHT), hold_frame.right, {
 			alphabet_putca(regi, false);
 			if((regi % ALPHABET_GLYPHS_PER_ROW) == REGI_DOUBLEWIDE_X) {
 				regi -= REGI_DOUBLEWIDE_X;

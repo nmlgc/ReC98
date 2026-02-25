@@ -729,23 +729,23 @@ void near shield_render_both(void)
 // returns `true` once the animation completed.
 bool16 pascal near wand_render_raise_both(bool16 restart = false)
 {
-	static int frames = 0;
+	static int frame = 0;
 
 	if(restart == true) {
-		frames = 0;
-	} else if (frames == 0) {
-		frames = 1;
+		frame = 0;
+	} else if (frame == 0) {
+		frame = 1;
 	} else {
-		frames++;
-		if(frames == 2) {
+		frame++;
+		if(frame == 2) {
 			anm_wand.bos_image = 0;
 			graph_accesspage_func(1);	anm_wand.put_8();
 			graph_accesspage_func(0);	anm_wand.put_8();
-		} else if(frames == 16) {
+		} else if(frame == 16) {
 			anm_wand.bos_image = 1;
 			graph_accesspage_func(1);	anm_wand.put_8();
 			graph_accesspage_func(0);	anm_wand.put_8();
-			frames = 0;
+			frame = 0;
 			return true;
 		}
 	}

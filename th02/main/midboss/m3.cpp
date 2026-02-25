@@ -6,7 +6,7 @@
 // State
 // -----
 
-extern int16_t midboss3_kill_frames[MIDBOSS3_COUNT];
+extern int16_t midboss3_kill_frame[MIDBOSS3_COUNT];
 
 // Same as for regular bosses.
 // ZUN bloat: We only need two for each of these, not 5.

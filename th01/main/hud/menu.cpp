@@ -199,7 +199,7 @@ inline void continue_choice_render(bool yes) {
 bool16 continue_menu(void)
 {
 	bool16 sel;
-	unsigned int frames = 0;
+	unsigned int frame = 0;
 
 	graph_accesspage_func(1);
 	graph_copy_accessed_page_to_other();
@@ -232,7 +232,7 @@ bool16 continue_menu(void)
 
 	while(1) {
 		input_sense(false);
-		frames++;
+		frame++;
 		frame_delay(1);
 
 		if((input_ok == true) || (input_shot == true)) {
@@ -250,7 +250,7 @@ bool16 continue_menu(void)
 				return false;
 			}
 		}
-		if(frames > 3000) {
+		if(frame > 3000) {
 			goto no_continue;
 		}
 		if(paused == true) {

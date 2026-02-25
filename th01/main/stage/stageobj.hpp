@@ -75,7 +75,7 @@ struct CCards {
 	int count;
 
 	// Current frame within the CARD_FLIPPING animation.
-	int *flip_frames;
+	int *flip_frame;
 
 	// Stored minus 1: A value of 0 indicates that the card needs to be
 	// flipped one more time to remove it.
@@ -86,7 +86,7 @@ struct CCards {
 			left = new screen_x_t[count];
 			top = new vram_y_t[count];
 			flag = new char[count];
-			flip_frames = new int[count];
+			flip_frame = new int[count];
 			hp = new char[count];
 			cards_score = new uscore_t[count];
 		}
@@ -96,7 +96,7 @@ struct CCards {
 		stageobj_safe_delete(left);
 		stageobj_safe_delete(top);
 		stageobj_safe_delete(flag);
-		stageobj_safe_delete(flip_frames);
+		stageobj_safe_delete(flip_frame);
 		stageobj_safe_delete(hp);
 		stageobj_safe_delete(cards_score);
 	}
@@ -106,7 +106,7 @@ struct CCards {
 		left = nullptr;
 		top = nullptr;
 		flag = nullptr;
-		flip_frames = nullptr;
+		flip_frame = nullptr;
 		hp = nullptr;
 		cards_score = nullptr;
 	}
@@ -120,7 +120,7 @@ extern CCards cards;
 // Combines bumpers, bumper bars, portals, and turrets.
 
 struct CObstacles {
-	union obstacle_type_frames_t {
+	union obstacle_type_frame_t {
 		int since_collision;
 		int fire_cycle;
 		int v;
@@ -129,7 +129,7 @@ struct CObstacles {
 	screen_x_t *left;
 	vram_y_t *top;
 	obstacle_type_t *type;
-	obstacle_type_frames_t *frames;
+	obstacle_type_frame_t *frame;
 	int count;
 
 	void new_counted() {
@@ -137,7 +137,7 @@ struct CObstacles {
 			left = new screen_x_t[count];
 			top = new vram_y_t[count];
 			type = new obstacle_type_t[count];
-			frames = new obstacle_type_frames_t[count];
+			frame = new obstacle_type_frame_t[count];
 		}
 	}
 
@@ -146,14 +146,14 @@ struct CObstacles {
 		left = nullptr;
 		top = nullptr;
 		type = nullptr;
-		frames = nullptr;
+		frame = nullptr;
 	}
 
 	void free() {
 		stageobj_safe_delete(left);
 		stageobj_safe_delete(top);
 		stageobj_safe_delete(type);
-		stageobj_safe_delete(frames);
+		stageobj_safe_delete(frame);
 	}
 };
 

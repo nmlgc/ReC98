@@ -6,7 +6,7 @@ extern bool16 mode_test;
 // Deals damage to every damageable object on screen if true.
 extern bool16 test_damage;
 
-extern unsigned long frames_since_start_of_binary;
+extern uint32_t frame_since_start_of_binary;
 
 // set_new_handler() that immediately exit()s the game with an error message.
 void out_of_memory_exit(void);

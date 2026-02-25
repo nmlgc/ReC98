@@ -89,7 +89,7 @@ struct safetycircle_t {
 	/* ------------------------- */ int8_t unused_1;
 	screen_point_t center;
 	/* ------------------------- */ int8_t unused_2[8];
-	unsigned int shrink_frames;
+	unsigned int shrink_frame;
 	pixel_t radius_filled;
 	pixel_t radius_ring_distance;
 	/* ------------------------- */ int8_t unused_3[8];

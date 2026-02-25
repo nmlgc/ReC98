@@ -33,11 +33,11 @@ int16_t input_reset_sense_held()
 
 int16_t pascal input_wait_for_change(int frames)
 {
-	#define frames_left	_BP
+	#define time	_BP
 
 	while(input_reset_sense_held()) {
 	}
-	frames_left = frames;
+	time = frames;
 	do {
 		if(input_reset_sense_held()) {
 			return _AX;
@@ -45,8 +45,8 @@ int16_t pascal input_wait_for_change(int frames)
 		_AX = vsync_Count1;
 		while(_AX == vsync_Count1) {
 		}
-		if(frames_left) {
-			frames_left--;
+		if(time) {
+			time--;
 			if(FLAGS_ZERO) {
 				break;
 			}
@@ -54,5 +54,5 @@ int16_t pascal input_wait_for_change(int frames)
 	} while(1);
 	return _AX;
 
-	#undef frames_left
+	#undef time
 }

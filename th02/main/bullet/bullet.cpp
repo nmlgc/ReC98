@@ -49,7 +49,7 @@ struct bullet_t {
 
 	// ZUN bloat: There's a padding byte to store a second value...
 	union {
-		uint8_t special_frames;
+		uint8_t special_frame;
 		uint8_t turns_done;
 		uint8_t v;
 	} u1;
@@ -417,8 +417,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		break;
 
 	case BSM_HOMING:
-		bullet.u1.special_frames++;
-		if(bullet.u1.special_frames < bullet_special.u2.homing_duration) {
+		bullet.u1.special_frame++;
+		if(bullet.u1.special_frame < bullet_special.u2.homing_duration) {
 			vector2_between_plus(
 				bullet_left,
 				bullet_top,
@@ -468,8 +468,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		vector2(
 			bullet.velocity.x.v, bullet.velocity.y.v, bullet.angle, bullet.speed
 		);
-		bullet.u1.special_frames++;
-		if(bullet.u1.special_frames > bullet_special.u3.drift_duration) {
+		bullet.u1.special_frame++;
+		if(bullet.u1.special_frame > bullet_special.u3.drift_duration) {
 			bullet.group_or_special_motion = BG_NONE;
 		}
 		break;
@@ -487,8 +487,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			aim_y,
 			bullet_special.u2.drift_speed
 		);
-		bullet.u1.special_frames++;
-		if(bullet.u1.special_frames > bullet_special.u3.drift_duration) {
+		bullet.u1.special_frame++;
+		if(bullet.u1.special_frame > bullet_special.u3.drift_duration) {
 			bullet.group_or_special_motion = BG_NONE;
 		}
 		break;

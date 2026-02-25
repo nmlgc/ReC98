@@ -5,7 +5,6 @@ _bullet_special	db ?
 _bullet_template_special_angle 	bullet_special_angle_t <?>
 
 public _bullet_zap, _bullet_clear_time
-label _bullet_zap_frames byte
 label _bullet_zap_active byte
 _bullet_zap       	db ?
 _bullet_clear_time	db ?

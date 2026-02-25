@@ -427,7 +427,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 	dash_cycle.v &= (DASH_FRAMES - 1);
 	if(((rem_bombs != 0) || bombing) && (bomb_flag >= BF_START)) {
 		if(bomb_flag == BF_START) {
-			bomb_frames = 0;
+			bomb_frame = 0;
 			bomb_flag = BF_ACTIVE;
 			player_deflecting = true;
 			bombing = true;
@@ -435,14 +435,14 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			hud_bombs_put(rem_bombs + 1);
 		}
 		orb_player_hittest(1);
-		bomb_done = bomb_update_and_render(bomb_frames);
+		bomb_done = bomb_update_and_render(bomb_frame);
 		bomb_flag = (bomb_done == false) ? BF_ACTIVE : BF_NONE;
 		if(bomb_done) {
 			bombing = false;
 			input_bomb = false;
 			player_put(PTN_MIKO_L);
 			ptn_id_prev = PTN_MIKO_L;
-		} else if(bomb_frames > 60) {
+		} else if(bomb_frame > 60) {
 			player_put(PTN_MIKO_L_CAST);
 		}
 		input_shot = false;
@@ -552,7 +552,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			if(mode_frame.v == 0) {
 				player_shots_add_centered();
 			} else if(mode_frame.v >= 2) {
-				bomb_frames = 0;
+				bomb_frame = 0;
 				mode = M_REGULAR;
 				input_shot = false;
 				submode.direction = SD_NO_ORB_REPEL_THEN_STATIONARY_BUG;
@@ -565,7 +565,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			ptn_id_prev = mode_frame.to_dash_cel_2(PTN_MIKO_R_DASH_SHOOT);
 			if(mode_frame.v >= 1) {
 				player_shots_add_centered();
-				bomb_frames = 0;
+				bomb_frame = 0;
 				input_shot = false;
 				mode = M_REGULAR;
 			}
@@ -577,7 +577,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			ptn_id_prev = mode_frame.to_dash_cel_int8(PTN_MIKO_L_DASH_SHOOT);
 			if(mode_frame.v >= 1) {
 				player_shots_add_centered();
-				bomb_frames = 0;
+				bomb_frame = 0;
 				input_shot = false;
 				mode = M_REGULAR;
 			}
@@ -624,7 +624,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 					mode_frame.v = 0;
 					input_strike = false;
-					bomb_frames = 0;
+					bomb_frame = 0;
 					player_invincible_against_orb = false;
 				}
 			}
@@ -642,7 +642,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 					return;
 				}
 				input_strike = false;
-				bomb_frames = 0;
+				bomb_frame = 0;
 				combo_enabled = false; // ZUN bloat: Redundant, see below
 				player_invincible_against_orb = false;
 			}
@@ -660,7 +660,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 					return;
 				}
 				input_strike = false;
-				bomb_frames = 0;
+				bomb_frame = 0;
 				// No `[combo_enabled] = false` here? Turns out it doesn't
 				// matter: We're back to M_REGULAR anyway, and [combo_enabled]
 				// is already set to `false` at the beginning of a slide.
@@ -821,7 +821,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				break;
 			}
 
-			bomb_frames = 0;
+			bomb_frame = 0;
 			mode_frame.v = 0;
 			player_sliding = false;
 			player_deflecting = false;

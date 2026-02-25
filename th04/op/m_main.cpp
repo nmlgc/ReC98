@@ -564,7 +564,7 @@ void near option_update_and_render(void)
 
 void main(void)
 {
-	int idle_frames = 0;
+	int idle_frame = 0;
 
 	text_clear();
 	respal_create(); // ZUN bloat: These games don't use resident palettes.
@@ -633,11 +633,11 @@ void main(void)
 		switch(in_option) {
 		case false:
 			main_update_and_render();
-			if(idle_frames >= 640) {
+			if(idle_frame >= 640) {
 				start_demo();
 #if (GAME == 5)
 				// ZUN bloat: Execution never gets here.
-				idle_frames = 0;
+				idle_frame = 0;
 #endif
 			}
 			break;
@@ -647,17 +647,15 @@ void main(void)
 			break;
 		}
 
+		// Holding Left+Right triggers the hidden Extra Stage replay in
+		// start_demo(). Don't reset [idle_frame] for that specific input, as
+		// that function would otherwise never be called.
 		if(
-			!key_det ||
-
-			// Holding Left+Right triggers the hidden Extra Stage replay in
-			// start_demo(). Don't reset [idle_frames] for that specific input,
-			// as that function would otherwise never be called.
-			((GAME == 5) && (key_det == (INPUT_LEFT | INPUT_RIGHT)))
+			!key_det || ((GAME == 5) && (key_det == (INPUT_LEFT | INPUT_RIGHT)))
 		) {
-			idle_frames++;
+			idle_frame++;
 		} else {
-			idle_frames = 0;
+			idle_frame = 0;
 		}
 
 		resident->rand++;

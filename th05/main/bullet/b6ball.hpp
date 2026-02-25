@@ -23,7 +23,7 @@ struct b6ball_t {
 	unsigned int age; // unused and broken, because it's never reset
 	Subpixel cloud_radius;
 	int patnum_tiny;
-	int decay_frames;
+	int decay_frame;
 	int8_t unused_2[4];
 };
 
