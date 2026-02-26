@@ -83,13 +83,22 @@ add_point_item:
 static const unsigned int CARD_SCORE_CAP_DIGITS = digit_count(CARD_SCORE_CAP);
 static const pixel_t CARD_SCORE_W = (CARD_SCORE_CAP_DIGITS * GLYPH_HALF_W);
 
-static const int FRAME_SCORE_FIRST = (
-	card_first_frame_of(CARD_CEL_EDGE) + (CARD_FRAMES_PER_CEL / 3)
+// The score animation lags behind the card-flipping animation by this amount
+// of frames.
+static const int SCORE_CEL_DELAY_FRAMES = (CARD_FRAMES_PER_CEL / 2);
+
+static const int KEYFRAME_SCORE_FIRST = (
+	card_first_frame_of(CARD_CEL_EDGE) + SCORE_CEL_DELAY_FRAMES
 );
-static const int FRAME_SCORE_MOVE_UP = (
-	card_first_frame_of(CARD_CEL_BACK_HALF) + (CARD_FRAMES_PER_CEL / 3)
+static const int KEYFRAME_SCORE_MOVE_UP = (
+	card_first_frame_of(CARD_CEL_BACK_HALF) + SCORE_CEL_DELAY_FRAMES
 );
-static const int FRAME_ANIM_DONE = (card_first_frame_of(CARD_CEL_FLIPPED) + 1);
+static const int KEYFRAME_FLIP_DONE = (
+	card_first_frame_of(CARD_CEL_FLIPPED) + 1
+);
+static const int KEYFRAME_SCORE_DONE = (
+	KEYFRAME_FLIP_DONE + SCORE_CEL_DELAY_FRAMES
+);
 
 void cards_score_render(void)
 {
@@ -102,10 +111,11 @@ void cards_score_render(void)
 
 	for(int i = 0; i < cards.count; i++) {
 		if(
-			(cards_score[i] != 0) && (cards.flip_frames[i] > FRAME_SCORE_FIRST)
+			(cards_score[i] != 0) &&
+			(cards.flip_frames[i] > (KEYFRAME_SCORE_FIRST - 1))
 		) {
-			if(cards.flip_frames[i] > FRAME_SCORE_MOVE_UP) {
-				popup_y	= (cards.flip_frames[i] - FRAME_SCORE_MOVE_UP);
+			if(cards.flip_frames[i] > (KEYFRAME_SCORE_MOVE_UP - 1)) {
+				popup_y	= (cards.flip_frames[i] - (KEYFRAME_SCORE_MOVE_UP - 1));
 			} else {
 				popup_y = 0;
 			}
@@ -134,9 +144,7 @@ void cards_score_render(void)
 				);
 			}
 
-			if(cards.flip_frames[i] >= (
-				FRAME_ANIM_DONE + (CARD_FRAMES_PER_CEL / 2)
-			)) {
+			if(cards.flip_frames[i] >= KEYFRAME_SCORE_DONE) {
 				cards_score[i] = 0;
 			} else {
 				str_from_positive_int16(str, cards_score[i]);
@@ -172,7 +180,7 @@ void cards_update_and_render(void)
 	for(i = 0; i < cards.count; i++) {
 		if(cards.flag[i] == CARD_FLIPPING) {
 			if(
-				(cards.flip_frames[i] < FRAME_ANIM_DONE) &&
+				(cards.flip_frames[i] < KEYFRAME_FLIP_DONE) &&
 				((cards.flip_frames[i] % CARD_FRAMES_PER_CEL) == 0)
 			) {
 				graph_accesspage_func(1);	card_put_8(i);
@@ -189,7 +197,7 @@ void cards_update_and_render(void)
 						group = PG_1_RANDOM_NARROW_AIMED;
 					}
 
-					if(cards.flip_frames[i] == FRAME_ANIM_DONE) {
+					if(cards.flip_frames[i] == KEYFRAME_FLIP_DONE) {
 						Pellets.add_group(
 							(cards.left[i] + (STAGEOBJ_W / 2) - (PELLET_W / 2)),
 							(cards.top[i]  + (STAGEOBJ_H / 2) - (PELLET_H / 2)),
