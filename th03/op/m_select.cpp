@@ -95,7 +95,7 @@ static bool sel_confirmed[PLAYER_COUNT];
 static page_t page_shown;
 static int8_t padding_2; // ZUN bloat
 func_t_near input_mode; // ZUN bloat: Why is this here?
-static unsigned int fadeout_frames;
+static unsigned int fadeout_frame_third;
 static int16_t curve_unused; // ZUN bloat
 static int curve_trail_count;
 static unsigned char playchars_available;
@@ -513,7 +513,7 @@ inline void cursor_put_p2(void) {
 		 * ZUN bloat: Should only be done in the main function, see the \
 		 * comment there. \
 		 */ \
-		fadeout_frames = 0; \
+		fadeout_frame_third = 0; \
 	} \
 	sel_confirmed[pid] = true; \
 	input_locked[pid] = true; \
@@ -587,13 +587,14 @@ inline bool select_cancel(void) {
 	\
 	/** \
 	 * ZUN quirk: Should have maybe been `>` rather than `>=`. Since \
-	 * [fadeout_frames] is technically off-by-one (frame 0 is the last frame \
-	 * of palette_white_in()), this sets the palette tone to 104 on frame #15. \
+	 * [fadeout_frame_third] is technically off-by-one (frame 0 is the last \
+	 * frame of palette_white_in()), this sets the palette tone to 104 on \
+	 * frame #15. \
 	 */ \
-	if(fadeout_frames >= 16) { \
-		palette_settone(200 - (fadeout_frames * 6)); \
+	if(fadeout_frame_third >= 16) { \
+		palette_settone(200 - (fadeout_frame_third * 6)); \
 	} \
-	if(fadeout_frames > 32) { \
+	if(fadeout_frame_third > 32) { \
 		goto quit_label; \
 	} \
 	optimization_barrier(); \
@@ -627,7 +628,7 @@ inline bool select_cancel(void) {
 	 * ZUN bloat: Doing this in the fade-out branch would have avoided the \
 	 * need to reset it for the beginning of the animation. \
 	 */ \
-	fadeout_frames++; \
+	fadeout_frame_third++; \
 	\
 	resident->rand++; \
 }
@@ -653,7 +654,7 @@ bool near select_1p_vs_2p_menu(void)
 	// ZUN quirk: Not used in the other modes, and completely unnecessary.
 	frame_delay(16);
 
-	fadeout_frames = 0;
+	fadeout_frame_third = 0;
 	while(1) {
 		select_base_render(vs_sel_pics_put);
 		cursor_put_p1();
@@ -681,7 +682,7 @@ bool near select_vs_cpu_menu(void)
 	sel_init_vs();
 	input_mode = input_mode_interface;
 	for(int pid_cur = 0; pid_cur < PLAYER_COUNT; pid_cur++) {
-		fadeout_frames = 0;
+		fadeout_frame_third = 0;
 		while(1) {
 			select_base_render(vs_sel_pics_put);
 			select_input_sense();
@@ -698,7 +699,11 @@ bool near select_vs_cpu_menu(void)
 			// ZUN quirk: Prevents selection from moving on to P2 before frame
 			// #13? This is a delay for its own sake; input locking already
 			// takes care of the one functional side effect it could have had.
-			if((pid_cur == 0) && sel_confirmed[0] && (fadeout_frames > 12)) {
+			if(
+				(pid_cur == 0) &&
+				sel_confirmed[0] &&
+				(fadeout_frame_third > 12)
+			) {
 				break;
 			}
 			if((pid_cur != 0) && sel_confirmed[1]) {
@@ -719,7 +724,7 @@ bool near select_story_menu(void)
 	sel_confirmed[0] = false;
 	sel_confirmed[1] = true;
 	input_mode = input_mode_interface;
-	fadeout_frames = 0;
+	fadeout_frame_third = 0;
 	while(1) {
 		select_base_render(story_sel_pics_put);
 		cursor_put_p1();

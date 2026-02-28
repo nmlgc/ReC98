@@ -27,7 +27,7 @@ static const screen_y_t CUTSCENE_PIC_TOP = ((RES_Y / 2) - (CUTSCENE_PIC_H / 2));
 // -----
 
 int measure_cur;
-int frames_half;
+int frame_half;
 int measure_target;
 extern page_t page_shown;
 
@@ -128,7 +128,7 @@ bool near wait_flip_and_check_measure_target(void)
 	graph_accesspage(page_shown);
 	graph_showpage(page_shown = (1 - page_shown));
 
-	frames_half++;
+	frame_half++;
 	measure_cur = snd_bgm_measure();
 	if(measure_cur < 0) {
 		// ZUN bug: 「Peaceful Romancer」 is timed using beats as measures. So,
@@ -137,7 +137,7 @@ bool near wait_flip_and_check_measure_target(void)
 		// While this might look like a quirk, it's much more likely that ZUN
 		// actually intended 22 *regular* frames here, which would translate to
 		// the much closer (22 / 56.423) ≈ 390 ms = 153.88 BPM.
-		measure_cur = (frames_half / 22);
+		measure_cur = (frame_half / 22);
 	}
 	return (measure_cur >= measure_target);
 }

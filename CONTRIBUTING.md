@@ -395,6 +395,8 @@ These cases should gradually be removed as development goes along, though.
   * Sums of frames that don't necessarily have to be continuous: `*_frames`
   * Continuously *incremented* frame counters, starting from 0: `*_frame`
   * Continuously *decremented* frame counters, ending at 0: `*_time`
+  * Frame counters in scenes with intentionally reduced frame rates should get
+    a suffix that indicates the fraction (`*_half`, `*_third`, etc.)
 
 * Blocking main functions of interactive menus with their own `frame_delay()`
   calls: `*_menu()`
