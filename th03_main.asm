@@ -566,7 +566,7 @@ var_2		= word ptr -2
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	graph_copy_page pascal, 0
 		call	@enemy_formations_load$qv
-		mov	byte_207E3, 0
+		mov	_round_id, 0
 		call	sub_9EBF
 		call	_hflip_lut_generate
 		nopcall	sub_D5A2
@@ -1006,7 +1006,7 @@ loc_9F31:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jnz	loc_9FFA
-		mov	al, byte_207E3
+		mov	al, _round_id
 		mov	ah, 0
 		mov	dl, es:[bx+resident_t.rem_credits]
 		mov	dh, 0
@@ -1083,7 +1083,7 @@ loc_9FFA:
 		jmp	cs:off_A217[bx]
 
 @@easy:
-		mov	al, byte_207E3
+		mov	al, _round_id
 		shl	al, 4
 		mov	_round_speed, al
 		mov	_bullet_base_speed, 0
@@ -1093,7 +1093,7 @@ loc_9FFA:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	al, byte_207E3
+		add	al, _round_id
 		mov	_gba_boss_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	loc_A0E7
@@ -1103,13 +1103,13 @@ loc_9FFA:
 ; ---------------------------------------------------------------------------
 
 @@normal:
-		mov	al, byte_207E3
+		mov	al, _round_id
 		shl	al, 5
 		mov	_round_speed, al
 		mov	_bullet_base_speed, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
-		mov	dl, byte_207E3
+		mov	dl, _round_id
 		add	dl, dl
 		add	al, dl
 		mov	_gba_boss_level, al
@@ -1119,14 +1119,14 @@ loc_9FFA:
 ; ---------------------------------------------------------------------------
 
 @@hard:
-		mov	al, byte_207E3
+		mov	al, _round_id
 		shl	al, 5
 		add	al, (2 shl 4)
 		mov	_round_speed, al
 		mov	_bullet_base_speed, 8
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
-		mov	dl, byte_207E3
+		mov	dl, _round_id
 		add	dl, dl
 		add	al, dl
 		add	al, 2
@@ -1148,7 +1148,7 @@ loc_A0A2:
 		mov	_bullet_base_speed, ((1 shl 4) + 8)
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
-		mov	dl, byte_207E3
+		mov	dl, _round_id
 		add	dl, dl
 		add	al, dl
 		add	al, 8
@@ -1288,7 +1288,7 @@ sub_A21F	proc near
 		call	grcg_fill
 		graph_showpage 1
 		call	grcg_off
-		inc	byte_207E3
+		inc	_round_id
 		call	sub_9EBF
 		call	farfp_20F28
 		mov	_p1.hyper, offset hyper_standby
@@ -3112,13 +3112,13 @@ loc_BF51:
 		cmp	word_20CE8, 40h
 		jge	short loc_BF92
 		push	(208 shl 16) or 84
-		mov	al, byte_207E3
+		mov	al, _round_id
 		mov	ah, 0
 		add	ax, 34
 		push	ax
 		call	super_put
 		push	(544 shl 16) or 84
-		mov	al, byte_207E3
+		mov	al, _round_id
 		jmp	short loc_BFD0
 ; ---------------------------------------------------------------------------
 
@@ -29846,10 +29846,10 @@ HSF_DONE = 0
 HSF_INIT = 1
 HSF_ACTIVE = 2
 
-public _hud_start_flag
+public _hud_start_flag, _round_id
 _hud_start_flag	db ?
+_round_id	db ?
 
-byte_207E3	db ?
 		db 150 dup(?)
 word_2087A	dw ?
 		db 1128 dup(?)
