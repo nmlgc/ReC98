@@ -144,7 +144,7 @@ void near overlay_black(void)
 
 void pascal near overlay_stage_enter_update_and_render(void)
 {
-	if(overlay_fade.in_frame >= OVERLAY_FADE_DURATION) {
+	if(overlay_fade.in_frame >= OVERLAY_FADE_FRAMES) {
 		overlay_wipe();
 		if(
 			(resident->demo_num == 0) ||
@@ -406,7 +406,7 @@ void pascal near overlay_boss_bgm_update_and_render(void)
 // Popup messages for common gameplay events, shown at the top of the playfield
 // ----------------------------------------------------------------------------
 
-const unsigned char POPUP_DURATION = 128;
+const uint8_t POPUP_FRAMES = 128;
 
 inline void line_wipe(tram_y_t y) {
 	overlay_line_fill(y, TX_WHITE);
@@ -455,8 +455,7 @@ void pascal near overlay_popup_update_and_render(void)
 	// this function has to be conditionally executed via the [popup] function
 	// pointer...
 	if(
-		(overlay_popup_id_new != id_cur) &&
-		(popup_frame >= (POPUP_DURATION / 2))
+		(overlay_popup_id_new != id_cur) && (popup_frame >= (POPUP_FRAMES / 2))
 	) {
 		line_wipe(POPUP_TRAM_Y);
 		line_wipe(BGM_TRAM_Y); // Why though?
@@ -482,7 +481,7 @@ void pascal near overlay_popup_update_and_render(void)
 		dest_reached = false;
 	}
 
-	if(popup_frame >= POPUP_DURATION) {
+	if(popup_frame >= POPUP_FRAMES) {
 		line_wipe(POPUP_TRAM_Y);
 		popup_frame = 0;
 		overlay2 = nullfunc_near;

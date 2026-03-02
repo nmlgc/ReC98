@@ -46,7 +46,7 @@ menu_put_func_t menu_put;
 // within the same compilation unit causes Turbo C++ to emit *everything* in a
 // different order... really, I couldn't make this up.
 extern char extra_unlocked;
-extern unsigned int score_duration;
+extern unsigned int score_frames;
 
 void title_flash(void);
 void pascal score_menu(void);
@@ -550,7 +550,7 @@ void main_update_and_render(void)
 				start_extra();
 				break;
 			case 2:
-				score_duration = 2000;
+				score_frames = 2000;
 				text_clear();
 				score_menu();
 
@@ -823,7 +823,7 @@ int main(void)
 		if(demo_num > 3) {
 			demo_num = 1;
 		}
-		score_duration = 350;
+		score_frames = 350;
 		score_menu();
 		graph_showpage(0);
 		graph_accesspage(0);

@@ -418,7 +418,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 
 	case BSM_HOMING:
 		bullet.u1.special_frame++;
-		if(bullet.u1.special_frame < bullet_special.u2.homing_duration) {
+		if(bullet.u1.special_frame < bullet_special.u2.homing_frames) {
 			vector2_between_plus(
 				bullet_left,
 				bullet_top,
@@ -469,7 +469,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			bullet.velocity.x.v, bullet.velocity.y.v, bullet.angle, bullet.speed
 		);
 		bullet.u1.special_frame++;
-		if(bullet.u1.special_frame > bullet_special.u3.drift_duration) {
+		if(bullet.u1.special_frame > bullet_special.u3.drift_frames) {
 			bullet.group_or_special_motion = BG_NONE;
 		}
 		break;
@@ -488,7 +488,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			bullet_special.u2.drift_speed
 		);
 		bullet.u1.special_frame++;
-		if(bullet.u1.special_frame > bullet_special.u3.drift_duration) {
+		if(bullet.u1.special_frame > bullet_special.u3.drift_frames) {
 			bullet.group_or_special_motion = BG_NONE;
 		}
 		break;

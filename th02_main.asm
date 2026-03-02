@@ -23677,7 +23677,7 @@ marisa_1B35F	proc near
 		mov	ah, 0
 		mov	bullet_special_drift_angle, ax
 		mov	bullet_special_drift_speed, 2
-		mov	bullet_special_drift_duration, 128
+		mov	bullet_special_drift_frames, 128
 		mov	al, byte_1EEA4
 		mov	ah, 0
 		imul	ax, -1
@@ -24704,7 +24704,7 @@ loc_1BC60:
 		cbw
 		mov	bullet_special_drift_angle, ax
 		mov	bullet_special_drift_speed, 0
-		mov	bullet_special_drift_duration, 64
+		mov	bullet_special_drift_frames, 64
 		mov	al, byte_1EEA5
 		cbw
 		imul	ax, -1
@@ -27143,12 +27143,12 @@ bullet_special_gravity_speed label word
 bullet_special_drift_angle label word
 	dw ?
 
-bullet_special_homing_duration label word
+bullet_special_homing_frames label word
 bullet_special_drift_speed label word
 	dw ?
 
 bullet_special_turns_max label word
-bullet_special_drift_duration label word
+bullet_special_drift_frames label word
 	dw ?
 
 _rank_base_speed	db ?

@@ -125,12 +125,13 @@ void pascal near yumeko_bg_render(void)
 /// Stage 6 - Shinki
 /// ----------------
 
-#define SHINKI_SPINLINE_MOVE_W (PLAYFIELD_W / 6) /* pixel_t! */
-#define SHINKI_SPINLINE_MOVE_SPEED to_sp(0.25f)
+static const pixel_t SHINKI_SPINLINE_MOVE_W = (PLAYFIELD_W / 6);
+static const subpixel_t SHINKI_SPINLINE_MOVE_SPEED = (TO_SP(1) / 4);
 #define SHINKI_SPINLINE_TOP to_sp(80.0f)
 #define SHINKI_SPINLINE_BOTTOM to_sp(PLAYFIELD_H - 64)
-#define SHINKI_SPINLINE_MOVE_DURATION \
-	(SHINKI_SPINLINE_MOVE_W * SHINKI_SPINLINE_MOVE_SPEED)
+static const unsigned int SHINKI_SPINLINE_MOVE_FRAMES = (
+	SHINKI_SPINLINE_MOVE_W * SHINKI_SPINLINE_MOVE_SPEED
+);
 
 static const int SHINKI_LINESET_COUNT = 2;
 static const int PARTICLES_UNINITIALIZED = (-1 & 0xFF);
@@ -153,9 +154,8 @@ extern bool shinki_bg_type_d_initialized;
 		set->radius[SHINKI_LINE_MAIN] -= 0.125f; \
 	} \
 	if( \
-		(shinki_bg_spinline_frame & ( \
-			(SHINKI_SPINLINE_MOVE_DURATION * 2) - 1) \
-		) < SHINKI_SPINLINE_MOVE_DURATION \
+		(shinki_bg_spinline_frame % (SHINKI_SPINLINE_MOVE_FRAMES * 2)) < \
+		SHINKI_SPINLINE_MOVE_FRAMES \
 	) { \
 		set->center[SHINKI_LINE_MAIN].x.v += delta; \
 	} else { \

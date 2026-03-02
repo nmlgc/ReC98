@@ -393,7 +393,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		player_48x32_cel_t new_48x32;
 	} cel;
 	bool16 bomb_done;
-	int special_duration;
+	int special_frames;
 
 	// YOU'VE ALREADY GOT A VARIABLE FOR THIS
 	#define prev_cel_48x48	static_cast<player_48x48_cel_t>(prev)
@@ -771,11 +771,11 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			if((mode_frame.v >= 20) && !input_strike && !input_shot)  {
 				combo_enabled = true;
 			}
-			special_duration = 28;
+			special_frames = 28;
 			break;
 		case (SS_SLIDEKICK | X_RIGHT):
 		case (SS_SLIDEKICK | X_LEFT):
-			special_duration = 13;
+			special_frames = 13;
 			break;
 		case (SS_SHOTCOMBO | X_RIGHT):
 		case (SS_SHOTCOMBO | X_LEFT):
@@ -789,11 +789,11 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			if(mode_frame.v == 4) {
 				player_deflecting = false;
 			}
-			special_duration = SHOTCOMBO_FRAMES;
+			special_frames = SHOTCOMBO_FRAMES;
 		}
 
 		mode_frame.v++;
-		if(mode_frame.v > special_duration) {
+		if(mode_frame.v > special_frames) {
 			// Special attack is done
 
 			// We're not *actually* about to lose the information on which

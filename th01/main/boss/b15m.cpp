@@ -1032,19 +1032,19 @@ int pattern_clusters_from_spheres(void)
 	enum {
 		INTERVAL = 10,
 		SPHERE_COUNT = 10,
-		SPHERE_DURATION = (SPHERE_COUNT * INTERVAL),
+		SPHERE_FRAMES = (SPHERE_COUNT * INTERVAL),
 
 		// Spheres spawned, start firing
-		KEYFRAME_FIRE = SPHERE_DURATION,
+		KEYFRAME_FIRE = SPHERE_FRAMES,
 
 		// Spheres start being removed
 		KEYFRAME_REMOVE = (KEYFRAME_FIRE + 30),
 
 		// All spheres fired
-		KEYFRAME_FIRE_DONE = (KEYFRAME_FIRE + SPHERE_DURATION),
+		KEYFRAME_FIRE_DONE = (KEYFRAME_FIRE + SPHERE_FRAMES),
 
 		// All spheres removed
-		KEYFRAME_REMOVE_DONE = (KEYFRAME_REMOVE + SPHERE_DURATION),
+		KEYFRAME_REMOVE_DONE = (KEYFRAME_REMOVE + SPHERE_FRAMES),
 
 		KEYFRAME_DONE = (KEYFRAME_REMOVE_DONE + 20),
 	};
@@ -1485,7 +1485,7 @@ elis_starpattern_ret_t pattern_three_symmetric_4_stacks_then_symmetric_arc(void)
 elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 {
 	enum {
-		CIRCLE_DURATION = 200,
+		CIRCLE_FRAMES = 200,
 
 		// A bit unfair, since the kill zone already starts in the transparent
 		// parts of the non-moving player sprite.
@@ -1532,7 +1532,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 			circle.frame = 1;
 			ent_unput_and_put_both(ent_still_or_wave, 1, C_STILL);
 		}
-	} else if((circle.frame != 0) && (circle.frame < CIRCLE_DURATION)) {
+	} else if((circle.frame != 0) && (circle.frame < CIRCLE_FRAMES)) {
 		circle.frame++;
 
 		// We only blit the circle to VRAM page 0, so any unblitting call for
@@ -1552,7 +1552,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 			}
 		}
 		if(player_is_hit == true) {
-			circle.frame = CIRCLE_DURATION;
+			circle.frame = CIRCLE_FRAMES;
 		}
 		if((boss_phase_frame % pattern_state.interval) == 0) {
 			Pellets.add_group(
@@ -1562,15 +1562,13 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 				to_sp(4.5f)
 			);
 		}
-		if(
-			(circle.frame > (CIRCLE_DURATION - 20)) && ((circle.frame % 4) == 0)
-		) {
+		if((circle.frame > (CIRCLE_FRAMES - 20)) && ((circle.frame % 4) == 0)) {
 			form_fire_group(F_GIRL, PG_1_AIMED, 4.5f);
 		}
-	} else if(circle.frame < CIRCLE_DURATION) {
+	} else if(circle.frame < CIRCLE_FRAMES) {
 		return SP_PATTERN;
 	} else {
-		if(circle.frame == CIRCLE_DURATION) {
+		if(circle.frame == CIRCLE_FRAMES) {
 			bigcircle_sloppy_unput(circle);
 		}
 		circle.frame++;
@@ -1587,7 +1585,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 				to_sp(4.5f)
 			);
 		}
-		if(circle.frame > (CIRCLE_DURATION + 60)) {
+		if(circle.frame > (CIRCLE_FRAMES + 60)) {
 			boss_phase_frame = 0;
 			circle.frame = 0; // ZUN bloat: Gets reset at the beginning.
 			circle.angle = 0x00; // ZUN bloat: Gets reset at the beginning.
@@ -1858,8 +1856,6 @@ void elis_main(void)
 
 	// Entrance animation
 	if(boss_phase == 0) {
-		#define entrance_frame hit.invincibility_frame
-
 		enum {
 			SPHERE_COUNT = 2,
 			TRAIL_COUNT = 3,
@@ -1905,10 +1901,12 @@ void elis_main(void)
 		// Trailing rotation
 		// -----------------
 
+		#define entrance_tick hit.invincibility_frame
+
 		angle = 0x00;
-		entrance_frame = 0;
+		entrance_tick = 0;
 		while(1) {
-			entrance_frame++;
+			entrance_tick++;
 			for(int i = 0; i < SPHERE_COUNT; i++) {
 				head_left = polar_x(
 					(BASE_CENTER_X - (SPHERE_W / 2)),
@@ -1930,23 +1928,22 @@ void elis_main(void)
 				// ZUN landmine: Both of these calls read uninitialized stack
 				// memory during frames 2 and 3, respectively. Invisible as
 				// well.
-				if(entrance_frame > 1) {
+				if(entrance_tick > 1) {
 					sphere_unput_and_put_trail(i, 0);
-					if(entrance_frame > 2) {
+					if(entrance_tick > 2) {
 						sphere_unput_and_put_trail(i, 1);
 					}
 				}
 				sphere_trails_forward_copy(i, head_left, head_top);
 			}
-			if(entrance_frame >= 120) {
+			if(entrance_tick >= 120) {
 				break;
 			}
 			angle += (0x300 / 32);
-
-			// [entrance_frame] doesn't directly correspond to frames here,
-			// therefore.
-			frame_delay(((120 - entrance_frame) / 12) + 1);
+			frame_delay(((120 - entrance_tick) / 12) + 1);
 		};
+
+		#undef entrance_tick
 		// -----------------
 
 		// Spheres move offscreen / wave-in effect
@@ -1963,6 +1960,8 @@ void elis_main(void)
 			KEYFRAME_SLIGHT_RIPPLE_DONE = 130,
 			KEYFRAME_ENTRANCE_DONE = 140,
 		};
+
+		#define entrance_frame hit.invincibility_frame
 
 		entrance_frame = 0;
 		trails_offscreen = false;
@@ -2045,11 +2044,12 @@ void elis_main(void)
 			frame_delay(1);
 		}
 
+		#undef entrance_frame
+		// ---------------------------------------
+
 		#undef sphere_trails_forward_copy
 		#undef sphere_unput_and_put_trail
 		#undef sphere_unput_and_put_head
-		#undef entrance_frame
-		// ---------------------------------------
 
 		boss_phase_frame = 0;
 		hit.invincibility_frame = 0;

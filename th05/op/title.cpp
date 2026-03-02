@@ -27,11 +27,11 @@ void near op_animate(void)
 	enum {
 		ROLL_CELS = 8,
 		ROLL_FRAMES_PER_CEL = 8,
-		ROLL_DURATION = (ROLL_CELS * ROLL_FRAMES_PER_CEL),
+		ROLL_FRAMES = (ROLL_CELS * ROLL_FRAMES_PER_CEL),
 
 		FADE_CELS = PI_MASK_COUNT,
 		FADE_FRAMES_PER_CEL = 4,
-		FADE_DURATION = (FADE_CELS * FADE_FRAMES_PER_CEL),
+		FADE_FRAMES = (FADE_CELS * FADE_FRAMES_PER_CEL),
 	};
 
 	struct {
@@ -78,7 +78,7 @@ void near op_animate(void)
 	// cause tearing on slower systems on the first frame of the loop below.
 	graph_showpage(0);
 
-	{for(int frame = 0; frame < ROLL_DURATION; frame++) {
+	{for(int frame = 0; frame < ROLL_FRAMES; frame++) {
 		// Blit to both pages
 		if((frame % ROLL_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
 			pi_palette_apply(frame / ROLL_FRAMES_PER_CEL);
@@ -88,7 +88,7 @@ void near op_animate(void)
 
 		// ZUN bug: Off by one; the last iteration will leave [PaletteTone] at
 		// 99, not 100, which does in fact significantly darken the image.
-		palette_settone((100 - ROLL_DURATION) + frame);
+		palette_settone((100 - ROLL_FRAMES) + frame);
 	}}
 
 	// The pi_load() call below automatically does this for slot 0.
@@ -124,7 +124,7 @@ void near op_animate(void)
 	graph_showpage(0);
 	frame_delay(16);
 
-	{for(int frame = 0; frame < FADE_DURATION; frame++) {
+	{for(int frame = 0; frame < FADE_FRAMES; frame++) {
 		// Blit to both pages
 		if((frame % FADE_FRAMES_PER_CEL) <= (PAGE_COUNT - 1)) {
 			pi_put_masked_8(0, 0, 0, (frame / FADE_FRAMES_PER_CEL));

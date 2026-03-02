@@ -16590,7 +16590,7 @@ loc_17A75:
 		mov	byte_25674, 0
 		mov	byte_2566E, 0Ah
 		mov	byte_2566F, 0
-		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
+		mov	_boss_statebyte[13].BSB_flystep_pointreflected_tick, 0
 		jmp	loc_17CA4
 ; ---------------------------------------------------------------------------
 
@@ -16668,7 +16668,7 @@ loc_17B1E:
 		cmp	_boss_phase_frame, 64
 		jl	short loc_17B98	; default
 		inc	_boss_phase_state
-		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
+		mov	_boss_statebyte[13].BSB_flystep_pointreflected_tick, 0
 		cmp	byte_2566F, 0
 		jnz	short loc_17B62
 		cmp	_bits_alive, 0

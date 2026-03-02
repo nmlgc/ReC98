@@ -559,7 +559,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 		double velocity_y[BIRD_COUNT];
 		int8_t unknown[BIRD_COUNT];
 		char hatch_time[BIRD_COUNT];
-		char hatch_duration[BIRD_COUNT];
+		int8_t hatch_frames[BIRD_COUNT];
 
 		double pellet_left(int i) {
 			return (left[i] + ((BIRD_W / 2) - (PELLET_W / 2)));
@@ -638,7 +638,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 				birds.left[i] = func_or_left;
 				birds.top[i] = top;
 				birds.unknown[i] = unknown;
-				birds.hatch_duration[i] = birds.hatch_time[i];
+				birds.hatch_frames[i] = birds.hatch_time[i];
 				return;
 			}
 		}
@@ -650,8 +650,8 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			}
 			if(birds.hatch_time[i] > 0) {
 				bird_put_8(birds.left[i], birds.top[i], ((
-					(birds.hatch_duration[i] - birds.hatch_time[i]) /
-					(birds.hatch_duration[i] / BIRD_HATCH_CELS)
+					(birds.hatch_frames[i] - birds.hatch_time[i]) /
+					(birds.hatch_frames[i] / BIRD_HATCH_CELS)
 				) + C_HATCH));
 				birds.hatch_time[i]--;
 			} else {
@@ -2043,7 +2043,7 @@ void near pascal dottedcircle_unput_update_render(
 	pixel_t radius_step,
 	vc2 col,
 	pixel_t radius_initial,
-	int duration
+	int frames
 )
 {
 	static pixel_t radius_prev;
@@ -2060,7 +2060,7 @@ void near pascal dottedcircle_unput_update_render(
 			return;
 		}
 		shape_circle_sloppy_unput(center_x, center_y, radius_prev, 0x01);
-		if(frame_1based >= duration) {
+		if(frame_1based >= frames) {
 			active = false;
 			return;
 		}
@@ -2198,7 +2198,7 @@ void pascal near pattern_curved_spray_leftright_once(int &frame)
 	// The duration can be calculated as:
 	//
 	//	target_radius = √((RES_X - SEAL_CENTER_X)² + (RES_Y - SEAL_CENTER_Y)²)
-	//	duration = (((target_radius - radius_initial) / radius_step) * interval)
+	//	frames = (((target_radius - radius_initial) / radius_step) * interval)
 	//
 	// Good luck doing that at compile time, but given the variables defined
 	// here, the result does come out as 88.38. So, close enough.

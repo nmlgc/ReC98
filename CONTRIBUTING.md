@@ -398,6 +398,10 @@ These cases should gradually be removed as development goes along, though.
   * Frame counters in scenes with intentionally reduced frame rates should get
     a suffix that indicates the fraction (`*_half`, `*_third`, etc.)
 
+* Frame amounts that don't directly correspond to hardware frames:
+  * Sums: `*_duration`
+  * *Incremented* counters starting from 0: `*_tick`
+
 * Blocking main functions of interactive menus with their own `frame_delay()`
   calls: `*_menu()`
 * Functions that show multi-frame animations in a blocking way, using their own

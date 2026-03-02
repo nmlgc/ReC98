@@ -25,14 +25,14 @@ static const unsigned char gbcRANKS[4][8] = {
 };
 
 const shiftjis_t *SHOTTYPES[SHOTTYPE_COUNT] = HISCORE_SHOTTYPES;
-int logo_step = 0;
+static int frame = 0;
 char need_op_h_bft = 1;
 int8_t need_op_h_bft_padding = 0;
 
 scoredat_section_t hi;
 char extra_unlocked;
 int8_t extra_unlocked_padding;
-unsigned int score_duration;
+unsigned int score_frames;
 
 #include "th02/formats/scoredat/load.cpp"
 
@@ -117,11 +117,11 @@ void pascal near logo_render(void)
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();
-	logo_step++;
+	frame++;
 	#define render(i, offset) for(i = 0; i < 4; i++) { \
-		screen_x_t x = logo_step + (160 * i) + offset; \
+		screen_x_t x = (frame + (160 * i) + offset); \
 		x %= 640; \
-		screen_y_t y = (i * 100) - logo_step; \
+		screen_y_t y = ((i * 100) - frame); \
 		while(1) { \
 			if(y < 0) { \
 				y += 400; \
@@ -169,7 +169,7 @@ void pascal score_menu(void)
 	grcg_off();
 
 	scores_put(-1);
-	logo_step = 0;
+	frame = 0;
 
 	// ZUN landmine: The beam is certainly at some place within the frame by
 	// now, yielding another tearing line.
@@ -188,7 +188,7 @@ void pascal score_menu(void)
 		frame_delay(1);
 		graph_accesspage(page_shown);
 		graph_showpage(page_shown = (1 - page_shown));
-	} while(logo_step <= score_duration);
+	} while(frame <= score_frames);
 
 	key_det = 0;
 	frame_delay(20);
