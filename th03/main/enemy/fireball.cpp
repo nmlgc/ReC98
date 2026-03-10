@@ -278,12 +278,10 @@ void near fireball_explosion_put(void)
 	}
 	sprite16_put_size.set(64, 64);
 
-	// ZUN bug: (16 / 2) pixels lower than where they should be, and where
-	// collision detection constructs its hitbox.
 	screen_x_t left;
 	screen_y_t top;
 	left = (playfield_fg_x_to_screen(p->center.x, p->pid) - (64 / 2));
-	top  = (playfield_fg_y_to_screen(p->center.y, p->pid) - (48 / 2));
+	top  = (playfield_fg_y_to_screen(p->center.y, p->pid) - (64 / 2));
 
 	sprite16_put(left, top, so);
 }
