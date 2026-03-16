@@ -64,7 +64,7 @@ extern item_t items[ITEM_COUNT];
 #define semirandom_cycle 	item_semirandom_cycle
 #define drop_cycle       	item_drop_cycle
 #define collect_skill    	item_collect_skill
-#define frames_unused    	item_frames_unused
+#define frame_unused     	item_frame_unused
 
 // ZUN bloat: Should have been local to items_update_and_render(), and been a
 // single reference instead of two pointers.
@@ -375,11 +375,11 @@ bool16 pascal near item_hittest_y(item_t near& item)
 
 void near items_update_and_render(void)
 {
-	extern int frames_unused; // ZUN bloat
+	extern int frame_unused; // ZUN bloat
 	extern uint8_t drop_cycle;
 
 	item_t near* p = items;
-	frames_unused++;
+	frame_unused++;
 	item_score_this_frame = 0;
 
 	for(int i = 0; i < ITEM_COUNT; (i++, p++)) {

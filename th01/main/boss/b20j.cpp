@@ -431,7 +431,9 @@ void konngara_load_and_entrance(int8_t)
 	// Shaking and panning
 	// -------------------
 
-	#define MAGNITUDE  	16
+	enum {
+		MAGNITUDE = 16,
+	};
 	#define frame      	i
 	#define line_on_top	j
 
@@ -464,7 +466,6 @@ void konngara_load_and_entrance(int8_t)
 
 	#undef line_on_top
 	#undef frame
-	#undef MAGNITUDE
 	// -------------------
 
 	frame_delay(30);
@@ -558,15 +559,17 @@ void slash_put(int image)
 
 void pattern_diamond_cross_to_edges_followed_by_rain(void)
 {
-	#define DIAMOND_ORIGIN_X (PLAYFIELD_CENTER_X - (DIAMOND_W / 2))
-	#define DIAMOND_ORIGIN_Y (PLAYFIELD_CENTER_Y + (DIAMOND_H / 2))
+	enum {
+		DIAMOND_ORIGIN_X = (PLAYFIELD_CENTER_X - (DIAMOND_W / 2)),
+		DIAMOND_ORIGIN_Y = (PLAYFIELD_CENTER_Y + (DIAMOND_H / 2)),
+	};
 
 	int i;
 
 	static pixel_t velocity_bottomleft_x, velocity_topleft_x;
 	static pixel_t velocity_bottomleft_y, velocity_topleft_y;
 	static EntitiesTopleft<4> diamonds;
-	static int frames_with_diamonds_at_edges;
+	static int diamonds_at_edges_frame;
 
 	#define diamonds_unput(i) \
 		for(i = 0; i < diamonds.count(); i++) { \
@@ -648,9 +651,9 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 			diamonds_put(i);
 		}
 		return;
-	} else if(frames_with_diamonds_at_edges < 200) {
-		frames_with_diamonds_at_edges++;
-		if((frames_with_diamonds_at_edges % pattern_state.interval) == 0)  {
+	} else if(diamonds_at_edges_frame < 200) {
+		diamonds_at_edges_frame++;
+		if((diamonds_at_edges_frame % pattern_state.interval) == 0)  {
 			#define speed to_sp(2.5f)
 			screen_x_t from_left;
 			screen_y_t from_top;
@@ -696,13 +699,10 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 	} else {
 		boss_phase_frame = 0;
 	}
-	frames_with_diamonds_at_edges = 0;
+	diamonds_at_edges_frame = 0;
 
 	#undef diamonds_put
 	#undef diamonds_unput
-	#undef diamonds
-	#undef DIAMOND_ORIGIN_Y
-	#undef DIAMOND_ORIGIN_X
 }
 
 void pattern_symmetrical_from_cup_fire(unsigned char angle)
@@ -927,7 +927,7 @@ void pattern_aimed_spray_from_cup(void)
 	static unsigned char spray_offset;
 	static unsigned char angle; // should be local
 	static int spray_delta; // should be unsigned char
-	static int frames_in_current_direction;
+	static int pellets_fired_in_current_direction;
 
 	if(boss_phase_frame == 10) {
 		face_expression_set_and_put(FE_CLOSED);
@@ -938,7 +938,7 @@ void pattern_aimed_spray_from_cup(void)
 	if(boss_phase_frame == 100) {
 		spray_offset = 0x20;
 		spray_delta = -0x08;
-		frames_in_current_direction = 0;
+		pellets_fired_in_current_direction = 0;
 		select_for_rank(pattern_state.interval, 5, 4, 3, 2);
 	}
 	if((boss_phase_frame % pattern_state.interval) == 0) {
@@ -951,10 +951,10 @@ void pattern_aimed_spray_from_cup(void)
 		);
 		angle += spray_offset;
 		spray_offset += spray_delta;
-		frames_in_current_direction++;
-		if(frames_in_current_direction > 8) {
+		pellets_fired_in_current_direction++;
+		if(pellets_fired_in_current_direction > 8) {
 			spray_delta *= -1;
-			frames_in_current_direction = 0;
+			pellets_fired_in_current_direction = 0;
 		}
 		Pellets.add_single(CUP_CENTER_X, CUP_TOP, angle, to_sp(3.0f));
 	}

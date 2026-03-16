@@ -1,5 +1,5 @@
-public SCORE_ADD
-score_add	proc far
+public @SCORE_ADD$QUIUC
+@score_add$quiuc	proc far
 
 @@pid  	= byte ptr  6
 @@score	= word ptr  8
@@ -59,4 +59,4 @@ score_add	proc far
 	pop	si
 	pop	bp
 	retf	4
-score_add	endp
+@score_add$quiuc	endp

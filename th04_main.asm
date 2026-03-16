@@ -9727,7 +9727,7 @@ bullets_render	proc near
 @@sprite_bullet_loop:
 		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	@@sprite_bullet_next
-		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
+		cmp	[si+bullet_t.spawn_flag], BSF_CLOUD_BACKWARDS
 		ja	short loc_12D24
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
@@ -9773,9 +9773,9 @@ loc_12D5C:
 		mov	[bp+@@patnum], (PAT_CLOUD_BULLET16_BLUE - 1)
 
 loc_12D6D:
-		mov	al, [si+bullet_t.spawn_state]
+		mov	al, [si+bullet_t.spawn_flag]
 		mov	ah, 0
-		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
+		mov	bx, (BSF_CLOUD_FRAMES / BULLET_CLOUD_CELS)
 		cwd
 		idiv	bx
 		add	[bp+@@patnum], ax
@@ -13396,7 +13396,7 @@ loc_15D7F:
 loc_15D86:
 		cmp	ax, THICKLASER_COUNT
 		jl	short loc_15D7F
-		mov	_thicklaser_template.TL_cur_flag_frames, 0
+		mov	_thicklaser_template.TL_cur_flag_frame, 0
 		mov	_thicklaser_template.TL_flag, 1
 		mov	_thicklaser_template.TL_radius_cur, 1
 		mov	_thicklaser_template.TL_radius_speed, 1
@@ -13493,11 +13493,11 @@ loc_15DFB:
 		jz	loc_15EBC
 		cmp	[si+thicklaser_t.TL_flag], TF_LINE
 		jnz	short loc_15E1F
-		mov	ax, [si+thicklaser_t.TL_cur_flag_frames]
+		mov	ax, [si+thicklaser_t.TL_cur_flag_frame]
 		cmp	ax, [si+thicklaser_t.TL_line_frames]
 		jl	short loc_15E6B
 		inc	[si+thicklaser_t.TL_flag]
-		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
+		mov	[si+thicklaser_t.TL_cur_flag_frame], 0
 		call	snd_se_play pascal, 6
 		jmp	short loc_15E6B
 ; ---------------------------------------------------------------------------
@@ -13511,7 +13511,7 @@ loc_15E1F:
 		cmp	ax, [si+thicklaser_t.TL_radius_max]
 		jl	short loc_15E6B
 		inc	[si+thicklaser_t.TL_flag]
-		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
+		mov	[si+thicklaser_t.TL_cur_flag_frame], 0
 		mov	ax, [si+thicklaser_t.TL_radius_max]
 		mov	[si+thicklaser_t.TL_radius_cur], ax
 		jmp	short loc_15E6B
@@ -13520,11 +13520,11 @@ loc_15E1F:
 loc_15E41:
 		cmp	[si+thicklaser_t.TL_flag], TF_STATIC
 		jnz	short loc_15E57
-		mov	ax, [si+thicklaser_t.TL_cur_flag_frames]
+		mov	ax, [si+thicklaser_t.TL_cur_flag_frame]
 		cmp	ax, [si+thicklaser_t.TL_static_frames]
 		jl	short loc_15E6B
 		inc	[si+thicklaser_t.TL_flag]
-		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
+		mov	[si+thicklaser_t.TL_cur_flag_frame], 0
 		jmp	short loc_15E6B
 ; ---------------------------------------------------------------------------
 
@@ -13538,7 +13538,7 @@ loc_15E57:
 		mov	[si+thicklaser_t.TL_flag], TF_FREE
 
 loc_15E6B:
-		inc	[si+thicklaser_t.TL_cur_flag_frames]
+		inc	[si+thicklaser_t.TL_cur_flag_frame]
 		cmp	[si+thicklaser_t.TL_flag], TF_LINE
 		jbe	short loc_15EBC
 		mov	ax, [si+thicklaser_t.TL_radius_cur]
@@ -16583,7 +16583,7 @@ loc_17A75:
 		mov	byte_25674, 0
 		mov	byte_2566E, 0Ah
 		mov	byte_2566F, 0
-		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
+		mov	_boss_statebyte[13].BSB_flystep_pointreflected_tick, 0
 		jmp	loc_17CA4
 ; ---------------------------------------------------------------------------
 
@@ -16661,7 +16661,7 @@ loc_17B1E:
 		cmp	_boss_phase_frame, 64
 		jl	short loc_17B98	; default
 		inc	_boss_phase_state
-		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
+		mov	_boss_statebyte[13].BSB_flystep_pointreflected_tick, 0
 		cmp	byte_2566F, 0
 		jnz	short loc_17B62
 		cmp	_bits_alive, 0
@@ -20732,7 +20732,7 @@ yuuka6_1A0D1	proc near
 		push	si
 		mov	si, offset yuuka6_safetycircle
 		mov	[si+yuuka6_safetycircle_t.B6S_flag], SCF_GROW
-		mov	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 0
+		mov	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 0
 		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 8
 		mov	ax, _player_pos.cur.x
 		sar	ax, 4
@@ -20898,30 +20898,30 @@ loc_1A25B:
 ; ---------------------------------------------------------------------------
 
 loc_1A261:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 8
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 8
 		jnb	short loc_1A26E
 		sub	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 8
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A26E:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 8
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 8
 		jnz	short loc_1A27B
 		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 9
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A27B:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 16
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 16
 		jnb	short loc_1A288
 		sub	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 2
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A288:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 160
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 160
 		jnb	loc_1A3A8
-		mov	ax, [si+yuuka6_safetycircle_t.B6S_shrink_frames]
+		mov	ax, [si+yuuka6_safetycircle_t.B6S_shrink_frame]
 		and	ax, 1Fh
 		cmp	ax, 16
 		jnb	short loc_1A2A1
@@ -20943,15 +20943,15 @@ loc_1A2B1:
 		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 9
 
 loc_1A2B5:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 104
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 104
 		ja	short loc_1A2BE
 		dec	[si+yuuka6_safetycircle_t.B6S_radius_filled]
 
 loc_1A2BE:
-		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 0Fh
+		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frame], 0Fh
 		jnz	loc_1A3BC
 		mov	[bp+var_6], -40h
-		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 1Fh
+		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frame], 1Fh
 		jnz	short loc_1A309
 		mov	ax, _boss_pos.cur.x
 		mov	_bullet_template.BT_origin.x, ax
@@ -21024,7 +21024,7 @@ loc_1A39A:
 ; ---------------------------------------------------------------------------
 
 loc_1A3A8:
-		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 176
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frame], 176
 		jnb	short loc_1A3B9
 		add	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 16
 		sub	[si+yuuka6_safetycircle_t.B6S_radius_filled], 2
@@ -21035,7 +21035,7 @@ loc_1A3B9:
 		mov	[si+yuuka6_safetycircle_t.B6S_flag], SCF_FREE
 
 loc_1A3BC:
-		inc	[si+yuuka6_safetycircle_t.B6S_shrink_frames]
+		inc	[si+yuuka6_safetycircle_t.B6S_shrink_frame]
 
 loc_1A3BF:
 		pop	di
@@ -21130,14 +21130,14 @@ yuuka6_1A439	proc near
 		mov	di, [bp+@@y]
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1A457
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jz	short loc_1A461
 		call	_yuuka6_anim_vanish
 		jmp	short loc_1A461
 ; ---------------------------------------------------------------------------
 
 loc_1A457:
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jnz	short loc_1A461
 		call	_yuuka6_anim_appear
 
@@ -21230,7 +21230,7 @@ yuuka6_1A4A8	endp
 yuuka6_1A503	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jnz	short loc_1A512
 		call	_yuuka6_anim_appear
 		jmp	short loc_1A539
@@ -21578,7 +21578,7 @@ word_1AB4D	dw    10h,   12h,   14h,   20h
 yuuka6_1AB5D	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AB6A
 		call	_yuuka6_anim_parasol_back_close
 
@@ -21642,14 +21642,14 @@ var_1		= byte ptr -1
 		enter	2, 0
 		cmp	_boss_phase_frame, 48
 		jge	short loc_1ABFF
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	loc_1AC96
 		call	_yuuka6_anim_parasol_back_pull_left
 		jmp	loc_1AC96
 ; ---------------------------------------------------------------------------
 
 loc_1ABFF:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_LEFT
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_LEFT
 		jnz	loc_1AC96
 		call	_yuuka6_anim_parasol_left_spin_back
 		cmp	_boss_phase_frame, 80
@@ -21734,7 +21734,7 @@ yuuka6_1ABE5	endp
 yuuka6_1ACCC	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1ACD9
 		call	_yuuka6_anim_parasol_back_open
 
@@ -21800,14 +21800,14 @@ yuuka6_1AD6F	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AD91
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AD85
 		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1ADCC
 ; ---------------------------------------------------------------------------
 
 loc_1AD85:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1ADCC
 		call	_yuuka6_anim_parasol_back_pull_forward
 		jmp	short loc_1ADCC
@@ -21825,7 +21825,7 @@ loc_1AD91:
 loc_1ADA6:
 		cmp	_boss_phase_frame, 288
 		jl	short loc_1ADCC
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1ADBA
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1ADCC
@@ -21921,14 +21921,14 @@ yuuka6_1AE8F	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AEB7
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AEA5
 		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1AEAF
 ; ---------------------------------------------------------------------------
 
 loc_1AEA5:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1AEAF
 		call	_yuuka6_anim_parasol_back_pull_forward
 
@@ -21974,7 +21974,7 @@ loc_1AEB7:
 loc_1AF33:
 		cmp	_boss_phase_frame, 128
 		jl	short loc_1AF59
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1AF47
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1AF59
@@ -22026,14 +22026,14 @@ yuuka6_1AFA8	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AFD0
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1AFBE
 		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1AFC8
 ; ---------------------------------------------------------------------------
 
 loc_1AFBE:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	short loc_1AFC8
 		call	_yuuka6_anim_parasol_back_pull_forward
 
@@ -22093,7 +22093,7 @@ loc_1AFD0:
 loc_1B06E:
 		cmp	_boss_phase_frame, 128
 		jl	short loc_1B094
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1B082
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1B094
@@ -22122,7 +22122,7 @@ yuuka6_1B099	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jg	short loc_1B0AF
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_SHIELD
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_SHIELD
 		jz	short loc_1B125
 		call	_yuuka6_anim_parasol_shield
 		jmp	short loc_1B125
@@ -22416,14 +22416,14 @@ yuuka6_1B313	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1B339
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		jnz	short loc_1B32A
 		call	_yuuka6_anim_parasol_back_close
 		jmp	loc_1B3DD
 ; ---------------------------------------------------------------------------
 
 loc_1B32A:
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jnz	loc_1B3DD
 		call	_yuuka6_anim_parasol_back_pull_forward
 		jmp	loc_1B3DD
@@ -22471,7 +22471,7 @@ loc_1B391:
 loc_1B3B7:
 		cmp	_boss_phase_frame, 192
 		jl	short loc_1B3DD
-		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		cmp	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		jz	short loc_1B3CB
 		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1B3DD
@@ -22583,7 +22583,7 @@ loc_1B4EB:
 		mov	_boss_phase_end_hp, 10600
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
-		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+		mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 		call	@randring2_next16_and$qui pascal, (YUUKA6_PHASE2_FLY_PATHS - 1)
 		mov	_yuuka6_phase2_fly_path, al
 		jmp	loc_1B8EA
@@ -22705,7 +22705,7 @@ loc_1B623:
 
 loc_1B634:
 		inc	_boss_phase_frame
-		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
+		cmp	_yuuka6_sprite_flag, Y6SF_VANISHED
 		jz	short loc_1B645
 		call	_yuuka6_anim_vanish
 		jmp	loc_1B8EA
@@ -22747,7 +22747,7 @@ loc_1B694:
 		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
-		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		mov	byte_25A1B, 1
 		mov	byte_25A02, -1
 		jmp	loc_1B8EA
@@ -22862,7 +22862,7 @@ loc_1B78E:
 		mov	_boss_mode, 0
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
-		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+		mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 		mov	byte_25A1B, 1
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -30032,21 +30032,21 @@ TF_STATIC = 3
 TF_SHRINK = 4
 
 thicklaser_t struc
-	TL_flag           	db ?
+	TL_flag          	db ?
 		db ?
-	TL_origin         	Point <?>
-		db ?
-		db ?
+	TL_origin        	Point <?>
 		db ?
 		db ?
-	TL_cur_flag_frames	dw ?
-	TL_line_frames    	dw ?
-	TL_static_frames  	dw ?
-	TL_col_outline    	db ?
 		db ?
-	TL_radius_max     	dw ?
-	TL_radius_cur     	dw ?
-	TL_radius_speed   	dw ?
+		db ?
+	TL_cur_flag_frame	dw ?
+	TL_line_frames   	dw ?
+	TL_static_frames 	dw ?
+	TL_col_outline   	db ?
+		db ?
+	TL_radius_max    	dw ?
+	TL_radius_cur    	dw ?
+	TL_radius_speed  	dw ?
 thicklaser_t ends
 
 public _thicklaser_template, _thicklasers
@@ -30141,8 +30141,8 @@ byte_25A02	db ?
 byte_25A03	db ?
 byte_25A04	db ?
 		db ?
-public _yuuka6_sprite_state, _yuuka6_phase2_fly_path
-_yuuka6_sprite_state	db ?
+public _yuuka6_sprite_flag, _yuuka6_phase2_fly_path
+_yuuka6_sprite_flag	db ?
 _yuuka6_phase2_fly_path	db ?
 byte_25A08	db ?
 		db ?
@@ -30334,7 +30334,7 @@ yuuka6_safetycircle_t struc
 		db ?
 	B6S_center              	Point <?>
 		db 8 dup(?)
-	B6S_shrink_frames       	dw ?
+	B6S_shrink_frame        	dw ?
 	B6S_radius_filled       	dw ?
 	B6S_radius_ring_distance	dw ?
 		db 4 dup(?)

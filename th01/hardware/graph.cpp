@@ -570,11 +570,12 @@ end:
 		grcg_off_func();
 	}
 
+#undef slope_y
 #undef plot_loop
 #undef unput32_at
-#undef clip_lerp_min
 #undef clip_lerp_max
-#undef slope_x
+#undef clip_lerp_min
+#undef lerp
 }
 
 void graph_r_lineloop_put(const screen_point_t point[], int count, vc_t col)

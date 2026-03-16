@@ -13,7 +13,7 @@ extern struct {
 		int16_t drift_angle;
 	} u1;
 	union {
-		int16_t homing_duration;
+		int16_t homing_frames;
 		Subpixel drift_speed;
 	} u2;
 
@@ -22,7 +22,7 @@ extern struct {
 	// field.
 	union {
 		int16_t turns_max;
-		int16_t drift_duration;
+		int16_t drift_frames;
 	} u3;
 } bullet_special;
 
@@ -35,8 +35,8 @@ enum bullet_group_or_special_motion_t {
 	// ------
 	// Supported for both pellets and 16×16 bullets, and subject to the same
 	// description that applies to TH01's `pellet_group_t`. The resulting
-	// angles and speeds can be freely offset via the angle and speed
-	// parameters to the bullet_add_*() functions.
+	// angles and speeds are further offset by the angle and speed parameters
+	// to the bullet_add_*() functions.
 
 	BG_1 = 0x20,
 	BG_1_AIMED = 0x19,
@@ -111,7 +111,7 @@ enum bullet_group_or_special_motion_t {
 	// Recalculates the bullet's velocity on every frame to exactly hit the
 	// player. Effectively ignores the passed [angle] value past the first
 	// frame.
-	// Resets to BG_NONE on the [bullet_special.u2.homing_duration]'th frame,
+	// Resets to BG_NONE on the [bullet_special.u2.homing_frames]'th frame,
 	// before adjusting the velocity.
 	BSM_HOMING = 0x81,
 
@@ -130,14 +130,14 @@ enum bullet_group_or_special_motion_t {
 	// Adds [bullet_special.u1.drift_angle] and [bullet_special.u2.drift_speed]
 	// to the bullet's angle and speed and recalculates its velocity on every
 	// frame.
-	// Resets to BG_NONE on the [bullet_special.u3.drift_duration]'th frame,
+	// Resets to BG_NONE on the [bullet_special.u3.drift_frames]'th frame,
 	// after adjusting the velocity.
 	BSM_DRIFT_ANGLE_AND_SPEED = 0x84,
 
 	// Adds [bullet_special.u1.drift_angle] to the bullet's angle, recalculates
 	// its velocity, then applies the BSM_CHASE calculation with
 	// [bullet_special.u2.drift_speed] as the chase speed on every frame.
-	// Resets to BG_NONE on the [bullet_special.u3.drift_duration]'th frame,
+	// Resets to BG_NONE on the [bullet_special.u3.drift_frames]'th frame,
 	// after adjusting the velocity.
 	BSM_DRIFT_ANGLE_CHASE = 0x85,
 

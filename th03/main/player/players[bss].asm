@@ -3,7 +3,7 @@ HALFHEARTS_MAX = 10
 ROUND_START_INVINCIBILITY_FRAMES = 50
 
 MISS_INVINCIBILITY_FRAMES = 110
-MISS_DAMAGE_MAX = 6
+HIT_DAMAGE_MAX = 6
 KNOCKBACK_FRAMES = 64
 
 SPELL_AUTOFIRE_FRAMES = 128
@@ -48,7 +48,7 @@ player_stuff_t struc
 	cpu_safety_frames dw ?
 	combo_bonus_max dw ?
 	combo_hits_max	db ?
-	miss_damage_next db ?
+	hit_damage_next	db ?
 	cpu_frame	 dw ?
 	gauge_attacks_fired db ?
 	boss_attacks_fired db ?

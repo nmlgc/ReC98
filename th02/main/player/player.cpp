@@ -135,7 +135,7 @@ void near player_miss_update_and_render(void)
 		),
 	};
 
-	if(miss_frames == 0) {
+	if(miss_frame == 0) {
 		snd_se_play(2);
 		miss_active = true;
 		stage_miss_count++;
@@ -155,18 +155,18 @@ void near player_miss_update_and_render(void)
 
 	player_topleft.x = *player_left_on_back_page;
 	player_topleft.y = *player_top_on_back_page;
-	miss_frames++;
-	if(miss_frames < KEYFRAME_PLAYCHAR_ANIM_DONE) {
+	miss_frame++;
+	if(miss_frame < KEYFRAME_PLAYCHAR_ANIM_DONE) {
 		static_assert(PLAYCHAR_ANIM_FRAMES == (MISS_ANIM_CELS * 4));
 
 		// ACTUAL TYPE: main_patnum_t
-		int patnum = (PAT_PLAYCHAR_MISS + (miss_frames >> 2));
+		int patnum = (PAT_PLAYCHAR_MISS + (miss_frame >> 2));
 
 		vram_y_t vram_top = scroll_screen_y_to_vram(
 			vram_top, *player_top_on_back_page
 		);
 		super_roll_put(*player_left_on_back_page, vram_top, patnum);
-	} else if(miss_frames == KEYFRAME_PLAYCHAR_ANIM_DONE) {
+	} else if(miss_frame == KEYFRAME_PLAYCHAR_ANIM_DONE) {
 		player_invincibility_time = MISS_INVINCIBILITY_FRAMES;
 		if(playperf > 2) {
 			playperf = 0;
@@ -178,7 +178,7 @@ void near player_miss_update_and_render(void)
 		}
 		player_miss_sparks_add(32);
 		if(lives == 0) {
-			miss_frames = 0;
+			miss_frame = 0;
 			items_miss_add_gameover = true;
 
 			// ZUN quirk: Not centered
@@ -194,7 +194,7 @@ void near player_miss_update_and_render(void)
 			// ZUN quirk: Not centered
 			items_miss_add(*player_left_on_back_page, *player_top_on_back_page);
 		}
-	} else if(miss_frames < KEYFRAME_RESPAWN) {
+	} else if(miss_frame < KEYFRAME_RESPAWN) {
 		// ZUN quirk: The only "death-induced hitbox shifting" that actually
 		// exists in the code. (The infamous one during the Extra Stage midboss
 		// is just players elevating happy collision detection accidents to a
@@ -210,7 +210,7 @@ void near player_miss_update_and_render(void)
 		// Also, this can and will move the player past [PLAYER_TOP_MAX] if the
 		// death occurred low enough.
 		*player_top_on_back_page += 4;
-	} else if(miss_frames == KEYFRAME_RESPAWN) {
+	} else if(miss_frame == KEYFRAME_RESPAWN) {
 		lives--;
 		hud_lives_put();
 
@@ -232,14 +232,14 @@ void near player_miss_update_and_render(void)
 		player_top_on_page[1] = player_top_on_page[0] = (
 			((PLAYFIELD_BOTTOM + PLAYFIELD_ROLL_MARGIN) - PLAYER_H) - 2
 		);
-	} else if(miss_frames < KEYFRAME_RESPAWN_DONE) {
+	} else if(miss_frame < KEYFRAME_RESPAWN_DONE) {
 		*player_top_on_back_page -= 2;
 		vram_y_t vram_top = scroll_screen_y_to_vram(
 			vram_top, *player_top_on_back_page
 		);
 		super_roll_put(*player_left_on_back_page, vram_top, PAT_PLAYCHAR_STILL);
 	} else {
-		miss_frames = 0;
+		miss_frame = 0;
 		miss_active = false;
 		player_is_hit = PLAYER_NOT_HIT;
 	}

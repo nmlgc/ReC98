@@ -1204,7 +1204,7 @@ void yuugenmagan_main(void)
 	// Compared to just reusing [invincibility_frame], this "copy" has the
 	// advantage of not being reset every 40 frames, and thus lasting the full
 	// EYE_TOGGLE_FRAMES.
-	static int after_hit_frames;
+	static int after_hit_frame;
 
 	static Pentagram pentagram_;
 
@@ -1828,7 +1828,7 @@ void yuugenmagan_main(void)
 			// change the final pattern, though.
 			pentagram_.angle = 0x00;
 
-			after_hit_frames = 0;
+			after_hit_frame = 0;
 			z_palette_set_all_show(stage_palette);
 			boss_palette_snap();
 		}
@@ -1850,22 +1850,22 @@ void yuugenmagan_main(void)
 		phase.frame_common();
 		u1.unused++;
 		eyes_foreach_if(eye_is_open_pedantic, locked_unput_and_put_8);
-		if(hit.invincible && (after_hit_frames == 0)) {
+		if(hit.invincible && (after_hit_frame == 0)) {
 			u3.eyes_open <<= 1;
-			after_hit_frames = 1;
+			after_hit_frame = 1;
 			if(u3.eyes_open == EF_RESET) {
 				u3.eyes_open = EF_WEST;
 			}
-		} else if(after_hit_frames > 0) {
+		} else if(after_hit_frame > 0) {
 			eyes_toggle_and_yokoshima_recolor(
 				(u3.eyes_open == EF_WEST) ? EF_NORTH : (u3.eyes_open >> 1),
 				u3.eyes_open,
 				COMPONENT_COUNT,
 				COMPONENT_COUNT,
-				after_hit_frames
+				after_hit_frame
 			);
-			if(after_hit_frames >= EYE_TOGGLE_FRAMES) {
-				after_hit_frames = 0;
+			if(after_hit_frame >= EYE_TOGGLE_FRAMES) {
+				after_hit_frame = 0;
 				u1.unused = 0;
 			}
 		} else {

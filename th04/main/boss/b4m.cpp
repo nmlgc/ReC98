@@ -52,7 +52,7 @@ struct bit_t {
 // State
 // -----
 
-#define flystep_pointreflected_frame boss_statebyte[13]
+#define flystep_pointreflected_tick boss_statebyte[13]
 
 extern uint8_t bits_alive;
 
@@ -64,7 +64,7 @@ extern screen_x_t bit_center_y[BIT_COUNT];
 // Game logic
 // ----------
 
-// On [flystep_pointreflected_frame] 0, this function sets up [boss] movement
+// On [flystep_pointreflected_tick] 0, this function sets up [boss] movement
 // towards the point reflection of Marisa's position across a fixed position
 // near the top of the sealed moon in the background. The velocity is
 // calculated to reach this exact point at [duration - 12], with Marisa braking
@@ -85,7 +85,7 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 		POINT_Y = TO_SP((PLAYFIELD_H * 7) / 23),
 		BRAKE_DURATION = 12,
 	};
-	if(flystep_pointreflected_frame == 0) {
+	if(flystep_pointreflected_tick == 0) {
 		boss.pos.velocity.x.v = (
 			(POINT_X - boss.pos.cur.x) / ((duration / 2) - (BRAKE_DURATION / 2))
 		);
@@ -93,12 +93,12 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 			(POINT_Y - boss.pos.cur.y) / ((duration / 2) - (BRAKE_DURATION / 2))
 		);
 	}
-	flystep_pointreflected_frame++;
-	if(flystep_pointreflected_frame >= (duration - BRAKE_DURATION)) {
+	flystep_pointreflected_tick++;
+	if(flystep_pointreflected_tick >= (duration - BRAKE_DURATION)) {
 		boss.pos.velocity.x.v /= 2;
 		boss.pos.velocity.y.v /= 2;
 	}
-	if(flystep_pointreflected_frame >= duration) {
+	if(flystep_pointreflected_tick >= duration) {
 		return true;
 	}
 	boss.pos.update_seg3();

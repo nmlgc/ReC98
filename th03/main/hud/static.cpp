@@ -1,5 +1,6 @@
 #include "th03/main/hud/static.hpp"
 #include "th03/main/player/stuff.hpp"
+#include "th03/main/player/gba.hpp"
 #include "th03/gaiji/gaiji.h"
 #include "th03/resident.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
@@ -127,18 +128,18 @@ void pascal hud_static_gauge_levels_put(pid2 pid)
 		x += (PLAYFIELD_W_BORDERED / GLYPH_HALF_W);
 	}
 
-	level = gauge_attack_level[pid];
+	level = gba_gauge_level[pid];
 	gaiji_putca(x, (PLAYFIELD_BOTTOM / GLYPH_H), (gpd_1 - 1 + level), TX_GREEN);
 	x += ((PLAYFIELD_W / GLYPH_HALF_W) - GAIJI_TRAM_W);
 
 	// This branch seems to confirm the interpretation that these digits
 	// display the *next* Boss Attack level, not the current one. If the level
 	// is already at the maximum, additional attacks won't increase it further.
-	level = boss_attack_level;
-	if(level >= BOSS_ATTACK_LEVEL_MAX) {
+	level = gba_boss_level;
+	if(level >= GBA_BOSS_LEVEL_MAX) {
 		// A bit brave to assume that [level] will never be greater than
-		// [BOSS_ATTACK_LEVEL_MAX]. On the other hand, it's great for debugging
-		// as any invalid state would render as a non-proportional-digit gaiji.
+		// [GBA_BOSS_LEVEL_MAX]. On the other hand, it's great for debugging as
+		// any invalid state would render as a non-proportional-digit gaiji.
 		level--;
 	}
 	gaiji_putca(x, (PLAYFIELD_BOTTOM / GLYPH_H), (gpd_1 + level), TX_RED);

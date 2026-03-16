@@ -322,7 +322,7 @@ void near box_1_to_0_animate(void)
 #if (GAME == 5)
 void pascal near box_wait_animate(int frames_to_wait)
 {
-	unsigned int frames_waited = 0;
+	unsigned int frame = 0;
 	bool16 ignore_frames = false;
 
 	while(1) {
@@ -359,10 +359,10 @@ void pascal near box_wait_animate(int frames_to_wait)
 		graph_gaiji_putc(
 			RETURN_LEFT,
 			cursor.y,
-			(ga_RETURN_KEY + ((frames_waited / 8) % RETURN_KEY_CELS)),
+			(ga_RETURN_KEY + ((frame / 8) % RETURN_KEY_CELS)),
 			V_WHITE
 		);
-		frames_waited++;
+		frame++;
 		if(!ignore_frames) {
 			frames_to_wait--;
 		}

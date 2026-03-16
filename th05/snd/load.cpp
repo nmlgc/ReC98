@@ -109,7 +109,7 @@ void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 	_asm { pop 	ds; }
 
 ret:
-	#undef func_local
 	#undef ext
+	#undef func_local
 	#undef _DI
 }

@@ -22,7 +22,7 @@ public @bullets_and_gather_invalidate$qv
 	cmp	[si+bullet_t.flag], F_FREE
 	jz	short @@pellet_next
 	if GAME eq 5
-		cmp	[si+bullet_t.spawn_state], BSS_GRAZED
+		cmp	[si+bullet_t.spawn_flag], BSF_GRAZED
 		jbe	short @@pellet_not_grazed
 		shl	_tile_invalidate_box, 1
 		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
@@ -53,7 +53,7 @@ public @bullets_and_gather_invalidate$qv
 @@bullet16_loop:
 	cmp	[si+bullet_t.flag], F_FREE
 	jz	short @@bullet16_next
-	cmp	[si+bullet_t.spawn_state], BSS_GRAZED
+	cmp	[si+bullet_t.spawn_flag], BSF_GRAZED
 	jbe	short @@bullet16_not_grazed
 	shl	_tile_invalidate_box, 1
 	call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]

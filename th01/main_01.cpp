@@ -494,13 +494,13 @@ int main_main(int, const char *[])
 
 		cardcombo_max = 0;
 		orb_in_portal = false;
-		bomb_frames = 0;
+		bomb_frame = 0;
 
 		if(mode_debug == true) {
 			debug_startup_delay();
 		}
 
-		frames_since_start_of_binary = 0;
+		frame_since_start_of_binary = 0;
 		orb_cur_left = ORB_LEFT_START;
 		orb_cur_top = ORB_TOP_START;
 
@@ -526,7 +526,7 @@ int main_main(int, const char *[])
 			input_ok = false;
 			paused = false;
 			hud_score_and_cardcombo_render();
-			bomb_doubletap_frames = (BOMB_DOUBLETAP_WINDOW * 3);
+			bomb_doubletap_frame = (BOMB_DOUBLETAP_WINDOW * 3);
 			obstacles_update_and_render(true);
 
 			// Play stage BGM. Why inside this loop though? The code would be
@@ -575,14 +575,14 @@ int main_main(int, const char *[])
 					player_unput_update_render();
 
 					frame_delay(1);
-					bomb_frames++;
+					bomb_frame++;
 				}
 			}
 
 			stage_wait_for_shot_to_begin = false;
 			input_shot = false;
 			irand_init(frame_rand);
-			bomb_doubletap_frames = BOMB_DOUBLETAP_WINDOW;
+			bomb_doubletap_frame = BOMB_DOUBLETAP_WINDOW;
 			first_stage_in_scene = false;
 			pellet_speed_raise_cycle = 3000; // ZUN bloat: Reassigned below
 
@@ -607,10 +607,10 @@ int main_main(int, const char *[])
 
 				player_unput_update_render();
 				items_unput_update_render();
-				frames_since_start_of_binary++;
+				frame_since_start_of_binary++;
 				orb_force_frame++;
-				bomb_frames++;
-				bomb_doubletap_frames++;
+				bomb_frame++;
+				bomb_doubletap_frame++;
 				if((frame_rand & 3) == 0) {
 					timer_tick_and_put();
 				}
@@ -699,7 +699,7 @@ int main_main(int, const char *[])
 			z_vsync_wait_and_scrollup(0);
 			resident->rand = frame_rand;
 			test_damage = false;
-			bomb_frames = 200;
+			bomb_frame = 200;
 			if((rem_lives <= 0) || stage_cleared) {
 				break;
 			}

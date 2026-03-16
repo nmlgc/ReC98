@@ -544,7 +544,7 @@ void game_switch(void)
 void MUSICROOM_DISTANCE musicroom_menu(void)
 {
 #if (GAME == 5)
-	int frames_since_last_input = 0;
+	int frame_since_last_input = 0;
 	uint8_t sel_prev;
 	track_id_at_top = 0;
 	track_playing = 0;
@@ -604,13 +604,13 @@ void MUSICROOM_DISTANCE musicroom_menu(void)
 				break;
 			}
 #if (GAME == 5)
-			if(frames_since_last_input >= 24) {
+			if(frame_since_last_input >= 24) {
 				if((key_det == INPUT_UP) || (key_det == INPUT_DOWN)) {
-					frames_since_last_input = 20;
+					frame_since_last_input = 20;
 					break;
 				}
 			}
-			frames_since_last_input++;
+			frame_since_last_input++;
 #endif
 			music_update_render_and_flip();
 		}
@@ -757,7 +757,7 @@ controls:
 		}
 		if(!key_det) {
 #if (GAME == 5)
-			frames_since_last_input = 0;
+			frame_since_last_input = 0;
 #endif
 			music_update_render_and_flip();
 			goto controls;

@@ -70,10 +70,10 @@ void near b6balls_update(void)
 			p->patnum_tiny = PAT_DECAY_B6BALL;
 			p->pos.velocity.x.v /= 2;
 			p->pos.velocity.y.v /= 2;
-			p->decay_frames = 0;
+			p->decay_frame = 0;
 		} else /* if(p->flag == B6BF_DECAY) */ {
-			p->decay_frames++;
-			if((p->decay_frames % 4) == 0) {
+			p->decay_frame++;
+			if((p->decay_frame % 4) == 0) {
 				p->patnum_tiny++;
 				if(p->patnum_tiny >= (PAT_DECAY_B6BALL_last + 1)) {
 					p->flag = B6BF_FREE;

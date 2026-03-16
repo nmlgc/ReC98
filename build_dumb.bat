@@ -27,8 +27,10 @@ mkdir th02\sprites %STDERR_IGNORE%
 mkdir th03\sprites %STDERR_IGNORE%
 mkdir th04\sprites %STDERR_IGNORE%
 mkdir th05\sprites %STDERR_IGNORE%
-echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -IPipeline/  -mt  -nobj/Pipeline/  Pipeline/grzview.cpp  th01/formats/grz.cpp  platform/x86real/pc98/palette.cpp  Pipeline/bmp2arrl.c  Pipeline/bmp2arr.c  Pipeline/zungen.c  Pipeline/comcstm.c>obj\batch000.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -G  -k-  -p  -x-  -IPipeline/  -mt  -nobj/Pipeline/  Pipeline/enedat.cpp  Pipeline/grzview.cpp  th01/formats/grz.cpp  platform/x86real/pc98/palette.cpp  Pipeline/bmp2arrl.c  Pipeline/bmp2arr.c  Pipeline/zungen.c  Pipeline/comcstm.c>obj\batch000.@c
 tcc @obj/batch000.@c
+echo -c -s -t c0t.obj obj\Pipeline\enedat.obj, bin\Pipeline\enedat.com, obj\Pipeline\enedat.map, emu.lib maths.lib ct.lib>obj\Pipeline\enedat.@l
+tlink @obj\Pipeline\enedat.@l
 echo -c -s -t c0t.obj obj\Pipeline\grzview.obj obj\Pipeline\grz.obj obj\Pipeline\palette.obj, bin\Pipeline\grzview.com, obj\Pipeline\grzview.map, bin\masters.lib emu.lib maths.lib ct.lib>obj\Pipeline\grzview.@l
 tlink @obj\Pipeline\grzview.@l
 echo -c -s -t c0t.obj obj\Pipeline\bmp2arrl.obj obj\Pipeline\bmp2arr.obj, bin\Pipeline\bmp2arr.com, obj\Pipeline\bmp2arr.map, emu.lib maths.lib ct.lib>obj\Pipeline\bmp2arr.@l
@@ -97,6 +99,7 @@ echo -c -s -E c0l.obj obj\th02\main.obj obj\th02\spark.obj obj\th02\spark_i.obj 
 tlink @obj\th02\debloatm.@l
 bin\Pipeline\bmp2arr.com -q -i th03/sprites/score.bmp -o th03/sprites/score.asp -sym _sSCORE_FONT -of asm -sw 8 -sh 8 -u
 bin\Pipeline\bmp2arr.com -q -i th03/sprites/flake.bmp -o th03/sprites/flake.asp -sym _sFLAKE -of asm -sw 16 -sh 8
+bin\Pipeline\bmp2arr.com -q -i th03/sprites/pellet.bmp -o th03/sprites/pellet.asp -sym _sPELLET -of asm -sw 32 -sh 4
 echo -c -s -t -3  obj\th03\zunsp.obj, bin\th03\zunsp.com, obj\th03\zunsp.map, >obj\th03\zunsp.@l
 tlink @obj\th03\zunsp.@l
 echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=3  -mt  -nobj/th03/  th03/res_yume.cpp>obj\batch007.@c
@@ -116,10 +119,10 @@ echo -c -s -E c0l.obj obj\platform\cutscene.obj obj\platform\font.obj obj\platfo
 echo obj\th03\inp_m_w.obj obj\th03\inp_wait.obj obj\th03\input_s.obj obj\th03\snd_dlym.obj obj\th03\snd_kaja.obj obj\th03\snd_se.obj obj\th03\pi_mask.obj obj\th03\vector.obj, bin\th03\debloat.exe, obj\th03\debloat.map, emu.lib mathl.lib cl.lib>>obj\th03\debloat.@l
 tlink @obj\th03\debloat.@l
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03_main.asm obj\th03\main.obj
-echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=3  -ml  -DBINARY='M'  -nobj/th03/  th03/playfld.cpp  th03/hitcirc.cpp  th03/hud_stat.cpp  th03/player_m.cpp  th03/main_010.cpp  th03/main_011.cpp  th03/polar.cpp  th03/pi_load.cpp  th03/mrs.cpp  th03/sprite16.cpp>obj\batch009.@c
+echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=3  -ml  -DBINARY='M'  -nobj/th03/  th03/playfld.cpp  th03/hitcirc.cpp  th03/hud_stat.cpp  th03/player_m.cpp  th03/main_010.cpp  th03/p_shot.cpp  th03/polar.cpp  th03/pi_load.cpp  th03/bullet.cpp  th03/e_enemy.cpp  th03/hitbox.cpp  th03/p_combo.cpp  th03/p_gauge.cpp  th03/e_expl.cpp  th03/e_fireb.cpp  th03/p_exatt.cpp  th03/mrs.cpp  th03/sprite16.cpp>obj\batch009.@c
 tcc @obj/batch009.@c
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\collmap.asm obj\th03\collmap.obj
-echo -c -s -E c0l.obj obj\th03\main.obj obj\th03\playfld.obj obj\th03\cfg_lres.obj obj\th03\hitcirc.obj obj\th03\hud_stat.obj obj\th03\player_m.obj obj\th03\main_010.obj obj\th03\main_011.obj obj\th02\vplanset.obj obj\th02\snd_mode.obj obj\th02\snd_pmdr.obj obj\th03\vector.obj obj\th03\exit.obj obj\th03\polar.obj obj\th02\frmdelay.obj obj\th03\input_s.obj obj\th02\snd_se_r.obj obj\th03\snd_se.obj obj\th03\snd_kaja.obj obj\th03\initmain.obj obj\th03\pi_load.obj obj\th03\inp_m_w.obj obj\th03\collmap.obj obj\th03\hfliplut.obj obj\th03\mrs.obj obj\th03\sprite16.obj, bin\th03\debloatm.exe, obj\th03\debloatm.map, emu.lib mathl.lib cl.lib>obj\th03\debloatm.@l
+echo -c -s -E c0l.obj obj\th03\main.obj obj\th03\playfld.obj obj\th03\cfg_lres.obj obj\th03\hitcirc.obj obj\th03\hud_stat.obj obj\th03\player_m.obj obj\th03\main_010.obj obj\th03\p_shot.obj obj\th02\vplanset.obj obj\th02\snd_mode.obj obj\th02\snd_pmdr.obj obj\th03\vector.obj obj\th03\exit.obj obj\th03\polar.obj obj\th02\frmdelay.obj obj\th03\input_s.obj obj\th02\snd_se_r.obj obj\th03\snd_se.obj obj\th03\snd_kaja.obj obj\th03\initmain.obj obj\th03\pi_load.obj obj\th03\inp_m_w.obj obj\th03\collmap.obj obj\th03\bullet.obj obj\th03\e_enemy.obj obj\th03\hitbox.obj obj\th03\p_combo.obj obj\th03\p_gauge.obj obj\th03\e_expl.obj obj\th03\e_fireb.obj obj\th03\p_exatt.obj obj\th03\hfliplut.obj obj\th03\mrs.obj obj\th03\sprite16.obj, bin\th03\debloatm.exe, obj\th03\debloatm.map, emu.lib mathl.lib cl.lib>obj\th03\debloatm.@l
 tlink @obj\th03\debloatm.@l
 bin\Pipeline\bmp2arr.com -q -i th04/sprites/pelletbt.bmp -o th04/sprites/pelletbt.asp -sym _sPELLET_BOTTOM -of asm -sw 8 -sh 4 -pshf outer
 bin\Pipeline\bmp2arr.com -q -i th04/sprites/pointnum.bmp -o th04/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner

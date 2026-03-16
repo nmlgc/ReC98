@@ -3587,7 +3587,7 @@ sub_100C6	proc near
 loc_100DE:
 		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	loc_1016B
-		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
+		cmp	[si+bullet_t.spawn_flag], BSF_CLOUD_BACKWARDS
 		ja	short loc_10108
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
@@ -3631,9 +3631,9 @@ loc_10146:
 		mov	di, (PAT_CLOUD_BULLET16_RED - 1)
 
 loc_10149:
-		mov	al, [si+bullet_t.spawn_state]
+		mov	al, [si+bullet_t.spawn_flag]
 		mov	ah, 0
-		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
+		mov	bx, (BSF_CLOUD_FRAMES / BULLET_CLOUD_CELS)
 		cwd
 		idiv	bx
 		add	di, ax
@@ -3662,9 +3662,9 @@ loc_1018A:
 		mov	bx, _pellet_clouds_render_count
 		add	bx, bx
 		mov	si, _pellet_clouds_render[bx]
-		mov	al, [si+bullet_t.spawn_state]
+		mov	al, [si+bullet_t.spawn_flag]
 		mov	ah, 0
-		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
+		mov	bx, (BSF_CLOUD_FRAMES / BULLET_CLOUD_CELS)
 		cwd
 		idiv	bx
 		add	ax, (PAT_CLOUD_PELLET - 1)
@@ -19568,7 +19568,7 @@ include th04/main/pointnum/pointnum[data].asm
 include th04/sprites/pointnum.asp
 include th05/formats/bb_playchar[data].asm
 public _shinki_bg_linesets_zoomed_out, _shinki_bg_type_a_particles_alive
-public _shinki_bg_type_b_initialized, _shinki_bg_spinline_frames
+public _shinki_bg_type_b_initialized, _shinki_bg_spinline_frame
 public _shinki_bg_type_c_initialized
 public _shinki_bg_type_d_initialized
 _shinki_bg_linesets_zoomed_out	db 0
@@ -19576,12 +19576,12 @@ _shinki_bg_linesets_zoomed_out	db 0
 _shinki_bg_type_a_particles_alive	dw (-1 and 255)
 _shinki_bg_type_b_initialized	db 0
 		db 0
-_shinki_bg_spinline_frames	dw 0
+_shinki_bg_spinline_frame	dw 0
 _shinki_bg_type_c_initialized	db 0
 _shinki_bg_type_d_initialized	db 0
-public _exalice_hexagrams_state
-_exalice_hexagrams_state	db 0
-		db 0
+public _hexagrams_flag
+_hexagrams_flag	db 0
+	evendata
 include th04/main/player/shot_laser[data].asm
 include th05/formats/bb_cheeto[data].asm
 ; char aMaine[]
@@ -20094,7 +20094,7 @@ sword_t struc
 	twirl_time	dw ?
 		dw ?
 	SWORD_patnum_tiny	dw ?
-	SWORD_decay_frames	dw ?
+	SWORD_decay_frame	dw ?
 		dw ?
 	SWORD_speed	db ?
 		db ?

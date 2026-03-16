@@ -1,4 +1,8 @@
-#include "platform.h"
+#include "th01/math/subpixel.hpp"
+
+// Current VS Mode round, or the number of times the current Story Mode stage
+// has been repeated.
+extern uint8_t round_id;
 
 // Round-relative frame counter. Resets to 0 when winning or losing.
 extern unsigned long round_frame;

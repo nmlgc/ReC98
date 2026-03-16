@@ -337,12 +337,12 @@ inline void special_start_shot(
 
 void player_unput_update_render(bool16 do_not_reset_player_state)
 {
-	enum bomb_state_t {
-		BS_NONE = 0,
-		BS_START = 2,
-		BS_ACTIVE = 3,
+	enum bomb_flag_t {
+		BF_NONE = 0,
+		BF_START = 2,
+		BF_ACTIVE = 3,
 
-		_bomb_state_t_FORCE_INT16 = 0x7FFF
+		_bomb_flag_t_FORCE_INT16 = 0x7FFF
 	};
 
 	static struct {
@@ -360,8 +360,8 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 	static int8_t mode = M_REGULAR; // mode_t
 	static x_direction_t dash_direction = X_LEFT;
-	static int8_t bomb_state = BS_NONE; // ACTUAL TYPE: bomb_state_t
-	static bool bombing = false; // ZUN bloat: Already covered by bomb_state_t
+	static int8_t bomb_flag = BF_NONE; // ACTUAL TYPE: bomb_flag_t
+	static bool bombing = false; // ZUN bloat: Already covered by bomb_flag_t
 	static int8_t combo_enabled = false; // ACTUAL TYPE: bool
 	static int8_t swing_deflection_frames;
 	static submode_t submode;
@@ -375,7 +375,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		player_48x32_cel_t new_48x32;
 	} cel;
 	bool16 bomb_done;
-	int special_duration;
+	int special_frames;
 
 	// YOU'VE ALREADY GOT A VARIABLE FOR THIS
 	#define prev_cel_48x48	static_cast<player_48x48_cel_t>(prev)
@@ -388,7 +388,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		mode = M_REGULAR;
 		submode.initial = -1;
 		dash_direction = X_LEFT;
-		bomb_state = BS_NONE;
+		bomb_flag = BF_NONE;
 		bomb_damaging = false;
 		player_sliding = false;
 		player_deflecting = false;
@@ -407,37 +407,37 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 	dash_cycle.v++;
 	dash_cycle.v &= (DASH_FRAMES - 1);
-	if(((rem_bombs != 0) || bombing) && (bomb_state >= BS_START)) {
-		if(bomb_state == BS_START) {
-			bomb_frames = 0;
-			bomb_state = BS_ACTIVE;
+	if(((rem_bombs != 0) || bombing) && (bomb_flag >= BF_START)) {
+		if(bomb_flag == BF_START) {
+			bomb_frame = 0;
+			bomb_flag = BF_ACTIVE;
 			player_deflecting = true;
 			bombing = true;
 			rem_bombs--;
 			hud_bombs_put(rem_bombs + 1);
 		}
 		orb_player_hittest(1);
-		bomb_done = bomb_update_and_render(bomb_frames);
-		bomb_state = (bomb_done == false) ? BS_ACTIVE : BS_NONE;
+		bomb_done = bomb_update_and_render(bomb_frame);
+		bomb_flag = (bomb_done == false) ? BF_ACTIVE : BF_NONE;
 		if(bomb_done) {
 			bombing = false;
 			input_bomb = false;
 			player_put(PTN_MIKO_L);
 			ptn_id_prev = PTN_MIKO_L;
-		} else if(bomb_frames > 60) {
+		} else if(bomb_frame > 60) {
 			player_put(PTN_MIKO_L_CAST);
 		}
 		input_shot = false;
 		input_strike = false;
 		mode = M_REGULAR;
-		if(bomb_state == BS_NONE) {
+		if(bomb_flag == BF_NONE) {
 			player_deflecting = false;
 		}
 	} else if(
 		// Yes, not `< M_SPECIAL_FIRST`.
 		(input_bomb == true) && (mode != M_SPECIAL_FIRST) && (rem_bombs != 0)
 	) {
-		bomb_state = BS_START;
+		bomb_flag = BF_START;
 		input_bomb = false;
 		pellet_speed_raise(0.025f);
 	} else if(mode == M_REGULAR) {
@@ -534,7 +534,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			if(mode_frame.v == 0) {
 				player_shots_add_centered();
 			} else if(mode_frame.v >= 2) {
-				bomb_frames = 0;
+				bomb_frame = 0;
 				mode = M_REGULAR;
 				input_shot = false;
 				submode.direction = SD_NO_ORB_REPEL_THEN_STATIONARY_BUG;
@@ -547,7 +547,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			ptn_id_prev = mode_frame.to_dash_cel(PTN_MIKO_R_DASH_SHOOT);
 			if(mode_frame.v >= 1) {
 				player_shots_add_centered();
-				bomb_frames = 0;
+				bomb_frame = 0;
 				input_shot = false;
 				mode = M_REGULAR;
 			}
@@ -559,7 +559,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			ptn_id_prev = mode_frame.to_dash_cel(PTN_MIKO_L_DASH_SHOOT);
 			if(mode_frame.v >= 1) {
 				player_shots_add_centered();
-				bomb_frames = 0;
+				bomb_frame = 0;
 				input_shot = false;
 				mode = M_REGULAR;
 			}
@@ -603,7 +603,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 					mode_frame.v = 0;
 					input_strike = false;
-					bomb_frames = 0;
+					bomb_frame = 0;
 					player_invincible_against_orb = false;
 				}
 			}
@@ -619,7 +619,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 					return;
 				}
 				input_strike = false;
-				bomb_frames = 0;
+				bomb_frame = 0;
 				combo_enabled = false; // ZUN bloat: Redundant, see below
 				player_invincible_against_orb = false;
 			}
@@ -635,7 +635,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 					return;
 				}
 				input_strike = false;
-				bomb_frames = 0;
+				bomb_frame = 0;
 				// No `[combo_enabled] = false` here? Turns out it doesn't
 				// matter: We're back to M_REGULAR anyway, and [combo_enabled]
 				// is already set to `false` at the beginning of a slide.
@@ -746,11 +746,11 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			if((mode_frame.v >= 20) && !input_strike && !input_shot)  {
 				combo_enabled = true;
 			}
-			special_duration = 28;
+			special_frames = 28;
 			break;
 		case (SS_SLIDEKICK | X_RIGHT):
 		case (SS_SLIDEKICK | X_LEFT):
-			special_duration = 13;
+			special_frames = 13;
 			break;
 		case (SS_SHOTCOMBO | X_RIGHT):
 		case (SS_SHOTCOMBO | X_LEFT):
@@ -764,11 +764,11 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			if(mode_frame.v == 4) {
 				player_deflecting = false;
 			}
-			special_duration = SHOTCOMBO_FRAMES;
+			special_frames = SHOTCOMBO_FRAMES;
 		}
 
 		mode_frame.v++;
-		if(mode_frame.v > special_duration) {
+		if(mode_frame.v > special_frames) {
 			// Special attack is done
 
 			// We're not *actually* about to lose the information on which
@@ -796,7 +796,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				break;
 			}
 
-			bomb_frames = 0;
+			bomb_frame = 0;
 			mode_frame.v = 0;
 			player_sliding = false;
 			player_deflecting = false;

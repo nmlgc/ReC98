@@ -155,7 +155,7 @@ enum boss_defeat_frames_t {
 	// animation, which in turn depends on its (hardcoded) amount of gaiji cels.
 	BDF_DIALOG = (GAME == 5),
 	BDF_FADEOUT = 416,
-	BDF_NEXT_STAGE = (BDF_FADEOUT + OVERLAY_FADE_DURATION),
+	BDF_NEXT_STAGE = (BDF_FADEOUT + OVERLAY_FADE_FRAMES),
 };
 
 // A dumb helper function…

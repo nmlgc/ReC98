@@ -390,14 +390,25 @@ These cases should gradually be removed as development goes along, though.
 * ASM file extensions: `.asm` if they emit code, `.inc` if they don't
 * Macros defining the number of instances of an entity: `<ENTITY>_COUNT`
 * Macros defining the number of distinct sprites in an animation: `*_CELS`
-* Frame variables counting from a frame count to 0: `*_time`
-* Frame variables and other counters starting from 0: `*_frames`
+
+* Frame amounts corresponding to hardware frames at the native 56.423 FPS rate:
+  * Sums of frames that don't necessarily have to be continuous: `*_frames`
+  * Continuously *incremented* frame counters, starting from 0: `*_frame`
+  * Continuously *decremented* frame counters, ending at 0: `*_time`
+  * Frame counters in scenes with intentionally reduced frame rates should get
+    a suffix that indicates the fraction (`*_half`, `*_third`, etc.)
+
+* Frame amounts that don't directly correspond to hardware frames:
+  * Sums: `*_duration`
+  * *Incremented* counters starting from 0: `*_tick`
+
 * Blocking main functions of interactive menus with their own `frame_delay()`
   calls: `*_menu()`
 * Functions that show multi-frame animations in a blocking way, using their own
   `frame_delay()` calls: `*_animate`
 * Generic 0-based IDs: `*_id`
 * Generic 1-based IDs, with 0 indicating some sort of absence: `*_num`
+* State machine enums with discrete values: `*_flag`
 * Random and incomplete collections of data related to a specific concept:
   `*_stuff`
   * Can be used for both structures and functions.

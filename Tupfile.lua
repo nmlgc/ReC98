@@ -203,6 +203,8 @@ local pipeline_cfg = optimized_cfg:branch(Subdir("Pipeline/"), {
 local pipeline_tool_cfg = pipeline_cfg:branch(MODEL_TINY)
 local pipeline_stub_cfg = pipeline_cfg:branch(MODEL_ASM)
 
+pipeline_tool_cfg:link("enedat", { "Pipeline/enedat.cpp" })
+
 pipeline_tool_cfg:link("grzview", {
 	"Pipeline/grzview.cpp",
 	"th01/formats/grz.cpp",
@@ -601,6 +603,10 @@ local th03_sprites = Sprites({
 	-- ZUN bloat: Investing 32 bytes just so that the individual rows can be
 	-- loaded with a 16-bit `MOV`…
 	{ "th03/sprites/flake.bmp", "asm", "sFLAKE", 16, 8 },
+
+	-- Double-preshifting just to ensure word-aligned VRAM writes? Was this
+	-- really worth the added 384 bytes?
+	{ "th03/sprites/pellet.bmp", "asm", "sPELLET", 32, 4 },
 })
 
 th03:zungen("bin/th03/zun.com", {
@@ -666,14 +672,17 @@ obj += {
 th03:branch(MODEL_LARGE):link("debloat", obj)
 
 obj = {
-	{ "th03_main.asm", extra_inputs = th03_sprites["score"] },
+	{ "th03_main.asm", extra_inputs = {
+		th03_sprites["pellet"],
+		th03_sprites["score"],
+	} },
 	"th03/playfld.cpp",
 	"th03/cfg_lres.cpp",
 	"th03/hitcirc.cpp",
 	"th03/hud_stat.cpp",
 	"th03/player_m.cpp",
 	"th03/main_010.cpp",
-	"th03/main_011.cpp",
+	"th03/p_shot.cpp",
 	"th02/vplanset.cpp",
 	"th02/snd_mode.c",
 	"th02/snd_pmdr.c",
@@ -689,6 +698,14 @@ obj = {
 	"th03/pi_load.cpp",
 	"th03/inp_m_w.cpp",
 	"th03/collmap.asm",
+	"th03/bullet.cpp",
+	"th03/e_enemy.cpp",
+	"th03/hitbox.cpp",
+	"th03/p_combo.cpp",
+	"th03/p_gauge.cpp",
+	"th03/e_expl.cpp",
+	"th03/e_fireb.cpp",
+	"th03/p_exatt.cpp",
 	"th03/hfliplut.asm",
 	"th03/mrs.cpp",
 	"th03/sprite16.cpp",

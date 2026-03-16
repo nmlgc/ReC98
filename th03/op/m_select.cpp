@@ -572,7 +572,7 @@ bool near select_menu(select_mode_t mode)
 	while(vsync_Count1 < vsyncs_per_loop) {
 	}
 
-	unsigned int fadeout_frames = 0;
+	unsigned int fadeout_frame_third = 0;
 	while(1) {
 		graph_clear();
 		select_curves_update_and_render();
@@ -632,7 +632,7 @@ bool near select_menu(select_mode_t mode)
 
 		// Well, the original game also processed all the input on the 33th
 		// frame, most importantly including INPUT_CANCEL...
-		if(fadeout_frames > 32) {
+		if(fadeout_frame_third > 32) {
 			break;
 		}
 
@@ -660,14 +660,14 @@ bool near select_menu(select_mode_t mode)
 			// Since we moved this branch from before VSync to after VSync to
 			// fix tearing, we need to increment first to avoid the fade being
 			// one frame behind.
-			fadeout_frames++;
+			fadeout_frame_third++;
 
 			// ZUN quirk: Should have maybe been `>` rather than `>=`. Since
-			// [fadeout_frames] is technically off-by-one (frame 0 is the last
+			// [fadeout_frame_third] is technically off-by-one (frame 0 is the last
 			// frame of palette_white_in()), this sets the palette tone to 104
 			// on frame #15.
-			if(fadeout_frames >= 16) {
-				palette_settone(200 - (fadeout_frames * 6));
+			if(fadeout_frame_third >= 16) {
+				palette_settone(200 - (fadeout_frame_third * 6));
 			}
 		}
 

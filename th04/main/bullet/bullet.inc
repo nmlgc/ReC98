@@ -5,26 +5,26 @@ include th02/main/entity.inc
 
 ; States and modes
 ; ----------------
-BSS_CLOUD_FRAMES = 16
-BMS_DECAY_FRAMES = 16
-BMS_DECELERATE_BASE_SPEED = (4 shl 4) + 8
-BMS_DECELERATE_THRESHOLD = (BMS_DECELERATE_BASE_SPEED - 8)
-BMS_DECELERATE_FRAMES = 32
+BSF_CLOUD_FRAMES = 16
+BMF_DECAY_FRAMES = 16
+BMF_DECELERATE_BASE_SPEED = (4 shl 4) + 8
+BMF_DECELERATE_THRESHOLD = (BMF_DECELERATE_BASE_SPEED - 8)
+BMF_DECELERATE_FRAMES = 32
 
-; bullet_spawn_state_t
-BSS_GRAZEABLE = 0
-BSS_GRAZED = 1
-BSS_ACTIVE = 2
-BSS_CLOUD_BACKWARDS = 3
-BSS_CLOUD_FORWARDS = 4
-BSS_CLOUD_END = (BSS_CLOUD_FORWARDS + BSS_CLOUD_FRAMES)
+; bullet_spawn_flag_t
+BSF_GRAZEABLE = 0
+BSF_GRAZED = 1
+BSF_ACTIVE = 2
+BSF_CLOUD_BACKWARDS = 3
+BSF_CLOUD_FORWARDS = 4
+BSF_CLOUD_END = (BSF_CLOUD_FORWARDS + BSF_CLOUD_FRAMES)
 
-; bullet_move_state_t
-BMS_DECELERATE = 0
-BMS_SPECIAL = 1
-BMS_REGULAR = 2
-BMS_DECAY = 4
-BMS_DECAY_END = (BMS_DECAY + BMS_DECAY_FRAMES)
+; bullet_move_flag_t
+BMF_DECELERATE = 0
+BMF_SPECIAL = 1
+BMF_REGULAR = 2
+BMF_DECAY = 4
+BMF_DECAY_END = (BMF_DECAY + BMF_DECAY_FRAMES)
 
 ; bullet_special_motion_t
 _bullet_special_motion_t_offset = ((GAME - 5) * 81h) and 0FFh
@@ -57,8 +57,8 @@ bullet_t struc
 		db ?
 	speed_cur	db ?
 	BULLET_angle	db ?
-	spawn_state	db ?
-	move_state	db ?
+	spawn_flag	db ?
+	move_flag	db ?
 	special_motion	db ?
 	speed_final	db ?
 

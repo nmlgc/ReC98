@@ -7,8 +7,6 @@
 #include "th01/formats/pf.hpp"
 #include "platform/array.hpp"
 
-#undef arc_file_read
-
 static const int FILE_COUNT = 64;
 
 static const uint16_t PF_TYPE_COMPRESSED = 0x9595; // "封" in Shift-JIS

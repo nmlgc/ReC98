@@ -93,8 +93,8 @@ static const uint8_t MISS_INVINCIBILITY_FRAMES = 220;
 // [player_invincibility_time].
 extern bool player_invincible_via_bomb;
 
-extern uint8_t miss_frames;
-extern bool miss_active; // ZUN bloat: Same as ([miss_frames] != 0)
+extern uint8_t miss_frame;
+extern bool miss_active; // ZUN bloat: Same as ([miss_frame] != 0)
 #endif
 
 static const int SHOT_LEVEL_MAX = 9;
