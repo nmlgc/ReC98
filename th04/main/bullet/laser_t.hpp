@@ -18,7 +18,7 @@ struct thicklaser_t {
 	/* ------------------------- */ int8_t unused_1;
 	SPPoint origin;
 	/* ------------------------- */ int8_t unused_2;
-	int cur_flag_frames;
+	int cur_flag_frame;
 
 	// Frames to spend in TF_LINE before transitioning to TF_GROW.
 	int line_frames;

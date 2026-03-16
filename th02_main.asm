@@ -2399,7 +2399,7 @@ loc_C5C2:
 		mov	_player_invincible_via_bomb, 0
 		mov	_quit, 0
 		mov	_stage_miss_count, 0
-		mov	_miss_frames, 0
+		mov	_miss_frame, 0
 		mov	byte_205DF, 8
 		mov	byte_205E0, 0
 		mov	_player_is_hit, 0
@@ -6156,7 +6156,7 @@ loc_102A9:
 		mov	byte_2066A, 0
 		mov	_boss_damage, 0
 		mov	byte_2066B, 0
-		mov	_sigma_frames, 0
+		mov	_sigma_frame, 0
 		mov	word_20686, 0
 		pop	si
 		pop	bp
@@ -6695,17 +6695,17 @@ midboss3_1120F	proc near
 		mov	[bp+@@patnum], 10
 		mov	bx, si
 		add	bx, bx
-		mov	ax, _midboss3_kill_frames[bx]
+		mov	ax, _midboss3_kill_frame[bx]
 		mov	bx, 6
 		cwd
 		idiv	bx
 		add	[bp+@@patnum], ax
 		mov	bx, si
 		add	bx, bx
-		inc	_midboss3_kill_frames[bx]
+		inc	_midboss3_kill_frame[bx]
 		mov	bx, si
 		add	bx, bx
-		cmp	_midboss3_kill_frames[bx], 48
+		cmp	_midboss3_kill_frame[bx], 48
 		jl	short loc_112BA
 		mov	bx, si
 		shl	bx, 2
@@ -6724,7 +6724,7 @@ midboss3_1120F	proc near
 		call	@sparks_add$qiuiiii
 		mov	bx, si
 		add	bx, bx
-		mov	_midboss3_kill_frames[bx], 0
+		mov	_midboss3_kill_frame[bx], 0
 		mov	midboss3_flag[si], M3F_REMOVED
 		mov	word_205D8, 0FFFFh
 		mov	word_205DA, 0FFFFh
@@ -15878,7 +15878,7 @@ loc_16948:
 		mov	ax, [bx]
 		mov	point_254E6.y, ax
 		call	sigma_15907
-		inc	_sigma_frames
+		inc	_sigma_frame
 
 loc_16962:
 		call	sigma_1566F
@@ -23679,7 +23679,7 @@ marisa_1B35F	proc near
 		mov	ah, 0
 		mov	bullet_special_drift_angle, ax
 		mov	bullet_special_drift_speed, 2
-		mov	bullet_special_drift_duration, 128
+		mov	bullet_special_drift_frames, 128
 		mov	al, byte_1EEA4
 		mov	ah, 0
 		imul	ax, -1
@@ -24706,7 +24706,7 @@ loc_1BC60:
 		cbw
 		mov	bullet_special_drift_angle, ax
 		mov	bullet_special_drift_speed, 0
-		mov	bullet_special_drift_duration, 64
+		mov	bullet_special_drift_frames, 64
 		mov	al, byte_1EEA5
 		cbw
 		imul	ax, -1
@@ -26425,8 +26425,8 @@ byte_1EB0E	db -1
 _POWER_RESET_FOR	db 1, 1, 4, 8, 16, 24, 32, 40, 52, 64
 	evendata
 
-public _midboss3_kill_frames
-_midboss3_kill_frames	dw MIDBOSS3_COUNT dup(0)
+public _midboss3_kill_frame
+_midboss3_kill_frame	dw MIDBOSS3_COUNT dup(0)
 
 		db    0
 		db    0
@@ -27036,12 +27036,12 @@ _player_option_left_topleft	Point 2 dup(<?>)
 playchar_shot_func	dw ?
 include th01/main/player_is_hit[bss].asm
 public _player_invincibility_time, _player_invincible_via_bomb
-public _quit, _stage_miss_count, _miss_frames
+public _quit, _stage_miss_count, _miss_frame
 _player_invincibility_time	db ?
 _player_invincible_via_bomb	db ?
 _quit	db ?
 _stage_miss_count	db ?
-_miss_frames	db ?
+_miss_frame	db ?
 include th02/main/player/speed[bss].asm
 byte_2060E	db ?
 byte_2060F	db ?
@@ -27107,8 +27107,8 @@ group_20670	db ?
 byte_20671	db ?
 byte_20672	db ?
 		db 15 dup(?)
-public _sigma_frames
-_sigma_frames	dd ?
+public _sigma_frame
+_sigma_frame	dd ?
 word_20686	dw ?
 
 BULLET_COUNT = 150
@@ -27145,12 +27145,12 @@ bullet_special_gravity_speed label word
 bullet_special_drift_angle label word
 	dw ?
 
-bullet_special_homing_duration label word
+bullet_special_homing_frames label word
 bullet_special_drift_speed label word
 	dw ?
 
 bullet_special_turns_max label word
-bullet_special_drift_duration label word
+bullet_special_drift_frames label word
 	dw ?
 
 _rank_base_speed	db ?
@@ -27199,7 +27199,7 @@ _item_p_top     	dw ?
 
 public _point_items_collected, _item_semirandom_ring_p, _items_miss_add_gameover
 public _item_semirandom_cycle, _item_score_this_frame, _item_collect_skill
-public _item_frames_unused
+public _item_frame_unused
 _point_items_collected	dw ?
 _item_semirandom_ring_p	db ?
 _items_miss_add_gameover	db ?
@@ -27208,7 +27208,7 @@ _item_semirandom_cycle	db ?
 _item_score_this_frame	dd ?
 _item_collect_skill	db ?
 		db ?
-_item_frames_unused	dw ?
+_item_frame_unused	dw ?
 
 public _score_delta, _score_delta_transferred_prev, _shot_level
 _score_delta      	dd ?

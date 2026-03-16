@@ -1,5 +1,5 @@
-public HITCOMBO_COMMIT
-hitcombo_commit	proc near
+public @COMBO_ADD$QUCUCUI
+@combo_add$qucucui proc near
 
 @@bonus		= word ptr  4
 @@slot		= byte ptr  6
@@ -14,11 +14,11 @@ hitcombo_commit	proc near
 	mov	dh, 0
 	add	ax, dx
 	mov	bx, ax
-	mov	al, _hitcombo_ring[bx]
+	mov	al, _chains.CHAIN_hits[bx]
 	push	ax
 	push	word ptr [bp+@@pid]
 	push	[bp+@@bonus]
-	nopcall	combo_add
+	nopcall	@combo_add_raw$qucucui
 	pop	bp
 	retn	6
-hitcombo_commit	endp
+@combo_add$qucucui endp

@@ -59,7 +59,7 @@ void pascal near bullet_turn_x(bullet_t near &bullet)
 	bullet.u1.turns_done++;
 	bullet.angle = (0x80 - bullet.angle);
 	if(bullet.u1.turns_done >= bullet_special.turns_max) {
-		bullet.move_state = BMS_REGULAR;
+		bullet.move_flag = BMF_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
 	bullet_update_patnum(bullet);
@@ -70,7 +70,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 	bullet.u1.turns_done++;
 	bullet.angle = (/* 0x00 */ - bullet.angle);
 	if(bullet.u1.turns_done >= bullet_special.turns_max) {
-		bullet.move_state = BMS_REGULAR;
+		bullet.move_flag = BMF_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
 	bullet_update_patnum(bullet);
@@ -80,7 +80,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 	bullet_update_patnum(bullet); \
 	bullet.speed_cur = bullet.speed_final; \
 	if(bullet.u1.turns_done >= bullet_special.turns_max) { \
-		bullet.move_state = BMS_REGULAR; \
+		bullet.move_flag = BMF_REGULAR; \
 	} \
 	bullet_velocity_set_from_angle_and_speed(bullet);
 
@@ -156,7 +156,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		} else {
 			bullet.angle = bullet.u2.angle.target;
 			bullet.speed_cur.v = bullet.speed_final.v;
-			bullet.move_state = BMS_REGULAR;
+			bullet.move_flag = BMF_REGULAR;
 			bullet_velocity_set_from_angle_and_speed(bullet);
 		}
 		break;
@@ -229,8 +229,8 @@ void bullets_update(void)
 			}
 			bullets_seen++;
 			if(bullet_clear_time) {
-				if(bullet->move_state < BMS_DECAY) {
-					bullet->move_state = BMS_DECAY;
+				if(bullet->move_flag < BMF_DECAY) {
+					bullet->move_flag = BMF_DECAY;
 					bullet->patnum = is_bullet16(i)
 						? PAT_DECAY_BULLET16
 						: PAT_DECAY_PELLET;
@@ -241,37 +241,37 @@ void bullets_update(void)
 						score_delta += 10;
 					}
 				} else {
-					reinterpret_cast<unsigned char &>(bullet->move_state)++;
-					if(bullet->move_state >= BMS_DECAY_END) {
+					reinterpret_cast<unsigned char &>(bullet->move_flag)++;
+					if(bullet->move_flag >= BMF_DECAY_END) {
 						bullet->pos.update_seg3();
 						bullet->flag = F_REMOVE;
 						continue;
 					}
-					if((bullet->move_state % BMS_DECAY_FRAMES_PER_CEL) == 0) {
+					if((bullet->move_flag % BMF_DECAY_FRAMES_PER_CEL) == 0) {
 						bullet->patnum++;
 					}
 				}
 			}
 			bullet->age++;
-			if(bullet->spawn_state >= BSS_ACTIVE) {
-				if(bullet->spawn_state == BSS_ACTIVE) {
-					bullet->spawn_state = BSS_GRAZEABLE;
+			if(bullet->spawn_flag >= BSF_ACTIVE) {
+				if(bullet->spawn_flag == BSF_ACTIVE) {
+					bullet->spawn_flag = BSF_GRAZEABLE;
 				} else {
 					// In delay cloud state
-					if(bullet->spawn_state == BSS_CLOUD_BACKWARDS) {
+					if(bullet->spawn_flag == BSF_CLOUD_BACKWARDS) {
 						bullet->pos.prev = bullet->pos.cur;
 						bullet->pos.cur.x.v -= (bullet->pos.velocity.x.v << 3);
 						bullet->pos.cur.y.v -= (bullet->pos.velocity.y.v << 3);
-						bullet->spawn_state = BSS_CLOUD_FORWARDS;
-					} else if(bullet->spawn_state == BSS_CLOUD_FORWARDS) {
+						bullet->spawn_flag = BSF_CLOUD_FORWARDS;
+					} else if(bullet->spawn_flag == BSF_CLOUD_FORWARDS) {
 						bullet->pos.update_seg3();
 					} else {
 						bullet->pos.prev = bullet->pos.cur;
 						bullet->pos.cur.x.v += (bullet->pos.velocity.x.v / 3);
 						bullet->pos.cur.y.v += (bullet->pos.velocity.y.v / 3);
 					}
-					reinterpret_cast<unsigned char &>(bullet->spawn_state)++;
-					if(bullet->spawn_state >= BSS_CLOUD_END) {
+					reinterpret_cast<unsigned char &>(bullet->spawn_flag)++;
+					if(bullet->spawn_flag >= BSF_CLOUD_END) {
 #if (GAME == 5)
 						if(!playfield_encloses_yx_lt_ge(
 							bullet->pos.cur.x,
@@ -283,7 +283,7 @@ void bullets_update(void)
 							continue;
 						}
 #endif
-						bullet->spawn_state = BSS_ACTIVE;
+						bullet->spawn_flag = BSF_ACTIVE;
 					}
 #if (GAME == 5)
 					else if(is_pellet(i)) {
@@ -294,17 +294,17 @@ void bullets_update(void)
 					continue;
 				}
 			}
-			if(bullet->move_state == BMS_SPECIAL) {
+			if(bullet->move_flag == BMF_SPECIAL) {
 				bullet_update_special(*bullet);
-			} else if(bullet->move_state == BMS_DECELERATE) {
+			} else if(bullet->move_flag == BMF_DECELERATE) {
 				bullet->u1.decelerate_time--;
 				bullet->speed_cur.v = (bullet->speed_final.v + ((
 					bullet->u1.decelerate_time *
 					bullet->u2.decelerate_speed_delta.v
-				) / BMS_DECELERATE_FRAMES));
+				) / BMF_DECELERATE_FRAMES));
 				if(bullet->u1.decelerate_time == 0) {
 					bullet->speed_cur = bullet->speed_final;
-					bullet->move_state = BMS_REGULAR;
+					bullet->move_flag = BMF_REGULAR;
 				}
 				bullet_velocity_set_from_angle_and_speed((*bullet));
 			}
@@ -323,7 +323,7 @@ void bullets_update(void)
 			if(player_invincibility_time == 0) {
 				// Yup, a bullet must have been grazed in a previous frame
 				// before it can be collided with.
-				if(bullet->spawn_state != BSS_GRAZEABLE) {
+				if(bullet->spawn_flag != BSF_GRAZEABLE) {
 					if(overlap_wh_inplace_fast(
 						_AX, _DX, BULLET_KILLBOX_W, BULLET_KILLBOX_H
 					)) {
@@ -339,12 +339,9 @@ void bullets_update(void)
 						to_sp(16.0f), to_sp(22.0f), to_sp(20.0f), to_sp(22.0f)
 					)) {
 						sparks_add_random(
-							bullet->pos.cur.x,
-							bullet->pos.cur.y,
-							to_sp(2.0f),
-							2
+							bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2
 						);
-						bullet->spawn_state = BSS_GRAZED;
+						bullet->spawn_flag = BSF_GRAZED;
 						if(stage_graze < STAGE_GRAZE_CAP) {
 							stage_graze++;
 							hud_graze_put();
@@ -405,7 +402,7 @@ void bullets_update(void)
 		unsigned char patnum;
 
 		patnum =
-			(PAT_BULLET_ZAP + (bullet_zap.frames / BULLET_ZAP_FRAMES_PER_CEL)
+			(PAT_BULLET_ZAP + (bullet_zap.frame / BULLET_ZAP_FRAMES_PER_CEL)
 		);
 		score_per_bullet = 1;
 		score_step = 1;
@@ -475,7 +472,7 @@ void bullets_update(void)
 		if(overlay_popup_bonus) {
 			overlay_popup_show(POPUP_ID_BONUS);
 		}
-		bullet_zap.frames++;
+		bullet_zap.frame++;
 
 		// ZUN quirk: Always true in TH05, see above
 		if(patnum >= (PAT_BULLET_ZAP + BULLET_ZAP_CELS)) {

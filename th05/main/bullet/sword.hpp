@@ -12,7 +12,7 @@ struct sword_t {
 	unsigned int twirl_time;
 	uint16_t unused_1;
 	int patnum_tiny;
-	int decay_frames;
+	int decay_frame;
 	int16_t unused_2;
 	SubpixelLength8 speed;
 	int8_t padding;

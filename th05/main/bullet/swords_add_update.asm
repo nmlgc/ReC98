@@ -155,13 +155,13 @@ swords_update proc near
 	sub	ax, dx
 	sar	ax, 1
 	mov	[si+sword_t.pos.velocity.y], ax
-	mov	[si+sword_t.SWORD_decay_frames], 0
+	mov	[si+sword_t.SWORD_decay_frame], 0
 	jmp	short @@next
 ; ---------------------------------------------------------------------------
 
 @@already_decaying:
-	inc	[si+sword_t.SWORD_decay_frames]
-	mov	ax, [si+sword_t.SWORD_decay_frames]
+	inc	[si+sword_t.SWORD_decay_frame]
+	mov	ax, [si+sword_t.SWORD_decay_frame]
 	mov	bx, 4
 	cwd
 	idiv	bx

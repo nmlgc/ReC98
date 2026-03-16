@@ -15,9 +15,4 @@ union score9_lebcd_t {
 	unsigned char digits[1 + SCORE_DIGITS];
 };
 
-extern score_lebcd_t score_lebcd[PLAYER_COUNT];
-
-// Adds the given amount of [score] points to the given player's [score_lebcd].
-void pascal score_add(uint16_t score, bool pid);
-
 #endif /* TH03_SCORE_HPP */

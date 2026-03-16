@@ -1,8 +1,16 @@
 #pragma option -G
 
 #include "decomp.hpp"
+#include "th03/resident.hpp"
 #include "th03/main/player/cur.hpp"
 #include "th03/main/player/stuff.hpp"
+#include "th03/main/player/cpu.hpp"
+
+// Function ordering fails
+// -----------------------
+
+void near story_skill_decrement(void);
+// -----------------------
 
 // Enforces signed 8-bit comparisons in one place. MODDERS: Just remove these.
 inline int8_t collmap_byte_x_min(void) { return 0; }
@@ -185,4 +193,39 @@ clip_y_done:
 	#undef tile_top_low
 	#undef tile_top
 	#undef hitbox_radius
+}
+
+shalfhearts_t near pascal players_hit_damage_update(
+	player_stuff_t near& player_hit
+)
+{
+	static_assert(PLAYER_COUNT == 2);
+	shalfhearts_t damage;
+	spid_t pid_other = (1 - pid.current);
+
+	// ZUN bloat: Assign `player_hit.hit_damage_next` once.
+	if(!player_hit.is_cpu) {
+		damage = player_hit.hit_damage_next;
+	} else {
+		damage = player_hit.hit_damage_next;
+		damage += cpu_hit_damage_additional;
+	}
+
+	player_hit.hit_damage_next = 3;
+	if(players[pid_other].hit_damage_next > 3) {
+		players[pid_other].hit_damage_next--;
+	}
+
+	if(((player_hit.halfhearts - damage) <= 0) && (player_hit.halfhearts > 1)) {
+		damage = (player_hit.halfhearts - 1u);
+	}
+	story_skill_decrement();
+	return damage;
+}
+
+void near story_skill_decrement(void)
+{
+	if((pid.current == 0) && (resident->skill > 0)) {
+		resident->skill--;
+	}
 }

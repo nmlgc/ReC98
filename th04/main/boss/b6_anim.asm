@@ -1,9 +1,9 @@
-Y6SS_VANISHED = 0
-Y6SS_PARASOL_BACK_OPEN = 1
-Y6SS_PARASOL_BACK_CLOSED = 2
-Y6SS_PARASOL_FORWARD = 3
-Y6SS_PARASOL_LEFT = 4
-Y6SS_PARASOL_SHIELD = 8
+Y6SF_VANISHED = 0
+Y6SF_PARASOL_BACK_OPEN = 1
+Y6SF_PARASOL_BACK_CLOSED = 2
+Y6SF_PARASOL_FORWARD = 3
+Y6SF_PARASOL_LEFT = 4
+Y6SF_PARASOL_SHIELD = 8
 
 public _yuuka6_anim_parasol_back_close
 _yuuka6_anim_parasol_back_close	proc near
@@ -11,7 +11,7 @@ _yuuka6_anim_parasol_back_close	proc near
 @@frame		= word ptr -2
 
 	enter	2, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 	inc	_yuuka6_anim_frame
 	mov	ax, _yuuka6_anim_frame
 	mov	[bp+@@frame], ax
@@ -52,7 +52,7 @@ _yuuka6_anim_parasol_back_close	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 	mov	al, 1
 	leave
 	retn
@@ -78,7 +78,7 @@ _yuuka6_anim_parasol_back_open	proc near
 @@frame		= word ptr -2
 
 	enter	2, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 	inc	_yuuka6_anim_frame
 	mov	ax, _yuuka6_anim_frame
 	mov	[bp+@@frame], ax
@@ -119,7 +119,7 @@ _yuuka6_anim_parasol_back_open	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 	mov	al, 1
 	leave
 	retn
@@ -186,7 +186,7 @@ _yuuka6_anim_parasol_back_pull_forward	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_FORWARD
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_FORWARD
 	mov	al, 1
 	leave
 	retn
@@ -247,7 +247,7 @@ _yuuka6_anim_parasol_back_pull_left	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_LEFT
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_LEFT
 	mov	al, 1
 	leave
 	retn
@@ -345,7 +345,7 @@ _yuuka6_anim_parasol_left_spin_back	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_CLOSED
 	mov	al, 1
 	pop	bp
 	retn
@@ -451,7 +451,7 @@ _yuuka6_anim_vanish	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_VANISHED
+	mov	_yuuka6_sprite_flag, Y6SF_VANISHED
 	mov	al, 1
 	leave
 	retn
@@ -523,7 +523,7 @@ _yuuka6_anim_appear	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 	mov	al, 1
 	leave
 	retn
@@ -586,7 +586,7 @@ _yuuka6_anim_parasol_shield	proc near
 
 @@done:
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_SHIELD
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_SHIELD
 	mov	al, 1
 	leave
 	retn

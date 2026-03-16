@@ -56,7 +56,7 @@ union sara_state_t {
 
 	struct {
 		/* -------------------- */ int8_t _unused_1[9];
-		uint8_t pattern_duration;
+		uint8_t pattern_frames;
 		uint8_t pattern_prev;
 		/* -------------------- */ int8_t _unused_2;
 		/* -------------------- */ int8_t _unused_3;
@@ -192,7 +192,7 @@ static void near phase_3_with_pattern(void)
 		boss.sprite = PAT_SARA_SPIN;
 	}
 	phase_2_3_pattern();
-	if(boss.phase_frame >= state->phase_3.pattern_duration) {
+	if(boss.phase_frame >= state->phase_3.pattern_frames) {
 		boss.phase_frame = 0;
 		boss.mode = 0;
 		boss.sprite = PAT_SARA_STAY;
@@ -210,7 +210,7 @@ void near pattern_pellet_arcs_at_expanding_random_angles(void)
 		);
 		bullet_template.set_spread(3, 0x3);
 		bullet_template.special_motion = BSM_EXACT_LINEAR;
-		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.0f, 3.0f);
+		bullet_template.speed.v = randring2_next8_ge_lt_sp(1.0f, 3.0f);
 		bullet_template_tune();
 		bullets_add_special();
 
@@ -220,7 +220,7 @@ void near pattern_pellet_arcs_at_expanding_random_angles(void)
 		bullet_template.angle = (
 			randring2_next16_mod(boss.phase_frame * 2) - boss.phase_frame + 0x40
 		);
-		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.5f, 3.5f);
+		bullet_template.speed.v = randring2_next8_ge_lt_sp(1.5f, 3.5f);
 		bullet_template_tune();
 		bullets_add_regular();
 
@@ -476,7 +476,7 @@ void pascal sara_update(void)
 		boss_score_bonus(5);
 	phase_2_timed_out:
 		boss_phase_next(ET_NW_SE, HP_PHASE_3_END);
-		state->phase_3.pattern_duration = 80;
+		state->phase_3.pattern_frames = 80;
 		break;
 
 	case 3:
@@ -491,9 +491,9 @@ void pascal sara_update(void)
 			phase_3_with_pattern();
 			if(
 				(boss.phase_frame == 0) &&
-				(state->phase_3.pattern_duration < 180)
+				(state->phase_3.pattern_frames < 180)
 			) {
-				state->phase_3.pattern_duration += 24;
+				state->phase_3.pattern_frames += 24;
 			}
 			break;
 		}

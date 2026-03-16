@@ -27,7 +27,7 @@ void near op_animate(void)
 		SLIDE_CEL_COUNT = 6,
 		COL_BLACK = 0,
 		FADE_SPEED = 4,
-		FADE_DURATION = ((0x100 / FADE_SPEED) - 1),
+		FADE_FRAMES = ((0x100 / FADE_SPEED) - 1),
 	};
 
 	// ZUN bloat: Declaring these inline as needed would have yielded better
@@ -143,7 +143,7 @@ void near op_animate(void)
 	#define white_point k
 	frame = 0;
 	white_point = (0x100 - FADE_SPEED);
-	while(frame < FADE_DURATION){
+	while(frame < FADE_FRAMES) {
 		for(col = 1; col < COLOR_COUNT; col++) {
 			for(comp = 0; comp < COMPONENT_COUNT; comp++) {
 				if(target_palette[col].v[comp] < Palettes[col].v[comp]) {

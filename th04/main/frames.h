@@ -1,3 +1,5 @@
+#include "platform.h"
+
 extern unsigned long frames_unused;
 
 // Stage-relative frame counter. Reset to 0 when moving to a new stage.
@@ -11,7 +13,8 @@ extern unsigned char stage_frame_mod16;
 // the vsync time of a single frame. (Pausing the game will also increment
 // this value!)
 extern unsigned long total_slow_frames;
-// Total number of frames rendered, across all stages (= including bosses)
+// Total number of frames rendered, across all stages (= including bosses), but
+// still excluding blocking animations
 extern unsigned long total_frames;
 // Total number of .STD VM frames rendered, across all stages (= excluding
 // bosses)

@@ -23,7 +23,7 @@ void near overlay_black(void);
 // -----------------
 
 static const int OVERLAY_FADE_INTERVAL = 8;
-static const int OVERLAY_FADE_DURATION = (
+static const int OVERLAY_FADE_FRAMES = (
 	(OVERLAY_FADE_CELS + 1) * OVERLAY_FADE_INTERVAL
 );
 

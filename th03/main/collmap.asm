@@ -33,8 +33,8 @@ MAIN_04 group COLLMAP_TEXT
 	.code
 	assume cs:MAIN_04
 
-public _collmap_set_rect_striped
-_collmap_set_rect_striped proc far
+public @collmap_set_rect_striped$qv
+@collmap_set_rect_striped$qv proc far
 	@@byte_x               	equ <al>
 	@@byte_x_wide         	equ <ax>	; Just remove this
 	@@left                 	equ <ax>
@@ -197,12 +197,12 @@ _collmap_set_rect_striped proc far
 
 @@ret:
 	ret
-_collmap_set_rect_striped endp
+@collmap_set_rect_striped$qv endp
 	even
 
 
-public _collmap_set_vline
-_collmap_set_vline proc far
+public @collmap_set_vline$qv
+@collmap_set_vline$qv proc far
 	@@pattern         	equ <ah>
 	@@first_bit       	equ <cl>
 	@@first_bit_wide  	equ <cx>	; Just remove this
@@ -256,12 +256,12 @@ _collmap_set_vline proc far
 
 @@ret:
 	ret
-_collmap_set_vline endp
+@collmap_set_vline$qv endp
 	even
 
 
-public _collmap_set_slope_striped
-_collmap_set_slope_striped proc c far
+public @collmap_set_slope_striped$qv
+@collmap_set_slope_striped$qv proc c far
 	uses si, di
 	@@collmap_p     	equ <bx>
 	@@first_bit     	equ <cl>
@@ -343,7 +343,7 @@ SLOPE_STRIPES = (COLLMAP_H / COLLMAP_SLOPE_VSTRIPE_DISTANCE)
 
 @@ret:
 	ret
-_collmap_set_slope_striped endp
+@collmap_set_slope_striped$qv endp
 	even
 
 	end

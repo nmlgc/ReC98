@@ -1,3 +1,6 @@
+#ifndef TH03_MAIN_SPRITE16_HPP
+#define TH03_MAIN_SPRITE16_HPP
+
 #include "th03/main/playfld.hpp"
 #include "th03/hardware/vram.hpp"
 
@@ -85,3 +88,5 @@ void pascal sprite16_put_noclip(
 );
 
 }
+
+#endif /* TH03_MAIN_SPRITE16_HPP */

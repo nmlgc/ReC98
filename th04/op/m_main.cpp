@@ -499,7 +499,7 @@ void near option_update_and_render(void)
 
 int main_op(int, const char *[])
 {
-	int idle_frames = 0;
+	int idle_frame = 0;
 
 	text_clear();
 	mem_assign_paras = (340768 >> 4);
@@ -563,11 +563,11 @@ int main_op(int, const char *[])
 		switch(in_option) {
 		case false:
 			main_update_and_render();
-			if(idle_frames >= 640) {
+			if(idle_frame >= 640) {
 				start_demo();
 #if (GAME == 5)
 				// ZUN bloat: Execution never gets here.
-				idle_frames = 0;
+				idle_frame = 0;
 #endif
 			}
 			break;
@@ -577,17 +577,15 @@ int main_op(int, const char *[])
 			break;
 		}
 
+		// Holding Left+Right triggers the hidden Extra Stage replay in
+		// start_demo(). Don't reset [idle_frame] for that specific input, as
+		// that function would otherwise never be called.
 		if(
-			!key_det ||
-
-			// Holding Left+Right triggers the hidden Extra Stage replay in
-			// start_demo(). Don't reset [idle_frames] for that specific input,
-			// as that function would otherwise never be called.
-			((GAME == 5) && (key_det == (INPUT_LEFT | INPUT_RIGHT)))
+			!key_det || ((GAME == 5) && (key_det == (INPUT_LEFT | INPUT_RIGHT)))
 		) {
-			idle_frames++;
+			idle_frame++;
 		} else {
-			idle_frames = 0;
+			idle_frame = 0;
 		}
 
 		resident->rand++;

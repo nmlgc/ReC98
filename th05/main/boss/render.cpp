@@ -125,12 +125,13 @@ void pascal near yumeko_bg_render(void)
 /// Stage 6 - Shinki
 /// ----------------
 
-#define SHINKI_SPINLINE_MOVE_W (PLAYFIELD_W / 6) /* pixel_t! */
-#define SHINKI_SPINLINE_MOVE_SPEED to_sp(0.25f)
+static const pixel_t SHINKI_SPINLINE_MOVE_W = (PLAYFIELD_W / 6);
+static const subpixel_t SHINKI_SPINLINE_MOVE_SPEED = (TO_SP(1) / 4);
 #define SHINKI_SPINLINE_TOP to_sp(80.0f)
 #define SHINKI_SPINLINE_BOTTOM to_sp(PLAYFIELD_H - 64)
-#define SHINKI_SPINLINE_MOVE_DURATION \
-	(SHINKI_SPINLINE_MOVE_W * SHINKI_SPINLINE_MOVE_SPEED)
+static const unsigned int SHINKI_SPINLINE_MOVE_FRAMES = (
+	SHINKI_SPINLINE_MOVE_W * SHINKI_SPINLINE_MOVE_SPEED
+);
 
 static const int SHINKI_LINESET_COUNT = 2;
 static const int PARTICLES_UNINITIALIZED = (-1 & 0xFF);
@@ -144,7 +145,7 @@ static const int SHINKI_LINE_4 = (3 * 6);
 extern unsigned char shinki_bg_linesets_zoomed_out;
 extern int shinki_bg_type_a_particles_alive;
 extern bool shinki_bg_type_b_initialized;
-extern unsigned int shinki_bg_spinline_frames;
+extern unsigned int shinki_bg_spinline_frame;
 extern bool shinki_bg_type_c_initialized;
 extern bool shinki_bg_type_d_initialized;
 
@@ -153,9 +154,8 @@ extern bool shinki_bg_type_d_initialized;
 		set->radius[SHINKI_LINE_MAIN] -= 0.125f; \
 	} \
 	if( \
-		(shinki_bg_spinline_frames & ( \
-			(SHINKI_SPINLINE_MOVE_DURATION * 2) - 1) \
-		) < SHINKI_SPINLINE_MOVE_DURATION \
+		(shinki_bg_spinline_frame % (SHINKI_SPINLINE_MOVE_FRAMES * 2)) < \
+		SHINKI_SPINLINE_MOVE_FRAMES \
 	) { \
 		set->center[SHINKI_LINE_MAIN].x.v += delta; \
 	} else { \
@@ -279,7 +279,7 @@ void near shinki_bg_type_a_update_part1(void)
 			vector2_at(
 				particle->velocity,
 				0.0f, 0.0f,
-				randring1_next16_and_ge_lt_sp(2.0f, 6.0f),
+				randring1_next16_ge_lt_sp(2.0f, 6.0f),
 				particle->angle
 			);
 			shinki_bg_type_a_particles_alive++;
@@ -409,7 +409,7 @@ void near shinki_bg_type_b_update_part1(void)
 			particle->origin.x = particle->pos.x;
 			particle->origin.y.set(-1.0f);
 			particle->velocity.set(0.0f, 0.0f);
-			particle->patnum = randring1_next8_and_ge_lt(
+			particle->patnum = randring1_next8_ge_lt(
 				PAT_PARTICLE, (PAT_PARTICLE_last + 1)
 			);
 			i++;
@@ -463,7 +463,7 @@ void near shinki_bg_type_b_update_and_render(void)
 		delta = -delta;
 	}
 
-	shinki_bg_spinline_frames++;
+	shinki_bg_spinline_frame++;
 
 	set = linesets;
 	if(set->center[SHINKI_LINE_MAIN].y < SHINKI_SPINLINE_TOP) {
@@ -533,7 +533,7 @@ void near shinki_bg_type_c_update_and_render(void)
 		delta = -delta;
 	}
 
-	shinki_bg_spinline_frames++;
+	shinki_bg_spinline_frame++;
 
 	set = linesets;
 	// [velocity_y] is still negative from type B in the beginning. Continue
@@ -674,22 +674,22 @@ void pascal near exalice_grcg_hexagram_put(subpixel_t radius, int angle)
 
 void near exalice_hexagrams_update_and_render(void)
 {
-	enum exalice_hexagrams_state_t {
+	enum hexagrams_flag_t {
 		UNINITIALIZED = 0,
 		TURN_RIGHT = 1,
 		TURN_LEFT = 2,
-		STATE_COUNT,
+		FLAG_COUNT,
 	};
-	extern exalice_hexagrams_state_t exalice_hexagrams_state;
+	extern hexagrams_flag_t hexagrams_flag;
 	int i;
 
 	lineset_t near &set = linesets[0];
-	if(exalice_hexagrams_state == UNINITIALIZED) {
+	if(hexagrams_flag == UNINITIALIZED) {
 		for(i = 0; i < (LINESET_LINE_COUNT - 1); i++) {
 			set.radius[i].set(1.0f);
 			set.angle[i] = 0x00;
 		}
-		exalice_hexagrams_state = TURN_RIGHT;
+		hexagrams_flag = TURN_RIGHT;
 	}
 	for(i = (LINESET_LINE_COUNT - 2); i > 0; i--) {
 		set.radius[i] = set.radius[i - 1];
@@ -698,11 +698,11 @@ void near exalice_hexagrams_update_and_render(void)
 	set.radius[0] += 5.0f;
 	if(set.radius[0].v >= to_sp(320.0f)) {
 		set.radius[0].set(1.0f);
-		exalice_hexagrams_state = static_cast<exalice_hexagrams_state_t>(
-			STATE_COUNT - exalice_hexagrams_state
+		hexagrams_flag = static_cast<hexagrams_flag_t>(
+			FLAG_COUNT - hexagrams_flag
 		);
 	}
-	if(exalice_hexagrams_state == TURN_RIGHT) {
+	if(hexagrams_flag == TURN_RIGHT) {
 		set.angle[0] += 0x01;
 	} else {
 		set.angle[0] -= 0x01;

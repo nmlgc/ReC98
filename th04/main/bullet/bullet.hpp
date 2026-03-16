@@ -21,60 +21,60 @@ extern "C" {
 /// States and modes
 /// ----------------
 
-static const int BMS_DECAY_FRAMES_PER_CEL = 4;
-#define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
-#define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * BMS_DECAY_FRAMES_PER_CEL)
+static const int BMF_DECAY_FRAMES_PER_CEL = 4;
+#define BSF_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
+#define BMF_DECAY_FRAMES (BULLET_DECAY_CELS * BMF_DECAY_FRAMES_PER_CEL)
 
-// Regular bullets with a given speed below BMS_DECELERATE_THRESHOLD are set to
-// BMS_DECELERATE. This fires them at BMS_DECELERATE_BASE_SPEED instead, and
+// Regular bullets with a given speed below BMF_DECELERATE_THRESHOLD are set to
+// BMF_DECELERATE. This fires them at BMF_DECELERATE_BASE_SPEED instead, and
 // then gradually slows them down to their given speed over the next
-// BMS_DECELERATE_FRAMES.
+// BMF_DECELERATE_FRAMES.
 // • In TH04, this is not done for stacks.
 // • In TH05, this is not done for any group with BST_NO_DECELERATE set.
-#define BMS_DECELERATE_BASE_SPEED 4.5f
-#define BMS_DECELERATE_THRESHOLD (BMS_DECELERATE_BASE_SPEED - 0.5f)
-#define BMS_DECELERATE_FRAMES 32
+#define BMF_DECELERATE_BASE_SPEED 4.5f
+#define BMF_DECELERATE_THRESHOLD (BMF_DECELERATE_BASE_SPEED - 0.5f)
+#define BMF_DECELERATE_FRAMES 32
 
-enum bullet_spawn_state_t {
+enum bullet_spawn_flag_t {
 	/// Hitbox is active
 	/// ----------------
 
-	BSS_GRAZEABLE = 0,
-	BSS_GRAZED = 1,
-	BSS_ACTIVE = 2,
+	BSF_GRAZEABLE = 0,
+	BSF_GRAZED = 1,
+	BSF_ACTIVE = 2,
 	/// ----------------
 
 	/// Delay "cloud", no hitbox
 	/// ------------------------
 
-	BSS_CLOUD_BACKWARDS = 3,
-	BSS_CLOUD_FORWARDS = 4,
-	BSS_CLOUD_END = (BSS_CLOUD_FORWARDS + BSS_CLOUD_FRAMES),
+	BSF_CLOUD_BACKWARDS = 3,
+	BSF_CLOUD_FORWARDS = 4,
+	BSF_CLOUD_END = (BSF_CLOUD_FORWARDS + BSF_CLOUD_FRAMES),
 	/// ------------------------
 
-	_bullet_spawn_state_t_FORCE_UINT8 = 0xFF
+	_bullet_spawn_flag_t_FORCE_UINT8 = 0xFF
 };
 
-enum bullet_move_state_t {
+enum bullet_move_flag_t {
 	/// Hitbox is active
 	/// ----------------
 
-	// Slows down from BMS_DECELERATE_BASE_SPEED to [final_speed]
-	BMS_DECELERATE = 0,
+	// Slows down from BMF_DECELERATE_BASE_SPEED to [final_speed]
+	BMF_DECELERATE = 0,
 	// Special processing according to [special_motion]
-	BMS_SPECIAL = 1,
+	BMF_SPECIAL = 1,
 	// No special processing
-	BMS_REGULAR = 2,
+	BMF_REGULAR = 2,
 	/// ----------------
 
 	/// Decay, no hitbox
 	/// ----------------
 
-	BMS_DECAY = 4,
-	BMS_DECAY_END = (BMS_DECAY + BMS_DECAY_FRAMES),
+	BMF_DECAY = 4,
+	BMF_DECAY_END = (BMF_DECAY + BMF_DECAY_FRAMES),
 	/// ----------------
 
-	_bullet_move_state_t_FORCE_UINT8 = 0xFF
+	_bullet_move_flag_t_FORCE_UINT8 = 0xFF
 };
 
 enum bullet_special_motion_t {
@@ -138,19 +138,19 @@ struct bullet_t {
 	int8_t unused; // ZUN bloat
 	SubpixelLength8 speed_cur;
 	unsigned char angle;
-	bullet_spawn_state_t spawn_state;
-	bullet_move_state_t move_state;
+	bullet_spawn_flag_t spawn_flag;
+	bullet_move_flag_t move_flag;
 	bullet_special_motion_t special_motion;
 	SubpixelLength8 speed_final;
 	union {
-		unsigned char decelerate_time;	// with BMS_DECELERATE
-		unsigned char turns_done;     	// with BMS_SPECIAL
+		unsigned char decelerate_time;	// with BMF_DECELERATE
+		unsigned char turns_done;     	// with BMF_SPECIAL
 	} u1;
 	union {
-		// Difference between [speed_final] and the BMS_DECELERATE_BASE_SPEED.
-		// Always positive for BMS_DECELERATE bullets.
-		SubpixelLength8 decelerate_speed_delta;	// with BMS_DECELERATE
-		bullet_special_angle_t angle;          	// with BMS_SPECIAL
+		// Difference between [speed_final] and the BMF_DECELERATE_BASE_SPEED.
+		// Always positive for BMF_DECELERATE bullets.
+		SubpixelLength8 decelerate_speed_delta;	// with BMF_DECELERATE
+		bullet_special_angle_t angle;          	// with BMF_SPECIAL
 	} u2;
 	int patnum;
 
@@ -202,7 +202,7 @@ extern bullet_t bullets[BULLET_COUNT];
 // Global parameters for special motion types.
 extern union {
 	// Number of times a bullet can change its direction during various special
-	// motion types, before it changes back into a BMS_REGULAR bullet. A value
+	// motion types, before it changes back into a BMF_REGULAR bullet. A value
 	// of 0 will still allow a single direction change.
 	unsigned char turns_max;
 
@@ -333,8 +333,8 @@ extern nearfunc_t_near bullet_template_tune;
 
 // The actual functions for spawning bullets based on the [bullet_template].
 // Both TH04 and TH05 pointlessly use separate functions for spawning "regular"
-// bullets (which receive a move state of BMS_DECELERATE or BMS_REGULAR) or
-// "special" ones (which are BMS_SPECIAL).
+// bullets (which receive a move state of BMF_DECELERATE or BMF_REGULAR) or
+// "special" ones (which are BMF_SPECIAL).
 #if (GAME == 5)
 void near bullets_add_regular(void);
 void near bullets_add_special(void);

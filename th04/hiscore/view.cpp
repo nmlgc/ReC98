@@ -289,15 +289,12 @@ void pascal near rank_animate(rank_t rank)
 	}
 
 	static_assert(RANK_W == (2 * BFNT_ASSUMED_MAX_W));
-	#define RANK_HALF_W (RANK_W / 2)
 	super_put(
-		(RANK_LEFT + (0 * RANK_HALF_W)), RANK_TOP, (PAT_RANK_1 + (rank * 2))
+		(RANK_LEFT + (0 * (RANK_W / 2))), RANK_TOP, (PAT_RANK_1 + (rank * 2))
 	);
 	super_put(
-		(RANK_LEFT + (1 * RANK_HALF_W)), RANK_TOP, (PAT_RANK_2 + (rank * 2))
+		(RANK_LEFT + (1 * (RANK_W / 2))), RANK_TOP, (PAT_RANK_2 + (rank * 2))
 	);
-	#undef RANK_HALF_W
-
 	palette_black_in(1);
 }
 

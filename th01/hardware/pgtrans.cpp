@@ -12,12 +12,11 @@
 void graph_interleave_pages_8x8_8(screen_x_t left, vram_y_t top, int mask_id)
 {
 	#include "th01/sprites/ileave_m.csp"
-	#define masks sINTERLEAVE_MASKS
 
 	vram_offset_t vo = vram_offset_divmul(left, top);
 	dots_t(INTERLEAVE_W) dots;
 	for(char y = 0; y < INTERLEAVE_H; y++) {
-		#define mask masks[mask_id][y]
+		#define mask sINTERLEAVE_MASKS[mask_id][y]
 
 		#define snap(plane, vo) \
 			VRAM_CHUNK(plane, vo, 8)
@@ -37,7 +36,6 @@ void graph_interleave_pages_8x8_8(screen_x_t left, vram_y_t top, int mask_id)
 		#undef snap
 		#undef mask
 	}
-	#undef masks
 }
 
 void pagetrans_diagonal_8x8(unsigned int step_ms)

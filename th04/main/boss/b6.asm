@@ -23,7 +23,7 @@ yuuka6_phase_next proc near
 	mov	_yuuka6_anim_frame, 0
 	mov	_boss_sprite, PAT_YUUKA6_PARASOL_BACK_OPEN
 	mov	_yuuka6_anim_frame, 0
-	mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
+	mov	_yuuka6_sprite_flag, Y6SF_PARASOL_BACK_OPEN
 	pop	bp
 	retn	4
 yuuka6_phase_next endp

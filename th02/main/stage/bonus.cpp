@@ -180,7 +180,7 @@ void near stage_extra_clear_bonus_animate(void)
 	}
 	bonus_row_put_and_add(10, BONUS_EXTRA_BOMBS, sum, val);
 
-	val = (20000 - sigma_frames);
+	val = (20000 - sigma_frame);
 	if(val < 0) {
 		val = 0;
 	}

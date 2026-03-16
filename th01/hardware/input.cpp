@@ -21,10 +21,10 @@ bool input_down = false;
 // -----
 
 inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
-	if(bomb_doubletap_frames < BOMB_DOUBLETAP_WINDOW) {
+	if(bomb_doubletap_frame < BOMB_DOUBLETAP_WINDOW) {
 		pressed++;
 	} else {
-		bomb_doubletap_frames = 0;
+		bomb_doubletap_frame = 0;
 		pressed = 1;
 		other = 0;
 	}

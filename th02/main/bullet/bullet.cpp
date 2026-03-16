@@ -1,6 +1,7 @@
 #pragma option -zPmain_03 -G
 
 #include "th02/main/bullet/bullet.hpp"
+#include "th02/main/bullet/impl.hpp"
 #include "libs/master.lib/master.hpp"
 #include "libs/master.lib/pc98_gfx.hpp"
 #include "th01/rank.h"
@@ -48,7 +49,7 @@ struct bullet_t {
 
 	// ZUN bloat: There's a padding byte to store a second value...
 	union {
-		uint8_t special_frames;
+		uint8_t special_frame;
 		uint8_t turns_done;
 		uint8_t v;
 	} u1;
@@ -168,74 +169,13 @@ bool16 pascal near group_velocity_set(
 	const screen_x_t aim_x = (player_center_x() - (PELLET_W / 2));
 	const screen_x_t bullet_left = bullet.screen_topleft[page_back].x;
 
-	// TH01 solved this more elegantly by moving all aimed groups past a
-	// certain value...
-	#define to_aim_or_not_to_aim(first_aimed) { \
-		if(group <= (first_aimed - 1)) { /* ZUN bloat: `< first_aimed` */ \
-			goto no_aim; \
-		} \
-		goto aim; \
-	}
-
-	#define ring(n) { \
-		i_angle = (i * (0x100 / n)); \
-		if(i >= (n - 1)) { \
-			done = true; \
-		} \
-		goto no_aim; \
-	}
-
 	switch(group) {
 	case BG_1_AIMED:
 		done = true;
 		goto aim;
 
 	case BG_2_SPREAD_ULTRAWIDE_AIMED:	i_angle += 0x05; // fallthrough
-	case BG_2_SPREAD_WIDE:
-	case BG_2_SPREAD_WIDE_AIMED:	i_angle += 0x03; // fallthrough
-	case BG_2_SPREAD_MEDIUM:
-	case BG_2_SPREAD_MEDIUM_AIMED:	i_angle += 0x03; // fallthrough
-	case BG_2_SPREAD_NARROW:
-	case BG_2_SPREAD_NARROW_AIMED:
-		/**/ if(i == 0) { i_angle = (+0x03 + i_angle); }
-		else if(i == 1) { i_angle = (-0x03 - i_angle); done = true; }
-		to_aim_or_not_to_aim(BG_2_SPREAD_NARROW_AIMED);
-
-	case BG_3_SPREAD_WIDE:
-	case BG_3_SPREAD_WIDE_AIMED:	i_angle += 0x08; // fallthrough
-	case BG_3_SPREAD_MEDIUM:
-	case BG_3_SPREAD_MEDIUM_AIMED:	i_angle += 0x08; // fallthrough
-	case BG_3_SPREAD_NARROW:
-	case BG_3_SPREAD_NARROW_AIMED:
-		/**/ if(i == 0) { i_angle  =  0x00; }
-		else if(i == 1) { i_angle = (+0x08 + i_angle); }
-		else if(i == 2) { i_angle = (-0x08 - i_angle); done = true; }
-		to_aim_or_not_to_aim(BG_3_SPREAD_NARROW_AIMED);
-
-	case BG_4_SPREAD_WIDE:
-	case BG_4_SPREAD_WIDE_AIMED:	i_angle += 0x06; // fallthrough
-	case BG_4_SPREAD_MEDIUM:
-	case BG_4_SPREAD_MEDIUM_AIMED:	i_angle += 0x06; // fallthrough
-	case BG_4_SPREAD_NARROW:
-	case BG_4_SPREAD_NARROW_AIMED:
-		/**/ if(i == 0) { i_angle = (+0x03 +  i_angle); }
-		else if(i == 1) { i_angle = (-0x03 -  i_angle); }
-		else if(i == 2) { i_angle = (+0x09 + (i_angle * 3)); }
-		else if(i == 3) { i_angle = (-0x09 - (i_angle * 3)); done = true; }
-		to_aim_or_not_to_aim(BG_4_SPREAD_NARROW_AIMED);
-
-	case BG_5_SPREAD_WIDE:
-	case BG_5_SPREAD_WIDE_AIMED:	i_angle += 0x06; // fallthrough
-	case BG_5_SPREAD_MEDIUM:
-	case BG_5_SPREAD_MEDIUM_AIMED:	i_angle += 0x06; // fallthrough
-	case BG_5_SPREAD_NARROW:
-	case BG_5_SPREAD_NARROW_AIMED:
-		/**/ if(i == 0) { i_angle  =  0x00; }
-		else if(i == 1) { i_angle = (+0x06 +  i_angle); }
-		else if(i == 2) { i_angle = (-0x06 -  i_angle); }
-		else if(i == 3) { i_angle = (+0x0C + (i_angle * 2)); }
-		else if(i == 4) { i_angle = (-0x0C - (i_angle * 2)); done = true; }
-		to_aim_or_not_to_aim(BG_5_SPREAD_NARROW_AIMED);
+	bullet_group_2_3_4_5_spreads_impl(i_angle, done, group, i);
 
 	case BG_2_RING:
 		// ZUN bloat: Could reuse the same ring code.
@@ -247,46 +187,14 @@ bool16 pascal near group_velocity_set(
 		}
 		goto no_aim;
 
-	case BG_4_RING: 	ring(4);
-	case BG_8_RING: 	ring(8);
-	case BG_16_RING:	ring(16);
-	case BG_32_RING:	ring(32);
+	case BG_4_RING: 	bullet_group_ring_impl(i_angle, done, i, 4, no_aim);
+	case BG_8_RING: 	bullet_group_ring_impl(i_angle, done, i, 8, no_aim);
+	case BG_16_RING:	bullet_group_ring_impl(i_angle, done, i, 16, no_aim);
+	case BG_32_RING:	bullet_group_ring_impl(i_angle, done, i, 32, no_aim);
 
-	case BG_2_SPREAD_HORIZONTALLY_SYMMETRIC:
-		if(i == 0) {
-			i_angle = 0x00;
-		} else {
-			// ZUN bloat: `bullet.angle = 0x80 - bullet.angle;` would have been
-			// clearer than using a multiplication to counteract the addition
-			// below.
-			i_angle = (0x80 - (bullet.angle * 2));
-			done = true;
-		}
-		goto no_aim;
-
-	case BG_1:
-		done = true;
-		goto no_aim;
-
-	case BG_1_RANDOM_ANGLE:
-		i_angle = randring2_next8();
-		done = true;
-		goto no_aim;
-
-	case BG_RANDOM_ANGLE:
-		i_angle = randring2_next8();
-		if(i >= bullet.angle) {
-			done = true;
-		}
-		goto no_aim;
-
-	case BG_RANDOM_ANGLE_AND_SPEED:
-		i_angle = randring2_next8();
-		speed += randring2_next8_ge_lt_sp(0.0f, 2.0f);
-		if(i >= bullet.angle) {
-			done = true;
-		}
-		goto no_aim;
+	bullet_groups_shared_between_th02_and_th03_impl(
+		i_angle, done, bullet.angle, i, bullet.angle, randring2_next8
+	);
 
 	default:
 	aim:
@@ -509,8 +417,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		break;
 
 	case BSM_HOMING:
-		bullet.u1.special_frames++;
-		if(bullet.u1.special_frames < bullet_special.u2.homing_duration) {
+		bullet.u1.special_frame++;
+		if(bullet.u1.special_frame < bullet_special.u2.homing_frames) {
 			vector2_between_plus(
 				bullet_left,
 				bullet_top,
@@ -560,8 +468,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 		vector2(
 			bullet.velocity.x.v, bullet.velocity.y.v, bullet.angle, bullet.speed
 		);
-		bullet.u1.special_frames++;
-		if(bullet.u1.special_frames > bullet_special.u3.drift_duration) {
+		bullet.u1.special_frame++;
+		if(bullet.u1.special_frame > bullet_special.u3.drift_frames) {
 			bullet.group_or_special_motion = BG_NONE;
 		}
 		break;
@@ -579,8 +487,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			aim_y,
 			bullet_special.u2.drift_speed
 		);
-		bullet.u1.special_frames++;
-		if(bullet.u1.special_frames > bullet_special.u3.drift_duration) {
+		bullet.u1.special_frame++;
+		if(bullet.u1.special_frame > bullet_special.u3.drift_frames) {
 			bullet.group_or_special_motion = BG_NONE;
 		}
 		break;

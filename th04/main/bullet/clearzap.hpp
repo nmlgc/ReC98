@@ -6,7 +6,7 @@
 // Lasts for BULLET_ZAP_FRAMES and resets to `false` afterwards.
 extern union {
 	bool active;
-	unsigned char frames; // doubles as the animation timer
+	uint8_t frame; // doubles as the animation timer
 } bullet_zap;
 
 static const int BULLET_ZAP_FRAMES_PER_CEL = 4;

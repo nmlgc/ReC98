@@ -24,12 +24,12 @@ static const unsigned char gbcRANKS[4][8] = {
 };
 
 const shiftjis_t *SHOTTYPES[SHOTTYPE_COUNT] = HISCORE_SHOTTYPES;
-int logo_step = 0;
+static int frame = 0;
 char need_op_h_bft = 1;
 
 scoredat_section_t hi;
 char extra_unlocked;
-unsigned int score_duration;
+unsigned int score_frames;
 
 #include "th02/formats/scoredat/load.cpp"
 
@@ -108,7 +108,7 @@ static void pascal near scores_put(int place_to_highlight)
 	}
 }
 
-void pascal near logo_render(int step)
+void pascal near logo_render(int frame)
 {
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
@@ -116,17 +116,17 @@ void pascal near logo_render(int step)
 
 	// ZUN bug: The first defined frame only displays the purple background
 	// without the 東方封魔録 label. See the `master` branch for more details.
-	if(step == 0) {
+	if(frame == 0) {
 		return;
 	}
 
 	for(int i = 0; i < 4; i++) {
-		screen_y_t y = ((i * 100) - step);
+		screen_y_t y = ((i * 100) - frame);
 		while(y < 0) {
 			y += 400;
 		}
 		for(screen_x_t offset = 0; offset < RES_X; offset += (RES_X / 2)) {
-			screen_x_t x = ((offset + step + (160 * i)) % RES_X);
+			screen_x_t x = ((offset + frame + (160 * i)) % RES_X);
 			super_put_rect((x +  0), y, 0);
 			super_put_rect((x + 64), y, 1);
 		}
@@ -169,7 +169,7 @@ void pascal score_menu(void)
 	grc_setclip(128, 96, 512, 304);
 
 	page_t page_shown = 1;
-	logo_step = 0;
+	frame = 0;
 	do {
 		input_reset_sense();
 		if(!input_allowed && !key_det) {
@@ -177,25 +177,25 @@ void pascal score_menu(void)
 		} else if(input_allowed == 1 && key_det) {
 			break;
 		}
-		logo_render(logo_step++);
+		logo_render(frame++);
 		frame_delay(1);
 
 		graph_accesspage(page_shown);
 		graph_showpage(page_shown = (1 - page_shown));
-		if(logo_step == 1) {
+		if(frame == 1) {
 			palette_settone(100);
 			scores_put(-1);
 		}
 		// Since we've merged the ZUN bug frame into this loop, we need to stay
 		// here for one extra frame.
-	} while(logo_step <= (score_duration + 1));
+	} while(frame <= (score_frames + 1));
 	key_det = 0;
 
 	// Render the previously rendered frame to the now active page to ensure
 	// that both VRAM pages are identical. This way, the call site can cleanly
 	// transition to whatever it wants to draw on whatever page.
 	vsync_Count1 = 0;
-	logo_render(logo_step - 1);
+	logo_render(frame - 1);
 	while(vsync_Count1 < 1) {
 	}
 	grc_setclip(0, 0, (RES_X - 1), (RES_Y - 1));

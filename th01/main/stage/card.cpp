@@ -41,7 +41,7 @@ void cards_hittest(int stage_id)
 			(test_damage == true) && (cards.flag[i] == CARD_ALIVE)
 		) || (
 			(bomb_damaging == true) &&
-			((bomb_frames % cards.count) == i) &&
+			((bomb_frame % cards.count) == i) &&
 			((irand() % 4) != 0) &&
 			(cards.flag[i] == CARD_ALIVE)
 		)) {
@@ -83,13 +83,22 @@ add_point_item:
 static const unsigned int CARD_SCORE_CAP_DIGITS = digit_count(CARD_SCORE_CAP);
 static const pixel_t CARD_SCORE_W = (CARD_SCORE_CAP_DIGITS * GLYPH_HALF_W);
 
-static const int FRAME_SCORE_FIRST = (
-	card_first_frame_of(CARD_CEL_EDGE) + (CARD_FRAMES_PER_CEL / 3)
+// The score animation lags behind the card-flipping animation by this amount
+// of frames.
+static const int SCORE_CEL_DELAY_FRAMES = (CARD_FRAMES_PER_CEL / 2);
+
+static const int KEYFRAME_SCORE_FIRST = (
+	card_first_frame_of(CARD_CEL_EDGE) + SCORE_CEL_DELAY_FRAMES
 );
-static const int FRAME_SCORE_MOVE_UP = (
-	card_first_frame_of(CARD_CEL_BACK_HALF) + (CARD_FRAMES_PER_CEL / 3)
+static const int KEYFRAME_SCORE_MOVE_UP = (
+	card_first_frame_of(CARD_CEL_BACK_HALF) + SCORE_CEL_DELAY_FRAMES
 );
-static const int FRAME_ANIM_DONE = (card_first_frame_of(CARD_CEL_FLIPPED) + 1);
+static const int KEYFRAME_FLIP_DONE = (
+	card_first_frame_of(CARD_CEL_FLIPPED) + 1
+);
+static const int KEYFRAME_SCORE_DONE = (
+	KEYFRAME_FLIP_DONE + SCORE_CEL_DELAY_FRAMES
+);
 
 void cards_score_render(void)
 {
@@ -102,10 +111,11 @@ void cards_score_render(void)
 
 	for(int i = 0; i < cards.count; i++) {
 		if(
-			(cards_score[i] != 0) && (cards.flip_frames[i] > FRAME_SCORE_FIRST)
+			(cards_score[i] != 0) &&
+			(cards.flip_frame[i] > (KEYFRAME_SCORE_FIRST - 1))
 		) {
-			if(cards.flip_frames[i] > FRAME_SCORE_MOVE_UP) {
-				popup_y	= (cards.flip_frames[i] - FRAME_SCORE_MOVE_UP);
+			if(cards.flip_frame[i] > (KEYFRAME_SCORE_MOVE_UP - 1)) {
+				popup_y	= (cards.flip_frame[i] - (KEYFRAME_SCORE_MOVE_UP - 1));
 			} else {
 				popup_y = 0;
 			}
@@ -130,9 +140,7 @@ void cards_score_render(void)
 				);
 			}
 
-			if(cards.flip_frames[i] >= (
-				FRAME_ANIM_DONE + (CARD_FRAMES_PER_CEL / 2)
-			)) {
+			if(cards.flip_frame[i] >= KEYFRAME_SCORE_DONE) {
 				cards_score[i] = 0;
 			} else {
 				str_from_positive_int16(str, cards_score[i]);
@@ -151,7 +159,7 @@ void cards_score_render(void)
 	stageobj_put_bg_and_obj_8( \
 		cards.left[i], \
 		cards.top[i], \
-		CARD_ANIM[cards.hp[i]][cards.flip_frames[i] / CARD_FRAMES_PER_CEL], \
+		CARD_ANIM[cards.hp[i]][cards.flip_frame[i] / CARD_FRAMES_PER_CEL], \
 		i \
 	);
 
@@ -163,14 +171,14 @@ void cards_update_and_render(void)
 	for(i = 0; i < cards.count; i++) {
 		if(cards.flag[i] == CARD_FLIPPING) {
 			if(
-				(cards.flip_frames[i] < FRAME_ANIM_DONE) &&
-				((cards.flip_frames[i] % CARD_FRAMES_PER_CEL) == 0)
+				(cards.flip_frame[i] < KEYFRAME_FLIP_DONE) &&
+				((cards.flip_frame[i] % CARD_FRAMES_PER_CEL) == 0)
 			) {
 				page_access(1);	card_put_8(i);
 				page_access(0);	card_put_8(i);
 			}
-			cards.flip_frames[i]++;
-			if(cards.flip_frames[i] >= card_first_frame_of(CARD_CEL_FLIPPED)) {
+			cards.flip_frame[i]++;
+			if(cards.flip_frame[i] >= card_first_frame_of(CARD_CEL_FLIPPED)) {
 				if(rank == RANK_LUNATIC) {
 					pellet_group_t group;
 
@@ -180,7 +188,7 @@ void cards_update_and_render(void)
 						group = PG_1_RANDOM_NARROW_AIMED;
 					}
 
-					if(cards.flip_frames[i] == FRAME_ANIM_DONE) {
+					if(cards.flip_frame[i] == KEYFRAME_FLIP_DONE) {
 						Pellets.add_group(
 							(cards.left[i] + (STAGEOBJ_W / 2) - (PELLET_W / 2)),
 							(cards.top[i]  + (STAGEOBJ_H / 2) - (PELLET_H / 2)),
@@ -189,13 +197,13 @@ void cards_update_and_render(void)
 						);
 					}
 				}
-				if(cards.flip_frames[i] >= card_first_frame_of(CARD_CELS)) {
+				if(cards.flip_frame[i] >= card_first_frame_of(CARD_CELS)) {
 					if(cards.hp[i] == 0) {
 						cards.flag[i] = CARD_REMOVED;
-						cards.flip_frames[i] = 0;
+						cards.flip_frame[i] = 0;
 					} else {
 						cards.flag[i] = CARD_ALIVE;
-						cards.flip_frames[i] = 0;
+						cards.flip_frame[i] = 0;
 						cards.hp[i]--;
 					}
 				}

@@ -40,8 +40,20 @@ static const collmap_tile_amount_t COLLMAP_SLOPE_VSTRIPE_DISTANCE = 2;
 extern PlayfieldPoint collmap_center;
 extern PlayfieldPoint collmap_topleft;
 
-extern collmap_tile_amount_t collmap_stripe_tile_w;
-extern collmap_tile_amount_t collmap_tile_h;
+extern struct {
+	collmap_tile_amount_t v;
+
+	void set(pixel_t pixel_v) {
+		v = (pixel_v / COLLMAP_TILE_W);
+	}
+} collmap_stripe_tile_w;
+extern struct {
+	collmap_tile_amount_t v;
+
+	void set(pixel_t pixel_v) {
+		v = (pixel_v / COLLMAP_TILE_H);
+	}
+} collmap_tile_h;
 extern PlayfieldPoint collmap_bottomright;
 extern pid_t collmap_pid;
 
@@ -63,6 +75,7 @@ void collmap_set_rect_striped();
 // • [collmap_topleft] (X and Y)
 // • [collmap_tile_h] (height of the line)
 // • [collmap_pid]
+// ZUN bloat: Only used for bullets, which only need a single tile.
 void collmap_set_vline();
 
 // Sets all bits on every [COLLMAP_SLOPE_VSTRIPE_DISTANCE]th row of a

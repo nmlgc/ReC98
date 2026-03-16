@@ -474,10 +474,10 @@ void stageobjs_init_and_render(int stage_id)
 	a_random_unused_card_id = (irand() % cards.count);
 
 	for(i = 0; i < obstacles.count; i++) {
-		obstacles.frames[i].v = 0;
+		obstacles.frame[i].v = 0;
 	}
 	for(i = 0; i < cards.count; i++) {
-		cards.flip_frames[i] = 0;
+		cards.flip_frame[i] = 0;
 	}
 
 	for(offset = cards_begin(); offset < cards_end(); offset++) {
@@ -567,7 +567,7 @@ void stageobjs_init_and_render(int stage_id)
 
 		actual_obstacle:
 			obstacles.type[obstacle_slot - 1] = obstacle_type;
-			obstacles.frames[obstacle_slot - 1].v = 0; // Again?!
+			obstacles.frame[obstacle_slot - 1].v = 0; // Again?!
 			break;
 		}
 	}
@@ -582,30 +582,30 @@ void stageobjs_init_and_render(int stage_id)
 
 	// ZUN bug: Should be STAGEOBJS_COUNT. This effectively limits stages to a
 	// maximum of 50 cards rather than the original 200, since...
-	int frames_for[50] = { 0 };
-	// ... [total_frames] is the next variable on the stack. Therefore, ...
-	int total_frames = 0;
+	int frame_for[50] = { 0 };
+	// ... [total_frame] is the next variable on the stack. Therefore, ...
+	int total_frame = 0;
 	while(1) {
 		int cards_animated = 0;
 		for(i = 0; i < cards.count; i++) {
-			if(frames_for[i] == -1) {
+			if(frame_for[i] == -1) {
 				cards_animated++;
 			}
-			if(frames_for[i] < card_first_frame_of(CARD_CEL_EDGE)) {
+			if(frame_for[i] < card_first_frame_of(CARD_CEL_EDGE)) {
 				continue;
 			}
-			if((frames_for[i] % CARD_FRAMES_PER_CEL) == 0) {
+			if((frame_for[i] % CARD_FRAMES_PER_CEL) == 0) {
 				card_ptn_id = (
-					CARD_ANIM[cards.hp[i] + 1][card_cel_at(frames_for[i])]
+					CARD_ANIM[cards.hp[i] + 1][card_cel_at(frame_for[i])]
 				);
 				stageobj_put_8(cards, i, card_ptn_id);
 			}
-			frames_for[i]++;
+			frame_for[i]++;
 			// ... trying to access the 51st card here actually accesses
-			// [total_frames], periodically resetting it to -1. Which in turn
+			// [total_frame], periodically resetting it to -1. Which in turn
 			// means that...
-			if(frames_for[i] > card_first_frame_of(CARD_CEL_FLIPPED)) {
-				frames_for[i] = -1;
+			if(frame_for[i] > card_first_frame_of(CARD_CEL_FLIPPED)) {
+				frame_for[i] = -1;
 			}
 		}
 		if(cards_animated >= cards.count) {
@@ -613,10 +613,10 @@ void stageobjs_init_and_render(int stage_id)
 		}
 		// ... the first 24 cards are animated over and over in an infinite
 		// loop, as the termination condition above can never become true.
-		if(total_frames < cards.count) {
-			frames_for[total_frames] = card_first_frame_of(CARD_CEL_EDGE);
+		if(total_frame < cards.count) {
+			frame_for[total_frame] = card_first_frame_of(CARD_CEL_EDGE);
 		}
-		total_frames++;
+		total_frame++;
 		frame_delay(1);
 	}
 
@@ -626,13 +626,13 @@ void stageobjs_init_and_render(int stage_id)
 
 #define turret_update(obstacle_i, firing_interval, reset) \
 	if(rank != RANK_EASY) { \
-		obstacles.frames[obstacle_i].fire_cycle++; \
+		obstacles.frame[obstacle_i].fire_cycle++; \
 	} \
-	if(obstacles.frames[obstacle_i].fire_cycle >= firing_interval) { \
+	if(obstacles.frame[obstacle_i].fire_cycle >= firing_interval) { \
 		turret_fire_update_and_render(obstacle_i); \
 	} \
 	if(reset == true) { \
-		obstacles.frames[obstacle_i].fire_cycle = 0; \
+		obstacles.frame[obstacle_i].fire_cycle = 0; \
 		turrets_reset(); \
 	}
 
@@ -643,8 +643,8 @@ void stageobjs_init_and_render(int stage_id)
 	i, condition_x, condition_above_top, condition_below_top \
 ) \
 	condition_x && condition_above_top && condition_below_top) { \
-		if(obstacles.frames[i].since_collision == 0) { \
-			obstacles.frames[i].since_collision++; \
+		if(obstacles.frame[i].since_collision == 0) { \
+			obstacles.frame[i].since_collision++; \
 			/* \
 			 * That's a very naive response to a collision, as it implies that \
 			 * the Orb is always coming in perpendicular to the bar. The size \
@@ -656,14 +656,14 @@ void stageobjs_init_and_render(int stage_id)
 		} \
 	} \
 	/* (redundant, checked after the loop) */ \
-	if(obstacles.frames[i].since_collision != 0
+	if(obstacles.frame[i].since_collision != 0
 
 #define bar_hittest_vertical( \
 	i, condition_y, condition_left_of_left, condition_right_of_left, blocked \
 ) \
 	condition_y && condition_left_of_left && condition_right_of_left) { \
-		if((obstacles.frames[i].since_collision == 0) && !blocked) { \
-			obstacles.frames[i].since_collision++; \
+		if((obstacles.frame[i].since_collision == 0) && !blocked) { \
+			obstacles.frame[i].since_collision++; \
 			blocked = true; \
 			\
 			/* \
@@ -682,7 +682,7 @@ void stageobjs_init_and_render(int stage_id)
 		} \
 	} \
 	/* (redundant, checked after the loop) */ \
-	if(obstacles.frames[i].since_collision != 0
+	if(obstacles.frame[i].since_collision != 0
 
 void obstacles_update_and_render(bool16 reset)
 {
@@ -743,9 +743,9 @@ void obstacles_update_and_render(bool16 reset)
 			if(
 				(delta_abs_x < STAGEOBJ_ORB_DISTANCE_X) &&
 				(delta_abs_y < STAGEOBJ_ORB_DISTANCE_Y) &&
-				(obstacles.frames[i].since_collision == 0)
+				(obstacles.frame[i].since_collision == 0)
 			) {
-				obstacles.frames[i].since_collision++;
+				obstacles.frame[i].since_collision++;
 
 				// Yup, an immediate teleport to above or below the bumper, as
 				// if it couldn't ever be hit from the left or right side,
@@ -780,16 +780,16 @@ void obstacles_update_and_render(bool16 reset)
 				orb_force_new(1.5, OF_BOUNCE_FROM_SURFACE);
 			}
 
-			if(obstacles.frames[i].since_collision != 0) {
-				obstacles.frames[i].since_collision++;
-				if(obstacles.frames[i].since_collision >= BLOCK_FRAMES) {
-					obstacles.frames[i].since_collision = 0;
+			if(obstacles.frame[i].since_collision != 0) {
+				obstacles.frame[i].since_collision++;
+				if(obstacles.frame[i].since_collision >= BLOCK_FRAMES) {
+					obstacles.frame[i].since_collision = 0;
 				}
 			}
 
 			// (redundant, done after the switch)
 			if(reset == true) {
-				obstacles.frames[i].since_collision = 0;
+				obstacles.frame[i].since_collision = 0;
 			}
 			continue;
 
@@ -816,13 +816,13 @@ void obstacles_update_and_render(bool16 reset)
 				(delta_abs_x < STAGEOBJ_ORB_DISTANCE_X) &&
 				(delta_abs_y < STAGEOBJ_ORB_DISTANCE_Y)
 			) || (
-				obstacles.frames[i].since_collision != 0
+				obstacles.frame[i].since_collision != 0
 			)) {
 				portal_enter_update_and_render(i);
 			}
 			if(reset == true) {
 				// (redundant, done after the switch)
-				obstacles.frames[i].since_collision = 0;
+				obstacles.frame[i].since_collision = 0;
 
 				portals_reset();
 			}
@@ -885,53 +885,53 @@ void obstacles_update_and_render(bool16 reset)
 			continue;
 		}
 		// Common to all bumper bars
-		if(obstacles.frames[i].since_collision != 0) {
-			obstacles.frames[i].since_collision++;
-			if(obstacles.frames[i].since_collision >= BLOCK_FRAMES) {
-				obstacles.frames[i].since_collision = 0;
+		if(obstacles.frame[i].since_collision != 0) {
+			obstacles.frame[i].since_collision++;
+			if(obstacles.frame[i].since_collision >= BLOCK_FRAMES) {
+				obstacles.frame[i].since_collision = 0;
 				vertical_bars_blocked = false;
 			}
 		}
 		if(reset == true) {
-			obstacles.frames[i].since_collision = 0;
+			obstacles.frame[i].since_collision = 0;
 		}
 	}
 }
 
 static const int TURRET_COOLDOWN_FRAMES = 7;
 
-enum turret_state_t {
-	TS_READY = 0,
-	TS_WARMUP = 1,
-	TS_FIRE = 2,
-	TS_COOLDOWN = 3,
-	TS_DONE = (TS_COOLDOWN + TURRET_COOLDOWN_FRAMES),
+enum turret_flag_t {
+	TF_READY = 0,
+	TF_WARMUP = 1,
+	TF_FIRE = 2,
+	TF_COOLDOWN = 3,
+	TF_DONE = (TF_COOLDOWN + TURRET_COOLDOWN_FRAMES),
 
-	_turret_state_t_FORCE_INT16 = 0x7FFF
+	_turret_flag_t_FORCE_INT16 = 0x7FFF
 };
 
 void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 {
-	static turret_state_t *turret_state;
+	static turret_flag_t *turret_flag;
 
 	if(reset == true) {
-		if(turret_state) {
-			delete[] turret_state;
-			turret_state = nullptr;
+		if(turret_flag) {
+			delete[] turret_flag;
+			turret_flag = nullptr;
 		}
 		if(obstacles.count != 0) {
-			turret_state = new turret_state_t[obstacles.count];
+			turret_flag = new turret_flag_t[obstacles.count];
 		}
 		for(
 			obstacle_slot = 0;
 			obstacle_slot < obstacles.count;
 			obstacle_slot++
 		) {
-			turret_state[obstacle_slot] = TS_READY;
+			turret_flag[obstacle_slot] = TF_READY;
 		}
 		return;
 	}
-	if(turret_state[obstacle_slot] == TS_READY) {
+	if(turret_flag[obstacle_slot] == TF_READY) {
 		// MODDERS: This assumes that PTN_TURRET_FIRING only adds or changes
 		// pixels compared to PTN_TURRET, and doesn't remove any. Unblit the
 		// previous portal sprite to ensure this.
@@ -941,12 +941,12 @@ void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		page_access(0);
 		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
 
-		turret_state[obstacle_slot] = TS_WARMUP;
-	} else if(turret_state[obstacle_slot] == TS_WARMUP) {
-		if((obstacles.frames[obstacle_slot].fire_cycle % 10) == 9) {
-			turret_state[obstacle_slot] = TS_FIRE;
+		turret_flag[obstacle_slot] = TF_WARMUP;
+	} else if(turret_flag[obstacle_slot] == TF_WARMUP) {
+		if((obstacles.frame[obstacle_slot].fire_cycle % 10) == 9) {
+			turret_flag[obstacle_slot] = TF_FIRE;
 		}
-	} else if(turret_state[obstacle_slot] == TS_FIRE) {
+	} else if(turret_flag[obstacle_slot] == TF_FIRE) {
 		uint8_t group; // ACTUAL TYPE: pellet_group_t
 		switch(obstacles.type[obstacle_slot]) {
 			case OT_TURRET_SLOW_1_AIMED:
@@ -992,17 +992,17 @@ void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		// (Also, same lazy blitting issue as we've had the first time.)
 		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
 
-		turret_state[obstacle_slot] = TS_COOLDOWN;
+		turret_flag[obstacle_slot] = TF_COOLDOWN;
 	} else {
-		reinterpret_cast<int &>(turret_state[obstacle_slot])++;
-		if(turret_state[obstacle_slot] >= TS_DONE) {
+		reinterpret_cast<int &>(turret_flag[obstacle_slot])++;
+		if(turret_flag[obstacle_slot] >= TF_DONE) {
 			page_access(1);
 			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
 			page_access(0);
 			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
 
-			turret_state[obstacle_slot] = TS_READY;
-			obstacles.frames[obstacle_slot].fire_cycle = 0;
+			turret_flag[obstacle_slot] = TF_READY;
+			obstacles.frame[obstacle_slot].fire_cycle = 0;
 		}
 	}
 }
@@ -1045,12 +1045,12 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		return;
 	}
 
-	if(obstacles.frames[obstacle_slot].since_collision != 0) {
-		obstacles.frames[obstacle_slot].since_collision++;
+	if(obstacles.frame[obstacle_slot].since_collision != 0) {
+		obstacles.frame[obstacle_slot].since_collision++;
 	}
-	if(obstacles.frames[obstacle_slot].since_collision == 0) {
+	if(obstacles.frame[obstacle_slot].since_collision == 0) {
 		orb_in_portal = true;
-		obstacles.frames[obstacle_slot].since_collision = 1;
+		obstacles.frame[obstacle_slot].since_collision = 1;
 		obstacle_slot_of_entered_portal = obstacle_slot;
 		portals_blocked = true;
 
@@ -1060,10 +1060,10 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		// pixels compared to PTN_PORTAL, and doesn't remove any. Unblit the
 		// previous portal sprite to ensure this.
 		stageobj_put_8(obstacles, obstacle_slot, (PTN_PORTAL_ANIM + 0));
-	} else if(obstacles.frames[obstacle_slot].since_collision == 10) {
+	} else if(obstacles.frame[obstacle_slot].since_collision == 10) {
 		stageobj_sloppy_unput_16(obstacles, obstacle_slot);
 		stageobj_put_8(obstacles, obstacle_slot, (PTN_PORTAL_ANIM + 1));
-	} else if(obstacles.frames[obstacle_slot].since_collision == 20) {
+	} else if(obstacles.frame[obstacle_slot].since_collision == 20) {
 		stageobj_sloppy_unput_16(obstacles, obstacle_slot);
 		stageobj_put_8(obstacles, obstacle_slot, PTN_PORTAL);
 
@@ -1098,10 +1098,10 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		dst_top = obstacles.top[dst_slot];
 		ptn_sloppy_unput_16(dst_left, dst_top);
 		ptn_put_8(dst_left, dst_top, (PTN_PORTAL_ANIM + 1));
-	} else if(obstacles.frames[obstacle_slot].since_collision == 30) {
+	} else if(obstacles.frame[obstacle_slot].since_collision == 30) {
 		ptn_sloppy_unput_16(dst_left, dst_top);
 		ptn_put_8(dst_left, dst_top, (PTN_PORTAL_ANIM + 0));
-	} else if(obstacles.frames[obstacle_slot].since_collision == 40) {
+	} else if(obstacles.frame[obstacle_slot].since_collision == 40) {
 		ptn_sloppy_unput_16(dst_left, dst_top);
 		ptn_put_8(dst_left, dst_top, PTN_PORTAL);
 
@@ -1110,8 +1110,8 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		orb_cur_left = dst_left;
 		orb_cur_top = dst_top;
 		orb_in_portal = false;
-	} else if(obstacles.frames[obstacle_slot].since_collision == 60) {
-		obstacles.frames[obstacle_slot].since_collision = 0;
+	} else if(obstacles.frame[obstacle_slot].since_collision == 60) {
+		obstacles.frame[obstacle_slot].since_collision = 0;
 		portals_blocked = false;
 	}
 }

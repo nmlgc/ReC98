@@ -195,19 +195,21 @@ void pascal near overlay_stage_fade_animate(
 	enum {
 		PLAYFIELD_GAIJI_W = (PLAYFIELD_W / GLYPH_FULL_W),
 		X_PER_FRAME = 2,
-		DURATION = ((PLAYFIELD_GAIJI_W / X_PER_FRAME) + OVERLAY_FADE_CELS),
+		FRAMES_HALF = ((PLAYFIELD_GAIJI_W / X_PER_FRAME) + OVERLAY_FADE_CELS),
 	};
 	shiftjis_kanji_amount_t x;
 	tram_y_t y;
-	int frame;
+	int frame_half;
 
 	// ACTUAL TYPE: gaiji_th02_t
 	int gaiji_last = (gaiji_first + OVERLAY_FADE_CELS - 1);
 
-	for(frame = 0; frame < DURATION; frame++) {
+	for(frame_half = 0; frame_half < FRAMES_HALF; frame_half++) {
 		for(x = 0; x < PLAYFIELD_GAIJI_W; x++) {
 			for(y = PLAYFIELD_TRAM_TOP; y <= (PLAYFIELD_TRAM_BOTTOM - 1); y++) {
-				int c = ((gaiji_first + frame) - (x >> 1)); // / X_PER_FRAME
+				// / X_PER_FRAME
+				int c = ((gaiji_first + frame_half) - (x >> 1));
+
 				if(c < gaiji_first) {
 					c = gaiji_first;
 				} else if(c > gaiji_last) {

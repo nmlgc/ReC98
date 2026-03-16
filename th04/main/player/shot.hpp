@@ -72,7 +72,7 @@ struct Shot {
 	) {
 		shot_velocity_set(
 			(SPPoint near*)&this->pos.velocity,
-			randring1_next8_and_ge_lt(min, max)
+			randring1_next8_ge_lt(min, max)
 		);
 	}
 };

@@ -424,8 +424,8 @@ void hud_bombs_put(int prev)
 	put_change(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, prev, rem_bombs);
 }
 
-#undef bg_snap_and_put
 #undef put_change
+#undef bg_snap_and_put
 /// ---------------
 
 inline void stage_unput(void) {

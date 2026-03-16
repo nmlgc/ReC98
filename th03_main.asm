@@ -24,19 +24,19 @@ include th03/arg_bx.inc
 include th03/th03.inc
 include th03/main/playfld.inc
 include th03/main/collmap.inc
-include th03/main/player/bomb.inc
 include th03/sprites/main_s16.inc
 include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
-GAUGE_ATTACK_LEVEL_MIN = 1
-GAUGE_ATTACK_LEVEL_MAX = 16
-BOSS_ATTACK_LEVEL_MAX = 16
+GBA_GAUGE_LEVEL_MIN = 1
+GBA_GAUGE_LEVEL_MAX = 16
+GBA_BOSS_LEVEL_MAX = 16
 
 	extern _execl:proc
 
-main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, main_011_TEXT
-main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
+main_01 group PLAYFLD_TEXT, CFG_LRES_TEXT, HITCIRC_TEXT, HUD_STAT_TEXT, PLAYER_M_TEXT, main_010_TEXT, P_SHOT_TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, ENEMY_PUT, E_EXPL_TEXT, PELLET_PUT, E_ENEMY_TEXT, HITBOX_TEXT, P_COMBO_TEXT, P_GAUGE_TEXT, ENEMY_2_TEXT, BULLET_TEXT, E_FIREB_TEXT
+main_06 group P_EXATT_TEXT, main_06_TEXT
 
 ; ===========================================================================
 
@@ -194,7 +194,7 @@ loc_9724:
 ; ---------------------------------------------------------------------------
 
 loc_974D:
-		call	sub_13DF9
+		call	@enemy_formations_free$qv
 		kajacall	KAJA_SONG_STOP
 		or	si, si
 		jnz	short loc_9764
@@ -231,16 +231,16 @@ sub_9778	proc near
 
 loc_977E:
 		call	_collmap_reset
-		call	sub_1797F
+		call	@bullet_template_reset_stuff$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_1FE70
-		call	p1_1F32E
+		call	exatt_update_p1
+		call	gba_boss_update_p1
 		call	p1_205CE
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_1FE7C
-		call	p2_1F332
+		call	exatt_update_p2
+		call	gba_boss_update_p2
 		call	p2_205D2
 		call	@hitcircles_update$qv
 		call	@shots_update$qv
@@ -251,18 +251,18 @@ loc_977E:
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	_chargeshot_update_p2
 		call	sub_BB12
-		call	sub_13CC7
-		call	sub_17A1B
-		call	sub_1609E
-		call	sub_18059
+		call	@enemy_formations_update$qv
+		call	@bullets_update$qv
+		call	@enemies_update$qv
+		call	@fireballs_update$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_202A4
-		call	p1_202AC
+		call	gba_gauge_pattern_pellet_p1
+		call	gba_gauge_pattern_bullet_p1
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_202A8
-		call	p2_202B0
+		call	gba_gauge_pattern_pellet_p2
+		call	gba_gauge_pattern_bullet_p2
 		nopcall	sub_CEB2
 		call	_input_mode
 		mov	_pid_PID_current, 0
@@ -300,21 +300,21 @@ loc_986C:
 		call	bomb_p2
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_1F336
+		call	gba_boss_render_p1
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_1F33A
+		call	gba_boss_render_p2
 		call	@shots_render$qv
-		call	sub_164DA
-		call	sub_1837C
+		call	@enemies_render$qv
+		call	@fireballs_hittest_and_render$qv
 		call	@hitcircles_render$qv
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
-		call	p1_1FE74
+		call	exatt_render_p1
 		call	_chargeshot_render_p1
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
-		call	p2_1FE80
+		call	exatt_render_p2
 		call	_chargeshot_render_p2
 		mov	_pid_PID_current, 0
 		push	offset _p1
@@ -330,8 +330,8 @@ loc_986C:
 		push	offset _p2
 		call	sub_DF18
 		nopcall	sub_CEE0
-		call	sub_17BD1
-		cmp	byte_20E3C, 2
+		call	@bullets_render$qv
+		cmp	_defeat_flag, DF_BANNER
 		jnz	loc_99B1
 		call	sub_C2F9
 		les	bx, _resident
@@ -408,7 +408,7 @@ loc_99B1:
 		push	1
 		nopcall	sub_C9FE
 		call	sub_BE5D
-		call	_combo_update_and_render
+		call	@combos_update_and_render$qv
 		call	fp_1FBC0
 		call	fp_1E6EA
 		cmp	byte_23AFA, 0
@@ -469,22 +469,22 @@ loc_9A62:
 		mov	_round_frame_mod2, al
 		test	byte ptr _round_or_result_frame, 63
 		jnz	short loc_9AC9
-		cmp	byte_23AF8, 7Fh
+		cmp	_round_speed, ROUND_SPEED_MAX
 		jnb	short loc_9A94
-		inc	byte_23AF8
+		inc	_round_speed
 
 loc_9A94:
 		test	_round_or_result_frame, 1023
 		jnz	short loc_9AB5
 		call	@randring_fill$qv
-		cmp	_p1.miss_damage_next, 6
+		cmp	_p1.hit_damage_next, HIT_DAMAGE_MAX
 		jnb	short loc_9AAA
-		inc	_p1.miss_damage_next
+		inc	_p1.hit_damage_next
 
 loc_9AAA:
-		cmp	_p2.miss_damage_next, 6
+		cmp	_p2.hit_damage_next, HIT_DAMAGE_MAX
 		jnb	short loc_9AB5
-		inc	_p2.miss_damage_next
+		inc	_p2.hit_damage_next
 
 loc_9AB5:
 		cmp	_round_or_result_frame, 2000
@@ -565,8 +565,8 @@ var_2		= word ptr -2
 		mov	random_seed, eax
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	graph_copy_page pascal, 0
-		call	sub_13CDD
-		mov	byte_207E3, 0
+		call	@enemy_formations_load$qv
+		mov	_round_id, 0
 		call	sub_9EBF
 		call	_hflip_lut_generate
 		nopcall	sub_D5A2
@@ -630,19 +630,19 @@ loc_9BC5:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
 		inc	al
-		mov	_gauge_attack_level[0], al
+		mov	_gba_gauge_level[0], al
 		mov	al, es:[bx+resident_t.story_stage]
 		inc	al
-		mov	_gauge_attack_level[1], al
+		mov	_gba_gauge_level[1], al
 		mov	al, _score_p1[6]
-		mov	byte_220DC, al
-		cmp	byte_220DC, 2
+		mov	_extends_gained, al
+		cmp	_extends_gained, EXTENDS_MAX
 		jnb	short loc_9BEF
 		cmp	_score_p1[7], 0
 		jz	short loc_9BF4
 
 loc_9BEF:
-		mov	byte_220DC, -1
+		mov	_extends_gained, EXTENDS_DISABLE
 
 loc_9BF4:
 		les	bx, _resident
@@ -692,9 +692,9 @@ loc_9C51:
 		mov	ax, word ptr [bp+var_6]
 		mov	_p1.cpu_safety_frames, ax
 		mov	_p2.cpu_safety_frames, ax
-		mov	_gauge_attack_level[0], GAUGE_ATTACK_LEVEL_MIN
-		mov	_gauge_attack_level[1], GAUGE_ATTACK_LEVEL_MIN
-		mov	byte_220DC, -1
+		mov	_gba_gauge_level[0], GBA_GAUGE_LEVEL_MIN
+		mov	_gba_gauge_level[1], GBA_GAUGE_LEVEL_MIN
+		mov	_extends_gained, EXTENDS_DISABLE
 		mov	_cpu_hit_damage_additional, 0
 		push	3
 
@@ -726,11 +726,11 @@ loc_9C93:
 loc_9CAB:
 		mov	_demo_frame, 0
 		mov	fp_1E6EA, offset sub_9AD6
-		mov	byte_23AF8, 40h
-		mov	byte_23E3C, 0
-		mov	_boss_attack_level, 8
-		mov	_gauge_attack_level[0], 9
-		mov	_gauge_attack_level[1], 9
+		mov	_round_speed, (4 shl 4)
+		mov	_bullet_base_speed, 0
+		mov	_gba_boss_level, 8
+		mov	_gba_gauge_level[0], 9
+		mov	_gba_gauge_level[1], 9
 
 loc_9CD0:
 		mov	fp_1FBC0, offset sub_B4A3
@@ -949,25 +949,25 @@ var_6		= dword	ptr -6
 		push	di
 		mov	word_1F32A, 0
 		mov	word_1F32C, 0
-		mov	byte_26356, 0
+		mov	_ef_onehit, 0
 		mov	byte_1FBC2, 0
 		mov	byte_1FBC3, 0
-		mov	byte_1F520, 0
+		mov	_enemy_speed, 0
 		call	sub_E313
 		call	@randring_fill$qv
-		call	sub_17384
+		call	@bullets_reset$qv
 		xor	di, di
 		jmp	short loc_9EFF
 ; ---------------------------------------------------------------------------
 
 loc_9EF4:
 		mov	bx, di
-		imul	bx, 30h
-		mov	byte ptr [bx+3ED6h], 0
+		imul	bx, size efe_t
+		mov	_efes[bx+efe_t.EFE_flag], EFF_FREE
 		inc	di
 
 loc_9EFF:
-		cmp	di, 40h
+		cmp	di, EFE_COUNT
 		jl	short loc_9EF4
 		xor	di, di
 		jmp	short loc_9F1D
@@ -1006,7 +1006,7 @@ loc_9F31:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jnz	loc_9FFA
-		mov	al, byte_207E3
+		mov	al, _round_id
 		mov	ah, 0
 		mov	dl, es:[bx+resident_t.rem_credits]
 		mov	dh, 0
@@ -1083,112 +1083,112 @@ loc_9FFA:
 		jmp	cs:off_A217[bx]
 
 @@easy:
-		mov	al, byte_207E3
+		mov	al, _round_id
 		shl	al, 4
-		mov	byte_23AF8, al
-		mov	byte_23E3C, 0
+		mov	_round_speed, al
+		mov	_bullet_base_speed, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	al, byte_207E3
-		mov	_boss_attack_level, al
+		add	al, _round_id
+		mov	_gba_boss_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	loc_A0E7
-		inc	_gauge_attack_level[0]
-		inc	_gauge_attack_level[1]
+		inc	_gba_gauge_level[0]
+		inc	_gba_gauge_level[1]
 		jmp	loc_A0E7
 ; ---------------------------------------------------------------------------
 
 @@normal:
-		mov	al, byte_207E3
+		mov	al, _round_id
 		shl	al, 5
-		mov	byte_23AF8, al
-		mov	byte_23E3C, 0
+		mov	_round_speed, al
+		mov	_bullet_base_speed, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
-		mov	dl, byte_207E3
+		mov	dl, _round_id
 		add	dl, dl
 		add	al, dl
-		mov	_boss_attack_level, al
+		mov	_gba_boss_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_A0E7
 		jmp	short loc_A0A2
 ; ---------------------------------------------------------------------------
 
 @@hard:
-		mov	al, byte_207E3
+		mov	al, _round_id
 		shl	al, 5
-		add	al, 20h	; ' '
-		mov	byte_23AF8, al
-		mov	byte_23E3C, 8
+		add	al, (2 shl 4)
+		mov	_round_speed, al
+		mov	_bullet_base_speed, 8
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
-		mov	dl, byte_207E3
+		mov	dl, _round_id
 		add	dl, dl
 		add	al, dl
 		add	al, 2
-		mov	_boss_attack_level, al
+		mov	_gba_boss_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_A0E7
 
 loc_A0A2:
-		mov	al, _gauge_attack_level[0]
+		mov	al, _gba_gauge_level[0]
 		add	al, 2
-		mov	_gauge_attack_level[0], al
-		mov	al, _gauge_attack_level[1]
+		mov	_gba_gauge_level[0], al
+		mov	al, _gba_gauge_level[1]
 		add	al, 2
 		jmp	short loc_A0E4
 ; ---------------------------------------------------------------------------
 
 @@lunatic:
-		mov	byte_23AF8, 60h
-		mov	byte_23E3C, 18h
+		mov	_round_speed, (6 shl 4)
+		mov	_bullet_base_speed, ((1 shl 4) + 8)
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.story_stage]
-		mov	dl, byte_207E3
+		mov	dl, _round_id
 		add	dl, dl
 		add	al, dl
 		add	al, 8
-		mov	_boss_attack_level, al
+		mov	_gba_boss_level, al
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_A0E7
-		mov	al, _gauge_attack_level[0]
+		mov	al, _gba_gauge_level[0]
 		add	al, 4
-		mov	_gauge_attack_level[0], al
-		mov	al, _gauge_attack_level[1]
+		mov	_gba_gauge_level[0], al
+		mov	al, _gba_gauge_level[1]
 		add	al, 4
 
 loc_A0E4:
-		mov	_gauge_attack_level[1], al
+		mov	_gba_gauge_level[1], al
 
 loc_A0E7:
-		cmp	byte_23AF8, 80h
+		cmp	_round_speed, (ROUND_SPEED_MAX + 1)
 		jb	short loc_A0F3
-		mov	byte_23AF8, 7Fh
+		mov	_round_speed, ROUND_SPEED_MAX
 
 loc_A0F3:
-		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
+		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
 		jbe	short loc_A0FF
-		mov	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
+		mov	_gba_boss_level, GBA_BOSS_LEVEL_MAX
 
 loc_A0FF:
-		cmp	_gauge_attack_level[0], GAUGE_ATTACK_LEVEL_MAX
+		cmp	_gba_gauge_level[0], GBA_GAUGE_LEVEL_MAX
 		jbe	short loc_A10B
-		mov	_gauge_attack_level[0], GAUGE_ATTACK_LEVEL_MAX
+		mov	_gba_gauge_level[0], GBA_GAUGE_LEVEL_MAX
 
 loc_A10B:
-		cmp	_gauge_attack_level[1], GAUGE_ATTACK_LEVEL_MAX
+		cmp	_gba_gauge_level[1], GBA_GAUGE_LEVEL_MAX
 		jbe	short loc_A117
-		mov	_gauge_attack_level[1], GAUGE_ATTACK_LEVEL_MAX
+		mov	_gba_gauge_level[1], GBA_GAUGE_LEVEL_MAX
 
 loc_A117:
-		mov	byte_1DB9E, -1
-		mov	byte_20E3C, 0
-		mov	byte_207E2, 1
-		mov	word_21434, 1400h
+		mov	_gba_boss_launched_by, PID_NONE
+		mov	_defeat_flag, DF_NONE
+		mov	_hud_start_flag, HSF_INIT
+		mov	_combo_points_for_boss_attack, 5120
 		mov	_round_frame_mod16, 0
 		mov	_round_frame_mod8, 0
 		mov	_round_frame_mod4, 0
@@ -1199,7 +1199,7 @@ loc_A117:
 ; ---------------------------------------------------------------------------
 
 loc_A148:
-		mov	byte ptr [di+4AD6h], 0
+		mov	_enemies_alive[di], 0
 		les	bx, _resident
 		add	bx, di
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted]
@@ -1221,7 +1221,7 @@ loc_A148:
 		mov	[si+player_stuff_t.center.y], ((PLAYFIELD_H - 32) shl 4)
 		mov	[si+player_stuff_t.gauge_charged], 0
 		mov	[si+player_stuff_t.shot_active], SA_ENABLED
-		mov	[si+player_stuff_t.miss_damage_next], 1
+		mov	[si+player_stuff_t.hit_damage_next], 1
 		mov	[bp+@@i], 0
 		jmp	short loc_A1BD
 ; ---------------------------------------------------------------------------
@@ -1247,19 +1247,19 @@ loc_A1BD:
 		mov	byte ptr [si+player_stuff_t.boss_attacks_fired], 0
 		mov	byte ptr [si+player_stuff_t.boss_attacks_reversed], 0
 		mov	byte ptr [si+player_stuff_t.boss_panics_fired], 0
-		mov	byte ptr [di+2D54h], 0
+		mov	_gba_flag_active[di], GBAF_NONE
 		mov	bx, di
 		add	bx, bx
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	_damage_all_enemies_on[di], 0
-		mov	byte ptr [di+798h], 0
+		mov	_damage_all_on[di], 0
+		mov	_warning_flag[di], WF_NONE
 		inc	di
 		add	si, size player_stuff_t
 
 loc_A206:
 		cmp	di, PLAYER_COUNT
 		jl	loc_A148
-		call	sub_13D9C
+		call	@enemy_formations_randomize$qv
 		pop	di
 		pop	si
 		leave
@@ -1288,7 +1288,7 @@ sub_A21F	proc near
 		call	grcg_fill
 		graph_showpage 1
 		call	grcg_off
-		inc	byte_207E3
+		inc	_round_id
 		call	sub_9EBF
 		call	farfp_20F28
 		mov	_p1.hyper, offset hyper_standby
@@ -1599,17 +1599,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A5E2
-		setfarfp	p1_1FE6C, reimu_1A27E
-		setfarfp	p1_1FE70, reimu_1A4E0
-		setfarfp	p1_1FE74, reimu_1A5F9
+		setfarfp	exatt_add_p1, @exatt_add_reimu$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_reimu$qv
+		setfarfp	exatt_render_p1, @exatt_render_reimu$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_reimu
 		setfarfp	_chargeshot_update_p1, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p1, chargeshot_render_reimu
-		setfarfp	p1_2029C, reimu_14CE3
-		setfarfp	p1_202A4, reimu_14FEE
-		setfarfp	p1_202AC, reimu_15006
-		setfarfp	p1_1F32E, reimu_11033
-		setfarfp	p1_1F336, reimu_113A9
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_reimu$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_reimu
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_reimu
+		setfarfp	gba_boss_update_p1, gba_boss_update_reimu
+		setfarfp	gba_boss_render_p1, gba_boss_render_reimu
 		setfarfp	p1_205CE, reimu_1508C
 		setfarfp	bomb_p1, reimu_bomb
 		mov	_p1.hyper_func, offset hyper_reimu
@@ -1618,17 +1618,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A5E2:
-		setfarfp	p2_1FE78, reimu_1A27E
-		setfarfp	p2_1FE7C, reimu_1A4E0
-		setfarfp	p2_1FE80, reimu_1A5F9
+		setfarfp	exatt_add_p2, @exatt_add_reimu$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_reimu$qv
+		setfarfp	exatt_render_p2, @exatt_render_reimu$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_reimu
 		setfarfp	_chargeshot_update_p2, chargeshot_update_reimu
 		setfarfp	_chargeshot_render_p2, chargeshot_render_reimu
-		setfarfp	p2_202A0, reimu_14CE3
-		setfarfp	p2_202A8, reimu_14FEE
-		setfarfp	p2_202B0, reimu_15006
-		setfarfp	p2_1F332, reimu_11033
-		setfarfp	p2_1F33A, reimu_113A9
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_reimu$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_reimu
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_reimu
+		setfarfp	gba_boss_update_p2, gba_boss_update_reimu
+		setfarfp	gba_boss_render_p2, gba_boss_render_reimu
 		setfarfp	p2_205D2, reimu_1508C
 		setfarfp	bomb_p2, reimu_bomb
 		mov	_p2.hyper_func, offset hyper_reimu
@@ -1664,17 +1664,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A77A
-		setfarfp	p1_1FE6C, mima_1A62B
-		setfarfp	p1_1FE70, mima_1A745
-		setfarfp	p1_1FE74, mima_1A8D3
+		setfarfp	exatt_add_p1, @exatt_add_mima$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_mima$qv
+		setfarfp	exatt_render_p1, @exatt_render_mima$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_mima
 		setfarfp	_chargeshot_update_p1, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p1, chargeshot_render_mima
-		setfarfp	p1_2029C, mima_15597
-		setfarfp	p1_202A4, mima_158C5
-		setfarfp	p1_202AC, mima_158DD
-		setfarfp	p1_1F32E, mima_FED8
-		setfarfp	p1_1F336, mima_10263
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_mima$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_mima
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_mima
+		setfarfp	gba_boss_update_p1, gba_boss_update_mima
+		setfarfp	gba_boss_render_p1, gba_boss_render_mima
 		setfarfp	p1_205CE, mima_17043
 		setfarfp	bomb_p1, mima_bomb
 		mov	_p1.hyper_func, offset hyper_mima
@@ -1683,17 +1683,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A77A:
-		setfarfp	p2_1FE78, mima_1A62B
-		setfarfp	p2_1FE7C, mima_1A745
-		setfarfp	p2_1FE80, mima_1A8D3
+		setfarfp	exatt_add_p2, @exatt_add_mima$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_mima$qv
+		setfarfp	exatt_render_p2, @exatt_render_mima$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_mima
 		setfarfp	_chargeshot_update_p2, chargeshot_update_mima
 		setfarfp	_chargeshot_render_p2, chargeshot_render_mima
-		setfarfp	p2_202A0, mima_15597
-		setfarfp	p2_202A8, mima_158C5
-		setfarfp	p2_202B0, mima_158DD
-		setfarfp	p2_1F332, mima_FED8
-		setfarfp	p2_1F33A, mima_10263
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_mima$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_mima
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_mima
+		setfarfp	gba_boss_update_p2, gba_boss_update_mima
+		setfarfp	gba_boss_render_p2, gba_boss_render_mima
 		setfarfp	p2_205D2, mima_17043
 		setfarfp	bomb_p2, mima_bomb
 		mov	_p2.hyper_func, offset hyper_mima
@@ -1729,17 +1729,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A912
-		setfarfp	p1_1FE6C, marisa_19ABC
-		setfarfp	p1_1FE70, marisa_19C36
-		setfarfp	p1_1FE74, marisa_19D31
+		setfarfp	exatt_add_p1, @exatt_add_marisa$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_marisa$qv
+		setfarfp	exatt_render_p1, @exatt_render_marisa$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_marisa
 		setfarfp	_chargeshot_update_p1, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p1, chargeshot_render_marisa
-		setfarfp	p1_2029C, marisa_14487
-		setfarfp	p1_202A4, marisa_14885
-		setfarfp	p1_202AC, marisa_1489D
-		setfarfp	p1_1F32E, marisa_F848
-		setfarfp	p1_1F336, marisa_FAE8
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_marisa$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_marisa
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_marisa
+		setfarfp	gba_boss_update_p1, gba_boss_update_marisa
+		setfarfp	gba_boss_render_p1, gba_boss_render_marisa
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, marisa_bomb
 		mov	_p1.hyper_func, offset hyper_marisa
@@ -1748,17 +1748,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A912:
-		setfarfp	p2_1FE78, marisa_19ABC
-		setfarfp	p2_1FE7C, marisa_19C36
-		setfarfp	p2_1FE80, marisa_19D31
+		setfarfp	exatt_add_p2, @exatt_add_marisa$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_marisa$qv
+		setfarfp	exatt_render_p2, @exatt_render_marisa$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_marisa
 		setfarfp	_chargeshot_update_p2, chargeshot_update_marisa
 		setfarfp	_chargeshot_render_p2, chargeshot_render_marisa
-		setfarfp	p2_202A0, marisa_14487
-		setfarfp	p2_202A8, marisa_14885
-		setfarfp	p2_202B0, marisa_1489D
-		setfarfp	p2_1F332, marisa_F848
-		setfarfp	p2_1F33A, marisa_FAE8
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_marisa$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_marisa
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_marisa
+		setfarfp	gba_boss_update_p2, gba_boss_update_marisa
+		setfarfp	gba_boss_render_p2, gba_boss_render_marisa
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, marisa_bomb
 		mov	_p2.hyper_func, offset hyper_marisa
@@ -1794,17 +1794,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AAAA
-		setfarfp	p1_1FE6C, ellen_193EF
-		setfarfp	p1_1FE70, ellen_1961D
-		setfarfp	p1_1FE74, ellen_197F3
+		setfarfp	exatt_add_p1, @exatt_add_ellen$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_ellen$qv
+		setfarfp	exatt_render_p1, @exatt_render_ellen$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_ellen
 		setfarfp	_chargeshot_update_p1, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p1, chargeshot_render_ellen
-		setfarfp	p1_2029C, ellen_1B903
-		setfarfp	p1_202A4, ellen_1BC1D
-		setfarfp	p1_202AC, ellen_1BC35
-		setfarfp	p1_1F32E, ellen_116B6
-		setfarfp	p1_1F336, ellen_11A01
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_ellen$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_ellen
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_ellen
+		setfarfp	gba_boss_update_p1, gba_boss_update_ellen
+		setfarfp	gba_boss_render_p1, gba_boss_render_ellen
 		setfarfp	p1_205CE, ellen_185AB
 		setfarfp	bomb_p1, ellen_bomb
 		mov	_p1.hyper_func, offset hyper_ellen
@@ -1813,17 +1813,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_AAAA:
-		setfarfp	p2_1FE78, ellen_193EF
-		setfarfp	p2_1FE7C, ellen_1961D
-		setfarfp	p2_1FE80, ellen_197F3
+		setfarfp	exatt_add_p2, @exatt_add_ellen$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_ellen$qv
+		setfarfp	exatt_render_p2, @exatt_render_ellen$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_ellen
 		setfarfp	_chargeshot_update_p2, chargeshot_update_ellen
 		setfarfp	_chargeshot_render_p2, chargeshot_render_ellen
-		setfarfp	p2_202A0, ellen_1B903
-		setfarfp	p2_202A8, ellen_1BC1D
-		setfarfp	p2_202B0, ellen_1BC35
-		setfarfp	p2_1F332, ellen_116B6
-		setfarfp	p2_1F33A, ellen_11A01
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_ellen$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_ellen
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_ellen
+		setfarfp	gba_boss_update_p2, gba_boss_update_ellen
+		setfarfp	gba_boss_render_p2, gba_boss_render_ellen
 		setfarfp	p2_205D2, ellen_185AB
 		setfarfp	bomb_p2, ellen_bomb
 		mov	_p2.hyper_func, offset hyper_ellen
@@ -1859,17 +1859,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AC42
-		setfarfp	p1_1FE6C, kotohime_19D60
-		setfarfp	p1_1FE70, kotohime_19FEF
-		setfarfp	p1_1FE74, kotohime_1A14E
+		setfarfp	exatt_add_p1, @exatt_add_kotohime$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_kotohime$qv
+		setfarfp	exatt_render_p1, @exatt_render_kotohime$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_kotohime
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kotohime
-		setfarfp	p1_2029C, kotohime_1C22E
-		setfarfp	p1_202A4, kotohime_1C3DA
-		setfarfp	p1_202AC, kotohime_1C3F2
-		setfarfp	p1_1F32E, kotohime_11E48
-		setfarfp	p1_1F336, kotohime_12140
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kotohime$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_kotohime
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_kotohime
+		setfarfp	gba_boss_update_p1, gba_boss_update_kotohime
+		setfarfp	gba_boss_render_p1, gba_boss_render_kotohime
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, kotohime_bomb
 		mov	_p1.hyper_func, offset hyper_kotohime
@@ -1878,17 +1878,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_AC42:
-		setfarfp	p2_1FE78, kotohime_19D60
-		setfarfp	p2_1FE7C, kotohime_19FEF
-		setfarfp	p2_1FE80, kotohime_1A14E
+		setfarfp	exatt_add_p2, @exatt_add_kotohime$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_kotohime$qv
+		setfarfp	exatt_render_p2, @exatt_render_kotohime$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_kotohime
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kotohime
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kotohime
-		setfarfp	p2_202A0, kotohime_1C22E
-		setfarfp	p2_202A8, kotohime_1C3DA
-		setfarfp	p2_202B0, kotohime_1C3F2
-		setfarfp	p2_1F332, kotohime_11E48
-		setfarfp	p2_1F33A, kotohime_12140
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kotohime$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_kotohime
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_kotohime
+		setfarfp	gba_boss_update_p2, gba_boss_update_kotohime
+		setfarfp	gba_boss_render_p2, gba_boss_render_kotohime
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, kotohime_bomb
 		mov	_p2.hyper_func, offset hyper_kotohime
@@ -1924,17 +1924,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_ADDA
-		setfarfp	p1_1FE6C, kana_19825
-		setfarfp	p1_1FE70, kana_19999
-		setfarfp	p1_1FE74, kana_19A8D
+		setfarfp	exatt_add_p1, @exatt_add_kana$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_kana$qv
+		setfarfp	exatt_render_p1, @exatt_render_kana$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_kana
 		setfarfp	_chargeshot_update_p1, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p1, chargeshot_render_kana
-		setfarfp	p1_2029C, kana_1BE52
-		setfarfp	p1_202A4, kana_1C128
-		setfarfp	p1_202AC, kana_1C140
-		setfarfp	p1_1F32E, kana_12FE8
-		setfarfp	p1_1F336, kana_132FE
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_kana$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_kana
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_kana
+		setfarfp	gba_boss_update_p1, gba_boss_update_kana
+		setfarfp	gba_boss_render_p1, gba_boss_render_kana
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, kana_bomb
 		mov	_p1.hyper_func, offset hyper_kana
@@ -1943,17 +1943,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_ADDA:
-		setfarfp	p2_1FE78, kana_19825
-		setfarfp	p2_1FE7C, kana_19999
-		setfarfp	p2_1FE80, kana_19A8D
+		setfarfp	exatt_add_p2, @exatt_add_kana$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_kana$qv
+		setfarfp	exatt_render_p2, @exatt_render_kana$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_kana
 		setfarfp	_chargeshot_update_p2, chargeshot_update_kana
 		setfarfp	_chargeshot_render_p2, chargeshot_render_kana
-		setfarfp	p2_202A0, kana_1BE52
-		setfarfp	p2_202A8, kana_1C128
-		setfarfp	p2_202B0, kana_1C140
-		setfarfp	p2_1F332, kana_12FE8
-		setfarfp	p2_1F33A, kana_132FE
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_kana$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_kana
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_kana
+		setfarfp	gba_boss_update_p2, gba_boss_update_kana
+		setfarfp	gba_boss_render_p2, gba_boss_render_kana
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, kana_bomb
 		mov	_p2.hyper_func, offset hyper_kana
@@ -1989,17 +1989,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AF72
-		setfarfp	p1_1FE6C, rikako_1AFA2
-		setfarfp	p1_1FE70, rikako_1B105
-		setfarfp	p1_1FE74, rikako_1B231
+		setfarfp	exatt_add_p1, @exatt_add_rikako$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_rikako$qv
+		setfarfp	exatt_render_p1, @exatt_render_rikako$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_rikako
 		setfarfp	_chargeshot_update_p1, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p1, chargeshot_render_rikako
-		setfarfp	p1_2029C, rikako_1C66B
-		setfarfp	p1_202A4, rikako_1C8DA
-		setfarfp	p1_202AC, rikako_1C8F2
-		setfarfp	p1_1F32E, rikako_13661
-		setfarfp	p1_1F336, rikako_1398B
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_rikako$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_rikako
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_rikako
+		setfarfp	gba_boss_update_p1, gba_boss_update_rikako
+		setfarfp	gba_boss_render_p1, gba_boss_render_rikako
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, rikako_bomb
 		mov	_p1.hyper_func, offset hyper_rikako
@@ -2008,17 +2008,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_AF72:
-		setfarfp	p2_1FE78, rikako_1AFA2
-		setfarfp	p2_1FE7C, rikako_1B105
-		setfarfp	p2_1FE80, rikako_1B231
+		setfarfp	exatt_add_p2, @exatt_add_rikako$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_rikako$qv
+		setfarfp	exatt_render_p2, @exatt_render_rikako$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_rikako
 		setfarfp	_chargeshot_update_p2, chargeshot_update_rikako
 		setfarfp	_chargeshot_render_p2, chargeshot_render_rikako
-		setfarfp	p2_202A0, rikako_1C66B
-		setfarfp	p2_202A8, rikako_1C8DA
-		setfarfp	p2_202B0, rikako_1C8F2
-		setfarfp	p2_1F332, rikako_13661
-		setfarfp	p2_1F33A, rikako_1398B
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_rikako$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_rikako
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_rikako
+		setfarfp	gba_boss_update_p2, gba_boss_update_rikako
+		setfarfp	gba_boss_render_p2, gba_boss_render_rikako
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, rikako_bomb
 		mov	_p2.hyper_func, offset hyper_rikako
@@ -2054,17 +2054,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B10A
-		setfarfp	p1_1FE6C, chiyuri_18FEA
-		setfarfp	p1_1FE70, chiyuri_19260
-		setfarfp	p1_1FE74, chiyuri_1938A
+		setfarfp	exatt_add_p1, @exatt_add_chiyuri$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_chiyuri$qv
+		setfarfp	exatt_render_p1, @exatt_render_chiyuri$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_chiyuri
 		setfarfp	_chargeshot_update_p1, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p1, chargeshot_render_chiyuri
-		setfarfp	p1_2029C, chiyuri_1B3B0
-		setfarfp	p1_202A4, chiyuri_1B623
-		setfarfp	p1_202AC, chiyuri_1B63B
-		setfarfp	p1_1F32E, chiyuri_126A8
-		setfarfp	p1_1F336, chiyuri_12B99
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_chiyuri$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_chiyuri
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_chiyuri
+		setfarfp	gba_boss_update_p1, gba_boss_update_chiyuri
+		setfarfp	gba_boss_render_p1, gba_boss_render_chiyuri
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, chiyuri_bomb
 		mov	_p1.hyper_func, offset hyper_chiyuri
@@ -2073,17 +2073,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_B10A:
-		setfarfp	p2_1FE78, chiyuri_18FEA
-		setfarfp	p2_1FE7C, chiyuri_19260
-		setfarfp	p2_1FE80, chiyuri_1938A
+		setfarfp	exatt_add_p2, @exatt_add_chiyuri$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_chiyuri$qv
+		setfarfp	exatt_render_p2, @exatt_render_chiyuri$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_chiyuri
 		setfarfp	_chargeshot_update_p2, chargeshot_update_chiyuri
 		setfarfp	_chargeshot_render_p2, chargeshot_render_chiyuri
-		setfarfp	p2_202A0, chiyuri_1B3B0
-		setfarfp	p2_202A8, chiyuri_1B623
-		setfarfp	p2_202B0, chiyuri_1B63B
-		setfarfp	p2_1F332, chiyuri_126A8
-		setfarfp	p2_1F33A, chiyuri_12B99
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_chiyuri$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_chiyuri
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_chiyuri
+		setfarfp	gba_boss_update_p2, gba_boss_update_chiyuri
+		setfarfp	gba_boss_render_p2, gba_boss_render_chiyuri
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, chiyuri_bomb
 		mov	_p2.hyper_func, offset hyper_chiyuri
@@ -2119,17 +2119,17 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B2A2
-		setfarfp	p1_1FE6C, yumemi_1A902
-		setfarfp	p1_1FE70, yumemi_1AE2E
-		setfarfp	p1_1FE74, yumemi_1AF72
+		setfarfp	exatt_add_p1, @exatt_add_yumemi$qiiuc
+		setfarfp	exatt_update_p1, @exatt_update_yumemi$qv
+		setfarfp	exatt_render_p1, @exatt_render_yumemi$qv
 		setfarfp	_p1.chargeshot_add, chargeshot_add_yumemi
 		setfarfp	_chargeshot_update_p1, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p1, chargeshot_render_yumemi
-		setfarfp	p1_2029C, yumemi_16B0C
-		setfarfp	p1_202A4, yumemi_16FC0
-		setfarfp	p1_202AC, yumemi_16FD8
-		setfarfp	p1_1F32E, yumemi_1070A
-		setfarfp	p1_1F336, yumemi_10BAB
+		setfarfp	chargeshot_hittest_p1, @chargeshot_hittest_yumemi$qv
+		setfarfp	gba_gauge_pattern_pellet_p1, gba_gauge_pattern_pellet_yumemi
+		setfarfp	gba_gauge_pattern_bullet_p1, gba_gauge_pattern_bullet_yumemi
+		setfarfp	gba_boss_update_p1, gba_boss_update_yumemi
+		setfarfp	gba_boss_render_p1, gba_boss_render_yumemi
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, yumemi_bomb
 		mov	_p1.hyper_func, offset hyper_yumemi
@@ -2138,17 +2138,17 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_B2A2:
-		setfarfp	p2_1FE78, yumemi_1A902
-		setfarfp	p2_1FE7C, yumemi_1AE2E
-		setfarfp	p2_1FE80, yumemi_1AF72
+		setfarfp	exatt_add_p2, @exatt_add_yumemi$qiiuc
+		setfarfp	exatt_update_p2, @exatt_update_yumemi$qv
+		setfarfp	exatt_render_p2, @exatt_render_yumemi$qv
 		setfarfp	_p2.chargeshot_add, chargeshot_add_yumemi
 		setfarfp	_chargeshot_update_p2, chargeshot_update_yumemi
 		setfarfp	_chargeshot_render_p2, chargeshot_render_yumemi
-		setfarfp	p2_202A0, yumemi_16B0C
-		setfarfp	p2_202A8, yumemi_16FC0
-		setfarfp	p2_202B0, yumemi_16FD8
-		setfarfp	p2_1F332, yumemi_1070A
-		setfarfp	p2_1F33A, yumemi_10BAB
+		setfarfp	chargeshot_hittest_p2, @chargeshot_hittest_yumemi$qv
+		setfarfp	gba_gauge_pattern_pellet_p2, gba_gauge_pattern_pellet_yumemi
+		setfarfp	gba_gauge_pattern_bullet_p2, gba_gauge_pattern_bullet_yumemi
+		setfarfp	gba_boss_update_p2, gba_boss_update_yumemi
+		setfarfp	gba_boss_render_p2, gba_boss_render_yumemi
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, yumemi_bomb
 		mov	_p2.hyper_func, offset hyper_yumemi
@@ -2620,7 +2620,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		cmp	byte_207E2, 1
+		cmp	_hud_start_flag, HSF_INIT
 		jnz	short loc_BB86
 		mov	word_20CE8, 0
 		mov	word_20CE4, 3284h
@@ -2657,7 +2657,7 @@ loc_BB75:
 		mov	word_20CEA, 1Ah
 
 loc_BB7B:
-		mov	byte_207E2, 2
+		mov	_hud_start_flag, HSF_ACTIVE
 		mov	x_20CEC, 0
 
 loc_BB86:
@@ -2883,7 +2883,7 @@ loc_BDAF:
 ; ---------------------------------------------------------------------------
 
 loc_BDB9:
-		mov	byte_207E2, 0
+		mov	_hud_start_flag, HSF_DONE
 
 loc_BDBE:
 		pop	di
@@ -3008,7 +3008,7 @@ sub_BE5D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_207E2, 0
+		cmp	_hud_start_flag, HSF_DONE
 		jz	loc_C0D5
 		cmp	byte_20CE6, 0
 		jnz	loc_BF51
@@ -3116,13 +3116,13 @@ loc_BF51:
 		cmp	word_20CE8, 40h
 		jge	short loc_BF92
 		push	(208 shl 16) or 84
-		mov	al, byte_207E3
+		mov	al, _round_id
 		mov	ah, 0
 		add	ax, 34
 		push	ax
 		call	super_put
 		push	(544 shl 16) or 84
-		mov	al, byte_207E3
+		mov	al, _round_id
 		jmp	short loc_BFD0
 ; ---------------------------------------------------------------------------
 
@@ -3284,13 +3284,13 @@ arg_0		= word ptr  4
 		sar	ax, 4
 		add	ax, 0FFF8h
 		mov	word_20E40, ax
-		mov	byte_20E3C, 1
+		mov	_defeat_flag, DF_EXPLODE
 		call	snd_se_play pascal, 14
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, 1
 		sub	bx, ax
-		mov	_damage_all_enemies_on[bx], 1
+		mov	_damage_all_on[bx], 1
 		mov	word_20E42, 0
 		jmp	short loc_C12C
 ; ---------------------------------------------------------------------------
@@ -3335,7 +3335,7 @@ loc_C159:
 		mov	byte ptr [si+1Fh], -1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		mov	byte_20E3C, 2
+		mov	_defeat_flag, DF_BANNER
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, 1
@@ -4518,6 +4518,13 @@ loc_C9F6:
 		retn
 sub_C8C4	endp
 
+WARNING_FLASH_RED_FRAMES = 30
+
+WF_NONE = 0
+WF_PORTRAIT = 1
+WF_FLASH_WHITE = 2
+WF_FLASH_RED = 3
+WF_FLASH_RED_END = (WF_FLASH_RED + WARNING_FLASH_RED_FRAMES)
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4533,7 +4540,7 @@ sub_C9FE	proc far
 		mov	al, [bp+@@mrs_slot]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 1
+		cmp	_warning_flag[bx], WF_PORTRAIT
 		jnz	short loc_CA37
 		mov	si, PLAYFIELD_LEFT
 		cmp	[bp+@@mrs_slot], 0
@@ -4550,7 +4557,7 @@ loc_CA1D:
 		mov	al, [bp+@@mrs_slot]
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 2
+		mov	_warning_flag[bx], WF_FLASH_WHITE
 
 loc_CA37:
 		pop	si
@@ -4567,9 +4574,9 @@ sub_CA3C	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_1DCF8, 2
+		cmp	warning_flag_p1, WF_FLASH_WHITE
 		jz	short loc_CA4E
-		cmp	byte_1DCF9, 2
+		cmp	warning_flag_p2, WF_FLASH_WHITE
 		jnz	short loc_CAC8
 
 loc_CA4E:
@@ -4580,17 +4587,17 @@ loc_CA4E:
 		nopcall	@hud_static_gauge_levels_put$qi
 		push	1
 		nopcall	@hud_static_gauge_levels_put$qi
-		cmp	byte_1DCF8, 2
+		cmp	warning_flag_p1, WF_FLASH_WHITE
 		jnz	short loc_CA81
-		mov	byte_1DCF8, 3
+		mov	warning_flag_p1, WF_FLASH_RED
 		push	0
 		push	0E1h
 		call	sub_CACB
 
 loc_CA81:
-		cmp	byte_1DCF9, 2
+		cmp	warning_flag_p2, WF_FLASH_WHITE
 		jnz	short loc_CA95
-		mov	byte_1DCF9, 3
+		mov	warning_flag_p2, WF_FLASH_RED
 		push	1
 		push	0E1h
 		call	sub_CACB
@@ -4617,7 +4624,7 @@ loc_CAA8:
 		inc	si
 
 loc_CAC3:
-		cmp	si, 1Bh
+		cmp	si, 27
 		jl	short loc_CA99
 
 loc_CAC8:
@@ -4655,7 +4662,7 @@ loc_CADF:
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 5
+		cmp	_gba_flag_next[bx], GBAF_BOSS
 		jz	short loc_CB47
 		lea	ax, [si+2]
 		call	gaiji_putsa pascal, ax, 15, ds, offset gpGAUGE_ATTACK_LEVEL, di
@@ -4665,7 +4672,7 @@ loc_CADF:
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		jmp	short loc_CB60
 ; ---------------------------------------------------------------------------
 
@@ -4675,7 +4682,7 @@ loc_CB47:
 		lea	ax, [si+13h]
 		push	ax
 		push	0Fh
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 
 loc_CB60:
 		mov	ah, 0
@@ -4709,12 +4716,12 @@ arg_0		= word ptr  6
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 3
+		cmp	_warning_flag[bx], WF_FLASH_RED
 		jb	loc_CD15
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 3
+		cmp	_warning_flag[bx], WF_FLASH_RED
 		jnz	short loc_CBB9
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -4725,12 +4732,12 @@ loc_CBB9:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 21h	; '!'
+		cmp	_warning_flag[bx], WF_FLASH_RED_END
 		jnb	loc_CCA6
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+798h], 12h
+		cmp	_warning_flag[bx], (WF_FLASH_RED + (WARNING_FLASH_RED_FRAMES / 2))
 		jnb	short loc_CBE6
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -4755,17 +4762,17 @@ loc_CBF3:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+798h]
+		inc	_warning_flag[bx]
 		mov	si, 1
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+798h], 1
+		test	_warning_flag[bx], WF_PORTRAIT
 		jz	short loc_CC4D
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 1
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_PELLET_INIT
 		jnz	short loc_CC2D
 		mov	si, 0A1h
 		jmp	short loc_CC43
@@ -4775,7 +4782,7 @@ loc_CC2D:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 3
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
 		jnz	short loc_CC40
 		mov	si, 61h	; 'a'
 		jmp	short loc_CC43
@@ -4794,12 +4801,12 @@ loc_CC4D:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 1
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_PELLET_INIT
 		jz	short loc_CC78
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+393Ch], 3
+		cmp	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
 		jnz	short loc_CC89
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
@@ -4858,15 +4865,15 @@ loc_CCCE:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 0
+		mov	_warning_flag[bx], WF_NONE
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+393Ch]
+		mov	al, _gba_flag_next[bx]
 		mov	dl, byte ptr [bp+arg_0]
 		mov	dh, 0
 		mov	bx, dx
-		mov	[bx+2D54h], al
+		mov	_gba_flag_active[bx], al
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
@@ -4880,7 +4887,7 @@ loc_CD15:
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	loc_CDB7
 		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
@@ -5952,17 +5959,17 @@ loc_D56B:
 		call	sub_D50E
 		call	grcg_off
 		mov	al, _score_p1[6]
-		cmp	byte_220DC, al
+		cmp	_extends_gained, al
 		jnb	short locret_D5A0
 		call	snd_se_play pascal, 8
 		les	bx, _resident
 		assume es:nothing
 		inc	es:[bx+resident_t.story_lives]
 		call	@hud_static_story_lives_put$qv
-		inc	byte_220DC
-		cmp	byte_220DC, 2
+		inc	_extends_gained
+		cmp	_extends_gained, EXTENDS_MAX
 		jnz	short locret_D5A0
-		mov	byte_220DC, -1
+		mov	_extends_gained, EXTENDS_DISABLE
 
 locret_D5A0:
 		retn
@@ -5991,32 +5998,32 @@ include th03/main/player/score_add.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @HUD_DYNAMIC_5_DIGIT_POINTS_PUT$QIIUIUC
+@hud_dynamic_5_digit_points_put$qiiuiuc proc far
 
-sub_D608	proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
+@@col   	= byte ptr  6
+@@points	= word ptr  8
+@@top   	= word ptr  0Ah
+@@left  	= word ptr  0Ch
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	GC_RMW
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@col]
 		mov	ah, 0
 		push	ax
 		call	grcg_setcolor
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@top] ; _AX = (top * (ROW_SIZE / 16))
 		mov	dx, ax
 		shl	ax, 2
 		add	ax, dx
-		add	ax, 0A805h
+		add	ax, (SEG_PLANE_B + ((1 * ROW_SIZE) / 16))
 		mov	es, ax
-		mov	cx, [bp+arg_6]
+		mov	cx, [bp+@@left]
 		mov	si, offset _FIVE_DIGIT_POWERS_OF_10
-		mov	di, [bp+arg_2]
+		mov	di, [bp+@@points]
 		mov	bl, 0
 		nop
 
@@ -6044,7 +6051,7 @@ loc_D645:
 		pop	si
 		pop	bp
 		retf	8
-sub_D608	endp
+@hud_dynamic_5_digit_points_put$qiiuiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6250,7 +6257,7 @@ hyper_marisa	proc near
 loc_D89D:
 		mov	bx, _player_cur
 		mov	[bx+player_stuff_t.shot_mode], SA_DISABLED
-		call	sub_14340
+		call	marisa_hyper_14340
 		mov	al, _player_speed_base.aligned.x8
 		add	al, (-1 shl 4)
 		mov	_player_speed_base.aligned.x8, al
@@ -6290,7 +6297,7 @@ loc_D8E0:
 		jnz	short loc_D8F9
 		push	[bx+player_stuff_t.center.x]
 		push	[bx+player_stuff_t.center.y]
-		call	sub_1B6CA
+		call	ellen_hyper_1B6CA
 
 loc_D8F9:
 		pop	bp
@@ -6449,7 +6456,7 @@ hyper_rikako	proc near
 		cmp	[bx+player_stuff_t.hyper_active], 0
 		jnz	short loc_DA0C
 		mov	[bx+player_stuff_t.hyper], offset hyper_standby
-		call	sub_1C4B4
+		call	rikako_hyper_1C4B4
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -6511,15 +6518,15 @@ loc_DA68:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_damage_all_enemies_on[bx], 0
+		cmp	_damage_all_on[bx], 0
 		jz	short loc_DA81
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		dec	_damage_all_enemies_on[bx]
+		dec	_damage_all_on[bx]
 
 loc_DA81:
-		cmp	byte_20E3C, 2
+		cmp	_defeat_flag, DF_BANNER
 		jz	loc_DE4F
 		cmp	byte ptr [si+1Fh], 0
 		jnz	loc_DE45
@@ -6738,24 +6745,24 @@ loc_DC64:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+798h], 1
+		mov	_warning_flag[bx], WF_PORTRAIT
 		cmp	[bp+var_2], 0FF0h
 		jl	short loc_DCD3
-		mov	al, byte_1DB9E
+		mov	al, _gba_boss_launched_by
 		cmp	al, _pid_PID_current
 		jz	short loc_DCDA
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 5
+		mov	_gba_flag_next[bx], GBAF_BOSS
 		mov	word ptr [si+1Ah], 400h
-		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
+		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
 		jnb	short loc_DCBC
-		inc	_boss_attack_level
+		inc	_gba_boss_level
 
 loc_DCBC:
-		add	word_21434, 2800h
-		cmp	byte_1DB9E, -1
+		add	_combo_points_for_boss_attack, 10240
+		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_DCCE
 		inc	byte ptr [si+77h]
 		jmp	short loc_DD2B
@@ -6775,12 +6782,12 @@ loc_DCDA:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 3
+		mov	_gba_flag_next[bx], GBAF_GAUGE_BULLET_INIT
 		sub	word ptr [si+1Ah], 800h
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
+		cmp	_gba_gauge_level[bx], GBA_GAUGE_LEVEL_MAX
 		jnb	short loc_DD2B
 		jmp	short loc_DD20
 ; ---------------------------------------------------------------------------
@@ -6790,19 +6797,19 @@ loc_DCFE:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 1
+		mov	_gba_flag_next[bx], GBAF_GAUGE_PELLET_INIT
 		sub	word ptr [si+1Ah], 400h
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
+		cmp	_gba_gauge_level[bx], GBA_GAUGE_LEVEL_MAX
 		jnb	short loc_DD2B
 
 loc_DD20:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	_gauge_attack_level[bx]
+		inc	_gba_gauge_level[bx]
 
 loc_DD2B:
 		mov	al, [si+6]
@@ -6882,7 +6889,7 @@ loc_DDCA:
 		mov	[bp+var_5], 1
 
 loc_DDCE:
-		cmp	byte_20E3C, 0
+		cmp	_defeat_flag, DF_NONE
 		jnz	short loc_DE4F
 		cmp	[bp+var_5], 0
 		jnz	short loc_DE4F
@@ -6897,8 +6904,7 @@ loc_DDCE:
 		mov	ah, 0
 		push	ax	; pid
 		nopcall	@hitcircles_player_add$qiii
-		push	si
-		call	sub_E1D5
+		call	@players_hit_damage_update$qr14player_stuff_t pascal, si
 		mov	dl, [si+7]
 		sub	dl, al
 		mov	[si+7],	dl
@@ -7245,7 +7251,7 @@ player_bomb	proc near
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jnz	short @@ret
 		cmp	[si+player_stuff_t.hyper_active], 0
 		jnz	short @@ret
@@ -7254,7 +7260,7 @@ player_bomb	proc near
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_PREPARING
+		mov	_bomb_flag[bx], BF_PREPARING
 		dec	[si+player_stuff_t.bombs]
 		mov	[si+player_stuff_t.invincibility_time], BOMB_FRAMES
 		push	word ptr _pid_PID_current
@@ -7268,7 +7274,7 @@ loc_E0BF:
 		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_damage_all_enemies_on[bx], 1
+		mov	_damage_all_on[bx], 1
 		call	snd_se_play pascal, 7
 		mov	al, [si+player_stuff_t.playchar_paletted]
 		mov	[si+player_stuff_t.hyper_active], al
@@ -7280,7 +7286,7 @@ loc_E0BF:
 		nopcall	sub_CDBD
 
 loc_E0EF:
-		call	sub_E24B
+		call	@story_skill_decrement$qv
 
 @@ret:
 		pop	si
@@ -7290,99 +7296,12 @@ player_bomb	endp
 
 	@PLAYER_HITTEST$QI procdesc pascal near \
 		hitbox_size:word
+	@PLAYERS_HIT_DAMAGE_UPDATE$QR14PLAYER_STUFF_T procdesc pascal near \
+		player_hit:word
+	@story_skill_decrement$qv procdesc near
 main_010_TEXT	ends
 
-main_011_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E1D5	proc near
-
-var_2		= byte ptr -2
-@@damage		= byte ptr -1
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		mov	si, [bp+arg_0]
-		mov	al, 1
-		sub	al, _pid_PID_current
-		mov	[bp+var_2], al
-		cmp	byte ptr [si+15h], 0
-		jnz	short loc_E1F3
-		mov	al, [si+73h]
-		jmp	short loc_E1FD
-; ---------------------------------------------------------------------------
-
-loc_E1F3:
-		mov	al, [si+73h]
-		mov	[bp+@@damage], al
-		add	al, _cpu_hit_damage_additional
-
-loc_E1FD:
-		mov	[bp+@@damage], al
-		mov	byte ptr [si+73h], 3
-		mov	al, [bp+var_2]
-		cbw
-		shl	ax, 7
-		mov	bx, ax
-		cmp	_players[bx].miss_damage_next, 3
-		jbe	short loc_E221
-		mov	al, [bp+var_2]
-		cbw
-		shl	ax, 7
-		mov	bx, ax
-		dec	_players[bx].miss_damage_next
-
-loc_E221:
-		mov	al, [si+7]
-		cbw
-		push	ax
-		mov	al, [bp+@@damage]
-		cbw
-		pop	dx
-		sub	dx, ax
-		jg	short loc_E240
-		mov	al, [si+7]
-		cbw
-		cmp	ax, 1
-		jle	short loc_E240
-		mov	al, [si+7]
-		dec	al
-		mov	[bp+@@damage], al
-
-loc_E240:
-		call	sub_E24B
-		mov	al, [bp+@@damage]
-		pop	si
-		leave
-		retn	2
-sub_E1D5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E24B	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_pid_PID_current, 0
-		jnz	short loc_E264
-		les	bx, _resident
-		cmp	es:[bx+resident_t.skill], 0
-		jbe	short loc_E264
-		dec	es:[bx+resident_t.skill]
-
-loc_E264:
-		pop	bp
-		retn
-sub_E24B	endp
-
+P_SHOT_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7432,18 +7351,18 @@ loc_E31F:
 loc_E326:
 		cmp	ax, SHOTPAIR_COUNT
 		jl	short loc_E31F
-		mov	di, 3ED6h
+		mov	di, offset _efes
 		xor	ax, ax
 		jmp	short loc_E339
 ; ---------------------------------------------------------------------------
 
 loc_E332:
-		mov	byte ptr [di], 0
+		mov	[di+efe_t.EFE_flag], EFF_FREE
 		inc	ax
-		add	di, 30h	; '0'
+		add	di, size efe_t
 
 loc_E339:
-		cmp	ax, 40h
+		cmp	ax, EFE_COUNT
 		jl	short loc_E332
 		mov	_round_frame, 0
 		mov	_round_or_result_frame, 0
@@ -7601,28 +7520,28 @@ loc_E4A2:
 		cmp	_round_or_result_frame, 1
 		jnz	loc_E5AC
 		mov	al, [di+player_stuff_t.combo_hits_max]
-		mov	_win_combo_hits_max, al
+		mov	_defeat_combo_hits_max, al
 		mov	al, [di+player_stuff_t.gauge_attacks_fired]
-		mov	_win_gauge_attacks_fired, al
+		mov	_defeat_gauge_attacks_fired, al
 		mov	al, [di+player_stuff_t.boss_attacks_fired]
-		mov	_win_boss_attacks_fired, al
+		mov	_defeat_boss_attacks_fired, al
 		mov	al, [di+player_stuff_t.boss_attacks_reversed]
-		mov	_win_boss_attacks_reversed, al
+		mov	_defeat_boss_attacks_reversed, al
 		mov	al, [di+player_stuff_t.boss_panics_fired]
-		mov	_win_boss_panics_fired, al
-		movzx	eax, _win_combo_hits_max
+		mov	_defeat_boss_panics_fired, al
+		movzx	eax, _defeat_combo_hits_max
 		imul	eax, 1000
 		mov	score_23DF0, eax
-		movzx	eax, _win_gauge_attacks_fired
+		movzx	eax, _defeat_gauge_attacks_fired
 		imul	eax, 10000
 		add	score_23DF0, eax
-		movzx	eax, _win_boss_attacks_fired
+		movzx	eax, _defeat_boss_attacks_fired
 		imul	eax, 15000
 		add	score_23DF0, eax
-		movzx	eax, _win_boss_attacks_reversed
+		movzx	eax, _defeat_boss_attacks_reversed
 		imul	eax, 20000
 		add	score_23DF0, eax
-		movzx	eax, _win_boss_panics_fired
+		movzx	eax, _defeat_boss_panics_fired
 		imul	eax, 30000
 		add	score_23DF0, eax
 		les	bx, _resident
@@ -7633,7 +7552,7 @@ loc_E4A2:
 		movzx	eax, byte_23DF9
 		imul	eax, 100000
 		add	score_23DF0, eax
-		mov	byte_220DC, -1
+		mov	_extends_gained, EXTENDS_DISABLE
 
 loc_E55E:
 		mov	eax, score_23DF0
@@ -7666,31 +7585,31 @@ loc_E589:
 loc_E5AC:
 		push	si
 		push	20h ; ' '
-		mov	al, _win_combo_hits_max
+		mov	al, _defeat_combo_hits_max
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	40h
-		mov	al, _win_gauge_attacks_fired
+		mov	al, _defeat_gauge_attacks_fired
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	60h
-		mov	al, _win_boss_attacks_fired
+		mov	al, _defeat_boss_attacks_fired
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	80h
-		mov	al, _win_boss_attacks_reversed
+		mov	al, _defeat_boss_attacks_reversed
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
 		push	si
 		push	0A0h
-		mov	al, _win_boss_panics_fired
+		mov	al, _defeat_boss_panics_fired
 		mov	ah, 0
 		push	ax
 		call	sub_E35B
@@ -7708,73 +7627,73 @@ loc_E602:
 		mov	ax, 8
 		imul	si
 		mov	si, ax
-		lea	ax, [si+0D8h]
-		push	ax
-		push	4003E8h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	502710h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	603A98h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	704E20h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	807530h
-		push	0Fh
-		nopcall	sub_D608
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(64 shl 16) or 1000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(80 shl 16) or 10000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(96 shl 16) or 15000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(112 shl 16) or 20000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(128 shl 16) or 30000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
 		les	bx, _resident
 		cmp	es:[bx+resident_t.story_stage], 8
 		jnz	short loc_E692
-		lea	ax, [si+0D0h]
-		push	ax
-		push	902710h
-		push	0Fh
-		nopcall	sub_D608
-		lea	ax, [si+0D8h]
-		push	ax
-		push	900000h
-		push	0Fh
-		nopcall	sub_D608
+		lea	ax, [si+208]
+		push	ax	; left
+		push	(144 shl 16) or 10000	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(144 shl 16) or 0	; ((top shl 16) or points)
+		push	0Fh ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
 
 loc_E692:
 		cmp	word_23DEC, 0
 		jz	short loc_E6A7
-		lea	ax, [si+0D8h]
-		push	ax
-		push	0A0h
+		lea	ax, [si+216]
+		push	ax	; left
+		push	160	; top
 		push	word_23DEC
 		jmp	short loc_E6D6
 ; ---------------------------------------------------------------------------
 
 loc_E6A7:
-		lea	ax, [si+0D8h]
-		push	ax
-		push	0A00000h
-		push	0Ch
-		nopcall	sub_D608
-		lea	ax, [si+0C8h]
-		push	ax
-		push	0A00000h
-		push	0Ch
-		nopcall	sub_D608
-		lea	ax, [si+0C0h]
-		push	ax
-		push	0A00000h
+		lea	ax, [si+216]
+		push	ax	; left
+		push	(160 shl 16) or 0	; ((top shl 16) or points)
+		push	0Ch ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+200]
+		push	ax	; left
+		push	(160 shl 16) or 0	; ((top shl 16) or points)
+		push	0Ch ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
+		lea	ax, [si+192]
+		push	ax	; left
+		push	(160 shl 16) or 0	; ((top shl 16) or points)
 
 loc_E6D6:
-		push	0Ch
-		nopcall	sub_D608
+		push	0Ch ; col
+		nopcall	@hud_dynamic_5_digit_points_put$qiiuiuc
 		lea	ax, [si+0B8h]
 		push	ax
 		push	0A0h
@@ -7786,7 +7705,7 @@ loc_E6D6:
 		jge	short loc_E716
 		push	score_23DEA
 		push	[bp+@@pid]
-		nopcall	score_add
+		nopcall	@score_add$quiuc
 		movzx	eax, score_23DEA
 		sub	score_23DF0, eax
 		jmp	short loc_E733
@@ -7797,7 +7716,7 @@ loc_E716:
 		jle	short loc_E733
 		push	word ptr score_23DF0
 		push	[bp+@@pid]
-		nopcall	score_add
+		nopcall	@score_add$quiuc
 		mov	score_23DF0, 0
 
 loc_E733:
@@ -7938,7 +7857,7 @@ sub_E737	endp
 
 	@shots_update$qv procdesc near
 	@shots_render$qv procdesc near
-main_011_TEXT	ends
+P_SHOT_TEXT ends
 
 ; ===========================================================================
 
@@ -8115,7 +8034,7 @@ loc_F32F:
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
-		call	score_add
+		call	@score_add$quiuc
 		mov	al, 0
 		jmp	short loc_F350
 ; ---------------------------------------------------------------------------
@@ -8198,8 +8117,8 @@ loc_F3D6:
 		cmp	word_1F340, 1A00h
 		jl	short loc_F400
 		mov	byte_1F34F, 0
-		mov	byte_1DB9E, -1
-		mov	word_21434, 1400h
+		mov	_gba_boss_launched_by, PID_NONE
+		mov	_combo_points_for_boss_attack, 5120
 
 loc_F400:
 		pop	bp
@@ -8219,9 +8138,9 @@ sub_F402	proc near
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 5
+		cmp	_gba_flag_active[bx], GBAF_BOSS
 		jnz	loc_F4AE
-		cmp	byte_1DB9E, -1
+		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_F481
 		mov	si, 1DFEh
 		cmp	_pid_current, 1
@@ -8241,10 +8160,10 @@ loc_F42B:
 		mov	byte_1F352, al
 		mov	word_1F3B0, 0
 		mov	al, _pid_current
-		mov	byte_1DB9E, al
+		mov	_gba_boss_launched_by, al
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		call	snd_se_play pascal, 18
 		mov	al, 1
 		sub	al, _pid_current
@@ -8309,9 +8228,9 @@ sub_F4B4	proc far
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 5
+		cmp	_gba_flag_active[bx], GBAF_BOSS
 		jz	short loc_F4F6
-		mov	word_21434, 1400h
+		mov	_combo_points_for_boss_attack, 5120
 
 loc_F4F6:
 		mov	al, [bp+@@pid_other]
@@ -8319,9 +8238,9 @@ loc_F4F6:
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+1DCAh], 0
-		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
+		cmp	_gba_boss_level, GBA_BOSS_LEVEL_MAX
 		jnb	short locret_F510
-		inc	_boss_attack_level
+		inc	_gba_boss_level
 
 locret_F510:
 		leave
@@ -8414,7 +8333,7 @@ sub_F58C	proc near
 		mov	byte_1F34F, al
 		cmp	byte_1F34F, 0
 		jnz	short loc_F5AD
-		mov	byte_1DB9E, -1
+		mov	_gba_boss_launched_by, PID_NONE
 
 loc_F5AD:
 		pop	bp
@@ -8464,7 +8383,7 @@ marisa_F5AF	endp
 
 ; Attributes: bp-based frame
 
-sub_F5FE	proc near
+marisa_F5FE	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_1F353, 1
@@ -8480,26 +8399,26 @@ loc_F619:
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_F683
 		mov	al, byte_1FE50
-		mov	angle_23E43, al
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
-		call	sub_17730
+		mov	_bullet_template.BT_pid, al
+		call	@bullets_add$qv
 		mov	al, byte_1F39F
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_23E42, al
-		call	sub_17730
+		mov	_bullet_template.BT_speed, al
+		call	@bullets_add$qv
 		mov	al, byte_1FE50
 		add	al, 7
 		mov	byte_1FE50, al
@@ -8515,14 +8434,14 @@ loc_F673:
 loc_F683:
 		pop	bp
 		retn
-sub_F5FE	endp
+marisa_F5FE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F685	proc near
+marisa_F685	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -8537,7 +8456,7 @@ sub_F685	proc near
 		jnz	short loc_F6BA
 		push	801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	1180h
 		jmp	short loc_F706
 ; ---------------------------------------------------------------------------
@@ -8547,7 +8466,7 @@ loc_F6BA:
 		jnz	short loc_F6D4
 		push	3801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0E80h
 		jmp	short loc_F706
 ; ---------------------------------------------------------------------------
@@ -8557,7 +8476,7 @@ loc_F6D4:
 		jnz	short loc_F6EE
 		push	6801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0B80h
 		jmp	short loc_F706
 ; ---------------------------------------------------------------------------
@@ -8567,13 +8486,13 @@ loc_F6EE:
 		jnz	short loc_F713
 		push	9801700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	880h
 
 loc_F706:
 		push	1700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -8588,30 +8507,30 @@ loc_F713:
 locret_F72B:
 		leave
 		retn
-sub_F685	endp
+marisa_F685	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F72D	proc near
+marisa_F72D	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
 		test	byte ptr word_1F3B0, 1Fh
 		jnz	short loc_F7A8
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
-		cmp	_boss_attack_level, 8
+		mov	_bullet_template.BT_pid, al
+		cmp	_gba_boss_level, 8
 		jnb	short loc_F768
 		mov	al, byte_1F3A0
 		jmp	short loc_F795
@@ -8619,11 +8538,11 @@ sub_F72D	proc near
 
 loc_F768:
 		mov	al, byte_1F3A2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_1F3A3
-		mov	byte_23E47, al
-		mov	byte_23E4E, 2
-		call	sub_17730
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		call	@bullets_add$qv
 		mov	al, byte_1F3A3
 		mov	ah, 0
 		push	ax
@@ -8631,16 +8550,16 @@ loc_F768:
 		cwd
 		pop	bx
 		idiv	bx
-		add	al, angle_23E43
-		mov	angle_23E43, al
+		add	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A4
 
 loc_F795:
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
-		mov	byte_23E4E, 4
-		call	sub_17730
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
+		call	@bullets_add$qv
 
 loc_F7A8:
 		cmp	word_1F3B0, 82h
@@ -8651,14 +8570,14 @@ loc_F7A8:
 loc_F7BB:
 		pop	bp
 		retn
-sub_F72D	endp
+marisa_F72D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F7BD	proc near
+marisa_F7BD	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -8673,7 +8592,7 @@ sub_F7BD	proc near
 		jnz	short loc_F7F0
 		push	2001700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	1000h
 		jmp	short loc_F822
 ; ---------------------------------------------------------------------------
@@ -8683,7 +8602,7 @@ loc_F7F0:
 		jnz	short loc_F80A
 		push	5001700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0D00h
 		jmp	short loc_F822
 ; ---------------------------------------------------------------------------
@@ -8693,13 +8612,13 @@ loc_F80A:
 		jnz	short loc_F82F
 		push	8001700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		push	0A00h
 
 loc_F822:
 		push	1700h
 		push	word ptr [bp+@@pid_other]
-		call	sub_19B06
+		call	marisa_19B06
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -8714,14 +8633,14 @@ loc_F82F:
 locret_F846:
 		leave
 		retn
-sub_F7BD	endp
+marisa_F7BD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_F848	proc far
+public gba_boss_update_marisa
+gba_boss_update_marisa proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -8730,30 +8649,30 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_F887
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, al
 		add	al, 32h	; '2'
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, al
 		add	al, 18h
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 20h	; ' '
 		mov	byte_1F3A1, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 0Ah
 		mov	byte_1F3A2, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 16h
 		mov	byte_1F3A3, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 16h
 		mov	byte_1F3A4, al
 
 loc_F887:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_F953	; jumptable 0000F8BF case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -8792,22 +8711,22 @@ loc_F8D9:
 ; ---------------------------------------------------------------------------
 
 loc_F8DE:
-		call	sub_F5FE	; jumptable 0000F8BF cases 2-5
+		call	marisa_F5FE	; jumptable 0000F8BF cases 2-5
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
 loc_F8E3:
-		call	sub_F685	; jumptable 0000F8BF cases 8-10
+		call	marisa_F685	; jumptable 0000F8BF cases 8-10
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
 loc_F8E8:
-		call	sub_F72D	; jumptable 0000F8BF cases 11-16
+		call	marisa_F72D	; jumptable 0000F8BF cases 11-16
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
 loc_F8ED:
-		call	sub_F7BD	; jumptable 0000F8BF cases 6,7,17
+		call	marisa_F7BD	; jumptable 0000F8BF cases 6,7,17
 		jmp	short loc_F8F5	; default
 ; ---------------------------------------------------------------------------
 
@@ -8823,27 +8742,27 @@ loc_F8F5:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_F953:
 		leave			; jumptable 0000F8BF case 255
 		retf
-marisa_F848	endp
+gba_boss_update_marisa endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -8877,7 +8796,7 @@ word_F956	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_F9A6	proc near
+marisa_F9A6	proc near
 
 @@pid_other		= byte ptr -3
 var_2		= word ptr -2
@@ -8961,14 +8880,14 @@ loc_FA6D:
 		pop	si
 		leave
 		retn
-sub_F9A6	endp
+marisa_F9A6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FA71	proc near
+marisa_FA71	proc near
 
 @@pid_other		= byte ptr -3
 @@top		= word ptr -2
@@ -9012,20 +8931,20 @@ arg_0		= word ptr  4
 		pop	si
 		leave
 		retn	2
-sub_FA71	endp
+marisa_FA71	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_FAE8	proc far
+public gba_boss_render_marisa
+gba_boss_render_marisa proc far
 
 @@pid_other		= byte ptr -1
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_FB44
 		mov	al, 1
 		sub	al, _pid_current
@@ -9049,7 +8968,7 @@ loc_FB1E:
 		mov	dx, 0C8h
 		sub	dx, ax
 		push	dx
-		call	sub_FA71
+		call	marisa_FA71
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9057,7 +8976,7 @@ loc_FB1E:
 loc_FB35:
 		cmp	byte_1F34F, -1
 		jz	short loc_FB41
-		call	sub_F9A6
+		call	marisa_F9A6
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9068,7 +8987,7 @@ loc_FB41:
 locret_FB44:
 		leave
 		retf
-marisa_FAE8	endp
+gba_boss_render_marisa endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9113,7 +9032,7 @@ mima_FB46	endp
 
 ; Attributes: bp-based frame
 
-sub_FB95	proc near
+mima_FB95	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 2
@@ -9133,18 +9052,18 @@ loc_FBB5:
 		jnz	loc_FC51
 		call	snd_se_play pascal, 3
 		mov	al, byte_20E28
-		mov	angle_23E43, al
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
-		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_is_animated, 1
 		mov	al, byte_20E28
 		add	al, 9
 		mov	byte_20E28, al
@@ -9158,17 +9077,17 @@ loc_FBB5:
 		div	bx
 		or	dx, dx
 		jnz	short loc_FC49
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 0Fh
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_4_SPREAD_MEDIUM
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_20E29
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		mov	al, 80h
 		sub	al, byte_20E29
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 
 loc_FC49:
 		mov	al, byte_20E29
@@ -9185,14 +9104,14 @@ loc_FC51:
 loc_FC69:
 		pop	bp
 		retn
-sub_FB95	endp
+mima_FB95	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FC6B	proc near
+mima_FC6B	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -9214,10 +9133,10 @@ loc_FC88:
 
 loc_FC91:
 		mov	ax, word_1F33E
-		add	ax, 180h
+		add	ax, (24 shl 4)
 		mov	si, ax
 		mov	ax, word_1F340
-		add	ax, 0FE00h
+		add	ax, (-32 shl 4)
 		mov	di, ax
 		cmp	word_1F3B0, 20h	; ' '
 		jz	short loc_FCB6
@@ -9241,34 +9160,34 @@ loc_FCC6:
 		jbe	loc_FD6D
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_FD12
-		mov	angle_23E43, 0
-		mov	byte_23E45, 1Ch
-		mov	word_23E3E, si
-		mov	word_23E40, di
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE_AND_SPEED
+		mov	_bullet_template.BT_center.x, si
+		mov	_bullet_template.BT_center.y, di
 		mov	al, byte_1F3A0
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
-		call	sub_17730
-		mov	byte_23E4E, 1
-		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_type, BT_PELLET
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_FD12:
 		cmp	word_1F3B0, 40h
 		jnz	short loc_FD47
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 25h ; '%'
-		mov	word_23E3E, si
-		mov	word_23E40, di
-		mov	byte_23E42, 20h ; ' '
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
-		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_32_RING
+		mov	_bullet_template.BT_center.x, si
+		mov	_bullet_template.BT_center.y, di
+		mov	_bullet_template.BT_speed, (2 shl 4)
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_FD47:
 		test	byte ptr word_1F3B0, 1
@@ -9287,14 +9206,14 @@ loc_FD6D:
 		pop	si
 		leave
 		retn
-sub_FC6B	endp
+mima_FC6B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FD71	proc near
+mima_FD71	proc near
 
 var_1		= byte ptr -1
 
@@ -9337,29 +9256,29 @@ loc_FDAC:
 		pop	dx
 		cmp	dx, ax
 		jnz	short loc_FDCB
-		mov	byte_23E45, 12h
+		mov	_bullet_template.BT_group, BG_4_SPREAD_MEDIUM_AIMED
 		jmp	short loc_FDD0
 ; ---------------------------------------------------------------------------
 
 loc_FDCB:
-		mov	byte_23E45, 18h
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM_AIMED
 
 loc_FDD0:
 		call	snd_se_play pascal, 10
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_angle, 0
 		mov	ax, word_1F33E
-		add	ax, 180h
-		mov	word_23E3E, ax
+		add	ax, (24 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0FE00h
-		mov	word_23E40, ax
-		mov	byte_23E42, 58h ; 'X'
-		mov	byte_23E4E, 2
-		mov	byte_23E50, 0
-		mov	byte_23E51, 1
-		call	sub_17730
-		mov	byte_23E51, 0
-		mov	byte_23E50, 1
+		add	ax, (-32 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, ((5 shl 4) + 8)
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_is_animated, 0
+		mov	_bullet_template.BT_has_trail, 1
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_has_trail, 0
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_FE11:
 		cmp	word_1F3B0, 96h
@@ -9371,14 +9290,14 @@ loc_FE11:
 locret_FE29:
 		leave
 		retn
-sub_FD71	endp
+mima_FD71	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FE2B	proc near
+mima_FE2B	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -9408,21 +9327,21 @@ loc_FE54:
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, angle_20E2B
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, angle_20E2B
 		add	al, 40h
-		mov	angle_23E43, al
-		mov	byte_23E4E, 4
-		mov	byte_23E45, 21h ; '!'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
+		mov	_bullet_template.BT_group, BG_2_RING
 		mov	al, byte_1F3A5
-		mov	byte_23E42, al
-		call	sub_17730
+		mov	_bullet_template.BT_speed, al
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 		mov	al, byte_20E2A
 		add	angle_20E2B, al
@@ -9436,14 +9355,14 @@ loc_FEC4:
 loc_FED6:
 		pop	bp
 		retn
-sub_FE2B	endp
+mima_FE2B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_FED8	proc far
+public gba_boss_update_mima
+gba_boss_update_mima proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -9452,38 +9371,38 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_FF2B
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 20h	; ' '
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	al, 2
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 20h	; ' '
 		mov	byte_1F3A1, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, al
 		mov	dl, 40h
 		sub	dl, al
 		mov	byte_1F3A2, dl
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 28h	; '('
 		mov	byte_1F3A3, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		shl	al, 2
 		add	al, 40h
 		mov	byte_1F3A4, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 36h	; '6'
 		mov	byte_1F3A5, al
 
 loc_FF2B:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_10000	; jumptable 0000FF6C case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -9491,7 +9410,7 @@ loc_FF2B:
 		call	sub_F512
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		inc	word_1F3B0
 		mov	al, byte_1F34F
 		mov	ah, 0
@@ -9525,22 +9444,22 @@ loc_FF86:
 ; ---------------------------------------------------------------------------
 
 loc_FF8B:
-		call	sub_FB95	; jumptable 0000FF6C cases 2-5
+		call	mima_FB95	; jumptable 0000FF6C cases 2-5
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
 loc_FF90:
-		call	sub_FC6B	; jumptable 0000FF6C cases 6-10
+		call	mima_FC6B	; jumptable 0000FF6C cases 6-10
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
 loc_FF95:
-		call	sub_FD71	; jumptable 0000FF6C cases 11-13
+		call	mima_FD71	; jumptable 0000FF6C cases 11-13
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
 loc_FF9A:
-		call	sub_FE2B	; jumptable 0000FF6C cases 14-17
+		call	mima_FE2B	; jumptable 0000FF6C cases 14-17
 		jmp	short loc_FFA2	; default
 ; ---------------------------------------------------------------------------
 
@@ -9556,27 +9475,27 @@ loc_FFA2:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_10000:
 		leave			; jumptable 0000FF6C case 255
 		retf
-mima_FED8	endp
+gba_boss_update_mima endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -9610,7 +9529,7 @@ word_10003	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_10053	proc near
+mima_10053	proc near
 
 @@pid_other		= byte ptr -3
 @@sprite_offset		= word ptr -2
@@ -9730,14 +9649,14 @@ loc_10180:
 		pop	si
 		leave
 		retn
-sub_10053	endp
+mima_10053	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10184	proc near
+mima_10184	proc near
 
 @@pid_other		= byte ptr -7
 @@top		= word ptr -6
@@ -9806,20 +9725,20 @@ arg_2		= word ptr  6
 		pop	si
 		leave
 		retn	4
-sub_10184	endp
+mima_10184	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_10263	proc far
+public gba_boss_render_mima
+gba_boss_render_mima proc far
 
 @@pid_other		= byte ptr -1
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_102C6
 		mov	al, 1
 		sub	al, _pid_current
@@ -9846,7 +9765,7 @@ loc_10299:
 		mov	ax, word_1F3B0
 		imul	ax, 3
 		push	ax
-		call	sub_10184
+		call	mima_10184
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9854,7 +9773,7 @@ loc_10299:
 loc_102B7:
 		cmp	byte_1F34F, -1
 		jz	short loc_102C3
-		call	sub_10053
+		call	mima_10053
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -9865,7 +9784,7 @@ loc_102C3:
 locret_102C6:
 		leave
 		retf
-mima_10263	endp
+gba_boss_render_mima endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9913,7 +9832,7 @@ yumemi_102C8	endp
 
 ; Attributes: bp-based frame
 
-sub_10324	proc near
+yumemi_10324	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -9942,7 +9861,7 @@ loc_1035A:
 		jnb	short loc_10376
 		push	word_20E50
 		push	word_20E52
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CE5B
@@ -9957,7 +9876,7 @@ loc_10376:
 		jnz	short loc_103A5
 		push	word_20E50
 		push	word_20E52
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
@@ -9967,20 +9886,20 @@ loc_10376:
 loc_103A5:
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_103EC
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_20E4E
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	ax, word_20E50
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_20E52
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
 		add	al, byte_20E4C
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_1F3A0
-		mov	byte_23E47, al
-		call	sub_17730
+		mov	_bullet_template.BT_count, al
+		call	@bullets_add$qv
 		mov	al, byte_20E4D
 		add	byte_20E4E, al
 		mov	al, byte_20E4C
@@ -9997,26 +9916,26 @@ loc_103EC:
 loc_10403:
 		pop	bp
 		retn
-sub_10324	endp
+yumemi_10324	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10405	proc near
+yumemi_10405	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
 		jnz	short loc_10456
 		mov	byte_1F353, 1
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
 		mov	ax, _players[bx].center.x
 		mov	point_1F342.x, ax
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -10041,7 +9960,7 @@ loc_10456:
 		jnz	loc_1050D
 		push	point_1F342.x
 		push	point_1F342.y
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CE5B
@@ -10056,7 +9975,7 @@ loc_1047F:
 		jnz	short loc_104A7
 		push	word_20E50
 		push	word_20E52
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
@@ -10067,25 +9986,24 @@ loc_104A7:
 		jnz	short loc_104F6
 		call	snd_se_play pascal, 3
 		mov	ax, word_20E50
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_20E52
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_20E4E
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		push	1Fh
 		call	@randring_far_next16_and$qui
 		add	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	1
 		call	@randring_far_next16_and$qui
 		inc	al
-		mov	byte_23E4E, al
-		push	5
-		call	@randring_far_next16_mod$qui
+		mov	_bullet_template.BT_type, al
+		call	@randring_far_next16_mod$qui pascal, 5
 		mov	bx, ax
-		mov	al, [bx+792h]
-		mov	byte_23E45, al
-		call	sub_17730
+		mov	al, yumemi_group_1DCF2[bx]
+		mov	_bullet_template.BT_group, al
+		call	@bullets_add$qv
 
 loc_104F6:
 		cmp	word_1F3B0, 60h
@@ -10097,14 +10015,14 @@ loc_104F6:
 loc_1050D:
 		pop	bp
 		retn
-sub_10405	endp
+yumemi_10405	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1050F	proc near
+yumemi_1050F	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -10117,40 +10035,40 @@ sub_1050F	proc near
 		div	bx
 		or	dx, dx
 		jnz	short loc_105A1
-		mov	byte_23E45, 20h ; ' '
-		mov	byte_23E42, 20h ; ' '
+		mov	_bullet_template.BT_group, BG_4_RING
+		mov	_bullet_template.BT_speed, (2 shl 4)
 		push	1
 		call	@randring_far_next16_and$qui
 		inc	al
-		mov	byte_23E4E, al
+		mov	_bullet_template.BT_type, al
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0FE00h
-		mov	word_23E40, ax
-		call	sub_17730
+		add	ax, (-32 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F340
-		add	ax, 200h
-		mov	word_23E40, ax
-		call	sub_17730
+		add	ax, (32 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
-		add	ax, 0FE00h
-		mov	word_23E3E, ax
+		add	ax, (-32 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, word_1F33E
-		add	ax, 200h
-		mov	word_23E3E, ax
-		call	sub_17730
+		add	ax, (32 shl 4)
+		mov	_bullet_template.BT_center.x, ax
+		call	@bullets_add$qv
 
 loc_105A1:
 		cmp	word_1F3B0, 60h
@@ -10161,14 +10079,14 @@ loc_105A1:
 loc_105B3:
 		pop	bp
 		retn
-sub_1050F	endp
+yumemi_1050F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_105B5	proc near
+yumemi_105B5	proc near
 		push	bp
 		mov	bp, sp
 		cmp	byte_1F355, 0
@@ -10191,13 +10109,13 @@ loc_105D4:
 
 loc_105E1:
 		mov	byte_1F354, 2
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
 		mov	ax, _players[bx].center.x
 		mov	point_1F342.x, ax
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -10214,13 +10132,13 @@ loc_105E1:
 		mov	byte_1F353, 1
 		push	point_1F342.x
 		push	point_1F342.y
-		mov	al, _pid_other
+		mov	al, _bullet_template.BT_pid
 		mov	ah, 0
 		push	ax
 		call	sub_CE5B
 		push	point_1F342.x
 		push	point_1F342.y
-		call	sub_1A95F
+		call	yumemi_1A95F
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -10238,14 +10156,14 @@ loc_10647:
 loc_10667:
 		pop	bp
 		retn
-sub_105B5	endp
+yumemi_105B5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10669	proc near
+yumemi_10669	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -10259,39 +10177,38 @@ sub_10669	proc near
 		div	bx
 		or	dx, dx
 		jnz	short loc_106F5
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		cmp	word_1F3B0, 40h
 		jnb	short loc_106B8
 		mov	ax, word_20E50
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_20E52
-		mov	word_23E40, ax
-		mov	angle_23E43, -40h
-		mov	byte_23E42, 60h
-		mov	byte_23E45, 16h
-		call	sub_17730
-		mov	byte_23E45, 10h
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_angle, -40h
+		mov	_bullet_template.BT_speed, (6 shl 4)
+		mov	_bullet_template.BT_group, BG_5_SPREAD_WIDE
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_group, BG_4_SPREAD_WIDE
+		call	@bullets_add$qv
 
 loc_106B8:
 		cmp	word_1F3B0, 20h	; ' '
 		jb	short loc_106F5
-		mov	byte_23E45, 0
-		mov	byte_23E42, 24h ; '$'
-		mov	word_23E40, 0
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_speed, ((2 shl 4) + 4)
+		mov	_bullet_template.BT_center.y, 0
 		xor	si, si
 		jmp	short loc_106F0
 ; ---------------------------------------------------------------------------
 
 loc_106D3:
-		push	1200h
-		call	@randring_far_next16_mod$qui
-		mov	word_23E3E, ax
+		call	@randring_far_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		push	3Fh ; '?'
 		call	@randring_far_next16_and$qui
 		add	al, 20h
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		inc	si
 
 loc_106F0:
@@ -10308,14 +10225,14 @@ loc_10707:
 		pop	si
 		pop	bp
 		retn
-sub_10669	endp
+yumemi_10669	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1070A	proc far
+public gba_boss_update_yumemi
+gba_boss_update_yumemi proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -10324,31 +10241,31 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_10761
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 40h
 		mov	byte_1F3A1, al
 		mov	al, 12h
-		sub	al, _boss_attack_level
+		sub	al, _gba_boss_level
 		mov	byte_1F3A2, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		shl	al, 2
 		add	al, 50h	; 'P'
 		mov	byte_1F3A3, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -10359,12 +10276,12 @@ var_4		= word ptr -4
 
 loc_10761:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_10878	; jumptable 000107AE case 255
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_F512
 		inc	word_1F3B0
 		mov	ax, word_1F33E
@@ -10415,27 +10332,27 @@ loc_107E2:
 ; ---------------------------------------------------------------------------
 
 loc_107E7:
-		call	sub_10324	; jumptable 000107AE cases 2-4
+		call	yumemi_10324	; jumptable 000107AE cases 2-4
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107EC:
-		call	sub_10405	; jumptable 000107AE cases 7-9
+		call	yumemi_10405	; jumptable 000107AE cases 7-9
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107F1:
-		call	sub_1050F	; jumptable 000107AE cases 11-14
+		call	yumemi_1050F	; jumptable 000107AE cases 11-14
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107F6:
-		call	sub_105B5	; jumptable 000107AE cases 15-17
+		call	yumemi_105B5	; jumptable 000107AE cases 15-17
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
 loc_107FB:
-		call	sub_10669	; jumptable 000107AE cases 5,6,10
+		call	yumemi_10669	; jumptable 000107AE cases 5,6,10
 		jmp	short loc_10803	; default
 ; ---------------------------------------------------------------------------
 
@@ -10461,27 +10378,27 @@ loc_1081A:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_10878:
 		leave			; jumptable 000107AE case 255
 		retf
-yumemi_1070A	endp
+gba_boss_update_yumemi endp
 
 ; ---------------------------------------------------------------------------
 word_1087A	dw	0,     1,     2,     3
@@ -10514,7 +10431,7 @@ word_1087A	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_108CA	proc near
+yumemi_108CA	proc near
 
 @@pid_other		= byte ptr -7
 var_6		= word ptr -6
@@ -10636,14 +10553,14 @@ loc_10A13:
 		pop	si
 		leave
 		retn
-sub_108CA	endp
+yumemi_108CA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10A17	proc near
+yumemi_10A17	proc near
 
 var_4		= byte ptr -4
 @@pid_other		= byte ptr -3
@@ -10816,20 +10733,20 @@ loc_10BA0:
 		pop	si
 		leave
 		retn
-sub_10A17	endp
+yumemi_10A17	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_10BAB	proc far
+public gba_boss_render_yumemi
+gba_boss_render_yumemi proc far
 
 @@pid_other		= byte ptr -1
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_10BFC
 		mov	al, 1
 		sub	al, _pid_current
@@ -10848,7 +10765,7 @@ loc_10BD5:
 loc_10BE1:
 		cmp	byte_1F34F, 0
 		jnz	short loc_10BED
-		call	sub_10A17
+		call	yumemi_10A17
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -10856,7 +10773,7 @@ loc_10BE1:
 loc_10BED:
 		cmp	byte_1F34F, -1
 		jz	short loc_10BF9
-		call	sub_108CA
+		call	yumemi_108CA
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -10867,7 +10784,7 @@ loc_10BF9:
 locret_10BFC:
 		leave
 		retf
-yumemi_10BAB	endp
+gba_boss_render_yumemi endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10912,7 +10829,7 @@ reimu_10BFE	endp
 
 ; Attributes: bp-based frame
 
-sub_10C4D	proc near
+reimu_10C4D	proc near
 
 @@angle		= byte ptr -1
 
@@ -10949,33 +10866,33 @@ loc_10C8D:
 		div	bx
 		or	dx, dx
 		jnz	loc_10D57
-		mov	byte_23E4E, 4
-		mov	byte_23E45, 0
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
+		mov	_bullet_template.BT_group, BG_1
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, [bp+@@angle]
 		add	al, al
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_23DC7
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		mov	al, [bp+@@angle]
 		add	al, al
 		add	al, 80h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, [bp+@@angle]
 		add	al, 80h
 		mov	[bp+@@angle], al
@@ -10983,14 +10900,14 @@ loc_10C8D:
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 
 loc_10D57:
 		test	byte ptr word_1F3B0, 1
@@ -11016,38 +10933,38 @@ loc_10D62:
 locret_10D9E:
 		leave
 		retn
-sub_10C4D	endp
+reimu_10C4D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10DA0	proc near
+reimu_10DA0	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		cmp	word_1F3B0, 40h
 		jnb	short loc_10DEF
 		cmp	_round_frame_mod16, 0
 		jnz	short loc_10E14
-		mov	angle_23E43, 20h
-		mov	byte_23E45, 8
-		call	sub_17730
-		mov	angle_23E43, 60h
+		mov	_bullet_template.BT_angle, 20h
+		mov	_bullet_template.BT_group, BG_3_SPREAD_NARROW
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_angle, 60h
 
 loc_10DE8:
-		call	sub_17730
+		call	@bullets_add$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -11057,8 +10974,8 @@ loc_10DEF:
 		jnb	short loc_10E09
 		cmp	_round_frame_mod16, 0
 		jnz	short loc_10E14
-		mov	byte_23E45, 15h
-		mov	angle_23E43, 40h
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM
+		mov	_bullet_template.BT_angle, 40h
 		jmp	short loc_10DE8
 ; ---------------------------------------------------------------------------
 
@@ -11069,14 +10986,14 @@ loc_10E09:
 loc_10E14:
 		pop	bp
 		retn
-sub_10DA0	endp
+reimu_10DA0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10E16	proc near
+reimu_10E16	proc near
 
 @@angle		= byte ptr -1
 
@@ -11194,22 +11111,22 @@ loc_10F26:
 		mov	byte_23DC8, al
 		cmp	_round_frame_mod16, 0
 		jnz	loc_10FCE
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F3A4
-		mov	byte_23E47, al
-		call	sub_17730
+		mov	_bullet_template.BT_count, al
+		call	@bullets_add$qv
 		jmp	short loc_10FCE
 ; ---------------------------------------------------------------------------
 
@@ -11238,7 +11155,7 @@ loc_10F85:
 		add	bx, bx
 		push	word ptr [bx+6876h]
 		push	word ptr [bp+@@angle]
-		call	sub_1A2CE
+		call	reimu_1A2CE
 		inc	si
 
 loc_10FB5:
@@ -11254,14 +11171,14 @@ loc_10FCE:
 		pop	si
 		leave
 		retn
-sub_10E16	endp
+reimu_10E16	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10FD1	proc near
+reimu_10FD1	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -11269,24 +11186,24 @@ sub_10FD1	proc near
 		jnb	short loc_11026
 		test	byte ptr word_1F3B0, 0Fh
 		jnz	short loc_11031
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte ptr word_1F3B0
-		mov	angle_23E43, al
-		mov	byte_23E45, 0Eh
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_4_SPREAD_NARROW
+		call	@bullets_add$qv
 		mov	al, 78h
 		sub	al, byte ptr word_1F3B0
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -11298,14 +11215,14 @@ loc_11026:
 loc_11031:
 		pop	bp
 		retn
-sub_10FD1	endp
+reimu_10FD1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_11033	proc far
+public gba_boss_update_reimu
+gba_boss_update_reimu proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -11314,7 +11231,7 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_11083
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 5
 		cwd
@@ -11322,30 +11239,30 @@ var_4		= word ptr -4
 		mov	dl, 5
 		sub	dl, al
 		mov	byte_1F39F, dl
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 18h
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, al
 		add	al, 28h	; '('
 		mov	byte_1F3A1, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 8
 		cwd
 		idiv	bx
 		add	al, 4
 		mov	byte_1F3A2, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 10h
 		mov	byte_1F3A3, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 10h
 		mov	byte_1F3A4, al
 
 loc_11083:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_11159	; jumptable 000110E0 case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -11384,22 +11301,22 @@ loc_110E0:
 		jmp	word ptr cs:[bx+24h] ; switch jump
 
 loc_110E4:
-		call	sub_10C4D	; jumptable 000110E0 cases 2-6
+		call	reimu_10C4D	; jumptable 000110E0 cases 2-6
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
 loc_110E9:
-		call	sub_10DA0	; jumptable 000110E0 cases 8-10,13
+		call	reimu_10DA0	; jumptable 000110E0 cases 8-10,13
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
 loc_110EE:
-		call	sub_10E16	; jumptable 000110E0 cases 15-17
+		call	reimu_10E16	; jumptable 000110E0 cases 15-17
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
 loc_110F3:
-		call	sub_10FD1	; jumptable 000110E0 cases 7,11,12,14
+		call	reimu_10FD1	; jumptable 000110E0 cases 7,11,12,14
 		jmp	short loc_110FB	; default
 ; ---------------------------------------------------------------------------
 
@@ -11415,27 +11332,27 @@ loc_110FB:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_11159:
 		leave			; jumptable 000110E0 case 255
 		retf
-reimu_11033	endp
+gba_boss_update_reimu endp
 
 ; ---------------------------------------------------------------------------
 word_1115B	dw	2,     3,     4,     5
@@ -11466,7 +11383,7 @@ word_1115B	dw	2,     3,     4,     5
 
 ; Attributes: bp-based frame
 
-sub_111A3	proc near
+reimu_111A3	proc near
 
 var_6		= byte ptr -6
 @@pid_other		= byte ptr -5
@@ -11574,14 +11491,14 @@ loc_112A2:
 		pop	si
 		leave
 		retn
-sub_111A3	endp
+reimu_111A3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_112A6	proc near
+reimu_112A6	proc near
 
 @@pid_other		= byte ptr -6
 var_5		= byte ptr -5
@@ -11685,18 +11602,18 @@ loc_113A3:
 		pop	si
 		leave
 		retn	4
-sub_112A6	endp
+reimu_112A6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_113A9	proc far
+public gba_boss_render_reimu
+gba_boss_render_reimu proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_113E0
 		cmp	byte_1F34F, 0
 		jnz	short loc_113D1
@@ -11706,7 +11623,7 @@ reimu_113A9	proc far
 		mov	dx, 0C80h
 		sub	dx, ax
 		push	dx
-		call	sub_112A6
+		call	reimu_112A6
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -11714,7 +11631,7 @@ reimu_113A9	proc far
 loc_113D1:
 		cmp	byte_1F34F, -1
 		jz	short loc_113DD
-		call	sub_111A3
+		call	reimu_111A3
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -11725,7 +11642,7 @@ loc_113DD:
 loc_113E0:
 		pop	bp
 		retf
-reimu_113A9	endp
+gba_boss_render_reimu endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11772,7 +11689,7 @@ ellen_113E2	endp
 
 ; Attributes: bp-based frame
 
-sub_11439	proc near
+ellen_11439	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -11813,21 +11730,21 @@ loc_1148D:
 		cmp	word_1F3B0, 1Ch
 		jb	loc_11544
 		mov	al, byte_23DE2
-		mov	angle_23E43, al
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	word_23E4C, 8
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_sprite_offset, (64 / BYTE_DOTS)
 		cmp	_pid_current, 0
 		jz	short loc_114D1
-		add	word_23E4C, 280h
+		add	_bullet_template.BT_sprite_offset, (8 * ROW_SIZE)
 
 loc_114D1:
 		cmp	word_1F3B0, 24h	; '$'
@@ -11846,11 +11763,11 @@ loc_114E1:
 ; ---------------------------------------------------------------------------
 
 loc_114F3:
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE2
 		add	al, 8
 		mov	byte_23DE2, al
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		inc	si
 
 loc_11504:
@@ -11867,7 +11784,7 @@ loc_1150B:
 
 loc_11519:
 		call	snd_se_play pascal, 3
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE2
 		add	al, 8
 		mov	byte_23DE2, al
@@ -11883,14 +11800,14 @@ loc_11544:
 		pop	si
 		leave
 		retn
-sub_11439	endp
+ellen_11439	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11547	proc near
+ellen_11547	proc near
 
 var_2		= byte ptr -2
 @@pid_other		= byte ptr -1
@@ -11935,7 +11852,7 @@ loc_115A1:
 		push	word_1F340
 		push	word ptr [bp+var_2]
 		push	2
-		call	sub_194A9
+		call	ellen_194A9
 		inc	si
 		mov	al, byte_1F3A0
 		mov	ah, 0
@@ -11968,7 +11885,7 @@ loc_115E2:
 		push	word_1F340
 		push	word ptr [bp+var_2]
 		push	0FEh
-		call	sub_194A9
+		call	ellen_194A9
 		inc	si
 		mov	al, byte_1F3A0
 		mov	ah, 0
@@ -11992,14 +11909,14 @@ loc_1161D:
 		pop	si
 		leave
 		retn
-sub_11547	endp
+ellen_11547	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11620	proc near
+ellen_11620	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -12013,34 +11930,34 @@ sub_11620	proc near
 		cmp	dx, 1
 		jnz	short loc_116A2
 		call	snd_se_play pascal, 10
-		mov	byte_23E45, 0Eh
+		mov	_bullet_template.BT_group, BG_4_SPREAD_NARROW
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_23DE3
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
-		mov	byte_23E4E, 1
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_type, BT_PELLET
 		mov	al, 1
 		sub	al, _pid_current
-		mov	_pid_other, al
-		call	sub_17730
+		mov	_bullet_template.BT_pid, al
+		call	@bullets_add$qv
 		mov	al, byte_23DE3
 		add	al, 80h
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		mov	al, byte_1F3A1
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_23E42, al
-		call	sub_17730
+		mov	_bullet_template.BT_speed, al
+		call	@bullets_add$qv
 		mov	al, byte_23DE3
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		mov	al, byte_23DE3
 		add	al, 10h
 		mov	byte_23DE3, al
@@ -12054,14 +11971,14 @@ loc_116A2:
 loc_116B4:
 		pop	bp
 		retn
-sub_11620	endp
+ellen_11620	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_116B6	proc far
+public gba_boss_update_ellen
+gba_boss_update_ellen proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -12070,21 +11987,21 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_116F6
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, al
 		add	al, 32h	; '2'
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 10
 		cwd
 		idiv	bx
 		add	al, 4
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 30h	; '0'
 		mov	byte_1F3A1, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -12095,7 +12012,7 @@ var_4		= word ptr -4
 
 loc_116F6:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_117C1	; jumptable 00011732 case 255
 		mov	al, 1
 		sub	al, _pid_current
@@ -12135,17 +12052,17 @@ loc_1174C:
 ; ---------------------------------------------------------------------------
 
 loc_11751:
-		call	sub_11439	; jumptable 00011732 cases 2-5
+		call	ellen_11439	; jumptable 00011732 cases 2-5
 		jmp	short loc_11763	; default
 ; ---------------------------------------------------------------------------
 
 loc_11756:
-		call	sub_11547	; jumptable 00011732 cases 6-10
+		call	ellen_11547	; jumptable 00011732 cases 6-10
 		jmp	short loc_11763	; default
 ; ---------------------------------------------------------------------------
 
 loc_1175B:
-		call	sub_11620	; jumptable 00011732 cases 11-17
+		call	ellen_11620	; jumptable 00011732 cases 11-17
 		jmp	short loc_11763	; default
 ; ---------------------------------------------------------------------------
 
@@ -12161,27 +12078,27 @@ loc_11763:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (24 shl 4)
 		mov	_hitbox_radius.y, (24 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_117C1:
 		leave			; jumptable 00011732 case 255
 		retf
-ellen_116B6	endp
+gba_boss_update_ellen endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -12215,7 +12132,7 @@ word_117C4	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_11814	proc near
+ellen_11814	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -12260,14 +12177,14 @@ arg_0		= word ptr  4
 		pop	si
 		leave
 		retn	2
-sub_11814	endp
+ellen_11814	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11885	proc near
+ellen_11885	proc near
 
 @@pid_other		= byte ptr -5
 @@top		= word ptr -4
@@ -12308,7 +12225,7 @@ loc_118CB:
 		idiv	bx
 		mov	si, dx
 		push	dx
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_118F6
@@ -12316,7 +12233,7 @@ loc_118CB:
 
 loc_118F6:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_11902
@@ -12324,19 +12241,19 @@ loc_118F6:
 
 loc_11902:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		pop	di
 		pop	si
 		leave
 		retn
-sub_11885	endp
+ellen_11885	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1190A	proc near
+ellen_1190A	proc near
 
 var_8		= word ptr -8
 @@sprite_offset		= word ptr -6
@@ -12361,7 +12278,7 @@ arg_4		= word ptr  8
 		idiv	bx
 		mov	si, dx
 		push	dx
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_11936
@@ -12369,7 +12286,7 @@ arg_4		= word ptr  8
 
 loc_11936:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		dec	si
 		or	si, si
 		jge	short loc_11942
@@ -12377,7 +12294,7 @@ loc_11936:
 
 loc_11942:
 		push	si
-		call	sub_11814
+		call	ellen_11814
 		cmp	_round_frame_mod2, 0
 		jz	short loc_11956
 		cmp	word_1F3B0, 40h
@@ -12442,20 +12359,20 @@ loc_119FB:
 		pop	si
 		leave
 		retn	6
-sub_1190A	endp
+ellen_1190A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_11A01	proc far
+public gba_boss_render_ellen
+gba_boss_render_ellen proc far
 
 @@pid_other		= byte ptr -1
 
 		enter	2, 0
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short locret_11A6B
 		mov	al, 1
 		sub	al, _pid_current
@@ -12484,7 +12401,7 @@ loc_11A37:
 		mov	ax, word_1F3B0
 		imul	ax, 3
 		push	ax
-		call	sub_1190A
+		call	ellen_1190A
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -12492,7 +12409,7 @@ loc_11A37:
 loc_11A5C:
 		cmp	byte_1F34F, -1
 		jz	short loc_11A68
-		call	sub_11885
+		call	ellen_11885
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -12503,7 +12420,7 @@ loc_11A68:
 locret_11A6B:
 		leave
 		retf
-ellen_11A01	endp
+gba_boss_render_ellen endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12549,7 +12466,7 @@ kotohime_11A6D	endp
 
 ; Attributes: bp-based frame
 
-sub_11AC1	proc near
+kotohime_11AC1	proc near
 
 @@angle		= byte ptr -5
 var_4		= word ptr -4
@@ -12558,7 +12475,7 @@ arg_0		= word ptr  4
 
 		enter	6, 0
 		push	si
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		xor	si, si
 		jmp	short loc_11B43
 ; ---------------------------------------------------------------------------
@@ -12567,7 +12484,7 @@ loc_11ACF:
 		cmp	[bp+arg_0], 0
 		jz	short loc_11ADD
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 
 loc_11ADD:
 		mov	ax, si
@@ -12592,10 +12509,10 @@ loc_11ADD:
 		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bp+var_4]
-		mov	word_23E40, ax
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		inc	si
 
 loc_11B43:
@@ -12606,14 +12523,14 @@ loc_11B43:
 		pop	si
 		leave
 		retn	2
-sub_11AC1	endp
+kotohime_11AC1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11B51	proc near
+kotohime_11B51	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -12635,11 +12552,11 @@ loc_11B6B:
 		inc	byte_1F354
 		cmp	byte_1F354, 40h
 		jbe	short loc_11BC4
-		mov	byte_23E45, 24h ; '$'
+		mov	_bullet_template.BT_group, BG_16_RING
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	1
-		call	sub_11AC1
+		call	kotohime_11AC1
 		call	snd_se_play pascal, 3
 		mov	byte_1F353, 0
 		mov	byte_1F34F, 1
@@ -12655,14 +12572,14 @@ loc_11BBC:
 loc_11BC4:
 		pop	bp
 		retn
-sub_11B51	endp
+kotohime_11B51	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11BC6	proc near
+kotohime_11BC6	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -12686,18 +12603,18 @@ loc_11BE5:
 		inc	byte_1F354
 		cmp	byte_1F354, 40h
 		jbe	short loc_11C5D
-		mov	byte_23E45, 5
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_group, BG_2_SPREAD_NARROW_AIMED
+		mov	_bullet_template.BT_angle, 0
 		mov	al, byte_1F3A2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	0
-		call	sub_11AC1
-		mov	byte_23E45, 18h
-		mov	angle_23E43, 0
+		call	kotohime_11AC1
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM_AIMED
+		mov	_bullet_template.BT_angle, 0
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		push	0
-		call	sub_11AC1
+		call	kotohime_11AC1
 		call	snd_se_play pascal, 3
 		mov	byte_1F353, 0
 		mov	byte_1F34F, 1
@@ -12713,14 +12630,14 @@ loc_11C55:
 loc_11C5D:
 		pop	bp
 		retn
-sub_11BC6	endp
+kotohime_11BC6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11C5F	proc near
+kotohime_11C5F	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_F356
@@ -12734,45 +12651,45 @@ sub_11C5F	proc near
 		cmp	dx, 1
 		jnz	loc_11D06
 		call	snd_se_play pascal, 3
-		mov	byte_23E4E, 1
+		mov	_bullet_template.BT_type, BT_PELLET
 		mov	al, byte ptr word_1F3B0
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
-		mov	byte_23E45, 26h ; '&'
-		mov	byte_23E47, 4
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_group, BG_RING
+		mov	_bullet_template.BT_count, 4
 		mov	ax, word_1F33E
-		add	ax, 0FD00h
-		mov	word_23E3E, ax
+		add	ax, (-48 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		add	ax, 0FE80h
-		mov	word_23E3E, ax
+		add	ax, (-24 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0C0h
-		mov	word_23E40, ax
-		call	sub_17730
+		add	ax, (12 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 180h
-		mov	word_23E40, ax
-		call	sub_17730
+		add	ax, (24 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		add	ax, 180h
-		mov	word_23E3E, ax
+		add	ax, (24 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0C0h
-		mov	word_23E40, ax
-		call	sub_17730
+		add	ax, (12 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		add	ax, 300h
-		mov	word_23E3E, ax
+		add	ax, (48 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 
 loc_11D06:
 		cmp	word_1F3B0, 60h
@@ -12783,14 +12700,14 @@ loc_11D06:
 loc_11D18:
 		pop	bp
 		retn
-sub_11C5F	endp
+kotohime_11C5F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11D1A	proc near
+kotohime_11D1A	proc near
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -12819,8 +12736,8 @@ loc_11D37:
 		inc	byte_1F354
 		cmp	byte_1F354, 40h
 		jbe	loc_11E44
-		mov	byte_23E45, 0
-		mov	byte_23E4E, 2
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
 		xor	di, di
 		jmp	loc_11E18
 ; ---------------------------------------------------------------------------
@@ -12848,9 +12765,9 @@ loc_11D77:
 		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [bp+var_4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		xor	si, si
 		jmp	short loc_11E0E
 ; ---------------------------------------------------------------------------
@@ -12866,7 +12783,7 @@ loc_11DDB:
 		idiv	bx
 		add	al, [bp+var_5]
 		add	al, 40h
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	ax, si
 		imul	ax, 30h
 		mov	dl, byte_1F3A5
@@ -12875,9 +12792,9 @@ loc_11DDB:
 		cwd
 		pop	bx
 		idiv	bx
-		add	al, 10h
-		mov	byte_23E42, al
-		call	sub_17730
+		add	al, (1 shl 4)
+		mov	_bullet_template.BT_speed, al
+		call	@bullets_add$qv
 		inc	si
 
 loc_11E0E:
@@ -12908,14 +12825,14 @@ loc_11E44:
 		pop	si
 		leave
 		retn
-sub_11D1A	endp
+kotohime_11D1A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_11E48	proc far
+public gba_boss_update_kotohime
+gba_boss_update_kotohime proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -12924,42 +12841,42 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_11EC0
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 3
 		cwd
 		idiv	bx
 		add	al, 6
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F3A1, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 20h	; ' '
 		mov	byte_1F3A2, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 18h
 		mov	byte_1F3A3, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -12967,7 +12884,7 @@ var_4		= word ptr -4
 		mov	dl, 20h	; ' '
 		sub	dl, al
 		mov	byte_1F3A4, dl
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -12977,14 +12894,14 @@ var_4		= word ptr -4
 
 loc_11EC0:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_11F92	; jumptable 00011EFE case 255
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
 		call	sub_F512
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		inc	word_1F3B0
 		mov	al, byte_1F34F
 		mov	ah, 0
@@ -13018,22 +12935,22 @@ loc_11F18:
 ; ---------------------------------------------------------------------------
 
 loc_11F1D:
-		call	sub_11B51	; jumptable 00011EFE cases 2-6
+		call	kotohime_11B51	; jumptable 00011EFE cases 2-6
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
 loc_11F22:
-		call	sub_11BC6	; jumptable 00011EFE cases 7-9
+		call	kotohime_11BC6	; jumptable 00011EFE cases 7-9
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
 loc_11F27:
-		call	sub_11C5F	; jumptable 00011EFE cases 12-14
+		call	kotohime_11C5F	; jumptable 00011EFE cases 12-14
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
 loc_11F2C:
-		call	sub_11D1A	; jumptable 00011EFE cases 10,11,15-17
+		call	kotohime_11D1A	; jumptable 00011EFE cases 10,11,15-17
 		jmp	short loc_11F34	; default
 ; ---------------------------------------------------------------------------
 
@@ -13049,27 +12966,27 @@ loc_11F34:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_11F92:
 		leave			; jumptable 00011EFE case 255
 		retf
-kotohime_11E48	endp
+gba_boss_update_kotohime endp
 
 ; ---------------------------------------------------------------------------
 word_11F94	dw	0,     1,     2,     3
@@ -13102,7 +13019,7 @@ word_11F94	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_11FE4	proc near
+kotohime_11FE4	proc near
 
 @@angle		= byte ptr -7
 var_6		= word ptr -6
@@ -13174,14 +13091,14 @@ loc_12095:
 		pop	si
 		leave
 		retn	2
-sub_11FE4	endp
+kotohime_11FE4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_120A0	proc near
+kotohime_120A0	proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -13215,20 +13132,20 @@ loc_120E4:
 		mov	al, byte_1F3A0
 		mov	ah, 0
 		push	ax
-		call	sub_11FE4
+		call	kotohime_11FE4
 
 loc_12100:
 		pop	si
 		leave
 		retn
-sub_120A0	endp
+kotohime_120A0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12103	proc near
+kotohime_12103	proc near
 
 arg_0		= word ptr  4
 
@@ -13249,24 +13166,24 @@ loc_12114:
 		mov	ax, [bp+arg_0]
 		mov	word_1F356, ax
 		push	8
-		call	sub_11FE4
+		call	kotohime_11FE4
 		mov	byte_1F353, 0
 
 loc_1213C:
 		pop	bp
 		retn	2
-sub_12103	endp
+kotohime_12103	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_12140	proc far
+public gba_boss_render_kotohime
+gba_boss_render_kotohime proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_1219B
 		mov	al, _pid_current
 		mov	ah, 0
@@ -13291,7 +13208,7 @@ loc_12172:
 		sub	dx, ax
 		shl	dx, 4
 		push	dx
-		call	sub_12103
+		call	kotohime_12103
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -13299,7 +13216,7 @@ loc_12172:
 loc_1218C:
 		cmp	byte_1F34F, -1
 		jz	short loc_12198
-		call	sub_120A0
+		call	kotohime_120A0
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -13310,7 +13227,7 @@ loc_12198:
 loc_1219B:
 		pop	bp
 		retf
-kotohime_12140	endp
+gba_boss_render_kotohime endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13357,7 +13274,7 @@ chiyuri_1219D	endp
 
 ; Attributes: bp-based frame
 
-sub_121F5	proc near
+chiyuri_121F5	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -13421,10 +13338,10 @@ loc_12282:
 		mov	byte_1F353, 20h	; ' '
 
 loc_1229A:
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 0
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_1
 		mov	al, byte_1F39F
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		cmp	byte_23DE5, 0
 		jnz	short loc_122CC
 		mov	al, byte_23DE4
@@ -13448,52 +13365,52 @@ loc_122CC:
 
 loc_122E5:
 		mov	ax, word_1F33E
-		add	ax, 380h
-		mov	word_23E3E, ax
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_23DE4
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 380h
-		mov	word_23E40, ax
-		mov	al, angle_23E43
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		mov	al, _bullet_template.BT_angle
 		add	al, 40h
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	al, angle_23E43
+		mov	_bullet_template.BT_center.y, ax
+		mov	al, _bullet_template.BT_angle
 		add	al, 40h
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
-		mov	al, angle_23E43
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		mov	al, _bullet_template.BT_angle
 		add	al, 40h
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 
 locret_12353:
 		leave
 		retn
-sub_121F5	endp
+chiyuri_121F5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12355	proc near
+chiyuri_12355	proc near
 		push	bp
 		mov	bp, sp
 		mov	al, byte_1F3A2
@@ -13521,56 +13438,56 @@ sub_12355	proc near
 
 loc_1239D:
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 25h ; '%'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_32_RING
 		mov	al, byte_1F3A1
-		mov	byte_23E42, al
-		call	sub_17730
-		cmp	_boss_attack_level, 8
+		mov	_bullet_template.BT_speed, al
+		call	@bullets_add$qv
+		cmp	_gba_boss_level, 8
 		jb	short loc_12423
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 23h ; '#'
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_8_RING
 		mov	al, byte_1F3A1
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	ax, word_1F33E
-		add	ax, 380h
-		mov	word_23E3E, ax
-		call	sub_17730
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
-		call	sub_17730
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
+		call	@bullets_add$qv
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		add	ax, 380h
-		mov	word_23E40, ax
-		call	sub_17730
+		add	ax, (56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 		mov	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
-		call	sub_17730
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
+		call	@bullets_add$qv
 
 loc_12423:
 		pop	bp
 		retn
-sub_12355	endp
+chiyuri_12355	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12425	proc near
+chiyuri_12425	proc near
 		push	bp
 		mov	bp, sp
 		test	byte ptr word_1F3B0, 7
@@ -13588,19 +13505,19 @@ loc_12447:
 		cmp	word_1F3B0, 30h	; '0'
 		jnz	short loc_12496
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 26h ; '&'
-		mov	byte_23E47, 30h	; '0'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_RING
+		mov	_bullet_template.BT_count, 48
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
-		mov	byte_23E51, 1
-		call	sub_17730
-		mov	byte_23E51, 0
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_has_trail, 1
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_has_trail, 0
 		mov	byte_1F34F, 1
 		mov	word_1F3B0, 0
 		mov	byte_1F353, 20h	; ' '
@@ -13608,14 +13525,14 @@ loc_12447:
 loc_12496:
 		pop	bp
 		retn
-sub_12425	endp
+chiyuri_12425	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12498	proc near
+chiyuri_12498	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -13643,11 +13560,11 @@ sub_12498	proc near
 		push	ax
 		call	sub_CE5B
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E45, 0
-		mov	byte_23E4E, 1
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_type, BT_PELLET
 		mov	al, byte_1F3A4
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		xor	si, si
 		jmp	short loc_12546
 ; ---------------------------------------------------------------------------
@@ -13663,8 +13580,8 @@ loc_124F5:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13675,15 +13592,15 @@ loc_124F5:
 		idiv	bx
 		mov	dl, 60h
 		sub	dl, al
-		mov	angle_23E43, dl
-		call	sub_17730
+		mov	_bullet_template.BT_angle, dl
+		call	@bullets_add$qv
 		mov	al, 0
-		sub	al, angle_23E43
-		mov	angle_23E43, al
-		call	sub_17730
-		mov	al, byte_23E42
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_12546:
@@ -13706,8 +13623,8 @@ loc_12553:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F33E
-		add	ax, 0FC80h
-		mov	word_23E3E, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13718,15 +13635,15 @@ loc_12553:
 		idiv	bx
 		mov	dl, 60h
 		sub	dl, al
-		mov	angle_23E43, dl
-		call	sub_17730
+		mov	_bullet_template.BT_angle, dl
+		call	@bullets_add$qv
 		mov	al, 0
-		sub	al, angle_23E43
-		mov	angle_23E43, al
-		call	sub_17730
-		mov	al, byte_23E42
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, -2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_125A4:
@@ -13757,11 +13674,11 @@ loc_125B0:
 		push	ax
 		call	sub_CE5B
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_center.x, ax
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		mov	al, byte_1F3A4
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		xor	si, si
 		jmp	short loc_1263F
 ; ---------------------------------------------------------------------------
@@ -13777,8 +13694,8 @@ loc_125FF:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13788,11 +13705,11 @@ loc_125FF:
 		pop	bx
 		idiv	bx
 		add	al, -20h
-		mov	angle_23E43, al
-		call	sub_17730
-		mov	al, byte_23E42
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_1263F:
@@ -13815,8 +13732,8 @@ loc_1264C:
 		idiv	bx
 		shl	ax, 4
 		add	ax, word_1F340
-		add	ax, 0FC80h
-		mov	word_23E40, ax
+		add	ax, (-56 shl 4)
+		mov	_bullet_template.BT_center.y, ax
 		mov	ax, si
 		shl	ax, 6
 		mov	dl, byte_1F3A5
@@ -13826,11 +13743,11 @@ loc_1264C:
 		pop	bx
 		idiv	bx
 		add	al, -20h
-		mov	angle_23E43, al
-		call	sub_17730
-		mov	al, byte_23E42
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, -2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_1268C:
@@ -13846,14 +13763,14 @@ loc_126A5:
 		pop	si
 		leave
 		retn
-sub_12498	endp
+chiyuri_12498	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_126A8	proc far
+public gba_boss_update_chiyuri
+gba_boss_update_chiyuri proc far
 
 var_4		= word ptr -4
 var_2		= byte ptr -2
@@ -13863,10 +13780,10 @@ var_2		= byte ptr -2
 		call	sub_F402
 		or	al, al
 		jz	short loc_12700
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 30h	; '0'
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -13874,20 +13791,20 @@ var_2		= byte ptr -2
 		mov	dl, 6
 		sub	dl, al
 		mov	byte_1F3A0, dl
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 34h	; '4'
 		mov	byte_1F3A1, al
 		mov	al, 20h	; ' '
-		sub	al, _boss_attack_level
+		sub	al, _gba_boss_level
 		mov	byte_1F3A2, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, al
 		add	al, 38h	; '8'
 		mov	byte_1F3A3, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 10h
 		mov	byte_1F3A4, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -13897,15 +13814,15 @@ var_2		= byte ptr -2
 
 loc_12700:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_1290B
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
 		call	sub_F512
-		mov	byte_23E50, 0
+		mov	_bullet_template.BT_is_animated, 0
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		inc	word_1F3B0
 		mov	al, byte_1F34F
 		mov	ah, 0
@@ -14013,22 +13930,22 @@ loc_1280B:
 ; ---------------------------------------------------------------------------
 
 loc_12838:
-		call	sub_121F5	; jumptable 00012744 cases 2-5
+		call	chiyuri_121F5	; jumptable 00012744 cases 2-5
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
 loc_1283D:
-		call	sub_12355	; jumptable 00012744 cases 6-9
+		call	chiyuri_12355	; jumptable 00012744 cases 6-9
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
 loc_12842:
-		call	sub_12425	; jumptable 00012744 cases 10-13
+		call	chiyuri_12425	; jumptable 00012744 cases 10-13
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
 loc_12847:
-		call	sub_12498	; jumptable 00012744 cases 14-17
+		call	chiyuri_12498	; jumptable 00012744 cases 14-17
 		jmp	short loc_12860	; default
 ; ---------------------------------------------------------------------------
 
@@ -14040,13 +13957,13 @@ loc_1284C:
 ; ---------------------------------------------------------------------------
 
 loc_12859:
-		mov	byte_23E50, 1	; jumptable 00012744 case 255
+		mov	_bullet_template.BT_is_animated, 1	; jumptable 00012744 case 255
 		leave
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_12860:
-		mov	byte_23E50, 1	; default
+		mov	_bullet_template.BT_is_animated, 1	; default
 		test	byte ptr _round_or_result_frame, 3
 		jnz	short loc_12871
 		mov	ax, 1
@@ -14086,27 +14003,27 @@ loc_128AD:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_1290B:
 		leave
 		retf
-chiyuri_126A8	endp
+gba_boss_update_chiyuri endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -14140,7 +14057,7 @@ word_1290E	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_1295E	proc near
+chiyuri_1295E	proc near
 
 @@angle		= byte ptr -9
 var_8		= word ptr -8
@@ -14205,14 +14122,14 @@ loc_12A04:
 		pop	si
 		leave
 		retn
-sub_1295E	endp
+chiyuri_1295E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12A10	proc near
+chiyuri_12A10	proc near
 
 @@top		= word ptr -2
 
@@ -14297,21 +14214,21 @@ loc_12AD4:
 		push	V_WHITE
 
 loc_12AD6:
-		call	sub_12B38
+		call	chiyuri_12B38
 
 loc_12AD9:
 		pop	di
 		pop	si
 		leave
 		retn
-sub_12A10	endp
+chiyuri_12A10	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12ADD	proc near
+chiyuri_12ADD	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -14356,20 +14273,20 @@ loc_12B24:
 
 loc_12B2F:
 		mov	byte_1F355, al
-		call	sub_1295E
+		call	chiyuri_1295E
 
 loc_12B35:
 		pop	si
 		pop	bp
 		retn
-sub_12ADD	endp
+chiyuri_12ADD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12B38	proc near
+chiyuri_12B38	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -14406,18 +14323,18 @@ sub_12B38	proc near
 		int	SPRITE16
 		leave
 		retn	2
-sub_12B38	endp
+chiyuri_12B38	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_12B99	proc far
+public gba_boss_render_chiyuri
+gba_boss_render_chiyuri proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_12BF9
 		mov	al, _pid_current
 		mov	ah, 0
@@ -14436,7 +14353,7 @@ loc_12BBF:
 loc_12BCB:
 		cmp	byte_1F34F, 0
 		jnz	short loc_12BD7
-		call	sub_12ADD
+		call	chiyuri_12ADD
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -14444,14 +14361,14 @@ loc_12BCB:
 loc_12BD7:
 		cmp	byte_1F34F, -1
 		jz	short loc_12BE3
-		call	sub_12A10
+		call	chiyuri_12A10
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_12BE3:
 		call	sub_F58C
-		cmp	byte_1DB9E, -1
+		cmp	_gba_boss_launched_by, PID_NONE
 		jnz	short loc_12BF9
 		mov	al, 1
 		sub	al, _pid_current
@@ -14461,7 +14378,7 @@ loc_12BE3:
 loc_12BF9:
 		pop	bp
 		retf
-chiyuri_12B99	endp
+gba_boss_render_chiyuri endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14507,7 +14424,7 @@ kana_12BFB	endp
 
 ; Attributes: bp-based frame
 
-sub_12C4F	proc near
+kana_12C4F	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -14548,30 +14465,30 @@ loc_12C8B:
 		push	word_1F33E
 		push	word_1F340
 		push	0E0h
-		call	sub_19896
+		call	kana_19896
 		push	word_1F33E
 		push	word_1F340
 		push	8
-		call	sub_19896
+		call	kana_19896
 		push	word_1F33E
 		push	word_1F340
 		push	78h ; 'x'
-		call	sub_19896
+		call	kana_19896
 		push	word_1F33E
 		push	word_1F340
 		push	0A0h
-		call	sub_19896
-		mov	byte_23E4E, 7
-		mov	byte_23E45, 26h ; '&'
+		call	kana_19896
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT_WITH_ACCEL
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F39F
-		mov	byte_23E47, al
-		mov	byte_23E46, 80h
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_accel_type, BAT_Y
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E42, 30h ; '0'
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, (3 shl 4)
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 		pop	bp
 		retn
@@ -14587,14 +14504,14 @@ loc_12D1E:
 loc_12D35:
 		pop	bp
 		retn
-sub_12C4F	endp
+kana_12C4F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12D37	proc near
+kana_12D37	proc near
 
 @@pid_other		= byte ptr -1
 
@@ -14628,12 +14545,12 @@ loc_12D7B:
 		jb	loc_12E5E
 		cmp	word_1F3B0, 50h	; 'P'
 		jnb	loc_12E5E
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_RING
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		cmp	word_1F3B0, 28h	; '('
 		jnz	short loc_12DC5
 		push	word_1F33E
@@ -14642,7 +14559,7 @@ loc_12D7B:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte_23E42, 10h
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		mov	al, byte_1F3A0
 		jmp	loc_12E4D
 ; ---------------------------------------------------------------------------
@@ -14656,27 +14573,27 @@ loc_12DC5:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte_23E42, 28h ; '('
+		mov	_bullet_template.BT_speed, ((2 shl 4) + 8)
 		mov	al, byte_1F3A1
-		mov	byte_23E47, al
-		call	sub_17730
+		mov	_bullet_template.BT_count, al
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
-		mov	byte_23E4E, 1
-		mov	angle_23E43, 20h
-		mov	byte_23E42, 10h
-		mov	byte_23E45, 22h ; '"'
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_angle, 20h
+		mov	_bullet_template.BT_speed, (1 shl 4)
+		mov	_bullet_template.BT_group, BG_2_SPREAD_HORIZONTALLY_SYMMETRIC
 		xor	si, si
 		jmp	short loc_12E24
 ; ---------------------------------------------------------------------------
 
 loc_12E0E:
-		call	sub_17730
-		mov	al, angle_23E43
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_angle
 		add	al, 6
-		mov	angle_23E43, al
-		mov	al, byte_23E42
+		mov	_bullet_template.BT_angle, al
+		mov	al, _bullet_template.BT_speed
 		add	al, 3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_12E24:
@@ -14694,12 +14611,12 @@ loc_12E2B:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte_23E42, 38h ; '8'
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 8)
 		mov	al, byte_1F3A2
 
 loc_12E4D:
-		mov	byte_23E47, al
-		call	sub_17730
+		mov	_bullet_template.BT_count, al
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 		jmp	short loc_12E75
 ; ---------------------------------------------------------------------------
@@ -14715,14 +14632,14 @@ loc_12E75:
 		pop	si
 		leave
 		retn
-sub_12D37	endp
+kana_12D37	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12E78	proc near
+kana_12E78	proc near
 
 var_1		= byte ptr -1
 
@@ -14753,17 +14670,17 @@ loc_12EB0:
 		push	word_1F33E
 		push	word_1F340
 		push	word ptr [bp+var_1]
-		call	sub_19896
-		mov	byte_23E4E, 4
-		mov	byte_23E45, 26h ; '&'
+		call	kana_19896
+		mov	_bullet_template.BT_type, BT_PELLET_CLOUD
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F3A4
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E42, 30h ; '0'
-		call	sub_17730
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, (3 shl 4)
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 
 loc_12EED:
@@ -14776,14 +14693,14 @@ loc_12EED:
 locret_12F04:
 		leave
 		retn
-sub_12E78	endp
+kana_12E78	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12F06	proc near
+kana_12F06	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1F3B0, 1
@@ -14846,18 +14763,18 @@ loc_12F77:
 		jnb	short loc_12FCF
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_12FBF
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 26h ; '&'
-		mov	byte_23E47, 5
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_RING
+		mov	_bullet_template.BT_count, 5
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_1F3A5
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, byte_23DE6
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		call	snd_se_play pascal, 10
 
 loc_12FBF:
@@ -14879,14 +14796,14 @@ loc_12FCF:
 loc_12FE6:
 		pop	bp
 		retn
-sub_12F06	endp
+kana_12F06	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_12FE8	proc far
+public gba_boss_update_kana
+gba_boss_update_kana proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -14895,28 +14812,28 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_1304F
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 18h
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F3A1, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -14924,27 +14841,27 @@ var_4		= word ptr -4
 		add	al, 14h
 		mov	byte_1F3A2, al
 		mov	al, 20h	; ' '
-		sub	al, _boss_attack_level
+		sub	al, _gba_boss_level
 		mov	byte_1F3A3, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 18h
 		mov	byte_1F3A4, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 40h
 		mov	byte_1F3A5, al
 
 loc_1304F:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_13122	; jumptable 0001308A case 255
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_F512
 		inc	word_1F3B0
 		mov	al, byte_1F34F
@@ -14979,22 +14896,22 @@ loc_130A4:
 ; ---------------------------------------------------------------------------
 
 loc_130A9:
-		call	sub_12C4F	; jumptable 0001308A cases 2-4
+		call	kana_12C4F	; jumptable 0001308A cases 2-4
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
 loc_130AE:
-		call	sub_12D37	; jumptable 0001308A cases 7-12
+		call	kana_12D37	; jumptable 0001308A cases 7-12
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
 loc_130B3:
-		call	sub_12E78	; jumptable 0001308A cases 13-15
+		call	kana_12E78	; jumptable 0001308A cases 13-15
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
 loc_130B8:
-		call	sub_12F06	; jumptable 0001308A cases 5,6,16,17
+		call	kana_12F06	; jumptable 0001308A cases 5,6,16,17
 		jmp	short loc_130C0	; default
 ; ---------------------------------------------------------------------------
 
@@ -15011,27 +14928,27 @@ loc_130C0:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_13122:
 		leave			; jumptable 0001308A case 255
 		retf
-kana_12FE8	endp
+gba_boss_update_kana endp
 
 ; ---------------------------------------------------------------------------
 word_13124	dw	0,     1,     2,     3
@@ -15064,7 +14981,7 @@ word_13124	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_13174	proc near
+kana_13174	proc near
 
 @@top		= word ptr -2
 
@@ -15143,14 +15060,14 @@ loc_1321F:
 		pop	si
 		leave
 		retn
-sub_13174	endp
+kana_13174	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13223	proc near
+kana_13223	proc near
 
 @@angle		= byte ptr -7
 var_6		= word ptr -6
@@ -15234,18 +15151,18 @@ loc_132FA:
 		pop	si
 		leave
 		retn
-sub_13223	endp
+kana_13223	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_132FE	proc far
+public gba_boss_render_kana
+gba_boss_render_kana proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_1334B
 		mov	al, _pid_current
 		mov	ah, 0
@@ -15264,7 +15181,7 @@ loc_13324:
 loc_13330:
 		cmp	byte_1F34F, 0
 		jnz	short loc_1333C
-		call	sub_13223
+		call	kana_13223
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -15272,7 +15189,7 @@ loc_13330:
 loc_1333C:
 		cmp	byte_1F34F, -1
 		jz	short loc_13348
-		call	sub_13174
+		call	kana_13174
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -15283,7 +15200,7 @@ loc_13348:
 loc_1334B:
 		pop	bp
 		retf
-kana_132FE	endp
+gba_boss_render_kana endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15330,7 +15247,7 @@ rikako_1334D	endp
 
 ; Attributes: bp-based frame
 
-sub_133A5	proc near
+rikako_133A5	proc near
 
 var_2		= byte ptr -2
 @@angle		= byte ptr -1
@@ -15368,9 +15285,9 @@ loc_133DE:
 		sub	dx, ax
 		push	dx
 		call	sub_CDBD
-		mov	byte_23E4E, 2
-		mov	byte_23E45, 16h
-		mov	byte_23E42, 1Ch
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_group, BG_5_SPREAD_WIDE
+		mov	_bullet_template.BT_speed, ((1 shl 4) + 12)
 		push	1
 		call	@randring_far_next16_and$qui
 		or	ax, ax
@@ -15402,17 +15319,17 @@ loc_13426:
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, [bp+@@angle]
 		add	al, [bp+var_2]
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 		inc	si
 
 loc_13483:
@@ -15434,14 +15351,14 @@ loc_134A7:
 		pop	si
 		leave
 		retn
-sub_133A5	endp
+rikako_133A5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_134AA	proc near
+rikako_134AA	proc near
 
 var_1		= byte ptr -1
 
@@ -15497,7 +15414,7 @@ loc_1350E:
 		push	word_1F33E
 		push	word_1F340
 		push	word ptr [bp+var_1]
-		call	sub_1B006
+		call	rikako_1B006
 		inc	si
 
 loc_13532:
@@ -15512,26 +15429,26 @@ loc_13532:
 loc_1353F:
 		cmp	word_1F3B0, 40h
 		jnz	short loc_1358F
-		mov	byte_23E4E, 1
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_type, BT_PELLET
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, byte_1F3A1
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
-		mov	byte_23E42, 20h ; ' '
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_speed, (2 shl 4)
 		xor	si, si
 		jmp	short loc_13581
 ; ---------------------------------------------------------------------------
 
 loc_1356B:
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	al, byte_23E42
+		mov	_bullet_template.BT_angle, al
+		mov	al, _bullet_template.BT_speed
 		add	al, 8
-		mov	byte_23E42, al
-		call	sub_17730
+		mov	_bullet_template.BT_speed, al
+		call	@bullets_add$qv
 		inc	si
 
 loc_13581:
@@ -15554,14 +15471,14 @@ loc_135A1:
 		pop	si
 		leave
 		retn
-sub_134AA	endp
+rikako_134AA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_135A4	proc near
+rikako_135A4	proc near
 
 var_1		= byte ptr -1
 
@@ -15600,20 +15517,20 @@ loc_135CD:
 		push	1
 		call	@randring_far_next16_and$qui
 		inc	al
-		mov	byte_23DE9, al
+		mov	bullet_type_23DE9, al
 
 loc_135F8:
-		mov	al, byte_23DE9
-		mov	byte_23E4E, al
-		mov	byte_23E45, 0Eh
+		mov	al, bullet_type_23DE9
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_group, BG_4_SPREAD_NARROW
 		mov	ax, word_1F33E
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, word_1F340
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, byte_23DE8
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_1F3A3
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		cmp	[bp+var_1], 1
 		jz	short loc_13633
 		cmp	[bp+var_1], 5
@@ -15625,11 +15542,11 @@ loc_135F8:
 
 loc_13633:
 		call	snd_se_play pascal, 10
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, byte_23DE8
 		add	al, 80h
-		mov	angle_23E43, al
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
 
 loc_1364C:
 		cmp	word_1F3B0, 80h
@@ -15640,14 +15557,14 @@ loc_1364C:
 locret_1365F:
 		leave
 		retn
-sub_135A4	endp
+rikako_135A4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_13661	proc far
+public gba_boss_update_rikako
+gba_boss_update_rikako proc far
 
 var_4		= word ptr -4
 @@pid_other		= byte ptr -1
@@ -15656,21 +15573,21 @@ var_4		= word ptr -4
 		call	sub_F402
 		or	al, al
 		jz	short loc_136AB
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	al, 10h
 		mov	byte_1F39F, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	al, 8
 		mov	byte_1F3A0, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -15678,20 +15595,20 @@ var_4		= word ptr -4
 		add	al, 1Ch
 		mov	byte_1F3A1, al
 		mov	al, 20h	; ' '
-		sub	al, _boss_attack_level
+		sub	al, _gba_boss_level
 		mov	byte_1F3A2, al
-		mov	al, _boss_attack_level
+		mov	al, _gba_boss_level
 		add	al, 40h
 		mov	byte_1F3A3, al
 
 loc_136AB:
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	locret_1377C	; jumptable 000136E6 case 255
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		call	sub_F512
 		inc	word_1F3B0
 		mov	al, byte_1F34F
@@ -15726,17 +15643,17 @@ loc_13700:
 ; ---------------------------------------------------------------------------
 
 loc_13705:
-		call	sub_133A5	; jumptable 000136E6 cases 2-5
+		call	rikako_133A5	; jumptable 000136E6 cases 2-5
 		jmp	short loc_13717	; default
 ; ---------------------------------------------------------------------------
 
 loc_1370A:
-		call	sub_134AA	; jumptable 000136E6 cases 7-12
+		call	rikako_134AA	; jumptable 000136E6 cases 7-12
 		jmp	short loc_13717	; default
 ; ---------------------------------------------------------------------------
 
 loc_1370F:
-		call	sub_135A4	; jumptable 000136E6 cases 6,13-17
+		call	rikako_135A4	; jumptable 000136E6 cases 6,13-17
 		jmp	short loc_13717	; default
 ; ---------------------------------------------------------------------------
 
@@ -15754,27 +15671,27 @@ loc_13717:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
-		mov	byte_20E2C, 1
+		call	@collmap_set_rect_striped$qv
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (32 shl 4)
 		mov	_hitbox_radius.y, (32 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, word_1F33E
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, word_1F340
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	byte_1F34E, al
 		mov	ah, 0
 		sub	word_1F34A, ax
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		nopcall	sub_F4B4
 
 locret_1377C:
 		leave			; jumptable 000136E6 case 255
 		retf
-rikako_13661	endp
+gba_boss_update_rikako endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -15808,7 +15725,7 @@ word_1377F	dw	0,     1,     2,     3
 
 ; Attributes: bp-based frame
 
-sub_137CF	proc near
+rikako_137CF	proc near
 
 @@angle		= byte ptr -9
 var_8		= word ptr -8
@@ -15897,14 +15814,14 @@ loc_138AA:
 		pop	si
 		leave
 		retn
-sub_137CF	endp
+rikako_137CF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_138B3	proc near
+rikako_138B3	proc near
 
 @@angle		= byte ptr -7
 var_6		= word ptr -6
@@ -15988,18 +15905,18 @@ loc_13987:
 		pop	si
 		leave
 		retn
-sub_138B3	endp
+rikako_138B3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1398B	proc far
+public gba_boss_render_rikako
+gba_boss_render_rikako proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
-		cmp	al, byte_1DB9E
+		cmp	al, _gba_boss_launched_by
 		jnz	short loc_139D8
 		mov	al, _pid_current
 		mov	ah, 0
@@ -16018,7 +15935,7 @@ loc_139B1:
 loc_139BD:
 		cmp	byte_1F34F, 0
 		jnz	short loc_139C9
-		call	sub_138B3
+		call	rikako_138B3
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -16026,7 +15943,7 @@ loc_139BD:
 loc_139C9:
 		cmp	byte_1F34F, -1
 		jz	short loc_139D5
-		call	sub_137CF
+		call	rikako_137CF
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -16037,7 +15954,7 @@ loc_139D5:
 loc_139D8:
 		pop	bp
 		retf
-rikako_1398B	endp
+gba_boss_render_rikako endp
 
 main_03_TEXT	ends
 
@@ -16054,909 +15971,18 @@ RANDRING_NEXT_DEF _FAR, far
 main_04_TEXT	ends
 
 COLLMAP_TEXT	segment byte public 'CODE' use16
-	extern _collmap_set_rect_striped:proc
-	extern _collmap_set_vline:proc
-	extern _collmap_set_slope_striped:proc
+	extern @collmap_set_rect_striped$qv:proc
+	extern @collmap_set_slope_striped$qv:proc
 COLLMAP_TEXT	ends
 
-main_04__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13C1E	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, [bp+arg_4]
-		shl	ax, 4
-		mov	si, ax
-		mov	al, byte ptr [bp+arg_4]
-		mov	byte_1F51C, al
-		mov	byte_1F51D, 0
-		jmp	short loc_13C52
-; ---------------------------------------------------------------------------
-
-loc_13C37:
-		mov	bx, si
-		add	bx, bx
-		mov	es, word_1F554
-		push	word ptr es:[bx]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	sub_15EDB
-		inc	byte_1F51D
-		inc	si
-
-loc_13C52:
-		mov	bx, [bp+arg_4]
-		mov	al, [bx+1FC4h]
-		cmp	al, byte_1F51D
-		ja	short loc_13C37
-		pop	si
-		pop	bp
-		retn	6
-sub_13C1E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13C64	proc near
-
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	2, 0
-		mov	al, byte ptr [bp+arg_0]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+4AD6h], 0
-		jnz	short locret_13CC3
-		mov	al, byte ptr [bp+arg_0]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+1FFAh]
-		mov	[bp+var_1], al
-		mov	al, byte_23AF8
-		mov	ah, 0
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		mov	byte_1F520, al
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	es, word_1F556
-		mov	bx, ax
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax
-		push	[bp+arg_0]
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	es, word_1F558
-		mov	bx, ax
-		mov	al, es:[bx]
-		push	ax
-		call	sub_13C1E
-		mov	al, byte ptr [bp+arg_0]
-		mov	ah, 0
-		mov	bx, ax
-		inc	byte ptr [bx+1FFAh]
-
-locret_13CC3:
-		leave
-		retn	2
-sub_13C64	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13CC7	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_207E2, 0
-		jnz	short loc_13CDB
-		push	0
-		call	sub_13C64
-		push	1
-		call	sub_13C64
-
-loc_13CDB:
-		pop	bp
-		retf
-sub_13CC7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13CDD	proc far
-
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		push	ds
-		push	offset aEnedat_dat ; "ENEDAT.DAT"
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_4]
-		push	ax
-		push	4
-		call	file_read
-		push	[bp+var_4]
-		call	hmem_allocbyte
-		mov	word_1F51E, ax
-		push	300h
-		call	hmem_allocbyte
-		mov	word_1F554, ax
-		push	100h
-		call	hmem_allocbyte
-		mov	word_1F556, ax
-		push	100h
-		call	hmem_allocbyte
-		mov	word_1F558, ax
-		mov	ax, word_1F51E
-		mov	word_1F522, ax
-		push	ax
-		push	0
-		push	[bp+var_4]
-		call	file_read
-		call	file_close
-		xor	si, si
-		mov	[bp+var_A], 0
-
-loc_13D41:
-		mov	es, word_1F522
-		mov	ax, es:[si]
-		mov	[bp+var_6], ax
-		cmp	[bp+var_6], 0
-		jz	short loc_13D92
-		mov	bx, [bp+var_A]
-		mov	al, byte ptr [bp+var_6]
-		mov	[bx+1FC4h], al
-		add	si, 2
-		xor	di, di
-		jmp	short loc_13D88
-; ---------------------------------------------------------------------------
-
-loc_13D62:
-		mov	es, word_1F522
-		mov	al, es:[si]
-		mov	ah, 0
-		mov	[bp+var_8], ax
-		inc	si
-		mov	bx, [bp+var_A]
-		shl	bx, 4
-		add	bx, bx
-		mov	es, word_1F554
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	es:[bx], si
-		add	si, [bp+var_8]
-		inc	di
-
-loc_13D88:
-		cmp	di, [bp+var_6]
-		jl	short loc_13D62
-		inc	[bp+var_A]
-		jmp	short loc_13D41
-; ---------------------------------------------------------------------------
-
-loc_13D92:
-		mov	al, byte ptr [bp+var_A]
-		mov	byte_1F55C, al
-		pop	di
-		pop	si
-		leave
-		retf
-sub_13CDD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13D9C	proc far
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		jmp	short loc_13DDC
-; ---------------------------------------------------------------------------
-
-loc_13DA5:
-		call	IRand
-		mov	dl, byte_1F55C
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_1], dl
-		mov	al, [bp+var_1]
-		cmp	al, [bp+var_2]
-		jz	short loc_13DA5
-		mov	es, word_1F556
-		mov	es:[si], al
-		mov	[bp+var_2], al
-		call	IRand
-		and	al, 1
-		shl	al, 7
-		mov	es, word_1F558
-		mov	es:[si], al
-		inc	si
-
-loc_13DDC:
-		cmp	si, 100h
-		jl	short loc_13DA5
-		mov	byte_1F55A, 0
-		mov	byte_1F55B, 0
-		mov	byte_22036, 0
-		mov	byte_22037, 0
-		pop	si
-		leave
-		retf
-sub_13D9C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13DF9	proc far
-		push	bp
-		mov	bp, sp
-		push	word_1F522
-		call	hmem_free
-		push	word_1F554
-		call	hmem_free
-		push	word_1F556
-		call	hmem_free
-		push	word_1F558
-		call	hmem_free
-		pop	bp
-		retf
-sub_13DF9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13E22	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, word_2203C
-		mov	cx, [si+10h]
-		mov	al, byte_1F520
-		mov	ah, 0
-		imul	cx
-		mov	bx, 9
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, cx
-		add	ax, ax
-		mov	bx, 3
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	cx, dx
-		test	byte ptr [si+21h], 80h
-		jz	short loc_13E55
-		add	[si+2],	cx
-		jmp	short loc_13E58
-; ---------------------------------------------------------------------------
-
-loc_13E55:
-		sub	[si+2],	cx
-
-loc_13E58:
-		test	byte ptr [si+21h], 1
-		jz	short loc_13E6C
-		cmp	word ptr [si+2], 0FE00h
-		jle	short loc_13EA0
-		cmp	word ptr [si+2], 1400h
-		jge	short loc_13EA0
-
-loc_13E6C:
-		mov	cx, [si+12h]
-		mov	al, byte_1F520
-		mov	ah, 0
-		imul	cx
-		mov	bx, 9
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, cx
-		add	ax, ax
-		mov	bx, 3
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	cx, dx
-		add	[si+4],	cx
-		test	byte ptr [si+21h], 2
-		jz	short loc_13E9C
-		cmp	word ptr [si+4], 1900h
-		jge	short loc_13EA0
-
-loc_13E9C:
-		mov	al, 0
-		jmp	short loc_13EA5
-; ---------------------------------------------------------------------------
-
-loc_13EA0:
-		mov	byte ptr [si], 0
-		mov	al, 1
-
-loc_13EA5:
-		pop	si
-		pop	bp
-		retn
-sub_13E22	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13EA8	proc near
-		push	bp
-		mov	bp, sp
-		push	es
-		push	ds
-		mov	ax, word_2203C
-		add	ax, 10h
-		push	ax
-		push	ds
-		mov	ax, word_2203C
-		add	ax, 12h
-		push	ax
-		mov	bx, word_2203C
-		push	word ptr [bx+19h]
-		mov	al, [bx+1Fh]
-		mov	ah, 0
-		push	ax
-		call	vector2
-		pop	es
-		pop	bp
-		retn
-sub_13EA8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13ED1	proc near
-		push	bp
-		mov	bp, sp
-		mov	bx, word_2203C
-		mov	al, [bx+1Ah]
-		cbw
-		shl	ax, 9
-		mov	bx, 3
-		cwd
-		idiv	bx
-		mov	cx, ax
-		mov	al, byte_1F520
-		mov	ah, 0
-		imul	cx
-		mov	bx, 9
-		cwd
-		idiv	bx
-		add	cx, ax
-		mov	bx, word_2203C
-		add	[bx+18h], cx
-		pop	bp
-		retn
-sub_13ED1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13EFF	proc near
-
-arg_0		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	cl, [bp+arg_0]
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, byte_23AF8
-		mov	ah, 0
-		imul	bx
-		mov	bx, ax
-		sar	bx, 7
-		mov	al, cl
-		mov	ah, 0
-		add	bx, ax
-		cmp	bx, 80h
-		jl	short loc_13F26
-		mov	bx, 7Fh
-
-loc_13F26:
-		mov	al, bl
-		pop	bp
-		retn	2
-sub_13EFF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13F2C	proc near
-
-var_E		= word ptr -0Eh
-var_B		= byte ptr -0Bh
-var_A		= byte ptr -0Ah
-var_9		= byte ptr -9
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-var_6		= word ptr -6
-@@player		= word ptr -4
-var_2		= word ptr -2
-
-		enter	0Eh, 0
-		push	si
-		push	di
-		mov	di, word_2203C
-		mov	al, [di+8]
-		mov	[bp+var_B], al
-		mov	ah, 0
-		shl	ax, 7
-		add	ax, offset _players
-		mov	[bp+@@player], ax
-		mov	es, word_1F51E
-		mov	ax, [di+0Eh]
-		mov	[bp+var_6], ax
-		mov	ax, [di+0Ah]
-
-loc_13F54:
-		add	[bp+var_6], ax
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	[bp+var_E], ax
-		mov	cx, 10h		; switch 16 cases
-		mov	bx, offset word_14290
-
-loc_13F68:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_E]
-		jz	short loc_13F78
-		add	bx, 2
-		loop	loc_13F68
-		jmp	loc_1423E	; default
-; ---------------------------------------------------------------------------
-
-loc_13F78:
-		jmp	word ptr cs:[bx+20h] ; switch jump
-
-loc_13F7C:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 cases	1,8,9
-		jnz	short loc_13F9A
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+2]
-		mov	[di+1Fh], al
-		mov	al, es:[bx+1]
-		mov	[di+19h], al
-		mov	byte ptr [di+18h], 0
-		call	sub_13EA8
-
-loc_13F9A:
-		call	sub_13E22
-		or	al, al
-		jnz	loc_14136	; jumptable 00013F78 case 0
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+3]
-		mov	[bp+var_8], al
-		mov	[bp+var_7], 4
-		cmp	byte ptr es:[bx], 8
-		jnz	short loc_13FD6
-		mov	bx, [bp+@@player]
-		mov	ax, [bx+player_stuff_t.center.y]
-		add	ax, (-32 shl 4)
-		cmp	[di+4],	ax
-		jl	loc_1423E	; default
-		mov	ax, [bx+player_stuff_t.center.y]
-		add	ax, (32 shl 4)
-		cmp	[di+4],	ax
-		jg	loc_1423E	; default
-		jmp	short loc_13FFC
-; ---------------------------------------------------------------------------
-
-loc_13FD6:
-		mov	bx, [bp+var_6]
-		cmp	byte ptr es:[bx], 9
-		jnz	loc_1423E	; default
-		mov	bx, [bp+@@player]
-		mov	ax, [bx+player_stuff_t.center.x]
-		add	ax, (-16 shl 4)
-		cmp	[di+2],	ax
-		jl	loc_1423E	; default
-		mov	ax, [bx+player_stuff_t.center.x]
-		add	ax, (16 shl 4)
-		cmp	[di+2],	ax
-		jg	loc_1423E	; default
-
-loc_13FFC:
-		mov	word ptr [di+0Ch], 0
-		jmp	loc_14284
-; ---------------------------------------------------------------------------
-
-loc_14004:
-		call	sub_13E22	; jumptable 00013F78 case 6
-		or	al, al
-		jnz	loc_14136	; jumptable 00013F78 case 0
-		jmp	loc_140A8	; jumptable 00013F78 case 3
-; ---------------------------------------------------------------------------
-
-loc_14010:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 case 7
-		jnz	short loc_14023
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+1]
-		mov	[di+1Fh], al
-		call	sub_13EA8
-
-loc_14023:
-		call	sub_13E22
-		or	al, al
-		jnz	loc_14136	; jumptable 00013F78 case 0
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+2]
-		mov	[bp+var_8], al
-		mov	[bp+var_7], 3
-		jmp	loc_1423E	; default
-; ---------------------------------------------------------------------------
-
-loc_1403D:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 cases	2,10
-		jnz	short loc_14058
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+1]
-		mov	[di+19h], al
-		mov	byte ptr [di+18h], 0
-		mov	al, es:[bx+3]
-		mov	[di+1Ah], al
-
-loc_14058:
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+2]
-		mov	[di+1Fh], al
-		call	sub_13EA8
-		mov	bx, [bp+var_6]
-		cmp	byte ptr es:[bx], 0Ah
-		jnz	short loc_1408B
-		mov	al, es:[bx+4]
-		cbw
-		add	[di+10h], ax
-		mov	al, es:[bx+5]
-		cbw
-		add	[di+12h], ax
-		mov	al, es:[bx+6]
-		mov	[bp+var_8], al
-		mov	[bp+var_7], 7
-		jmp	short loc_14099
-; ---------------------------------------------------------------------------
-
-loc_1408B:
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+4]
-		mov	[bp+var_8], al
-		mov	[bp+var_7], 5
-
-loc_14099:
-		call	sub_13E22
-		or	al, al
-		jnz	loc_14136	; jumptable 00013F78 case 0
-		call	sub_13ED1
-		jmp	loc_1423E	; default
-; ---------------------------------------------------------------------------
-
-loc_140A8:
-		mov	bx, [bp+var_6]	; jumptable 00013F78 case 3
-		mov	al, es:[bx+1]
-		mov	[bp+var_8], al
-		mov	[bp+var_7], 2
-		jmp	loc_1423E	; default
-; ---------------------------------------------------------------------------
-
-loc_140B9:
-		cmp	word ptr [di+0Ch], 0 ; jumptable 00013F78 cases	4,5
-		jnz	short loc_140CE
-		mov	word ptr [di+18h], 0
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+2]
-		mov	[di+1Ah], al
-
-loc_140CE:
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+1]
-		mov	[bp+var_9], al
-		movzx	eax, [bp+var_9]
-		mov	dl, [di+19h]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		mov	[di+10h], ax
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+3]
-		cbw
-		mov	[di+12h], ax
-		cmp	byte ptr es:[bx], 5
-		jnz	short loc_1411B
-		mov	al, [di+10h]
-		mov	[bp+var_A], al
-		mov	ax, [di+12h]
-		mov	[di+10h], ax
-		mov	al, [bp+var_A]
-		cbw
-		mov	[di+12h], ax
-
-loc_1411B:
-		call	sub_13E22
-		or	al, al
-		jnz	short loc_14136	; jumptable 00013F78 case 0
-		call	sub_13ED1
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+4]
-		mov	[bp+var_8], al
-		mov	[bp+var_7], 5
-		jmp	loc_1423E	; default
-; ---------------------------------------------------------------------------
-
-loc_14136:
-		mov	byte ptr [di], 0 ; jumptable 00013F78 case 0
-		mov	al, 1
-		jmp	loc_1428B
-; ---------------------------------------------------------------------------
-
-loc_1413E:
-		mov	byte ptr [di], 1 ; jumptable 00013F78 case 16
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+1]
-		cbw
-		mov	[bp+var_2], ax
-		test	byte ptr [di+21h], 80h
-		jz	short loc_1415A
-		shl	ax, 7
-		mov	[di+2],	ax
-		jmp	short loc_14168
-; ---------------------------------------------------------------------------
-
-loc_1415A:
-		mov	ax, [bp+var_2]
-		shl	ax, 7
-		mov	dx, 1200h
-		sub	dx, ax
-		mov	[di+2],	dx
-
-loc_14168:
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+2]
-		cbw
-		mov	[bp+var_2], ax
-		shl	ax, 7
-		mov	[di+4],	ax
-		mov	al, byte_1F520
-		mov	ah, 0
-		add	ax, [bp+var_6]
-		mov	bx, ax
-		mov	al, es:[bx+3]
-
-loc_14187:
-		mov	[di+6],	al
-		mov	al, [di+6]
-		shl	al, 4
-		mov	[di+9],	al
-		mov	al, byte_1F520
-		mov	ah, 0
-		add	ax, [bp+var_6]
-		mov	bx, ax
-		mov	al, es:[bx+7]
-		mov	[di+7],	al
-		mov	bx, [bp+var_6]
-		cmp	byte ptr es:[bx+0Bh], 0
-		jz	short loc_141B3
-		mov	ax, 1
-		jmp	short loc_141B5
-; ---------------------------------------------------------------------------
-
-loc_141B3:
-		xor	ax, ax
-
-loc_141B5:
-		or	[di+21h], al
-		mov	bx, [bp+var_6]
-		cmp	byte ptr es:[bx+0Ch], 0
-		jz	short loc_141C7
-		mov	ax, 1
-		jmp	short loc_141C9
-; ---------------------------------------------------------------------------
-
-loc_141C7:
-		xor	ax, ax
-
-loc_141C9:
-		add	al, al
-		or	[di+21h], al
-		mov	[bp+var_7], 0Eh
-		jmp	loc_14284
-; ---------------------------------------------------------------------------
-
-loc_141D5:
-		or	byte ptr [di+21h], 1 ; jumptable 00013F78 case 130
-		jmp	short loc_141DF
-; ---------------------------------------------------------------------------
-
-loc_141DB:
-		or	byte ptr [di+21h], 2 ; jumptable 00013F78 case 131
-
-loc_141DF:
-		mov	[bp+var_7], 1
-		jmp	loc_14284
-; ---------------------------------------------------------------------------
-
-loc_141E6:
-		mov	al, [di+20h]	; jumptable 00013F78 case 128
-		mov	ah, 0
-		mov	bx, [bp+var_6]
-		push	ax
-		mov	al, es:[bx+2]
-		cbw
-		pop	dx
-		cmp	dx, ax
-		jl	short loc_141FB
-		jmp	short loc_1421E
-; ---------------------------------------------------------------------------
-
-loc_141FB:
-		inc	byte ptr [di+20h]
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+1]
-		cbw
-		mov	[di+0Ah], ax
-		jmp	short loc_14236
-; ---------------------------------------------------------------------------
-
-loc_1420B:
-		mov	al, [di+20h]	; jumptable 00013F78 case 129
-		mov	ah, 0
-		mov	bx, [bp+var_6]
-		push	ax
-		mov	al, es:[bx+2]
-		cbw
-		pop	dx
-		cmp	dx, ax
-		jl	short loc_14228
-
-loc_1421E:
-		mov	byte ptr [di+20h], 0
-		mov	[bp+var_7], 3
-		jmp	short loc_14284
-; ---------------------------------------------------------------------------
-
-loc_14228:
-		inc	byte ptr [di+20h]
-		mov	bx, [bp+var_6]
-		mov	al, es:[bx+1]
-		cbw
-
-loc_14233:
-		add	[di+0Ah], ax
-
-loc_14236:
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		jmp	loc_13F54
-; ---------------------------------------------------------------------------
-
-loc_1423E:
-		mov	al, [bp+var_8]	; default
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		imul	ax, 3
-		mov	dl, byte_1F520
-		mov	dh, 0
-		push	ax
-		mov	ax, dx
-		imul	[bp+var_2]
-		mov	bx, 6
-		cwd
-		idiv	bx
-		pop	dx
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	ax, [di+0Ch]
-		cmp	ax, [bp+var_2]
-		jb	short loc_1427D
-		mov	word ptr [di+0Ch], 0
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		add	[di+0Ah], ax
-		jmp	short loc_14280
-; ---------------------------------------------------------------------------
-
-loc_1427D:
-		inc	word ptr [di+0Ch]
-
-loc_14280:
-		mov	al, 0
-		jmp	short loc_1428B
-; ---------------------------------------------------------------------------
-
-loc_14284:
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		jmp	short loc_14233
-; ---------------------------------------------------------------------------
-
-loc_1428B:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_13F2C	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-word_14290	dw	0,     1,     2,     3
-		dw	4,     5,     6,     7 ; value table for switch	statement
-		dw	8,     9,   0Ah,   10h
-		dw    80h,   81h,   82h,   83h
-		dw offset loc_14136	; jump table for switch	statement
-		dw offset loc_13F7C
-		dw offset loc_1403D
-		dw offset loc_140A8
-		dw offset loc_140B9
-		dw offset loc_140B9
-		dw offset loc_14004
-		dw offset loc_14010
-		dw offset loc_13F7C
-		dw offset loc_13F7C
-		dw offset loc_1403D
-		dw offset loc_1413E
-		dw offset loc_141E6
-		dw offset loc_1420B
-		dw offset loc_141D5
-		dw offset loc_141DB
+ENEMY_2_TEXT segment byte public 'CODE' use16
+ENEMY_2_TEXT ends
+
+HITBOX_TEXT segment byte public 'CODE' use16
+	extern @enemy_formations_update$qv:proc
+	extern @enemy_formations_load$qv:proc
+	extern @enemy_formations_randomize$qv:proc
+	extern @enemy_formations_free$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17029,7 +16055,7 @@ chargeshot_add_marisa	endp
 
 ; Attributes: bp-based frame
 
-sub_14340	proc far
+marisa_hyper_14340	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -17084,7 +16110,7 @@ loc_143A4:
 		pop	si
 		pop	bp
 		retf
-sub_14340	endp
+marisa_hyper_14340	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17181,14 +16207,14 @@ chargeshot_update_marisa	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_14487	proc far
+public @chargeshot_hittest_marisa$qv
+@chargeshot_hittest_marisa$qv proc far
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 32h
 		add	ax, 288Ah
@@ -17231,7 +16257,7 @@ loc_144AF:
 		mov	ax, _hitbox_origin_topleft.y
 		add	ax, _hitbox_radius.y
 		push	ax	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -17253,7 +16279,7 @@ loc_1450E:
 		pop	si
 		leave
 		retf
-marisa_14487	endp
+@chargeshot_hittest_marisa$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17432,27 +16458,27 @@ chargeshot_render_marisa	endp
 
 ; Attributes: bp-based frame
 
-sub_146AF	proc near
+@gauge_pattern_marisa$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		push	si
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_146C6
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_146C6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_14723
 		push	1Fh
 		call	@randring2_next16_and$qui
@@ -17470,12 +16496,12 @@ loc_146C6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	dl, 30h	; '0'
 		mov	bx, ax
-		sub	dl, _gauge_attack_level[bx]
+		sub	dl, _gba_gauge_level[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -17488,27 +16514,27 @@ loc_14723:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
 		jnz	loc_14880
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2884h]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
-		mov	byte_23E42, 38h ; '8'
-		mov	byte_23E45, 0
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 8)
+		mov	_bullet_template.BT_group, BG_1
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -17560,17 +16586,17 @@ loc_147BA:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_147F5
-		mov	angle_23E43, 20h
-		mov	word_23E3E, 0
+		mov	_bullet_template.BT_angle, 20h
+		mov	_bullet_template.BT_center.x, 0
 		xor	si, si
 		jmp	short loc_147EE
 ; ---------------------------------------------------------------------------
 
 loc_147E0:
-		nopcall	sub_17730
-		mov	al, byte_23E42
+		nopcall	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, -6
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_147EE:
@@ -17590,17 +16616,17 @@ loc_147F5:
 		idiv	bx
 		cmp	dx, 0Ch
 		jnz	short loc_14850
-		mov	angle_23E43, 60h
-		mov	word_23E3E, 1200h
+		mov	_bullet_template.BT_angle, 60h
+		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
 		xor	si, si
 		jmp	short loc_1482A
 ; ---------------------------------------------------------------------------
 
 loc_1481C:
-		nopcall	sub_17730
-		mov	al, byte_23E42
+		nopcall	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, -6
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		inc	si
 
 loc_1482A:
@@ -17631,7 +16657,7 @@ loc_14850:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -17645,49 +16671,47 @@ loc_14880:
 		pop	si
 		leave
 		retn	2
-sub_146AF	endp
+@gauge_pattern_marisa$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_14885	proc far
+public gba_gauge_pattern_pellet_marisa
+gba_gauge_pattern_pellet_marisa	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1489B
-		push	1
-		call	sub_146AF
+		call	@gauge_pattern_marisa$quc pascal, BT_PELLET
 
 loc_1489B:
 		pop	bp
 		retf
-marisa_14885	endp
+gba_gauge_pattern_pellet_marisa endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_1489D	proc far
+public gba_gauge_pattern_bullet_marisa
+gba_gauge_pattern_bullet_marisa	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_148B3
-		push	2
-		call	sub_146AF
+		call	@gauge_pattern_marisa$quc pascal, BT_BULLET16_DEFAULT
 
 loc_148B3:
 		pop	bp
 		retf
-marisa_1489D	endp
+gba_gauge_pattern_bullet_marisa endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17705,7 +16729,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -18169,7 +17193,7 @@ chargeshot_update_reimu	endp
 
 ; Attributes: bp-based frame
 
-sub_14C8C	proc near
+reimu_chargeshot_14C8C	proc near
 
 @@sprite_offset		= word ptr -2
 arg_0		= word ptr  4
@@ -18208,14 +17232,14 @@ arg_4		= word ptr  8
 		pop	si
 		leave
 		retn	6
-sub_14C8C	endp
+reimu_chargeshot_14C8C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_14CE3	proc far
+public @chargeshot_hittest_reimu$qv
+@chargeshot_hittest_reimu$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -18225,7 +17249,7 @@ reimu_14CE3	proc far
 		jnz	loc_14D7E
 
 loc_14CF7:
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2D6Ah
@@ -18264,7 +17288,7 @@ loc_14D0A:
 		jg	short loc_14D73
 		push	word ptr [bx+2]	; center_x
 		push	word ptr [bx+10h]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -18287,7 +17311,7 @@ loc_14D80:
 		pop	si
 		pop	bp
 		retf
-reimu_14CE3	endp
+@chargeshot_hittest_reimu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18335,7 +17359,7 @@ loc_14DC6:
 		push	word ptr [bx+0Eh]
 		push	word ptr [bx+1Ch]
 		push	3
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 		mov	dx, 5
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
@@ -18343,7 +17367,7 @@ loc_14DC6:
 		push	word ptr [bx+0Ah]
 		push	word ptr [bx+18h]
 		push	2
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 		mov	dx, 6
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
@@ -18351,7 +17375,7 @@ loc_14DC6:
 		push	word ptr [bx+6]
 		push	word ptr [bx+14h]
 		push	1
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 		xor	dx, dx
 		mov	ah, SPRITE16_SET_MONO
 		int	SPRITE16
@@ -18359,7 +17383,7 @@ loc_14DC6:
 		push	word ptr [bx+2]
 		push	word ptr [bx+10h]
 		push	0
-		call	sub_14C8C
+		call	reimu_chargeshot_14C8C
 
 loc_14E2D:
 		inc	si
@@ -18378,26 +17402,26 @@ chargeshot_render_reimu	endp
 
 ; Attributes: bp-based frame
 
-sub_14E3B	proc near
+@gauge_pattern_reimu$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type	= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_14E51
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_14E51:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_14EB3
 		mov	al, _pid_current
 		mov	ah, 0
@@ -18406,11 +17430,11 @@ loc_14E51:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 20h	; ' '
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -18421,7 +17445,7 @@ loc_14E51:
 		mov	ah, 0
 		mov	dl, 20h	; ' '
 		mov	bx, ax
-		sub	dl, _gauge_attack_level[bx]
+		sub	dl, _gba_gauge_level[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -18435,22 +17459,22 @@ loc_14EB3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
 		jnz	locret_14FEA
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
-		mov	word_23E40, 80h
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_center.y, (8 shl 4)
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
-		mov	byte_23E42, 20h ; ' '
-		mov	angle_23E43, 0
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_speed, (2 shl 4)
+		mov	_bullet_template.BT_angle, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -18468,21 +17492,21 @@ loc_14EB3:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_14F52
-		mov	byte_23E45, 18h
-		mov	word_23E3E, 200h
+		mov	_bullet_template.BT_group, BG_5_SPREAD_MEDIUM_AIMED
+		mov	_bullet_template.BT_center.x, (32 shl 4)
 		push	2000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
-		mov	word_23E3E, 1000h
+		nopcall	@bullets_add$qv
+		mov	_bullet_template.BT_center.x, (256 shl 4)
 		push	10000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_14F52:
 		mov	al, _pid_current
@@ -18495,28 +17519,28 @@ loc_14F52:
 		idiv	bx
 		cmp	dx, 10h
 		jnz	short loc_14FBD
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
-		mov	byte_23E42, 32h ; '2'
-		mov	word_23E3E, 400h
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 2)
+		mov	_bullet_template.BT_center.x, (64 shl 4)
 		push	4000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
-		mov	word_23E3E, 0E00h
+		nopcall	@bullets_add$qv
+		mov	_bullet_template.BT_center.x, ((PLAYFIELD_W - 64) shl 4)
 		push	0E000080h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_14FBD:
 		mov	al, _pid_current
@@ -18527,7 +17551,7 @@ loc_14FBD:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -18540,49 +17564,47 @@ loc_14FDF:
 locret_14FEA:
 		leave
 		retn	2
-sub_14E3B	endp
+@gauge_pattern_reimu$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_14FEE	proc far
+public gba_gauge_pattern_pellet_reimu
+gba_gauge_pattern_pellet_reimu proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_15004
-		push	1
-		call	sub_14E3B
+		call	@gauge_pattern_reimu$quc pascal, BT_PELLET
 
 loc_15004:
 		pop	bp
 		retf
-reimu_14FEE	endp
+gba_gauge_pattern_pellet_reimu endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_15006	proc far
+public gba_gauge_pattern_bullet_reimu
+gba_gauge_pattern_bullet_reimu proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1501C
-		push	2
-		call	sub_14E3B
+		call	@gauge_pattern_reimu$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1501C:
 		pop	bp
 		retf
-reimu_15006	endp
+gba_gauge_pattern_bullet_reimu endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18595,17 +17617,17 @@ sub_1501E	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_1505C
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -18625,7 +17647,7 @@ loc_1505C:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -18646,17 +17668,17 @@ reimu_1508C	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_150ED
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -18722,7 +17744,7 @@ loc_15132:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -18737,7 +17759,7 @@ reimu_1508C	endp
 
 ; Attributes: bp-based frame
 
-sub_1515D	proc near
+reimu_bomb_1515D	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -18791,7 +17813,7 @@ loc_151D9:
 		pop	si
 		leave
 		retn
-sub_1515D	endp
+reimu_bomb_1515D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18807,7 +17829,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -18983,7 +18005,7 @@ loc_153AB:
 		call	egc_on
 		cmp	[bp+@@frame], 96
 		jnb	short @@ret
-		call	sub_1515D
+		call	reimu_bomb_1515D
 
 @@ret:
 		leave
@@ -19095,7 +18117,7 @@ chargeshot_add_mima	endp
 
 ; Attributes: bp-based frame
 
-sub_1546C	proc near
+mima_chargeshot_1546C	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
@@ -19130,7 +18152,7 @@ arg_2		= byte ptr  6
 		call	snd_se_play pascal, 13
 		pop	bp
 		retn	4
-sub_1546C	endp
+mima_chargeshot_1546C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19212,7 +18234,7 @@ loc_1555A:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_1546C
+		call	mima_chargeshot_1546C
 
 loc_15584:
 		mov	al, _pid_current
@@ -19231,14 +18253,14 @@ chargeshot_update_mima	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_15597	proc far
+public @chargeshot_hittest_mima$qv
+@chargeshot_hittest_mima$qv proc far
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+38C4h], 0
@@ -19249,7 +18271,7 @@ var_1		= byte ptr -1
 
 loc_155AE:
 		mov	[bp+var_1], 0
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 96h
 		add	ax, 3796h
@@ -19278,7 +18300,7 @@ loc_155C5:
 		jg	short loc_1560B
 		push	word ptr [bx+2]	; center_x
 		push	ax	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -19297,14 +18319,14 @@ loc_15619:
 		pop	si
 		leave
 		retf
-mima_15597	endp
+@chargeshot_hittest_mima$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1561C	proc near
+mima_chargeshot_1561C	proc near
 
 @@sprite_offset		= word ptr  4
 arg_2		= word ptr  6
@@ -19332,7 +18354,7 @@ arg_2		= word ptr  6
 		pop	si
 		pop	bp
 		retn	6
-sub_1561C	endp
+mima_chargeshot_1561C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19391,7 +18413,7 @@ loc_156AF:
 		shl	dx, 2
 		add	dx, [bp+var_2]
 		push	dx
-		call	sub_1561C
+		call	mima_chargeshot_1561C
 
 loc_156D4:
 		inc	si
@@ -19412,26 +18434,26 @@ chargeshot_render_mima	endp
 
 ; Attributes: bp-based frame
 
-sub_156E2	proc near
+@gauge_pattern_mima$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= word ptr  4
+@@type		= word ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_156F8
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_156F8:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_15786
 		push	1
 		nopcall	@randring_far_next16_and$qui
@@ -19460,11 +18482,11 @@ loc_15719:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 26h	; '&'
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -19474,7 +18496,7 @@ loc_15719:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, al
 		add	al, 18h
 		mov	dl, _pid_current
@@ -19490,9 +18512,9 @@ loc_15786:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -19510,44 +18532,44 @@ loc_15786:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_15894
-		mov	al, byte ptr [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, byte ptr [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+3792h], 7
 		jbe	short loc_157DD
-		mov	word_23E3E, 200h
+		mov	_bullet_template.BT_center.x, (32 shl 4)
 		jmp	short loc_157E3
 ; ---------------------------------------------------------------------------
 
 loc_157DD:
-		mov	word_23E3E, 1000h
+		mov	_bullet_template.BT_center.x, (256 shl 4)
 
 loc_157E3:
-		mov	word_23E40, 100h
+		mov	_bullet_template.BT_center.y, (16 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+3790h]
-		mov	angle_23E43, al
-		mov	byte_23E50, 0
-		mov	byte_23E45, 14h
-		push	word_23E3E
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_is_animated, 0
+		mov	_bullet_template.BT_group, BG_5_SPREAD_NARROW
+		push	_bullet_template.BT_center.x
 		push	100h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -19558,21 +18580,21 @@ loc_157E3:
 		idiv	bx
 		or	dx, dx
 		jz	short loc_15878
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
-		mov	byte_23E42, 36h ; '6'
-		push	word_23E3E
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 6)
+		push	_bullet_template.BT_center.x
 		push	100h
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_15878:
 		mov	al, _pid_current
@@ -19583,7 +18605,7 @@ loc_15878:
 		mov	dh, 0
 		mov	bx, dx
 		add	[bx+3790h], al
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_15894:
 		mov	al, _pid_current
@@ -19594,7 +18616,7 @@ loc_15894:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -19607,176 +18629,53 @@ loc_158B6:
 locret_158C1:
 		leave
 		retn	2
-sub_156E2	endp
+@gauge_pattern_mima$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_158C5	proc far
+public gba_gauge_pattern_pellet_mima
+gba_gauge_pattern_pellet_mima proc far
 
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_158DB
-		push	1
-		call	sub_156E2
+		call	@gauge_pattern_mima$quc pascal, BT_PELLET
 
 loc_158DB:
 		pop	bp
 		retf
-mima_158C5	endp
+gba_gauge_pattern_pellet_mima endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_158DD	proc far
+public gba_gauge_pattern_bullet_mima
+gba_gauge_pattern_bullet_mima proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_158F3
-		push	2
-		call	sub_156E2
+		call	@gauge_pattern_mima$quc pascal, BT_BULLET16_DEFAULT
 
 loc_158F3:
 		pop	bp
 		retf
-mima_158DD	endp
+gba_gauge_pattern_bullet_mima endp
 
+	extern @hitbox_hittest$qv:proc
+HITBOX_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_158F5	proc far
-
-var_5		= byte ptr -5
-@@center_y	= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	[bp+var_5], 0
-		cmp	_hitbox_origin_center.y, 0
-		jl	short loc_1590F
-		cmp	byte_20E3C, 2
-		jnz	short loc_15914
-
-loc_1590F:
-		mov	al, 0
-		jmp	loc_159FB
-; ---------------------------------------------------------------------------
-
-loc_15914:
-		mov	byte_26356, 0
-		mov	si, offset _shotpairs
-		mov	ax, _hitbox_origin_center.x
-		add	ax, _hitbox_radius.x
-		mov	_hitbox_right, ax
-		mov	ax, _hitbox_origin_center.y
-		add	ax, _hitbox_radius.y
-		mov	_hitbox_bottom, ax
-		mov	ax, _hitbox_origin_center.x
-		sub	ax, _hitbox_radius.x
-		mov	_hitbox_origin_topleft.x, ax
-		mov	ax, _hitbox_origin_center.y
-		sub	ax, _hitbox_radius.y
-		mov	_hitbox_origin_topleft.y, ax
-		mov	_hitcircles_enemy_add_do_not_rand, 1
-		mov	[bp+var_2], 0
-		jmp	short loc_159B2
-; ---------------------------------------------------------------------------
-
-loc_15950:
-		cmp	[si+shotpair_t.SP_alive], 1
-		jnz	short loc_159AC
-		mov	al, [si+shotpair_t.pid]
-		cmp	al, pid_20E3A
-		jnz	short loc_159AC
-		mov	ax, [si+shotpair_t.topleft.x]
-		add	ax, (16 shl 4)
-		mov	di, ax
-		mov	ax, [si+shotpair_t.topleft.y]
-		add	ax, (8 shl 4)
-		mov	[bp+@@center_y], ax
-		lea	ax, [di-(16 shl 4)]
-		cmp	ax, _hitbox_right
-		jg	short loc_159AC
-		lea	ax, [di+(16 shl 4)]
-		cmp	ax, _hitbox_origin_topleft.x
-		jl	short loc_159AC
-		mov	ax, [bp+@@center_y]
-		cmp	ax, _hitbox_origin_topleft.y
-		jl	short loc_159AC
-		cmp	ax, _hitbox_bottom
-		jg	short loc_159AC
-		mov	[si+shotpair_t.SP_alive], 0
-		mov	al, [bp+var_5]
-		add	al, 2
-		mov	[bp+var_5], al
-		push	di	; center_x
-		push	[bp+@@center_y]	; center_y
-		mov	al, pid_20E3A
-		mov	ah, 0
-		push	ax	; pid
-		call	@hitcircles_enemy_add$qiii
-
-loc_159AC:
-		inc	[bp+var_2]
-		add	si, size shotpair_t
-
-loc_159B2:
-		cmp	[bp+var_2], SHOTPAIR_COUNT
-		jl	short loc_15950
-		mov	_hitcircles_enemy_add_do_not_rand, 0
-		cmp	byte_20E2C, 0
-		jnz	short loc_159CC
-		nopcall	sub_1670D
-		add	[bp+var_5], al
-
-loc_159CC:
-		cmp	pid_20E3A, 0
-		jnz	short loc_159D9
-		call	p1_2029C
-		jmp	short loc_159DD
-; ---------------------------------------------------------------------------
-
-loc_159D9:
-		call	p2_202A0
-
-loc_159DD:
-		add	[bp+var_5], al
-		mov	al, pid_20E3A
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
-		jz	short loc_159F8
-		test	byte ptr _round_or_result_frame, 1
-		jnz	short loc_159F8
-		inc	[bp+var_5]
-
-loc_159F8:
-		mov	al, [bp+var_5]
-
-loc_159FB:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_158F5	endp
-
+P_COMBO_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19801,7 +18700,7 @@ var_2		= word ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -20037,1499 +18936,24 @@ loc_15CB0:
 		retf
 yumemi_bomb	endp
 
+	extern @combos_update_and_render$qv:proc
+P_COMBO_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
+P_GAUGE_TEXT segment byte public 'CODE' use16
+P_GAUGE_TEXT ends
 
-; Attributes: bp-based frame
+E_ENEMY_TEXT segment byte public 'CODE' use16
+E_ENEMY_TEXT ends
 
-combo_add	proc far
+ENEMY_PUT segment byte public 'CODE' use16
+	extern @enemies_update$qv:proc
+	extern @enemies_render$qv:proc
+ENEMY_PUT ends
 
-var_8		= word ptr -8
-var_5		= byte ptr -5
-@@bonus_total		= dword	ptr -4
-@@bonus		= word ptr  6
-@@pid		= byte ptr  8
-@@hits		= byte ptr  0Ah
+E_EXPL_TEXT segment byte public 'CODE' use16
+E_EXPL_TEXT ends
 
-		enter	8, 0
-		push	si
-		push	di
-		mov	cl, [bp+@@hits]
-		mov	dx, [bp+@@bonus]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, offset _combos
-		mov	si, ax
-		cmp	cl, COMBO_HIT_MIN
-		jb	short @@ret
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 7
-		add	ax, offset _players
-		mov	di, ax
-		movzx	eax, dx
-		mov	[bp+@@bonus_total], eax
-		movzx	eax, [si+combo_t.bonus]
-		add	[bp+@@bonus_total], eax
-		cmp	[bp+@@bonus_total], COMBO_BONUS_CAP
-		jbe	short loc_15D04
-		mov	dx, COMBO_BONUS_CAP
-		jmp	short loc_15D07
-; ---------------------------------------------------------------------------
-
-loc_15D04:
-		mov	dx, word ptr [bp+@@bonus_total]
-
-loc_15D07:
-		mov	[si+combo_t.bonus], dx
-		mov	al, [di+player_stuff_t.combo_hits_max]
-		mov	[bp+var_5], al
-		cmp	[bp+var_5], cl
-		jnb	short loc_15D18
-		mov	[di+player_stuff_t.combo_hits_max], cl
-
-loc_15D18:
-		mov	ax, [di+player_stuff_t.combo_bonus_max]
-		mov	[bp+var_8], ax
-		cmp	[bp+var_8], dx
-		jnb	short loc_15D26
-		mov	[di+player_stuff_t.combo_bonus_max], dx
-
-loc_15D26:
-		cmp	cl, COMBO_HIT_CAP
-		jbe	short loc_15D35
-		mov	cl, COMBO_HIT_CAP
-		cmp	dx, COMBO_BONUS_CAP
-		jz	short loc_15D35
-		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
-
-loc_15D35:
-		cmp	[si+combo_t.hits], cl
-		jb	short loc_15D3F
-		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
-		jnb	short @@ret
-
-loc_15D3F:
-		mov	[si+combo_t.hits], cl
-		cmp	dx, COMBO_BONUS_CAP
-		jz	short @@ret
-		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
-
-@@ret:
-		mov	ax, [si+combo_t.bonus]
-		pop	di
-		pop	si
-		leave
-		retf	6
-combo_add	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-_combo_update_and_render	proc far
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-@@pid		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	si, offset _combos
-		mov	[bp+@@pid], 0
-		jmp	@@player_more?
-; ---------------------------------------------------------------------------
-
-@@player_loop:
-		cmp	[si+combo_t.COMBO_time], 0
-		jz	@@player_next
-		cmp	[si+combo_t.COMBO_time], COMBO_FRAMES
-		jnz	loc_15E09
-		mov	ax, [bp+@@pid]
-		imul	ax, PLAYFIELD_VRAM_W_BORDERED
-		mov	di, ax
-		add	ax, 8
-		call	gaiji_putsa pascal, ax, 2, ds, offset _gsHIT, TX_WHITE
-		lea	ax, [di+4]
-		call	gaiji_putsa pascal, ax, 3, ds, offset _gBONUS_FRAME, TX_WHITE
-		mov	al, [si+combo_t.hits]
-		mov	[bp+var_4], al
-		cmp	[bp+var_4], 0Ah
-		jb	short loc_15DDB
-		mov	ah, 0
-		mov	bx, 10
-		cwd
-		idiv	bx
-		add	al, gb_0_
-		mov	[bp+var_3], al
-		lea	ax, [di+4]
-		push	ax
-		push	2
-		mov	al, [bp+var_3]
-		mov	ah, 0
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putca
-		mov	al, [bp+var_4]
-		mov	ah, 0
-		mov	bx, 10
-		cwd
-		idiv	bx
-		mov	[bp+var_4], dl
-		jmp	short loc_15DED
-; ---------------------------------------------------------------------------
-
-loc_15DDB:
-		lea	ax, [di+4]
-		push	ax
-		push	(2 shl 16) + 0CFh
-		push	TX_WHITE
-		call	gaiji_putca
-
-loc_15DED:
-		mov	al, [bp+var_4]
-		add	al, gb_0_
-		mov	[bp+var_3], al
-		lea	ax, [di+6]
-		push	ax
-		push	2
-		mov	al, [bp+var_3]
-		mov	ah, 0
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putca
-
-loc_15E09:
-		dec	[si+combo_t.COMBO_time]
-		cmp	[bp+@@pid], 0
-		jnz	short loc_15E16
-		mov	di, 28h	; '('
-		jmp	short loc_15E19
-; ---------------------------------------------------------------------------
-
-loc_15E16:
-		mov	di, 168h
-
-loc_15E19:
-		mov	[bp+var_3], 0Ch
-		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
-		jnb	short loc_15E27
-		mov	ax, 1
-		jmp	short loc_15E29
-; ---------------------------------------------------------------------------
-
-loc_15E27:
-		xor	ax, ax
-
-loc_15E29:
-		push	ax
-		mov	ax, _round_or_result_frame
-		and	ax, 3
-		cmp	ax, 2
-		jnb	short loc_15E3A
-		mov	ax, 1
-		jmp	short loc_15E3C
-; ---------------------------------------------------------------------------
-
-loc_15E3A:
-		xor	ax, ax
-
-loc_15E3C:
-		pop	dx
-		test	dx, ax
-		jz	short loc_15E45
-		mov	[bp+var_3], 8
-
-loc_15E45:
-		push	di
-		push	18h
-		push	[si+combo_t.bonus]
-		push	word ptr [bp+var_3]
-		call	sub_D608
-		cmp	[si+combo_t.COMBO_time], 0
-		jnz	short @@player_next
-		mov	ax, [bp+@@pid]
-		imul	ax, PLAYFIELD_VRAM_W_BORDERED
-		mov	di, ax
-		add	ax, 4
-		call	text_puts pascal, ax, 2, ds, offset _aBONUS_FRAME_SPACES
-		lea	ax, [di+4]
-		call	text_puts pascal, ax, 3, ds, offset _aBONUS_FRAME_SPACES
-		mov	[si+combo_t.hits], 0
-		call	score_add pascal, [si+combo_t.bonus], [bp+@@pid]
-		mov	[si+combo_t.bonus], 0
-
-@@player_next:
-		inc	[bp+@@pid]
-		add	si, size combo_t
-
-@@player_more?:
-		cmp	[bp+@@pid], PLAYER_COUNT
-		jl	@@player_loop
-		pop	di
-		pop	si
-		leave
-		retf
-_combo_update_and_render	endp
-
-include th03/main/player/gauge_avail_add.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15EDB	proc far
-
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 3ED6h
-		xor	dx, dx
-		jmp	short loc_15F20
-; ---------------------------------------------------------------------------
-
-loc_15EE6:
-		cmp	byte ptr [si], 0
-		jnz	short loc_15F1C
-		mov	byte ptr [si], 3
-		mov	word ptr [si+0Ah], 0
-		mov	word ptr [si+0Ch], 0
-		mov	byte ptr [si+20h], 0
-		mov	ax, [bp+arg_4]
-		mov	[si+0Eh], ax
-		mov	al, [bp+arg_2]
-		mov	[si+8],	al
-		mov	al, byte_1F51C
-		mov	[si+1Dh], al
-		mov	al, byte_1F51D
-		mov	[si+1Eh], al
-		mov	al, [bp+arg_0]
-		mov	[si+21h], al
-		jmp	short loc_15F25
-; ---------------------------------------------------------------------------
-
-loc_15F1C:
-		inc	dx
-		add	si, 30h	; '0'
-
-loc_15F20:
-		cmp	dx, 28h	; '('
-		jl	short loc_15EE6
-
-loc_15F25:
-		pop	si
-		pop	bp
-		retf	6
-sub_15EDB	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15F2A	proc near
-
-var_5		= byte ptr -5
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		mov	bx, word_2203C
-		mov	al, [bx+6]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	si, [bx+82Ch]
-		mov	bx, word_2203C
-		mov	al, [bx+7]
-		mov	ah, 0
-		mov	dl, [bx+6]
-		mov	dh, 0
-		imul	dx
-		add	ax, ax
-		sub	si, ax
-		mov	al, [bx+9]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[bp+var_5], al
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+8]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@left], ax
-		mov	bx, word_2203C
-		mov	ax, [bx+4]
-		sar	ax, 4
-		add	ax, 16
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, si
-		pop	si
-		leave
-		retn
-sub_15F2A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15F9D	proc near
-		push	bp
-		mov	bp, sp
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 0Ah
-		jnz	short loc_15FB6
-		mov	byte ptr [bx], 0Ah
-		call	snd_se_play pascal, 3
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_15FB6:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 20h ; ' '
-		jnz	short loc_15FC5
-		mov	byte ptr [bx], 9
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_15FC5:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 24h ; '$'
-		jb	short loc_15FD2
-		mov	byte ptr [bx], 0
-
-loc_15FD2:
-		pop	bp
-		retn
-sub_15F9D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15FD4	proc near
-
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_1		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 0Ah
-		jnb	short loc_15FF4
-		mov	al, [bx+6]
-		mov	ah, 0
-		shl	ax, 3
-		mov	bx, ax
-		mov	di, [bx+82Eh]
-		jmp	short loc_16044
-; ---------------------------------------------------------------------------
-
-loc_15FF4:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 20h ; ' '
-		jnb	short loc_1602C
-		mov	al, [bx+1]
-		mov	ah, 0
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		mov	bx, word_2203C
-		mov	al, [bx+6]
-		mov	ah, 0
-		shl	ax, 3
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		and	dx, 1
-		add	dx, dx
-		add	ax, dx
-		mov	bx, ax
-		mov	di, [bx+830h]
-		jmp	short loc_16044
-; ---------------------------------------------------------------------------
-
-loc_1602C:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 24h ; '$'
-		jnb	short loc_16044
-		mov	al, [bx+6]
-		mov	ah, 0
-		shl	ax, 3
-		mov	bx, ax
-		mov	di, [bx+834h]
-
-loc_16044:
-		mov	bx, word_2203C
-		mov	al, [bx+9]
-		mov	ah, 0
-		add	ax, 16
-		mov	si, ax
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	_sprite16_put_w, al
-		mov	ax, si
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sprite16_put_h, ax
-		sar	si, 1
-		mov	bx, word_2203C
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+8]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		sub	ax, si
-		mov	[bp+@@left], ax
-		mov	bx, word_2203C
-		mov	ax, [bx+4]
-		sar	ax, 4
-		add	ax, 16
-		sub	ax, si
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, di
-		pop	di
-		pop	si
-		leave
-		retn
-sub_15FD4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1609E	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	word_2203C, 3ED6h
-		mov	byte_22036, 0
-		mov	byte_22037, 0
-		xor	si, si
-		jmp	short loc_16129
-; ---------------------------------------------------------------------------
-
-loc_160B7:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 0
-		jz	short loc_16123
-		mov	bx, word_2203C
-		inc	byte ptr [bx+1]
-		cmp	byte ptr [bx], 9
-		jb	short loc_160D1
-		call	sub_15F9D
-		jmp	short loc_16123
-; ---------------------------------------------------------------------------
-
-loc_160D1:
-		call	sub_13F2C
-		or	al, al
-		jnz	short loc_16123
-		mov	bx, word_2203C
-		mov	al, [bx+8]
-		mov	ah, 0
-		mov	bx, ax
-		inc	byte ptr [bx+4AD6h]
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 1
-		jnz	short loc_16123
-		mov	al, [bx+9]
-		mov	ah, 0
-		imul	ax, 3
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	di, ax
-		mov	bx, word_2203C
-		mov	ax, [bx+2]
-		mov	_collmap_center.x, ax
-		mov	ax, [bx+4]
-		mov	_collmap_center.y, ax
-		mov	_collmap_stripe_tile_w, di
-		mov	_collmap_tile_h, di
-		mov	al, [bx+8]
-		mov	_collmap_pid, al
-		nopcall	_collmap_set_rect_striped
-
-loc_16123:
-		inc	si
-		add	word_2203C, 30h	; '0'
-
-loc_16129:
-		cmp	si, 28h	; '('
-		jl	short loc_160B7
-		call	sub_164AD
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_1609E	endp
-
-include th03/main/player/hitcombo.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1615D	proc near
-
-@@hitcombo		= byte ptr -5
-@@hitcombo_slot		= byte ptr -4
-@@pid		= byte ptr -3
-@@bonus_total		= word ptr -2
-
-		enter	6, 0
-		push	si
-		mov	bx, word_2203C
-		cmp	word ptr [bx+4], 0
-		jle	loc_164AA
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+9], 10h
-		jz	short loc_16184
-		mov	al, [bx+9]
-		mov	ah, 0
-		imul	ax, 7
-		mov	si, ax
-		jmp	short loc_16187
-; ---------------------------------------------------------------------------
-
-loc_16184:
-		mov	si, (10 shl 4)
-
-loc_16187:
-		mov	bx, word_2203C
-		mov	al, [bx+8]
-		mov	[bp+@@pid], al
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_damage_all_enemies_on[bx], 0
-		jz	short loc_16212
-		mov	bx, word_2203C
-		mov	byte ptr [bx+7], 0
-		mov	byte ptr [bx], 9
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _hitcombo_ring_p[bx]
-		mov	[bp+@@hitcombo_slot], al
-		mov	bx, word_2203C
-		mov	[bx+1Ch], al
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_hitcombo_ring[bx], 1
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	byte ptr [bx+4AFEh], 0
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		inc	_hitcombo_ring_p[bx]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_hitcombo_ring_p[bx], HITCOMBO_RING_SIZE
-		jb	loc_164A2
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	_hitcombo_ring_p[bx], 0
-		jmp	loc_164A2
-; ---------------------------------------------------------------------------
-
-loc_16212:
-		mov	bx, word_2203C
-		mov	ax, [bx+2]
-		mov	_hitbox_origin_center.x, ax
-		mov	ax, [bx+4]
-		mov	_hitbox_origin_center.y, ax
-		mov	_hitbox_radius.x, si
-		mov	_hitbox_radius.y, si
-		mov	al, [bx+8]
-		mov	pid_20E3A, al
-		cmp	_hitbox_origin_center.y, 0
-		jl	loc_164AA
-		nopcall	sub_158F5
-		or	al, al
-		jz	loc_164AA
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+7], 0
-		jz	short loc_16257
-		cmp	byte_26356, 0
-		jz	loc_1649B
-
-loc_16257:
-		mov	bx, word_2203C
-		mov	byte ptr [bx], 9
-		mov	byte_220C3, 1
-		cmp	byte_2203B, 0
-		jnz	short loc_162D5
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _hitcombo_ring_p[bx]
-		mov	[bp+@@hitcombo_slot], al
-		mov	bx, word_2203C
-		mov	[bx+1Ch], al
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	_hitcombo_ring[bx], 1
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	byte ptr [bx+4AFEh], 0
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		inc	_hitcombo_ring_p[bx]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_hitcombo_ring_p[bx], HITCOMBO_RING_SIZE
-		jb	loc_16484
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	_hitcombo_ring_p[bx], 0
-		jmp	loc_16484
-; ---------------------------------------------------------------------------
-
-loc_162D5:
-		call	gauge_avail_add pascal, word ptr [bp+@@pid], 32
-		mov	al, hitcombo_slot_220C2
-		mov	[bp+@@hitcombo_slot], al
-		mov	bx, word_2203C
-		mov	[bx+1Ch], al
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _hitcombo_ring[bx]
-		mov	[bp+@@hitcombo], al
-		cmp	[bp+@@hitcombo], 255
-		jnb	short loc_1630B
-		inc	[bp+@@hitcombo]
-
-loc_1630B:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	dl, [bp+@@hitcombo]
-		mov	bx, ax
-		mov	_hitcombo_ring[bx], dl
-		push	word ptr [bp+@@pid]
-		push	word ptr [bp+@@hitcombo_slot]
-		mov	al, [bp+@@hitcombo]
-		mov	ah, 0
-		shl	ax, 4
-		push	ax
-		call	hitcombo_commit
-		mov	[bp+@@bonus_total], ax
-		push	ax
-		push	word ptr [bp+@@pid]
-		call	sub_165B5
-		mov	bx, word_2203C
-		mov	ax, [bx+2]
-		mov	word_23E3E, ax
-		mov	ax, [bx+4]
-		mov	word_23E40, ax
-		push	18h
-		call	sub_13EFF
-		mov	byte_23E42, al
-		mov	angle_23E43, 0
-		mov	al, [bp+@@pid]
-		mov	_pid_other, al
-		mov	al, byte_23AF8
-		mov	ah, 0
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		mov	[bp+@@hitcombo_slot], al
-		cmp	[bp+@@hitcombo], 2
-		ja	short loc_1638E
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		inc	byte ptr [bx+4B1Eh]
-		jmp	loc_1646E
-; ---------------------------------------------------------------------------
-
-loc_1638E:
-		mov	al, [bp+@@hitcombo]
-		mov	ah, 0
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		mov	bx, 9
-		sub	bx, dx
-		cmp	ax, bx
-		jg	short loc_163DA
-		mov	byte_23E45, 1Dh
-		nopcall	sub_17971
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4B1Eh]
-		add	al, 2
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@hitcombo_slot]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	[bx+4B1Eh], al
-		jmp	loc_1646E
-; ---------------------------------------------------------------------------
-
-loc_163DA:
-		mov	al, [bp+@@hitcombo]
-		mov	ah, 0
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, 0Eh
-		sub	bx, dx
-		cmp	ax, bx
-		jg	short loc_1642D
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4B1Eh]
-		add	al, 3
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@hitcombo_slot]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	[bx+4B1Eh], al
-		test	[bp+@@hitcombo], 1
-		jnz	short loc_1646E
-		mov	byte_23E45, 1Dh
-		nopcall	sub_17971
-		jmp	short loc_16459
-; ---------------------------------------------------------------------------
-
-loc_1642D:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4B1Eh]
-		add	al, 4
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@hitcombo_slot]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	[bx+4B1Eh], al
-
-loc_16459:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@hitcombo_slot]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		inc	byte ptr [bx+4B3Eh]
-
-loc_1646E:
-		push	word ptr [bp+@@pid]
-		mov	al, [bp+@@hitcombo_slot]
-		mov	ah, 0
-		push	ax
-		call	sub_1816D
-		push	word ptr [bp+@@pid]
-		push	word_2203C
-		call	sub_1654E
-
-loc_16484:
-		mov	bx, word_2203C
-		mov	al, [bx+6]
-		mov	ah, 0
-		imul	ax, 10
-		call	score_add pascal, ax, word ptr [bp+@@pid]
-		jmp	short loc_164A2
-; ---------------------------------------------------------------------------
-
-loc_1649B:
-		mov	bx, word_2203C
-		dec	byte ptr [bx+7]
-
-loc_164A2:
-		mov	bx, word_2203C
-		mov	byte ptr [bx+1], 0
-
-loc_164AA:
-		pop	si
-		leave
-		retn
-sub_1615D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_164AD	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	byte_2203A, 0
-		mov	word_2203C, 4626h
-		mov	si, 27h	; '''
-		jmp	short loc_164D3
-; ---------------------------------------------------------------------------
-
-loc_164C1:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 1
-		jnz	short loc_164CD
-		call	sub_1615D
-
-loc_164CD:
-		dec	si
-		sub	word_2203C, 30h	; '0'
-
-loc_164D3:
-		or	si, si
-		jge	short loc_164C1
-		pop	si
-		pop	bp
-		retn
-sub_164AD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_164DA	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	word_2203C, 3ED6h
-		xor	di, di
-		jmp	short loc_16545
-; ---------------------------------------------------------------------------
-
-loc_164E9:
-		mov	si, word_2203C
-		cmp	byte ptr [si], 0
-		jz	short loc_1653F
-		cmp	byte ptr [si], 3
-		jz	short loc_1653F
-		mov	al, [si+9]
-		mov	ah, 0
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		mov	_sprite16_put_w, al
-		mov	al, [si+9]
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_sprite16_put_h, ax
-		cmp	byte ptr [si+8], 0
-		jnz	short loc_16526
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
-		jmp	short loc_16532
-; ---------------------------------------------------------------------------
-
-loc_16526:
-		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-
-loc_16532:
-		cmp	byte ptr [si], 1
-		jnz	short loc_1653C
-		call	sub_15F2A
-		jmp	short loc_1653F
-; ---------------------------------------------------------------------------
-
-loc_1653C:
-		call	sub_15FD4
-
-loc_1653F:
-		inc	di
-		add	word_2203C, 30h	; '0'
-
-loc_16545:
-		cmp	di, 28h	; '('
-		jl	short loc_164E9
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_164DA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1654E	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-
-		enter	2, 0
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4B1Eh]
-		mov	ah, 0
-		mov	dl, byte_23AF8
-		mov	dh, 0
-		mov	bx, 10h
-		push	ax
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	dx, 0Ch
-		sub	dx, ax
-		pop	ax
-		cmp	ax, dx
-		jl	short locret_165B1
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	byte ptr [bx+4B1Eh], 0
-		mov	ax, word_2203C
-		mov	[bp+var_2], ax
-		mov	ax, [bp+arg_0]
-		mov	word_2203C, ax
-		nopcall	sub_17DAE
-		mov	ax, [bp+var_2]
-		mov	word_2203C, ax
-
-locret_165B1:
-		leave
-		retn	4
-sub_1654E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_165B5	proc near
-
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_2]
-		mov	cl, [bp+arg_0]
-		cmp	si, word_21434
-		jb	loc_166FD
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+798h], 0
-		jnz	loc_16708
-		cmp	byte_1DB9E, cl
-		jz	loc_1667D
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 5
-		jz	loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 5
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+798h], 1
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	byte ptr [bx+4AFEh], 0
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	byte ptr [bx+4B1Eh], 0
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	byte ptr [bx+4B3Eh], 0
-		add	word_21434, 1400h
-		cmp	_boss_attack_level, BOSS_ATTACK_LEVEL_MAX
-		jnb	short loc_16656
-		inc	_boss_attack_level
-
-loc_16656:
-		cmp	byte_1DB9E, -1
-		jnz	short loc_1666D
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		inc	_players[bx].boss_attacks_fired
-		jmp	loc_16708
-; ---------------------------------------------------------------------------
-
-loc_1666D:
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		inc	_players[bx].boss_attacks_reversed
-		jmp	loc_16708
-; ---------------------------------------------------------------------------
-
-loc_1667D:
-		cmp	si, 7530h
-		jb	loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+4AD8h], 0
-		jnz	short loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
-		jnz	short loc_16708
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+393Ch], 3
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+798h], 1
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+4AD8h], 1
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
-		add	al, 3
-		mov	dl, cl
-		mov	dh, 0
-		mov	bx, dx
-		mov	_gauge_attack_level[bx], al
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
-		jbe	short loc_166EE
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	_gauge_attack_level[bx], GAUGE_ATTACK_LEVEL_MAX
-
-loc_166EE:
-		mov	al, cl
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		inc	_players[bx].boss_panics_fired
-		jmp	short loc_16708
-; ---------------------------------------------------------------------------
-
-loc_166FD:
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+4AD8h], 0
-
-loc_16708:
-		pop	si
-		pop	bp
-		retn	4
-sub_165B5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1670D	proc far
-
-var_E		= byte ptr -0Eh
-@@hitcombo		= byte ptr -0Dh
-var_C		= word ptr -0Ch
-@@bonus		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	0Eh, 0
-		push	si
-		push	di
-		mov	[bp+var_C], 0
-		cmp	byte_2203A, 1
-		jnz	short loc_16725
-		mov	[bp+var_E], 1
-		jmp	short loc_16730
-; ---------------------------------------------------------------------------
-
-loc_16725:
-		mov	al, byte_2203A
-		mov	ah, 0
-		imul	ax, 3
-		mov	[bp+var_E], al
-
-loc_16730:
-		mov	si, 3ED6h
-		mov	byte_2203B, 0
-		mov	[bp+var_2], 0
-		jmp	loc_16974
-; ---------------------------------------------------------------------------
-
-loc_16740:
-		cmp	byte ptr [si], 9
-		jb	loc_1696E
-		cmp	byte_2203A, 0
-		jnz	short loc_16769
-		cmp	byte ptr [si], 9
-		jz	loc_1696E
-		mov	al, [si]
-		mov	ah, 0
-		mov	dl, [si+6]
-		mov	dh, 0
-		add	dx, dx
-		add	dx, 0Ah
-		cmp	ax, dx
-		jge	loc_1696E
-
-loc_16769:
-		mov	al, [si+8]
-		cmp	al, pid_20E3A
-		jnz	loc_1696E
-		test	byte ptr [si+1], 3
-		jnz	loc_1696E
-		mov	al, [si+9]
-		mov	ah, 0
-		imul	ax, 6
-		mov	[bp+var_8], ax
-		mov	ax, [si+2]
-		sub	ax, [bp+var_8]
-		mov	[bp+var_4], ax
-		mov	ax, [si+4]
-		sub	ax, [bp+var_8]
-		mov	[bp+var_6], ax
-		mov	ax, _hitbox_right
-		cmp	ax, [bp+var_4]
-		jl	loc_1696E
-		mov	ax, _hitbox_bottom
-		cmp	ax, [bp+var_6]
-		jl	loc_1696E
-		shl	[bp+var_8], 1
-		mov	ax, [bp+var_8]
-		add	[bp+var_4], ax
-		add	[bp+var_6], ax
-		mov	ax, _hitbox_origin_topleft.x
-		cmp	ax, [bp+var_4]
-		jg	loc_1696E
-		mov	ax, _hitbox_origin_topleft.y
-		cmp	ax, [bp+var_6]
-		jg	loc_1696E
-		mov	al, [si+1Ch]
-		mov	hitcombo_slot_220C2, al
-		cmp	byte_2203A, 0
-		jnz	short loc_167DF
-		inc	byte ptr [si]
-		jmp	loc_16966
-; ---------------------------------------------------------------------------
-
-loc_167DF:
-		mov	al, pid_20E3A
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, _hitcombo_ring[bx]
-		mov	[bp+@@hitcombo], al
-		cmp	[bp+@@hitcombo], 255
-		jnb	short loc_16801
-		inc	[bp+@@hitcombo]
-
-loc_16801:
-		mov	al, pid_20E3A
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	dl, [bp+@@hitcombo]
-		mov	bx, ax
-		mov	_hitcombo_ring[bx], dl
-		cmp	[bp+var_E], 1
-		jnz	short loc_1682E
-		mov	al, [bp+@@hitcombo]
-		mov	ah, 0
-		add	ax, ax
-		mov	[bp+@@bonus], ax
-		push	1
-		jmp	short loc_1685C
-; ---------------------------------------------------------------------------
-
-loc_1682E:
-		cmp	[bp+var_E], 6
-		jnz	short loc_16846
-		mov	al, [bp+@@hitcombo]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 100
-		mov	[bp+@@bonus], ax
-		push	40
-		jmp	short loc_1685C
-; ---------------------------------------------------------------------------
-
-loc_16846:
-		cmp	[bp+var_E], 9
-		jnz	short loc_16865
-		mov	al, [bp+@@hitcombo]
-		mov	ah, 0
-		shl	ax, 4
-		add	ax, 444
-		mov	[bp+@@bonus], ax
-		push	80
-
-loc_1685C:
-		push	word ptr pid_20E3A
-		call	score_add
-
-loc_16865:
-		mov	al, byte_23AF8
-		mov	ah, 0
-		add	[bp+@@bonus], ax
-		cmp	byte_23AF8, 30h	; '0'
-		ja	short loc_16879
-		sar	[bp+@@bonus], 1
-		jmp	short loc_16886
-; ---------------------------------------------------------------------------
-
-loc_16879:
-		cmp	byte_23AF8, 60h
-		jb	short loc_16886
-		mov	ax, [bp+@@bonus]
-		add	[bp+@@bonus], ax
-
-loc_16886:
-		mov	al, pid_20E3A
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 4AFEh
-		mov	di, ax
-		mov	al, [bp+var_E]
-		add	[di], al
-		mov	al, [di]
-		mov	[bp+@@hitcombo], al
-		mov	al, pid_20E3A
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 4B1Eh
-		mov	di, ax
-		cmp	[bp+var_E], 1
-		jnz	short loc_168C8
-		push	word ptr pid_20E3A
-		push	4
-		jmp	short loc_168D5
-; ---------------------------------------------------------------------------
-
-loc_168C8:
-		push	word ptr pid_20E3A
-		mov	al, [bp+var_E]
-		mov	ah, 0
-		imul	ax, 3
-		push	ax
-
-loc_168D5:
-		call	gauge_avail_add
-		cmp	[bp+@@hitcombo], 4
-		jnb	short loc_168E4
-		mov	al, [di]
-		add	al, 2
-		jmp	short loc_168EE
-; ---------------------------------------------------------------------------
-
-loc_168E4:
-		cmp	[bp+@@hitcombo], 10
-		jnb	short loc_168F2
-		mov	al, [di]
-		add	al, 5
-
-loc_168EE:
-		mov	[di], al
-		jmp	short loc_16945
-; ---------------------------------------------------------------------------
-
-loc_168F2:
-		cmp	[bp+@@hitcombo], 20
-		jnb	short loc_16916
-		mov	al, [di]
-		add	al, 2
-		mov	[di], al
-		mov	al, pid_20E3A
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		inc	byte ptr [bx+4B3Eh]
-		jmp	short loc_16945
-; ---------------------------------------------------------------------------
-
-loc_16916:
-		mov	al, pid_20E3A
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, hitcombo_slot_220C2
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4B3Eh]
-		add	al, 2
-		mov	dl, pid_20E3A
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, hitcombo_slot_220C2
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	[bx+4B3Eh], al
-
-loc_16945:
-		call	hitcombo_commit pascal, word ptr pid_20E3A, word ptr hitcombo_slot_220C2, [bp+@@bonus]
-		mov	[bp+@@bonus], ax
-		push	ax
-		push	word ptr pid_20E3A
-		call	sub_165B5
-		push	word ptr pid_20E3A
-		push	si
-		call	sub_1654E
-
-loc_16966:
-		inc	[bp+var_C]
-		mov	byte_2203B, 1
-
-loc_1696E:
-		inc	[bp+var_2]
-		add	si, 30h	; '0'
-
-loc_16974:
-		cmp	[bp+var_2], 40h
-		jl	loc_16740
-		mov	al, byte ptr [bp+var_C]
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1670D	endp
-
+PELLET_PUT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21558,38 +18982,38 @@ sub_16983	proc far
 ; ---------------------------------------------------------------------------
 
 loc_169AD:
-		mov	si, 3ED6h
+		mov	si, offset enemies
 		xor	cx, cx
 		jmp	short loc_169EF
 ; ---------------------------------------------------------------------------
 
 loc_169B4:
-		cmp	byte ptr [si], 1
+		cmp	[si+enemy_t.ENEMY_flag], EF_RUNNING_SPAWNED
 		jnz	short loc_169EB
-		mov	al, [si+8]
+		mov	al, [si+enemy_t.ENEMY_pid]
 		cmp	al, [bp+@@pid]
 		jnz	short loc_169EB
-		cmp	word ptr [si+2], 0
+		cmp	[si+enemy_t.ENEMY_center.x], 0
 		jl	short loc_169EB
-		cmp	word ptr [si+2], 1200h
+		cmp	[si+enemy_t.ENEMY_center.x], (PLAYFIELD_W shl 4)
 		jg	short loc_169EB
-		cmp	word ptr [si+4], 0
+		cmp	[si+enemy_t.ENEMY_center.y], 0
 		jl	short loc_169EB
-		cmp	word ptr [si+4], 1800h
+		cmp	[si+enemy_t.ENEMY_center.y], ((PLAYFIELD_H + PLAYFIELD_BORDER) shl 4)
 		jg	short loc_169EB
-		cmp	[si+1Eh], dl
+		cmp	[si+enemy_t.ENEMY_formation_i], dl
 		jnb	short loc_169EB
-		mov	dl, [si+1Eh]
-		mov	word_2203C, si
+		mov	dl, [si+enemy_t.ENEMY_formation_i]
+		mov	_efe_p, si
 		or	dl, dl
 		jz	short loc_169F4
 
 loc_169EB:
 		inc	cx
-		add	si, 30h	; '0'
+		add	si, size efe_t
 
 loc_169EF:
-		cmp	cx, 28h	; '('
+		cmp	cx, ENEMY_COUNT
 		jl	short loc_169B4
 
 loc_169F4:
@@ -21602,12 +19026,12 @@ loc_169F4:
 ; ---------------------------------------------------------------------------
 
 loc_16A0C:
-		mov	bx, word_2203C
-		mov	ax, [bx+2]
-		add	ax, 0FF00h
+		mov	bx, _efe_p
+		mov	ax, [bx+enemy_t.ENEMY_center.x]
+		add	ax, (-16 shl 4)
 		mov	word_2142E, ax
-		mov	ax, [bx+4]
-		add	ax, 6E0h
+		mov	ax, [bx+enemy_t.ENEMY_center.y]
+		add	ax, (110 shl 4)
 		mov	word_21430, ax
 		mov	byte_20E48, dl
 		cmp	word_2142E, 0
@@ -21743,12 +19167,12 @@ chargeshot_update_yumemi	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16B0C	proc far
+public @chargeshot_hittest_yumemi$qv
+@chargeshot_hittest_yumemi$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 6
 		add	ax, 4B80h
@@ -21798,7 +19222,7 @@ loc_16B69:
 		jl	short loc_16BB0
 		push	_hitbox_origin_topleft.x	; center_x
 		push	_hitbox_origin_topleft.y	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -21813,14 +19237,14 @@ loc_16BB2:
 		pop	si
 		pop	bp
 		retf
-yumemi_16B0C	endp
+@chargeshot_hittest_yumemi$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16BB5	proc near
+yumemi_chargeshot_16BB5	proc near
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
@@ -21891,7 +19315,7 @@ loc_16C56:
 		pop	si
 		leave
 		retn	6
-sub_16BB5	endp
+yumemi_chargeshot_16BB5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22042,7 +19466,7 @@ loc_16D78:
 		shl	ax, 4
 		push	ax
 		push	20h ; ' '
-		call	sub_16BB5
+		call	yumemi_chargeshot_16BB5
 		push	si
 		mov	al, [bp+var_5]
 		mov	ah, 0
@@ -22051,7 +19475,7 @@ loc_16D78:
 		shl	ax, 4
 		push	ax
 		push	0E0h
-		call	sub_16BB5
+		call	yumemi_chargeshot_16BB5
 
 loc_16DAF:
 		push	si
@@ -22066,7 +19490,7 @@ loc_16DB8:
 		push	0
 
 loc_16DC1:
-		call	sub_16BB5
+		call	yumemi_chargeshot_16BB5
 
 loc_16DC4:
 		pop	di
@@ -22080,29 +19504,29 @@ chargeshot_render_yumemi	endp
 
 ; Attributes: bp-based frame
 
-sub_16DC8	proc near
+@gauge_pattern_yumemi$quc proc near
 
 var_4		= word ptr -4
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= word ptr  4
+@@type		= word ptr  4
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_16DE0
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_16DE0:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_16E42
 		mov	al, _pid_current
 		mov	ah, 0
@@ -22111,11 +19535,11 @@ loc_16DE0:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 18h
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -22125,7 +19549,7 @@ loc_16DE0:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 20h	; ' '
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -22139,9 +19563,9 @@ loc_16E42:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -22159,24 +19583,24 @@ loc_16E42:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_16F8F
-		mov	al, byte ptr [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, byte ptr [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	angle_23E43, 0
-		mov	byte_23E45, 2Ch ; ','
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -22213,50 +19637,50 @@ loc_16EE7:
 loc_16EEF:
 		mov	si, 0C00h	; jumptable 00016EDB case 16
 		mov	di, 500h
-		mov	word_23E3E, 900h
-		mov	word_23E40, 200h
+		mov	_bullet_template.BT_center.x, (144 shl 4)
+		mov	_bullet_template.BT_center.y, (32 shl 4)
 		jmp	short loc_16F61	; default
 ; ---------------------------------------------------------------------------
 
 loc_16F03:
 		mov	si, 600h	; jumptable 00016EDB case 24
 		mov	di, 380h
-		mov	word_23E3E, 600h
+		mov	_bullet_template.BT_center.x, (96 shl 4)
 		jmp	short loc_16F1D
 ; ---------------------------------------------------------------------------
 
 loc_16F11:
 		mov	si, 0C00h	; jumptable 00016EDB case 32
 		mov	di, 380h
-		mov	word_23E3E, 0C00h
+		mov	_bullet_template.BT_center.x, (192 shl 4)
 
 loc_16F1D:
-		mov	word_23E40, 500h
+		mov	_bullet_template.BT_center.y, (80 shl 4)
 		jmp	short loc_16F61	; default
 ; ---------------------------------------------------------------------------
 
 loc_16F25:
 		mov	si, 900h	; jumptable 00016EDB case 40
 		mov	di, 680h
-		mov	word_23E3E, 600h
+		mov	_bullet_template.BT_center.x, (96 shl 4)
 
 loc_16F31:
-		mov	word_23E40, 380h
+		mov	_bullet_template.BT_center.y, (56 shl 4)
 		jmp	short loc_16F61	; default
 ; ---------------------------------------------------------------------------
 
 loc_16F39:
-		mov	word_23E3E, 0C00h ; jumptable 00016EDB case 48
+		mov	_bullet_template.BT_center.x, (192 shl 4) ; jumptable 00016EDB case 48
 		jmp	short loc_16F31
 ; ---------------------------------------------------------------------------
 
 loc_16F41:
-		mov	word_23E3E, 900h ; jumptable 00016EDB case 56
-		mov	word_23E40, 680h
+		mov	_bullet_template.BT_center.x, (144 shl 4) ; jumptable 00016EDB case 56
+		mov	_bullet_template.BT_center.y, (104 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -22279,7 +19703,7 @@ loc_16F7C:
 		mov	bx, ax
 		cmp	byte ptr [bx+4B7Eh], 10h
 		jb	short loc_16F8F
-		nopcall	sub_17730
+		nopcall	@bullets_add$qv
 
 loc_16F8F:
 		mov	al, _pid_current
@@ -22292,7 +19716,7 @@ loc_16F9A:
 		pop	si
 		leave
 		retn	2
-sub_16DC8	endp
+@gauge_pattern_yumemi$quc endp
 
 ; ---------------------------------------------------------------------------
 word_16FA0	dw	0,     8,   10h,   18h
@@ -22309,94 +19733,46 @@ word_16FA0	dw	0,     8,   10h,   18h
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16FC0	proc far
+public gba_gauge_pattern_pellet_yumemi
+gba_gauge_pattern_pellet_yumemi	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_16FD6
-		push	1
-		call	sub_16DC8
+		call	@gauge_pattern_yumemi$quc pascal, BT_PELLET
 
 loc_16FD6:
 		pop	bp
 		retf
-yumemi_16FC0	endp
+gba_gauge_pattern_pellet_yumemi endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16FD8	proc far
+public gba_gauge_pattern_bullet_yumemi
+gba_gauge_pattern_bullet_yumemi	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_16FEE
-		push	2
-		call	sub_16DC8
+		call	@gauge_pattern_yumemi$quc pascal, BT_BULLET16_DEFAULT
 
 loc_16FEE:
 		pop	bp
 		retf
-yumemi_16FD8	endp
+gba_gauge_pattern_bullet_yumemi endp
 
+	@grcg_pellet_put$qiuii procdesc near
+PELLET_PUT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_16FF0	proc near
-		push	si
-		push	di
-		mov	si, ax
-		sar	ax, 4
-		shl	ax, 1
-		shl	bx, 6
-		add	ax, bx
-		shr	bx, 2
-		add	ax, bx
-		mov	di, ax
-		and	si, 0Fh
-		shl	si, 4
-		add	si, 9EAh
-		add	si, dx
-		cmp	ax, 8
-		jl	short loc_1702A
-		movsd
-		add	di, 4Ch	; 'L'
-		movsd
-		add	di, 4Ch	; 'L'
-		movsd
-		add	di, 4Ch	; 'L'
-		movsd
-		jmp	short loc_17040
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1702A:
-		movsw
-		add	si, 2
-		add	di, 4Eh	; 'N'
-		movsw
-		add	si, 2
-		add	di, 4Eh	; 'N'
-		movsw
-		add	si, 2
-		add	di, 4Eh	; 'N'
-		movsw
-
-loc_17040:
-		pop	di
-		pop	si
-		retn
-sub_16FF0	endp
-
+BULLET_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22409,17 +19785,17 @@ mima_17043	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_170A5
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -22508,7 +19884,7 @@ loc_17129:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -22523,7 +19899,7 @@ mima_17043	endp
 
 ; Attributes: bp-based frame
 
-sub_1714F	proc near
+mima_bomb_1714F	proc near
 
 @@x		= word ptr -2
 
@@ -22570,7 +19946,7 @@ loc_171B7:
 		pop	si
 		leave
 		retn
-sub_1714F	endp
+mima_bomb_1714F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22586,7 +19962,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -22632,7 +20008,7 @@ loc_17202:
 		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 		call	egc_on
-		call	sub_1714F
+		call	mima_bomb_1714F
 		jmp	loc_1737D
 ; ---------------------------------------------------------------------------
 
@@ -22763,2074 +20139,51 @@ loc_1737D:
 		retf
 mima_bomb	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17384	proc far
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		jmp	short loc_17396
-; ---------------------------------------------------------------------------
-
-loc_1738B:
-		mov	bx, ax
-		imul	bx, 1Ah
-		mov	byte ptr [bx+68F2h], 0
-		inc	ax
-
-loc_17396:
-		cmp	ax, 140h
-		jl	short loc_1738B
-		mov	byte_26353, 0
-		pop	bp
-		retf
-sub_17384	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_173A2	proc near
-
-@@length		= byte ptr -9
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-@@center_y		= word ptr -6
-@@center_x		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Ah
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	[bp+var_2], 0
-		xor	di, di
-		mov	[bp+var_7], 0
-		mov	[bp+var_8], 8
-		mov	al, _pid_other
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		mov	ax, _players[bx].center.x
-		mov	[bp+@@center_x], ax
-		mov	al, _pid_other
-		mov	ah, 0
-		shl	ax, 7
-		mov	bx, ax
-		mov	ax, _players[bx].center.y
-		mov	[bp+@@center_y], ax
-		mov	al, byte_23E42
-		mov	[bp+@@length], al
-		mov	al, byte_23E45
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, 2Ch	; ','
-		ja	loc_1767D
-		add	bx, bx
-		jmp	cs:off_176D6[bx]
-
-loc_173F9:
-		add	[bp+var_2], 3
-
-loc_173FD:
-		add	[bp+var_2], 3
-
-loc_17401:
-		or	si, si
-		jnz	short loc_17410
-		mov	ax, [bp+var_2]
-		add	ax, 3
-		mov	[bp+var_2], ax
-		jmp	short loc_17421
-; ---------------------------------------------------------------------------
-
-loc_17410:
-		cmp	si, 1
-		jnz	short loc_17421
-		mov	ax, 0FFFDh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	di, 1
-
-loc_17421:
-		cmp	byte_23E45, 4
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_1742D:
-		add	[bp+var_2], 8
-
-loc_17431:
-		add	[bp+var_2], 8
-
-loc_17435:
-		or	si, si
-		jnz	short loc_17440
-		mov	[bp+var_2], 0
-		jmp	short loc_17461
-; ---------------------------------------------------------------------------
-
-loc_17440:
-		cmp	si, 1
-		jnz	short loc_17450
-		mov	ax, [bp+var_2]
-		add	ax, 8
-		mov	[bp+var_2], ax
-		jmp	short loc_17461
-; ---------------------------------------------------------------------------
-
-loc_17450:
-		cmp	si, 2
-		jnz	short loc_17461
-		mov	ax, 0FFF8h
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	di, 1
-
-loc_17461:
-		cmp	byte_23E45, 0Ah
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_1746D:
-		add	[bp+var_2], 6
-
-loc_17471:
-		add	[bp+var_2], 6
-
-loc_17475:
-		or	si, si
-		jnz	short loc_17484
-		mov	ax, [bp+var_2]
-		add	ax, 3
-		mov	[bp+var_2], ax
-		jmp	short loc_174C1
-; ---------------------------------------------------------------------------
-
-loc_17484:
-		cmp	si, 1
-		jnz	short loc_17494
-		mov	ax, 0FFFDh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		jmp	short loc_174C1
-; ---------------------------------------------------------------------------
-
-loc_17494:
-		cmp	si, 2
-		jnz	short loc_174A9
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, [bp+var_2]
-		add	ax, 9
-		mov	[bp+var_2], ax
-		jmp	short loc_174C1
-; ---------------------------------------------------------------------------
-
-loc_174A9:
-		cmp	si, 3
-		jnz	short loc_174C1
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, [bp+var_2]
-		mov	dx, 0FFF7h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	di, 1
-
-loc_174C1:
-		cmp	byte_23E45, 10h
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_174CD:
-		add	[bp+var_2], 6
-
-loc_174D1:
-		add	[bp+var_2], 6
-
-loc_174D5:
-		or	si, si
-		jnz	short loc_174E0
-		mov	[bp+var_2], 0
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_174E0:
-		cmp	si, 1
-		jnz	short loc_174F0
-		mov	ax, [bp+var_2]
-		add	ax, 6
-		mov	[bp+var_2], ax
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_174F0:
-		cmp	si, 2
-		jnz	short loc_17500
-		mov	ax, 0FFFAh
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_17500:
-		cmp	si, 3
-		jnz	short loc_17512
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	ax, 0Ch
-		mov	[bp+var_2], ax
-		jmp	short loc_17527
-; ---------------------------------------------------------------------------
-
-loc_17512:
-		cmp	si, 4
-		jnz	short loc_17527
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		mov	dx, 0FFF4h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	di, 1
-
-loc_17527:
-		cmp	byte_23E45, 16h
-		ja	loc_1767D
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17533:
-		mov	[bp+var_7], 10h
-		dec	[bp+var_8]
-
-loc_1753A:
-		mov	al, [bp+var_7]
-		add	al, 8
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_17545:
-		mov	al, [bp+var_7]
-		add	al, 4
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_17550:
-		mov	al, [bp+var_7]
-		add	al, 2
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_1755B:
-		mov	al, [bp+var_7]
-		inc	al
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-		mov	ax, si
-		mov	cl, [bp+var_8]
-		shl	ax, cl
-		mov	[bp+var_2], ax
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		cmp	ax, si
-		jg	loc_176A8
-		mov	di, 1
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17581:
-		mov	ax, si
-		shl	ax, 8
-		mov	dl, byte_23E47
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	al, byte_23E47
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	loc_176A8
-		jmp	loc_17628
-; ---------------------------------------------------------------------------
-
-loc_175A3:
-		mov	[bp+var_7], 10h
-		dec	[bp+var_8]
-
-loc_175AA:
-		mov	al, [bp+var_7]
-		add	al, 8
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_175B5:
-		mov	al, [bp+var_7]
-		add	al, 4
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_175C0:
-		mov	al, [bp+var_7]
-		add	al, 2
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-
-loc_175CB:
-		mov	al, [bp+var_7]
-		inc	al
-		mov	[bp+var_7], al
-		dec	[bp+var_8]
-		mov	ax, si
-		mov	cl, [bp+var_8]
-		shl	ax, cl
-		mov	[bp+var_2], ax
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		cmp	ax, si
-		jg	loc_1767D
-		jmp	loc_1767A
-; ---------------------------------------------------------------------------
-
-loc_175EE:
-		mov	ax, si
-		shl	ax, 8
-		mov	dl, byte_23E47
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	al, byte_23E47
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	short loc_1767D
-		jmp	short loc_1767A
-; ---------------------------------------------------------------------------
-
-loc_1760D:
-		or	si, si
-		jnz	short loc_17619
-		mov	[bp+var_2], 0
-		jmp	loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17619:
-		mov	al, angle_23E43
-		mov	ah, 0
-		add	ax, ax
-		mov	dx, 80h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-
-loc_17628:
-		mov	di, 1
-		jmp	short loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_1762D:
-		call	@randring2_next16$qv
-		mov	[bp+var_2], ax
-		mov	di, 1
-		jmp	short loc_176A8
-; ---------------------------------------------------------------------------
-
-loc_17638:
-		call	@randring2_next16$qv
-		mov	[bp+var_2], ax
-		mov	al, byte_23E47
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_176A8
-		jmp	short loc_17628
-; ---------------------------------------------------------------------------
-
-loc_17649:
-		call	@randring2_next16$qv
-		mov	[bp+var_2], ax
-		push	1Fh
-		call	@randring2_next16_and$qui
-		add	al, [bp+@@length]
-		mov	[bp+@@length], al
-		mov	al, byte_23E47
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_176A8
-		jmp	short loc_17628
-; ---------------------------------------------------------------------------
-
-loc_17665:
-		push	1Fh
-		call	@randring2_next16_and$qui
-		mov	[bp+var_2], ax
-		sub	[bp+var_2], 10h
-		mov	al, byte_23E47
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_1767D
-
-loc_1767A:
-		mov	di, 1
-
-loc_1767D:
-		push	word_23E3E
-		push	word_23E40
-		push	[bp+@@center_x]
-		push	[bp+@@center_y]
-		mov	al, byte ptr [bp+var_2]
-		add	al, angle_23E43
-		push	ax
-		push	ds
-		push	offset point_23E48.x
-		push	ds
-		push	offset point_23E48.y
-		mov	al, [bp+@@length]
-		mov	ah, 0
-		push	ax
-		call	vector2_between_plus
-		jmp	short loc_176C3
-; ---------------------------------------------------------------------------
-
-loc_176A8:
-		push	ds
-		push	offset point_23E48.x
-		push	ds
-		push	offset point_23E48.y
-		mov	al, byte ptr [bp+var_2]
-		add	al, angle_23E43
-		push	ax
-		mov	al, [bp+@@length]
-		mov	ah, 0
-		push	ax
-		call	vector2
-
-loc_176C3:
-		mov	al, byte ptr [bp+var_2]
-		add	al, angle_23E43
-		mov	byte_26352, al
-		mov	ax, di
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_173A2	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_176D6	dw offset loc_17628
-		dw offset loc_1767A
-		dw offset loc_17401
-		dw offset loc_173FD
-		dw offset loc_173F9
-		dw offset loc_17401
-		dw offset loc_173FD
-		dw offset loc_173F9
-		dw offset loc_17435
-		dw offset loc_17431
-		dw offset loc_1742D
-		dw offset loc_17435
-		dw offset loc_17431
-		dw offset loc_1742D
-		dw offset loc_17475
-		dw offset loc_17471
-		dw offset loc_1746D
-		dw offset loc_17475
-		dw offset loc_17471
-		dw offset loc_1746D
-		dw offset loc_174D5
-		dw offset loc_174D1
-		dw offset loc_174CD
-		dw offset loc_174D5
-		dw offset loc_174D1
-		dw offset loc_174CD
-		dw offset loc_1762D
-		dw offset loc_17638
-		dw offset loc_17649
-		dw offset loc_17665
-		dw offset loc_1767D
-		dw offset loc_1767D
-		dw offset loc_17550
-		dw offset loc_1755B
-		dw offset loc_1760D
-		dw offset loc_17545
-		dw offset loc_1753A
-		dw offset loc_17533
-		dw offset loc_17581
-		dw offset loc_175CB
-		dw offset loc_175C0
-		dw offset loc_175B5
-		dw offset loc_175AA
-		dw offset loc_175A3
-		dw offset loc_175EE
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17730	proc far
-
-var_E		= byte ptr -0Eh
-var_D		= byte ptr -0Dh
-var_C		= byte ptr -0Ch
-var_B		= byte ptr -0Bh
-@@length		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Eh
-		push	si
-		push	di
-		mov	[bp+var_4], 0
-		mov	[bp+var_C], 0
-		cmp	word_23E40, 0FF80h
-		jle	loc_1795E
-		cmp	word_23E40, 1780h
-		jge	loc_1795E
-		cmp	word_23E3E, 0FF80h
-		jle	loc_1795E
-		cmp	word_23E3E, 1280h
-		jge	loc_1795E
-		mov	si, 68F2h
-		mov	al, byte_23E4E
-		mov	ah, 0
-		sub	ax, 2
-		mov	bx, ax
-		cmp	bx, 6
-		ja	short loc_177A9
-		add	bx, bx
-		jmp	cs:off_17963[bx]
-
-loc_17780:
-		mov	[bp+var_C], 1
-		mov	[bp+var_D], 1
-		jmp	short loc_177AF
-; ---------------------------------------------------------------------------
-
-loc_1778A:
-		mov	[bp+var_C], 1
-
-loc_1778E:
-		mov	al, _pid_PID_so_attack
-		mov	ah, 0
-		add	ax, 8
-		mov	word_23E4C, ax
-
-loc_17799:
-		mov	[bp+var_D], 2
-		jmp	short loc_177AF
-; ---------------------------------------------------------------------------
-
-loc_1779F:
-		mov	[bp+var_C], 1
-		mov	[bp+var_D], 2
-		jmp	short loc_177AF
-; ---------------------------------------------------------------------------
-
-loc_177A9:
-		mov	al, byte_23E4E
-		mov	[bp+var_D], al
-
-loc_177AF:
-		mov	al, byte_23E42
-		mov	[bp+var_E], al
-		mov	al, byte_23E3C
-		add	byte_23E42, al
-		cmp	byte_23E42, 80h
-		jbe	short loc_177CA
-		mov	byte_23E42, 80h
-		jmp	short loc_177D6
-; ---------------------------------------------------------------------------
-
-loc_177CA:
-		cmp	byte_23E42, 10h
-		jnb	short loc_177D6
-		mov	byte_23E42, 10h
-
-loc_177D6:
-		mov	[bp+var_2], 0
-		jmp	loc_1794F
-; ---------------------------------------------------------------------------
-
-loc_177DE:
-		cmp	byte ptr [si], 0
-		jnz	loc_17949
-		mov	al, [bp+var_D]
-		mov	[si], al
-		mov	byte ptr [si+1], 0
-		mov	ax, word_23E3E
-		mov	[si+2],	ax
-		mov	ax, word_23E40
-		mov	[si+4],	ax
-		mov	al, byte_23E45
-		mov	[si+11h], al
-		mov	al, _pid_other
-		mov	[si+10h], al
-		mov	ax, word_23E4C
-		mov	[si+12h], ax
-		mov	al, byte_23E50
-		mov	[si+16h], al
-		mov	al, byte_23E4F
-		mov	[si+15h], al
-		mov	al, byte_23E51
-		mov	[si+17h], al
-		cmp	byte_23E51, 0
-		jz	short loc_1786C
-		mov	al, byte_26353
-		mov	ah, 0
-		imul	ax, 18h
-		add	ax, 8972h
-		mov	[si+18h], ax
-		inc	byte_26353
-		cmp	byte_26353, 30h	; '0'
-		jb	short loc_17843
-		mov	byte_26353, 0
-
-loc_17843:
-		xor	di, di
-		jmp	short loc_17867
-; ---------------------------------------------------------------------------
-
-loc_17847:
-		mov	ax, di
-		add	ax, ax
-		add	ax, [si+18h]
-		mov	dx, word_23E3E
-		mov	bx, ax
-		mov	[bx], dx
-		mov	ax, di
-		add	ax, ax
-		add	ax, [si+18h]
-		mov	dx, word_23E40
-		mov	bx, ax
-		mov	[bx+0Ch], dx
-		inc	di
-
-loc_17867:
-		cmp	di, 6
-		jl	short loc_17847
-
-loc_1786C:
-		cmp	[bp+var_C], 0
-		jz	short loc_1787A
-		mov	al, byte_23E46
-		mov	[si+14h], al
-		jmp	short loc_1787E
-; ---------------------------------------------------------------------------
-
-loc_1787A:
-		mov	byte ptr [si+14h], 0
-
-loc_1787E:
-		cmp	[bp+var_D], 3
-		jnz	loc_17914
-		push	word_23E3E	; x
-		mov	al, _pid_other
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	[bp+var_8], ax
-		call	@randring2_next16_mod$qui pascal, (288 shl 4)
-		mov	[bp+var_6], ax
-		mov	[si+6],	ax
-		push	ax	; x
-		mov	al, _pid_other
-		mov	ah, 0
-		mov	dx, 1
-		sub	dx, ax
-		push	dx	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	[bp+var_6], ax
-		mov	al, byte_23AF8
-		mov	ah, 0
-		mov	bx, 3
-		cwd
-		idiv	bx
-		add	ax, 46h	; 'F'
-		mov	[bp+@@length], ax
-		mov	ax, [bp+var_8]
-		shl	ax, 4
-		push	ax
-		push	word ptr [si+4]
-		mov	ax, [bp+var_6]
-		shl	ax, 4
-		push	ax
-		call	@randring2_next16_and$qui pascal, 255
-		push	ax
-		push	0
-		push	ds
-		lea	ax, [si+0Ah]
-		push	ax
-		push	ds
-		lea	ax, [si+0Ch]
-		push	ax
-		push	[bp+@@length]
-		call	vector2_between_plus
-		push	[bp+var_6]	; x
-		mov	al, _pid_other
-		mov	ah, 0
-		push	ax	; pid
-		call	@screen_x_to_playfield$qii
-		mov	[si+8],	ax
-		mov	al, angle_23E43
-		mov	[si+0Fh], al
-		mov	al, byte_23E42
-		mov	[si+0Eh], al
-		jmp	short loc_17958
-; ---------------------------------------------------------------------------
-
-loc_17914:
-		push	[bp+var_4]
-		call	sub_173A2
-		mov	[bp+var_B], al
-		mov	ax, point_23E48.x
-		mov	[si+0Ah], ax
-		mov	ax, point_23E48.y
-		mov	[si+0Ch], ax
-		mov	al, byte_26352
-		mov	[si+0Fh], al
-		mov	al, byte_23E42
-		mov	[si+0Eh], al
-		cmp	[bp+var_D], 4
-		jnz	short loc_17940
-		mov	word ptr [si+12h], 1942h
-
-loc_17940:
-		cmp	[bp+var_B], 0
-		jnz	short loc_17958
-		inc	[bp+var_4]
-
-loc_17949:
-		inc	[bp+var_2]
-		add	si, 1Ah
-
-loc_1794F:
-		cmp	[bp+var_2], 140h
-		jl	loc_177DE
-
-loc_17958:
-		mov	al, [bp+var_E]
-		mov	byte_23E42, al
-
-loc_1795E:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17730	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_17963	dw offset loc_1778E
-		dw offset loc_177A9
-		dw offset loc_177A9
-		dw offset loc_17799
-		dw offset loc_17780
-		dw offset loc_1778A
-		dw offset loc_1779F
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17971	proc far
-		push	bp
-		mov	bp, sp
-		mov	byte_23E4E, 3
-		call	sub_17730
-		pop	bp
-		retf
-sub_17971	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1797F	proc far
-		push	bp
-		mov	bp, sp
-		mov	angle_23E43, 0
-		mov	byte_23E47, 0
-		mov	byte_23E50, 1
-		mov	byte_23E4F, 1
-		mov	byte_23E51, 0
-		pop	bp
-		retf
-sub_1797F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1799D	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		add	bx, [si+18h]
-		mov	dx, [bx+8]
-		mov	[bx+0Ah], dx
-		cmp	dx, 0FF80h
-		jle	short loc_179D1
-		cmp	dx, word_26354
-		jge	short loc_179D1
-		mov	dx, [bx+6]
-		mov	[bx+8],	dx
-		mov	dx, [bx+4]
-		mov	[bx+6],	dx
-		mov	dx, [bx+2]
-		mov	[bx+4],	dx
-		mov	dx, [bx]
-		mov	[bx+2],	dx
-		mov	[bx], cx
-		clc
-		jmp	short loc_179D2
-; ---------------------------------------------------------------------------
-
-loc_179D1:
-		stc
-
-loc_179D2:
-		pop	si
-		pop	bp
-		retn
-sub_1799D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_179D5	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	al, [si]
-		mov	byte_23E4E, al
-		mov	ax, [si+2]
-		mov	word_23E3E, ax
-		mov	ax, [si+4]
-		mov	word_23E40, ax
-		mov	ax, [si+0Eh]
-		mov	word ptr byte_23E42, ax
-		mov	ax, [si+10h]
-		mov	word ptr _pid_other, ax
-		call	sub_17730
-		pop	si
-		pop	bp
-		retn
-sub_179D5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_179FD	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, si
-		mov	al, [di+14h]
-		mov	ah, 0
-		cmp	ax, 80h
-		jnz	short loc_17A17
-		cmp	word ptr [di+0Ch], 50h ; 'P'
-		jge	short loc_17A17
-		inc	word ptr [di+0Ch]
-
-loc_17A17:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_179FD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17A1B	proc far
-
-var_1		= byte ptr -1
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	[bp+var_1], 0
-		mov	_collmap_tile_h, 1
-		mov	byte_2203A, 1
-		mov	di, 141h
-		mov	ax, 68F2h
-		add	ax, 0FFE6h
-		mov	si, ax
-
-loc_17A3D:
-		add	si, 1Ah
-		dec	di
-		mov	ax, di
-		or	ax, ax
-		jz	loc_17BCD
-		cmp	byte ptr [si], 0
-		jz	short loc_17A3D
-		cmp	byte ptr [si], 5
-		jnb	short loc_17A3D
-		inc	[bp+var_1]
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si], 4
-		jnz	short loc_17A7A
-		mov	al, [si+1]
-		and	al, 3
-		jnz	short loc_17A3D
-		mov	ax, [si+12h]
-		add	ax, 4
-		cmp	ax, 194Eh
-		jl	short loc_17A75
-		mov	byte ptr [si], 1
-		jmp	short loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17A75:
-		mov	[si+12h], ax
-		jmp	short loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17A7A:
-		mov	ax, [si+2]
-		mov	cx, ax
-		add	ax, [si+0Ah]
-		cmp	byte ptr [si], 3
-		jz	short loc_17ADC
-		mov	bh, 0
-		mov	bl, [si+10h]
-		add	bx, offset _bomb_state
-		cmp	byte ptr [bx], 0
-		jnz	short loc_17AD6
-		mov	bh, 0
-		mov	bl, [si+10h]
-		add	bx, offset _damage_all_enemies_on
-		cmp	byte ptr [bx], 0
-		jnz	short loc_17AD6
-		cmp	byte ptr [si+17h], 0
-		jz	short loc_17ACC
-		cmp	ax, 0FF80h
-		jle	short loc_17AB5
-		cmp	ax, 1280h
-		jge	short loc_17ABA
-		jmp	short loc_17ABD
-; ---------------------------------------------------------------------------
-
-loc_17AB5:
-		mov	ax, 0FF80h
-		jmp	short loc_17ABD
-; ---------------------------------------------------------------------------
-
-loc_17ABA:
-		mov	ax, 1280h
-
-loc_17ABD:
-		mov	word_26354, 1280h
-		xor	bx, bx
-		call	sub_1799D
-		jb	short loc_17AD6
-		jmp	short loc_17AEF
-; ---------------------------------------------------------------------------
-
-loc_17ACC:
-		cmp	ax, 0FF80h
-		jle	short loc_17AD6
-		cmp	ax, 1280h
-		jl	short loc_17AEF
-
-loc_17AD6:
-		mov	byte ptr [si], 0
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17ADC:
-		mov	bl, [si+10h]
-		or	bl, bl
-		jnz	short loc_17AEA
-		cmp	ax, [si+8]
-		jl	short loc_17B15
-		jmp	short loc_17AF1
-; ---------------------------------------------------------------------------
-
-loc_17AEA:
-		cmp	ax, [si+8]
-		jle	short loc_17AF1
-
-loc_17AEF:
-		jmp	short loc_17B15
-; ---------------------------------------------------------------------------
-
-loc_17AF1:
-		mov	byte ptr [si], 4
-		xor	byte ptr [si+10h], 1
-		mov	dx, [si+6]
-		mov	[si+2],	dx
-		mov	word ptr [si+4], 20h ; ' '
-		add	byte ptr [si+0Eh], 8
-		mov	byte_23E47, 0
-		call	sub_179D5
-		mov	byte ptr [si], 0
-		jmp	loc_17BCA
-; ---------------------------------------------------------------------------
-
-loc_17B15:
-		mov	[si+2],	ax
-		mov	ax, [si+4]
-		mov	cx, ax
-		add	ax, [si+0Ch]
-		cmp	byte ptr [si+17h], 0
-		jz	short loc_17B36
-		mov	word_26354, 1780h
-		mov	bx, 0Ch
-		call	sub_1799D
-		jb	short loc_17B40
-		jmp	short loc_17B46
-; ---------------------------------------------------------------------------
-
-loc_17B36:
-		cmp	ax, 0FF80h
-		jle	short loc_17B40
-		cmp	ax, 1780h
-		jl	short loc_17B46
-
-loc_17B40:
-		mov	byte ptr [si], 0
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17B46:
-		mov	[si+4],	ax
-		cmp	byte ptr [si+14h], 0
-		jz	short loc_17B52
-		call	sub_179FD
-
-loc_17B52:
-		cmp	byte ptr [si], 1
-		jnz	short loc_17BA9
-		mov	dx, [si+2]
-		sub	dx, (6 shl 4)
-		sub	ax, (6 shl 4)
-		mov	_hitbox_origin_topleft.x, dx
-		mov	_hitbox_origin_topleft.y, ax
-		add	dx, (12 shl 4)
-		add	ax, (12 shl 4)
-		mov	_hitbox_right, dx
-		mov	_hitbox_bottom, ax
-		mov	bl, [si+10h]
-		mov	pid_20E3A, bl
-		call	sub_1670D
-		or	al, al
-		jz	short loc_17BA9
-		mov	bh, 0
-		mov	bl, [si+10h]
-		xor	bl, 1
-		add	bx, 2D54h
-		cmp	byte ptr [bx], 0
-		jnz	short loc_17BA3
-		mov	byte ptr [si], 3
-		mov	byte ptr [si+11h], 1Dh
-		mov	byte ptr [si+0Fh], 0
-		call	sub_179D5
-
-loc_17BA3:
-		mov	byte ptr [si], 0
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17BA9:
-		cmp	byte ptr [si], 3
-		jz	short loc_17BCA
-		cmp	byte ptr [si+15h], 0
-		jz	short loc_17BCA
-		mov	ax, [si+2]
-		mov	_collmap_topleft.x, ax
-		mov	ax, [si+4]
-		mov	_collmap_topleft.y, ax
-		mov	al, [si+10h]
-		mov	_collmap_pid, al
-		call	_collmap_set_vline
-
-loc_17BCA:
-		jmp	loc_17A3D
-; ---------------------------------------------------------------------------
-
-loc_17BCD:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17A1B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17BD1	proc far
-
-var_D		= byte ptr -0Dh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-@@sprite_offset		= word ptr -8
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Eh
-		push	si
-		push	di
-		call	egc_on
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	_sprite16_put_w, (16 / 16)
-		mov	_sprite16_put_h, 8
-		mov	[bp+var_C], 68F2h
-		mov	[bp+var_D], 0
-		mov	[bp+var_2], 0
-		jmp	loc_17CD9
-; ---------------------------------------------------------------------------
-
-loc_17C06:
-		mov	bx, [bp+var_C]
-		cmp	byte ptr [bx], 2
-		jnz	loc_17CC6
-		mov	ax, [bx+12h]
-		mov	[bp+@@sprite_offset], ax
-		cmp	byte ptr [bx+17h], 0
-		jz	short loc_17C7D
-		add	[bp+@@sprite_offset], 6
-		mov	[bp+var_A], 5
-		jmp	short loc_17C77
-; ---------------------------------------------------------------------------
-
-loc_17C27:
-		mov	ax, [bp+var_A]
-		add	ax, ax
-		mov	bx, [bp+var_C]
-		add	ax, [bx+18h]
-		mov	bx, ax
-		push	word ptr [bx]	; x
-		mov	bx, [bp+var_C]
-		mov	al, [bx+10h]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -8
-		mov	[bp+@@left], ax
-		mov	ax, [bp+var_A]
-		add	ax, ax
-		mov	bx, [bp+var_C]
-		add	ax, [bx+18h]
-		mov	bx, ax
-		mov	ax, [bx+0Ch]
-		sar	ax, 4
-		add	ax, 8
-		mov	[bp+@@top], ax
-		call	sprite16_put_noclip pascal, [bp+@@left], ax, [bp+@@sprite_offset]
-		sub	[bp+var_A], 2
-		sub	[bp+@@sprite_offset], 2
-
-loc_17C77:
-		cmp	[bp+var_A], 0
-		jg	short loc_17C27
-
-loc_17C7D:
-		mov	bx, [bp+var_C]
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+10h]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -8
-		mov	[bp+@@left], ax
-		mov	bx, [bp+var_C]
-		mov	ax, [bx+4]
-		sar	ax, 4
-		add	ax, 8
-		mov	[bp+@@top], ax
-		cmp	byte ptr [bx+16h], 0
-		jz	short loc_17CB6
-		mov	al, [bx+1]
-		mov	ah, 0
-		and	ax, 3
-		add	ax, ax
-		add	[bp+@@sprite_offset], ax
-
-loc_17CB6:
-		call	sprite16_put_noclip pascal, [bp+@@left], [bp+@@top], [bp+@@sprite_offset]
-		jmp	short loc_17CD2
-; ---------------------------------------------------------------------------
-
-loc_17CC6:
-		mov	bx, [bp+var_C]
-		cmp	byte ptr [bx], 4
-		jnz	short loc_17CD2
-		mov	[bp+var_D], 1
-
-loc_17CD2:
-		inc	[bp+var_2]
-		add	[bp+var_C], 1Ah
-
-loc_17CD9:
-		cmp	[bp+var_2], 140h
-		jl	loc_17C06
-		cmp	[bp+var_D], 0
-		jz	short loc_17D56
-		mov	dx, 1
-		mov	ah, SPRITE16_SET_MONO
-		int	SPRITE16
-		mov	dx, V_WHITE
-		mov	ah, SPRITE16_SET_COLOR
-		int	SPRITE16
-		mov	_sprite16_put_w, (32 / 16)
-		mov	_sprite16_put_h, 16
-		mov	[bp+var_C], 68F2h
-		mov	[bp+var_2], 0
-		jmp	short loc_17D48
-; ---------------------------------------------------------------------------
-
-loc_17D0D:
-		mov	bx, [bp+var_C]
-		cmp	byte ptr [bx], 4
-		jnz	short loc_17D41
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+10h]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -16
-		mov	[bp+@@left], ax
-		mov	bx, [bp+var_C]
-		mov	ax, [bx+4]
-		sar	ax, 4
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, word ptr [bx+12h]
-
-loc_17D41:
-		inc	[bp+var_2]
-		add	[bp+var_C], 1Ah
-
-loc_17D48:
-		cmp	[bp+var_2], 140h
-		jl	short loc_17D0D
-		mov	dx, 0
-		mov	ah, SPRITE16_SET_MONO
-		int	SPRITE16
-
-loc_17D56:
-		call	egc_off
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	si, 68F2h
-		mov	di, 0
-
-loc_17D71:
-		test	byte ptr [si], 1
-		jz	short loc_17D9C
-		push	word ptr [si+2]	; x
-		mov	al, [si+10h]
-		xor	ah, ah
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -4
-		mov	bx, [si+4]
-		sar	bx, 5
-		add	bx, 6
-		xor	dx, dx
-		cmp	byte ptr [si], 1
-		jz	short loc_17D99
-		mov	dh, 1
-
-loc_17D99:
-		call	sub_16FF0
-
-loc_17D9C:
-		add	si, 1Ah
-		inc	di
-		cmp	di, 140h
-		jb	short loc_17D71
-		GRCG_OFF_VIA_XOR ax
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17BD1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17DAE	proc far
-
-@@length		= byte ptr -8
-@@pid		= byte ptr -7
-var_6		= word ptr -6
-var_4		= word ptr -4
-@@x		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	bx, word_2203C
-		mov	di, [bx+2]
-		mov	ax, [bx+4]
-		mov	[bp+var_6], ax
-		mov	si, 4656h
-		mov	al, 1
-		sub	al, [bx+8]
-		mov	[bp+@@pid], al
-		mov	[bp+var_4], 0
-		jmp	loc_17EEB
-; ---------------------------------------------------------------------------
-
-loc_17DD4:
-		cmp	byte ptr [si], 0
-		jnz	loc_17EE5
-		mov	byte ptr [si], 2
-		mov	[si+2],	di
-		mov	ax, [bp+var_6]
-		mov	[si+4],	ax
-		mov	bx, word_2203C
-		mov	al, [bx+8]
-		mov	[si+8],	al
-		push	1Fh
-		call	@randring2_next16_and$qui
-		mov	dl, byte_23AF8
-		mov	dh, 0
-		push	ax
-		mov	ax, dx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		pop	dx
-		add	dl, al
-		add	dl, 14h
-		mov	[bp+@@length], dl
-		cmp	[bp+@@length], 80h
-		jbe	short loc_17E17
-		mov	[bp+@@length], 80h
-
-loc_17E17:
-		mov	al, [bp+@@length]
-		mov	[si+1Bh], al
-		mov	al, byte_1E14C
-		add	al, 2
-		mov	[si+7],	al
-		mov	al, byte_1E14C
-		add	al, 2
-		mov	[si+6],	al
-		mov	byte ptr [si+9], 30h ; '0'
-		mov	byte ptr [si+1Eh], 0
-		cmp	byte_1E14C, 0
-		jnz	short loc_17E40
-		mov	al, 0
-		jmp	short loc_17E45
-; ---------------------------------------------------------------------------
-
-loc_17E40:
-		mov	al, byte_26358
-		inc	al
-
-loc_17E45:
-		mov	[si+20h], al
-		push	di	; x
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	dx, 1
-		sub	dx, ax
-		push	dx	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	[bp+@@x], ax
-		mov	ax, _round_or_result_frame
-		and	ax, 511
-		cmp	ax, 256
-		jnb	short loc_17E6F
-		push	1200h
-		call	@randring2_next16_mod$qui
-		jmp	short loc_17E83
-; ---------------------------------------------------------------------------
-
-loc_17E6F:
-		push	1FFh
-		call	@randring2_next16_and$qui
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 7
-		mov	bx, dx
-		add	ax, _players[bx].center.x
-
-loc_17E83:
-		mov	di, ax
-		mov	[si+14h], di
-		push	di	; x
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	di, ax
-		mov	al, byte_23AF8
-		mov	ah, 0
-		mov	bx, 3
-		cwd
-		idiv	bx
-		add	al, 46h	; 'F'
-		mov	[bp+@@length], al
-		mov	ax, [bp+@@x]
-		shl	ax, 4
-		push	ax
-		push	[bp+var_6]
-		mov	ax, di
-		shl	ax, 4
-		push	ax
-		push	0
-		push	0
-		push	ds
-		lea	ax, [si+10h]
-		push	ax
-		push	ds
-		lea	ax, [si+12h]
-		push	ax
-		mov	al, [bp+@@length]
-		mov	ah, 0
-		push	ax
-		call	vector2_between_plus
-		push	di	; x
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	dx, 1
-		sub	dx, ax
-		push	dx	; pid
-		call	@screen_x_to_playfield$qii
-		mov	[si+16h], ax
-		jmp	short loc_17EF3
-; ---------------------------------------------------------------------------
-
-loc_17EE5:
-		inc	[bp+var_4]
-		add	si, 30h	; '0'
-
-loc_17EEB:
-		cmp	[bp+var_4], 18h
-		jl	loc_17DD4
-
-loc_17EF3:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17DAE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17EF7	proc near
-
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, word_2203C
-		mov	al, [si+1]
-		and	al, 7
-		mov	[bp+var_6], al
-		cmp	byte ptr [si], 1
-		jnz	short loc_17F35
-		mov	al, [si+6]
-		mov	ah, 0
-		shl	ax, 3
-		add	ax, 18F0h
-		mov	di, ax
-		cmp	[bp+var_6], 3
-		ja	short loc_17F24
-		add	di, 4
-
-loc_17F24:
-		mov	_sprite16_put_w, (32 / 16)
-		mov	_sprite16_put_h, 16
-		mov	[bp+var_5], 10h
-		jmp	short loc_17F5A
-; ---------------------------------------------------------------------------
-
-loc_17F35:
-		mov	al, [si+6]
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, 1DF8h
-		mov	di, ax
-		cmp	[bp+var_6], 3
-		ja	short loc_17F4B
-		add	di, 2
-
-loc_17F4B:
-		mov	_sprite16_put_w, (16 / 16)
-		mov	_sprite16_put_h, 8
-		mov	[bp+var_5], 8
-
-loc_17F5A:
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		push	word ptr [si+2]	; x
-		mov	al, [si+8]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@left], ax
-		mov	ax, [si+4]
-		sar	ax, 4
-		add	ax, 16
-		mov	dl, [bp+var_5]
-		mov	dh, 0
-		sub	ax, dx
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, di
-		pop	di
-		pop	si
-		leave
-		retn
-sub_17EF7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17F9F	proc near
-		push	bp
-		mov	bp, sp
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 0Eh
-		jnz	short loc_17FB1
-		mov	byte ptr [bx], 0Ah
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_17FB1:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 20h ; ' '
-		jnz	short loc_17FC0
-		mov	byte ptr [bx], 9
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_17FC0:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 24h ; '$'
-		jb	short loc_17FCD
-		mov	byte ptr [bx], 0
-
-loc_17FCD:
-		pop	bp
-		retn
-sub_17F9F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17FCF	proc near
-
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_1		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 0Ch
-		jnb	short loc_17FE4
-		mov	si, word_1DDA6
-		jmp	short loc_18019
-; ---------------------------------------------------------------------------
-
-loc_17FE4:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 20h ; ' '
-		jnb	short loc_1800B
-		mov	al, [bx+1]
-		mov	ah, 0
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		mov	ah, 0
-		and	ax, 1
-		add	ax, ax
-		mov	bx, ax
-		mov	si, [bx+848h]
-		jmp	short loc_18019
-; ---------------------------------------------------------------------------
-
-loc_1800B:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+1], 24h ; '$'
-		jnb	short loc_18019
-		mov	si, word_1DDAC
-
-loc_18019:
-		mov	_sprite16_put_w, (64 / 16)
-		mov	_sprite16_put_h, 32
-		mov	bx, word_2203C
-		push	word ptr [bx+2]	; x
-		mov	al, [bx+8]
-		mov	ah, 0
-		push	ax	; pid
-		call	@playfield_fg_x_to_screen$qii
-		add	ax, -32
-		mov	[bp+@@left], ax
-		mov	bx, word_2203C
-		mov	ax, [bx+4]
-		sar	ax, 4
-		add	ax, -8
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, si
-		pop	si
-		leave
-		retn
-sub_17FCF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18059	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
-		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
-		mov	word_2203C, 4656h
-		xor	di, di
-		jmp	loc_18162
-; ---------------------------------------------------------------------------
-
-loc_18075:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 0
-		jz	loc_1815C
-		mov	bx, word_2203C
-		inc	byte ptr [bx+1]
-		cmp	byte ptr [bx], 9
-		jb	short loc_18092
-		call	sub_17F9F
-		jmp	loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_18092:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 1
-		jnz	short loc_18100
-		mov	si, [bx+2]
-		add	si, [bx+10h]
-		mov	al, [bx+8]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
-		jnz	short loc_180BB
-		cmp	si, 0FF00h
-		jle	short loc_180BB
-		cmp	si, 1300h
-		jl	short loc_180C5
-
-loc_180BB:
-		mov	bx, word_2203C
-		mov	byte ptr [bx], 0
-		jmp	loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_180C5:
-		mov	bx, word_2203C
-		mov	[bx+2],	si
-		mov	si, [bx+4]
-		add	si, [bx+12h]
-		cmp	si, 1800h
-		jge	short loc_180BB
-		mov	bx, word_2203C
-		mov	[bx+4],	si
-		cmp	byte ptr [bx], 1
-		jnz	short loc_1815C
-		mov	ax, [bx+2]
-		mov	_collmap_center.x, ax
-		mov	ax, [bx+4]
-		add	ax, 80h
-		mov	_collmap_center.y, ax
-		mov	al, [bx+8]
-		mov	_collmap_pid, al
-		nopcall	_collmap_set_rect_striped
-		jmp	short loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_18100:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 2
-		jnz	short loc_1815C
-		mov	si, [bx+2]
-		add	si, [bx+10h]
-		cmp	byte ptr [bx+8], 0
-		jnz	short loc_18143
-		cmp	[bx+16h], si
-		jg	short loc_1814C
-
-loc_1811A:
-		mov	bx, word_2203C
-		mov	ax, [bx+14h]
-		mov	[bx+2],	ax
-		mov	word ptr [bx+4], 0
-		mov	word ptr [bx+10h], 0
-		mov	al, [bx+1Bh]
-		mov	ah, 0
-		mov	[bx+12h], ax
-		mov	byte ptr [bx], 1
-		mov	al, 1
-		sub	al, [bx+8]
-		mov	[bx+8],	al
-		jmp	short loc_1815C
-; ---------------------------------------------------------------------------
-
-loc_18143:
-		mov	bx, word_2203C
-		cmp	[bx+16h], si
-		jge	short loc_1811A
-
-loc_1814C:
-		mov	bx, word_2203C
-		mov	[bx+2],	si
-		mov	si, [bx+4]
-		add	si, [bx+12h]
-		mov	[bx+4],	si
-
-loc_1815C:
-		inc	di
-		add	word_2203C, 30h	; '0'
-
-loc_18162:
-		cmp	di, 18h
-		jl	loc_18075
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_18059	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1816D	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		mov	al, byte ptr [bp+arg_2]
-		mov	ah, 0
-		shl	ax, 4
-		mov	bx, ax
-		mov	al, [bx+si+4B3Eh]
-		mov	ah, 0
-		mov	dl, byte_23AF8
-		mov	dh, 0
-		mov	bx, 20h	; ' '
-		push	ax
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	dx, 6
-		sub	dx, ax
-		pop	ax
-		cmp	ax, dx
-		jl	short loc_181BE
-		mov	al, byte ptr [bp+arg_2]
-		mov	ah, 0
-		shl	ax, 4
-		mov	bx, ax
-		mov	byte ptr [bx+si+4B3Eh],	0
-		mov	bx, word_2203C
-		push	word ptr [bx+2]
-		push	word ptr [bx+4]
-		push	[bp+arg_2]
-		call	sub_1A17E
-
-loc_181BE:
-		pop	si
-		pop	bp
-		retn	4
-sub_1816D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_181C3	proc near
-
-@@pid		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	_hitbox_radius.x, (12 shl 4)
-		mov	_hitbox_radius.y, (10 shl 4)
-		mov	word_2203C, 4AA6h
-		mov	byte_1E14C, 1
-		mov	si, 3Fh	; '?'
-		jmp	loc_1836D
-; ---------------------------------------------------------------------------
-
-loc_181E5:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 1
-		jnz	loc_18367
-		mov	bx, word_2203C
-		mov	al, [bx+6]
-		mov	byte_2203A, al
-		mov	al, [bx+8]
-		mov	[bp+@@pid], al
-		mov	ax, [bx+2]
-		mov	_hitbox_origin_center.x, ax
-		mov	ax, [bx+4]
-		add	ax, (3 shl 4)
-		mov	_hitbox_origin_center.y, ax
-		mov	al, [bp+@@pid]
-		mov	pid_20E3A, al
-		nopcall	sub_158F5
-		or	al, al
-		jz	loc_18367
-		mov	bx, word_2203C
-		cmp	byte ptr [bx+7], 0
-		jz	short loc_1823A
-		cmp	byte_2203B, 0
-		jnz	short loc_1823A
-		cmp	byte_26356, 0
-		jz	loc_18353
-
-loc_1823A:
-		mov	bx, word_2203C
-		mov	al, [bx+20h]
-		mov	byte_26358, al
-		cmp	byte_2203B, 0
-		jz	loc_182D6
-		mov	byte ptr [bx], 9
-		mov	al, hitcombo_slot_220C2
-		mov	[bp+var_1], al
-		mov	[bx+1Ch], al
-		cmp	byte_2203A, 3
-		jnz	short loc_18275
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		inc	byte ptr [bx+4B3Eh]
-
-loc_18275:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4B3Eh]
-		mov	ah, 0
-		mov	dl, byte_23AF8
-		mov	dh, 0
-		mov	bx, 20h	; ' '
-		push	ax
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	dx, 7
-		sub	dx, ax
-		pop	ax
-		cmp	ax, dx
-		jl	short loc_182CD
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	byte ptr [bx+4B3Eh], 0
-		mov	bx, word_2203C
-		push	word ptr [bx+2]
-		push	word ptr [bx+4]
-		push	word ptr [bp+@@pid]
-		call	sub_1A17E
-
-loc_182CD:
-		cmp	byte_26358, 4
-		jnb	short loc_18345
-		jmp	short loc_18341
-; ---------------------------------------------------------------------------
-
-loc_182D6:
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		mov	bx, dx
-		mov	dl, _hitcombo_ring_p[bx]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4B3Eh]
-		add	al, byte_2203A
-		add	al, -1
-		mov	dl, [bp+@@pid]
-		mov	dh, 0
-		shl	dx, 4
-		mov	bl, [bp+@@pid]
-		mov	bh, 0
-		mov	bl, _hitcombo_ring_p[bx]
-		mov	bh, 0
-		add	dx, bx
-		mov	bx, dx
-		mov	[bx+4B3Eh], al
-		mov	bx, word_2203C
-		mov	byte ptr [bx], 0
-		push	word ptr [bp+@@pid]
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, _hitcombo_ring_p[bx]
-		mov	ah, 0
-		push	ax
-		call	sub_1816D
-		call	gauge_avail_add pascal, word ptr [bp+@@pid], 16
-		call	score_add pascal, 50, word ptr [bp+@@pid]
-
-loc_18341:
-		call	sub_17DAE
-
-loc_18345:
-		push	word ptr [bp+@@pid]
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		push	ax
-		call	sub_1816D
-		jmp	short loc_1835A
-; ---------------------------------------------------------------------------
-
-loc_18353:
-		mov	bx, word_2203C
-		dec	byte ptr [bx+7]
-
-loc_1835A:
-		mov	byte_26357, 1
-		mov	bx, word_2203C
-		mov	byte ptr [bx+1], 0
-
-loc_18367:
-		dec	si
-		sub	word_2203C, 30h	; '0'
-
-loc_1836D:
-		cmp	si, 28h	; '('
-		jge	loc_181E5
-		mov	byte_1E14C, 0
-		pop	si
-		leave
-		retn
-sub_181C3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1837C	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		call	sub_181C3
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	word_2203C, 4656h
-		xor	si, si
-		jmp	short loc_183B9
-; ---------------------------------------------------------------------------
-
-loc_18399:
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 0
-		jz	short loc_183B3
-		mov	bx, word_2203C
-		cmp	byte ptr [bx], 9
-		jnb	short loc_183B0
-		call	sub_17EF7
-		jmp	short loc_183B3
-; ---------------------------------------------------------------------------
-
-loc_183B0:
-		call	sub_17FCF
-
-loc_183B3:
-		inc	si
-		add	word_2203C, 30h	; '0'
-
-loc_183B9:
-		cmp	si, 18h
-		jl	short loc_18399
-		pop	si
-		pop	bp
-		retf
-sub_1837C	endp
-
-main_04__TEXT	ends
+BG_1 = 0
+BG_1_AIMED = 1
+BG_2_SPREAD_NARROW = 2
+BG_2_SPREAD_NARROW_AIMED = 5
+BG_3_SPREAD_NARROW = 8
+BG_3_SPREAD_NARROW_AIMED = 11
+BG_4_SPREAD_NARROW = 14
+BG_4_SPREAD_MEDIUM = 15
+BG_4_SPREAD_WIDE = 16
+BG_4_SPREAD_NARROW_AIMED = 17
+BG_4_SPREAD_MEDIUM_AIMED = 18
+BG_5_SPREAD_NARROW = 20
+BG_5_SPREAD_MEDIUM = 21
+BG_5_SPREAD_WIDE = 22
+BG_5_SPREAD_NARROW_AIMED = 23
+BG_5_SPREAD_MEDIUM_AIMED = 24
+BG_RANDOM_ANGLE_AND_SPEED = 28
+BG_RANDOM_CONSTRAINED_ANGLE_AIMED = 29
+BG_2_RING = 33
+BG_4_RING = 32
+BG_8_RING = 35
+BG_16_RING = 36
+BG_32_RING = 37
+BG_RING = 38
+BG_RING_AIMED = 44
+BG_2_SPREAD_HORIZONTALLY_SYMMETRIC = 34
+
+BT_PELLET = 1
+BT_BULLET16_DEFAULT = 2
+BT_PELLET_CLOUD = 4
+BT_BULLET16_DEFAULT_WITH_ACCEL = 7
+BT_BULLET16_CUSTOM_WITH_ACCEL = 8
+BAT_Y = 80h
+
+	extern @bullets_reset$qv:proc
+	extern @bullets_add$qv:proc
+	extern @bullet_template_reset_stuff$qv:proc
+	extern @bullets_update$qv:proc
+	extern @bullets_render$qv:proc
+BULLET_TEXT ends
+
+E_FIREB_TEXT segment byte public 'CODE' use16
+	extern @fireballs_update$qv:proc
+	extern @fireballs_hittest_and_render$qv:proc
+E_FIREB_TEXT ends
 
 ; ===========================================================================
 
@@ -24854,7 +20207,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -25052,17 +20405,17 @@ ellen_185AB	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_PREPARING
+		cmp	_bomb_flag[bx], BF_PREPARING
 		jnz	short loc_1860D
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_ACTIVE
+		mov	_bomb_flag[bx], BF_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -25151,7 +20504,7 @@ loc_18698:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	_bomb_state[bx], BOMB_INACTIVE
+		mov	_bomb_flag[bx], BF_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
@@ -25166,7 +20519,7 @@ ellen_185AB	endp
 
 ; Attributes: bp-based frame
 
-sub_186C3	proc near
+ellen_bomb_186C3	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -25233,7 +20586,7 @@ loc_1875E:
 		pop	si
 		leave
 		retn
-sub_186C3	endp
+ellen_bomb_186C3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -25251,7 +20604,7 @@ var_2		= word ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -25454,7 +20807,7 @@ loc_18964:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		call	sub_186C3
+		call	ellen_bomb_186C3
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -25484,7 +20837,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
@@ -25688,7 +21041,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
@@ -25909,7 +21262,7 @@ var_2		= byte ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	_bomb_state[bx], BOMB_INACTIVE
+		cmp	_bomb_flag[bx], BF_INACTIVE
 		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
@@ -26115,16 +21468,16 @@ main_05_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_06_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_06_TEXT
+P_EXATT_TEXT segment byte public 'CODE' use16
+		assume cs:main_06
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_18FEA	proc far
+public @EXATT_ADD_CHIYURI$QIIUC
+@exatt_add_chiyuri$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -26184,14 +21537,14 @@ loc_19054:
 		pop	si
 		pop	bp
 		retf	6
-chiyuri_18FEA	endp
+@exatt_add_chiyuri$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1905A	proc near
+chiyuri_1905A	proc near
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -26401,14 +21754,14 @@ loc_1925C:
 		pop	si
 		leave
 		retn
-sub_1905A	endp
+chiyuri_1905A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_19260	proc far
+public @exatt_update_chiyuri$qv
+@exatt_update_chiyuri$qv proc far
 
 @@pid_other		= byte ptr -3
 var_2		= word ptr -2
@@ -26473,7 +21826,7 @@ loc_192DB:
 		add	si, 20h	; ' '
 		mov	ax, [si+2]
 		mov	_collmap_bottomright.x, ax
-		call	_collmap_set_slope_striped
+		call	@collmap_set_slope_striped$qv
 		jmp	short loc_1930C
 ; ---------------------------------------------------------------------------
 
@@ -26552,14 +21905,14 @@ loc_1937F:
 		pop	si
 		leave
 		retf
-chiyuri_19260	endp
+@exatt_update_chiyuri$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1938A	proc far
+public @exatt_render_chiyuri$qv
+@exatt_render_chiyuri$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -26576,7 +21929,7 @@ loc_193A0:
 		mov	bx, word_2028A
 		cmp	byte ptr [bx], 0
 		jz	short loc_193AC
-		call	sub_1905A
+		call	chiyuri_1905A
 
 loc_193AC:
 		add	si, 2
@@ -26588,7 +21941,7 @@ loc_193B4:
 		pop	si
 		pop	bp
 		retf
-chiyuri_1938A	endp
+@exatt_render_chiyuri$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26632,8 +21985,8 @@ sub_193BC	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_193EF	proc far
+public @EXATT_ADD_ELLEN$QIIUC
+@exatt_add_ellen$qiiuc proc far
 
 var_7		= byte ptr -7
 var_6		= byte ptr -6
@@ -26726,14 +22079,14 @@ loc_194A4:
 		pop	si
 		leave
 		retf	6
-ellen_193EF	endp
+@exatt_add_ellen$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_194A9	proc far
+ellen_194A9	proc far
 
 arg_0		= byte ptr  6
 arg_2		= byte ptr  8
@@ -26788,14 +22141,14 @@ loc_1950B:
 		pop	si
 		pop	bp
 		retf	8
-sub_194A9	endp
+ellen_194A9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19510	proc near
+ellen_19510	proc near
 
 var_9		= word ptr -9
 @@left		= word ptr -8
@@ -26915,14 +22268,14 @@ loc_19619:
 		pop	si
 		leave
 		retn
-sub_19510	endp
+ellen_19510	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1961D	proc far
+public @exatt_update_ellen$qv
+@exatt_update_ellen$qv proc far
 
 @@pid_other		= byte ptr -5
 var_4		= word ptr -4
@@ -27038,22 +22391,22 @@ loc_19732:
 		add	[di+10h], ax
 
 loc_19740:
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, [di+2]
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [di+10h]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
-		mov	byte_20E2C, 0
+		call	@hitbox_hittest$qv
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	ax, [di+2]
 		mov	_collmap_center.x, ax
 		mov	ax, [di+10h]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_197DC
 ; ---------------------------------------------------------------------------
 
@@ -27120,14 +22473,14 @@ loc_197E7:
 		pop	si
 		leave
 		retf
-ellen_1961D	endp
+@exatt_update_ellen$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_197F3	proc far
+public @exatt_render_ellen$qv
+@exatt_render_ellen$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27146,7 +22499,7 @@ loc_1980A:
 		cmp	byte ptr [bx], 0
 		jz	short loc_19818
 		mov	word_1FB3A, si
-		call	sub_19510
+		call	ellen_19510
 
 loc_19818:
 		inc	di
@@ -27159,14 +22512,14 @@ loc_1981C:
 		pop	si
 		pop	bp
 		retf
-ellen_197F3	endp
+@exatt_render_ellen$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_19825	proc far
+public @EXATT_ADD_KANA$QIIUC
+@exatt_add_kana$qiiuc proc far
 
 var_2		= word ptr -2
 arg_0		= word ptr  6
@@ -27226,14 +22579,14 @@ loc_19890:
 		pop	si
 		leave
 		retf	6
-kana_19825	endp
+@exatt_add_kana$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19896	proc far
+kana_19896	proc far
 
 arg_0		= byte ptr  6
 arg_2		= word ptr  8
@@ -27278,14 +22631,14 @@ loc_198D8:
 		pop	si
 		pop	bp
 		retf	6
-sub_19896	endp
+kana_19896	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_198DD	proc near
+kana_198DD	proc near
 
 var_5		= word ptr -5
 @@top		= word ptr -4
@@ -27372,14 +22725,14 @@ loc_19995:
 		pop	si
 		leave
 		retn
-sub_198DD	endp
+kana_198DD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_19999	proc far
+public @exatt_update_kana$qv
+@exatt_update_kana$qv proc far
 
 @@pid_other		= byte ptr -5
 @@vector_y		= word ptr -4
@@ -27431,22 +22784,22 @@ loc_199C6:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_19A49
-		mov	byte_23E4E, 8
-		mov	angle_23E43, 40h
-		mov	byte_23E45, 0
-		mov	byte_23E46, 80h
+		mov	_bullet_template.BT_type, BT_BULLET16_CUSTOM_WITH_ACCEL
+		mov	_bullet_template.BT_angle, 40h
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_accel_type, BAT_Y
 		mov	al, _pid_PID_so_attack
 		mov	ah, 0
-		add	ax, 1680h
-		mov	word_23E4C, ax
-		mov	byte_23E42, 10h
+		add	ax, (72 * ROW_SIZE)
+		mov	_bullet_template.BT_sprite_offset, ax
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		mov	ax, [si+2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [si+4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		call	sub_17730
+		mov	_bullet_template.BT_pid, al
+		call	@bullets_add$qv
 
 loc_19A49:
 		call	@PLAYFIELD_CLIP$Q20%SUBPIXELBASE$TI$TI%T1 pascal, word ptr [si+2], word ptr [si+4]
@@ -27489,14 +22842,14 @@ loc_19A82:
 		pop	si
 		leave
 		retf
-kana_19999	endp
+@exatt_update_kana$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_19A8D	proc far
+public @exatt_render_kana$qv
+@exatt_render_kana$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27514,7 +22867,7 @@ loc_19AA3:
 		cmp	byte ptr [si], 0
 		jz	short loc_19AAF
 		mov	word_2028A, si
-		call	sub_198DD
+		call	kana_198DD
 
 loc_19AAF:
 		inc	di
@@ -27527,14 +22880,14 @@ loc_19AB3:
 		pop	si
 		pop	bp
 		retf
-kana_19A8D	endp
+@exatt_render_kana$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_19ABC	proc far
+public @EXATT_ADD_MARISA$QIIUC
+@exatt_add_marisa$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -27582,14 +22935,14 @@ loc_19B00:
 		pop	si
 		pop	bp
 		retf	6
-marisa_19ABC	endp
+@exatt_add_marisa$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19B06	proc far
+marisa_19B06	proc far
 
 arg_0		= byte ptr  6
 arg_2		= word ptr  8
@@ -27635,14 +22988,14 @@ loc_19B4A:
 		pop	si
 		pop	bp
 		retf	6
-sub_19B06	endp
+marisa_19B06	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19B4F	proc near
+marisa_19B4F	proc near
 
 var_5		= byte ptr -5
 @@top		= word ptr -4
@@ -27753,14 +23106,14 @@ loc_19C32:
 		pop	si
 		leave
 		retn
-sub_19B4F	endp
+marisa_19B4F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_19C36	proc far
+public @exatt_update_marisa$qv
+@exatt_update_marisa$qv proc far
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -27831,7 +23184,7 @@ loc_19C9B:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_19D1C
 ; ---------------------------------------------------------------------------
 
@@ -27880,14 +23233,14 @@ loc_19D25:
 		pop	si
 		leave
 		retf
-marisa_19C36	endp
+@exatt_update_marisa$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_19D31	proc far
+public @exatt_render_marisa$qv
+@exatt_render_marisa$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27905,7 +23258,7 @@ loc_19D47:
 		cmp	byte ptr [si], 0
 		jz	short loc_19D53
 		mov	word_2028A, si
-		call	sub_19B4F
+		call	marisa_19B4F
 
 loc_19D53:
 		inc	di
@@ -27918,14 +23271,14 @@ loc_19D57:
 		pop	si
 		pop	bp
 		retf
-marisa_19D31	endp
+@exatt_render_marisa$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_19D60	proc far
+public @EXATT_ADD_KOTOHIME$QIIUC
+@exatt_add_kotohime$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -27985,14 +23338,14 @@ loc_19DCD:
 		pop	si
 		pop	bp
 		retf	6
-kotohime_19D60	endp
+@exatt_add_kotohime$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19DD3	proc far
+kotohime_19DD3	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -28032,14 +23385,14 @@ loc_19DFA:
 		pop	si
 		pop	bp
 		retf	4
-sub_19DD3	endp
+kotohime_19DD3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19E2A	proc near
+kotohime_19E2A	proc near
 
 var_5		= word ptr -5
 @@x		= word ptr -2
@@ -28132,14 +23485,14 @@ loc_19EF5:
 		pop	si
 		leave
 		retn
-sub_19E2A	endp
+kotohime_19E2A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19EF9	proc near
+kotohime_19EF9	proc near
 		push	bp
 		mov	bp, sp
 		call	snd_se_play pascal, 3
@@ -28154,14 +23507,14 @@ sub_19EF9	proc near
 		call	sub_CDBD
 		pop	bp
 		retn
-sub_19EF9	endp
+kotohime_19EF9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19F1F	proc near
+kotohime_19F1F	proc near
 
 var_1		= byte ptr -1
 
@@ -28172,13 +23525,13 @@ var_1		= byte ptr -1
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D5Ah]
-		mov	byte_23E4E, al
+		mov	_bullet_template.BT_type, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -28193,18 +23546,18 @@ loc_19F5D:
 		mov	[bp+var_1], 0Ch
 
 loc_19F61:
-		mov	byte_23E42, 10h
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		xor	si, si
 		jmp	short loc_19F7F
 ; ---------------------------------------------------------------------------
 
 loc_19F6A:
-		call	sub_17730
-		mov	al, byte_23E42
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+var_1]
-		add	angle_23E43, al
+		add	_bullet_template.BT_angle, al
 		inc	si
 
 loc_19F7F:
@@ -28213,14 +23566,14 @@ loc_19F7F:
 		pop	si
 		leave
 		retn
-sub_19F1F	endp
+kotohime_19F1F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19F87	proc near
+kotohime_19F87	proc near
 
 var_1		= byte ptr -1
 
@@ -28231,14 +23584,14 @@ var_1		= byte ptr -1
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D5Ah]
-		mov	byte_23E4E, al
-		mov	byte_23E42, 10h
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_speed, (1 shl 4)
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
+		mov	_bullet_template.BT_count, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -28258,12 +23611,12 @@ loc_19FCE:
 ; ---------------------------------------------------------------------------
 
 loc_19FD2:
-		call	sub_17730
-		mov	al, byte_23E42
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_speed
 		add	al, 2
-		mov	byte_23E42, al
+		mov	_bullet_template.BT_speed, al
 		mov	al, [bp+var_1]
-		add	angle_23E43, al
+		add	_bullet_template.BT_angle, al
 		inc	si
 
 loc_19FE7:
@@ -28272,14 +23625,14 @@ loc_19FE7:
 		pop	si
 		leave
 		retn
-sub_19F87	endp
+kotohime_19F87	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_19FEF	proc far
+public @exatt_update_kotohime$qv
+@exatt_update_kotohime$qv proc far
 
 @@pid_other		= byte ptr -1
 
@@ -28313,20 +23666,20 @@ loc_1A020:
 		jl	loc_1A0DA
 		cmp	byte ptr [si+12h], 4
 		jnz	short loc_1A07A
-		call	sub_19EF9
+		call	kotohime_19EF9
 		cmp	byte ptr [si+11h], 0
 		jz	loc_1A0D5
-		mov	byte_23E42, 1Ch
+		mov	_bullet_template.BT_speed, ((1 shl 4) + 12)
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, [si+2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [si+4]
-		mov	word_23E40, ax
-		call	sub_19F1F
+		mov	_bullet_template.BT_center.y, ax
+		call	kotohime_19F1F
 		jmp	short loc_1A0D5
 ; ---------------------------------------------------------------------------
 
@@ -28337,34 +23690,34 @@ loc_1A07A:
 		jnz	short loc_1A08B
 
 loc_1A086:
-		call	sub_19EF9
+		call	kotohime_19EF9
 		jmp	short loc_1A0D5
 ; ---------------------------------------------------------------------------
 
 loc_1A08B:
 		cmp	byte ptr [si+12h], 10h
 		jnz	short loc_1A0D5
-		call	sub_19EF9
-		mov	byte_23E42, 18h
+		call	kotohime_19EF9
+		mov	_bullet_template.BT_speed, ((1 shl 4) + 8)
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
-		mov	byte_23E45, 26h ; '&'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.BT_group, BG_RING
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	ax, [si+2]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		mov	ax, [si+4]
-		mov	word_23E40, ax
+		mov	_bullet_template.BT_center.y, ax
 		cmp	byte ptr [si+11h], 0
 		jnz	short loc_1A0CF
-		mov	byte_23E4E, 2
-		mov	byte_23E47, 0Ah
-		call	sub_17730
+		mov	_bullet_template.BT_type, BT_BULLET16_DEFAULT
+		mov	_bullet_template.BT_count, 10
+		call	@bullets_add$qv
 		jmp	short loc_1A0D2
 ; ---------------------------------------------------------------------------
 
 loc_1A0CF:
-		call	sub_19F87
+		call	kotohime_19F87
 
 loc_1A0D2:
 		mov	byte ptr [si], 0
@@ -28377,22 +23730,22 @@ loc_1A0D5:
 loc_1A0DA:
 		mov	ax, [si+14h]
 		add	[si+4],	ax
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, [si+2]
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
-		mov	byte_20E2C, 0
+		call	@hitbox_hittest$qv
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	ax, [si+2]
 		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_1A13A
 ; ---------------------------------------------------------------------------
 
@@ -28428,14 +23781,14 @@ loc_1A143:
 		pop	si
 		leave
 		retf
-kotohime_19FEF	endp
+@exatt_update_kotohime$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1A14E	proc far
+public @exatt_render_kotohime$qv
+@exatt_render_kotohime$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -28452,7 +23805,7 @@ loc_1A164:
 		mov	bx, word_2028A
 		cmp	byte ptr [bx], 0
 		jz	short loc_1A170
-		call	sub_19E2A
+		call	kotohime_19E2A
 
 loc_1A170:
 		inc	si
@@ -28464,47 +23817,10 @@ loc_1A176:
 		pop	si
 		pop	bp
 		retf
-kotohime_1A14E	endp
+@exatt_render_kotohime$qv endp
+P_EXATT_TEXT ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A17E	proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		cmp	[bp+arg_0], 0
-		jnz	short loc_1A199
-		push	si
-		push	di
-		push	0
-		call	p1_1FE6C
-		jmp	short loc_1A1A1
-; ---------------------------------------------------------------------------
-
-loc_1A199:
-		push	si
-		push	di
-		push	1
-		call	p2_1FE78
-
-loc_1A1A1:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_1A17E	endp
-
+main_06_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28607,7 +23923,7 @@ arg_6		= word ptr  0Ah
 		push	ds
 		lea	ax, [si+8]
 		push	ax
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -28631,8 +23947,8 @@ sub_1A1ED	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_1A27E	proc far
+public @EXATT_ADD_REIMU$QIIUC
+@exatt_add_reimu$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -28682,14 +23998,14 @@ loc_1A2C8:
 		pop	si
 		pop	bp
 		retf	6
-reimu_1A27E	endp
+@exatt_add_reimu$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A2CE	proc far
+reimu_1A2CE	proc far
 
 @@angle		= word ptr  6
 arg_2		= word ptr  8
@@ -28745,7 +24061,7 @@ loc_1A324:
 		pop	si
 		pop	bp
 		retf	6
-sub_1A2CE	endp
+reimu_1A2CE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28838,7 +24154,7 @@ sub_1A377	endp
 
 ; Attributes: bp-based frame
 
-sub_1A3C4	proc near
+reimu_1A3C4	proc near
 
 var_5		= byte ptr -5
 @@top		= word ptr -4
@@ -28935,7 +24251,7 @@ loc_1A48D:
 		pop	si
 		leave
 		retn
-sub_1A3C4	endp
+reimu_1A3C4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28958,13 +24274,13 @@ arg_2		= word ptr  6
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_collmap_pid, al
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		sub	_collmap_center.x, (12 shl 4)
 		mov	_collmap_stripe_tile_w, (8 / COLLMAP_TILE_W)
 		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		add	_collmap_center.x, (24 shl 4)
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		pop	bp
 		retn	4
 sub_1A491	endp
@@ -28973,20 +24289,20 @@ sub_1A491	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_1A4E0	proc far
+public @exatt_update_reimu$qv
+@exatt_update_reimu$qv proc far
 
 @@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, 1
 		sub	al, _pid_current
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 9
@@ -29040,7 +24356,7 @@ loc_1A56B:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		call	sub_1A491
@@ -29070,7 +24386,7 @@ loc_1A58A:
 		lea	ax, [si+8]
 		push	ax
 		push	word ptr [bp+@@angle]
-		mov	al, byte_23AF8
+		mov	al, _round_speed
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -29098,19 +24414,19 @@ loc_1A5E5:
 loc_1A5E9:
 		cmp	di, 8
 		jl	loc_1A512
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		pop	di
 		pop	si
 		leave
 		retf
-reimu_1A4E0	endp
+@exatt_update_reimu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_1A5F9	proc far
+public @exatt_render_reimu$qv
+@exatt_render_reimu$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -29128,7 +24444,7 @@ loc_1A60F:
 		cmp	byte ptr [si], 0
 		jz	short loc_1A61E
 		mov	word_2028A, si
-		call	sub_1A3C4
+		call	reimu_1A3C4
 		inc	byte ptr [si+1]
 
 loc_1A61E:
@@ -29142,14 +24458,14 @@ loc_1A622:
 		pop	si
 		pop	bp
 		retf
-reimu_1A5F9	endp
+@exatt_render_reimu$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_1A62B	proc far
+public @EXATT_ADD_MIMA$QIIUC
+@exatt_add_mima$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -29201,14 +24517,14 @@ loc_1A67E:
 		pop	si
 		pop	bp
 		retf	6
-mima_1A62B	endp
+@exatt_add_mima$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A684	proc near
+mima_1A684	proc near
 
 var_5		= word ptr -5
 @@top		= word ptr -4
@@ -29301,14 +24617,14 @@ loc_1A741:
 		pop	si
 		leave
 		retn
-sub_1A684	endp
+mima_1A684	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_1A745	proc far
+public @exatt_update_mima$qv
+@exatt_update_mima$qv proc far
 
 @@pid_other		= byte ptr -7
 var_6		= word ptr -6
@@ -29427,25 +24743,25 @@ loc_1A81C:
 		call	vector2
 
 loc_1A83A:
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	_hitbox_origin_center.x, di
 		mov	ax, [bp+@@center_y]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		or	al, al
 		jz	short loc_1A868
 		sub	word ptr [si+8], 8
 
 loc_1A868:
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	_collmap_center.x, di
 		mov	ax, [bp+@@center_y]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_1A8BE
 ; ---------------------------------------------------------------------------
 
@@ -29490,14 +24806,14 @@ loc_1A8C7:
 		pop	si
 		leave
 		retf
-mima_1A745	endp
+@exatt_update_mima$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_1A8D3	proc far
+public @exatt_render_mima$qv
+@exatt_render_mima$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -29515,7 +24831,7 @@ loc_1A8E9:
 		cmp	byte ptr [si], 0
 		jz	short loc_1A8F5
 		mov	word_2028A, si
-		call	sub_1A684
+		call	mima_1A684
 
 loc_1A8F5:
 		inc	di
@@ -29528,14 +24844,14 @@ loc_1A8F9:
 		pop	si
 		pop	bp
 		retf
-mima_1A8D3	endp
+@exatt_render_mima$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1A902	proc far
+public @EXATT_ADD_YUMEMI$QIIUC
+@exatt_add_yumemi$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -29588,14 +24904,14 @@ loc_1A959:
 		pop	si
 		pop	bp
 		retf	6
-yumemi_1A902	endp
+@exatt_add_yumemi$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A95F	proc far
+yumemi_1A95F	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -29641,14 +24957,14 @@ loc_1A9AB:
 		pop	si
 		pop	bp
 		retf	4
-sub_1A95F	endp
+yumemi_1A95F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A9B0	proc near
+yumemi_1A9B0	proc near
 
 var_A		= word ptr -0Ah
 var_8		= byte ptr -8
@@ -30161,14 +25477,14 @@ loc_1AE2A:
 		pop	si
 		leave
 		retn
-sub_1A9B0	endp
+yumemi_1A9B0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1AE2E	proc far
+public @exatt_update_yumemi$qv
+@exatt_update_yumemi$qv proc far
 
 @@pid_other		= byte ptr -1
 
@@ -30224,9 +25540,9 @@ loc_1AE8B:
 		mov	byte ptr [si], 0
 
 loc_1AE9D:
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	al, [bp+@@pid_other]
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		mov	ax, [si+14h]
 		shl	ax, 3
 		mov	_hitbox_radius.x, ax
@@ -30235,7 +25551,7 @@ loc_1AE9D:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		mov	_hitbox_radius.x, (4 shl 4)
 		mov	ax, [si+14h]
 		shl	ax, 3
@@ -30244,8 +25560,8 @@ loc_1AE9D:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
-		mov	byte_20E2C, 0
+		call	@hitbox_hittest$qv
+		mov	_hitbox_hittest_skip_explosions, 0
 		mov	ax, [si+14h]
 		mov	_collmap_stripe_tile_w, ax
 		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
@@ -30253,7 +25569,7 @@ loc_1AE9D:
 		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
 		mov	_collmap_center.y, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		mov	ax, [si+14h]
 		shl	ax, 2
 		add	ax, [si+4]
@@ -30265,7 +25581,7 @@ loc_1AE9D:
 		idiv	bx
 		add	ax, [si+14h]
 		mov	_collmap_tile_h, ax
-		call	_collmap_set_rect_striped
+		call	@collmap_set_rect_striped$qv
 		jmp	short loc_1AF60
 ; ---------------------------------------------------------------------------
 
@@ -30306,14 +25622,14 @@ loc_1AF67:
 		pop	si
 		leave
 		retf
-yumemi_1AE2E	endp
+@exatt_update_yumemi$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_1AF72	proc far
+public @exatt_render_yumemi$qv
+@exatt_render_yumemi$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -30330,7 +25646,7 @@ loc_1AF88:
 		mov	bx, word_2028A
 		cmp	byte ptr [bx], 0
 		jz	short loc_1AF94
-		call	sub_1A9B0
+		call	yumemi_1A9B0
 
 loc_1AF94:
 		inc	si
@@ -30342,14 +25658,14 @@ loc_1AF9A:
 		pop	si
 		pop	bp
 		retf
-yumemi_1AF72	endp
+@exatt_render_yumemi$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1AFA2	proc far
+public @EXATT_ADD_RIKAKO$QIIUC
+@exatt_add_rikako$qiiuc proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -30405,14 +25721,14 @@ loc_1B000:
 		pop	si
 		pop	bp
 		retf	6
-rikako_1AFA2	endp
+@exatt_add_rikako$qiiuc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B006	proc far
+rikako_1B006	proc far
 
 arg_0		= byte ptr  6
 arg_2		= word ptr  8
@@ -30461,14 +25777,14 @@ loc_1B055:
 		pop	si
 		pop	bp
 		retf	6
-sub_1B006	endp
+rikako_1B006	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B05A	proc near
+rikako_1B05A	proc near
 
 var_5		= word ptr -5
 var_4		= word ptr -4
@@ -30547,14 +25863,14 @@ loc_1B101:
 		pop	si
 		leave
 		retn
-sub_1B05A	endp
+rikako_1B05A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1B105	proc far
+public @exatt_update_rikako$qv
+@exatt_update_rikako$qv proc far
 
 var_7		= byte ptr -7
 var_6		= byte ptr -6
@@ -30575,10 +25891,10 @@ var_6		= byte ptr -6
 		mov	[bp+@@pid_other], al
 		mov	_playfield_clip_negative_radius.x, (-32 shl 4)
 		mov	_playfield_clip_negative_radius.y, (-32 shl 4)
-		mov	byte_20E2C, 1
+		mov	_hitbox_hittest_skip_explosions, 1
 		mov	_hitbox_radius.x, (16 shl 4)
 		mov	_hitbox_radius.y, (16 shl 4)
-		mov	pid_20E3A, al
+		mov	_hitbox_pid, al
 		xor	di, di
 		jmp	loc_1B221
 ; ---------------------------------------------------------------------------
@@ -30648,7 +25964,7 @@ loc_1B1E0:
 		mov	_hitbox_origin_center.x, ax
 		mov	ax, [si+4]
 		mov	_hitbox_origin_center.y, ax
-		call	sub_158F5
+		call	@hitbox_hittest$qv
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		call	sub_1A491
@@ -30684,19 +26000,19 @@ loc_1B21D:
 loc_1B221:
 		cmp	di, 0Eh
 		jl	loc_1B146
-		mov	byte_20E2C, 0
+		mov	_hitbox_hittest_skip_explosions, 0
 		pop	di
 		pop	si
 		leave
 		retf
-rikako_1B105	endp
+@exatt_update_rikako$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1B231	proc far
+public @exatt_render_rikako$qv
+@exatt_render_rikako$qv proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -30714,7 +26030,7 @@ loc_1B247:
 		cmp	byte ptr [si], 0
 		jz	short loc_1B253
 		mov	word_2028A, si
-		call	sub_1B05A
+		call	rikako_1B05A
 
 loc_1B253:
 		inc	di
@@ -30727,7 +26043,7 @@ loc_1B257:
 		pop	si
 		pop	bp
 		retf
-rikako_1B231	endp
+@exatt_render_rikako$qv endp
 
 main_06_TEXT	ends
 
@@ -30901,7 +26217,7 @@ chargeshot_update_chiyuri	endp
 
 ; Attributes: bp-based frame
 
-sub_1B35F	proc near
+chiyuri_chargeshot_1B35F	proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -30935,21 +26251,21 @@ loc_1B37B:
 		pop	si
 		leave
 		retn
-sub_1B35F	endp
+chiyuri_chargeshot_1B35F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B3B0	proc far
+public @chargeshot_hittest_chiyuri$qv
+@chargeshot_hittest_chiyuri$qv proc far
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 30h
 		add	ax, 1F84h
@@ -30982,7 +26298,7 @@ loc_1B3CB:
 		jg	short loc_1B417
 		push	word ptr [si+2]	; center_x
 		push	word ptr [si+4]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -31002,7 +26318,7 @@ loc_1B420:
 		pop	si
 		leave
 		retf
-chiyuri_1B3B0	endp
+@chargeshot_hittest_chiyuri$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31043,7 +26359,7 @@ loc_1B469:
 		mov	bx, word_1F51A
 		cmp	byte ptr [bx], 1
 		jnz	short loc_1B47E
-		call	sub_1B35F
+		call	chiyuri_chargeshot_1B35F
 
 loc_1B47E:
 		inc	si
@@ -31064,27 +26380,27 @@ chargeshot_render_chiyuri	endp
 
 ; Attributes: bp-based frame
 
-sub_1B48C	proc near
+@gauge_pattern_chiyuri$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
 		push	si
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1B4A3
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1B4A3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1B502
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31093,11 +26409,11 @@ loc_1B4A3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -31121,9 +26437,9 @@ loc_1B502:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -31151,7 +26467,7 @@ loc_1B502:
 		add	ax, ax
 		mov	bx, ax
 		add	word ptr [bx+1F54h], 180h
-		add	si, 180h
+		add	si, (24 shl 4)
 		push	si
 		push	0
 		mov	al, [bp+@@pid_other]
@@ -31173,10 +26489,10 @@ loc_1B57C:
 		mov	bx, ax
 		test	byte ptr [bx+1F58h], 1
 		jz	short loc_1B5E3
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -31186,19 +26502,19 @@ loc_1B57C:
 		cwd
 		idiv	bx
 		shl	dl, 2
-		add	dl, 18h
-		mov	byte_23E42, dl
-		mov	byte_23E45, 1
-		mov	angle_23E43, 0
-		mov	word_23E40, 0
-		mov	word_23E3E, si
-		mov	byte_23E50, 0
-		call	sub_17730
-		mov	ax, 1200h
+		add	dl, ((1 shl 4) + 8)
+		mov	_bullet_template.BT_speed, dl
+		mov	_bullet_template.BT_group, BG_1_AIMED
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_center.y, 0
+		mov	_bullet_template.BT_center.x, si
+		mov	_bullet_template.BT_is_animated, 0
+		call	@bullets_add$qv
+		mov	ax, (PLAYFIELD_W shl 4)
 		sub	ax, si
-		mov	word_23E3E, ax
-		call	sub_17730
-		mov	byte_23E50, 1
+		mov	_bullet_template.BT_center.x, ax
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_is_animated, 1
 
 loc_1B5E3:
 		mov	al, _pid_current
@@ -31218,7 +26534,7 @@ loc_1B5E3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -31226,49 +26542,47 @@ loc_1B61E:
 		pop	si
 		leave
 		retn	2
-sub_1B48C	endp
+@gauge_pattern_chiyuri$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B623	proc far
+public gba_gauge_pattern_pellet_chiyuri
+gba_gauge_pattern_pellet_chiyuri proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1B639
-		push	1
-		call	sub_1B48C
+		call	@gauge_pattern_chiyuri$quc pascal, BT_PELLET
 
 loc_1B639:
 		pop	bp
 		retf
-chiyuri_1B623	endp
+gba_gauge_pattern_pellet_chiyuri endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B63B	proc far
+public gba_gauge_pattern_bullet_chiyuri
+gba_gauge_pattern_bullet_chiyuri proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1B651
-		push	2
-		call	sub_1B48C
+		call	@gauge_pattern_chiyuri$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1B651:
 		pop	bp
 		retf
-chiyuri_1B63B	endp
+gba_gauge_pattern_bullet_chiyuri endp
 
 main_07_TEXT	ends
 
@@ -31354,7 +26668,7 @@ chargeshot_add_ellen	endp
 
 ; Attributes: bp-based frame
 
-sub_1B6CA	proc far
+ellen_hyper_1B6CA	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -31401,7 +26715,7 @@ loc_1B71E:
 		pop	si
 		pop	bp
 		retf	4
-sub_1B6CA	endp
+ellen_hyper_1B6CA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31579,7 +26893,7 @@ chargeshot_update_ellen	endp
 
 ; Attributes: bp-based frame
 
-sub_1B8A6	proc near
+ellen_chargeshot_1B8A6	proc near
 
 var_3		= byte ptr -3
 @@sprite_offset		= word ptr -2
@@ -31620,21 +26934,21 @@ arg_0		= word ptr  4
 		pop	si
 		leave
 		retn	4
-sub_1B8A6	endp
+ellen_chargeshot_1B8A6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1B903	proc far
+public @chargeshot_hittest_ellen$qv
+@chargeshot_hittest_ellen$qv proc far
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		mov	[bp+var_1], 0
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2008h
@@ -31660,7 +26974,7 @@ loc_1B91F:
 		jg	short loc_1B968
 		push	word ptr [bx+4]	; center_x
 		push	ax	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -31681,7 +26995,7 @@ loc_1B96E:
 		pop	si
 		leave
 		retf
-ellen_1B903	endp
+@chargeshot_hittest_ellen$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31722,7 +27036,7 @@ loc_1B9BC:
 		mov	bx, word_1F868
 		push	word ptr [bx+4]
 		push	word ptr [bx+6]
-		call	sub_1B8A6
+		call	ellen_chargeshot_1B8A6
 
 loc_1B9D2:
 		inc	si
@@ -31741,26 +27055,26 @@ chargeshot_render_ellen	endp
 
 ; Attributes: bp-based frame
 
-sub_1B9E0	proc near
+@gauge_pattern_ellen$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1B9F6
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1BA77
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31769,7 +27083,7 @@ loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -31783,7 +27097,7 @@ loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 0Eh
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -31793,7 +27107,7 @@ loc_1B9F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 1Ch
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -31808,9 +27122,9 @@ loc_1BA77:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -31825,56 +27139,56 @@ loc_1BA77:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1BC0E
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
-		mov	word_23E40, 80h
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
+		mov	_bullet_template.BT_center.y, (8 shl 4)
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	_pid_other, al
+		mov	_bullet_template.BT_pid, al
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		cmp	word ptr [bx+1FFEh], 0
 		jle	loc_1BB55
-		mov	angle_23E43, 0
-		mov	byte_23E42, 38h ; '8'
-		mov	byte_23E45, 2Ch ; ','
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_speed, ((3 shl 4) + 8)
+		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D58h]
-		mov	byte_23E47, al
-		mov	word_23E40, 0
+		mov	_bullet_template.BT_count, al
+		mov	_bullet_template.BT_center.y, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+1FFEh]
-		mov	word_23E3E, ax
+		mov	_bullet_template.BT_center.x, ax
 		push	ax
 		push	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, 1200h
 		mov	bx, ax
 		sub	dx, [bx+1FFEh]
-		mov	word_23E3E, dx
+		mov	_bullet_template.BT_center.x, dx
 		push	dx
 		push	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
+		call	@bullets_add$qv
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -31891,21 +27205,21 @@ loc_1BB55:
 		cmp	word ptr [bx+2002h], 900h
 		jge	loc_1BBFA
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
-		mov	byte_23E45, 24h ; '$'
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_group, BG_16_RING
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2002h]
-		mov	word_23E40, ax
-		mov	word_23E3E, 0
+		mov	_bullet_template.BT_center.y, ax
+		mov	_bullet_template.BT_center.x, 0
 		push	0
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31916,8 +27230,8 @@ loc_1BB55:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
-		mov	word_23E3E, 1200h
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
 		push	1200h
 		mov	al, _pid_current
 		mov	ah, 0
@@ -31928,9 +27242,9 @@ loc_1BB55:
 		mov	ah, 0
 		push	ax
 		call	sub_CE0C
-		call	sub_17730
+		call	@bullets_add$qv
 		call	@randring_far_next16$qv
-		mov	angle_23E43, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -31943,7 +27257,7 @@ loc_1BBFA:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
 
@@ -31956,49 +27270,47 @@ loc_1BC0E:
 locret_1BC19:
 		leave
 		retn	2
-sub_1B9E0	endp
+@gauge_pattern_ellen$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1BC1D	proc far
+public gba_gauge_pattern_pellet_ellen
+gba_gauge_pattern_pellet_ellen proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1BC33
-		push	1
-		call	sub_1B9E0
+		call	@gauge_pattern_ellen$quc pascal, BT_PELLET
 
 loc_1BC33:
 		pop	bp
 		retf
-ellen_1BC1D	endp
+gba_gauge_pattern_pellet_ellen endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1BC35	proc far
+public gba_gauge_pattern_bullet_ellen
+gba_gauge_pattern_bullet_ellen proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1BC4B
-		push	2
-		call	sub_1B9E0
+		call	@gauge_pattern_ellen$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1BC4B:
 		pop	bp
 		retf
-ellen_1BC35	endp
+gba_gauge_pattern_bullet_ellen endp
 
 main_08_TEXT	ends
 
@@ -32245,7 +27557,7 @@ chargeshot_update_kana	endp
 
 ; Attributes: bp-based frame
 
-sub_1BDF8	proc near
+kana_chargeshot_1BDF8	proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -32289,26 +27601,26 @@ loc_1BE4A:
 		pop	si
 		leave
 		retn
-sub_1BDF8	endp
+kana_chargeshot_1BDF8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1BE52	proc far
+public @chargeshot_hittest_kana$qv
+@chargeshot_hittest_kana$qv proc far
 
 var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+282Eh], 0
 		jz	loc_1BEED
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 0D8h
 		add	ax, 267Ch
@@ -32353,7 +27665,7 @@ loc_1BE81:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+di+1Ah]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -32382,7 +27694,7 @@ loc_1BEEF:
 		pop	si
 		leave
 		retf
-kana_1BE52	endp
+@chargeshot_hittest_kana$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32425,7 +27737,7 @@ loc_1BF40:
 ; ---------------------------------------------------------------------------
 
 loc_1BF4A:
-		call	sub_1BDF8
+		call	kana_chargeshot_1BDF8
 		inc	si
 		add	word_1FD8C, 36h	; '6'
 
@@ -32447,26 +27759,26 @@ chargeshot_render_kana	endp
 
 ; Attributes: bp-based frame
 
-sub_1BF62	proc near
+@gauge_pattern_kana$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1BF78
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1BFF3
 		mov	al, _pid_current
 		mov	ah, 0
@@ -32475,7 +27787,7 @@ loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -32484,7 +27796,7 @@ loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -32499,7 +27811,7 @@ loc_1BF78:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 30h	; '0'
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -32514,9 +27826,9 @@ loc_1BFF3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -32541,27 +27853,27 @@ loc_1BFF3:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	word_23E40, 0
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_center.y, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2676h]
-		mov	word_23E3E, ax
-		mov	byte_23E45, 0
-		mov	angle_23E43, 40h
+		mov	_bullet_template.BT_center.x, ax
+		mov	_bullet_template.BT_group, BG_1
+		mov	_bullet_template.BT_angle, 40h
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
-		call	sub_17730
-		push	word_23E3E
+		mov	_bullet_template.BT_speed, al
+		call	@bullets_add$qv
+		push	_bullet_template.BT_center.x
 		push	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -32573,9 +27885,9 @@ loc_1BFF3:
 		mov	dx, 1200h
 		mov	bx, ax
 		sub	dx, [bx+2676h]
-		mov	word_23E3E, dx
-		call	sub_17730
-		push	word_23E3E
+		mov	_bullet_template.BT_center.x, dx
+		call	@bullets_add$qv
+		push	_bullet_template.BT_center.x
 		push	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -32617,7 +27929,7 @@ loc_1C0F3:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
@@ -32632,49 +27944,47 @@ loc_1C119:
 locret_1C124:
 		leave
 		retn	2
-sub_1BF62	endp
+@gauge_pattern_kana$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1C128	proc far
+public gba_gauge_pattern_pellet_kana
+gba_gauge_pattern_pellet_kana proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C13E
-		push	1
-		call	sub_1BF62
+		call	@gauge_pattern_kana$quc pascal, BT_PELLET
 
 loc_1C13E:
 		pop	bp
 		retf
-kana_1C128	endp
+gba_gauge_pattern_pellet_kana endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1C140	proc far
+public gba_gauge_pattern_bullet_kana
+gba_gauge_pattern_bullet_kana proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C156
-		push	2
-		call	sub_1BF62
+		call	@gauge_pattern_kana$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1C156:
 		pop	bp
 		retf
-kana_1C140	endp
+gba_gauge_pattern_bullet_kana endp
 
 main_09_TEXT	ends
 
@@ -32774,7 +28084,7 @@ chargeshot_update_kotohime	endp
 
 ; Attributes: bp-based frame
 
-sub_1C1E9	proc near
+kotohime_chargeshot_1C1E9	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -32801,17 +28111,17 @@ sub_1C1E9	proc near
 		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		leave
 		retn
-sub_1C1E9	endp
+kotohime_chargeshot_1C1E9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C22E	proc far
+public @chargeshot_hittest_kotohime$qv
+@chargeshot_hittest_kotohime$qv proc far
 		push	bp
 		mov	bp, sp
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		shl	ax, 3
 		add	ax, 28FAh
@@ -32833,12 +28143,12 @@ kotohime_1C22E	proc far
 		jl	short loc_1C291
 		cmp	ax, _hitbox_bottom
 		jg	short loc_1C291
-		mov	byte_26356, 1
+		mov	_ef_onehit, 1
 		mov	ax, _hitbox_origin_topleft.x
 		add	ax, _hitbox_radius.x
 		push	ax	; center_x
 		push	word ptr [bx+4]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -32851,7 +28161,7 @@ loc_1C291:
 		mov	al, 0
 		pop	bp
 		retf
-kotohime_1C22E	endp
+@chargeshot_hittest_kotohime$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32883,7 +28193,7 @@ loc_1C2CF:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1C2DB:
-		call	sub_1C1E9
+		call	kotohime_chargeshot_1C1E9
 
 loc_1C2DE:
 		pop	bp
@@ -32895,25 +28205,25 @@ chargeshot_render_kotohime	endp
 
 ; Attributes: bp-based frame
 
-sub_1C2E0	proc near
+@gauge_pattern_kotohime$quc proc near
 
-var_1		= byte ptr -1
-arg_0		= byte ptr  4
+@@flag_expected	= byte ptr -1
+@@type		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_1], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1C2F6
-		mov	al, [bp+var_1]
-		add	al, 2
-		mov	[bp+var_1], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1C2F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_1]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1C36B
 		mov	al, _pid_current
 		mov	ah, 0
@@ -32922,11 +28232,11 @@ loc_1C2F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -32947,7 +28257,7 @@ loc_1C2F6:
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
-		mov	dl, [bp+arg_0]
+		mov	dl, [bp+@@type]
 		mov	bx, ax
 		mov	[bx+2D5Ah], dl
 		leave
@@ -32958,7 +28268,7 @@ loc_1C36B:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
 		mov	dl, [bp+var_1]
 		mov	dh, 0
@@ -32975,7 +28285,7 @@ loc_1C36B:
 		add	ax, 400h
 		push	ax
 		push	0
-		call	sub_19DD3
+		call	kotohime_19DD3
 		jmp	short loc_1C3CB
 ; ---------------------------------------------------------------------------
 
@@ -32988,7 +28298,7 @@ loc_1C3A5:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
@@ -33003,49 +28313,47 @@ loc_1C3CB:
 locret_1C3D6:
 		leave
 		retn	2
-sub_1C2E0	endp
+@gauge_pattern_kotohime$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C3DA	proc far
+public gba_gauge_pattern_pellet_kotohime
+gba_gauge_pattern_pellet_kotohime proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C3F0
-		push	1
-		call	sub_1C2E0
+		call	@gauge_pattern_kotohime$quc pascal, BT_PELLET
 
 loc_1C3F0:
 		pop	bp
 		retf
-kotohime_1C3DA	endp
+gba_gauge_pattern_pellet_kotohime endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C3F2	proc far
+public gba_gauge_pattern_bullet_kotohime
+gba_gauge_pattern_bullet_kotohime proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C408
-		push	2
-		call	sub_1C2E0
+		call	@gauge_pattern_kotohime$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1C408:
 		pop	bp
 		retf
-kotohime_1C3F2	endp
+gba_gauge_pattern_bullet_kotohime endp
 
 main_10_TEXT	ends
 
@@ -33164,7 +28472,7 @@ rikako_1C497	endp
 
 ; Attributes: bp-based frame
 
-sub_1C4B4	proc far
+rikako_hyper_1C4B4	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_PID_current
@@ -33173,7 +28481,7 @@ sub_1C4B4	proc far
 		mov	byte ptr [bx+3928h], 0
 		pop	bp
 		retf
-sub_1C4B4	endp
+rikako_hyper_1C4B4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33350,7 +28658,7 @@ chargeshot_update_rikako	endp
 
 ; Attributes: bp-based frame
 
-sub_1C62A	proc near
+rikako_chargeshot_1C62A	proc near
 
 @@sprite_offset		= word ptr -6
 @@top		= word ptr -4
@@ -33376,21 +28684,21 @@ sub_1C62A	proc near
 		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		leave
 		retn
-sub_1C62A	endp
+rikako_chargeshot_1C62A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C66B	proc far
+public @chargeshot_hittest_rikako$qv
+@chargeshot_hittest_rikako$qv proc far
 
 var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+3928h], 0
@@ -33401,7 +28709,7 @@ var_2		= word ptr -2
 
 loc_1C683:
 		mov	[bp+var_2], 0
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		imul	ax, 18h
 		add	ax, 38F6h
@@ -33429,7 +28737,7 @@ loc_1C699:
 		jg	short loc_1C6D8
 		push	word ptr [si]	; center_x
 		push	word ptr [si+2]	; center_y
-		mov	al, pid_20E3A
+		mov	al, _hitbox_pid
 		mov	ah, 0
 		push	ax	; pid
 		call	@hitcircles_enemy_add$qiii
@@ -33449,7 +28757,7 @@ loc_1C6E4:
 		pop	si
 		leave
 		retf
-rikako_1C66B	endp
+@chargeshot_hittest_rikako$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33489,7 +28797,7 @@ loc_1C734:
 ; ---------------------------------------------------------------------------
 
 loc_1C738:
-		call	sub_1C62A
+		call	rikako_chargeshot_1C62A
 		inc	si
 		add	word_20E86, 6
 
@@ -33508,26 +28816,26 @@ chargeshot_render_rikako	endp
 
 ; Attributes: bp-based frame
 
-sub_1C749	proc near
+@gauge_pattern_rikako$quc proc near
 
-var_2		= byte ptr -2
+@@flag_expected	= byte ptr -2
 @@pid_other		= byte ptr -1
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 
 		enter	2, 0
-		mov	[bp+var_2], 1
-		cmp	[bp+arg_0], 2
+		mov	[bp+@@flag_expected], GBAF_GAUGE_PELLET_INIT
+		cmp	[bp+@@type], BT_BULLET16_DEFAULT
 		jnz	short loc_1C75F
-		mov	al, [bp+var_2]
-		add	al, 2
-		mov	[bp+var_2], al
+		mov	al, [bp+@@flag_expected]
+		add	al, GBAF_PELLET_TO_BULLET
+		mov	[bp+@@flag_expected], al
 
 loc_1C75F:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
-		cmp	al, [bp+var_2]
+		mov	al, _gba_flag_active[bx]
+		cmp	al, [bp+@@flag_expected]
 		jnz	short loc_1C7CA
 		mov	al, _pid_current
 		mov	ah, 0
@@ -33536,11 +28844,11 @@ loc_1C75F:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+2D54h]
+		inc	_gba_flag_active[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -33555,7 +28863,7 @@ loc_1C75F:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, _gauge_attack_level[bx]
+		mov	al, _gba_gauge_level[bx]
 		add	al, 30h	; '0'
 		mov	dl, _pid_current
 		mov	dh, 0
@@ -33570,9 +28878,9 @@ loc_1C7CA:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+2D54h]
+		mov	al, _gba_flag_active[bx]
 		mov	ah, 0
-		mov	dl, [bp+var_2]
+		mov	dl, [bp+@@flag_expected]
 		mov	dh, 0
 		inc	dx
 		cmp	ax, dx
@@ -33597,12 +28905,12 @@ loc_1C7CA:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	al, [bp+arg_0]
-		mov	byte_23E4E, al
+		mov	al, [bp+@@type]
+		mov	_bullet_template.BT_type, al
 		mov	al, [bp+@@pid_other]
-		mov	_pid_other, al
-		mov	word_23E40, 0
-		mov	byte_23E45, 1
+		mov	_bullet_template.BT_pid, al
+		mov	_bullet_template.BT_center.y, 0
+		mov	_bullet_template.BT_group, BG_1_AIMED
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -33613,23 +28921,23 @@ loc_1C7CA:
 		idiv	bx
 		mov	dl, 20h	; ' '
 		sub	dl, al
-		mov	angle_23E43, dl
+		mov	_bullet_template.BT_angle, dl
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte_23E42, al
-		mov	word_23E3E, 0
-		call	sub_17730
-		mov	word_23E3E, 1200h
-		call	sub_17730
-		mov	al, angle_23E43
+		mov	_bullet_template.BT_speed, al
+		mov	_bullet_template.BT_center.x, 0
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_center.x, (PLAYFIELD_W shl 4)
+		call	@bullets_add$qv
+		mov	al, _bullet_template.BT_angle
 		neg	al
-		mov	angle_23E43, al
-		call	sub_17730
-		mov	word_23E3E, 0
-		call	sub_17730
+		mov	_bullet_template.BT_angle, al
+		call	@bullets_add$qv
+		mov	_bullet_template.BT_center.x, 0
+		call	@bullets_add$qv
 		pushd	0
 		mov	al, [bp+@@pid_other]
 		mov	ah, 0
@@ -33650,7 +28958,7 @@ loc_1C8A5:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+2D54h], 0
+		mov	_gba_flag_active[bx], GBAF_NONE
 		mov	al, 1
 		sub	al, _pid_current
 		push	ax
@@ -33665,53 +28973,53 @@ loc_1C8CB:
 locret_1C8D6:
 		leave
 		retn	2
-sub_1C749	endp
+@gauge_pattern_rikako$quc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C8DA	proc far
+public gba_gauge_pattern_pellet_rikako
+gba_gauge_pattern_pellet_rikako	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C8F0
-		push	1
-		call	sub_1C749
+		call	@gauge_pattern_rikako$quc pascal, BT_PELLET
 
 loc_1C8F0:
 		pop	bp
 		retf
-rikako_1C8DA	endp
+gba_gauge_pattern_pellet_rikako endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C8F2	proc far
+public gba_gauge_pattern_bullet_rikako
+gba_gauge_pattern_bullet_rikako	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+2D54h], 0
+		cmp	_gba_flag_active[bx], GBAF_NONE
 		jz	short loc_1C908
-		push	2
-		call	sub_1C749
+		call	@gauge_pattern_rikako$quc pascal, BT_BULLET16_DEFAULT
 
 loc_1C908:
 		pop	bp
 		retf
-rikako_1C8F2	endp
+gba_gauge_pattern_bullet_rikako endp
 
 main_11_TEXT	ends
 
 	.data
+
+PID_NONE = -1
 
 		db  64h	; d
 		db    0
@@ -33871,9 +29179,10 @@ include th03/snd/se_state[data].asm
 include th02/formats/pfopen[data].asm
 include th03/snd/se_priority[data].asm
 include th03/formats/cfg_lres[data].asm
-		db 0
-byte_1DB9E	db 0FFh
-		db 0
+	evendata
+public _gba_boss_launched_by
+_gba_boss_launched_by	db PID_NONE
+	evendata
 a00ch_bf2	db '00ch.bf2',0
 		db 0
 		db    0
@@ -33910,8 +29219,9 @@ a00ch_bf2	db '00ch.bf2',0
 		db 0FCh
 		db 0FFh
 		db 0FEh
-aEnedat_dat	db 'ENEDAT.DAT',0
-		db 0
+public _ENEDAT_DAT
+_ENEDAT_DAT	db 'ENEDAT.DAT',0
+	evendata
 angles_1DBD8	db 192, 182, 202, 192, 176, 208
 		db    0
 		db    4
@@ -34189,14 +29499,18 @@ angles_1DBD8	db 192, 182, 202, 192, 176, 208
 		db  40h
 		db 0EBh
 		db  95h
-		db    8
-		db  0Eh
-		db    2
-		db  14h
-		db    0
-		db    0
-byte_1DCF8	db 0
-byte_1DCF9	db 0
+yumemi_group_1DCF2 label byte
+	db BG_3_SPREAD_NARROW
+	db BG_4_SPREAD_NARROW
+	db BG_2_SPREAD_NARROW
+	db BG_5_SPREAD_NARROW
+	db BG_1
+	evendata
+
+public _warning_flag
+_warning_flag label byte
+warning_flag_p1	db WF_NONE
+warning_flag_p2	db WF_NONE
 gbWARNING_1	db 50h,	51h, 52h, 53h, 54h, 55h, 56h, 57h, 58h, 59h, 5Ah
 		db 5Bh,	5Ch, 5Dh, 5Eh, 5Fh, 0
 gbWARNING_2	db 60h,	61h, 62h, 63h, 64h, 65h, 66h, 67h, 68h, 69h, 6Ah
@@ -34212,46 +29526,41 @@ gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL db 8Dh, 8Eh, 8Fh, 92h, 93h, 94h, 95h
 asc_1DD5A	db '                                ',0
 		db 0
 include th03/main/player/combo[data].asm
-		db 0
-		db  86h
-		db  20h
-		db  0Ch
-		db  23h	; #
-		db 0A2h
-		db  20h
-		db  18h
-		db  28h	; (
-		db  20h
-		db  28h	; (
-		db  24h	; $
-		db  28h	; (
-		db  20h
-		db  2Dh	; -
-		db  24h	; $
-		db  2Dh	; -
-		db 0A8h	; ®
-		db  20h
-		db  28h	; (
-		db  28h	; (
-		db 0A8h	; ®
-		db  2Fh	; /
-		db 0AEh
-		db  34h	; 4
-word_1DDA6	dw 20AEh
-		db 0AEh
-		db  2Ah	; *
-		db 0B6h
-		db  20h
-word_1DDAC	dw 2AB6h
-		db    0
-		db  32h	; 2
-		db  0Ah
-		db  32h	; 2
-		db  14h
-		db  32h	; 2
-		db  1Eh
-		db  32h	; 2
-include th03/main/player/hitcombo[data].asm
+	evendata
+
+EXPLOSION_CELS = 4
+
+public _SO_ENEMIES, _SO_EXPLOSIONS
+label _SO_ENEMIES word
+	dw ((104 * ROW_SIZE) + ( 48 / BYTE_DOTS))	; 16x16
+	dw ((112 * ROW_SIZE) + ( 96 / BYTE_DOTS))	; 32x32
+	dw ((104 * ROW_SIZE) + (272 / BYTE_DOTS))	; 48x48
+	dw ((128 * ROW_SIZE) + (192 / BYTE_DOTS))	; 64x64
+label _SO_EXPLOSIONS word
+label _SO_EXPLOSION_32X32 word
+	dw ((128 * ROW_SIZE) + (256 / BYTE_DOTS))
+	dw ((128 * ROW_SIZE) + (288 / BYTE_DOTS))
+	dw ((144 * ROW_SIZE) + (256 / BYTE_DOTS))
+	dw ((144 * ROW_SIZE) + (288 / BYTE_DOTS))
+label _SO_EXPLOSION_48X48 word
+	dw ((104 * ROW_SIZE) + (320 / BYTE_DOTS))
+	dw ((128 * ROW_SIZE) + (320 / BYTE_DOTS))
+	dw ((152 * ROW_SIZE) + (320 / BYTE_DOTS))
+	dw ((168 * ROW_SIZE) + (368 / BYTE_DOTS))
+label _SO_EXPLOSION_64X64 word
+	dw ((104 * ROW_SIZE) + (368 / BYTE_DOTS))
+	dw ((136 * ROW_SIZE) + (368 / BYTE_DOTS))
+	dw ((104 * ROW_SIZE) + (432 / BYTE_DOTS))
+	dw ((136 * ROW_SIZE) + (432 / BYTE_DOTS))
+label _SO_EXPLOSION_80X80 word
+	dw ((160 * ROW_SIZE) + (  0 / BYTE_DOTS))
+	dw ((160 * ROW_SIZE) + ( 80 / BYTE_DOTS))
+	dw ((160 * ROW_SIZE) + (160 / BYTE_DOTS))
+	dw ((160 * ROW_SIZE) + (240 / BYTE_DOTS))
+
+public _chain_ring_p
+_chain_ring_p	db	PLAYER_COUNT dup(0)
+
 include th03/sprites/score.asp
 include th03/main/5_powers_of_10[data].asm
 		db  6Ch	; l
@@ -34319,522 +29628,10 @@ aTOTAL	db 'Å@Å@Å@ÇsÇnÇsÇ`ÇkÅ@Å@Å@Å@Å@',0
 aWINNER_BONUS	db 'Å@Å@ÇvÇhÇmÇmÇdÇqÅ@ÇaÇnÇmÇtÇrÅ@Å@',0
 aALL_CLEAR	db 'Å@Å@Å@Ç`ÇkÇkÅ@ÇbÇkÇdÇ`ÇqÅIÅIÅ@Å@',0
 aPLAYER_REM	db 'écÇËêlêîÅ@Å@Å@Å@Å@Å@Å@Å@Å~',0
-		db 0
-		db '<',0
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db    0
-		db  7Fh
-		db  80h
-		db    0
-		db    0
-		db  7Fh
-		db  80h
-		db    0
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db    0
-		db  3Fh	; ?
-		db 0C0h
-		db    0
-		db    0
-		db  3Fh	; ?
-		db 0C0h
-		db    0
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db    0
-		db    7
-		db  80h
-		db    0
-		db    0
-		db  1Fh
-		db 0E0h
-		db    0
-		db    0
-		db  1Fh
-		db 0E0h
-		db    0
-		db    0
-		db    7
-		db  80h
-		db    0
-		db    0
-		db    3
-		db 0C0h
-		db    0
-		db    0
-		db  0Fh
-		db 0F0h
-		db    0
-		db    0
-		db  0Fh
-		db 0F0h
-		db    0
-		db    0
-		db    3
-		db 0C0h
-		db    0
-		db    0
-		db    1
-		db 0E0h
-		db    0
-		db    0
-		db    7
-		db 0F8h
-		db    0
-		db    0
-		db    7
-		db 0F8h
-		db    0
-		db    0
-		db    1
-		db 0E0h
-		db    0
-		db    0
-		db    0
-		db 0F0h
-		db    0
-		db    0
-		db    3
-		db 0FCh
-		db    0
-		db    0
-		db    3
-		db 0FCh
-		db    0
-		db    0
-		db    0
-		db 0F0h
-		db    0
-		db    0
-		db    0
-		db  78h	; x
-		db    0
-		db    0
-		db    1
-		db 0FEh
-		db    0
-		db    0
-		db    1
-		db 0FEh
-		db    0
-		db    0
-		db    0
-		db  78h	; x
-		db    0
-		db    0
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db    0
-		db  7Fh
-		db  80h
-		db    0
-		db    0
-		db  7Fh
-		db  80h
-		db    0
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db    0
-		db  3Fh	; ?
-		db 0C0h
-		db    0
-		db    0
-		db  3Fh	; ?
-		db 0C0h
-		db    0
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db    0
-		db    7
-		db  80h
-		db    0
-		db    0
-		db  1Fh
-		db 0E0h
-		db    0
-		db    0
-		db  1Fh
-		db 0E0h
-		db    0
-		db    0
-		db    7
-		db  80h
-		db    0
-		db    0
-		db    3
-		db 0C0h
-		db    0
-		db    0
-		db  0Fh
-		db 0F0h
-		db    0
-		db    0
-		db  0Fh
-		db 0F0h
-		db    0
-		db    0
-		db    3
-		db 0C0h
-		db    0
-		db    0
-		db    1
-		db 0E0h
-		db    0
-		db    0
-		db    7
-		db 0F8h
-		db    0
-		db    0
-		db    7
-		db 0F8h
-		db    0
-		db    0
-		db    1
-		db 0E0h
-		db    0
-		db    0
-		db    0
-		db 0F0h
-		db    0
-		db    0
-		db    3
-		db 0FCh
-		db    0
-		db    0
-		db    3
-		db 0FCh
-		db    0
-		db    0
-		db    0
-		db 0F0h
-		db    0
-		db    0
-		db    0
-		db  78h	; x
-		db    0
-		db    0
-		db    1
-		db 0FEh
-		db    0
-		db    0
-		db    1
-		db 0FEh
-		db    0
-		db    0
-		db    0
-		db  78h	; x
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db  81h
-		db    0
-		db    0
-		db    0
-		db  81h
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db    0
-		db    0
-		db  40h
-		db  80h
-		db    0
-		db    0
-		db  40h
-		db  80h
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db    0
-		db    0
-		db    6
-		db    0
-		db    0
-		db    0
-		db  20h
-		db  40h
-		db    0
-		db    0
-		db  20h
-		db  40h
-		db    0
-		db    0
-		db    6
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
-		db  10h
-		db  20h
-		db    0
-		db    0
-		db  10h
-		db  20h
-		db    0
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
-		db    1
-		db  80h
-		db    0
-		db    0
-		db    8
-		db  10h
-		db    0
-		db    0
-		db    8
-		db  10h
-		db    0
-		db    0
-		db    1
-		db  80h
-		db    0
-		db    0
-		db    0
-		db 0C0h
-		db    0
-		db    0
-		db    4
-		db    8
-		db    0
-		db    0
-		db    4
-		db    8
-		db    0
-		db    0
-		db    0
-		db 0C0h
-		db    0
-		db    0
-		db    0
-		db  60h
-		db    0
-		db    0
-		db    2
-		db    4
-		db    0
-		db    0
-		db    1
-		db    4
-		db    0
-		db    0
-		db    0
-		db  60h
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    0
-		db    0
-		db    1
-		db    2
-		db    0
-		db    0
-		db    1
-		db    2
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db  81h
-		db    0
-		db    0
-		db    0
-		db  81h
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db    0
-		db    0
-		db  40h
-		db  80h
-		db    0
-		db    0
-		db  40h
-		db  80h
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db    0
-		db    0
-		db    6
-		db    0
-		db    0
-		db    0
-		db  20h
-		db  40h
-		db    0
-		db    0
-		db  20h
-		db  40h
-		db    0
-		db    0
-		db    6
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
-		db  10h
-		db  20h
-		db    0
-		db    0
-		db  10h
-		db  20h
-		db    0
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
-		db    1
-		db  80h
-		db    0
-		db    0
-		db    8
-		db  10h
-		db    0
-		db    0
-		db    8
-		db  10h
-		db    0
-		db    0
-		db    1
-		db  80h
-		db    0
-		db    0
-		db    0
-		db 0C0h
-		db    0
-		db    0
-		db    4
-		db    8
-		db    0
-		db    0
-		db    4
-		db    8
-		db    0
-		db    0
-		db    0
-		db 0C0h
-		db    0
-		db    0
-		db    0
-		db  60h
-		db    0
-		db    0
-		db    2
-		db    4
-		db    0
-		db    0
-		db    1
-		db    4
-		db    0
-		db    0
-		db    0
-		db  60h
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    0
-		db    0
-		db    1
-		db    2
-		db    0
-		db    0
-		db    1
-		db    2
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    0
+	evendata
+include th03/sprites/pellet.asp
 		db    1
 		db    0
-byte_1E14C	db 0
-		db 0
 
 	.data?
 
@@ -34873,10 +29670,15 @@ word_1F326	dw ?
 word_1F328	dw ?
 word_1F32A	dw ?
 word_1F32C	dw ?
-p1_1F32E	dd ?
-p2_1F332	dd ?
-p1_1F336	dd ?
-p2_1F33A	dd ?
+
+public _gba_boss_update, _gba_boss_render
+_gba_boss_update label
+gba_boss_update_p1	dd ?
+gba_boss_update_p2	dd ?
+_gba_boss_render label
+gba_boss_render_p1	dd ?
+gba_boss_render_p2	dd ?
+
 word_1F33E	dw ?
 word_1F340	dw ?
 point_1F342	Point <?>
@@ -34895,8 +29697,8 @@ byte_1F355	db ?
 word_1F356	dw ?
 byte_1F358	db ?
 		db 69 dup(?)
-public _boss_attack_level
-_boss_attack_level	db ?
+public _gba_boss_level
+_gba_boss_level	db ?
 byte_1F39F	db ?
 byte_1F3A0	db ?
 byte_1F3A1	db ?
@@ -34909,19 +29711,27 @@ word_1F3B0	dw ?
 include th02/math/randring[bss].asm
 		db 102 dup(?)
 word_1F51A	dw ?
-byte_1F51C	db ?
-byte_1F51D	db ?
-word_1F51E	dw ?
-byte_1F520	db ?
-		db ?
-word_1F522	dw ?
-		db 48 dup(?)
-word_1F554	dw ?
-word_1F556	dw ?
-word_1F558	dw ?
-byte_1F55A	db ?
-byte_1F55B	db ?
-byte_1F55C	db ?
+
+public _enemy_formation_type, _enemy_formation_i, _enedat_2, _enemy_speed
+public _enedat
+_enemy_formation_type	db ?
+_enemy_formation_i	db ?
+_enedat_2	dw ?
+_enemy_speed	db ?
+	evendata
+_enedat	dw ?
+
+FORMATIONS_MAX = 24
+
+public _formation_enemy_count, _formation_scripts, _formation_type_ring
+public _formation_pos_type_ring, _formation_p, _formation_count
+_formation_enemy_count  	db (FORMATIONS_MAX * 2) dup(?)
+_formation_scripts      	dw ?
+_formation_type_ring    	dw ?
+_formation_pos_type_ring	dw ?
+_formation_p            	db PLAYER_COUNT dup(?)
+_formation_count        	db ?
+
 		db 779 dup(?)
 word_1F868	dw ?
 		db 720 dup(?)
@@ -34979,28 +29789,50 @@ byte_1FE5A	db ?
 byte_1FE62	db ?
 		db 7 dup(?)
 word_1FE6A	dw ?
-p1_1FE6C	dd ?
-p1_1FE70	dd ?
-p1_1FE74	dd ?
-p2_1FE78	dd ?
-p2_1FE7C	dd ?
-p2_1FE80	dd ?
+
+public _exatt_funcs
+_exatt_funcs label byte
+exatt_add_p1	dd ?
+exatt_update_p1	dd ?
+exatt_render_p1	dd ?
+exatt_add_p2	dd ?
+exatt_update_p2	dd ?
+exatt_render_p2	dd ?
+
 		db 4 dup(?)
 public _pid_current
 _pid_current	db ?
 	evendata
 		db 1024 dup(?)
 word_2028A	dw ?
-include th03/main/player/chargeshot[bss].asm
-p1_2029C	dd ?
-p2_202A0	dd ?
-p1_202A4	dd ?
-p2_202A8	dd ?
-p1_202AC	dd ?
-p2_202B0	dd ?
-		db 2 dup(?)
-public _gauge_attack_level
-_gauge_attack_level	db PLAYER_COUNT dup(?)
+
+public _chargeshot_update, _chargeshot_render, _chargeshot_hittest
+_chargeshot_update label dword
+_chargeshot_update_p1	dd ?
+_chargeshot_update_p2	dd ?
+_chargeshot_render label dword
+_chargeshot_render_p1	dd ?
+_chargeshot_render_p2	dd ?
+_chargeshot_hittest label dword
+chargeshot_hittest_p1	dd ?
+chargeshot_hittest_p2	dd ?
+
+GBAF_NONE = 0
+GBAF_GAUGE_PELLET_INIT = 1
+GBAF_GAUGE_BULLET_INIT = 3
+GBAF_BOSS = 5
+GBAF_PELLET_TO_BULLET = (GBAF_GAUGE_BULLET_INIT - GBAF_GAUGE_PELLET_INIT)
+
+public _gba_gauge_pattern_pellet, _gba_gauge_pattern_bullet
+public _gba_flag_active, _gba_gauge_level
+_gba_gauge_pattern_pellet label dword
+gba_gauge_pattern_pellet_p1	dd ?
+gba_gauge_pattern_pellet_p2	dd ?
+_gba_gauge_pattern_bullet label dword
+gba_gauge_pattern_bullet_p1	dd ?
+gba_gauge_pattern_bullet_p2	dd ?
+_gba_flag_active db PLAYER_COUNT dup(?)
+_gba_gauge_level	db PLAYER_COUNT dup(?)
 		db 786 dup(?)
 word_205CA	dw ?
 byte_205CC	db ?
@@ -35013,8 +29845,15 @@ public _bomb_frame
 _bomb_frame	db PLAYER_COUNT dup(?)
 		db 512 dup(?)
 word_207E0	dw ?
-byte_207E2	db ?
-byte_207E3	db ?
+
+HSF_DONE = 0
+HSF_INIT = 1
+HSF_ACTIVE = 2
+
+public _hud_start_flag, _round_id
+_hud_start_flag	db ?
+_round_id	db ?
+
 		db 150 dup(?)
 word_2087A	dw ?
 		db 1128 dup(?)
@@ -35031,9 +29870,10 @@ byte_20E28	db ?
 byte_20E29	db ?
 byte_20E2A	db ?
 angle_20E2B	db ?
-byte_20E2C	db ?
-		db ?
-public _hitbox
+
+public _hitbox_hittest_skip_explosions, _hitbox
+_hitbox_hittest_skip_explosions	db ?
+	evendata
 _hitbox label byte
 _hitbox_origin_center label Point
 _hitbox_origin_topleft label Point
@@ -35041,9 +29881,15 @@ _hitbox_origin_topleft label Point
 _hitbox_radius	Point <?>
 _hitbox_right 	dw ?
 _hitbox_bottom	dw ?
-pid_20E3A	db ?
+_hitbox_pid	db ?
 	evendata
-byte_20E3C	db ?
+
+DF_NONE = 0
+DF_EXPLODE = 1
+DF_BANNER = 2
+
+public _defeat_flag
+_defeat_flag	db ?
 byte_20E3D	db ?
 word_20E3E	dw ?
 word_20E40	dw ?
@@ -35063,7 +29909,9 @@ word_20E52	dw ?
 word_20E86	dw ?
 byte_20E88	db ?
 byte_20E89	db ?
-		db 20 dup(?)
+		db 18 dup(?)
+public _gba_flag_next
+_gba_flag_next	db PLAYER_COUNT dup(?)
 include th03/main/player/combo[bss].asm
 		db 120 dup(?)
 byte_20F1E	db ?
@@ -35077,33 +29925,90 @@ angle_2142C	db ?
 word_2142E	dw ?
 word_21430	dw ?
 		db 2 dup(?)
-word_21434	dw ?
-		db 298 dup(?)
-word_21560	dw ?
-word_21562	dw ?
-dword_21564	dd ?
-word_21568	dw ?
-word_2156A	dw ?
-		db 256 dup(?)
-byte_2166C	db ?
+public _combo_points_for_boss_attack
+_combo_points_for_boss_attack	dw ?
+
+EFF_FREE = 0
+EFF_EXPLOSION_IGNORING_ENEMIES = 9
+EFF_EXPLOSION_HITTING_ENEMIES = 10
+
+efe_t struct
+	EFE_flag                         	db ?
+	EFE_frame                        	db ?
+	EFE_center                       	Point <?>
+	EFE_explosion_max_enemy_hits_half	db ?
 		db ?
-word_2166E	dw ?
-word_21670	dw ?
-byte_21672	db ?
-byte_21673	db ?
-		db 2498 dup(?)
-byte_22036	db ?
-byte_22037	db ?
-		db 2 dup(?)
-byte_2203A	db ?
-byte_2203B	db ?
-word_2203C	dw ?
-include th03/main/player/hitcombo[bss].asm
-		db 100 dup(?)
-hitcombo_slot_220C2	db ?
-byte_220C3	db ?
+	EFE_pid                          	db ?
+	EFE_size_pixels                  	db ?
+		db 18 dup (?)
+	EFE_chain_slot                   	db ?
+		db 19 dup(?)
+efe_t ends
+
+EF_RUNNING_SPAWNED = 1
+
+enemy_t struct
+	ENEMY_flag           	db ?
+	ENEMY_frame          	db ?
+	ENEMY_center         	Point <?>
+	ENEMY_size_words     	db ?
+	ENEMY_hp             	db ?
+	ENEMY_pid            	db ?
+	ENEMY_size_pixels    	db ?
+	ENEMY_script_ip      	dw ?
+	ENEMY_script_op_frame	dw ?
+	ENEMY_script_base    	dw ?
+	ENEMY_velocity       	Point <?>
+		db 4 dup (?)
+	ENEMY_angle_wide label word
+	ENEMY_angle_fine     	db ?
+	ENEMY_angle_coarse   	db ?
+	ENEMY_angle_speed    	db ?
+		db ?
+	ENEMY_chain_slot     	db ?
+	ENEMY_formation_type 	db ?
+	ENEMY_formation_i    	db ?
+	ENEMY_speed          	db ?
+	ENEMY_loop_i         	db ?
+	ENEMY_pos_type       	db ?
+		db 14 dup(?)
+enemy_t ends
+
+EFE_COUNT = 64
+ENEMY_COUNT = 40
+
+public _efes, _enemies_alive, _boss_panic_fired_in_current_comb
+public _explosion_hittest_against, _explosion_collision_in_last_hitt, _efe_p
+label enemies enemy_t
+_efes	efe_t EFE_COUNT dup(<?>)
+_enemies_alive	db PLAYER_COUNT dup(?)
+_boss_panic_fired_in_current_comb db PLAYER_COUNT dup(?)
+_explosion_hittest_against	db ?
+_explosion_collision_in_last_hitt	db ?
+_efe_p	dw ?
+
+CHAIN_RING_SIZE = 16
+
+chains_t struc
+	CHAIN_hits                    	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+	CHAIN_pellet_or_fireball_value	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+	CHAIN_charge_fireball         	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+	CHAIN_charge_exatt            	db PLAYER_COUNT dup (CHAIN_RING_SIZE dup(?))
+chains_t ends
+
+public _chains, _explosion_collision_chain_slot
+public _enemy_killed_in_previous_hittest
+_chains	chains_t <?>
+		dd ?
+_explosion_collision_chain_slot	db ?
+_enemy_killed_in_previous_hittest	db ?
 include th03/main/player/score[bss].asm
-byte_220DC	db ?
+
+EXTENDS_MAX = 2
+EXTENDS_DISABLE = 255
+
+public _extends_gained
+_extends_gained	db ?
 		db 3 dup(?)
 byte_220E0	db ?
 		db 5 dup(?)
@@ -35121,14 +30026,21 @@ _collmap_bottomright	Point <?>
 _collmap_pid	db ?
 		db 5 dup(?)
 _collmap	db (PLAYER_COUNT * COLLMAP_SIZE) dup(?)
-public _bomb_state, _player_speed_base, _player_velocity
-_bomb_state	db PLAYER_COUNT dup(?)
+
+BOMB_FRAMES = 180
+
+BF_INACTIVE = 0
+BF_PREPARING = 1
+BF_ACTIVE = 2
+
+public _bomb_flag, _player_speed_base, _player_velocity
+_bomb_flag	db PLAYER_COUNT dup(?)
 _player_speed_base	speed_t <?>
 _player_velocity  	SPPoint8 <?>
-public _player_cur, _cpu_hit_damage_additional, _damage_all_enemies_on
+public _player_cur, _cpu_hit_damage_additional, _damage_all_on
 _player_cur	dw ?
 _cpu_hit_damage_additional	db ?
-_damage_all_enemies_on	db PLAYFIELD_COUNT dup(?)
+_damage_all_on	db PLAYFIELD_COUNT dup(?)
 		db ?
 include th02/hardware/pages[bss].asm
 public _pid
@@ -35136,10 +30048,13 @@ _pid_PID_current  	label byte
 _pid_PID_so_attack	label byte
 _pid	db ?
 	evendata
-public _round_frame, _round_or_result_frame
+
+ROUND_SPEED_MAX = ((8 shl 4) - 1)
+
+public _round_frame, _round_or_result_frame, _round_speed
 _round_frame	dd ?
 _round_or_result_frame	dw ?
-byte_23AF8	db ?
+_round_speed	db ?
 byte_23AF9	db ?
 byte_23AFA	db ?
 		db ?
@@ -35160,39 +30075,43 @@ byte_23DE5	db ?
 byte_23DE6	db ?
 byte_23DE7	db ?
 byte_23DE8	db ?
-byte_23DE9	db ?
+bullet_type_23DE9	db ?
 score_23DEA	dw ?
 word_23DEC	dw ?
 word_23DEE	dw ?
 score_23DF0	dd ?
-include th03/main/player/win[bss].asm
+
+public _defeat_combo_hits_max
+public _defeat_gauge_attacks_fired, _defeat_boss_attacks_fired
+public _defeat_boss_attacks_reversed, _defeat_boss_panics_fired
+_defeat_combo_hits_max       	db ?
+_defeat_gauge_attacks_fired  	db ?
+_defeat_boss_attacks_fired   	db ?
+_defeat_boss_attacks_reversed	db ?
+_defeat_boss_panics_fired    	db ?
+
 byte_23DF9	db ?
 		db 64 dup(?)
 word_23E3A	dw ?
-byte_23E3C	db ?
-		db ?
-word_23E3E	dw ?
-word_23E40	dw ?
-byte_23E42	db ?
-angle_23E43	db ?
-public _pid_other
-_pid_other	db ?
-byte_23E45	db ?
-byte_23E46	db ?
-byte_23E47	db ?
-point_23E48	Point <?>
-word_23E4C	dw ?
-byte_23E4E	db ?
-byte_23E4F	db ?
-byte_23E50	db ?
-byte_23E51	db ?
-		db 9472 dup(?)
-byte_26352	db ?
-byte_26353	db ?
-word_26354	dw ?
-byte_26356	db ?
-byte_26357	db ?
-byte_26358	db ?
-		db    ?	;
+
+bullet_template_t struc
+	BT_center       	Point <?>
+	BT_speed        	db ?
+	BT_angle        	db ?
+	BT_pid          	db ?
+	BT_group        	db ?
+	BT_accel_type   	db ?
+	BT_count        	db ?
+	BT_velocity_tmp 	Point <?>
+	BT_sprite_offset	dw ?
+	BT_type         	db ?
+	BT_is_collidable	db ?
+	BT_is_animated  	db ?
+	BT_has_trail    	db ?
+bullet_template_t ends
+
+	extern _bullet_base_speed:byte
+	extern _bullet_template:bullet_template_t
+	extern _ef_onehit:byte
 
 		end
